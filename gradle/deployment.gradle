@@ -1,0 +1,33 @@
+task runDockerBuild(type: Exec) {
+    commandLine 'docker', 'build', '-t', "${dockerHostname}/${dockerRepositoryName}:${version}", './app/portal'
+}
+
+def ecrLogin() {
+    println 'Logging in...'
+    def sout = new StringBuffer(), serr = new StringBuffer()
+    def dir = new File(".")
+    def env = System.getenv().collect { k, v -> "$k=$v" }
+    env << "AWS_ACCESS_KEY_ID=$iamAccessKeyId"
+    env << "AWS_SECRET_ACCESS_KEY=$iamSecretAccessKey"
+    def loginCommandString = "aws ecr get-login --region ${dockerRegion} --no-include-email"
+    def proc = loginCommandString.execute(env, dir)
+    proc.consumeProcessOutput(sout, serr)
+    proc.waitForOrKill(6000)
+
+    List loginCommandList = sout.toString().split('\n')
+    loginCommandList.each {
+        if (it != '') {
+            println "Processing response: '${it}'"
+            def loginProc = it.execute()
+            loginProc.waitForOrKill(6000)
+        }
+    }
+}
+
+task pushImage(type: Exec, dependsOn: [runDockerBuild]) {
+    doFirst {
+        ecrLogin()
+    }
+
+    commandLine 'docker', 'push', "${dockerHostname}/${dockerRepositoryName}:${version}"
+}

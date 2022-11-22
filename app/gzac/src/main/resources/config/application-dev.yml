@@ -1,0 +1,13 @@
+spring:
+    datasource:
+        url: jdbc:postgresql://${spring.datasource.hostname}:${spring.datasource.port}/${spring.datasource.database-name}
+        username: ${DATABASE_USERNAME:valtimo}
+        password: ${DATABASE_PASSWORD:valtimo}
+        hostname: ${DATABASE_HOSTNAME:localhost}
+        database-name: ${DATABASE_NAME:gzac-portal-db}
+        port: ${DATABASE_PORT:54330}
+        name: gzac-portal-db
+
+logging:
+    level:
+        reactor.netty.http.client.HttpClient: DEBUG

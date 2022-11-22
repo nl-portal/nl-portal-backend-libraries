@@ -1,0 +1,30 @@
+{
+  "url": "http://localhost:8006/klanten/api/v1/klanten/9de04dac-b134-465a-a584-fb01977229a4",
+  "bronorganisatie": "051845623",
+  "klantnummer": "123",
+  "bedrijfsnaam": "",
+  "functie": "",
+  "websiteUrl": "http://www.invalid-url.com/",
+  "voornaam": "",
+  "voorvoegselAchternaam": "",
+  "achternaam": "",
+  "telefoonnummer": "0622222222",
+  "emailadres": "created@email.nl",
+  "adres": null,
+  "subject": "",
+  "subjectType": "natuurlijk_persoon",
+  "aanmaakkanaal": "",
+  "subjectIdentificatie": {
+    "inpBsn": "569312863",
+    "anpIdentificatie": "",
+    "inpANummer": "",
+    "geslachtsnaam": "",
+    "voorvoegselGeslachtsnaam": "",
+    "voorletters": "",
+    "voornamen": "",
+    "geslachtsaanduiding": "",
+    "geboortedatum": "",
+    "verblijfsadres": null,
+    "subVerblijfBuitenland": null
+  }
+}

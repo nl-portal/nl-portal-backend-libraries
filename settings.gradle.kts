@@ -1,0 +1,23 @@
+rootProject.name = "nl-portal-backend-libraries"
+include(
+    "app:portal",
+    "app:gzac",
+    "case",
+    "common-ground-authentication",
+    "common-ground-authentication-test",
+    "core",
+    "data",
+    "form",
+    "form-flow",
+    "graphql",
+    "gzac",
+    "gzac:objects-api",
+    "haalcentraal:haalcentraal-all",
+    "haalcentraal:haalcentraal-brp",
+    "haalcentraal:haalcentraal-hr",
+    "klant",
+    "messaging",
+    "product",
+    "task",
+    "zaak"
+)

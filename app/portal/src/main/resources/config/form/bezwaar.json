@@ -1,0 +1,240 @@
+{
+    "display": "form",
+    "settings": {
+        "pdf": {
+            "id": "1ec0f8ee-6685-5d98-a847-26f67b67d6f0",
+            "src": "https://files.form.io/pdf/5692b91fd1028f01000407e3/file/1ec0f8ee-6685-5d98-a847-26f67b67d6f0"
+        }
+    },
+    "components": [
+        {
+            "label": "HTML",
+            "tag": "b",
+            "attrs": [
+                {
+                    "attr": "",
+                    "value": ""
+                }
+            ],
+            "content": "U bent het niet eens met een besluit van de gemeente.\nOp deze pagina kunt u online bezwaar maken.",
+            "refreshOnChange": false,
+            "key": "html",
+            "type": "htmlelement",
+            "input": false,
+            "tableView": false
+        },
+        {
+            "label": "Aanhef",
+            "optionsLabelPosition": "right",
+            "inline": false,
+            "tableView": false,
+            "values": [
+                {
+                    "label": "De heer",
+                    "value": "deHeer",
+                    "shortcut": ""
+                },
+                {
+                    "label": "Mevrouw",
+                    "value": "mevrouw",
+                    "shortcut": ""
+                }
+            ],
+            "key": "aanhef",
+            "type": "radio",
+            "input": true,
+            "defaultValue": "deHeer"
+        },
+        {
+            "label": "Voornaam",
+            "tableView": true,
+            "defaultValue": "Frank",
+            "key": "voornaam",
+            "type": "textfield",
+            "input": true
+        },
+        {
+            "label": "Achternaam",
+            "tableView": true,
+            "defaultValue": "de Graaf",
+            "key": "achternaam",
+            "type": "textfield",
+            "input": true
+        },
+        {
+            "label": "Burgerservicenummer",
+            "tableView": true,
+            "defaultValue": "234567861",
+            "key": "bsn",
+            "type": "textfield",
+            "input": true
+        },
+        {
+            "label": "Straatnaam",
+            "tableView": true,
+            "defaultValue": "Hoogstraat",
+            "key": "straatnaam",
+            "type": "textfield",
+            "input": true
+        },
+        {
+            "label": "Huisnummer",
+            "tooltip": "Vul alleen cijfers in.",
+            "tableView": true,
+            "defaultValue": "12",
+            "key": "huisnummer",
+            "type": "textfield",
+            "input": true
+        },
+        {
+            "label": "Toevoeging",
+            "tooltip": "Bijvoorbeeld 'II', 'bis' of 'A'.",
+            "tableView": true,
+            "defaultValue": "3",
+            "key": "toevoeging",
+            "type": "textfield",
+            "input": true
+        },
+        {
+            "label": "Postcode",
+            "tableView": true,
+            "defaultValue": "1103JT",
+            "key": "postcode",
+            "type": "textfield",
+            "input": true
+        },
+        {
+            "label": "Plaats",
+            "tableView": true,
+            "defaultValue": "Utrecht",
+            "key": "plaats",
+            "type": "textfield",
+            "input": true
+        },
+        {
+            "label": "Telefoonnummer",
+            "tableView": true,
+            "defaultValue": "0678827777",
+            "key": "telefoonnummer",
+            "type": "textfield",
+            "input": true
+        },
+        {
+            "label": "E-mailadres",
+            "tableView": true,
+            "defaultValue": "fdejager@test.nl",
+            "key": "e-mailadres",
+            "type": "email",
+            "input": true
+        },
+        {
+            "label": "Tegen welk besluit maakt u bezwaar?",
+            "description": "Vul het nummer of kenmerk in.",
+            "tooltip": "Het nummer of kenmerk staat op de brief waarin de gemeente het besluit bekend maakte.",
+            "tableView": true,
+            "key": "zaaknummer",
+            "defaultValue": "ZAAK-2020-1000000023",
+            "type": "textfield",
+            "input": true
+        },
+        {
+            "label": "Wanneer heeft de gemeente het besluit kenbaar gemaakt? (dd-mm-jjjj)",
+            "tableView": true,
+            "tooltip": "Vul eerst de dag in, daarna de maand en dan het jaar. Bijvoorbeeld '30-07-2019'. Als u een brief heeft ontvangen waarin het besluit is bekend gemaakt, is dit de verzenddatum van deze brief.",
+            "key": "datumBesluit",
+            "type": "textfield",
+            "input": true,
+            "defaultValue": "01-01-2020"
+        },
+        {
+            "label": "Wie heeft het besluit genomen?",
+            "tableView": true,
+            "key": "naamBeslisser",
+            "defaultValue": "Leonie Post",
+            "type": "textfield",
+            "input": true
+        },
+        {
+            "label": "Waarover ging het besluit?",
+            "autoExpand": false,
+            "tableView": true,
+            "key": "besluit",
+            "defaultValue": "Nieuwe WOZ waarde van mijn woning",
+            "type": "textarea",
+            "input": true
+        },
+        {
+            "label": "Waarom bent u het niet eens met het besluit?",
+            "autoExpand": false,
+            "tableView": true,
+            "key": "bezwaar",
+            "defaultValue": "De nieuwe WOZ waarde is binnen een jaar met 30% gestegen.",
+            "type": "textarea",
+            "input": true
+        },
+        {
+            "label": "Hebt u een voorkeur voor de manier waarop de gemeente met u communiceert over het bezwaar?",
+            "optionsLabelPosition": "right",
+            "inline": false,
+            "tableView": false,
+            "values": [
+                {
+                    "label": "Per portal",
+                    "value": "perPortal",
+                    "shortcut": ""
+                },
+                {
+                    "label": "Telefonisch",
+                    "value": "telefonisch",
+                    "shortcut": ""
+                },
+                {
+                    "label": "Schriftelijk",
+                    "value": "schriftelijk",
+                    "shortcut": ""
+                },
+                {
+                    "label": "Geen voorkeur",
+                    "value": "geenVoorkeur",
+                    "shortcut": ""
+                }
+            ],
+            "key": "communicatie",
+            "type": "radio",
+            "defaultValue": "geenVoorkeur",
+            "input": true
+        },
+        {
+            "label": "HTML",
+            "tag": "b",
+            "attrs": [
+                {
+                    "attr": "",
+                    "value": ""
+                }
+            ],
+            "content": "Klopt alles? Zet dan een vinkje en verstuur daarna het formulier.",
+            "refreshOnChange": false,
+            "key": "html2",
+            "type": "htmlelement",
+            "input": false,
+            "tableView": false
+        },
+        {
+            "label": "Ja, ik heb alles juist ingevuld.",
+            "tableView": false,
+            "key": "ingevuld",
+            "type": "checkbox",
+            "input": true,
+            "defaultValue": true
+        },
+        {
+            "type": "button",
+            "label": "Submit",
+            "key": "submit",
+            "disableOnInvalid": true,
+            "input": true,
+            "tableView": false
+        }
+    ]
+}

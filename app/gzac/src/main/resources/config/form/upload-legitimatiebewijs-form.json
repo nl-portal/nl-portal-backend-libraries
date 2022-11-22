@@ -1,0 +1,72 @@
+{
+    "display": "form",
+    "settings": {
+        "pdf": {
+            "id": "1ec0f8ee-6685-5d98-a847-26f67b67d6f0",
+            "src": "https://files.form.io/pdf/5692b91fd1028f01000407e3/file/1ec0f8ee-6685-5d98-a847-26f67b67d6f0"
+        }
+    },
+    "components": [
+        {
+            "label": "HTML",
+            "tag": "b",
+            "attrs": [
+                {
+                    "attr": "",
+                    "value": ""
+                }
+            ],
+            "content": "Op deze pagina kunt u uw legitimatiebewijs uploaden.",
+            "refreshOnChange": false,
+            "key": "html",
+            "type": "htmlelement",
+            "input": false,
+            "tableView": false
+        },
+        {
+            "label": "Voorletters",
+            "tableView": true,
+            "key": "voorletters",
+            "type": "textfield",
+            "input": true
+        },
+        {
+            "label": "Tussenvoegsel",
+            "tableView": true,
+            "key": "tussenvoegsel",
+            "type": "textfield",
+            "input": true
+        },
+        {
+            "label": "Achternaam",
+            "tableView": true,
+            "key": "achternaam",
+            "type": "textfield",
+            "input": true
+        },
+        {
+            "type": "portalFileUpload",
+            "label": "Upload uw paspoort",
+            "key": "passport",
+            "multipleFiles": false,
+            "input": true,
+            "tableView": false
+        },
+        {
+            "label": "Documenten",
+            "calculateValue": "value = []\nif (data.passport?.length > 0) {value.push(\"/passport\")}",
+            "key": "documenten",
+            "type": "hidden",
+            "input": true,
+            "tableView": false
+        },
+        {
+            "type": "button",
+            "label": "Submit",
+            "key": "submit",
+            "disableOnInvalid": true,
+            "input": true,
+            "tableView": false
+        }
+    ]
+}

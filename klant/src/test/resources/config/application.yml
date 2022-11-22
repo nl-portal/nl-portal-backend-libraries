@@ -1,0 +1,9 @@
+graphql:
+    packages:
+        - "com.ritense.portal"
+
+valtimo:
+    openklant:
+        url: #filled in test
+        clientId: valtimo_client
+        secret: e09b8bc5-5831-4618-ab28-41411304309d
