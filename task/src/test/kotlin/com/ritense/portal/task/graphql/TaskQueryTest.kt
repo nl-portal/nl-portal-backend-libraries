@@ -18,7 +18,7 @@ package com.ritense.portal.task.graphql
 import com.ritense.portal.case.domain.Case
 import com.ritense.portal.case.domain.CaseDefinitionId
 import com.ritense.portal.case.domain.CaseId
-import com.ritense.portal.graphql.security.context.SecurityConstants
+import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import com.ritense.portal.task.BaseTest
 import graphql.GraphQLContext
 import graphql.schema.DataFetchingEnvironment
@@ -55,7 +55,7 @@ internal class TaskQueryTest : BaseTest() {
         taskQuery = TaskQuery(taskService, caseService)
 
         `when`(environment.graphQlContext).thenReturn(context)
-        `when`(context.get<Authentication>(SecurityConstants.AUTHENTICATION_KEY)).thenReturn(authentication)
+        `when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
         `when`(authentication.name).thenReturn("userId")
     }
 

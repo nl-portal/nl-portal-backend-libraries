@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.graphql.security.context
 
-import com.expediagroup.graphql.server.spring.execution.SpringGraphQLContext
-import org.springframework.security.core.Authentication
-import org.springframework.web.reactive.function.server.ServerRequest
+package com.ritense.portal.graphql.security
 
-@Deprecated("Support for custom GraphQL context is deprecated from graphql-kotlin. Use GraphQL context Map in DataFetchingEnvironment instead")
-class AuthenticationGraphQLContext(val authentication: Authentication?, request: ServerRequest) : SpringGraphQLContext(request)
+object SecurityConstants {
+    const val AUTHENTICATION_KEY = "authentication"
+}

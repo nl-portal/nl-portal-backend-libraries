@@ -19,7 +19,7 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Mutation
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
-import com.ritense.portal.graphql.security.context.SecurityConstants
+import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import com.ritense.portal.gzac.objectsapi.task.domain.Task
 import com.ritense.portal.gzac.objectsapi.task.service.TaskService
 import graphql.schema.DataFetchingEnvironment
@@ -35,7 +35,7 @@ class TaskMutation(
         id: UUID,
         submission: ObjectNode,
     ): Task {
-        val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(SecurityConstants.AUTHENTICATION_KEY)
+        val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
 
         return taskService.submitTask(id, submission, authentication)
     }

@@ -18,7 +18,7 @@ plugins {
 }
 
 dockerCompose {
-    projectName = "task"
+    projectNamePrefix = "task"
     isRequiredBy(tasks.getByName("test"))
     useComposeFiles.addAll("../docker-resources/docker-compose-base-test.yml", "docker-compose-override.yml")
 }
@@ -34,7 +34,7 @@ dependencies {
 
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.assertj", "assertj-core")
-    testImplementation("org.postgresql", "postgresql", "42.3.1")
+    testImplementation(TestDependencies.postgresql)
 }
 
 val jar: Jar by tasks

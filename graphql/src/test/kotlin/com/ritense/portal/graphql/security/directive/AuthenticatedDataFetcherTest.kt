@@ -16,7 +16,7 @@
 package com.ritense.portal.graphql.security.directive
 
 import com.ritense.portal.graphql.exception.UnauthorizedException
-import com.ritense.portal.graphql.security.context.SecurityConstants.AUTHENTICATION_KEY
+import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import graphql.GraphQLContext
 import graphql.schema.DataFetcher
 import graphql.schema.DataFetchingEnvironment

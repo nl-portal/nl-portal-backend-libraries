@@ -17,7 +17,7 @@ package com.ritense.portal.case.graphql
 
 import com.ritense.portal.case.BaseTest
 import com.ritense.portal.case.service.CaseService
-import com.ritense.portal.graphql.security.context.SecurityConstants
+import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import graphql.GraphQLContext
 import graphql.schema.DataFetchingEnvironment
 import org.assertj.core.api.Assertions.assertThat
@@ -44,7 +44,7 @@ class CaseInstanceQueryTest : BaseTest() {
 
         `when`(caseService.getAllCases(userId)).thenReturn(listOf(case(today), case(yesterday)))
         `when`(environment.graphQlContext).thenReturn(context)
-        `when`(context.get<Authentication>(SecurityConstants.AUTHENTICATION_KEY)).thenReturn(authentication)
+        `when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
         `when`(authentication.name).thenReturn(userId)
 
         val allCaseInstances = caseInstanceQuery.allCaseInstances(
@@ -63,7 +63,7 @@ class CaseInstanceQueryTest : BaseTest() {
 
         `when`(caseService.getAllCases(userId)).thenReturn(listOf(case(today), case(yesterday)))
         `when`(environment.graphQlContext).thenReturn(context)
-        `when`(context.get<Authentication>(SecurityConstants.AUTHENTICATION_KEY)).thenReturn(authentication)
+        `when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
         `when`(authentication.name).thenReturn(userId)
 
         val allCaseInstances = caseInstanceQuery.allCaseInstances(

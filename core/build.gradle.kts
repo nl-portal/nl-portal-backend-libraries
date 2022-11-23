@@ -39,16 +39,16 @@ dependencies {
     api("org.liquibase", "liquibase-core")
 
     // Apache Commons
-    api("commons-io", "commons-io", "2.11.0")
-    api("org.apache.commons", "commons-lang3", "3.12.0")
+    api(ApiDependencies.commonsIo)
+    api(ApiDependencies.apacheCommons)
 
     // Hibernate json support
-    api("com.vladmihalcea", "hibernate-types-52", "2.14.0")
+    api(ApiDependencies.hibernateTypes)
 
     // Logging for Kotlin
-    api("io.github.microutils", "kotlin-logging", "2.0.11")
+    api(ApiDependencies.kotlinLogging)
 
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
-    testImplementation("org.jetbrains.kotlinx", "kotlinx-coroutines-test", "1.5.2")
-    testImplementation("com.nhaarman.mockitokotlin2", "mockito-kotlin", "2.2.0")
+    testImplementation(TestDependencies.kotlinCoroutines)
+    testImplementation(TestDependencies.mockitoKotlin)
 }

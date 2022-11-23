@@ -25,10 +25,10 @@ dependencies {
     testImplementation(project(":common-ground-authentication-test"))
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.assertj", "assertj-core")
-    testImplementation("com.nhaarman.mockitokotlin2", "mockito-kotlin", "2.2.0")
-    testImplementation("org.jetbrains.kotlinx", "kotlinx-coroutines-test", "1.5.2")
-    testImplementation("com.squareup.okhttp3", "mockwebserver", "4.9.2")
-    testImplementation("com.squareup.okhttp3", "okhttp", "4.9.2")
+    testImplementation(TestDependencies.mockitoKotlin)
+    testImplementation(TestDependencies.kotlinCoroutines)
+    testImplementation(TestDependencies.okHttpMockWebserver)
+    testImplementation(TestDependencies.okHttp)
 }
 
 val jar: Jar by tasks

@@ -19,7 +19,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
-import com.ritense.portal.graphql.security.context.SecurityConstants
+import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import com.ritense.portal.haalcentraal.brp.domain.persoon.PersoonNaam
 import com.ritense.portal.haalcentraal.brp.service.HaalCentraalBrpService
 import com.ritense.portal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
@@ -47,7 +47,7 @@ internal class GemachtigdeQueryTest {
     @BeforeEach
     fun setup() {
         whenever(environment.graphQlContext).thenReturn(context)
-        whenever(context.get<Authentication>(SecurityConstants.AUTHENTICATION_KEY)).thenReturn(authentication)
+        whenever(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
     }
 
     @Test

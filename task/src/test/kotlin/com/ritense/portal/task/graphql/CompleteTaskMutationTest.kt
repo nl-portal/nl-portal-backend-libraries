@@ -18,24 +18,23 @@ package com.ritense.portal.task.graphql
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.ritense.portal.case.domain.Case
 import com.ritense.portal.case.domain.CaseDefinitionId
+import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.core.util.Mapper
 import com.ritense.portal.graphql.exception.UnauthorizedException
-import com.ritense.portal.graphql.security.context.AuthenticationGraphQLContext
 import com.ritense.portal.task.BaseTest
 import com.ritense.portal.task.domain.Task
 import com.ritense.portal.task.domain.TaskId
 import com.ritense.portal.task.exception.UnauthorizedTaskException
+import graphql.GraphQLContext
+import graphql.schema.DataFetchingEnvironment
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
-import org.springframework.security.core.Authentication
+import org.mockito.Mockito.`when`
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.reactive.function.server.ServerRequest
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -44,19 +43,16 @@ class CompleteTaskMutationTest : BaseTest() {
 
     lateinit var completeTaskMutation: CompleteTaskMutation
 
-    @Mock
-    lateinit var authentication: Authentication
-
-    @Mock
-    lateinit var serverRequest: ServerRequest
-
-    lateinit var context: AuthenticationGraphQLContext
+    var environment = mock(DataFetchingEnvironment::class.java)
+    var authentication = mock(CommonGroundAuthentication::class.java)
+    val context = mock(GraphQLContext::class.java)
 
     @BeforeEach
     fun setup() {
         baseSetUp()
+        `when`(authentication.name).thenReturn("John Doe")
+        `when`(environment.graphQlContext).thenReturn(context)
         completeTaskMutation = CompleteTaskMutation(taskService, caseService)
-        context = AuthenticationGraphQLContext(authentication, serverRequest)
     }
 
     @Test
@@ -69,7 +65,6 @@ class CompleteTaskMutationTest : BaseTest() {
         val case = mock(Case::class.java)
 
         // set up mocks
-        `when`(authentication.name).thenReturn(userId)
         `when`(taskService.completeTask(taskId, submission, userId)).thenReturn(
             Task(
                 TaskId.existingId(taskId),
@@ -87,7 +82,7 @@ class CompleteTaskMutationTest : BaseTest() {
         `when`(case.caseDefinitionId).thenReturn(CaseDefinitionId.existingId("caseDefinitionId"))
 
         // complete task
-        val completedTask = completeTaskMutation.completeTask(taskId, submission, context)
+        val completedTask = completeTaskMutation.completeTask(taskId, submission, environment)
 
         // verify
         verify(taskService).completeTask(taskId, submission, userId)
@@ -113,7 +108,7 @@ class CompleteTaskMutationTest : BaseTest() {
         `when`(taskService.completeTask(taskId, submission, userId)).thenThrow(UnauthorizedTaskException())
 
         Assertions.assertThrows(UnauthorizedException::class.java) {
-            completeTaskMutation.completeTask(taskId, submission, context)
+            completeTaskMutation.completeTask(taskId, submission, environment)
         }
     }
 }

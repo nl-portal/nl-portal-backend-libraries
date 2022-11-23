@@ -17,7 +17,7 @@ package com.ritense.portal.haalcentraal.brp.graphql
 
 import com.nhaarman.mockitokotlin2.mock
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
-import com.ritense.portal.graphql.security.context.SecurityConstants
+import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import com.ritense.portal.haalcentraal.brp.service.HaalCentraalBrpService
 import graphql.GraphQLContext
 import graphql.schema.DataFetchingEnvironment
@@ -37,6 +37,6 @@ internal open class QueryTestBase {
     @BeforeEach
     fun setup() {
         Mockito.`when`(environment.graphQlContext).thenReturn(context)
-        Mockito.`when`(context.get<Authentication>(SecurityConstants.AUTHENTICATION_KEY)).thenReturn(authentication)
+        Mockito.`when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
     }
 }

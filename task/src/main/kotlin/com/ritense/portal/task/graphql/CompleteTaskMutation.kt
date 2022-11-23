@@ -19,10 +19,12 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Mutation
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.ritense.portal.case.service.CaseService
+import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.graphql.exception.UnauthorizedException
-import com.ritense.portal.graphql.security.context.AuthenticationGraphQLContext
+import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import com.ritense.portal.task.exception.UnauthorizedTaskException
 import com.ritense.portal.task.service.TaskService
+import graphql.schema.DataFetchingEnvironment
 import java.util.UUID
 
 class CompleteTaskMutation(
@@ -34,10 +36,11 @@ class CompleteTaskMutation(
     fun completeTask(
         taskId: UUID,
         submission: ObjectNode,
-        context: AuthenticationGraphQLContext
+        dfe: DataFetchingEnvironment
     ): TaskInstance {
         try {
-            val completedTask = taskService.completeTask(taskId, submission, context.authentication?.name)
+            val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
+            val completedTask = taskService.completeTask(taskId, submission, authentication.name)
             val caseInstance = caseService.getCase(completedTask.externalCaseId)!!
             return TaskInstance.from(completedTask, caseInstance.caseDefinitionId.value)
         } catch (ute: UnauthorizedTaskException) {

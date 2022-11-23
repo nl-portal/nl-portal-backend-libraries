@@ -17,7 +17,7 @@ package com.ritense.portal.klant.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Mutation
-import com.ritense.portal.graphql.security.context.SecurityConstants.AUTHENTICATION_KEY
+import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import com.ritense.portal.klant.domain.klanten.Klant
 import com.ritense.portal.klant.domain.klanten.KlantUpdate
 import com.ritense.portal.klant.service.BurgerService

@@ -19,7 +19,7 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Mutation
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.ritense.portal.case.service.CaseService
-import com.ritense.portal.graphql.security.context.SecurityConstants.AUTHENTICATION_KEY
+import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import graphql.schema.DataFetchingEnvironment
 
 class CreateCaseMutation(private val caseService: CaseService) : Mutation {

@@ -16,7 +16,7 @@
 package com.ritense.portal.klant.graphql
 
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
-import com.ritense.portal.graphql.security.context.SecurityConstants.AUTHENTICATION_KEY
+import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import com.ritense.portal.klant.service.BurgerService
 import graphql.GraphQLContext
 import graphql.schema.DataFetchingEnvironment

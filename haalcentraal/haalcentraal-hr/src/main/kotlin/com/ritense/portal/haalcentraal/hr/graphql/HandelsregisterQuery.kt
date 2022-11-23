@@ -17,7 +17,7 @@ package com.ritense.portal.haalcentraal.hr.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Query
-import com.ritense.portal.graphql.security.context.SecurityConstants
+import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import com.ritense.portal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 import com.ritense.portal.haalcentraal.hr.service.HandelsregisterService
 import graphql.schema.DataFetchingEnvironment
@@ -26,6 +26,6 @@ class HandelsregisterQuery(val handelsregisterService: HandelsregisterService) :
 
     @GraphQLDescription("Gets the bedrijf data")
     suspend fun getBedrijf(dfe: DataFetchingEnvironment): MaatschappelijkeActiviteit? {
-        return handelsregisterService.getMaatschappelijkeActiviteit(dfe.graphQlContext.get(SecurityConstants.AUTHENTICATION_KEY))
+        return handelsregisterService.getMaatschappelijkeActiviteit(dfe.graphQlContext.get(AUTHENTICATION_KEY))
     }
 }

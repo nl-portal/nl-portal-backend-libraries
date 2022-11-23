@@ -18,7 +18,7 @@ package com.ritense.portal.haalcentraal.all.graphql
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Query
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
-import com.ritense.portal.graphql.security.context.SecurityConstants
+import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import com.ritense.portal.haalcentraal.brp.service.HaalCentraalBrpService
 import com.ritense.portal.haalcentraal.hr.service.HandelsregisterService
 import graphql.schema.DataFetchingEnvironment
@@ -30,7 +30,7 @@ class GemachtigdeQuery(
 
     @GraphQLDescription("Gets the data of the gemachtigde")
     suspend fun getGemachtigde(dfe: DataFetchingEnvironment): Gemachtigde {
-        val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(SecurityConstants.AUTHENTICATION_KEY)
+        val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
 
         return Gemachtigde(
             haalCentraalBrpService.getGemachtigde(authentication),

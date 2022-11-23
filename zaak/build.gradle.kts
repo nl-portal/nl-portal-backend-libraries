@@ -29,18 +29,18 @@ dependencies {
     implementation("org.springframework.boot", "spring-boot-starter-security")
 
     // jjwt
-    implementation("io.jsonwebtoken", "jjwt-api", "0.11.2")
-    implementation("io.jsonwebtoken", "jjwt-impl", "0.11.2")
-    implementation("io.jsonwebtoken", "jjwt-jackson", "0.11.2")
+    implementation(Dependencies.jsonWebTokensApi)
+    implementation(Dependencies.jsonWebTokensImpl)
+    implementation(Dependencies.jsonWebTokensJackson)
 
     testImplementation(project(":common-ground-authentication-test"))
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.springframework.security", "spring-security-test")
-    testImplementation("org.jetbrains.kotlinx", "kotlinx-coroutines-test", "1.5.2")
-    testImplementation("com.nhaarman.mockitokotlin2", "mockito-kotlin", "2.2.0")
-    testImplementation("com.squareup.okhttp3", "mockwebserver", "4.9.2")
-    testImplementation("com.squareup.okhttp3", "okhttp", "4.9.2")
-    testImplementation("org.postgresql", "postgresql", "42.3.1")
+    testImplementation(TestDependencies.kotlinCoroutines)
+    testImplementation(TestDependencies.mockitoKotlin)
+    testImplementation(TestDependencies.okHttpMockWebserver)
+    testImplementation(TestDependencies.okHttp)
+    testImplementation(TestDependencies.postgresql)
 }
 
 val jar: Jar by tasks

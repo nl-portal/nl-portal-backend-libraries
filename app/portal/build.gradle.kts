@@ -24,7 +24,7 @@ dependencies {
     implementation(project(":form-flow"))
     implementation(project(":task"))
 
-    api("org.postgresql", "postgresql", "42.3.1")
+    api("org.postgresql", "postgresql")
 }
 
 tasks.getByName<Jar>("jar") {

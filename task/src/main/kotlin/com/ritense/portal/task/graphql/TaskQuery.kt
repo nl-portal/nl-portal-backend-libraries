@@ -19,7 +19,7 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Query
 import com.ritense.portal.case.domain.CaseId
 import com.ritense.portal.case.service.CaseService
-import com.ritense.portal.graphql.security.context.SecurityConstants.AUTHENTICATION_KEY
+import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import com.ritense.portal.task.service.TaskService
 import graphql.schema.DataFetchingEnvironment
 import org.springframework.security.core.Authentication

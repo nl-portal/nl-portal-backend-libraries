@@ -22,8 +22,8 @@ dependencies {
     api(project(":core"))
 
     // Spring cloud stream rabbitmq
-    api("org.springframework.cloud", "spring-cloud-stream", "3.1.5")
-    api("org.springframework.cloud", "spring-cloud-stream-binder-rabbit", "3.1.5")
+    api(ApiDependencies.springCloudStream)
+    api(ApiDependencies.springCloudStreamBinderRabbit)
 }
 
 val jar: Jar by tasks

@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.graphql.security.directive
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDirective
-
-@GraphQLDirective(
-    name = "isAuthenticated",
-    description = "The user needs to be authenticated to use this",
-    locations = []
-)
-annotation class IsUnauthenticated
+object Dependencies {
+    val everitJsonSchema by lazy { "com.github.erosb:everit-json-schema:${Versions.everitJsonSchema}" }
+    val jsonPath by lazy { "com.jayway.jsonpath:json-path:${Versions.jsonPath}" }
+    val jsonWebTokensApi by lazy { "io.jsonwebtoken:jjwt-api:${Versions.jsonWebTokens}" }
+    val jsonWebTokensImpl by lazy { "io.jsonwebtoken:jjwt-impl:${Versions.jsonWebTokens}" }
+    val jsonWebTokensJackson by lazy { "io.jsonwebtoken:jjwt-jackson:${Versions.jsonWebTokens}" }
+}

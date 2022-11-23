@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.graphql.security.directive
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDirective
+import org.gradle.kotlin.dsl.`kotlin-dsl`
 
-@GraphQLDirective(
-    name = "isAuthenticated",
-    description = "The user needs to be authenticated to use this",
-    locations = []
-)
-annotation class IsUnauthenticated
+plugins {
+    `kotlin-dsl`
+}
+
+repositories {
+    mavenCentral()
+}

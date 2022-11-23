@@ -70,9 +70,9 @@ class BurgerService(
 
     private suspend fun createBurgerProfiel(authentication: BurgerAuthentication, updatedKlant: KlantUpdate): Klant {
 
-        val websiteUrl = "http://www.invalid-url.com/" // TODO: how do we prefill the websiteUrl
-        val telefoonnummer = updatedKlant.telefoonnummer ?: "" // TODO: how do we prefill the telefoonnummer
-        val emailadres = updatedKlant.emailadres ?: "" // TODO: how do we prefill the emailadres
+        val websiteUrl = "http://www.invalid-url.com/"
+        val telefoonnummer = updatedKlant.telefoonnummer ?: ""
+        val emailadres = updatedKlant.emailadres ?: ""
 
         val klantRequest = KlantCreationRequest(
             openKlantClientConfig.rsin,

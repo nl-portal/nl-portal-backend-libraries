@@ -1,42 +1,39 @@
 import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
-import java.net.URI
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.net.URI
 
 plugins {
-    val kotlinVersion = "1.5.31"
-    val springBootVersion = "2.5.12"
-    val springDependencyManagementVersion = "1.0.11.RELEASE"
-
     // IntelliJ
     idea
 
     // Apply the Kotlin JVM plugin to add support for Kotlin on the JVM.
-    kotlin("jvm") version kotlinVersion apply false
+    kotlin("jvm")
 
     // Classes annotated with @Configuration, @Controller, @RestController, @Service or @Repository are automatically opened
     // https://kotlinlang.org/docs/reference/compiler-plugins.html#spring-support
-    kotlin("plugin.spring") version kotlinVersion apply false
-    kotlin("plugin.jpa") version kotlinVersion apply false
-    kotlin("plugin.allopen") version kotlinVersion apply false
+
+    kotlin("plugin.spring")
+    kotlin("plugin.jpa")
+    kotlin("plugin.allopen")
 
     // Allows to package executable jar or war archives, run Spring Boot applications,
     // and use the dependency management
     // https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html/
-    id("org.springframework.boot") version springBootVersion apply false
+    id("org.springframework.boot")
 
     // A Gradle plugin that provides Maven-like dependency management and exclusions
     // https://docs.spring.io/dependency-management-plugin/docs/current/reference/html/
-    id("io.spring.dependency-management") version springDependencyManagementVersion
+    id("io.spring.dependency-management")
 
     // For dependency version upgrades "gradle dependencyUpdates -Drevision=release"
-    id("com.github.ben-manes.versions") version "0.39.0"
+    id("com.github.ben-manes.versions")
 
     // Checkstyle
-    id("org.jlleitschuh.gradle.ktlint") version "10.2.0" apply false
-    id("com.diffplug.spotless") version "5.17.0" apply false
+    id("org.jlleitschuh.gradle.ktlint")
+    id("com.diffplug.spotless")
 
     // Docker-compose plugin
-    id("com.avast.gradle.docker-compose") version "0.14.9" apply false
+    id("com.avast.gradle.docker-compose")
 }
 
 allprojects {
@@ -90,8 +87,8 @@ subprojects {
     tasks.withType<KotlinCompile> {
         println("Configuring KotlinCompile $name in project ${project.name}...")
         kotlinOptions {
-            languageVersion = "1.5"
-            apiVersion = "1.5"
+            languageVersion = "1.6"
+            apiVersion = "1.6"
             jvmTarget = "17"
             freeCompilerArgs = listOf("-Xjsr305=strict", "-Xemit-jvm-type-annotations")
         }

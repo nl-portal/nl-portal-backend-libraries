@@ -18,7 +18,7 @@ plugins {
 }
 
 dockerCompose {
-    projectName = "case"
+    projectNamePrefix = "case"
     isRequiredBy(tasks.getByName("test"))
     useComposeFiles.addAll("../docker-resources/docker-compose-base-test.yml", "docker-compose-override.yml")
 }
@@ -39,10 +39,10 @@ dependencies {
     implementation("org.springframework.boot", "spring-boot-starter-validation")
 
     // JsonSchema support
-    implementation("com.github.erosb", "everit-json-schema", "1.14.0")
-    implementation("com.jayway.jsonpath", "json-path", "2.6.0")
+    implementation(Dependencies.everitJsonSchema)
+    implementation(Dependencies.jsonPath)
 
+    testImplementation(TestDependencies.postgresql)
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.assertj", "assertj-core")
-    testImplementation("org.postgresql", "postgresql", "42.3.1")
 }

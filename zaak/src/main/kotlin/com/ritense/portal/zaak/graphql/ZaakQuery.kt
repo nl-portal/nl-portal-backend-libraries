@@ -17,7 +17,7 @@ package com.ritense.portal.zaak.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Query
-import com.ritense.portal.graphql.security.context.SecurityConstants.AUTHENTICATION_KEY
+import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import com.ritense.portal.zaak.domain.zaken.Zaak
 import com.ritense.portal.zaak.service.ZaakService
 import graphql.schema.DataFetchingEnvironment

@@ -16,7 +16,7 @@
 package com.ritense.portal.zaak.graphql
 
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
-import com.ritense.portal.graphql.security.context.SecurityConstants.AUTHENTICATION_KEY
+import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import com.ritense.portal.zaak.service.ZaakService
 import graphql.GraphQLContext
 import graphql.schema.DataFetchingEnvironment

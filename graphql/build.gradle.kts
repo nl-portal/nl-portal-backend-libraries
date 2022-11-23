@@ -28,20 +28,20 @@ dependencies {
     api(project(":core"))
 
     // GraphQL
-    api("com.expediagroup", "graphql-kotlin-spring-server", "5.2.0")
-    api("com.expediagroup", "graphql-kotlin-hooks-provider", "5.2.0")
-    api("com.graphql-java", "graphql-java-extended-scalars", "17.0")
+    api(ApiDependencies.graphqlKotlinSpringServer)
+    api(ApiDependencies.graphqlKotlinHooksProvider)
+    api(ApiDependencies.graphqlJavaExtendedScalars)
 
     // Jackson
     api("com.fasterxml.jackson.module", "jackson-module-kotlin")
 
     // Logging for Kotlin
-    api("io.github.microutils", "kotlin-logging", "2.0.11")
+    api(ApiDependencies.kotlinLogging)
 
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.springframework.security", "spring-security-test")
     testImplementation("org.springframework.boot", "spring-boot-starter-webflux")
     testImplementation("org.assertj", "assertj-core")
-    testImplementation("org.jetbrains.kotlinx", "kotlinx-coroutines-test", "1.5.2")
-    testImplementation("org.postgresql", "postgresql", "42.3.1")
+    testImplementation(TestDependencies.kotlinCoroutines)
+    testImplementation(TestDependencies.postgresql)
 }

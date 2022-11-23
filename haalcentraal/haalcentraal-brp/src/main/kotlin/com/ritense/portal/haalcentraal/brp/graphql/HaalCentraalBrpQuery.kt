@@ -17,7 +17,7 @@ package com.ritense.portal.haalcentraal.brp.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Query
-import com.ritense.portal.graphql.security.context.SecurityConstants
+import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import com.ritense.portal.haalcentraal.brp.domain.persoon.Persoon
 import com.ritense.portal.haalcentraal.brp.service.HaalCentraalBrpService
 import graphql.schema.DataFetchingEnvironment
@@ -26,11 +26,11 @@ class HaalCentraalBrpQuery(val haalCentraalBrpService: HaalCentraalBrpService) :
 
     @GraphQLDescription("Gets the persoon data")
     suspend fun getPersoon(dfe: DataFetchingEnvironment): Persoon? {
-        return haalCentraalBrpService.getPersoon(dfe.graphQlContext.get(SecurityConstants.AUTHENTICATION_KEY))
+        return haalCentraalBrpService.getPersoon(dfe.graphQlContext.get(AUTHENTICATION_KEY))
     }
 
     @GraphQLDescription("Gets the number of people living in the same house as the person that makes the requests")
     suspend fun getBewonersAantal(dfe: DataFetchingEnvironment): Int? {
-        return haalCentraalBrpService.getBewonersAantal(dfe.graphQlContext.get(SecurityConstants.AUTHENTICATION_KEY))
+        return haalCentraalBrpService.getBewonersAantal(dfe.graphQlContext.get(AUTHENTICATION_KEY))
     }
 }

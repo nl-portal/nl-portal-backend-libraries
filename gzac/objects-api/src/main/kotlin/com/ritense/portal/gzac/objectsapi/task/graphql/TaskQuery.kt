@@ -18,7 +18,7 @@ package com.ritense.portal.gzac.objectsapi.task.graphql
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Query
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
-import com.ritense.portal.graphql.security.context.SecurityConstants
+import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import com.ritense.portal.gzac.objectsapi.task.domain.Task
 import com.ritense.portal.gzac.objectsapi.task.service.TaskService
 import graphql.schema.DataFetchingEnvironment
@@ -34,7 +34,7 @@ class TaskQuery(
         pageNumber: Int? = 1,
         pageSize: Int? = 20
     ): TaskPage {
-        val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(SecurityConstants.AUTHENTICATION_KEY)
+        val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
 
         return taskService.getTasks(
             pageNumber = pageNumber ?: 1,
@@ -45,7 +45,7 @@ class TaskQuery(
 
     @GraphQLDescription("Get task by id")
     suspend fun getTaskById(id: UUID, dfe: DataFetchingEnvironment): Task {
-        val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(SecurityConstants.AUTHENTICATION_KEY)
+        val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
         return taskService.getTaskById(id, authentication)
     }
 }

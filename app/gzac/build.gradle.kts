@@ -26,7 +26,7 @@ dependencies {
     implementation(project(":zaak"))
     implementation(project(":form"))
 
-    api("org.postgresql", "postgresql", "42.3.1")
+    api("org.postgresql", "postgresql")
 }
 
 tasks.getByName<Jar>("jar") {
