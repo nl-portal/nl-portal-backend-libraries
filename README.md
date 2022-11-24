@@ -3,16 +3,30 @@
 ![Kotlin 1.7.21](https://img.shields.io/badge/Kotlin-1.7.21-green)
 ![Spring boot 2.7.5](https://img.shields.io/badge/Spring%20boot-2.7.5-green)
 
-## What is nl-portal
+## NL Portal
 
-TODO
+NL Portal is an application for communicating with citizens and third parties. It is built for use with the Dutch 
+'VNG API’s for Zaakgericht Werken' - though not required. The development is based on Common Ground principles. Under 
+the motto 'create once, use 340 times', the NL Portal has been built open source, so any (government) organization can 
+use and improve it without restrictions.
+
+Starting principles are:
+
+- Open standards, open source under EUPL 1.2;
+- Compatible with multiple formbuilders;
+- Frontend UI based in Nl Design System;
+- Independent of underlying process- or case management systems;
+- Horizontal scalable;
+- A-sync communication with underlying systems.
 
 ## What is nl-portal backend libraries
 
-This project is the backend-for-frontend code for Portals for Dutch municipalities.
+This project is the backend-for-frontend for Portals of Dutch municipalities.
 
-The frontend is currently located at the GitHub page of the municipality of The Hague: 
-[nl-portal-libraries](https://github.com/Gemeente-DenHaag/nl-portal-libraries)
+There is a React and Angular frontend version available. The frontend development of the React version is hosted on the GitHub page of the
+municipality of The Hague: [nl-portal-libraries](https://github.com/Gemeente-DenHaag/nl-portal-libraries).
+
+More information about NL design can be found on https://nldesignsystem.nl/.
 
 
 ## How does this fit the 5-layers model from the Dutch Common Ground initiative?
