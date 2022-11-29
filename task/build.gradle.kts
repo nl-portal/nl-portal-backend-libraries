@@ -29,6 +29,7 @@ dependencies {
     api(project(":data"))
     api(project(":graphql"))
     api(project(":case"))
+    api(project(":common-ground-authentication"))
 
     implementation("org.springframework.boot", "spring-boot-starter-data-jpa")
 

@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.ritense.portal.graphql.security
 
 import com.expediagroup.graphql.generator.execution.KotlinDataFetcherFactoryProvider
 import com.expediagroup.graphql.server.spring.GraphQLAutoConfiguration
+import com.expediagroup.graphql.server.spring.execution.SpringGraphQLContextFactory
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.ritense.portal.graphql.security.context.AuthenticationGraphQLContextFactory
 import com.ritense.portal.graphql.security.directive.ReactiveDataFactoryProvider
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.springframework.boot.autoconfigure.AutoConfigureBefore
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.ApplicationContext
@@ -29,6 +31,13 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 @AutoConfigureBefore(GraphQLAutoConfiguration::class)
 class GraphQLContextAutoConfiguration {
+
+    @ExperimentalCoroutinesApi
+    @Bean
+    @ConditionalOnMissingBean
+    fun authenticationGraphQLContextFactory(): SpringGraphQLContextFactory<*> {
+        return AuthenticationGraphQLContextFactory()
+    }
 
     @Bean
     @ConditionalOnMissingBean

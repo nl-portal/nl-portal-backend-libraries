@@ -1,4 +1,4 @@
-FROM openjdk:13.0.2
+FROM openjdk:17.0.5
 
 ADD /build/libs/*.jar /app.jar
 

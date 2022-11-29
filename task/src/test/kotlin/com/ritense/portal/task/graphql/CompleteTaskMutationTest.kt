@@ -21,6 +21,7 @@ import com.ritense.portal.case.domain.CaseDefinitionId
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.core.util.Mapper
 import com.ritense.portal.graphql.exception.UnauthorizedException
+import com.ritense.portal.graphql.security.SecurityConstants
 import com.ritense.portal.task.BaseTest
 import com.ritense.portal.task.domain.Task
 import com.ritense.portal.task.domain.TaskId
@@ -34,6 +35,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
+import org.springframework.security.core.Authentication
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.util.UUID
@@ -46,12 +48,14 @@ class CompleteTaskMutationTest : BaseTest() {
     var environment = mock(DataFetchingEnvironment::class.java)
     var authentication = mock(CommonGroundAuthentication::class.java)
     val context = mock(GraphQLContext::class.java)
+    val userId = "user"
 
     @BeforeEach
     fun setup() {
         baseSetUp()
-        `when`(authentication.name).thenReturn("John Doe")
+        `when`(authentication.name).thenReturn(userId)
         `when`(environment.graphQlContext).thenReturn(context)
+        `when`(context.get<Authentication>(SecurityConstants.AUTHENTICATION_KEY)).thenReturn(authentication)
         completeTaskMutation = CompleteTaskMutation(taskService, caseService)
     }
 
@@ -60,7 +64,6 @@ class CompleteTaskMutationTest : BaseTest() {
         // test data
         val submission = Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java)
         val taskId = UUID.randomUUID()
-        val userId = "user"
         val externalCaseId = "externalCaseId"
         val case = mock(Case::class.java)
 
@@ -101,9 +104,6 @@ class CompleteTaskMutationTest : BaseTest() {
     fun `should throw UnauthorizedException on UnauthorizedTaskException when completing task`() {
         val taskId = UUID.randomUUID()
         val submission = Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java)
-        val userId = "user"
-
-        `when`(authentication.name).thenReturn(userId)
 
         `when`(taskService.completeTask(taskId, submission, userId)).thenThrow(UnauthorizedTaskException())
 

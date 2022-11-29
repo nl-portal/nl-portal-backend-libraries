@@ -45,6 +45,12 @@ internal class TaskQueryIT(
 ) {
     lateinit var server: MockWebServer
 
+    @field:Autowired
+    private lateinit var getTasksPayload: String
+
+    @field:Autowired
+    private lateinit var getTaskByIdPayload: String
+
     @BeforeEach
     internal fun setUp() {
         server = MockWebServer()
@@ -61,27 +67,6 @@ internal class TaskQueryIT(
     @Test
     @WithBurgerUser("569312863")
     fun `should get list of tasks for burger`() {
-
-        val query = """
-            query {
-                getTasks(pageSize:1) {
-                    number
-                    size
-                    totalPages
-                    totalElements
-                    numberOfElements
-                    content {
-                        id
-                        objectId
-                        formId
-                        status
-                        date
-                        data
-                    }
-                }
-            }
-        """.trimIndent()
-
         val basePath = "$.data.getTasks"
         val resultPath = "$basePath.content[0]"
 
@@ -89,7 +74,7 @@ internal class TaskQueryIT(
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
+            .bodyValue(getTasksPayload)
             .exchange()
             .expectBody()
             .jsonPath(basePath).exists()
@@ -109,27 +94,6 @@ internal class TaskQueryIT(
     @Test
     @WithBedrijfUser("14127293")
     fun `should get list of tasks for bedrijf`() {
-
-        val query = """
-            query {
-                getTasks(pageSize:1) {
-                    number
-                    size
-                    totalPages
-                    totalElements
-                    numberOfElements
-                    content {
-                        id
-                        objectId
-                        formId
-                        status
-                        date
-                        data
-                    }
-                }
-            }
-        """.trimIndent()
-
         val basePath = "$.data.getTasks"
         val resultPath = "$basePath.content[0]"
 
@@ -137,7 +101,7 @@ internal class TaskQueryIT(
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
+            .bodyValue(getTasksPayload)
             .exchange()
             .expectBody()
             .jsonPath(resultPath).exists()
@@ -157,25 +121,13 @@ internal class TaskQueryIT(
     @Test
     @WithBedrijfUser("14127293")
     fun `should get task by id for burger`() {
-
-        val query = """
-            query {
-                getTaskById(id: "58fad5ab-dc2f-11ec-9075-f22a405ce707") {
-                    id
-                    formId
-                    status
-                    date
-                }
-            }
-        """.trimIndent()
-
         val basePath = "$.data.getTaskById"
 
         testClient.post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
+            .bodyValue(getTaskByIdPayload)
             .exchange()
             .expectBody()
             .jsonPath(basePath).exists()
@@ -188,25 +140,13 @@ internal class TaskQueryIT(
     @Test
     @WithBurgerUser("569312863")
     fun `should get task by id for bedrijf`() {
-
-        val query = """
-            query {
-                getTaskById(id: "58fad5ab-dc2f-11ec-9075-f22a405ce707") {
-                    id
-                    formId
-                    status
-                    date
-                }
-            }
-        """.trimIndent()
-
         val basePath = "$.data.getTaskById"
 
         testClient.post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
+            .bodyValue(getTaskByIdPayload)
             .exchange()
             .expectBody()
             .jsonPath(basePath).exists()

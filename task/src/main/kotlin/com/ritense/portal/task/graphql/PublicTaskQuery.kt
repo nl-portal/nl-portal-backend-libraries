@@ -17,11 +17,12 @@ package com.ritense.portal.task.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Query
+import com.ritense.portal.graphql.security.directive.IsUnauthenticated
 import com.ritense.portal.task.service.TaskService
 
 class PublicTaskQuery(val taskService: TaskService) : Query {
 
-//    @IsUnauthenticated
+    @IsUnauthenticated
     @GraphQLDescription("find public task with id")
     fun findPublicTask(taskId: String): TaskInstance {
         return TaskInstance.from(taskService.findPublicTask(taskId))

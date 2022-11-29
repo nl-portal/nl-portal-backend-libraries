@@ -87,8 +87,8 @@ subprojects {
     tasks.withType<KotlinCompile> {
         println("Configuring KotlinCompile $name in project ${project.name}...")
         kotlinOptions {
-            languageVersion = "1.6"
-            apiVersion = "1.6"
+            languageVersion = "1.7"
+            apiVersion = "1.7"
             jvmTarget = "17"
             freeCompilerArgs = listOf("-Xjsr305=strict", "-Xemit-jvm-type-annotations")
         }

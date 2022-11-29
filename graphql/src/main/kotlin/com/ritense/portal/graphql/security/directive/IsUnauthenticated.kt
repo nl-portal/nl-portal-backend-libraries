@@ -16,10 +16,11 @@
 package com.ritense.portal.graphql.security.directive
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDirective
+import graphql.introspection.Introspection.DirectiveLocation.FIELD_DEFINITION
 
 @GraphQLDirective(
     name = "isAuthenticated",
     description = "The user needs to be authenticated to use this",
-    locations = []
+    locations = [FIELD_DEFINITION]
 )
 annotation class IsUnauthenticated
