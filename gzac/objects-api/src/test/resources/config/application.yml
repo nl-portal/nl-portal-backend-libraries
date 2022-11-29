@@ -1,0 +1,14 @@
+graphql:
+    packages:
+        - "com.ritense.portal"
+
+logging:
+    level:
+        reactor.netty.http.client.HttpClient: DEBUG
+
+valtimo:
+    objectsapi:
+        url: http://localhost:8010
+        token: 0000000000000000000000000000000000000000
+        task:
+            typeUrl: "http://localhost:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb35"

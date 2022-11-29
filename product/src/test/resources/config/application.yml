@@ -1,0 +1,8 @@
+graphql:
+    packages:
+        - "com.ritense.portal"
+
+valtimo:
+    openformulieren:
+        url: #filled in test
+        token: "some-test-token"

@@ -1,0 +1,8 @@
+query {
+    getTaskById(id: "58fad5ab-dc2f-11ec-9075-f22a405ce707") {
+        id
+        formId
+        status
+        date
+    }
+}

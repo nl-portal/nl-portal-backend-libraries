@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.ritense.portal.data.DataAutoConfiguration,\
+  com.ritense.portal.data.liquibase.LiquibaseRunnerAutoConfiguration
+
+

@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.ritense.portal.gzac.objectsapi.autoconfiguration.ObjectsApiAutoConfiguration, \
+  com.ritense.portal.gzac.objectsapi.task.autoconfiguration.TaskAutoConfiguration

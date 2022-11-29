@@ -1,0 +1,82 @@
+server:
+    port: 8081
+
+spring:
+    application:
+        name: nl-portal-backend-libraries
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://localhost:8093/auth/realms/master
+    liquibase:
+        enabled: false
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: org.postgresql.Driver
+        hikari:
+            auto-commit: false
+            poolName: "gzac-portal-pool"
+    jpa:
+        database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+        database: postgresql
+        show_sql: true
+        open-in-view: false
+        properties:
+            hibernate:
+                hbm2ddl.auto: none
+                generate_statistics: false
+                naming-strategy: org.springframework.boot.orm.jpa.hibernate.SpringNamingStrategy
+                cache:
+                    use_second_level_cache: false
+                    use_query_cache: false
+                    region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
+                format_sql: true
+                jdbc:
+                    time_zone: UTC
+                connection:
+                    provider_disables_autocommit: true
+
+graphql:
+    packages:
+        - "com.ritense.portal"
+logging:
+    level:
+        org.springframework.amqp: DEBUG
+
+valtimo:
+    openzaak:
+        url: http://localhost:8001
+        clientId: valtimo_client
+        secret: e09b8bc5-5831-4618-ab28-41411304309d
+        rsin: "051845623"
+        documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/efc332f2-be3b-4bad-9e3c-49a6219c92ad
+    openklant:
+        url: http://localhost:8006
+        clientId: valtimo_client
+        secret: e09b8bc5-5831-4618-ab28-41411304309d
+        rsin: "051845623"
+    openformulieren:
+        url: http://localhost:8003
+        token: 3ca04f4c11159811877444fdb1e019b7eac13f78
+    objectsapi:
+        url: http://localhost:8010
+        token: 182c13e2209161852c53cef53a879f7a2f923430
+        task:
+            typeUrl: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
+    haalcentraal:
+    #        url: ${VALTIMO_HAALCENTRAAL_URL}
+    #        apiKey: ${VALTIMO_HAALCENTRAAL_APIKEY}
+    #        ssl:
+    #            enabled: ${VALTIMO_HAALCENTRAAL_SSL_ENABLED}
+    #            key:
+    #                key: ${VALTIMO_HAALCENTRAAL_SSL_KEY_KEY}
+    #                certChain: ${VALTIMO_HAALCENTRAAL_SSL_KEY_CERT_CHAIN}
+    #                keyPassword: ${VALTIMO_HAALCENTRAAL_SSL_KEY_KEY_PASSWORD}
+    #            trustedCertificate: ${VALTIMO_HAALCENTRAAL_SSL_TRUSTED_CERTIFICATE}
+    cors:
+        -   path: "/**"
+            config:
+                allowedHeaders: "*"
+                allowedOrigins: "*"
+                allowedMethods: "*"

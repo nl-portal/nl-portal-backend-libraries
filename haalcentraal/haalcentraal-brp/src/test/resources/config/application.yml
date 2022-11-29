@@ -1,0 +1,8 @@
+graphql:
+    packages:
+        - "com.ritense.portal"
+
+valtimo:
+    haalcentraal:
+        url: #filled in test
+        apiKey: "some-api-key"

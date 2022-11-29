@@ -1,0 +1,249 @@
+{
+    "_links": {
+        "self": {
+            "href": "https://www.haalcentraal.nl/haalcentraal/api/brp/ingeschrevenpersonen/999993847"
+        },
+        "ouders": [
+            {
+                "href": "https://www.haalcentraal.nl/haalcentraal/api/brp/ingeschrevenpersonen/999993847/ouders/1"
+            },
+            {
+                "href": "https://www.haalcentraal.nl/haalcentraal/api/brp/ingeschrevenpersonen/999993847/ouders/2"
+            }
+        ],
+        "kinderen": [
+            {
+                "href": "https://www.haalcentraal.nl/haalcentraal/api/brp/ingeschrevenpersonen/999993847/kinderen/2"
+            },
+            {
+                "href": "https://www.haalcentraal.nl/haalcentraal/api/brp/ingeschrevenpersonen/999993847/kinderen/1"
+            }
+        ],
+        "partnerhistorie": {
+            "href": "https://www.haalcentraal.nl/haalcentraal/api/brphistorie/ingeschrevenpersonen/999993847/partnerhistorie"
+        },
+        "partners": [
+            {
+                "href": "https://www.haalcentraal.nl/haalcentraal/api/brp/ingeschrevenpersonen/999993847/partners/1"
+            }
+        ],
+        "verblijfplaatshistorie": {
+            "href": "https://www.haalcentraal.nl/haalcentraal/api/brphistorie/ingeschrevenpersonen/999993847/verblijfplaatshistorie"
+        },
+        "verblijfstitelhistorie": {
+            "href": "https://www.haalcentraal.nl/haalcentraal/api/brphistorie/ingeschrevenpersonen/999993847/verblijfstitelhistorie"
+        },
+        "adres": {
+            "href": "https://www.haalcentraal.nl/haalcentraal/api/bag/v1/adressen/0518200000781378"
+        },
+        "nationaliteitHistorie": {
+            "href": "https://www.haalcentraal.nl/haalcentraal/api/brphistorie/ingeschrevenpersonen/999993847/nationaliteithistorie"
+        }
+    },
+    "aNummer": "2352984859",
+    "geslachtsaanduiding": "vrouw",
+    "naam": {
+        "aanhef": "Geachte mevrouw Kooyman",
+        "aanschrijfwijze": "M. Kooyman",
+        "gebruikInLopendeTekst": "mevrouw Kooyman",
+        "aanduidingNaamgebruik": "eigen",
+        "voornamen": "Merel",
+        "voorletters": "M.",
+        "voorvoegsel": "de",
+        "geslachtsnaam": "Kooyman"
+    },
+    "leeftijd": 39,
+    "nationaliteiten": [
+        {
+            "nationaliteit": {
+                "code": "0001",
+                "omschrijving": "Nederlandse"
+            }
+        },
+        {
+            "nationaliteit": {
+                "code": "0057",
+                "omschrijving": "Franse"
+            }
+        }
+    ],
+    "verblijfplaats": {
+        "functieAdres": "woonadres",
+        "adresseerbaarObjectIdentificatie": "0518010000781379",
+        "nummeraanduidingIdentificatie": "0518200000781378",
+        "korteNaam": "Hector Berliozplantsoen",
+        "gemeenteVanInschrijving": {
+            "code": "0518",
+            "omschrijving": "'s-Gravenhage"
+        },
+        "datumAanvangAdreshouding": {
+            "datum": "2001-02-15",
+            "jaar": 2001,
+            "maand": 2,
+            "dag": 15
+        },
+        "datumInschrijvingInGemeente": {
+            "datum": "2001-02-15",
+            "jaar": 2001,
+            "maand": 2,
+            "dag": 15
+        },
+        "adresregel1": "Hector Berliozplantsoen 31",
+        "adresregel2": "2551XS 's-Gravenhage",
+        "inOnderzoek": {
+            "nummeraanduidingIdentificatie": true,
+            "adresseerbaarObjectIdentificatie": true,
+            "woonplaats": true,
+            "huisnummertoevoeging": true,
+            "postcode": true,
+            "korteNaam": true,
+            "straat": true,
+            "huisletter": true,
+            "huisnummer": true,
+            "aanduidingBijHuisnummer": true,
+            "datumIngangOnderzoek": {
+                "datum": "2001-02-20",
+                "jaar": 2001,
+                "maand": 2,
+                "dag": 20
+            }
+        },
+        "straat": "Hector Berliozplantsoen",
+        "huisnummer": 31,
+        "huisletter": "H",
+        "huisnummertoevoeging": "Achter",
+        "postcode": "2551XS",
+        "woonplaats": "'s-Gravenhage"
+    },
+    "kinderen": [
+        {
+            "naam": {
+                "voornamen": "Catharina-Amalia",
+                "voorletters": "C.",
+                "geslachtsnaam": "Maassen"
+            },
+            "leeftijd": 18,
+            "burgerservicenummer": "999994918",
+            "geboorte": {
+                "datum": {
+                    "datum": "2003-11-07",
+                    "jaar": 2003,
+                    "maand": 11,
+                    "dag": 7
+                }
+            }
+        },
+        {
+            "naam": {
+                "voornamen": "Lisanne-Caroline",
+                "voorletters": "L.",
+                "geslachtsnaam": "Maassen"
+            },
+            "leeftijd": 19,
+            "burgerservicenummer": "999995121",
+            "geboorte": {
+                "datum": {
+                    "datum": "2002-02-22",
+                    "jaar": 2002,
+                    "maand": 2,
+                    "dag": 22
+                }
+            }
+        }
+    ],
+    "ouders": [
+        {
+            "ouderAanduiding": "ouder1",
+            "naam": {
+                "voornamen": "Irene Louise",
+                "voorletters": "I.L.",
+                "geslachtsnaam": "Holthuizen"
+            },
+            "burgerservicenummer": "999991887",
+            "geboorte": {
+                "plaats": {
+                    "code": "0363",
+                    "omschrijving": "Amsterdam"
+                },
+                "land": {
+                    "code": "6030",
+                    "omschrijving": "Nederland"
+                },
+                "datum": {
+                    "datum": "1954-05-05",
+                    "jaar": 1954,
+                    "maand": 5,
+                    "dag": 5
+                }
+            }
+        },
+        {
+            "ouderAanduiding": "ouder2",
+            "naam": {
+                "voornamen": "Jan Adrianus",
+                "voorletters": "J.A.",
+                "geslachtsnaam": "Kooyman"
+            },
+            "burgerservicenummer": "999991346",
+            "geboorte": {
+                "plaats": {
+                    "code": "0545",
+                    "omschrijving": "Leerdam"
+                },
+                "land": {
+                    "code": "6030",
+                    "omschrijving": "Nederland"
+                },
+                "datum": {
+                    "datum": "1950-03-04",
+                    "jaar": 1950,
+                    "maand": 3,
+                    "dag": 4
+                }
+            }
+        }
+    ],
+    "partners": [
+        {
+            "naam": {
+                "voornamen": "Martin Gerard",
+                "voorletters": "M.G.",
+                "geslachtsnaam": "Maassen"
+            },
+            "aangaanHuwelijkPartnerschap": {
+                "datum": {
+                    "datum": "2001-02-15",
+                    "jaar": 2001,
+                    "maand": 2,
+                    "dag": 15
+                }
+            },
+            "burgerservicenummer": "999990184",
+            "geboorte": {
+                "datum": {
+                    "datum": "1975-03-06",
+                    "jaar": 1975,
+                    "maand": 3,
+                    "dag": 6
+                }
+            }
+        }
+    ],
+    "burgerservicenummer": "999993847",
+    "geboorte": {
+        "plaats": {
+            "code": "0545",
+            "omschrijving": "Leerdam"
+        },
+        "land": {
+            "code": "6030",
+            "omschrijving": "Nederland"
+        },
+        "datum": {
+            "datum": "1982-04-10",
+            "jaar": 1982,
+            "maand": 4,
+            "dag": 10
+        }
+    }
+}
