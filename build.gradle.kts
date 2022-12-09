@@ -34,6 +34,8 @@ plugins {
 
     // Docker-compose plugin
     id("com.avast.gradle.docker-compose")
+
+    id("com.github.jk1.dependency-license-report") version "2.1"
 }
 
 allprojects {
