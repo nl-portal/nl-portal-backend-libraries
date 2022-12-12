@@ -25,6 +25,7 @@ dependencies {
     implementation(project(":product"))
     implementation(project(":zaak"))
     implementation(project(":form"))
+    implementation(project(":erfpachtdossier"))
 
     api("org.postgresql", "postgresql")
 }

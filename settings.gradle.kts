@@ -32,6 +32,7 @@ include(
     "common-ground-authentication-test",
     "core",
     "data",
+    "erfpachtdossier",
     "form",
     "form-flow",
     "graphql",

@@ -23,7 +23,7 @@ import com.ritense.portal.zaak.client.OpenZaakClient
 import com.ritense.portal.zaak.domain.documenten.Document
 import com.ritense.portal.zaak.service.ZaakService
 import com.ritense.portal.zaak.web.rest.impl.DocumentContentResource
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -43,7 +43,7 @@ class DocumentContentResourceTest {
     val document = mock<Document>()
 
     @Test
-    fun `should fill http servlet response`() = runBlockingTest {
+    fun `should fill http servlet response`() = runTest {
         val uuid = UUID.randomUUID()
         val testString = "This is a test string for the DataBuffer, it should end up in the result"
         val fluxDataBuffer = getFluxDataBufferFromString(testString)

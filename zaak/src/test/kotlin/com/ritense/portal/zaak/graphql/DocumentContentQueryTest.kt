@@ -17,7 +17,7 @@ package com.ritense.portal.zaak.graphql
 
 import com.ritense.portal.zaak.service.ZaakService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
@@ -30,7 +30,7 @@ internal class DocumentContentQueryTest {
     var documentContentQuery = DocumentContentQuery(zaakService)
 
     @Test
-    fun getDocumentContent() = runBlockingTest {
+    fun getDocumentContent() = runTest {
         val documentId = UUID.randomUUID()
         documentContentQuery.getDocumentContent(documentId)
         verify(zaakService).getDocumentContent(documentId)

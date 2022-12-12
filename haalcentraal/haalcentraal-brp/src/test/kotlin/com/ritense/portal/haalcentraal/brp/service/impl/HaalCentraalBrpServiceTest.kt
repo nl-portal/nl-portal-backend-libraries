@@ -19,11 +19,11 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.ritense.portal.commonground.authentication.JwtBuilder
+import com.ritense.portal.haalcentraal.brp.client.HaalCentraalBrpClient
 import com.ritense.portal.haalcentraal.brp.domain.persoon.Persoon
 import com.ritense.portal.haalcentraal.brp.domain.persoon.PersoonNaam
-import com.ritense.portal.haalcentraal.brp.client.HaalCentraalBrpClient
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
@@ -34,7 +34,7 @@ class HaalCentraalBrpServiceTest {
     val haalCentraalBrpService = HaalCentraalBrpService(haalCentraalBrpClient)
 
     @Test
-    fun `getPerson calls client and gets Persoon`() = runBlockingTest {
+    fun `getPerson calls client and gets Persoon`() = runTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
         whenever(haalCentraalBrpClient.getPersoon("123")).thenReturn(
             Persoon(
@@ -61,7 +61,7 @@ class HaalCentraalBrpServiceTest {
     }
 
     @Test
-    fun `getPerson with invalid bsn`() = runBlockingTest {
+    fun `getPerson with invalid bsn`() = runTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
         val persoon = haalCentraalBrpService.getPersoon(authentication)
 
@@ -69,7 +69,7 @@ class HaalCentraalBrpServiceTest {
     }
 
     @Test
-    fun `getGemachtigde calls client and gets PersoonNaam`() = runBlockingTest {
+    fun `getGemachtigde calls client and gets PersoonNaam`() = runTest {
         val authentication = JwtBuilder()
             .aanvragerBsn("123")
             .gemachtigdeBsn("456")
@@ -92,7 +92,7 @@ class HaalCentraalBrpServiceTest {
     }
 
     @Test
-    fun `getGemachtigde with invalid bsn`() = runBlockingTest {
+    fun `getGemachtigde with invalid bsn`() = runTest {
         val authentication = JwtBuilder()
             .aanvragerBsn("123")
             .gemachtigdeBsn("456")

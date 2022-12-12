@@ -18,7 +18,7 @@ package com.ritense.portal.zaak.domain
 import com.ritense.portal.zaak.domain.zaken.ZaakStatus
 import com.ritense.portal.zaak.service.ZaakService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
@@ -29,7 +29,7 @@ internal class ZaakStatusTest {
     var zaakService = mock(ZaakService::class.java)
 
     @Test
-    fun statustype() = runBlockingTest {
+    fun statustype() = runTest {
         val zaakStatus = ZaakStatus("2021-01-01", "statustype")
         zaakStatus.statustype(zaakService)
         verify(zaakService).getZaakStatusType("statustype")

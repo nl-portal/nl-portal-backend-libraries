@@ -18,7 +18,7 @@ package com.ritense.portal.zaak.domain
 import com.ritense.portal.zaak.domain.zaken.Zaak
 import com.ritense.portal.zaak.service.ZaakService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
@@ -33,14 +33,14 @@ internal class ZaakTest {
     var zaakService = mock(ZaakService::class.java)
 
     @Test
-    fun status() = runBlockingTest {
+    fun status() = runTest {
         val zaak = createTestZaak("test-status")
         zaak.status(zaakService)
         verify(zaakService).getZaakStatus("test-status")
     }
 
     @Test
-    fun `status null`() = runBlockingTest {
+    fun `status null`() = runTest {
         val zaak = createTestZaak(null)
         val status = zaak.status(zaakService)
         verifyNoInteractions(zaakService)
@@ -48,21 +48,21 @@ internal class ZaakTest {
     }
 
     @Test
-    fun statusGeschiedenis() = runBlockingTest {
+    fun statusGeschiedenis() = runTest {
         val zaak = createTestZaak()
         zaak.statusGeschiedenis(zaakService)
         verify(zaakService).getZaakStatusHistory(zaak.uuid)
     }
 
     @Test
-    fun zaaktype() = runBlockingTest {
+    fun zaaktype() = runTest {
         val zaak = createTestZaak()
         zaak.zaaktype(zaakService)
         verify(zaakService).getZaakType("test-zaaktype")
     }
 
     @Test
-    fun documenten() = runBlockingTest {
+    fun documenten() = runTest {
         val zaak = createTestZaak()
         zaak.documenten(zaakService)
         verify(zaakService).getDocumenten(zaak.url)

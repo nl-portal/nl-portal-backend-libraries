@@ -17,14 +17,14 @@ package com.ritense.portal.haalcentraal.brp.graphql
 
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 
 @ExperimentalCoroutinesApi
 internal class PersoonQueryTest : QueryTestBase() {
 
     @Test
-    fun `getPerson should call service`() = runBlockingTest {
+    fun `getPerson should call service`() = runTest {
         query.getPersoon(environment)
         verify(haalCentraalBrpService).getPersoon(authentication)
     }

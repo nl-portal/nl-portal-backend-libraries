@@ -27,7 +27,7 @@ import com.ritense.portal.haalcentraal.hr.service.HandelsregisterService
 import graphql.GraphQLContext
 import graphql.schema.DataFetchingEnvironment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -51,7 +51,7 @@ internal class GemachtigdeQueryTest {
     }
 
     @Test
-    fun `getGemachtigde should call service`() = runBlockingTest {
+    fun `getGemachtigde should call service`() = runTest {
         whenever(haalCentraalBrpService.getGemachtigde(authentication)).thenReturn(
             PersoonNaam(
                 "test", "test", "test", "test", "test"

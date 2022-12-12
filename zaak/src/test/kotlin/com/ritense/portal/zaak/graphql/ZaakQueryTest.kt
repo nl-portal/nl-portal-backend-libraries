@@ -21,7 +21,7 @@ import com.ritense.portal.zaak.service.ZaakService
 import graphql.GraphQLContext
 import graphql.schema.DataFetchingEnvironment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
@@ -46,19 +46,19 @@ internal class ZaakQueryTest {
     }
 
     @Test
-    fun getZaken() = runBlockingTest {
+    fun getZaken() = runTest {
         zaakQuery.getZaken(environment, 3)
         verify(zaakService).getZaken(3, authentication)
     }
 
     @Test
-    fun `getZaken no page`() = runBlockingTest {
+    fun `getZaken no page`() = runTest {
         zaakQuery.getZaken(environment)
         verify(zaakService).getZaken(1, authentication)
     }
 
     @Test
-    fun getZaak() = runBlockingTest {
+    fun getZaak() = runTest {
         val zaakId = UUID.randomUUID()
 
         zaakQuery.getZaak(zaakId, environment)

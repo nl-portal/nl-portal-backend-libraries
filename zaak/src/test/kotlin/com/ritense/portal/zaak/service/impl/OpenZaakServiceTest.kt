@@ -15,7 +15,7 @@
  */
 package com.ritense.portal.zaak.service.impl
 
-import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
+ import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.commonground.authentication.JwtBuilder
 import com.ritense.portal.zaak.client.OpenZaakClient
 import com.ritense.portal.zaak.client.OpenZaakClientConfig
@@ -26,15 +26,16 @@ import com.ritense.portal.zaak.domain.documenten.DocumentStatus
 import com.ritense.portal.zaak.domain.zaken.ZaakDocument
 import com.ritense.portal.zaak.domain.zaken.ZaakRol
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+ import kotlinx.coroutines.test.runBlockingTest
+ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 import org.springframework.security.oauth2.jwt.Jwt
 import java.util.UUID
 
@@ -46,7 +47,7 @@ internal class OpenZaakServiceTest {
     var zaakService = OpenZaakService(openZaakClient, openZaakClientConfig)
 
     @Test
-    fun `getZaken calls openzaak client with BSN for burger`() = runBlockingTest {
+    fun `getZaken calls openzaak client with BSN for burger`() = runTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
 
         zaakService.getZaken(5, authentication)
@@ -54,7 +55,7 @@ internal class OpenZaakServiceTest {
     }
 
     @Test
-    fun `getZaken gets rollen and zaken for rollen for bedrijf`() = runBlockingTest {
+    fun `getZaken gets rollen and zaken for rollen for bedrijf`() = runTest {
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
         val firstZaakId = UUID.randomUUID()
         val secondZaakId = UUID.randomUUID()
@@ -86,7 +87,7 @@ internal class OpenZaakServiceTest {
         val authentication = object : CommonGroundAuthentication(jwt, emptyList()) {}
 
         val illegalArgumentException = Assertions.assertThrows(IllegalArgumentException::class.java) {
-            runBlockingTest {
+            runTest {
                 zaakService.getZaken(1, authentication)
             }
         }
@@ -95,7 +96,7 @@ internal class OpenZaakServiceTest {
     }
 
     @Test
-    fun `getZaak gets zaak and checks rol for burger`() = runBlockingTest {
+    fun `getZaak gets zaak and checks rol for burger`() = runTest {
         val uuid = UUID.randomUUID()
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
 
@@ -115,7 +116,7 @@ internal class OpenZaakServiceTest {
     }
 
     @Test
-    fun `getZaak gets zaak and checks rol for bedrijf`() = runBlockingTest {
+    fun `getZaak gets zaak and checks rol for bedrijf`() = runTest {
         val uuid = UUID.randomUUID()
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
 
@@ -144,7 +145,7 @@ internal class OpenZaakServiceTest {
         )
 
         val illegalStateException = Assertions.assertThrows(IllegalStateException::class.java) {
-            runBlockingTest {
+            runTest {
                 zaakService.getZaak(uuid, authentication)
             }
         }
@@ -163,7 +164,7 @@ internal class OpenZaakServiceTest {
         val authentication = object : CommonGroundAuthentication(jwt, emptyList()) {}
 
         val illegalArgumentException = Assertions.assertThrows(IllegalArgumentException::class.java) {
-            runBlockingTest {
+            runTest {
                 zaakService.getZaak(uuid, authentication)
             }
         }
@@ -172,65 +173,65 @@ internal class OpenZaakServiceTest {
     }
 
     @Test
-    fun getZaakStatus() = runBlockingTest {
+    fun getZaakStatus() = runTest {
         val uuid = UUID.randomUUID()
         zaakService.getZaakStatus("http://some.domain.com/zaken/api/v1/statussen/$uuid")
         verify(openZaakClient).getStatus(uuid)
     }
 
     @Test
-    fun getZaakStatusHistory() = runBlockingTest {
+    fun getZaakStatusHistory() = runTest {
         val uuid = UUID.randomUUID()
         zaakService.getZaakStatusHistory(uuid)
         verify(openZaakClient).getStatusHistory(uuid)
     }
 
     @Test
-    fun getZaakStatusType() = runBlockingTest {
+    fun getZaakStatusType() = runTest {
         val uuid = UUID.randomUUID()
         zaakService.getZaakStatusType("http://some.domain.com/catalogi/api/v1/statustypen/$uuid")
         verify(openZaakClient).getStatusType(uuid)
     }
 
     @Test
-    fun getZaakType() = runBlockingTest {
+    fun getZaakType() = runTest {
         val uuid = UUID.randomUUID()
         zaakService.getZaakType("http://some.domain.com/catalogi/api/v1/zaaktypen/$uuid")
         verify(openZaakClient).getZaakType(uuid)
     }
 
     @Test
-    fun `getDocumenten doesnt find in_bewerking document`() = runBlockingTest {
+    fun `getDocumenten doesnt find in_bewerking document`() = runTest {
         val documenten = getDocumentWithStatus(DocumentStatus.IN_BEWERKING)
         assertEquals(0, documenten.size)
     }
 
     @Test
-    fun `getDocumenten doesnt find ter_vaststelling document`() = runBlockingTest {
+    fun `getDocumenten doesnt find ter_vaststelling document`() = runTest {
         val documenten = getDocumentWithStatus(DocumentStatus.TER_VASTSTELLING)
         assertEquals(0, documenten.size)
     }
 
     @Test
-    fun `getDocumenten doesnt find document without status`() = runBlockingTest {
+    fun `getDocumenten doesnt find document without status`() = runTest {
         val documenten = getDocumentWithStatus(null)
         assertEquals(0, documenten.size)
     }
 
     @Test
-    fun `getDocumenten finds definitief document`() = runBlockingTest {
+    fun `getDocumenten finds definitief document`() = runTest {
         val documenten = getDocumentWithStatus(DocumentStatus.DEFINITIEF)
         assertDocumentsReturned(documenten)
     }
 
     @Test
-    fun `getDocumenten finds gearchiveerd document`() = runBlockingTest {
+    fun `getDocumenten finds gearchiveerd document`() = runTest {
         val documenten = getDocumentWithStatus(DocumentStatus.GEARCHIVEERD)
         assertDocumentsReturned(documenten)
     }
 
     @Test
-    fun `getDocument finds document`() = runBlockingTest {
+    fun `getDocument finds document`() = runTest {
         val documentId = UUID.randomUUID()
         `when`(openZaakClient.getDocument(documentId)).thenReturn(
             getTestDocument(null)
@@ -292,7 +293,7 @@ internal class OpenZaakServiceTest {
     }
 
     @Test
-    fun getZaakStatusTypes() = runBlockingTest {
+    fun getZaakStatusTypes() = runTest {
         val uuid = UUID.randomUUID()
         val zaakUrl = "http://some.domain.com/catalogi/api/v1/zaaktypen/$uuid"
 
