@@ -106,11 +106,6 @@ subprojects {
     tasks.withType<Test> {
         useJUnitPlatform()
     }
-
-    if (project.properties.containsKey("isLib")) {
-        println("Apply publishing script in project ${project.name}...")
-        apply(from = "${project.rootProject.projectDir}/gradle/publishing.gradle.kts")
-    }
 }
 
 println("Apply deployment script")
