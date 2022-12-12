@@ -99,6 +99,7 @@
         { "bundleName" : "MIT", "licenseUrlPattern" : ".*(www\\.)?opensource\\.org/licenses/MIT(\\.php)?" },
         { "bundleName" : "MPL-1.1", "licenseNamePattern" : "MPL 1\\.1" },
         { "bundleName" : "MPL-2.0", "licenseNamePattern" : "MPL 2\\.0"},
+        { "bundleName" : "MPL-2.0", "licenseNamePattern" : "Mozilla Public License, Version 2\\.0"},
         { "bundleName" : "MPL-2.0", "licenseUrlPattern" : ".*(www\\.).opensource\\.org/licenses/MPL-2\\.0" },
         { "bundleName" : "Public-Domain", "licenseNamePattern" : "((public)\\s(domain)).*", "transformUrl" : false },
         { "bundleName" : "Public-Domain", "licenseFileContentPattern" : ".*(Creative)\\s(Commons).*", "transformUrl" : false },
