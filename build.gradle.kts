@@ -39,7 +39,6 @@ plugins {
 }
 
 allprojects {
-    group = "com.ritense.portal"
 
     repositories {
         mavenCentral()

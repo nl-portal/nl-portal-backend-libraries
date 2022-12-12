@@ -34,6 +34,7 @@ include(
     "data",
     "form",
     "form-flow",
+    "gradle:license-report",
     "graphql",
     "gzac",
     "gzac:objects-api",
