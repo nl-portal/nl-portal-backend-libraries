@@ -87,12 +87,16 @@ internal class ErfpachtdossierQueryIT(
         val query = """
             query {
                 getDossiers {
-                    dossierNummer
+                    dossiers {
+                        dossierNummer,
+                        kadaster,
+                        eersteUitgifte
+                    }
                 }
             }
         """.trimIndent()
 
-        val basePath = "$.data"
+        val basePath = "$.data.getDossiers.dossiers"
 
         testClient.post()
             .uri("/graphql")
@@ -101,7 +105,17 @@ internal class ErfpachtdossierQueryIT(
             .bodyValue(query)
             .exchange()
             .expectBody()
+            .consumeWith(System.out::println)
             .jsonPath(basePath).exists()
+            .jsonPath("$basePath").isArray
+            .jsonPath("$basePath[0].dossierNummer").isEqualTo("E1001/01")
+            .jsonPath("$basePath[1].dossierNummer").isEqualTo("E1000/01")
+            .jsonPath("$basePath[0].kadaster").isArray
+            .jsonPath("$basePath[0].kadaster[0]").isEqualTo("ASD02/SB/990/G/4")
+            .jsonPath("$basePath[0].kadaster[1]").isEqualTo("ASD02/SB/999/G/5")
+            .jsonPath("$basePath[1].kadaster").doesNotExist()
+            .jsonPath("$basePath[0].eersteUitgifte").isEqualTo("2020-12-12")
+            .jsonPath("$basePath[1].eersteUitgifte").isEqualTo("2019-12-12")
     }
 
     fun setupMockDossierServer() {

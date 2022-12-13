@@ -22,25 +22,12 @@
             "adres_postcode": "1011RN",
             "mut_begindatum": "2021-01-01",
             "mut_einddatum": "2023-01-01",
-            "Adres_gemeente": "Amsterdam",
-            "Bestemming": [{
-                "bestemming_categorie": "Wonen",
-                "bestemming_subcategorie": "Koopwoning",
-                "bestemming_omschrijving": "Wonen",
-                "bestemming_hoeveelheid": "160",
-                "bestemming_eenheid": "GO",
-                "bestemming_woningtype": "EGWO",
-                "bestemming_juridisch": true
-            }]
+            "Adres_gemeente": "Amsterdam"
         },
         {
             "dossier_nummer": "E1000/01",
-            "kadaster": [
-                "ASD02/SB/990/G/4",
-                "ASD02/SB/999/G/5"
-            ],
             "voorkeuradres": "TBD",
-            "eerste_uitgifte": "2020-12-12",
+            "eerste_uitgifte": "2019-12-12",
             "beeindiging_uitgifte": "2021-12-12",
             "einde_reden": "TBD",
             "tijdvak_begin": "2022-01-01",
@@ -55,16 +42,7 @@
             "adres_postcode": "1011RN",
             "mut_begindatum": "2021-01-01",
             "mut_einddatum": "2023-01-01",
-            "Adres_gemeente": "Amsterdam",
-            "Bestemming": [{
-                "bestemming_categorie": "Wonen",
-                "bestemming_subcategorie": "Koopwoning",
-                "bestemming_omschrijving": "Wonen",
-                "bestemming_hoeveelheid": "160",
-                "bestemming_eenheid": "GO",
-                "bestemming_woningtype": "EGWO",
-                "bestemming_juridisch": true
-            }]
+            "Adres_gemeente": "Amsterdam"
         }
     ]
 }

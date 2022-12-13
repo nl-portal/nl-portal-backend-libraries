@@ -15,6 +15,21 @@
  */
 package com.ritense.portal.erfpachtdossier.domain
 
-data class DossiersDTO(
-    var erfpachtrechten: List<Erfpachtdossier>
+import com.fasterxml.jackson.annotation.JsonProperty
+
+data class ErfpachtdossierBestemming(
+    @JsonProperty("bestemming_categorie")
+    val categorie: String,
+    @JsonProperty("bestemming_subcategorie")
+    val subCategorie: String,
+    @JsonProperty("bestemming_omschrijving")
+    val omschrijving: String,
+    @JsonProperty("bestemming_hoeveelheid")
+    val hoeveelheid: Int,
+    @JsonProperty("bestemming_eenheid")
+    val eenheid: String,
+    @JsonProperty("bestemming_woningtype")
+    val woningType: String,
+    @JsonProperty("bestemming_juridisch")
+    val juridisch: Boolean
 )

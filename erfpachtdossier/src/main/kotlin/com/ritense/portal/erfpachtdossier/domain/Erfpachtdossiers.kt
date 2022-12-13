@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.erfpachtdossier.client
+package com.ritense.portal.erfpachtdossier.domain
 
-import org.springframework.boot.context.properties.ConfigurationProperties
-
-@ConfigurationProperties(prefix = "portal.config.erfpachtdossier")
-class ErfpachtDossierClientConfig(
-    var url: String = ""
+data class Erfpachtdossiers(
+    val dossiers: List<Erfpachtdossier>
 )

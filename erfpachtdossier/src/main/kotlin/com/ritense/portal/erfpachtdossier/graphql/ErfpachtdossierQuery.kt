@@ -18,6 +18,7 @@ package com.ritense.portal.erfpachtdossier.graphql
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Query
 import com.ritense.portal.erfpachtdossier.domain.Erfpachtdossier
+import com.ritense.portal.erfpachtdossier.domain.Erfpachtdossiers
 import com.ritense.portal.erfpachtdossier.service.DossierService
 import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import graphql.schema.DataFetchingEnvironment
@@ -25,7 +26,7 @@ import graphql.schema.DataFetchingEnvironment
 class ErfpachtdossierQuery(val dossierService: DossierService): Query {
 
     @GraphQLDescription("Gets all erfpachtdossiers for a user")
-    suspend fun getDossiers(dfe: DataFetchingEnvironment): List<Erfpachtdossier> {
+    suspend fun getDossiers(dfe: DataFetchingEnvironment): Erfpachtdossiers {
         return dossierService.getDossiers(dfe.graphQlContext.get(AUTHENTICATION_KEY))
     }
 

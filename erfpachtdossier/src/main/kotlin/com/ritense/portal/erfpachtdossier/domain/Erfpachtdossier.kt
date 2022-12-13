@@ -21,11 +21,11 @@ import java.time.LocalDate
 data class Erfpachtdossier(
     @JsonProperty("dossier_nummer")
     val dossierNummer: String,
-    val kadaster: List<String>,
+    val kadaster: List<String>?,
     @JsonProperty("eerste_uitgifte")
     val eersteUitgifte: LocalDate,
     @JsonProperty("beeindiging_uitgifte")
-    val beeindigingUitgifte: LocalDate,
+    val beeindigingUitgifte: String,
     @JsonProperty("einde_reden")
     val eindeReden: String,
     @JsonProperty("tijdvak_begin")
@@ -36,16 +36,22 @@ data class Erfpachtdossier(
     val abJuridisch: String,
     @JsonProperty("te_betalen_canon")
     val teBetalenCanon: Double,
-    val adres_straatnaam: String,
-    val adres_nummer: Int,
-    val adres_letter: String,
-    val adres_toevoeging: String,
-    val adres_postcode: String,
+    @JsonProperty("adres_straatnaam")
+    val adresStraatnaam: String,
+    @JsonProperty("adres_nummer")
+    val adresNummer: Int,
+    @JsonProperty("adres_letter")
+    val adresLetter: String,
+    @JsonProperty("adres_toevoeging")
+    val adresToevoeging: String,
+    @JsonProperty("adres_postcode")
+    val adresPostcode: String,
     @JsonProperty("Adres_gemeente")
-    val adres_gemeente: String,
-    val bestemming: List<ErfpachtdossierBestemming>,
+    val adresGemeente: String,
+//    @JsonProperty("Bestemming")
+//    val bestemming: ErfpachtdossierBestemming?,
     @JsonProperty("mut_begindatum")
-    val mutBeginDatum: LocalDate,
+    val mutBeginDatum: String,
     @JsonProperty("mut_einddatum")
-    val mutEindDatum: LocalDate
+    val mutEindDatum: String
 )

@@ -16,6 +16,7 @@
 package com.ritense.portal.erfpachtdossier.client
 
 import com.ritense.portal.erfpachtdossier.domain.Erfpachtdossier
+import com.ritense.portal.erfpachtdossier.domain.Erfpachtdossiers
 import io.netty.handler.logging.LogLevel
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient
@@ -25,42 +26,43 @@ import reactor.netty.transport.logging.AdvancedByteBufFormat
 
 class ErfpachtDossierClient(
     val erfpachtDossierClientConfig: ErfpachtDossierClientConfig
-) {
-    suspend fun getDossiers(): List<Erfpachtdossier> {
-        return webClient()
-            .get()
-            .uri {
-                val uriBuilder = it.path("/api/erfpachtdossiers")
-                uriBuilder.build()
+        ) {
+            suspend fun getDossiers(): Erfpachtdossiers {
+                return webClient()
+                    .get()
+                    .uri {
+                        val uriBuilder = it.path("/api/erfpachtdossier")
+                        uriBuilder.build()
+                    }
+                    .retrieve()
+                    .awaitBody()
             }
-            .retrieve()
-            .awaitBody()
-    }
-    suspend fun getDossier(dossierId: String): Erfpachtdossier {
-        return webClient()
-            .get()
-            .uri {
-                val uriBuilder = it.path("/api/erfpachtdossiers/$dossierId")
-                uriBuilder.build()
+            suspend fun getDossier(dossierId: String): Erfpachtdossier {
+                return webClient()
+                    .get()
+                    .uri {
+                        val uriBuilder = it.path("/api/erfpachtdossier/$dossierId")
+                        uriBuilder.build()
+                    }
+                    .retrieve()
+                    .awaitBody()
             }
-            .retrieve()
-            .awaitBody()
-    }
 
-    private fun webClient(): WebClient {
-        return WebClient.builder()
-            .clientConnector(
-                ReactorClientHttpConnector(
-                    HttpClient.create().wiretap(
-                        "reactor.netty.http.client.HttpClient",
-                        LogLevel.DEBUG,
-                        AdvancedByteBufFormat.TEXTUAL
+            private fun webClient(): WebClient {
+                return WebClient.builder()
+                    .clientConnector(
+                        ReactorClientHttpConnector(
+                            HttpClient.create().wiretap(
+                                "reactor.netty.http.client.HttpClient",
+                                LogLevel.DEBUG,
+                                AdvancedByteBufFormat.TEXTUAL
+                            )
+                        )
                     )
-                )
-            )
             .baseUrl(erfpachtDossierClientConfig.url)
-            .defaultHeader("X-Soort-Identificatie")
-            .defaultHeader("X-Nummer-Identificatie")
+            // TODO This should not be hardcoded
+            .defaultHeader("X-Soort-Identiteit", "RelatieID")
+            .defaultHeader("X-Nummer-Identiteit", "1234567")
             .build()
     }
 }

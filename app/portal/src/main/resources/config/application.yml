@@ -87,11 +87,6 @@ graphql:
     packages:
         - "com.ritense.portal"
 
-portal:
-    config:
-        erfpachtdossier:
-            url: "http://localhost:8091"
-
 logging:
     level:
         org:

@@ -17,9 +17,10 @@ package com.ritense.portal.erfpachtdossier.service
 
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.erfpachtdossier.domain.Erfpachtdossier
+import com.ritense.portal.erfpachtdossier.domain.Erfpachtdossiers
 
 interface DossierService {
-    suspend fun getDossiers(authentication: CommonGroundAuthentication): List<Erfpachtdossier>
+    suspend fun getDossiers(authentication: CommonGroundAuthentication): Erfpachtdossiers
 
     suspend fun getDossier(authentication: CommonGroundAuthentication, dossierId: String): Erfpachtdossier
 }

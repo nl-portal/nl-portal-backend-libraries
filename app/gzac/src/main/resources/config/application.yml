@@ -38,6 +38,8 @@ spring:
                     provider_disables_autocommit: true
 
 graphql:
+    introspection:
+        enabled: true
     packages:
         - "com.ritense.portal"
 logging:

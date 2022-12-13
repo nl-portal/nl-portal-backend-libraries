@@ -20,12 +20,13 @@ import com.ritense.portal.commonground.authentication.BurgerAuthentication
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.erfpachtdossier.client.ErfpachtDossierClient
 import com.ritense.portal.erfpachtdossier.domain.Erfpachtdossier
+import com.ritense.portal.erfpachtdossier.domain.Erfpachtdossiers
 import com.ritense.portal.erfpachtdossier.service.DossierService
 
 class ErfpachtDossierService(
     val erfpachtDossierClient: ErfpachtDossierClient
 ) : DossierService {
-    override suspend fun getDossiers(authentication: CommonGroundAuthentication): List<Erfpachtdossier> {
+    override suspend fun getDossiers(authentication: CommonGroundAuthentication): Erfpachtdossiers {
         return if (authentication is BurgerAuthentication) {
             erfpachtDossierClient.getDossiers()
         } else if (authentication is BedrijfAuthentication) {

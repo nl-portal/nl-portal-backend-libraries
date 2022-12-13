@@ -8,6 +8,11 @@ spring:
         port: ${DATABASE_PORT:54330}
         name: gzac-portal-db
 
+portal:
+    config:
+        erfpachtdossier:
+            url: "http://localhost:8192"
+
 logging:
     level:
         reactor.netty.http.client.HttpClient: DEBUG
