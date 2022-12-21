@@ -33,6 +33,13 @@ tasks.getByName<Jar>("jar") {
     enabled = false
 }
 
+tasks.withType<PublishToMavenRepository>().configureEach {
+        enabled = false
+}
+tasks.withType<PublishToMavenLocal>().configureEach {
+    enabled = false
+}
+
 tasks.register("bootRunDev") {
     group = "application"
     description = "Runs the Spring Boot application with the dev profile"

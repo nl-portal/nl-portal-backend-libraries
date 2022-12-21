@@ -31,3 +31,10 @@ task pushImage(type: Exec, dependsOn: [runDockerBuild]) {
 
     commandLine 'docker', 'push', "${dockerHostname}/${dockerRepositoryName}:${version}"
 }
+
+task writeProjectVersionWithBuildNumberToFile() {
+    def currentVersion = project.version.split("-").getAt(0)
+    doLast {
+        new File("$projectDir/projectversion.txt").text = currentVersion
+    }
+}

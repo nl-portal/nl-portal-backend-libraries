@@ -34,10 +34,11 @@ plugins {
 
     // Docker-compose plugin
     id("com.avast.gradle.docker-compose")
+
+    id("com.github.jk1.dependency-license-report") version "2.1"
 }
 
 allprojects {
-    group = "com.ritense.portal"
 
     repositories {
         mavenCentral()
@@ -104,11 +105,6 @@ subprojects {
 
     tasks.withType<Test> {
         useJUnitPlatform()
-    }
-
-    if (project.properties.containsKey("isLib")) {
-        println("Apply publishing script in project ${project.name}...")
-        apply(from = "${project.rootProject.projectDir}/gradle/publishing.gradle.kts")
     }
 }
 
