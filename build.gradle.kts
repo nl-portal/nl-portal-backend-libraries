@@ -3,6 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.net.URI
 
 plugins {
+    java
+
     // IntelliJ
     idea
 
@@ -36,6 +38,8 @@ plugins {
     id("com.avast.gradle.docker-compose")
 
     id("com.github.jk1.dependency-license-report") version "2.1"
+
+    id("org.jetbrains.dokka")
 }
 
 allprojects {
@@ -60,6 +64,15 @@ subprojects {
 
     println("Enabling com.diffplug.spotless plugin in project ${project.name}...")
     apply(plugin = "com.diffplug.spotless")
+
+    apply(plugin = "org.jetbrains.dokka")
+
+    apply(plugin = "java")
+
+    java {
+        withSourcesJar()
+        withJavadocJar()
+    }
 
     if (project.properties.containsKey("isLib") || project.properties.containsKey("isApp")) {
         configure<com.diffplug.gradle.spotless.SpotlessExtension> {
