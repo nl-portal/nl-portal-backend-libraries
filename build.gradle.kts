@@ -43,7 +43,6 @@ plugins {
 }
 
 allprojects {
-
     repositories {
         mavenCentral()
         maven(URI("https://repository.jboss.org/nexus/content/repositories/releases"))
@@ -69,11 +68,6 @@ subprojects {
 
     apply(plugin = "java")
 
-    java {
-        withSourcesJar()
-        withJavadocJar()
-    }
-
     if (project.properties.containsKey("isLib") || project.properties.containsKey("isApp")) {
         configure<com.diffplug.gradle.spotless.SpotlessExtension> {
             kotlin {
@@ -86,8 +80,19 @@ subprojects {
         }
     }
 
-    println("Enabling Spring Boot plugin in project ${project.name}...")
-    apply(plugin = "org.springframework.boot")
+    java {
+        withSourcesJar()
+        withJavadocJar()
+    }
+
+    if (!(project.name.contains("app") || project.path.contains("gradle"))) {
+        println("Enabling Spring Boot plugin in project ${project.name}...")
+        apply(plugin = "org.springframework.boot")
+
+        val javadocJar = tasks.named<Jar>("javadocJar") {
+            from(tasks.named("dokkaJavadoc"))
+        }
+    }
 
     println("Enabling Kotlin Spring plugin in project ${project.name}...")
     apply(plugin = "org.jetbrains.kotlin.plugin.spring")
@@ -119,6 +124,10 @@ subprojects {
     tasks.withType<Test> {
         useJUnitPlatform()
     }
+}
+
+tasks.bootJar {
+    enabled = false
 }
 
 println("Apply deployment script")
