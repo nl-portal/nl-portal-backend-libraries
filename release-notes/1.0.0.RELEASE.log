@@ -1,0 +1,21 @@
+ed9fa58 - Merge branch 'rc/1.0.0.20.RC'
+49c1cb7 - Updated version to 1.0.0.RELEASE
+35b23e3 - Updated version to 1.0.0.20.RC-SNAPSHOT
+575e565 - Merge pull request #6 from nl-portal/development
+89d317a - Merge pull request #5 from nl-portal/feature/gitignore
+5948b2a - removed ignoring of logfiles as the changelog is a logfile
+51efd96 - Merge pull request #4 from nl-portal/feature/dokka
+945332f - fixed configuration for dokka javadoc + sources .jar artefact for maven central publication
+a6d24b2 - set up java config withSourcesJar + withJavadocJar
+1ea2d7e - Merge pull request #3 from nl-portal/task-42866
+613de27 - remove comment from .json file
+c301a6c - add licenses to license report
+64ff8e5 - remove publishing.gradle from project
+e73ebdb - add license report plugin
+f5fcf5f - add license report plugin
+7583046 - Add access rights to gradlew executable
+801c7d6 - Merge pull request #1 from nl-portal/feature/initial-setup
+5d925e8 - Fixed problems that arose from updating the dependencies
+880489d - Updated readme with more information about NL-portal
+f496e56 - Removed the use of deprecated classes
+6c7c712 - Initial commit
