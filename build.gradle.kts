@@ -126,6 +126,13 @@ subprojects {
     }
 }
 
+tasks.withType<PublishToMavenRepository> {
+    enabled = false
+}
+tasks.withType<PublishToMavenLocal> {
+    enabled = false
+}
+
 tasks.bootJar {
     enabled = false
 }
