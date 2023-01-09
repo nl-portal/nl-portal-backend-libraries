@@ -18,4 +18,5 @@ f5fcf5f - add license report plugin
 5d925e8 - Fixed problems that arose from updating the dependencies
 880489d - Updated readme with more information about NL-portal
 f496e56 - Removed the use of deprecated classes
-6c7c712 - Initial commit
+6c7c712 - Initial commit9beff6a - Updated version to 1.0.0.RELEASE
+0db92ea - Updated version to 1.0.0.32.RC-SNAPSHOT
