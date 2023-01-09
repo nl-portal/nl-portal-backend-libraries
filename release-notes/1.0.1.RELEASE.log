@@ -1,0 +1,11 @@
+a45e53b - Updated version to 1.0.1.RELEASE
+b3699f9 - Updated version to 1.0.1.36.RC-SNAPSHOT
+fb7298e - Merge pull request #10 from nl-portal/main
+d578390 - Merge pull request #9 from nl-portal/development
+ad8968a - Merge pull request #8 from nl-portal/task-42866
+ccc63f5 - Merge branch 'development' into task-42866
+d4482ea - disable root project to be published
+14b84c0 - removed conflicting projectVersion line, we're moving to version variable name instead
+0a97f2a - Added release notes file
+9beff6a - Updated version to 1.0.0.RELEASE
+0db92ea - Updated version to 1.0.0.32.RC-SNAPSHOT
