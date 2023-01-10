@@ -1,0 +1,3 @@
+d4e8c73 - Updated version to 1.0.2.RELEASE
+d9643eb - Updated version to 1.0.2.39.RC-SNAPSHOT
+a1c6cec - revert disabling of publishing, solved it by applying the publishing conditionally
