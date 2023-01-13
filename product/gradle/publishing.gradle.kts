@@ -19,8 +19,8 @@ pluginManager.withPlugin("maven-publish") {
         publications {
             withType(MavenPublication::class.java) {
                 pom {
-                    getName().set("Case module")
-                    getDescription().set("The Case module provides functionality related to a Portal case. This is often a reference to a case in an case management service.")
+                    getName().set("Product module")
+                    getDescription().set("The Product module provides functionality to integrate Open Forms in the Portal.")
                     developers {
                         developer {
                             getId().set("team-nl-portal")
