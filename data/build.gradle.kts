@@ -29,3 +29,5 @@ dependencies {
 
     api("org.springframework.boot", "spring-boot-starter-data-jpa")
 }
+
+apply(from = "gradle/publishing.gradle.kts")

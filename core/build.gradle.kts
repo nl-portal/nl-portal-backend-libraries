@@ -52,3 +52,5 @@ dependencies {
     testImplementation(TestDependencies.kotlinCoroutines)
     testImplementation(TestDependencies.mockitoKotlin)
 }
+
+apply(from = "gradle/publishing.gradle.kts")

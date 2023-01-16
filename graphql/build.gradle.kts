@@ -45,3 +45,5 @@ dependencies {
     testImplementation(TestDependencies.kotlinCoroutines)
     testImplementation(TestDependencies.postgresql)
 }
+
+apply(from = "gradle/publishing.gradle.kts")
