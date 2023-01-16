@@ -1,0 +1,6 @@
+8ab47da - Updated version to 1.0.5.RELEASE
+84c8625 - Updated version to 1.0.5.41.RC-SNAPSHOT
+9393539 - Merge pull request #11 from nl-portal/feature/pom-metadata
+178b459 - Added publishing gradle files with metadata
+a9995b4 - Create SECURITY.md
+e786f7e - added example publishing.gradle.kts
