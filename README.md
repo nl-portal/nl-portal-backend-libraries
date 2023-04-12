@@ -31,5 +31,5 @@ For more information check the following links.
 - Documentation: https://docs.nl-portal.nl
 
 ## Getting started
-* Clone `https://github.com/valtimo-platform/valtimo-docker-profiles` and run the compose file for your desired edition
+* Clone `https://github.com/nl-portal/nl-portal-docker-compose` and run the 'supporting-services' compose file.
 * Then run the Gradle `bootRun` task for your desired edition (for the GZAC edition this is `app/gzac/application/bootRun`)
