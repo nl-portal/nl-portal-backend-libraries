@@ -2,6 +2,8 @@ server:
     port: 8081
 
 spring:
+    profiles:
+        default: dev
     application:
         name: nl-portal-backend-libraries
     security:
