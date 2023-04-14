@@ -31,5 +31,6 @@ For more information check the following links.
 - Documentation: https://docs.nl-portal.nl
 
 ## Getting started
-* Clone `https://github.com/nl-portal/nl-portal-docker-compose` and run the 'supporting-services' compose file.
+* Clone `https://github.com/nl-portal/nl-portal-docker-compose` and run the following command: `docker compose up -d`.
+    * When supporting ZGW services are needed, like Open Zaak, Objects API and Objecttypes API, the following command should be used: `docker compose --profile zgw up -d`
 * Then run the Gradle `bootRun` task for your desired edition (for the GZAC edition this is `app/gzac/application/bootRun`)
