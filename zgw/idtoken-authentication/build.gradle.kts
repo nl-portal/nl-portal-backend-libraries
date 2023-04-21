@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 plugins {
     kotlin("jvm")
 }
@@ -20,30 +21,21 @@ plugins {
 val isLib = true
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    api(project(":graphql"))
-    api(project(":zgw:common-ground-authentication"))
 
-    // jjwt
     implementation(Dependencies.jsonWebTokensApi)
     implementation(Dependencies.jsonWebTokensImpl)
     implementation(Dependencies.jsonWebTokensJackson)
+    implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.springframework.boot:spring-boot-starter-web")
 
-    testImplementation(project(":zgw:common-ground-authentication-test"))
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
-    testImplementation("org.springframework.security", "spring-security-test")
-    testImplementation(TestDependencies.kotlinCoroutines)
-    testImplementation(TestDependencies.mockitoKotlin)
-    testImplementation(TestDependencies.okHttpMockWebserver)
-    testImplementation(TestDependencies.okHttp)
-    testImplementation(TestDependencies.okHttpTls)
-    testImplementation(TestDependencies.hamcrest)
-    testImplementation(TestDependencies.postgresql)
+    testImplementation("org.jetbrains.kotlin:kotlin-test")
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 val jar: Jar by tasks
 val bootJar: org.springframework.boot.gradle.tasks.bundling.BootJar by tasks
-bootJar.enabled = false
+bootJar.enabled = true
 jar.enabled = true
 
-apply(from = "gradle/publishing.gradle.kts")
+apply(from = "gradle/publishing.gradle")

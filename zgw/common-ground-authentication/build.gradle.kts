@@ -17,28 +17,13 @@ plugins {
     kotlin("jvm")
 }
 
-val isLib = true
-
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    api(project(":graphql"))
-    api(project(":zgw:common-ground-authentication"))
+    api(project(":core"))
 
-    // jjwt
-    implementation(Dependencies.jsonWebTokensApi)
-    implementation(Dependencies.jsonWebTokensImpl)
-    implementation(Dependencies.jsonWebTokensJackson)
-
-    testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.springframework.security", "spring-security-test")
-    testImplementation(TestDependencies.kotlinCoroutines)
-    testImplementation(TestDependencies.mockitoKotlin)
-    testImplementation(TestDependencies.okHttpMockWebserver)
-    testImplementation(TestDependencies.okHttp)
-    testImplementation(TestDependencies.okHttpTls)
-    testImplementation(TestDependencies.hamcrest)
-    testImplementation(TestDependencies.postgresql)
+    testImplementation(project(":zgw:common-ground-authentication-test"))
 }
 
 val jar: Jar by tasks

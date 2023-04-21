@@ -23,7 +23,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     api(project(":core"))
     api(project(":graphql"))
-    api(project(":common-ground-authentication"))
+    api(project(":zgw:common-ground-authentication"))
 
     implementation("org.springframework.boot", "spring-boot-starter-webflux")
     implementation("org.springframework.boot", "spring-boot-starter-security")
@@ -33,7 +33,7 @@ dependencies {
     implementation(Dependencies.jsonWebTokensImpl)
     implementation(Dependencies.jsonWebTokensJackson)
 
-    testImplementation(project(":common-ground-authentication-test"))
+    testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.springframework.security", "spring-security-test")
     testImplementation(TestDependencies.kotlinCoroutines)

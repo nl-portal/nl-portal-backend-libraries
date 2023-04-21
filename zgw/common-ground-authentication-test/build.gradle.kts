@@ -19,11 +19,11 @@ plugins {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    api(project(":core"))
+    api(project(":zgw:common-ground-authentication"))
+
+    implementation("org.springframework.security", "spring-security-test")
 
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
-    testImplementation("org.springframework.security", "spring-security-test")
-    testImplementation(project(":common-ground-authentication-test"))
 }
 
 val jar: Jar by tasks

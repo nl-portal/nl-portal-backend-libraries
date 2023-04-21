@@ -30,8 +30,6 @@ include(
     "app:portal",
     "app:gzac",
     "case",
-    "common-ground-authentication",
-    "common-ground-authentication-test",
     "core",
     "data",
     "form",
@@ -47,5 +45,8 @@ include(
     "messaging",
     "product",
     "task",
-    "zaak"
+    "zaak",
+    "zgw:idtoken-authentication",
+    "zgw:common-ground-authentication",
+    "zgw:common-ground-authentication-test"
 )
