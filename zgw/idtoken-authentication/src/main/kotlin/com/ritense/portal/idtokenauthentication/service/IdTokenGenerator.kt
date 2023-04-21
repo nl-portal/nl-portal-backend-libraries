@@ -15,7 +15,6 @@
  */
 package com.ritense.portal.idtokenauthentication.service
 
-
 import io.jsonwebtoken.JwtBuilder
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm

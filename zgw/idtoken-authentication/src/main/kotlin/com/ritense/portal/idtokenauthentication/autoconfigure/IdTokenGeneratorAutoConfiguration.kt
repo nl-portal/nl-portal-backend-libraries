@@ -11,5 +11,4 @@ class IdTokenGeneratorAutoConfiguration {
     fun idTokenGenerator(): IdTokenGenerator {
         return IdTokenGenerator()
     }
-
 }
