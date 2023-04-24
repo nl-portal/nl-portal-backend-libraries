@@ -25,7 +25,7 @@ dependencies {
 
     api(ApiDependencies.kotlinLogging)
 
-    testImplementation(project(":common-ground-authentication-test"))
+    testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.springframework.security", "spring-security-test")
     testImplementation(TestDependencies.kotlinCoroutines)

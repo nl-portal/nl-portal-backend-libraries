@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2022 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 plugins {
     kotlin("jvm")
 }
 
+val isLib = true
+
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    api(project(":common-ground-authentication"))
 
-    implementation("org.springframework.security", "spring-security-test")
+    implementation(ApiDependencies.kotlinLogging)
+    implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
 
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
+    testImplementation("org.jetbrains.kotlin:kotlin-test")
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 val jar: Jar by tasks
@@ -31,4 +36,4 @@ val bootJar: org.springframework.boot.gradle.tasks.bundling.BootJar by tasks
 bootJar.enabled = false
 jar.enabled = true
 
-apply(from = "gradle/publishing.gradle.kts")
+apply(from = "gradle/publishing.gradle")
