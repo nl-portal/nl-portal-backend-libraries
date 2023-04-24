@@ -8,8 +8,6 @@
 name: Build validation with Gradle
 
 on:
-    push:
-        branches: [ "development" ]
     pull_request:
         branches: [ "development" ]
 
