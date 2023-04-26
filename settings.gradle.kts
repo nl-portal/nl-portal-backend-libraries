@@ -46,7 +46,8 @@ include(
     "product",
     "task",
     "zaak",
-    "zgw:idtoken-authentication",
     "zgw:common-ground-authentication",
-    "zgw:common-ground-authentication-test"
+    "zgw:common-ground-authentication-test",
+    "zgw:idtoken-authentication",
+    "zgw:taak"
 )
