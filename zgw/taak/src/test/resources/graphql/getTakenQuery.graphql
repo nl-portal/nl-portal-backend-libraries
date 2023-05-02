@@ -1,0 +1,17 @@
+query {
+    getTaken(pageSize:1) {
+        number
+        size
+        totalPages
+        totalElements
+        numberOfElements
+        content {
+            id
+            objectId
+            formId
+            status
+            date
+            data
+        }
+    }
+}
