@@ -26,7 +26,6 @@ dependencies {
     implementation(Dependencies.jsonWebTokensImpl)
     implementation(Dependencies.jsonWebTokensJackson)
     implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.springframework.boot:spring-boot-starter-web")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.junit.jupiter:junit-jupiter")

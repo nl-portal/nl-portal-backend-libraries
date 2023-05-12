@@ -35,18 +35,36 @@ class IdTokenGenerator {
             .setIssuer(clientId)
             .setIssuedAt(Date())
             .claim("client_id", clientId)
-            .appendUserInfo()
+            .appendUserInfo(null, null)
             .signWith(signingKey, SignatureAlgorithm.HS256)
             .compact()
     }
 
-    private fun JwtBuilder.appendUserInfo(): JwtBuilder {
+    fun generateToken(secretKey: String, clientId: String, userId: String, userRepresentation: Any): String {
+        require(secretKey.length >= 32) {
+            "SecretKey needs to be at least 32 in length"
+        }
+
+        val signingKey = Keys.hmacShaKeyFor(secretKey.encodeToByteArray())
+        val jwtBuilder = Jwts.builder()
+
+        return jwtBuilder
+            .setIssuer(clientId)
+            .setIssuedAt(Date())
+            .claim("client_id", clientId)
+            .appendUserInfo(userId, userRepresentation)
+            .signWith(signingKey, SignatureAlgorithm.HS256)
+            .compact()
+    }
+
+    private fun JwtBuilder.appendUserInfo(userId: String?, userRepresentation: Any?): JwtBuilder {
         return this
-            .claim("user_id", DEFAULT_USER_ID)
-            .claim("user_representation", "")
+            .claim("user_id", userId ?: DEFAULT_USER_ID)
+            .claim("user_representation", userRepresentation ?: DEFAULT_USER_REPRESENTATION)
     }
 
     companion object {
         private const val DEFAULT_USER_ID = "Valtimo"
+        private const val DEFAULT_USER_REPRESENTATION = "Valtimo"
     }
 }

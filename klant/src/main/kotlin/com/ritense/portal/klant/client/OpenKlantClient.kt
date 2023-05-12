@@ -16,6 +16,7 @@
 package com.ritense.portal.klant.client
 
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
+import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
 import com.ritense.portal.klant.domain.ResultPage
 import com.ritense.portal.klant.domain.klanten.Klant
 import com.ritense.portal.klant.domain.klanten.KlantCreationRequest
@@ -28,8 +29,8 @@ import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
 
 class OpenKlantClient(
-    val openKlantClientConfig: OpenKlantClientConfig,
-    val openKlantTokenGenerator: OpenKlantTokenGenerator
+    private val openKlantClientConfig: OpenKlantClientConfig,
+    private val idTokenGenerator: IdTokenGenerator
 ) {
     suspend fun getKlanten(authentication: CommonGroundAuthentication, page: Int, bsn: String?): List<Klant> {
         return webClient(authentication)
@@ -68,10 +69,11 @@ class OpenKlantClient(
     }
 
     private fun webClient(authentication: CommonGroundAuthentication): WebClient {
-        val token = openKlantTokenGenerator.generateToken(
+        val token = idTokenGenerator.generateToken(
             openKlantClientConfig.secret,
             openKlantClientConfig.clientId,
-            authentication
+            authentication.getUserId(),
+            authentication.getUserRepresentation()
         )
 
         return WebClient.builder()
