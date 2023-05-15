@@ -23,6 +23,10 @@ import io.jsonwebtoken.security.Keys
 import java.nio.charset.Charset
 import java.util.Date
 
+@Deprecated(
+    message = "Moved to generic class.",
+    replaceWith = ReplaceWith("IdTokenGenerator", "com.ritense.portal.idtokenauthentication.service.IdTokenGenerator")
+)
 class OpenKlantTokenGenerator {
 
     fun generateToken(secretKey: String, clientId: String, authentication: CommonGroundAuthentication): String {

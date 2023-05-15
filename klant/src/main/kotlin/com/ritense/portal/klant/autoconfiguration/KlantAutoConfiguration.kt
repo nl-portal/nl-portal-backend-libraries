@@ -15,6 +15,7 @@
  */
 package com.ritense.portal.klant.autoconfiguration
 
+import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
 import com.ritense.portal.klant.client.OpenKlantClient
 import com.ritense.portal.klant.client.OpenKlantClientConfig
 import com.ritense.portal.klant.client.OpenKlantTokenGenerator
@@ -53,9 +54,9 @@ class KlantAutoConfiguration {
     @Bean
     fun openKlantClient(
         openKlantClientConfig: OpenKlantClientConfig,
-        openKlantTokenGenerator: OpenKlantTokenGenerator
+        idTokenGenerator: IdTokenGenerator
     ): OpenKlantClient {
-        return OpenKlantClient(openKlantClientConfig, openKlantTokenGenerator)
+        return OpenKlantClient(openKlantClientConfig, idTokenGenerator)
     }
 
     @Bean
