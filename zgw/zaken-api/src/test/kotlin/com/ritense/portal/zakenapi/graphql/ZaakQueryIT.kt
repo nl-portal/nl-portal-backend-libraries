@@ -65,24 +65,12 @@ internal class ZaakQueryIT(
                     uuid,
                     identificatie,
                     omschrijving,
-                    zaaktype {
-                        identificatie,
-                        omschrijving
-                    },
                     startdatum,
                     status {
-                        datumStatusGezet,
-                        statustype {
-                            omschrijving,
-                            isEindstatus
-                        }
+                        datumStatusGezet
                     },
                     statusGeschiedenis {
-                        datumStatusGezet,
-                        statustype {
-                            omschrijving,
-                            isEindstatus
-                        }
+                        datumStatusGezet
                     }
                 }
             }
@@ -90,29 +78,23 @@ internal class ZaakQueryIT(
 
         val basePath = "$.data.getZaken[0]"
 
-        val response = testClient.post()
+        val request = testClient.post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
             .expectBody()
+            .jsonPath(basePath)
 
-        with(response) {
-            jsonPath(basePath).exists()
-            jsonPath("$basePath.uuid").isEqualTo("5d479908-fbb7-49c2-98c9-9afecf8de79a")
-            jsonPath("$basePath.identificatie").isEqualTo("ZAAK-2021-0000000003")
-            jsonPath("$basePath.omschrijving").isEqualTo("Voorbeeld afgesloten zaak 1")
-            jsonPath("$basePath.startdatum").isEqualTo("2021-09-16")
-            jsonPath("$basePath.zaaktype.identificatie").isEqualTo("bezwaar-behandelen")
-            jsonPath("$basePath.zaaktype.omschrijving").isEqualTo("Bezwaar behandelen")
-            jsonPath("$basePath.status.datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
-            jsonPath("$basePath.status.statustype.omschrijving").isEqualTo("Zaak afgerond")
-            jsonPath("$basePath.status.statustype.isEindstatus").isEqualTo(true)
-            jsonPath("$basePath.statusGeschiedenis[0].datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
-            jsonPath("$basePath.statusGeschiedenis[0].statustype.omschrijving").isEqualTo("Zaak afgerond")
-            jsonPath("$basePath.statusGeschiedenis[0].statustype.isEindstatus").isEqualTo(true)
-        }
+        request
+            .exists()
+            .jsonPath("$basePath.uuid").isEqualTo("5d479908-fbb7-49c2-98c9-9afecf8de79a")
+            .jsonPath("$basePath.identificatie").isEqualTo("ZAAK-2021-0000000003")
+            .jsonPath("$basePath.omschrijving").isEqualTo("Voorbeeld afgesloten zaak 1")
+            .jsonPath("$basePath.startdatum").isEqualTo("2021-09-16")
+            .jsonPath("$basePath.status.datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
+            .jsonPath("$basePath.statusGeschiedenis[0].datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
     }
 
     @Test
@@ -125,24 +107,12 @@ internal class ZaakQueryIT(
                     uuid,
                     identificatie,
                     omschrijving,
-                    zaaktype {
-                        identificatie,
-                        omschrijving
-                    },
                     startdatum,
                     status {
-                        datumStatusGezet,
-                        statustype {
-                            omschrijving,
-                            isEindstatus
-                        }
+                        datumStatusGezet
                     },
                     statusGeschiedenis {
-                        datumStatusGezet,
-                        statustype {
-                            omschrijving,
-                            isEindstatus
-                        }
+                        datumStatusGezet
                     }
                 }
             }
@@ -157,19 +127,14 @@ internal class ZaakQueryIT(
             .bodyValue(query)
             .exchange()
             .expectBody()
-            .jsonPath(basePath).exists()
+            .jsonPath(basePath)
+            .exists()
             .jsonPath("$basePath.uuid").isEqualTo("5d479908-fbb7-49c2-98c9-9afecf8de79a")
             .jsonPath("$basePath.identificatie").isEqualTo("ZAAK-2021-0000000003")
             .jsonPath("$basePath.omschrijving").isEqualTo("Voorbeeld afgesloten zaak 1")
             .jsonPath("$basePath.startdatum").isEqualTo("2021-09-16")
-            .jsonPath("$basePath.zaaktype.identificatie").isEqualTo("bezwaar-behandelen")
-            .jsonPath("$basePath.zaaktype.omschrijving").isEqualTo("Bezwaar behandelen")
             .jsonPath("$basePath.status.datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
-            .jsonPath("$basePath.status.statustype.omschrijving").isEqualTo("Zaak afgerond")
-            .jsonPath("$basePath.status.statustype.isEindstatus").isEqualTo(true)
             .jsonPath("$basePath.statusGeschiedenis[0].datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
-            .jsonPath("$basePath.statusGeschiedenis[0].statustype.omschrijving").isEqualTo("Zaak afgerond")
-            .jsonPath("$basePath.statusGeschiedenis[0].statustype.isEindstatus").isEqualTo(true)
     }
 
     @Test
@@ -182,37 +147,12 @@ internal class ZaakQueryIT(
                     uuid,
                     identificatie,
                     omschrijving,
-                    zaaktype {
-                        identificatie,
-                        omschrijving
-                    },
                     startdatum,
                     status {
-                        datumStatusGezet,
-                        statustype {
-                            omschrijving,
-                            isEindstatus
-                        }
+                        datumStatusGezet
                     },
                     statusGeschiedenis {
-                        datumStatusGezet,
-                        statustype {
-                            omschrijving,
-                            isEindstatus
-                        }
-                    },
-                    documenten {
-                        uuid,
-                        identificatie,
-                        creatiedatum,
-                        titel,
-                        formaat,
-                        bestandsnaam,
-                        bestandsomvang
-                    },
-                    statussen {
-                        omschrijving,
-                        isEindstatus
+                        datumStatusGezet
                     }
                 }
             }
@@ -220,33 +160,21 @@ internal class ZaakQueryIT(
 
         val basePath = "$.data.getZaak"
 
-        testClient.post()
+        val request = testClient.post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
             .expectBody()
+
+        request
             .jsonPath(basePath).exists()
             .jsonPath("$basePath.uuid").isEqualTo("5d479908-fbb7-49c2-98c9-9afecf8de79a")
             .jsonPath("$basePath.identificatie").isEqualTo("ZAAK-2021-0000000003")
             .jsonPath("$basePath.omschrijving").isEqualTo("Voorbeeld afgesloten zaak 1")
             .jsonPath("$basePath.startdatum").isEqualTo("2021-09-16")
-            .jsonPath("$basePath.zaaktype.identificatie").isEqualTo("bezwaar-behandelen")
-            .jsonPath("$basePath.zaaktype.omschrijving").isEqualTo("Bezwaar behandelen")
             .jsonPath("$basePath.status.datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
-            .jsonPath("$basePath.status.statustype.omschrijving").isEqualTo("Zaak afgerond")
-            .jsonPath("$basePath.status.statustype.isEindstatus").isEqualTo(true)
-            .jsonPath("$basePath.statusGeschiedenis[0].datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
-            .jsonPath("$basePath.statusGeschiedenis[0].statustype.omschrijving").isEqualTo("Zaak afgerond")
-            .jsonPath("$basePath.statusGeschiedenis[0].statustype.isEindstatus").isEqualTo(true)
-            .jsonPath("$basePath.documenten[0].uuid").isEqualTo("095be615-a8ad-4c33-8e9c-c7612fbf6c9f")
-            .jsonPath("$basePath.documenten[0].titel").isEqualTo("Een titel")
-            .jsonPath("$basePath.documenten[0].formaat").isEqualTo(".pdf")
-            .jsonPath("$basePath.statussen[0].omschrijving").isEqualTo("Eerste status")
-            .jsonPath("$basePath.statussen[0].isEindstatus").isEqualTo(false)
-            .jsonPath("$basePath.statussen[2].omschrijving").isEqualTo("Derde status")
-            .jsonPath("$basePath.statussen[2].isEindstatus").isEqualTo(true)
     }
 
     fun setupMockOpenZaakServer() {

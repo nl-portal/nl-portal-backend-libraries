@@ -53,13 +53,13 @@ internal class ZaakQueryTest {
     }
 
     @Test
-    fun `getZaken no page`() = runBlockingTest {
+    fun `getZaken no page`() = runTest {
         zaakQuery.getZaken(environment)
         verify(zakenApiService).getZaken(1, authentication)
     }
 
     @Test
-    fun getZaak() = runBlockingTest {
+    fun getZaak() = runTest {
         val zaakId = UUID.randomUUID()
 
         zaakQuery.getZaak(zaakId, environment)
