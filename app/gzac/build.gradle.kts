@@ -24,6 +24,9 @@ dependencies {
     implementation(project(":klant"))
     implementation(project(":product"))
     implementation(project(":zaak"))
+    implementation(project(":zgw:catalogi-api"))
+    implementation(project(":zgw:documenten-api"))
+    implementation(project(":zgw:zaken-api"))
     implementation(project(":form"))
 
     api("org.postgresql", "postgresql")
