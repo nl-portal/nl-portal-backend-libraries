@@ -13,19 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.zakenapi.client
+package com.ritense.portal.catalogiapi.client
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "valtimo.zgw.zakenapi")
-data class ZakenApiConfig(
+@ConfigurationProperties(prefix = "valtimo.zgw.documentenapi")
+data class DocumentenApiConfig(
     var url: String = "",
     var clientId: String = "",
     var secret: String = "",
+    var rsin: String = "",
+    var documentTypeUrl: String = ""
 ) {
     init {
-        require(url.isNotEmpty() && clientId.isNotEmpty() && secret.isNotEmpty()) {
-            "Invalid configuration properties at path: valtimo.zgw.zakenapi"
+        require(
+            url.isNotEmpty() && clientId.isNotEmpty() && secret.isNotEmpty() && rsin.isNotEmpty() && documentTypeUrl.isNotEmpty()
+        ) {
+            "Invalid configuration properties at path: valtimo.zgw.documentenapi"
         }
     }
 }

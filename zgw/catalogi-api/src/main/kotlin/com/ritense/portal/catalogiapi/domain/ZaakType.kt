@@ -13,19 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.zakenapi.client
+package com.ritense.portal.catalogiapi.domain
 
-import org.springframework.boot.context.properties.ConfigurationProperties
-
-@ConfigurationProperties(prefix = "valtimo.zgw.zakenapi")
-data class ZakenApiConfig(
-    var url: String = "",
-    var clientId: String = "",
-    var secret: String = "",
-) {
-    init {
-        require(url.isNotEmpty() && clientId.isNotEmpty() && secret.isNotEmpty()) {
-            "Invalid configuration properties at path: valtimo.zgw.zakenapi"
-        }
-    }
-}
+data class ZaakType(
+    val identificatie: String,
+    val omschrijving: String
+)

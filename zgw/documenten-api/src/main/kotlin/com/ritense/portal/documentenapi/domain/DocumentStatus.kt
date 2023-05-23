@@ -13,19 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.zakenapi.client
+package com.ritense.portal.documentenapi.domain
 
-import org.springframework.boot.context.properties.ConfigurationProperties
+import com.fasterxml.jackson.annotation.JsonValue
 
-@ConfigurationProperties(prefix = "valtimo.zgw.zakenapi")
-data class ZakenApiConfig(
-    var url: String = "",
-    var clientId: String = "",
-    var secret: String = "",
-) {
-    init {
-        require(url.isNotEmpty() && clientId.isNotEmpty() && secret.isNotEmpty()) {
-            "Invalid configuration properties at path: valtimo.zgw.zakenapi"
-        }
-    }
+enum class DocumentStatus(@JsonValue val key: String) {
+    IN_BEWERKING("in_bewerking"),
+    TER_VASTSTELLING("ter_vaststelling"),
+    DEFINITIEF("definitief"),
+    GEARCHIVEERD("gearchiveerd");
 }

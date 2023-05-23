@@ -1,2 +1,2 @@
-#org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-#  com.ritense.portal.idtokenauthentication.autoconfigure.IdTokenGeneratorAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.ritense.portal.catalogiapi.autoconfigure.CatalogiApiAutoConfiguration

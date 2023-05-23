@@ -13,19 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.zakenapi.client
+package com.ritense.portal.documentenapi.domain
 
-import org.springframework.boot.context.properties.ConfigurationProperties
+import java.net.URI
 
-@ConfigurationProperties(prefix = "valtimo.zgw.zakenapi")
-data class ZakenApiConfig(
-    var url: String = "",
-    var clientId: String = "",
-    var secret: String = "",
+data class ResultPage<T>(
+    val count: Int,
+    val next: URI? = null,
+    val previous: URI? = null,
+    val results: List<T>
 ) {
-    init {
-        require(url.isNotEmpty() && clientId.isNotEmpty() && secret.isNotEmpty()) {
-            "Invalid configuration properties at path: valtimo.zgw.zakenapi"
-        }
+    fun getNextPageNumber(): Int? {
+        return next
+            ?.query
+            ?.split("&")
+            ?.map { Pair(it.substringBefore("="), it.substringAfter("=")) }
+            ?.filter { it.first.equals("page") }
+            ?.map { it.second }
+            ?.map { it.toInt() }
+            ?.single()
     }
 }

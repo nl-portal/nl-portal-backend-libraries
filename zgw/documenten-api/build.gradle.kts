@@ -22,6 +22,10 @@ val isLib = true
 
 dependencies {
 
+    api(project(":graphql"))
+    api(project(":zgw:common-ground-authentication"))
+    api(project(":zgw:idtoken-authentication"))
+
     implementation("org.springframework.boot:spring-boot-starter")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
