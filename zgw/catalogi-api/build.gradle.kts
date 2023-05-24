@@ -31,6 +31,14 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
+
+    testImplementation(project(":zgw:common-ground-authentication-test"))
+    testImplementation(TestDependencies.kotlinCoroutines)
+    testImplementation(TestDependencies.mockitoKotlin)
+    testImplementation(TestDependencies.okHttpMockWebserver)
+    testImplementation(TestDependencies.okHttp)
+    testImplementation(TestDependencies.postgresql)
 }
 
 val jar: Jar by tasks
