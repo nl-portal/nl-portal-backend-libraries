@@ -17,6 +17,7 @@ package com.ritense.portal.documentenapi.autoconfigure
 
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
 import com.ritense.portal.documentenapi.client.DocumentenApiConfig
+import com.ritense.portal.documentenapi.graphql.DocumentContentQuery
 import com.ritense.portal.documentenapi.service.DocumentenApiService
 import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -49,4 +50,10 @@ class DocumentenApiAutoConfiguration {
     ): DocumentenApiClient {
         return DocumentenApiClient(documentenApiConfig, idTokenGenerator)
     }
+
+    @Bean
+    fun documentContentQuery2(documentenApiService: DocumentenApiService): DocumentContentQuery {
+        return DocumentContentQuery(documentenApiService)
+    }
+
 }
