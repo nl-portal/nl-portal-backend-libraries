@@ -18,7 +18,9 @@ package com.ritense.portal.documentenapi.autoconfigure
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
 import com.ritense.portal.documentenapi.client.DocumentenApiConfig
 import com.ritense.portal.documentenapi.graphql.DocumentContentQuery
+import com.ritense.portal.documentenapi.security.config.DocumentContentResourceHttpSecurityConfigurer
 import com.ritense.portal.documentenapi.service.DocumentenApiService
+import com.ritense.portal.documentenapi.web.rest.DocumentContentResource
 import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -56,4 +58,18 @@ class DocumentenApiAutoConfiguration {
         return DocumentContentQuery(documentenApiService)
     }
 
+    @Bean
+    @ConditionalOnMissingBean(DocumentContentResourceHttpSecurityConfigurer::class)
+    fun documentContentResourceHttpSecurityConfigurer2(): DocumentContentResourceHttpSecurityConfigurer {
+        return DocumentContentResourceHttpSecurityConfigurer()
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(DocumentContentResource::class)
+    fun documentContentResource2(
+        documentenApiClient: DocumentenApiClient,
+        documentenApiService: DocumentenApiService
+    ): DocumentContentResource {
+        return DocumentContentResource(documentenApiClient, documentenApiService)
+    }
 }

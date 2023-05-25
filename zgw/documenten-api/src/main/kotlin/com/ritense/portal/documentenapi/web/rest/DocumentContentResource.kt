@@ -25,14 +25,23 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.http.codec.multipart.FilePart
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestPart
+import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Flux
 
+@RestController
+@RequestMapping(value = ["/api"])
 class DocumentContentResource(
     val documentenApiClient: DocumentenApiClient,
     val documentenApiService: DocumentenApiService
 ) {
 
-    fun downloadStreaming(documentId: UUID): ResponseEntity<Flux<DataBuffer>> {
+    @GetMapping(value = ["/document/{documentId}/content"])
+    fun downloadStreaming(@PathVariable documentId: UUID): ResponseEntity<Flux<DataBuffer>> {
         // Request service to get the file's data stream
         val fileDataStream = documentenApiClient.getDocumentContentStream(documentId)
 
@@ -48,7 +57,8 @@ class DocumentContentResource(
             .body(fileDataStream)
     }
 
-    suspend fun uploadStreaming(file: FilePart): ResponseEntity<Document> {
+    @PostMapping(value = ["/document/content"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    suspend fun uploadStreaming(@RequestPart("file") file: FilePart): ResponseEntity<Document> {
         return ResponseEntity.ok(documentenApiService.uploadDocument(file))
     }
 }

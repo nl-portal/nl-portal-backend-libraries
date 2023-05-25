@@ -18,7 +18,6 @@ package com.ritense.portal.zakenapi.service
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.commonground.authentication.JwtBuilder
 import com.ritense.portal.zakenapi.client.ZakenApiClient
-import com.ritense.portal.zakenapi.client.ZakenApiConfig
 import com.ritense.portal.zakenapi.domain.ResultPage
 import com.ritense.portal.zakenapi.domain.ZaakRol
 import java.util.UUID

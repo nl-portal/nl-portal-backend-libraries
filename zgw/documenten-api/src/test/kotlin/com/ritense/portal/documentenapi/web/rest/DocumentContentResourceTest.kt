@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.documentenapi.rest
+package com.ritense.portal.documentenapi.web.rest
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -22,7 +22,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
 import com.ritense.portal.documentenapi.domain.Document
 import com.ritense.portal.documentenapi.service.DocumentenApiService
-import com.ritense.portal.documentenapi.web.rest.DocumentContentResource
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
