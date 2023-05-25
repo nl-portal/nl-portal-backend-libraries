@@ -48,6 +48,16 @@ logging:
 
 valtimo:
     zgw:
+        catalogiapi:
+            url: http://localhost:8001
+            clientId: valtimo_client
+            secret: e09b8bc5-5831-4618-ab28-41411304309d
+            rsin: "051845623"
+            documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/efc332f2-be3b-4bad-9e3c-49a6219c92ad
+        documentenapi:
+            url: http://localhost:8001
+            clientId: valtimo_client
+            secret: e09b8bc5-5831-4618-ab28-41411304309d
         zakenapi:
             url: http://localhost:8001
             clientId: valtimo_client

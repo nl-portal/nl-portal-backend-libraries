@@ -40,6 +40,9 @@ import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.http.codec.multipart.FilePart
 import org.springframework.security.core.context.ReactiveSecurityContextHolder
 
+@Deprecated(
+    message = "Split up into separate modules: catalogi-api, documenten-api and zaken-api."
+)
 class OpenZaakService(
     val openZaakClient: OpenZaakClient,
     val openZaakClientConfig: OpenZaakClientConfig,
