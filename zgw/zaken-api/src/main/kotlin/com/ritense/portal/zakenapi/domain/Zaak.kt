@@ -16,6 +16,10 @@
 package com.ritense.portal.zakenapi.domain
 
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
+import com.ritense.portal.catalogiapi.domain.StatusType
+import com.ritense.portal.catalogiapi.domain.ZaakType
+import com.ritense.portal.catalogiapi.service.CatalogiApiService
+import com.ritense.portal.documentenapi.domain.Document
 import com.ritense.portal.zakenapi.service.ZakenApiService
 import java.time.LocalDate
 import java.util.UUID
@@ -32,11 +36,23 @@ data class Zaak(
     @GraphQLIgnore
     val status: String?
 ) {
-    suspend fun status(@GraphQLIgnore @Autowired zaakService: ZakenApiService): ZaakStatus? {
-        return status?.let { zaakService.getZaakStatus(it) }
+    suspend fun status(@GraphQLIgnore @Autowired zakenApiService: ZakenApiService): ZaakStatus? {
+        return status?.let { zakenApiService.getZaakStatus(it) }
     }
 
-    suspend fun statusGeschiedenis(@GraphQLIgnore @Autowired zaakService: ZakenApiService): List<ZaakStatus> {
-        return zaakService.getZaakStatusHistory(uuid)
+    suspend fun statusGeschiedenis(@GraphQLIgnore @Autowired zakenApiService: ZakenApiService): List<ZaakStatus> {
+        return zakenApiService.getZaakStatusHistory(uuid)
+    }
+
+    suspend fun documenten(@GraphQLIgnore @Autowired zakenApiService: ZakenApiService): List<Document> {
+        return zakenApiService.getDocumenten(url)
+    }
+
+    suspend fun statussen(@GraphQLIgnore @Autowired catalogiApiService: CatalogiApiService): List<StatusType> {
+        return catalogiApiService.getZaakStatusTypes(zaaktype)
+    }
+
+    suspend fun zaaktype(@GraphQLIgnore @Autowired catalogiApiService: CatalogiApiService): ZaakType {
+        return catalogiApiService.getZaakType(zaaktype)
     }
 }

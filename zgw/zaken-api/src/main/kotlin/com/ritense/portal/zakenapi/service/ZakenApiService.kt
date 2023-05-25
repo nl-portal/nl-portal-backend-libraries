@@ -18,6 +18,9 @@ package com.ritense.portal.zakenapi.service
 import com.ritense.portal.commonground.authentication.BedrijfAuthentication
 import com.ritense.portal.commonground.authentication.BurgerAuthentication
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
+import com.ritense.portal.documentenapi.domain.Document
+import com.ritense.portal.documentenapi.domain.DocumentStatus
+import com.ritense.portal.documentenapi.service.DocumentenApiService
 import com.ritense.portal.zakenapi.client.ZakenApiClient
 import com.ritense.portal.zakenapi.domain.Zaak
 import com.ritense.portal.zakenapi.domain.ZaakDocument
@@ -27,6 +30,7 @@ import java.util.UUID
 
 class ZakenApiService(
     private val zakenApiClient: ZakenApiClient,
+    private val documentenApiService: DocumentenApiService
 ) {
 
     suspend fun getZaken(page: Int, authentication: CommonGroundAuthentication): List<Zaak> {
@@ -63,6 +67,12 @@ class ZakenApiService(
 
     suspend fun getZaakStatus(statusUrl: String): ZaakStatus {
         return zakenApiClient.getStatus(extractId(statusUrl))
+    }
+
+    suspend fun getDocumenten(zaakUrl: String): List<Document> {
+        return getZaakDocumenten(zaakUrl)
+            .map { documentenApiService.getDocument(DocumentenApiService.extractId(it.informatieobject!!)) }
+            .filter { it.status in listOf(DocumentStatus.DEFINITIEF, DocumentStatus.GEARCHIVEERD) }
     }
 
     suspend fun getZaakStatusHistory(zaakId: UUID): List<ZaakStatus> {

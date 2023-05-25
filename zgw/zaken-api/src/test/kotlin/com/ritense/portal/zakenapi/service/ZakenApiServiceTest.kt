@@ -15,8 +15,10 @@
  */
 package com.ritense.portal.zakenapi.service
 
+import com.nhaarman.mockitokotlin2.mock
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.commonground.authentication.JwtBuilder
+import com.ritense.portal.documentenapi.service.DocumentenApiService
 import com.ritense.portal.zakenapi.client.ZakenApiClient
 import com.ritense.portal.zakenapi.domain.ResultPage
 import com.ritense.portal.zakenapi.domain.ZaakRol
@@ -36,15 +38,16 @@ import org.springframework.security.oauth2.jwt.Jwt
 @ExperimentalCoroutinesApi
 internal class ZakenApiServiceTest {
 
-    var openZaakClient = mock(ZakenApiClient::class.java)
-    var zaakService = ZakenApiService(openZaakClient)
+    var documentenApiService: DocumentenApiService = mock()
+    var zakenApiClient = mock(ZakenApiClient::class.java)
+    var zaakService = ZakenApiService(zakenApiClient, documentenApiService)
 
     @Test
     fun `getZaken calls openzaak client with BSN for burger`() = runBlockingTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
 
         zaakService.getZaken(5, authentication)
-        verify(openZaakClient).getZaken(5, "123")
+        verify(zakenApiClient).getZaken(5, "123")
     }
 
     @Test
@@ -53,7 +56,7 @@ internal class ZakenApiServiceTest {
         val firstZaakId = UUID.randomUUID()
         val secondZaakId = UUID.randomUUID()
 
-        `when`(openZaakClient.getZaakRollen(anyInt(), any(), any(), any())).thenReturn(
+        `when`(zakenApiClient.getZaakRollen(anyInt(), any(), any(), any())).thenReturn(
             ResultPage(
                 1, null, null,
                 listOf(
@@ -65,9 +68,9 @@ internal class ZakenApiServiceTest {
 
         zaakService.getZaken(5, authentication)
 
-        verify(openZaakClient).getZaakRollen(1, null, "123", null)
-        verify(openZaakClient).getZaak(firstZaakId)
-        verify(openZaakClient).getZaak(secondZaakId)
+        verify(zakenApiClient).getZaakRollen(1, null, "123", null)
+        verify(zakenApiClient).getZaak(firstZaakId)
+        verify(zakenApiClient).getZaak(secondZaakId)
     }
 
     @Test
@@ -93,7 +96,7 @@ internal class ZakenApiServiceTest {
         val uuid = UUID.randomUUID()
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
 
-        `when`(openZaakClient.getZaakRollen(anyInt(), any(), any(), any())).thenReturn(
+        `when`(zakenApiClient.getZaakRollen(anyInt(), any(), any(), any())).thenReturn(
             ResultPage(
                 1, null, null,
                 listOf(
@@ -104,8 +107,8 @@ internal class ZakenApiServiceTest {
 
         zaakService.getZaak(uuid, authentication)
 
-        verify(openZaakClient).getZaak(uuid)
-        verify(openZaakClient).getZaakRollen(1, "123", null, uuid)
+        verify(zakenApiClient).getZaak(uuid)
+        verify(zakenApiClient).getZaakRollen(1, "123", null, uuid)
     }
 
     @Test
@@ -113,7 +116,7 @@ internal class ZakenApiServiceTest {
         val uuid = UUID.randomUUID()
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
 
-        `when`(openZaakClient.getZaakRollen(anyInt(), any(), any(), any())).thenReturn(
+        `when`(zakenApiClient.getZaakRollen(anyInt(), any(), any(), any())).thenReturn(
             ResultPage(
                 1, null, null,
                 listOf(
@@ -124,8 +127,8 @@ internal class ZakenApiServiceTest {
 
         zaakService.getZaak(uuid, authentication)
 
-        verify(openZaakClient).getZaak(uuid)
-        verify(openZaakClient).getZaakRollen(1, null, "123", uuid)
+        verify(zakenApiClient).getZaak(uuid)
+        verify(zakenApiClient).getZaakRollen(1, null, "123", uuid)
     }
 
     @Test
@@ -133,7 +136,7 @@ internal class ZakenApiServiceTest {
         val uuid = UUID.randomUUID()
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
 
-        `when`(openZaakClient.getZaakRollen(anyInt(), any(), any(), any())).thenReturn(
+        `when`(zakenApiClient.getZaakRollen(anyInt(), any(), any(), any())).thenReturn(
             ResultPage(1, null, null, listOf())
         )
 
@@ -169,13 +172,13 @@ internal class ZakenApiServiceTest {
     fun getZaakStatus() = runBlockingTest {
         val uuid = UUID.randomUUID()
         zaakService.getZaakStatus("http://some.domain.com/zaken/api/v1/statussen/$uuid")
-        verify(openZaakClient).getStatus(uuid)
+        verify(zakenApiClient).getStatus(uuid)
     }
 
     @Test
     fun getZaakStatusHistory() = runBlockingTest {
         val uuid = UUID.randomUUID()
         zaakService.getZaakStatusHistory(uuid)
-        verify(openZaakClient).getStatusHistory(uuid)
+        verify(zakenApiClient).getStatusHistory(uuid)
     }
 }

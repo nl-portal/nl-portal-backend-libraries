@@ -24,7 +24,9 @@ dependencies {
 
     api(project(":core"))
     api(project(":graphql"))
+    api(project(":zgw:catalogi-api"))
     api(project(":zgw:common-ground-authentication"))
+    api(project(":zgw:documenten-api"))
     api(project(":zgw:idtoken-authentication"))
 
     implementation("org.springframework.boot:spring-boot-starter")

@@ -41,7 +41,7 @@ import org.springframework.http.codec.multipart.FilePart
 import org.springframework.security.core.context.ReactiveSecurityContextHolder
 
 @Deprecated(
-    message = "Split up into separate modules: catalogi-api, documenten-api and zaken-api."
+    message = "Split up into separate modules. See catalogi-api, documenten-api and zaken-api modules."
 )
 class OpenZaakService(
     val openZaakClient: OpenZaakClient,

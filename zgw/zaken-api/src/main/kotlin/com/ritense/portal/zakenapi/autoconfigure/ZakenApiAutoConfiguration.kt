@@ -15,6 +15,7 @@
  */
 package com.ritense.portal.zakenapi.autoconfigure
 
+import com.ritense.portal.documentenapi.service.DocumentenApiService
 import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
 import com.ritense.portal.zakenapi.client.ZakenApiClient
 import com.ritense.portal.zakenapi.client.ZakenApiConfig
@@ -32,9 +33,10 @@ class ZakenApiAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(ZakenApiService::class)
     fun zakenApiService(
-        zakenApiClient: ZakenApiClient
+        zakenApiClient: ZakenApiClient,
+        documentenApiService: DocumentenApiService
     ): ZakenApiService {
-        return ZakenApiService(zakenApiClient)
+        return ZakenApiService(zakenApiClient, documentenApiService)
     }
 
     @Bean

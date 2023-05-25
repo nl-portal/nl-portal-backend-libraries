@@ -1,6 +1,6 @@
 spring:
     datasource:
-        url: jdbc:postgresql://localhost:5432/nl-portal
+        url: jdbc:postgresql://localhost:54321/nl-portal
         username: nlportal
         password: password
         name: nl-portal-database
