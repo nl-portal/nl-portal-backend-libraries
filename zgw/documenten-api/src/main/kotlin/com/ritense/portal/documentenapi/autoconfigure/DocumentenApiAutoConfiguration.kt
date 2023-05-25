@@ -15,9 +15,9 @@
  */
 package com.ritense.portal.documentenapi.autoconfigure
 
-import com.ritense.portal.catalogiapi.client.DocumentenApiClient
-import com.ritense.portal.catalogiapi.client.DocumentenApiConfig
-import com.ritense.portal.documentenapi.DocumentenApiService
+import com.ritense.portal.documentenapi.client.DocumentenApiClient
+import com.ritense.portal.documentenapi.client.DocumentenApiConfig
+import com.ritense.portal.documentenapi.service.DocumentenApiService
 import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -30,7 +30,7 @@ class DocumentenApiAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(DocumentenApiService::class)
-    fun zakenApiService(
+    fun documentenApiService(
         documentenApiClient: DocumentenApiClient,
         documentenApiConfig: DocumentenApiConfig
     ): DocumentenApiService {

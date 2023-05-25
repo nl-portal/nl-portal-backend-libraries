@@ -16,9 +16,9 @@
 package com.ritense.portal.zakenapi.autoconfigure
 
 import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
-import com.ritense.portal.zakenapi.graphql.ZaakQuery
 import com.ritense.portal.zakenapi.client.ZakenApiClient
 import com.ritense.portal.zakenapi.client.ZakenApiConfig
+import com.ritense.portal.zakenapi.graphql.ZaakQuery
 import com.ritense.portal.zakenapi.service.ZakenApiService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties

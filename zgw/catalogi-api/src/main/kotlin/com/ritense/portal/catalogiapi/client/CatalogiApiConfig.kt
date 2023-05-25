@@ -22,10 +22,4 @@ data class CatalogiApiConfig(
     var url: String = "",
     var clientId: String = "",
     var secret: String = "",
-) {
-    init {
-        require(url.isNotEmpty() && clientId.isNotEmpty() && secret.isNotEmpty()) {
-            "Invalid configuration properties at path: valtimo.zgw.catalogiapi"
-        }
-    }
-}
+)

@@ -38,7 +38,6 @@ import org.springframework.security.oauth2.jwt.Jwt
 internal class ZakenApiServiceTest {
 
     var openZaakClient = mock(ZakenApiClient::class.java)
-    var zakenApiConfig = ZakenApiConfig()
     var zaakService = ZakenApiService(openZaakClient)
 
     @Test

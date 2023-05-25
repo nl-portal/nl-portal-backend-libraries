@@ -13,15 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.documentenapi.client
+package com.ritense.portal.documentenapi
 
-import org.springframework.boot.context.properties.ConfigurationProperties
+import okhttp3.mockwebserver.MockResponse
 
-@ConfigurationProperties(prefix = "valtimo.zgw.documentenapi")
-data class DocumentenApiConfig(
-    var url: String = "",
-    var clientId: String = "",
-    var secret: String = "",
-    var rsin: String = "",
-    var documentTypeUrl: String = ""
-)
+object TestHelper {
+
+    fun mockResponseFromFile(fileName: String): MockResponse {
+        return MockResponse()
+            .addHeader("Content-Type", "application/json; charset=utf-8")
+            .setResponseCode(200)
+            .setBody(readFileAsString(fileName))
+    }
+
+    private fun readFileAsString(fileName: String): String =
+        this::class.java.getResource(fileName)!!.readText(Charsets.UTF_8)
+}

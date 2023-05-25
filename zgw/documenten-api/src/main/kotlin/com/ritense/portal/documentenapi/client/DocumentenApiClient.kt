@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.catalogiapi.client
+package com.ritense.portal.documentenapi.client
 
 import com.ritense.portal.core.util.Mapper
 import com.ritense.portal.documentenapi.domain.Document
