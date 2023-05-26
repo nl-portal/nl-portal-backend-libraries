@@ -30,7 +30,7 @@ import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
 
 class CatalogiApiClient(
-    private val zakenApiConfig: CatalogiApiConfig,
+    private val catalogiApiConfig: CatalogiApiConfig,
     private val idTokenGenerator: IdTokenGenerator
 ) {
 
@@ -70,8 +70,8 @@ class CatalogiApiClient(
 
     private fun webClient(): WebClient {
         val token = idTokenGenerator.generateToken(
-            zakenApiConfig.secret,
-            zakenApiConfig.clientId
+            catalogiApiConfig.secret,
+            catalogiApiConfig.clientId
         )
 
         return WebClient.builder()
@@ -84,7 +84,7 @@ class CatalogiApiClient(
                     )
                 )
             )
-            .baseUrl(zakenApiConfig.url)
+            .baseUrl(catalogiApiConfig.url)
             .defaultHeader("Accept-Crs", "EPSG:4326")
             .defaultHeader("Content-Crs", "EPSG:4326")
             .defaultHeader("Authorization", "Bearer $token")
