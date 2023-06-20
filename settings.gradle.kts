@@ -29,6 +29,7 @@ pluginManagement {
 include(
     "app:portal",
     "app:gzac",
+    "aws:s3",
     "case",
     "common-ground-authentication",
     "common-ground-authentication-test",

@@ -1,0 +1,7 @@
+aws:
+    profile: ritense
+    region: eu-central-1
+    s3:
+        endpoint: http://localhost.localstack.cloud:4568
+        bucketRegion: eu-central-1
+        bucketName: nl-portal
