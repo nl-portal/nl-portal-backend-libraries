@@ -82,7 +82,7 @@ internal class DocumentContentQueryIT(
             .expectBody()
             .jsonPath(basePath).exists()
             .jsonPath("$basePath.content").isEqualTo(
-                Base64.getEncoder().encodeToString(getResourceAsStream("logo.png").readAllBytes())
+                getResourceAsStream("logo.png").use { Base64.getEncoder().encodeToString(it.readAllBytes()) }
             )
     }
 
