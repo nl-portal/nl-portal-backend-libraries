@@ -1,7 +1,7 @@
 # NL Portal Backend Libraries #
 
 ![Kotlin 1.7.21](https://img.shields.io/badge/Kotlin-1.7.21-green)
-![Spring boot 2.7.5](https://img.shields.io/badge/Spring%20boot-2.7.5-green)
+![Spring boot 2.7.12](https://img.shields.io/badge/Spring%20boot-2.7.12-green)
 
 ## NL Portal
 
