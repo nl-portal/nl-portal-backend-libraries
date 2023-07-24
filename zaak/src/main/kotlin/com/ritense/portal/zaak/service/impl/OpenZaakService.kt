@@ -120,7 +120,7 @@ class OpenZaakService(
         return DocumentContent(Base64.getEncoder().encodeToString(documentContent))
     }
 
-    override suspend fun uploadDocument(file: FilePart): Document {
+    override suspend fun uploadDocument(file: FilePart, documentType: String?): Document {
         val auteur = ReactiveSecurityContextHolder.getContext()
             .map { (it.authentication as CommonGroundAuthentication).getUserId() }
             .awaitSingleOrNull() ?: "valtimo"
@@ -135,7 +135,7 @@ class OpenZaakService(
                 taal = "nld",
                 bestandsnaam = file.filename(),
                 indicatieGebruiksrecht = false,
-                informatieobjecttype = openZaakClientConfig.documentTypeUrl,
+                informatieobjecttype = documentType ?: openZaakClientConfig.documentTypeUrl,
             ),
             file.content()
         )

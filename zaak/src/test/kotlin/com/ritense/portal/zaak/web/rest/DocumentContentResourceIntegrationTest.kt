@@ -45,6 +45,7 @@ import org.springframework.http.client.MultipartBodyBuilder
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.BodyInserters
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 
 @SpringBootTest
 @AutoConfigureWebTestClient
@@ -69,8 +70,13 @@ class DocumentContentResourceIntegrationTest(
         server.shutdown()
     }
 
+    @BeforeEach
+    fun reset() {
+        executedRequests.clear()
+    }
+
     @Test
-    fun `should download using data streams`() {
+    fun `should upload without documentType`() {
         val uuid = UUID.fromString("095be615-a8ad-4c33-8e9c-c7612fbf6c9f")
 
         // Call rest endpoint with webtestclient
@@ -110,6 +116,34 @@ class DocumentContentResourceIntegrationTest(
         assertThat(requestBody.inhoud).isEqualTo(Base64.getEncoder().encodeToString("Test content".toByteArray()))
         assertThat(requestBody.indicatieGebruiksrecht).isFalse
         assertThat(requestBody.informatieobjecttype).isEqualTo("http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000")
+    }
+
+    @Test
+    @WithBurgerUser("569312863")
+    fun `should upload with documentType`() {
+        val bodyBuilder = MultipartBodyBuilder()
+        bodyBuilder.part("file", ClassPathResource("/data/test-file.txt", this::class.java.classLoader))
+        bodyBuilder.part("informatieobjecttype", "http://localhost:8001/catalogi/api/v1/informatieobjecttypen/c5f44018-fe06-4722-9b4f-7a4a9ada8997")
+
+        webTestClient.post()
+            .uri("/api/document/content")
+            .contentType(MediaType.MULTIPART_FORM_DATA)
+            .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
+            .exchange()
+            .expectStatus().isOk
+            .expectBody()
+
+        val requestBody = getRequestBody(HttpMethod.POST, "/documenten/api/v1/enkelvoudiginformatieobjecten", PostEnkelvoudiginformatieobjectRequest::class.java)
+        assertThat(requestBody.bronorganisatie).isEqualTo("051845623")
+        assertThat(requestBody.creatiedatum).isNotBlank
+        assertThat(requestBody.titel).isEqualTo("test-file.txt")
+        assertThat(requestBody.auteur).isEqualTo("569312863")
+        assertThat(requestBody.status).isEqualTo(DocumentStatus.DEFINITIEF)
+        assertThat(requestBody.taal).isEqualTo("nld")
+        assertThat(requestBody.bestandsnaam).isEqualTo("test-file.txt")
+        assertThat(requestBody.inhoud).isEqualTo(Base64.getEncoder().encodeToString("Test content".toByteArray()))
+        assertThat(requestBody.indicatieGebruiksrecht).isFalse
+        assertThat(requestBody.informatieobjecttype).isEqualTo("http://localhost:8001/catalogi/api/v1/informatieobjecttypen/c5f44018-fe06-4722-9b4f-7a4a9ada8997")
     }
 
     fun setupMockDocumentServer() {

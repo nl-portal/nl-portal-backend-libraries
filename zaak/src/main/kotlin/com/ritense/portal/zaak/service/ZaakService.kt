@@ -50,5 +50,5 @@ interface ZaakService {
 
     suspend fun getDocumentContent(documentId: UUID): DocumentContent
 
-    suspend fun uploadDocument(file: FilePart): Document
+    suspend fun uploadDocument(file: FilePart, documentType: String?): Document
 }
