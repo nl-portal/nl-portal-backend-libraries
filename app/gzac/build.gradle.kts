@@ -19,6 +19,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":gzac:objects-api"))
     implementation(project(":haalcentraal:haalcentraal-all"))
     implementation(project(":klant"))
     implementation(project(":product"))
