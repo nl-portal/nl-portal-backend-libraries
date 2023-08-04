@@ -49,7 +49,10 @@ class DocumentContentResource(
             .body(fileDataStream)
     }
 
-    override suspend fun uploadStreaming(file: FilePart): ResponseEntity<Document> {
-        return ResponseEntity.ok(zaakService.uploadDocument(file))
+    override suspend fun uploadStreaming(
+        file: FilePart,
+        informatieobjecttype: String?
+    ): ResponseEntity<Document> {
+        return ResponseEntity.ok(zaakService.uploadDocument(file, informatieobjecttype))
     }
 }
