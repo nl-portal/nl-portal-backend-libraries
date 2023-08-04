@@ -23,7 +23,8 @@ import java.util.UUID
 class Taak(
     val id: UUID,
     val objectId: UUID,
-    val formId: String,
+    val identificatie: TaakIdentificatie,
+    val formulier: TaakFormulier,
     val status: TaakStatus,
     val date: String,
     var data: ObjectNode,
@@ -34,10 +35,11 @@ class Taak(
             return Taak(
                 id = objectsApiTask.record.data.verwerkerTaakId,
                 objectId = objectsApiTask.uuid,
-                formId = objectsApiTask.record.data.formulier.value,
+                formulier = objectsApiTask.record.data.formulier,
                 status = objectsApiTask.record.data.status,
                 date = objectsApiTask.record.startAt,
-                data = ObjectMapper().valueToTree(objectsApiTask.record.data.data)
+                data = ObjectMapper().valueToTree(objectsApiTask.record.data.data),
+                identificatie = objectsApiTask.record.data.identificatie
             )
         }
     }
