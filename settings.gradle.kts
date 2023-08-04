@@ -46,8 +46,11 @@ include(
     "product",
     "task",
     "zaak",
+    "zgw:catalogi-api",
     "zgw:common-ground-authentication",
     "zgw:common-ground-authentication-test",
+    "zgw:documenten-api",
     "zgw:idtoken-authentication",
-    "zgw:taak"
+    "zgw:taak",
+    "zgw:zaken-api",
 )
