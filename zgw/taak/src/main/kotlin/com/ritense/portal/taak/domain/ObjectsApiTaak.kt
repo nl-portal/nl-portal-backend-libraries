@@ -21,11 +21,19 @@ import java.util.UUID
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class ObjectsApiTaak(
-    val kvk: String?,
-    val bsn: String?,
+    val identificatie: TaakIdentificatie,
     val data: Map<String, Any>,
     @JsonProperty("verzonden_data") var verzondenData: Map<String, Any>? = null,
     var status: TaakStatus,
-    @JsonProperty("formulier_id") val formulierId: String,
+    val formulier: TaakFormulier,
     @JsonProperty("verwerker_taak_id") val verwerkerTaakId: UUID,
+)
+data class TaakIdentificatie(
+    val type: String,
+    val value: String,
+)
+
+data class TaakFormulier (
+    val type: String,
+    val value: String
 )
