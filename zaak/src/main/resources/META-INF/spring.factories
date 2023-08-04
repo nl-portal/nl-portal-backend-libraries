@@ -1,4 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.ritense.portal.zaak.autoconfiguration.ZaakAutoConfiguration,\
-  com.ritense.portal.zaak.autoconfiguration.DocumentAutoConfiguration
-
