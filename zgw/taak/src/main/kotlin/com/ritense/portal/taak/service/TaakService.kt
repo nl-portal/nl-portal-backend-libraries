@@ -44,11 +44,11 @@ open class TaakService(
         pageSize: Int,
         authentication: CommonGroundAuthentication
     ): TaakPage {
-        val userSearchParameter = getUserSearchParameter(authentication)
+        val userSearchParameters = getUserSearchParameters(authentication)
         val statusOpenSearchParameter = ObjectSearchParameter("status", Comparator.EQUAL_TO, "open")
 
         return objectsApiClient.getObjects<ObjectsApiTaak>(
-            objectSearchParameters = listOf(userSearchParameter, statusOpenSearchParameter),
+            objectSearchParameters = userSearchParameters + statusOpenSearchParameter,
             objectTypeUrl = objectsApiTaskConfig.typeUrl,
             page = pageNumber,
             pageSize = pageSize,
@@ -79,22 +79,33 @@ open class TaakService(
         taskId: UUID,
         authentication: CommonGroundAuthentication
     ): ObjectsApiObject<ObjectsApiTaak> {
-        val userSearchParameter = getUserSearchParameter(authentication)
+        val userSearchParameters = getUserSearchParameters(authentication)
         val taskIdSearchParameter = ObjectSearchParameter("verwerker_taak_id", Comparator.EQUAL_TO, taskId.toString())
 
         return objectsApiClient.getObjects<ObjectsApiTaak>(
-            objectSearchParameters = listOf(userSearchParameter, taskIdSearchParameter),
+            objectSearchParameters = userSearchParameters + taskIdSearchParameter,
             objectTypeUrl = objectsApiTaskConfig.typeUrl,
             page = 1,
             pageSize = 2,
         ).results.single()
     }
 
-    private fun getUserSearchParameter(authentication: CommonGroundAuthentication): ObjectSearchParameter {
+    private fun getUserSearchParameters(authentication: CommonGroundAuthentication): List<ObjectSearchParameter> {
         return when (authentication) {
-            is BurgerAuthentication -> ObjectSearchParameter("bsn", Comparator.EQUAL_TO, authentication.getBsn())
-            is BedrijfAuthentication -> ObjectSearchParameter("kvk", Comparator.EQUAL_TO, authentication.getKvkNummer())
+            is BurgerAuthentication -> {
+                createIdentificatieSearchParameters("bsn", authentication.getBsn())
+            }
+            is BedrijfAuthentication -> {
+                createIdentificatieSearchParameters("kvk", authentication.getKvkNummer())
+            }
             else -> throw UserTypeUnsupportedException("User type not supported")
         }
+    }
+
+    private fun createIdentificatieSearchParameters(type: String, value: String): List<ObjectSearchParameter> {
+        return listOf(
+            ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, type),
+            ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, value)
+        )
     }
 }
