@@ -15,8 +15,8 @@
  */
 package nl.nlportal.zgw.taak.graphql
 
-import com.ritense.portal.gzac.objectsapi.domain.ObjectsApiObject
-import com.ritense.portal.gzac.objectsapi.domain.ResultPage
+import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
+import nl.nlportal.zgw.objectenapi.domain.ResultPage
 import nl.nlportal.zgw.taak.domain.Taak
 import nl.nlportal.zgw.taak.domain.TaakObject
 

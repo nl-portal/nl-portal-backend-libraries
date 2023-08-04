@@ -22,11 +22,11 @@ import com.ritense.portal.commonground.authentication.BurgerAuthentication
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.commonground.authentication.exception.UserTypeUnsupportedException
 import com.ritense.portal.core.util.Mapper
-import com.ritense.portal.gzac.objectsapi.client.ObjectsApiClient
-import com.ritense.portal.gzac.objectsapi.domain.Comparator
-import com.ritense.portal.gzac.objectsapi.domain.ObjectSearchParameter
-import com.ritense.portal.gzac.objectsapi.domain.ObjectsApiObject
-import com.ritense.portal.gzac.objectsapi.domain.UpdateObjectsApiObjectRequest
+import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
+import nl.nlportal.zgw.objectenapi.domain.Comparator
+import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
+import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
+import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import nl.nlportal.zgw.taak.autoconfigure.ObjectsApiTaakConfig
 import nl.nlportal.zgw.taak.domain.Taak
 import nl.nlportal.zgw.taak.domain.TaakObject

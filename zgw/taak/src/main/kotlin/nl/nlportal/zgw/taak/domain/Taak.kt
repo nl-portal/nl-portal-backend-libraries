@@ -17,7 +17,7 @@ package nl.nlportal.zgw.taak.domain
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
-import com.ritense.portal.gzac.objectsapi.domain.ObjectsApiObject
+import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import java.util.UUID
 
 class Taak(

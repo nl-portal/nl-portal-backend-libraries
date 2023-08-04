@@ -35,8 +35,6 @@ include(
     "form-flow",
     "gradle:license-report",
     "graphql",
-    "gzac",
-    "gzac:objects-api",
     "haalcentraal:haalcentraal-all",
     "haalcentraal:haalcentraal-brp",
     "haalcentraal:haalcentraal-hr",
@@ -48,5 +46,6 @@ include(
     "zgw:common-ground-authentication",
     "zgw:common-ground-authentication-test",
     "zgw:idtoken-authentication",
-    "zgw:taak"
+    "zgw:taak",
+    "zgw:objectenapi"
 )
