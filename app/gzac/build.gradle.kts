@@ -19,12 +19,12 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":gzac:objects-api"))
     implementation(project(":haalcentraal:haalcentraal-all"))
     implementation(project(":klant"))
     implementation(project(":product"))
     implementation(project(":zaak"))
     implementation(project(":form"))
+    implementation(project(":zgw:taak"))
 
     api("org.postgresql", "postgresql")
 }
