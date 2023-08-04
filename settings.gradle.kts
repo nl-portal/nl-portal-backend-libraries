@@ -27,8 +27,7 @@ pluginManagement {
 }
 
 include(
-    "app:portal",
-    "app:gzac",
+    "app",
     "case",
     "core",
     "data",
