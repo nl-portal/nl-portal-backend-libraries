@@ -27,6 +27,7 @@ dependencies {
     implementation(project(":zgw:documenten-api"))
     implementation(project(":zgw:zaken-api"))
     implementation(project(":form"))
+    implementation(project(":zgw:taak"))
 
     api("org.postgresql", "postgresql")
 }
