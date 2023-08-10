@@ -39,7 +39,3 @@ tasks.withType<PublishToMavenRepository>().configureEach {
 tasks.withType<PublishToMavenLocal>().configureEach {
     enabled = false
 }
-
-tasks.bootRun.configure {
-    systemProperty("spring.profiles.active", "dev")
-}
