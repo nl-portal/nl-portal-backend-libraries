@@ -85,7 +85,7 @@ subprojects {
         withJavadocJar()
     }
 
-    if (!(project.name.contains("app") || project.path.contains("gradle"))) {
+    if (!(project.path.contains("gradle"))) {
         println("Enabling Spring Boot plugin in project ${project.name}...")
         apply(plugin = "org.springframework.boot")
 
