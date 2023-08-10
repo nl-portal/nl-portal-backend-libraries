@@ -22,9 +22,11 @@ dependencies {
     implementation(project(":haalcentraal:haalcentraal-all"))
     implementation(project(":klant"))
     implementation(project(":product"))
-    implementation(project(":zaak"))
     implementation(project(":form"))
     implementation(project(":zgw:taak"))
+    implementation(project(":zgw:zaken-api"))
+    implementation(project(":zgw:catalogi-api"))
+    implementation(project(":zgw:documenten-api"))
 
     api("org.postgresql", "postgresql")
 }
