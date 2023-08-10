@@ -15,33 +15,41 @@
  */
 package com.ritense.portal.zaak.service.impl
 
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.commonground.authentication.JwtBuilder
+import com.ritense.portal.commonground.authentication.WithBurgerUser
 import com.ritense.portal.zaak.client.OpenZaakClient
 import com.ritense.portal.zaak.client.OpenZaakClientConfig
 import com.ritense.portal.zaak.domain.ResultPage
 import com.ritense.portal.zaak.domain.catalogi.StatusType
 import com.ritense.portal.zaak.domain.documenten.Document
 import com.ritense.portal.zaak.domain.documenten.DocumentStatus
+import com.ritense.portal.zaak.domain.documenten.PostEnkelvoudiginformatieobjectRequest
 import com.ritense.portal.zaak.domain.zaken.ZaakDocument
 import com.ritense.portal.zaak.domain.zaken.ZaakRol
+import java.util.UUID
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.anyInt
-import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
+import org.springframework.core.io.buffer.DataBuffer
+import org.springframework.http.codec.multipart.FilePart
 import org.springframework.security.oauth2.jwt.Jwt
-import java.util.UUID
+import reactor.core.publisher.Flux
 
 @ExperimentalCoroutinesApi
 internal class OpenZaakServiceTest {
 
-    var openZaakClient = mock(OpenZaakClient::class.java)
+    var openZaakClient: OpenZaakClient = mock()
     var openZaakClientConfig = OpenZaakClientConfig()
     var zaakService = OpenZaakService(openZaakClient, openZaakClientConfig)
 
@@ -200,6 +208,67 @@ internal class OpenZaakServiceTest {
     }
 
     @Test
+    @WithBurgerUser("569312863")
+    fun `uploadDocument sends PostEnkelvoudiginformatieobjectRequest with documentType`() = runBlockingTest {
+        val uploadedFile = mock<FilePart>()
+        val fileContent = mock<Flux<DataBuffer>>()
+        whenever(uploadedFile.filename()).thenReturn("filename")
+        whenever(uploadedFile.content()).thenReturn(fileContent)
+        openZaakClientConfig.rsin = "test-rsin"
+
+        zaakService.uploadDocument(uploadedFile, "test-document-type")
+
+        val requestCaptor = argumentCaptor<PostEnkelvoudiginformatieobjectRequest>()
+        val contentCaptor = argumentCaptor<Flux<DataBuffer>>()
+
+        verify(openZaakClient).postDocument(requestCaptor.capture(), contentCaptor.capture())
+
+        val request = requestCaptor.firstValue
+        assertEquals("test-rsin", request.bronorganisatie)
+        assertNotNull(request.creatiedatum)
+        assertEquals("filename", request.titel)
+        assertEquals("valtimo", request.auteur)
+        assertEquals(DocumentStatus.DEFINITIEF, request.status)
+        assertEquals("nld", request.taal)
+        assertEquals("filename", request.bestandsnaam)
+        assertEquals(false, request.indicatieGebruiksrecht)
+        assertEquals("test-document-type", request.informatieobjecttype)
+
+        assertEquals(fileContent, contentCaptor.firstValue)
+    }
+
+    @Test
+    @WithBurgerUser("569312863")
+    fun `uploadDocument sends PostEnkelvoudiginformatieobjectRequest without documentType`() = runBlockingTest {
+        val uploadedFile = mock<FilePart>()
+        val fileContent = mock<Flux<DataBuffer>>()
+        whenever(uploadedFile.filename()).thenReturn("filename")
+        whenever(uploadedFile.content()).thenReturn(fileContent)
+        openZaakClientConfig.rsin = "test-rsin"
+        openZaakClientConfig.documentTypeUrl = "document-type-test"
+
+        zaakService.uploadDocument(uploadedFile, null)
+
+        val requestCaptor = argumentCaptor<PostEnkelvoudiginformatieobjectRequest>()
+        val contentCaptor = argumentCaptor<Flux<DataBuffer>>()
+
+        verify(openZaakClient).postDocument(requestCaptor.capture(), contentCaptor.capture())
+
+        val request = requestCaptor.firstValue
+        assertEquals("test-rsin", request.bronorganisatie)
+        assertNotNull(request.creatiedatum)
+        assertEquals("filename", request.titel)
+        assertEquals("valtimo", request.auteur)
+        assertEquals(DocumentStatus.DEFINITIEF, request.status)
+        assertEquals("nld", request.taal)
+        assertEquals("filename", request.bestandsnaam)
+        assertEquals(false, request.indicatieGebruiksrecht)
+        assertEquals("document-type-test", request.informatieobjecttype)
+
+        assertEquals(fileContent, contentCaptor.firstValue)
+    }
+
+    @Test
     fun `getDocumenten doesnt find in_bewerking document`() = runBlockingTest {
         val documenten = getDocumentWithStatus(DocumentStatus.IN_BEWERKING)
         assertEquals(0, documenten.size)
@@ -282,7 +351,10 @@ internal class OpenZaakServiceTest {
     }
 
     fun assertDocumentReturned(document: Document) {
-        assertEquals("http://example.com/enkelvoudiginformatieobjecten/0727b025-eaae-4587-a375-3fe671a19dd8", document.url)
+        assertEquals(
+            "http://example.com/enkelvoudiginformatieobjecten/0727b025-eaae-4587-a375-3fe671a19dd8",
+            document.url
+        )
         assertEquals("identificatie", document.identificatie)
         assertEquals("2020-04-17", document.creatiedatum)
         assertEquals("titel", document.titel)

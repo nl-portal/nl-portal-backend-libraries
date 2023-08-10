@@ -37,5 +37,8 @@ interface DocumentContentResource {
     fun downloadStreaming(@PathVariable("documentId") documentId: UUID): ResponseEntity<Flux<DataBuffer>>
 
     @PostMapping(value = ["/document/content"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    suspend fun uploadStreaming(@RequestPart("file") file: FilePart): ResponseEntity<Document>
+    suspend fun uploadStreaming(
+        @RequestPart("file") file: FilePart,
+        @RequestPart("informatieobjecttype", required = false) informatieobjecttype: String?
+    ): ResponseEntity<Document>
 }
