@@ -13,29 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package nl.nlportal.zgw.objectenapi.domain
 
-plugins {
-    kotlin("jvm")
-}
+import java.net.URI
 
-dependencies {
-    implementation(project(":haalcentraal:haalcentraal-all"))
-    implementation(project(":klant"))
-    implementation(project(":product"))
-    implementation(project(":zaak"))
-    implementation(project(":form"))
-    implementation(project(":zgw:taak"))
-
-    api("org.postgresql", "postgresql")
-}
-
-tasks.getByName<Jar>("jar") {
-    enabled = false
-}
-
-tasks.withType<PublishToMavenRepository>().configureEach {
-    enabled = false
-}
-tasks.withType<PublishToMavenLocal>().configureEach {
-    enabled = false
+data class ResultPage<T>(
+    val count: Int,
+    val next: URI? = null,
+    val previous: URI? = null,
+    val results: List<T>
+) {
+    fun getNextPageNumber(): Int? {
+        return next
+            ?.query
+            ?.split("&")
+            ?.asSequence()
+            ?.map { Pair(it.substringBefore("="), it.substringAfter("=")) }
+            ?.firstOrNull { it.first == "page" }
+            ?.second?.toIntOrNull()
+    }
 }

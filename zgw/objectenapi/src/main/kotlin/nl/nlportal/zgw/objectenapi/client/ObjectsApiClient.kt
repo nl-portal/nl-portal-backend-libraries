@@ -1,0 +1,89 @@
+/*
+ * Copyright 2015-2023 Ritense BV, the Netherlands.
+ *
+ * Licensed under EUPL, Version 1.2 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package nl.nlportal.zgw.objectenapi.client
+
+import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
+import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
+import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
+import nl.nlportal.zgw.objectenapi.domain.ResultPage
+import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
+import io.netty.handler.logging.LogLevel
+import java.util.UUID
+import kotlinx.coroutines.reactor.awaitSingle
+import org.springframework.core.ParameterizedTypeReference
+import org.springframework.http.MediaType
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
+import org.springframework.web.reactive.function.client.WebClient
+import reactor.netty.http.client.HttpClient
+import reactor.netty.transport.logging.AdvancedByteBufFormat
+
+open class ObjectsApiClient(
+    private val objectsApiClientConfig: ObjectsApiClientConfig,
+) {
+    suspend inline fun <reified T> getObjects(
+        objectSearchParameters: List<ObjectSearchParameter>,
+        objectTypeUrl: String? = null,
+        page: Int,
+        pageSize: Int,
+        ordering: String? = null
+    ): ResultPage<ObjectsApiObject<T>> {
+        return webClient()
+            .get()
+            .uri { uriBuilder ->
+                uriBuilder.path("/api/v2/objects")
+                    .queryParam("page", page)
+                    .queryParam("pageSize", pageSize)
+                objectTypeUrl?.let { uriBuilder.queryParam("type", it) }
+                uriBuilder.queryParam("data_attrs", ObjectSearchParameter.toQueryParameter(objectSearchParameters))
+                ordering?.let { uriBuilder.queryParam("ordering", ordering) }
+                uriBuilder.build()
+            }
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .bodyToMono(object : ParameterizedTypeReference<ResultPage<ObjectsApiObject<T>>>() {})
+            .awaitSingle()
+    }
+
+    suspend inline fun <reified T> updateObject(objectUuid: UUID, objectsApiObject: UpdateObjectsApiObjectRequest<T>): ObjectsApiObject<T> {
+        return webClient()
+            .put()
+            .uri("/api/v2/objects/$objectUuid")
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .bodyValue(objectsApiObject)
+            .retrieve()
+            .bodyToMono(object : ParameterizedTypeReference<ObjectsApiObject<T>>() {})
+            .awaitSingle()
+    }
+
+    fun webClient(): WebClient {
+        return WebClient.builder()
+            .clientConnector(
+                ReactorClientHttpConnector(
+                    HttpClient.create().wiretap(
+                        "reactor.netty.http.client.HttpClient",
+                        LogLevel.DEBUG,
+                        AdvancedByteBufFormat.TEXTUAL
+                    )
+                )
+            )
+            .baseUrl(objectsApiClientConfig.url)
+            .defaultHeader("Accept-Crs", "EPSG:4326")
+            .defaultHeader("Content-Crs", "EPSG:4326")
+            .defaultHeader("Authorization", "Token ${objectsApiClientConfig.token}")
+            .build()
+    }
+}

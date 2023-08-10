@@ -13,29 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package nl.nlportal.zgw.taak
 
-plugins {
-    kotlin("jvm")
-}
+import okhttp3.mockwebserver.MockResponse
 
-dependencies {
-    implementation(project(":haalcentraal:haalcentraal-all"))
-    implementation(project(":klant"))
-    implementation(project(":product"))
-    implementation(project(":zaak"))
-    implementation(project(":form"))
-    implementation(project(":zgw:taak"))
+object TestHelper {
 
-    api("org.postgresql", "postgresql")
-}
+    fun mockResponseFromFile(fileName: String): MockResponse {
+        return MockResponse()
+            .addHeader("Content-Type", "application/json; charset=utf-8")
+            .setResponseCode(200)
+            .setBody(readFileAsString(fileName))
+    }
 
-tasks.getByName<Jar>("jar") {
-    enabled = false
-}
-
-tasks.withType<PublishToMavenRepository>().configureEach {
-    enabled = false
-}
-tasks.withType<PublishToMavenLocal>().configureEach {
-    enabled = false
+    private fun readFileAsString(fileName: String): String =
+        this::class.java.getResource(fileName)!!.readText(Charsets.UTF_8)
 }

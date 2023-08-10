@@ -13,29 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package nl.nlportal.zgw.objectenapi.domain
 
-plugins {
-    kotlin("jvm")
-}
+import java.util.UUID
 
-dependencies {
-    implementation(project(":haalcentraal:haalcentraal-all"))
-    implementation(project(":klant"))
-    implementation(project(":product"))
-    implementation(project(":zaak"))
-    implementation(project(":form"))
-    implementation(project(":zgw:taak"))
+data class ObjectsApiObject<T>(
+    val uuid: UUID,
+    val type: String,
+    val record: ObjectsApiObjectRecord<T>,
+)
 
-    api("org.postgresql", "postgresql")
-}
-
-tasks.getByName<Jar>("jar") {
-    enabled = false
-}
-
-tasks.withType<PublishToMavenRepository>().configureEach {
-    enabled = false
-}
-tasks.withType<PublishToMavenLocal>().configureEach {
-    enabled = false
-}
+data class ObjectsApiObjectRecord<T>(
+    val index: Int,
+    val typeVersion: Int,
+    val data: T,
+    val startAt: String,
+)

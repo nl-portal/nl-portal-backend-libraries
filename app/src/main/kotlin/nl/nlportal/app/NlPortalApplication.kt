@@ -13,29 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package nl.nlportal.app
 
-plugins {
-    kotlin("jvm")
-}
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.boot.runApplication
 
-dependencies {
-    implementation(project(":haalcentraal:haalcentraal-all"))
-    implementation(project(":klant"))
-    implementation(project(":product"))
-    implementation(project(":zaak"))
-    implementation(project(":form"))
-    implementation(project(":zgw:taak"))
+@EnableConfigurationProperties
+@SpringBootApplication
+class PortalApplication
 
-    api("org.postgresql", "postgresql")
-}
-
-tasks.getByName<Jar>("jar") {
-    enabled = false
-}
-
-tasks.withType<PublishToMavenRepository>().configureEach {
-    enabled = false
-}
-tasks.withType<PublishToMavenLocal>().configureEach {
-    enabled = false
+fun main(args: Array<String>) {
+    runApplication<PortalApplication>(*args)
 }

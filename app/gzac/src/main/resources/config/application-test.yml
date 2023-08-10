@@ -1,8 +1,0 @@
-# ===================================================================
-# Spring Boot configuration for the "test" profile.
-#
-# This configuration overrides the application.yml file.
-# ===================================================================
-graphql:
-    introspection:
-        enabled: false
