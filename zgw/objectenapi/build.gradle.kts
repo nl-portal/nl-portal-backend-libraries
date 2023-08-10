@@ -23,7 +23,6 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     api(project(":graphql"))
     api(project(":zgw:common-ground-authentication"))
-    api(project(":zgw:taak"))
 
     // jjwt
     implementation(Dependencies.jsonWebTokensApi)
