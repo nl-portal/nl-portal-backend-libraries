@@ -28,12 +28,3 @@ data class TaakObject(
     val formulier: TaakFormulier,
     @JsonProperty("verwerker_taak_id") val verwerkerTaakId: UUID,
 )
-data class TaakIdentificatie(
-    val type: String,
-    val value: String,
-)
-
-data class TaakFormulier (
-    val type: String,
-    val value: String
-)
