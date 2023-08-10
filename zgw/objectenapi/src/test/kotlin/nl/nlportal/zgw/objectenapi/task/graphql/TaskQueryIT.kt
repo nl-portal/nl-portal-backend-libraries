@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.zgw.taak.graphql
+package nl.nlportal.zgw.objectenapi.task.graphql
 
 import com.ritense.portal.commonground.authentication.WithBedrijfUser
 import com.ritense.portal.commonground.authentication.WithBurgerUser
+import nl.nlportal.zgw.objectenapi.TestHelper
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
-import nl.nlportal.zgw.taak.TestHelper
-import nl.nlportal.zgw.taak.domain.TaakStatus
+import com.ritense.portal.gzac.objectsapi.task.domain.TaskStatus
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -39,17 +39,17 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(PER_CLASS)
-internal class TaakQueryIT(
+internal class TaskQueryIT(
     @Autowired private val testClient: WebTestClient,
     @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig
 ) {
     lateinit var server: MockWebServer
 
-    @Autowired
-    private lateinit var getTakenPayload: String
+    @field:Autowired
+    private lateinit var getTasksPayload: String
 
-    @Autowired
-    private lateinit var getTaakByIdPayload: String
+    @field:Autowired
+    private lateinit var getTaskByIdPayload: String
 
     @BeforeEach
     internal fun setUp() {
@@ -67,21 +67,21 @@ internal class TaakQueryIT(
     @Test
     @WithBurgerUser("569312863")
     fun `should get list of tasks for burger`() {
-        val basePath = "$.data.getTaken"
+        val basePath = "$.data.getTasks"
         val resultPath = "$basePath.content[0]"
 
         testClient.post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
-            .bodyValue(getTakenPayload)
+            .bodyValue(getTasksPayload)
             .exchange()
             .expectBody()
             .jsonPath(basePath).exists()
             .jsonPath("$resultPath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
             .jsonPath("$resultPath.objectId").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
             .jsonPath("$resultPath.formId").isEqualTo("check-loan-form")
-            .jsonPath("$resultPath.status").isEqualTo(TaakStatus.OPEN.toString())
+            .jsonPath("$resultPath.status").isEqualTo(TaskStatus.OPEN.toString())
             .jsonPath("$resultPath.date").isEqualTo("2022-05-25")
             .jsonPath("$resultPath.data.voornaam").isEqualTo("Peter")
             .jsonPath("$basePath.number").isEqualTo(1)
@@ -94,21 +94,21 @@ internal class TaakQueryIT(
     @Test
     @WithBedrijfUser("14127293")
     fun `should get list of tasks for bedrijf`() {
-        val basePath = "$.data.getTaken"
+        val basePath = "$.data.getTasks"
         val resultPath = "$basePath.content[0]"
 
         testClient.post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
-            .bodyValue(getTakenPayload)
+            .bodyValue(getTasksPayload)
             .exchange()
             .expectBody()
             .jsonPath(resultPath).exists()
             .jsonPath("$resultPath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
             .jsonPath("$resultPath.objectId").isEqualTo("2d94fedb-3d99-43c4-b333-f04e0ccfe78a")
             .jsonPath("$resultPath.formId").isEqualTo("check-loan-form")
-            .jsonPath("$resultPath.status").isEqualTo(TaakStatus.OPEN.toString())
+            .jsonPath("$resultPath.status").isEqualTo(TaskStatus.OPEN.toString())
             .jsonPath("$resultPath.date").isEqualTo("2022-05-30")
             .jsonPath("$resultPath.data.voornaam").isEqualTo("Peter")
             .jsonPath("$basePath.number").isEqualTo(1)
@@ -121,38 +121,38 @@ internal class TaakQueryIT(
     @Test
     @WithBedrijfUser("14127293")
     fun `should get task by id for burger`() {
-        val basePath = "$.data.getTaakById"
+        val basePath = "$.data.getTaskById"
 
         testClient.post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
-            .bodyValue(getTaakByIdPayload)
+            .bodyValue(getTaskByIdPayload)
             .exchange()
             .expectBody()
             .jsonPath(basePath).exists()
             .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
             .jsonPath("$basePath.formId").isEqualTo("check-loan-form")
-            .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
+            .jsonPath("$basePath.status").isEqualTo(TaskStatus.OPEN.toString())
             .jsonPath("$basePath.date").isEqualTo("2022-05-30")
     }
 
     @Test
     @WithBurgerUser("569312863")
     fun `should get task by id for bedrijf`() {
-        val basePath = "$.data.getTaakById"
+        val basePath = "$.data.getTaskById"
 
         testClient.post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
-            .bodyValue(getTaakByIdPayload)
+            .bodyValue(getTaskByIdPayload)
             .exchange()
             .expectBody()
             .jsonPath(basePath).exists()
             .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
             .jsonPath("$basePath.formId").isEqualTo("check-loan-form")
-            .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
+            .jsonPath("$basePath.status").isEqualTo(TaskStatus.OPEN.toString())
             .jsonPath("$basePath.date").isEqualTo("2022-05-25")
     }
 
@@ -172,7 +172,6 @@ internal class TaakQueryIT(
                             MockResponse().setResponseCode(404)
                         }
                     }
-
                     else -> MockResponse().setResponseCode(404)
                 }
                 return response

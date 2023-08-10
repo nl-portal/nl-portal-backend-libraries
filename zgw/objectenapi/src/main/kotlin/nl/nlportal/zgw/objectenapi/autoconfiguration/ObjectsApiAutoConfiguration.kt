@@ -13,37 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.zgw.taak.autoconfigure
+package nl.nlportal.zgw.objectenapi.autoconfiguration
 
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
-import nl.nlportal.zgw.taak.graphql.TaakMutation
-import nl.nlportal.zgw.taak.graphql.TaakQuery
-import nl.nlportal.zgw.taak.service.TaakService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class TaakAutoConfiguration {
+@EnableConfigurationProperties(ObjectsApiClientConfig::class)
+class ObjectsApiAutoConfiguration {
 
     @Bean
-    @ConditionalOnMissingBean(TaakService::class)
-    fun gzacTaskService(
-        objectsApiClient: ObjectsApiClient,
-        objectsApiTaskConfig: ObjectsApiTaakConfig
-    ): TaakService {
-        return TaakService(objectsApiClient, objectsApiTaskConfig)
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(TaakQuery::class)
-    fun gzacTaskQuery(taskService: TaakService): TaakQuery {
-        return TaakQuery(taskService)
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(TaakMutation::class)
-    fun gzacTaskMutation(taskService: TaakService): TaakMutation {
-        return TaakMutation(taskService)
+    @ConditionalOnMissingBean(ObjectsApiClient::class)
+    fun gzacObjectsApiClient(
+        objectsApiClientConfig: ObjectsApiClientConfig
+    ): ObjectsApiClient {
+        return ObjectsApiClient(objectsApiClientConfig)
     }
 }
