@@ -19,7 +19,7 @@ import com.ritense.portal.commonground.authentication.WithBedrijfUser
 import com.ritense.portal.commonground.authentication.WithBurgerUser
 import nl.nlportal.zgw.objectenapi.TestHelper
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
-import com.ritense.portal.gzac.objectsapi.task.domain.TaskStatus
+import nl.nlportal.zgw.taak.domain.TaakStatus
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -81,7 +81,7 @@ internal class TaskQueryIT(
             .jsonPath("$resultPath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
             .jsonPath("$resultPath.objectId").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
             .jsonPath("$resultPath.formId").isEqualTo("check-loan-form")
-            .jsonPath("$resultPath.status").isEqualTo(TaskStatus.OPEN.toString())
+            .jsonPath("$resultPath.status").isEqualTo(TaakStatus.OPEN.toString())
             .jsonPath("$resultPath.date").isEqualTo("2022-05-25")
             .jsonPath("$resultPath.data.voornaam").isEqualTo("Peter")
             .jsonPath("$basePath.number").isEqualTo(1)
@@ -108,7 +108,7 @@ internal class TaskQueryIT(
             .jsonPath("$resultPath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
             .jsonPath("$resultPath.objectId").isEqualTo("2d94fedb-3d99-43c4-b333-f04e0ccfe78a")
             .jsonPath("$resultPath.formId").isEqualTo("check-loan-form")
-            .jsonPath("$resultPath.status").isEqualTo(TaskStatus.OPEN.toString())
+            .jsonPath("$resultPath.status").isEqualTo(TaakStatus.OPEN.toString())
             .jsonPath("$resultPath.date").isEqualTo("2022-05-30")
             .jsonPath("$resultPath.data.voornaam").isEqualTo("Peter")
             .jsonPath("$basePath.number").isEqualTo(1)
@@ -133,7 +133,7 @@ internal class TaskQueryIT(
             .jsonPath(basePath).exists()
             .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
             .jsonPath("$basePath.formId").isEqualTo("check-loan-form")
-            .jsonPath("$basePath.status").isEqualTo(TaskStatus.OPEN.toString())
+            .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
             .jsonPath("$basePath.date").isEqualTo("2022-05-30")
     }
 
@@ -152,7 +152,7 @@ internal class TaskQueryIT(
             .jsonPath(basePath).exists()
             .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
             .jsonPath("$basePath.formId").isEqualTo("check-loan-form")
-            .jsonPath("$basePath.status").isEqualTo(TaskStatus.OPEN.toString())
+            .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
             .jsonPath("$basePath.date").isEqualTo("2022-05-25")
     }
 

@@ -23,6 +23,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     api(project(":graphql"))
     api(project(":zgw:common-ground-authentication"))
+    api(project(":zgw:taak"))
 
     // jjwt
     implementation(Dependencies.jsonWebTokensApi)
@@ -39,6 +40,7 @@ dependencies {
     testImplementation(TestDependencies.okHttpTls)
     testImplementation(TestDependencies.hamcrest)
     testImplementation(TestDependencies.postgresql)
+    testImplementation(project(mapOf("path" to ":zgw:taak")))
 }
 
 val jar: Jar by tasks
