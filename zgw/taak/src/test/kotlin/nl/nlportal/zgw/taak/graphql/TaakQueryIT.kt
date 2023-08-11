@@ -80,7 +80,7 @@ internal class TaakQueryIT(
             .jsonPath(basePath).exists()
             .jsonPath("$resultPath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
             .jsonPath("$resultPath.objectId").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
-            .jsonPath("$resultPath.formId").isEqualTo("check-loan-form")
+            .jsonPath("$resultPath.formulier.value").isEqualTo("check-loan-form")
             .jsonPath("$resultPath.status").isEqualTo(TaakStatus.OPEN.toString())
             .jsonPath("$resultPath.date").isEqualTo("2022-05-25")
             .jsonPath("$resultPath.data.voornaam").isEqualTo("Peter")
@@ -107,7 +107,7 @@ internal class TaakQueryIT(
             .jsonPath(resultPath).exists()
             .jsonPath("$resultPath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
             .jsonPath("$resultPath.objectId").isEqualTo("2d94fedb-3d99-43c4-b333-f04e0ccfe78a")
-            .jsonPath("$resultPath.formId").isEqualTo("check-loan-form")
+            .jsonPath("$resultPath.formulier.value").isEqualTo("check-loan-form")
             .jsonPath("$resultPath.status").isEqualTo(TaakStatus.OPEN.toString())
             .jsonPath("$resultPath.date").isEqualTo("2022-05-30")
             .jsonPath("$resultPath.data.voornaam").isEqualTo("Peter")
@@ -132,7 +132,7 @@ internal class TaakQueryIT(
             .expectBody()
             .jsonPath(basePath).exists()
             .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
-            .jsonPath("$basePath.formId").isEqualTo("check-loan-form")
+            .jsonPath("$basePath.formulier.value").isEqualTo("check-loan-form")
             .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
             .jsonPath("$basePath.date").isEqualTo("2022-05-30")
     }
@@ -151,7 +151,7 @@ internal class TaakQueryIT(
             .expectBody()
             .jsonPath(basePath).exists()
             .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
-            .jsonPath("$basePath.formId").isEqualTo("check-loan-form")
+            .jsonPath("$basePath.formulier.value").isEqualTo("check-loan-form")
             .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
             .jsonPath("$basePath.date").isEqualTo("2022-05-25")
     }
@@ -164,9 +164,9 @@ internal class TaakQueryIT(
                 val queryParams = request.path?.substringAfter('?')?.split('&') ?: emptyList()
                 val response = when (request.method + " " + path) {
                     "GET /api/v2/objects" -> {
-                        if (queryParams.any { it.contains("bsn__exact__569312863") }) {
+                        if (queryParams.any { it.contains("identificatie__value__exact__569312863") }) {
                             TestHelper.mockResponseFromFile("/data/get-bsn-task-list.json")
-                        } else if (queryParams.any { it.contains("kvk__exact__14127293") }) {
+                        } else if (queryParams.any { it.contains("identificatie__value__exact__14127293") }) {
                             TestHelper.mockResponseFromFile("/data/get-kvk-task-list.json")
                         } else {
                             MockResponse().setResponseCode(404)

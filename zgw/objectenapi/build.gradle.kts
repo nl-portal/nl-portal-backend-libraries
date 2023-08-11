@@ -39,6 +39,7 @@ dependencies {
     testImplementation(TestDependencies.okHttpTls)
     testImplementation(TestDependencies.hamcrest)
     testImplementation(TestDependencies.postgresql)
+    testImplementation(project(mapOf("path" to ":zgw:taak")))
 }
 
 val jar: Jar by tasks

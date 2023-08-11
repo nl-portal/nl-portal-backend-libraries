@@ -1,6 +1,6 @@
 package nl.nlportal.zgw.taak.domain
 
-data class TaakFormulier (
+data class TaakFormulier(
     val type: String,
     val value: String
 )
