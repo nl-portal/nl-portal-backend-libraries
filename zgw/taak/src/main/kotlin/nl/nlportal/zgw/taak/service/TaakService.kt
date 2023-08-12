@@ -27,7 +27,7 @@ import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
-import nl.nlportal.zgw.taak.autoconfigure.ObjectsApiTaakConfig
+import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
 import nl.nlportal.zgw.taak.domain.Taak
 import nl.nlportal.zgw.taak.domain.TaakObject
 import nl.nlportal.zgw.taak.domain.TaakStatus
@@ -36,7 +36,7 @@ import java.util.UUID
 
 open class TaakService(
     private val objectsApiClient: ObjectsApiClient,
-    private val objectsApiTaskConfig: ObjectsApiTaakConfig
+    private val objectsApiTaskConfig: TaakObjectConfig
 ) {
 
     suspend fun getTaken(

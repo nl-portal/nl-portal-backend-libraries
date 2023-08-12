@@ -30,7 +30,7 @@ class TaakAutoConfiguration {
     @ConditionalOnMissingBean(TaakService::class)
     fun gzacTaskService(
         objectsApiClient: ObjectsApiClient,
-        objectsApiTaskConfig: ObjectsApiTaakConfig
+        objectsApiTaskConfig: TaakObjectConfig
     ): TaakService {
         return TaakService(objectsApiClient, objectsApiTaskConfig)
     }

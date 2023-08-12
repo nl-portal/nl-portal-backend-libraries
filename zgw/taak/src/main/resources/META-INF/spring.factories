@@ -1,3 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   nl.nlportal.zgw.taak.autoconfigure.TaakAutoConfiguration, \
-  nl.nlportal.zgw.taak.autoconfigure.ObjectsApiTaakConfig
+  nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig

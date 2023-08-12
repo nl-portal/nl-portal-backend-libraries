@@ -67,6 +67,9 @@ valtimo:
             url: http://localhost:8001
             clientId: valtimo_client
             secret: e09b8bc5-5831-4618-ab28-41411304309d
+        taak:
+            taakobject:
+                typeUrl: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
     openklant:
         url: http://localhost:8006
         clientId: valtimo_client
@@ -78,8 +81,6 @@ valtimo:
     objectsapi:
         url: http://localhost:8010
         token: 182c13e2209161852c53cef53a879f7a2f923430
-        task:
-            typeUrl: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
     haalcentraal:
     #        url: ${VALTIMO_HAALCENTRAAL_URL}
     #        apiKey: ${VALTIMO_HAALCENTRAAL_APIKEY}
