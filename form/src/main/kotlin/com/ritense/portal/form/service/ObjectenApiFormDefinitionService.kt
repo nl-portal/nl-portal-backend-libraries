@@ -24,7 +24,10 @@ import org.springframework.transaction.annotation.Transactional
 class ObjectsApiFormDefinitionService(
     private val objectenApiService: ObjectenApiService
 ) {
-    suspend fun findObjectsApiFormDefinition(objectUrl: String): ObjectsApiFormIoFormDefinition? {
+    suspend fun findObjectsApiFormDefinitionById(objectId: String): ObjectsApiFormIoFormDefinition? {
+        return objectenApiService.getObjectById<ObjectsApiFormIoFormDefinition>(objectId)?.record?.data
+    }
+    suspend fun findObjectsApiFormDefinitionByUrl(objectUrl: String): ObjectsApiFormIoFormDefinition? {
         return objectenApiService.getObjectByUrl<ObjectsApiFormIoFormDefinition>(objectUrl)?.record?.data
     }
 }

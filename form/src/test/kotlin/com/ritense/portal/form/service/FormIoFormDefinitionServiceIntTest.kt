@@ -59,7 +59,7 @@ class FormIoFormDefinitionServiceIntTest : BaseIntegrationTest() {
     @Transactional
     @Test
     fun `should retrieve one form by name `() {
-        val form = formIoFormDefinitionService.findFormIoFormDefinition("form-example")
+        val form = formIoFormDefinitionService.findFormIoFormDefinitionByName("form-example")
         assertThat(form?.name).isEqualTo("form-example")
         assertThat(form?.isNew).isFalse
     }
@@ -68,7 +68,7 @@ class FormIoFormDefinitionServiceIntTest : BaseIntegrationTest() {
     @Test
     fun `should modify form definition of form `() {
         val newFormDef = Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java)
-        val form = formIoFormDefinitionService.findFormIoFormDefinition("form-example")
+        val form = formIoFormDefinitionService.findFormIoFormDefinitionByName("form-example")
         form?.modifyFormDefinition(newFormDef)
 
         val modifiedForm = formIoFormDefinitionService.modify(form!!)
