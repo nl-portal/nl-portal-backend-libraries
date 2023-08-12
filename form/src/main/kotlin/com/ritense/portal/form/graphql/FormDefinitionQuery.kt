@@ -18,20 +18,40 @@ package com.ritense.portal.form.graphql
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Query
 import com.ritense.portal.form.service.FormIoFormDefinitionService
+import com.ritense.valtimo.portal.form.service.ObjectsApiFormDefinitionService
 
-class FormDefinitionQuery(private val formIoFormDefinitionService: FormIoFormDefinitionService) : Query {
+class FormDefinitionQuery(
+    private val formIoFormDefinitionService: FormIoFormDefinitionService,
+    private val objectenApiFormDefinitionService: ObjectsApiFormDefinitionService
+) : Query {
 
     @GraphQLDescription("find all form definitions from repository")
+    @Deprecated("Deprecated")
     fun allFormDefinitions(): List<FormDefinition> {
         return formIoFormDefinitionService.findAllFormDefinitions()
-            .map { FormDefinition(it.name, it.formDefinition) }
+            .map { FormDefinition(it.formDefinition) }
     }
 
     @GraphQLDescription("find single form definition from repository")
+    @Deprecated("Replaced by getFormDefinitionById and getFormDefinitionByObjectenApiUrl")
     fun getFormDefinition(
         @GraphQLDescription("The form definition name") name: String
     ): FormDefinition? {
         val formIoFormDefinition = formIoFormDefinitionService.findFormIoFormDefinition(name) ?: return null
-        return FormDefinition(formIoFormDefinition.name, formIoFormDefinition.formDefinition)
+        return FormDefinition(formIoFormDefinition.formDefinition)
+    }
+
+    fun getFormDefinitionById(
+        @GraphQLDescription("The form definition id") id: String
+    ): FormDefinition? {
+        val formIoFormDefinition = formIoFormDefinitionService.findFormIoFormDefinition(id) ?: return null
+        return FormDefinition(formIoFormDefinition.formDefinition)
+    }
+
+    suspend fun getFormDefinitionByObjectenApiUrl(
+        @GraphQLDescription("The form definition url") url: String
+    ): FormDefinition? {
+        val objectenApiFormDefinition = objectenApiFormDefinitionService.findObjectsApiFormDefinition(url) ?: return null
+        return FormDefinition(objectenApiFormDefinition.formDefinition)
     }
 }
