@@ -16,9 +16,10 @@
 package nl.nlportal.zgw.objectenapi.autoconfiguration
 
 import org.springframework.boot.context.properties.ConfigurationProperties
+import java.net.URI
 
 @ConfigurationProperties(prefix = "valtimo.objectsapi")
 class ObjectsApiClientConfig(
-    var url: String = "",
+    var url: URI = URI.create(""),
     var token: String = ""
 )

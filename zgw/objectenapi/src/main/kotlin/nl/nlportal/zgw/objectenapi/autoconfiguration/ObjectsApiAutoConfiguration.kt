@@ -16,6 +16,7 @@
 package nl.nlportal.zgw.objectenapi.autoconfiguration
 
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
+import nl.nlportal.zgw.objectenapi.service.ObjectenApiService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -27,9 +28,18 @@ class ObjectsApiAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(ObjectsApiClient::class)
-    fun gzacObjectsApiClient(
+    fun objectsApiClient(
         objectsApiClientConfig: ObjectsApiClientConfig
     ): ObjectsApiClient {
         return ObjectsApiClient(objectsApiClientConfig)
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(ObjectenApiService::class)
+    fun objectenApiService(
+        objectsApiClient: ObjectsApiClient,
+        objectsApiClientConfig: ObjectsApiClientConfig
+    ): ObjectenApiService {
+        return ObjectenApiService(objectsApiClient, objectsApiClientConfig)
     }
 }

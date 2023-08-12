@@ -17,6 +17,7 @@ package com.ritense.portal.form.autoconfigure
 
 import com.ritense.portal.form.graphql.FormDefinitionQuery
 import com.ritense.portal.form.service.FormIoFormDefinitionService
+import com.ritense.valtimo.portal.form.service.ObjectsApiFormDefinitionService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -25,8 +26,9 @@ class GraphqlAutoConfiguration {
 
     @Bean
     fun formDefinitionQuery(
-        formIoFormDefinitionService: FormIoFormDefinitionService
+        formIoFormDefinitionService: FormIoFormDefinitionService,
+        objectenApiFormDefinitionService: ObjectsApiFormDefinitionService
     ): FormDefinitionQuery {
-        return FormDefinitionQuery(formIoFormDefinitionService)
+        return FormDefinitionQuery(formIoFormDefinitionService, objectenApiFormDefinitionService)
     }
 }
