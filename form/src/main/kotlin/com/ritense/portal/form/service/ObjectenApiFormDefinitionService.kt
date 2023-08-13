@@ -15,7 +15,6 @@
  */
 package com.ritense.valtimo.portal.form.service
 
-
 import com.ritense.valtimo.portal.form.domain.ObjectsApiFormIoFormDefinition
 import nl.nlportal.zgw.objectenapi.service.ObjectenApiService
 import org.springframework.transaction.annotation.Transactional
