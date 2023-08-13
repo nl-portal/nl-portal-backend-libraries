@@ -31,6 +31,7 @@ dependencies {
     api(ApiDependencies.graphqlKotlinSpringServer)
     api(ApiDependencies.graphqlKotlinHooksProvider)
     api(ApiDependencies.graphqlJavaExtendedScalars)
+    api(ApiDependencies.graphqlJava)
 
     // Jackson
     api("com.fasterxml.jackson.module", "jackson-module-kotlin")
