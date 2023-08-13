@@ -23,7 +23,10 @@ import org.springframework.context.ApplicationContext
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.findAnnotation
 
-class ReactiveDataFactoryProvider(val objectMapper: ObjectMapper, val applicationContext: ApplicationContext) :
+class ReactiveDataFactoryProvider(
+    val objectMapper: ObjectMapper,
+    val applicationContext: ApplicationContext
+) :
     SimpleKotlinDataFetcherFactoryProvider(objectMapper) {
 
     override fun functionDataFetcherFactory(target: Any?, kFunction: KFunction<*>) = DataFetcherFactory {
