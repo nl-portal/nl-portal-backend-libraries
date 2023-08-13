@@ -57,10 +57,10 @@ class FormDefinitionQuery(
     suspend fun getFormDefinitionById(
         @GraphQLDescription("The form definition id") id: String
     ): FormDefinition? {
-        //for backwards compatibility
-        //if the requested id is a UUID, we assume it's an Objecten API id
-        //when the nl-portal-frontend-libraries has been migrated, this method will be removed
-        if(requestedIdIsUuid(id)) {
+        // for backwards compatibility
+        // if the requested id is a UUID, we assume it's an Objecten API id
+        // when the nl-portal-frontend-libraries has been migrated, this method will be removed
+        if (requestedIdIsUuid(id)) {
             val formIoFormDefinition = objectenApiFormDefinitionService.findObjectsApiFormDefinitionById(id) ?: return null
             return FormDefinition(formIoFormDefinition.formDefinition)
         } else {
