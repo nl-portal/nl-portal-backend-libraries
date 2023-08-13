@@ -18,7 +18,7 @@ package com.ritense.portal.form.graphql
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Query
 import com.ritense.portal.form.service.FormIoFormDefinitionService
-import com.ritense.valtimo.portal.form.service.ObjectsApiFormDefinitionService
+import com.ritense.portal.form.service.ObjectsApiFormDefinitionService
 import java.util.UUID.fromString
 
 class FormDefinitionQuery(

@@ -20,7 +20,7 @@ import com.ritense.portal.form.autodeployment.FormApplicationReadyEventListener
 import com.ritense.portal.form.autodeployment.FormDefinitionDeploymentService
 import com.ritense.portal.form.repository.FormIoFormDefinitionRepository
 import com.ritense.portal.form.service.FormIoFormDefinitionService
-import com.ritense.valtimo.portal.form.service.ObjectsApiFormDefinitionService
+import com.ritense.portal.form.service.ObjectsApiFormDefinitionService
 import nl.nlportal.zgw.objectenapi.service.ObjectenApiService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.domain.EntityScan

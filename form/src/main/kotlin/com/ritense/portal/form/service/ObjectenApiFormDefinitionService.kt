@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.valtimo.portal.form.service
+package com.ritense.portal.form.service
 
-import com.ritense.valtimo.portal.form.domain.ObjectsApiFormIoFormDefinition
+import com.ritense.portal.form.domain.ObjectsApiFormIoFormDefinition
 import nl.nlportal.zgw.objectenapi.service.ObjectenApiService
 import org.springframework.transaction.annotation.Transactional
 
