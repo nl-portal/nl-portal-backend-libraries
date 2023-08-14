@@ -51,7 +51,7 @@ class ObjectenApiService(
     ): ObjectsApiObject<T>? {
         val requestedObjectenApiHost = URI.create(url).host
         val configuredObjectenApiHost = objectsApiClientConfig.url.host
-        if(!requestedObjectenApiHost.equals(configuredObjectenApiHost)) {
+        if (!requestedObjectenApiHost.equals(configuredObjectenApiHost)) {
             throw IllegalArgumentException("Configured Objects API hostname does not match the requested object")
         }
         return objectsApiClient.getObjectByUrl(url)
