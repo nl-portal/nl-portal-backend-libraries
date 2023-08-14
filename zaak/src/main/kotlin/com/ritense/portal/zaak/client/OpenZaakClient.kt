@@ -66,9 +66,9 @@ class OpenZaakClient(
                 uriBuilder.build()
             }
             .retrieve()
-            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.NOT_FOUND)) })
-            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.UNAUTHORIZED)) })
-            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)) })
+            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
+            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) })
+            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) })
             .awaitBody<ResultPage<Zaak>>()
             .results
     }
@@ -78,9 +78,9 @@ class OpenZaakClient(
             .get()
             .uri("/zaken/api/v1/zaken/$zaakId")
             .retrieve()
-            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.NOT_FOUND)) })
-            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.UNAUTHORIZED)) })
-            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)) })
+            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
+            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) })
+            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) })
             .awaitBody()
     }
 
@@ -96,9 +96,9 @@ class OpenZaakClient(
                 uriBuilder.build()
             }
             .retrieve()
-            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.NOT_FOUND)) })
-            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.UNAUTHORIZED)) })
-            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)) })
+            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
+            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) })
+            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) })
             .awaitBody()
     }
 
@@ -107,9 +107,9 @@ class OpenZaakClient(
             .get()
             .uri("/zaken/api/v1/statussen/$statusId")
             .retrieve()
-            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.NOT_FOUND)) })
-            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.UNAUTHORIZED)) })
-            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)) })
+            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
+            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) })
+            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) })
             .awaitBody()
     }
 
@@ -122,9 +122,9 @@ class OpenZaakClient(
                     .build()
             }
             .retrieve()
-            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.NOT_FOUND)) })
-            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.UNAUTHORIZED)) })
-            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)) })
+            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
+            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) })
+            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) })
             .awaitBody<ResultPage<ZaakStatus>>()
             .results
     }
@@ -143,9 +143,9 @@ class OpenZaakClient(
                     .build()
             }
             .retrieve()
-            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.NOT_FOUND)) })
-            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.UNAUTHORIZED)) })
-            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)) })
+            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
+            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) })
+            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) })
             .awaitBody<ResultPage<StatusType>>()
             .results
     }
@@ -155,9 +155,9 @@ class OpenZaakClient(
             .get()
             .uri("/catalogi/api/v1/statustypen/$statusTypeId")
             .retrieve()
-            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.NOT_FOUND)) })
-            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.UNAUTHORIZED)) })
-            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)) })
+            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
+            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) })
+            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) })
             .awaitBody()
     }
 
@@ -166,9 +166,9 @@ class OpenZaakClient(
             .get()
             .uri("/catalogi/api/v1/zaaktypen/$zaakTypeId")
             .retrieve()
-            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.NOT_FOUND)) })
-            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.UNAUTHORIZED)) })
-            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)) })
+            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
+            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) })
+            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) })
             .awaitBody()
     }
 
@@ -181,9 +181,9 @@ class OpenZaakClient(
                     .build()
             }
             .retrieve()
-            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.NOT_FOUND)) })
-            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.UNAUTHORIZED)) })
-            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)) })
+            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
+            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) })
+            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) })
             .awaitBody()
     }
 
@@ -192,9 +192,9 @@ class OpenZaakClient(
             .get()
             .uri("/documenten/api/v1/enkelvoudiginformatieobjecten/$id")
             .retrieve()
-            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.NOT_FOUND)) })
-            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.UNAUTHORIZED)) })
-            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)) })
+            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
+            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) })
+            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) })
             .awaitBody()
     }
 
@@ -204,9 +204,9 @@ class OpenZaakClient(
             .uri("/documenten/api/v1/enkelvoudiginformatieobjecten/$id/download")
             .accept(MediaType.APPLICATION_OCTET_STREAM)
             .retrieve()
-            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.NOT_FOUND)) })
-            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.UNAUTHORIZED)) })
-            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)) })
+            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
+            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) })
+            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) })
             .awaitBody()
     }
 
@@ -245,9 +245,9 @@ class OpenZaakClient(
             .accept(MediaType.APPLICATION_JSON)
             .body(BodyInserters.fromResource(FileSystemResource(file)))
             .retrieve()
-            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.NOT_FOUND)) })
-            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.UNAUTHORIZED)) })
-            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { Mono.error(ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)) })
+            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
+            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) })
+            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) })
             .awaitBody<Document>()
 
         file.deleteIfExists()
