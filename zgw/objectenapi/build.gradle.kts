@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 plugins {
     kotlin("jvm")
 }
@@ -21,11 +20,9 @@ plugins {
 val isLib = true
 
 dependencies {
-
     implementation(kotlin("stdlib-jdk8"))
     api(project(":graphql"))
     api(project(":zgw:common-ground-authentication"))
-    api(project(":zgw:objectenapi"))
 
     // jjwt
     implementation(Dependencies.jsonWebTokensApi)
@@ -42,6 +39,7 @@ dependencies {
     testImplementation(TestDependencies.okHttpTls)
     testImplementation(TestDependencies.hamcrest)
     testImplementation(TestDependencies.postgresql)
+    testImplementation(project(mapOf("path" to ":zgw:taak")))
 }
 
 val jar: Jar by tasks
@@ -49,4 +47,4 @@ val bootJar: org.springframework.boot.gradle.tasks.bundling.BootJar by tasks
 bootJar.enabled = false
 jar.enabled = true
 
-apply(from = "gradle/publishing.gradle")
+apply(from = "gradle/publishing.gradle.kts")

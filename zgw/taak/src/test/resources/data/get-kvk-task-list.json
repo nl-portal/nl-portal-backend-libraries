@@ -11,12 +11,18 @@
                 "index": 1,
                 "typeVersion": 1,
                 "data": {
-                    "kvk": "14127293",
+                    "identificatie": {
+                        "type": "kvk",
+                        "value": "569312863"
+                    },
                     "data": {
                         "voornaam": "Peter"
                     },
                     "status": "open",
-                    "formulier_id": "check-loan-form",
+                    "formulier": {
+                        "type": "id",
+                        "value": "check-loan-form"
+                    },
                     "verwerker_taak_id": "58fad5ab-dc2f-11ec-9075-f22a405ce707"
                 },
                 "geometry": null,

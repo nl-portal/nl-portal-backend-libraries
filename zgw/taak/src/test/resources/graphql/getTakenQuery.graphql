@@ -8,10 +8,17 @@ query {
         content {
             id
             objectId
-            formId
             status
             date
             data
+            formulier {
+                type
+                value
+            }
+            identificatie {
+                type
+                value
+            }
         }
     }
 }
