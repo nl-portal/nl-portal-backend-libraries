@@ -50,6 +50,7 @@ internal class ZaakQueryIT(
         openZaakClientConfig.url = server.url("/").toString()
     }
 
+
     @AfterEach
     internal fun tearDown() {
         server.shutdown()
@@ -112,6 +113,146 @@ internal class ZaakQueryIT(
             .jsonPath("$basePath.statusGeschiedenis[0].statustype.isEindstatus").isEqualTo(true)
     }
 
+    @Test
+    @WithBurgerUser("")
+    fun getZakenNotFound() {
+
+        setupMockOpenZaakServer404()
+
+        val query = """
+            query {
+                getZaken(page: 0) {
+                    uuid,
+                    identificatie,
+                    omschrijving,
+                    zaaktype {
+                        identificatie,
+                        omschrijving
+                    },
+                    startdatum,
+                    status {
+                        datumStatusGezet,
+                        statustype {
+                            omschrijving,
+                            isEindstatus
+                        }
+                    },
+                    statusGeschiedenis {
+                        datumStatusGezet,
+                        statustype {
+                            omschrijving,
+                            isEindstatus
+                        }
+                    }
+                }
+            }
+        """.trimIndent()
+
+        val basePath = "$.data.getZaken[0]"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(query)
+            .exchange()
+            .expectBody()
+            .jsonPath(basePath).doesNotExist()
+    }
+
+    @Test
+    @WithBurgerUser("")
+    fun getZakenUnAuthorized() {
+
+        setupMockOpenZaakServer401()
+
+        val query = """
+            query {
+                getZaken(page: 0) {
+                    uuid,
+                    identificatie,
+                    omschrijving,
+                    zaaktype {
+                        identificatie,
+                        omschrijving
+                    },
+                    startdatum,
+                    status {
+                        datumStatusGezet,
+                        statustype {
+                            omschrijving,
+                            isEindstatus
+                        }
+                    },
+                    statusGeschiedenis {
+                        datumStatusGezet,
+                        statustype {
+                            omschrijving,
+                            isEindstatus
+                        }
+                    }
+                }
+            }
+        """.trimIndent()
+
+        val basePath = "$.data.getZaken[0]"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(query)
+            .exchange()
+            .expectBody()
+            .jsonPath(basePath).doesNotExist()
+    }
+
+    @Test
+    @WithBurgerUser("")
+    fun getZakenInternalServerError() {
+
+        setupMockOpenZaakServer500()
+
+        val query = """
+            query {
+                getZaken(page: 0) {
+                    uuid,
+                    identificatie,
+                    omschrijving,
+                    zaaktype {
+                        identificatie,
+                        omschrijving
+                    },
+                    startdatum,
+                    status {
+                        datumStatusGezet,
+                        statustype {
+                            omschrijving,
+                            isEindstatus
+                        }
+                    },
+                    statusGeschiedenis {
+                        datumStatusGezet,
+                        statustype {
+                            omschrijving,
+                            isEindstatus
+                        }
+                    }
+                }
+            }
+        """.trimIndent()
+
+        val basePath = "$.data.getZaken[0]"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(query)
+            .exchange()
+            .expectBody()
+            .jsonPath(basePath).doesNotExist()
+    }
     @Test
     @WithBurgerUser("123")
     fun `getZaken no page`() {
@@ -265,6 +406,37 @@ internal class ZaakQueryIT(
                     else -> MockResponse().setResponseCode(404)
                 }
                 return response
+            }
+        }
+        server.dispatcher = dispatcher
+    }
+    fun setupMockOpenZaakServer404() {
+        val dispatcher: Dispatcher = object : Dispatcher() {
+            @Throws(InterruptedException::class)
+            override fun dispatch(request: RecordedRequest): MockResponse {
+                return MockResponse().setResponseCode(404)
+            }
+        }
+        server.dispatcher = dispatcher
+    }
+    fun setupMockOpenZaakServer401() {
+
+        openZaakClientConfig.clientId = "";
+
+
+        val dispatcher: Dispatcher = object : Dispatcher() {
+            @Throws(InterruptedException::class)
+            override fun dispatch(request: RecordedRequest): MockResponse {
+                return MockResponse().setResponseCode(401)
+            }
+        }
+        server.dispatcher = dispatcher
+    }
+    fun setupMockOpenZaakServer500() {
+        val dispatcher: Dispatcher = object : Dispatcher() {
+            @Throws(InterruptedException::class)
+            override fun dispatch(request: RecordedRequest): MockResponse {
+                return MockResponse().setResponseCode(500)
             }
         }
         server.dispatcher = dispatcher
@@ -635,6 +807,13 @@ internal class ZaakQueryIT(
         return MockResponse()
             .addHeader("Content-Type", "application/json; charset=utf-8")
             .setResponseCode(200)
+            .setBody(body)
+    }
+
+    fun mockUnAuthorizedResponse(body: String): MockResponse {
+        return MockResponse()
+            .addHeader("Content-Type", "application/json; charset=utf-8")
+            .setResponseCode(401)
             .setBody(body)
     }
 }
