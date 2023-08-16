@@ -21,5 +21,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 data class DocumentenApiVirusScanConfig(
         var enabled: Boolean = false,
     var hostName: String = "",
-    var port: Int = 0
+    var port: Int = 3310
 )
