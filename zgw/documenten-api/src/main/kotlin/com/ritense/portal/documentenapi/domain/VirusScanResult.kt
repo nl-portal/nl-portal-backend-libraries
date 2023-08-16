@@ -1,6 +1,8 @@
 package com.ritense.portal.documentenapi.domain
 
-sealed class VirusScanResult {
-    object OK : VirusScanResult()
-    data class VirusFound(val foundViruses: Map<String, Collection<String>>) : VirusScanResult()
+import java.util.Collections
+
+class VirusScanResult {
+    var status: VirusScanStatus = VirusScanStatus.OK
+    var foundViruses: Map<String, Collection<String>> = Collections.emptyMap()
 }

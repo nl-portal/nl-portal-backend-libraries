@@ -18,6 +18,7 @@ package com.ritense.portal.documentenapi.web.rest
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
 import com.ritense.portal.documentenapi.client.DocumentenApiVirusScanConfig
 import com.ritense.portal.documentenapi.domain.VirusScanResult
+import com.ritense.portal.documentenapi.domain.VirusScanStatus
 import com.ritense.portal.documentenapi.service.DocumentenApiService
 import com.ritense.portal.documentenapi.service.VirusScanService
 import kotlinx.coroutines.runBlocking
@@ -70,7 +71,7 @@ class DocumentContentResource(
             val virusScanResult = virusScanService.scan(dataBufferToInputStream(file.content()))
 
             // only return a bad request as a virus is found, otherwise continue....
-            if(VirusScanResult.OK != virusScanResult) {
+            if(VirusScanStatus.VIRUS_FOUND == virusScanResult.status) {
                 return ResponseEntity(virusScanResult, HttpStatus.BAD_REQUEST)
             }
         }

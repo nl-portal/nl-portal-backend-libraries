@@ -3,6 +3,7 @@ package com.ritense.portal.documentenapi.service.impl
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.ritense.portal.documentenapi.domain.VirusScanResult
+import com.ritense.portal.documentenapi.domain.VirusScanStatus
 import com.ritense.portal.documentenapi.service.VirusScanService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -24,7 +25,7 @@ internal class ClamAVServiceTest {
         val originalStream: InputStream = mock()
         whenever(clamAVClient.scan(originalStream)).thenReturn(ScanResult.OK)
         val result = clamAVService.scan(originalStream)
-        assertEquals(VirusScanResult.OK, result)
+        assertEquals(VirusScanStatus.OK, result.status)
     }
 
     @Test
@@ -37,8 +38,7 @@ internal class ClamAVServiceTest {
         )
 
         val result = clamAVService.scan(originalStream)
-        assertEquals(VirusScanResult.VirusFound(
-                Collections.singletonMap("test", Collections.singleton("test")))
-                , result)
+        assertEquals(VirusScanStatus.VIRUS_FOUND, result.status)
+        assertEquals(Collections.singletonMap("test", Collections.singleton("test")), result.foundViruses)
     }
 }
