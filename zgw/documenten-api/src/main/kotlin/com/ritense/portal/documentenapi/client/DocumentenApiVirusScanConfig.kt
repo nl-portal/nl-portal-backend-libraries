@@ -17,11 +17,9 @@ package com.ritense.portal.documentenapi.client
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "valtimo.zgw.documentenapi")
-data class DocumentenApiConfig(
-        var url: String = "",
-        var clientId: String = "",
-        var secret: String = "",
-        var rsin: String = "",
-        var documentTypeUrl: String = ""
+@ConfigurationProperties(prefix = "valtimo.zgw.documentenapi.virusscan")
+data class DocumentenApiVirusScanConfig(
+        var enabled: Boolean = false,
+    var hostName: String = "",
+    var port: Int = 0
 )

@@ -17,18 +17,22 @@ package com.ritense.portal.documentenapi.autoconfigure
 
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
 import com.ritense.portal.documentenapi.client.DocumentenApiConfig
+import com.ritense.portal.documentenapi.client.DocumentenApiVirusScanConfig
 import com.ritense.portal.documentenapi.graphql.DocumentContentQuery
 import com.ritense.portal.documentenapi.security.config.DocumentContentResourceHttpSecurityConfigurer
+import com.ritense.portal.documentenapi.service.impl.ClamAVService
 import com.ritense.portal.documentenapi.service.DocumentenApiService
+import com.ritense.portal.documentenapi.service.VirusScanService
 import com.ritense.portal.documentenapi.web.rest.DocumentContentResource
 import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import xyz.capybara.clamav.ClamavClient
 
 @Configuration
-@EnableConfigurationProperties(DocumentenApiConfig::class)
+@EnableConfigurationProperties(DocumentenApiConfig::class, DocumentenApiVirusScanConfig::class)
 class DocumentenApiAutoConfiguration {
 
     @Bean
@@ -41,8 +45,30 @@ class DocumentenApiAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(VirusScanService::class)
+    fun virusScanService(
+            clamAVClient: ClamavClient
+    ): VirusScanService {
+        return ClamAVService(clamAVClient)
+    }
+
+    @Bean
+    fun clamAVClient(
+            documentenApiVirusScanConfig: DocumentenApiVirusScanConfig
+    ): ClamavClient {
+        return ClamavClient(
+                documentenApiVirusScanConfig.hostName,
+                documentenApiVirusScanConfig.port
+        )
+    }
+    @Bean
     fun documentenApiConfig(): DocumentenApiConfig {
         return DocumentenApiConfig()
+    }
+
+    @Bean
+    fun documentenApiVirusScanConfig(): DocumentenApiVirusScanConfig {
+        return DocumentenApiVirusScanConfig()
     }
 
     @Bean
@@ -68,8 +94,10 @@ class DocumentenApiAutoConfiguration {
     @ConditionalOnMissingBean(DocumentContentResource::class)
     fun documentContentResource2(
         documentenApiClient: DocumentenApiClient,
-        documentenApiService: DocumentenApiService
+        documentenApiService: DocumentenApiService,
+        virusScanService: VirusScanService,
+        documentenApiVirusScanConfig: DocumentenApiVirusScanConfig
     ): DocumentContentResource {
-        return DocumentContentResource(documentenApiClient, documentenApiService)
+        return DocumentContentResource(documentenApiClient, documentenApiService, virusScanService, documentenApiVirusScanConfig)
     }
 }

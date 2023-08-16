@@ -19,6 +19,7 @@ import com.ritense.portal.commonground.authentication.WithBurgerUser
 import com.ritense.portal.core.util.Mapper
 import com.ritense.portal.documentenapi.TestHelper
 import com.ritense.portal.documentenapi.client.DocumentenApiConfig
+import com.ritense.portal.documentenapi.client.DocumentenApiVirusScanConfig
 import com.ritense.portal.documentenapi.domain.DocumentStatus
 import com.ritense.portal.documentenapi.domain.PostEnkelvoudiginformatieobjectRequest
 import java.io.InputStream
@@ -51,7 +52,8 @@ import org.assertj.core.api.Assertions.assertThat
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DocumentContentResourceIntegrationTest(
     @Autowired private val webTestClient: WebTestClient,
-    @Autowired private val documentenApiConfig: DocumentenApiConfig
+    @Autowired private val documentenApiConfig: DocumentenApiConfig,
+    @Autowired private val documentenApiVirusScanConfig: DocumentenApiVirusScanConfig
 ) {
     lateinit var server: MockWebServer
     protected var executedRequests: MutableList<RecordedRequest> = mutableListOf()
