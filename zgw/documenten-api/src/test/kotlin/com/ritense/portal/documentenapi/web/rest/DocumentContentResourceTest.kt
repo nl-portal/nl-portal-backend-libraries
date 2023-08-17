@@ -43,8 +43,8 @@ class DocumentContentResourceTest {
     private val documentenApiClient: DocumentenApiClient = mock()
     private val documentenApiService: DocumentenApiService = mock()
     private val virusScanService: VirusScanService = mock()
-    private val clamAVVirusScanConfig: DocumentenApiVirusScanConfig = mock()
-    private val downloadResource = DocumentContentResource(documentenApiClient, documentenApiService, virusScanService, clamAVVirusScanConfig)
+    private val documentenApiVirusScanConfig: DocumentenApiVirusScanConfig = mock()
+    private val downloadResource = DocumentContentResource(documentenApiClient, documentenApiService, virusScanService, documentenApiVirusScanConfig)
     val document: Document = mock()
 
     @Test

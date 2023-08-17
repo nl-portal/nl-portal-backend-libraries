@@ -53,7 +53,7 @@ import org.assertj.core.api.Assertions.assertThat
 class DocumentContentResourceIntegrationTest(
     @Autowired private val webTestClient: WebTestClient,
     @Autowired private val documentenApiConfig: DocumentenApiConfig,
-    @Autowired private val clamAVVirusScanConfig: DocumentenApiVirusScanConfig
+    @Autowired private val documentenApiVirusScanConfig: DocumentenApiVirusScanConfig
 ) {
     lateinit var server: MockWebServer
     protected var executedRequests: MutableList<RecordedRequest> = mutableListOf()
