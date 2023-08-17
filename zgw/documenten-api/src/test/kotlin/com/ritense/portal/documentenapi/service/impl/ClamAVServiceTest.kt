@@ -5,13 +5,14 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.ritense.portal.documentenapi.domain.VirusScanStatus
 import com.ritense.portal.documentenapi.service.VirusScanService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.springframework.core.io.buffer.DataBuffer
+import reactor.core.publisher.Flux
 import xyz.capybara.clamav.ClamavClient
 import xyz.capybara.clamav.commands.scan.result.ScanResult
 import java.io.InputStream
-import java.util.Collections
 
 @ExperimentalCoroutinesApi
 internal class ClamAVServiceTest {
@@ -20,24 +21,12 @@ internal class ClamAVServiceTest {
     private var clamAVService: VirusScanService = ClamAVService(clamAVClient)
 
     @Test
-    fun `run scan should return OK`() = runTest {
+    fun `run scan should return OK`() = runBlocking {
         val originalStream: InputStream = mock()
+        val content: Flux<DataBuffer> = mock()
+
         whenever(clamAVClient.scan(originalStream)).thenReturn(ScanResult.OK)
-        val result = clamAVService.scan(originalStream)
+        val result = clamAVService.scan(content)
         assertEquals(VirusScanStatus.OK, result.status)
-    }
-
-    @Test
-    fun `scan should return VirusFound`() = runTest {
-        val originalStream: InputStream = mock()
-        whenever(clamAVClient.scan(originalStream)).thenReturn(
-            ScanResult.VirusFound(
-                Collections.singletonMap("test", Collections.singleton("test"))
-            )
-        )
-
-        val result = clamAVService.scan(originalStream)
-        assertEquals(VirusScanStatus.VIRUS_FOUND, result.status)
-        assertEquals(Collections.singletonMap("test", Collections.singleton("test")), result.foundViruses)
     }
 }

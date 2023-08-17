@@ -22,7 +22,6 @@ import com.ritense.portal.documentenapi.service.DocumentenApiService
 import com.ritense.portal.documentenapi.service.VirusScanService
 import kotlinx.coroutines.runBlocking
 import org.springframework.core.io.buffer.DataBuffer
-import org.springframework.core.io.buffer.DataBufferUtils
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -35,9 +34,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestPart
 import reactor.core.publisher.Flux
-import java.io.InputStream
-import java.io.PipedInputStream
-import java.io.PipedOutputStream
 import java.util.UUID
 
 @RestController
@@ -71,7 +67,7 @@ class DocumentContentResource(
     suspend fun uploadStreaming(@RequestPart("file") file: FilePart): ResponseEntity<Any> {
         if (documentenApiVirusScanConfig.enabled) {
             // virus scan is enabled
-            val virusScanResult = virusScanService.scan(dataBufferToInputStream(file.content()))
+            val virusScanResult = virusScanService.scan(file.content())
 
             // only return a bad request as a virus is found, otherwise continue....
             if (VirusScanStatus.VIRUS_FOUND == virusScanResult.status) {
@@ -79,14 +75,5 @@ class DocumentContentResource(
             }
         }
         return ResponseEntity.ok(documentenApiService.uploadDocument(file))
-    }
-
-    fun dataBufferToInputStream(content: Flux<DataBuffer>): InputStream {
-        val osPipe = PipedOutputStream()
-        val isPipe = PipedInputStream(osPipe)
-        DataBufferUtils.write(content, osPipe)
-            .subscribe(DataBufferUtils.releaseConsumer())
-
-        return isPipe
     }
 }

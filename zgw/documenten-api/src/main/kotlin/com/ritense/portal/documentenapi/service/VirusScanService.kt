@@ -1,8 +1,9 @@
 package com.ritense.portal.documentenapi.service
 
 import com.ritense.portal.documentenapi.domain.VirusScanResult
-import java.io.InputStream
+import org.springframework.core.io.buffer.DataBuffer
+import reactor.core.publisher.Flux
 
 fun interface VirusScanService {
-    fun scan(originalStream: InputStream): VirusScanResult
+    fun scan(content: Flux<DataBuffer>): VirusScanResult
 }
