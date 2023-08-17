@@ -17,7 +17,6 @@ package com.ritense.portal.documentenapi.web.rest
 
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
 import com.ritense.portal.documentenapi.client.DocumentenApiVirusScanConfig
-import com.ritense.portal.documentenapi.domain.VirusScanResult
 import com.ritense.portal.documentenapi.domain.VirusScanStatus
 import com.ritense.portal.documentenapi.service.DocumentenApiService
 import com.ritense.portal.documentenapi.service.VirusScanService
@@ -29,13 +28,17 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.http.codec.multipart.FilePart
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestPart
 import reactor.core.publisher.Flux
 import java.io.InputStream
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
-import java.util.*
-
+import java.util.UUID
 
 @RestController
 @RequestMapping(value = ["/api"])
@@ -66,12 +69,12 @@ class DocumentContentResource(
 
     @PostMapping(value = ["/document/content"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     suspend fun uploadStreaming(@RequestPart("file") file: FilePart): ResponseEntity<Any> {
-        if(documentenApiVirusScanConfig.enabled){
-            //virus scan is enabled
+        if (documentenApiVirusScanConfig.enabled) {
+            // virus scan is enabled
             val virusScanResult = virusScanService.scan(dataBufferToInputStream(file.content()))
 
             // only return a bad request as a virus is found, otherwise continue....
-            if(VirusScanStatus.VIRUS_FOUND == virusScanResult.status) {
+            if (VirusScanStatus.VIRUS_FOUND == virusScanResult.status) {
                 return ResponseEntity(virusScanResult, HttpStatus.BAD_REQUEST)
             }
         }
@@ -82,7 +85,7 @@ class DocumentContentResource(
         val osPipe = PipedOutputStream()
         val isPipe = PipedInputStream(osPipe)
         DataBufferUtils.write(content, osPipe)
-                .subscribe(DataBufferUtils.releaseConsumer());
+            .subscribe(DataBufferUtils.releaseConsumer())
 
         return isPipe
     }

@@ -8,7 +8,7 @@ import xyz.capybara.clamav.commands.scan.result.ScanResult
 import java.io.InputStream
 
 class ClamAVService(
-        private val clamAVClient: ClamavClient
+    private val clamAVClient: ClamavClient
 ) : VirusScanService {
 
     override fun scan(originalStream: InputStream): VirusScanResult {
@@ -21,6 +21,6 @@ class ClamAVService(
             }
         }
 
-        return result;
+        return result
     }
 }

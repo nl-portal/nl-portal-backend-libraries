@@ -47,18 +47,18 @@ class DocumentenApiAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(VirusScanService::class)
     fun virusScanService(
-            clamAVClient: ClamavClient
+        clamAVClient: ClamavClient
     ): VirusScanService {
         return ClamAVService(clamAVClient)
     }
 
     @Bean
     fun clamAVClient(
-            documentenApiVirusScanConfig: DocumentenApiVirusScanConfig
+        documentenApiVirusScanConfig: DocumentenApiVirusScanConfig
     ): ClamavClient {
         return ClamavClient(
-                documentenApiVirusScanConfig.hostName,
-                documentenApiVirusScanConfig.port
+            documentenApiVirusScanConfig.hostName,
+            documentenApiVirusScanConfig.port
         )
     }
     @Bean

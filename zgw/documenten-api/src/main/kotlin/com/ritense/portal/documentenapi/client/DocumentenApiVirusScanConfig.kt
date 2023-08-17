@@ -19,7 +19,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "valtimo.zgw.documentenapi.virusscan")
 data class DocumentenApiVirusScanConfig(
-        var enabled: Boolean = false,
+    var enabled: Boolean = false,
     var hostName: String = "",
     var port: Int = 3310
 )

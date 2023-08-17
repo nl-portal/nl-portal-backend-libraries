@@ -2,7 +2,6 @@ package com.ritense.portal.documentenapi.service.impl
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import com.ritense.portal.documentenapi.domain.VirusScanResult
 import com.ritense.portal.documentenapi.domain.VirusScanStatus
 import com.ritense.portal.documentenapi.service.VirusScanService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -12,7 +11,7 @@ import org.junit.jupiter.api.Test
 import xyz.capybara.clamav.ClamavClient
 import xyz.capybara.clamav.commands.scan.result.ScanResult
 import java.io.InputStream
-import java.util.*
+import java.util.Collections
 
 @ExperimentalCoroutinesApi
 internal class ClamAVServiceTest {
@@ -21,7 +20,7 @@ internal class ClamAVServiceTest {
     private var clamAVService: VirusScanService = ClamAVService(clamAVClient)
 
     @Test
-    fun `run scan should return OK` () = runTest {
+    fun `run scan should return OK`() = runTest {
         val originalStream: InputStream = mock()
         whenever(clamAVClient.scan(originalStream)).thenReturn(ScanResult.OK)
         val result = clamAVService.scan(originalStream)
@@ -29,12 +28,12 @@ internal class ClamAVServiceTest {
     }
 
     @Test
-    fun `scan should return VirusFound`()  = runTest{
+    fun `scan should return VirusFound`() = runTest {
         val originalStream: InputStream = mock()
         whenever(clamAVClient.scan(originalStream)).thenReturn(
-                ScanResult.VirusFound(
-                        Collections.singletonMap("test", Collections.singleton("test"))
-                )
+            ScanResult.VirusFound(
+                Collections.singletonMap("test", Collections.singleton("test"))
+            )
         )
 
         val result = clamAVService.scan(originalStream)
