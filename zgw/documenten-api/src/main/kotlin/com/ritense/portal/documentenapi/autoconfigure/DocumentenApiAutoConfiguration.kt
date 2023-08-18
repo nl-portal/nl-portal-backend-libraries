@@ -15,14 +15,15 @@
  */
 package com.ritense.portal.documentenapi.autoconfigure
 
+import com.ritense.portal.documentenapi.client.ClamAVVirusScanConfig
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
 import com.ritense.portal.documentenapi.client.DocumentenApiConfig
 import com.ritense.portal.documentenapi.client.DocumentenApiVirusScanConfig
 import com.ritense.portal.documentenapi.graphql.DocumentContentQuery
 import com.ritense.portal.documentenapi.security.config.DocumentContentResourceHttpSecurityConfigurer
-import com.ritense.portal.documentenapi.service.impl.ClamAVService
 import com.ritense.portal.documentenapi.service.DocumentenApiService
 import com.ritense.portal.documentenapi.service.VirusScanService
+import com.ritense.portal.documentenapi.service.impl.ClamAVService
 import com.ritense.portal.documentenapi.web.rest.DocumentContentResource
 import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -32,7 +33,7 @@ import org.springframework.context.annotation.Configuration
 import xyz.capybara.clamav.ClamavClient
 
 @Configuration
-@EnableConfigurationProperties(DocumentenApiConfig::class, DocumentenApiVirusScanConfig::class)
+@EnableConfigurationProperties(DocumentenApiConfig::class, DocumentenApiVirusScanConfig::class, ClamAVVirusScanConfig::class)
 class DocumentenApiAutoConfiguration {
 
     @Bean
@@ -54,11 +55,11 @@ class DocumentenApiAutoConfiguration {
 
     @Bean
     fun clamAVClient(
-        documentenApiVirusScanConfig: DocumentenApiVirusScanConfig
+        clamAVVirusScanConfig: ClamAVVirusScanConfig
     ): ClamavClient {
         return ClamavClient(
-            documentenApiVirusScanConfig.hostName,
-            documentenApiVirusScanConfig.port
+            clamAVVirusScanConfig.hostName,
+            clamAVVirusScanConfig.port
         )
     }
     @Bean
