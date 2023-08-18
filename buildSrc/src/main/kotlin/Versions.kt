@@ -28,7 +28,7 @@ internal object TestVersions {
     const val postgresql = "42.5.0"
 }
 
-internal object ApiVersions {
+object ApiVersions {
     const val apacheCommons = "3.12.0"
     const val commonsIo = "2.11.0"
     const val formFlow = "9.24.0.RELEASE"

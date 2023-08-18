@@ -24,8 +24,8 @@ import kotlin.reflect.KFunction
 import kotlin.reflect.full.findAnnotation
 
 class ReactiveDataFactoryProvider(
-    val objectMapper: ObjectMapper,
-    val applicationContext: ApplicationContext
+    private val objectMapper: ObjectMapper,
+    private val applicationContext: ApplicationContext
 ) :
     SimpleKotlinDataFetcherFactoryProvider(objectMapper) {
 

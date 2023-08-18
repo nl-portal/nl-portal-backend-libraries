@@ -118,7 +118,7 @@ subprojects {
     configure<DependencyManagementExtension> {
         imports {
             mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES) {
-                bomProperty("graphql-java.version", "17.0")
+                bomProperty("graphql-java.version", ApiVersions.graphqlJava)
             }
         }
     }

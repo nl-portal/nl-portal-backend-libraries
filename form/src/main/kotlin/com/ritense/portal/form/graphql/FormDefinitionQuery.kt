@@ -27,7 +27,7 @@ class FormDefinitionQuery(
 ) : Query {
 
     @GraphQLDescription("find all form definitions from repository")
-    @Deprecated("Deprecated")
+    @Deprecated("This method is not used by the NL Portal frontend and is not being replaced.")
     fun allFormDefinitions(): List<FormDefinition> {
         return formIoFormDefinitionService.findAllFormDefinitions()
             .map { FormDefinition(it.formDefinition) }
