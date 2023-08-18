@@ -88,10 +88,6 @@ subprojects {
     if (!(project.path.contains("gradle"))) {
         println("Enabling Spring Boot plugin in project ${project.name}...")
         apply(plugin = "org.springframework.boot")
-
-        val javadocJar = tasks.named<Jar>("javadocJar") {
-            from(tasks.named("dokkaJavadoc"))
-        }
     }
 
     println("Enabling Kotlin Spring plugin in project ${project.name}...")
