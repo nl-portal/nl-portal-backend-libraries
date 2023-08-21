@@ -15,10 +15,9 @@
  */
 package nl.nlportal.zgw.taak.autoconfigure
 
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "zgw.taak.taakobject")
+@ConfigurationProperties(prefix = "nl-portal.zgw.taak.taakobject")
 class TaakObjectConfig(
     var typeUrl: String = ""
 )
