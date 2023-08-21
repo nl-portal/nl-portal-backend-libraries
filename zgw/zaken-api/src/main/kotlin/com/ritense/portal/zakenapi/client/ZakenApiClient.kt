@@ -22,10 +22,12 @@ import com.ritense.portal.zakenapi.domain.ZaakDocument
 import com.ritense.portal.zakenapi.domain.ZaakRol
 import com.ritense.portal.zakenapi.domain.ZaakStatus
 import io.netty.handler.logging.LogLevel
+import org.springframework.http.HttpStatus
 import java.util.UUID
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
+import org.springframework.web.server.ResponseStatusException
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
 
@@ -43,6 +45,9 @@ class ZakenApiClient(
                 uriBuilder.build()
             }
             .retrieve()
+            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
+            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) })
+            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) })
             .awaitBody<ResultPage<Zaak>>()
             .results
     }
@@ -52,6 +57,9 @@ class ZakenApiClient(
             .get()
             .uri("/zaken/api/v1/zaken/$zaakId")
             .retrieve()
+            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
+            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) })
+            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) })
             .awaitBody()
     }
 
@@ -67,6 +75,9 @@ class ZakenApiClient(
                 uriBuilder.build()
             }
             .retrieve()
+            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
+            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) })
+            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) })
             .awaitBody()
     }
 
@@ -75,6 +86,9 @@ class ZakenApiClient(
             .get()
             .uri("/zaken/api/v1/statussen/$statusId")
             .retrieve()
+            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
+            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) })
+            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) })
             .awaitBody()
     }
 
@@ -87,6 +101,9 @@ class ZakenApiClient(
                     .build()
             }
             .retrieve()
+            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
+            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) })
+            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) })
             .awaitBody<ResultPage<ZaakStatus>>()
             .results
     }
@@ -100,6 +117,9 @@ class ZakenApiClient(
                     .build()
             }
             .retrieve()
+            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
+            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) })
+            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) })
             .awaitBody()
     }
 
