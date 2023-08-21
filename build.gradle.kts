@@ -88,10 +88,6 @@ subprojects {
     if (!(project.path.contains("gradle"))) {
         println("Enabling Spring Boot plugin in project ${project.name}...")
         apply(plugin = "org.springframework.boot")
-
-        val javadocJar = tasks.named<Jar>("javadocJar") {
-            from(tasks.named("dokkaJavadoc"))
-        }
     }
 
     println("Enabling Kotlin Spring plugin in project ${project.name}...")
@@ -117,7 +113,9 @@ subprojects {
     apply(plugin = "io.spring.dependency-management")
     configure<DependencyManagementExtension> {
         imports {
-            mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+            mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES) {
+                bomProperty("graphql-java.version", ApiVersions.graphqlJava)
+            }
         }
     }
 

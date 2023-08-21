@@ -22,6 +22,7 @@ open class Page<T> (
     @GraphQLDescription("The requested page number") val number: Int,
     @GraphQLDescription("The requested page size") val size: Int,
     @GraphQLDescription("The elements on this page")val content: List<T>,
+    @GraphQLDescription("The elements on this page (deprecated)")val results: List<T>,
     @GraphQLDescription("The total number of elements") val totalElements: Int,
 ) {
     @GraphQLDescription("The number of elements on this page")

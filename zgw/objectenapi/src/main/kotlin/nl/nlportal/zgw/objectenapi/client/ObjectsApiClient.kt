@@ -23,6 +23,7 @@ import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import io.netty.handler.logging.LogLevel
 import java.util.UUID
 import kotlinx.coroutines.reactor.awaitSingle
+import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.MediaType
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
@@ -33,6 +34,26 @@ import reactor.netty.transport.logging.AdvancedByteBufFormat
 open class ObjectsApiClient(
     private val objectsApiClientConfig: ObjectsApiClientConfig,
 ) {
+    suspend inline fun <reified T> getObjectById(id: String): ObjectsApiObject<T>? {
+        return webClient()
+            .get()
+            .uri("/api/v2/objects/$id")
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .bodyToMono(object : ParameterizedTypeReference<ObjectsApiObject<T>>() {})
+            .awaitSingleOrNull()
+    }
+
+    suspend inline fun <reified T> getObjectByUrl(url: String): ObjectsApiObject<T>? {
+        return webClientWithoutBaseUrl()
+            .get()
+            .uri(url)
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .bodyToMono(object : ParameterizedTypeReference<ObjectsApiObject<T>>() {})
+            .awaitSingleOrNull()
+    }
+
     suspend inline fun <reified T> getObjects(
         objectSearchParameters: List<ObjectSearchParameter>,
         objectTypeUrl: String? = null,
@@ -80,7 +101,24 @@ open class ObjectsApiClient(
                     )
                 )
             )
-            .baseUrl(objectsApiClientConfig.url)
+            .baseUrl(objectsApiClientConfig.url.toString())
+            .defaultHeader("Accept-Crs", "EPSG:4326")
+            .defaultHeader("Content-Crs", "EPSG:4326")
+            .defaultHeader("Authorization", "Token ${objectsApiClientConfig.token}")
+            .build()
+    }
+
+    fun webClientWithoutBaseUrl(): WebClient {
+        return WebClient.builder()
+            .clientConnector(
+                ReactorClientHttpConnector(
+                    HttpClient.create().wiretap(
+                        "reactor.netty.http.client.HttpClient",
+                        LogLevel.DEBUG,
+                        AdvancedByteBufFormat.TEXTUAL
+                    )
+                )
+            )
             .defaultHeader("Accept-Crs", "EPSG:4326")
             .defaultHeader("Content-Crs", "EPSG:4326")
             .defaultHeader("Authorization", "Token ${objectsApiClientConfig.token}")

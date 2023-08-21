@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2022 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.graphql.security.directive
+package com.ritense.portal.form.domain
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDirective
+import com.fasterxml.jackson.databind.node.ObjectNode
 
-@GraphQLDirective(
-    name = "isAuthenticated",
-    description = "The user needs to be authenticated to use this"
+data class ObjectsApiFormIoFormDefinition(
+    val formDefinition: ObjectNode,
 )
-annotation class IsUnauthenticated

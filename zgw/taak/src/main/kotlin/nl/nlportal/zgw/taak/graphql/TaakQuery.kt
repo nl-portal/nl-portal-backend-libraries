@@ -29,6 +29,16 @@ class TaakQuery(
 ) : Query {
 
     @GraphQLDescription("Get a list of tasks")
+    @Deprecated("Replaced by getTaken")
+    suspend fun getTasks(
+        dfe: DataFetchingEnvironment,
+        pageNumber: Int? = 1,
+        pageSize: Int? = 20
+    ): TaakPage {
+        return getTaken(dfe, pageNumber, pageSize)
+    }
+
+    @GraphQLDescription("Get a list of tasks")
     suspend fun getTaken(
         dfe: DataFetchingEnvironment,
         pageNumber: Int? = 1,
