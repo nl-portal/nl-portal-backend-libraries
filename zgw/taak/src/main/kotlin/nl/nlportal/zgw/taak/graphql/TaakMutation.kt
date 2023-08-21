@@ -39,4 +39,13 @@ class TaakMutation(
 
         return taskService.submitTaak(id, submission, authentication)
     }
+
+    @GraphQLDescription("Submit a task")
+    suspend fun submitTask(
+        dfe: DataFetchingEnvironment,
+        id: UUID,
+        submission: ObjectNode,
+    ): Taak {
+        return submitTaak(dfe, id, submission)
+    }
 }

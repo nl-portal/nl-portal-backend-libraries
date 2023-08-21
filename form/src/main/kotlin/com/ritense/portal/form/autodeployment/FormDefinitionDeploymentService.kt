@@ -41,7 +41,7 @@ class FormDefinitionDeploymentService(
             }
             val name = getFormName(resource)
             val rawFormDefinition = getJson(IOUtils.toString(resource.inputStream, StandardCharsets.UTF_8))
-            val form = formIoFormDefinitionService.findFormIoFormDefinition(name)
+            val form = formIoFormDefinitionService.findFormIoFormDefinitionByName(name)
             if (form == null) {
                 formIoFormDefinitionService.createFormDefinition(
                     CreateFormDefinitionRequest(

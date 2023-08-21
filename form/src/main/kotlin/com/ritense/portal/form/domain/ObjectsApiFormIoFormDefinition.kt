@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.valtimo.portal.form.domain
+package com.ritense.portal.form.domain
 
 import com.fasterxml.jackson.databind.node.ObjectNode
 

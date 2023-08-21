@@ -22,6 +22,7 @@ import java.util.UUID
 
 class Taak(
     val id: UUID,
+    val title: String,
     val objectId: UUID,
     val identificatie: TaakIdentificatie,
     val formulier: TaakFormulier,
@@ -35,6 +36,7 @@ class Taak(
             val taakObject = objectsApiTask.record.data
             return Taak(
                 id = taakObject.verwerkerTaakId,
+                title = taakObject.title,
                 objectId = objectsApiTask.uuid,
                 formulier = taakObject.formulier,
                 status = taakObject.status,

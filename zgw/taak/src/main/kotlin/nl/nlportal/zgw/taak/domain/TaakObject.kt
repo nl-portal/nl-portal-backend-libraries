@@ -22,6 +22,7 @@ import java.util.UUID
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class TaakObject(
     val identificatie: TaakIdentificatie,
+    val title: String,
     val data: Map<String, Any>,
     @JsonProperty("verzonden_data") var verzondenData: Map<String, Any>? = null,
     var status: TaakStatus,
