@@ -26,6 +26,7 @@ import com.ritense.portal.documentenapi.service.VirusScanService
 import com.ritense.portal.documentenapi.service.impl.ClamAVService
 import com.ritense.portal.documentenapi.web.rest.DocumentContentResource
 import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
+import mu.KotlinLogging
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -57,6 +58,7 @@ class DocumentenApiAutoConfiguration {
     fun clamAVClient(
         clamAVVirusScanConfig: ClamAVVirusScanConfig
     ): ClamavClient {
+        logger.info("ClamAV virusscan is loaded with host: {} and port: {}", clamAVVirusScanConfig.hostName, clamAVVirusScanConfig.port)
         return ClamavClient(
             clamAVVirusScanConfig.hostName,
             clamAVVirusScanConfig.port
@@ -100,5 +102,9 @@ class DocumentenApiAutoConfiguration {
         documentenApiVirusScanConfig: DocumentenApiVirusScanConfig
     ): DocumentContentResource {
         return DocumentContentResource(documentenApiClient, documentenApiService, virusScanService, documentenApiVirusScanConfig)
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger {}
     }
 }
