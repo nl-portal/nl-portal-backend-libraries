@@ -44,7 +44,7 @@ class FormIoFormDefinitionService(
         return formIoFormDefinitionRepository.findAll()
     }
 
-    fun findFormIoFormDefinition(name: String): FormIoFormDefinition? {
+    fun findFormIoFormDefinitionByName(name: String): FormIoFormDefinition? {
         return formIoFormDefinitionRepository.findByName(name)
     }
 

@@ -28,6 +28,18 @@ import kotlin.coroutines.coroutineContext
 @ExperimentalCoroutinesApi
 class AuthenticationGraphQLContextFactory : SpringGraphQLContextFactory<AuthenticationGraphQLContext>() {
 
+    @Deprecated("Support for custom GraphQL context is deprecated from graphql-kotlin. Use GraphQL context Map in DataFetchingEnvironment instead")
+    override suspend fun generateContext(request: ServerRequest): AuthenticationGraphQLContext {
+        val reactorContext = coroutineContext[ReactorContext]?.context ?: throw RuntimeException("ReactorContext not found")
+
+        val securityContext = reactorContext.getOrDefault<Mono<SecurityContext>>(
+            SecurityContext::class.java,
+            null
+        )!!
+
+        return AuthenticationGraphQLContext(securityContext.awaitFirstOrNull()?.authentication, request)
+    }
+
     override suspend fun generateContextMap(request: ServerRequest): Map<*, Any> {
         val reactorContext = coroutineContext[ReactorContext]?.context ?: throw RuntimeException("ReactorContext not found")
 

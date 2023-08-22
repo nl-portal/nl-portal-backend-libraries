@@ -28,6 +28,7 @@ dependencies {
     api(project(":core"))
     api(project(":data"))
     api(project(":graphql"))
+    api(project(":zgw:objectenapi"))
 
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.assertj", "assertj-core")

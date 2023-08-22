@@ -18,6 +18,5 @@ package com.ritense.portal.form.graphql
 import com.fasterxml.jackson.databind.node.ObjectNode
 
 data class FormDefinition(
-    var name: String,
     var formDefinition: ObjectNode
 )

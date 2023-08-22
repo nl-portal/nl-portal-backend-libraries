@@ -28,12 +28,12 @@ internal object TestVersions {
     const val postgresql = "42.5.0"
 }
 
-internal object ApiVersions {
+object ApiVersions {
     const val apacheCommons = "3.12.0"
     const val commonsIo = "2.11.0"
     const val formFlow = "9.24.0.RELEASE"
-    const val graphqlJava ="18.3"
-    const val graphqlKotlin = "6.3.0"
+    const val graphqlJava ="17.0"
+    const val graphqlKotlin = "5.5.0"
     const val hibernateTypes = "2.20.0"
     const val kotlinLogging = "3.0.4"
     const val springCloud = "3.2.6"

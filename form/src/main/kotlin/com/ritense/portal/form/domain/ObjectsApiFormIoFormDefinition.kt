@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2022 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.zgw.taak.autoconfigure
+package com.ritense.portal.form.domain
 
-import org.springframework.boot.context.properties.ConfigurationProperties
+import com.fasterxml.jackson.databind.node.ObjectNode
 
-@ConfigurationProperties(prefix = "valtimo.objectsapi.taak")
-class ObjectsApiTaakConfig(
-    var typeUrl: String = ""
+data class ObjectsApiFormIoFormDefinition(
+    val formDefinition: ObjectNode,
 )

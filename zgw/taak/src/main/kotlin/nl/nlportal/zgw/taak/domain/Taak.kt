@@ -22,24 +22,28 @@ import java.util.UUID
 
 class Taak(
     val id: UUID,
+    val title: String,
     val objectId: UUID,
     val identificatie: TaakIdentificatie,
     val formulier: TaakFormulier,
+    val formId: String,
     val status: TaakStatus,
     val date: String,
     var data: ObjectNode,
 ) {
     companion object {
-
         fun fromObjectsApiTask(objectsApiTask: ObjectsApiObject<TaakObject>): Taak {
+            val taakObject = objectsApiTask.record.data
             return Taak(
-                id = objectsApiTask.record.data.verwerkerTaakId,
+                id = taakObject.verwerkerTaakId,
+                title = taakObject.title,
                 objectId = objectsApiTask.uuid,
-                formulier = objectsApiTask.record.data.formulier,
-                status = objectsApiTask.record.data.status,
+                formulier = taakObject.formulier,
+                status = taakObject.status,
                 date = objectsApiTask.record.startAt,
                 data = ObjectMapper().valueToTree(objectsApiTask.record.data.data),
-                identificatie = objectsApiTask.record.data.identificatie
+                identificatie = taakObject.identificatie,
+                formId = taakObject.formulier.value
             )
         }
     }

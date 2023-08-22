@@ -56,7 +56,7 @@ internal class TaakQueryIT(
         server = MockWebServer()
         setupMockObjectsApiServer()
         server.start()
-        objectsApiClientConfig.url = server.url("/").toString()
+        objectsApiClientConfig.url = server.url("/").toUri()
     }
 
     @AfterEach

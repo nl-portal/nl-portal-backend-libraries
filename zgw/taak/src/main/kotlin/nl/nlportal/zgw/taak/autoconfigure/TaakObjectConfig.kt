@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.graphql.security.directive
+package nl.nlportal.zgw.taak.autoconfigure
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDirective
+import org.springframework.boot.context.properties.ConfigurationProperties
 
-@GraphQLDirective(
-    name = "isAuthenticated",
-    description = "The user needs to be authenticated to use this"
+@ConfigurationProperties(prefix = "nl-portal.zgw.taak.taakobject")
+class TaakObjectConfig(
+    var typeUrl: String = ""
 )
-annotation class IsUnauthenticated

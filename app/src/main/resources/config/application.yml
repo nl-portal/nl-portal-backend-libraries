@@ -78,8 +78,6 @@ valtimo:
     objectsapi:
         url: http://localhost:8010
         token: 182c13e2209161852c53cef53a879f7a2f923430
-        task:
-            typeUrl: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
     haalcentraal:
     #        url: ${VALTIMO_HAALCENTRAAL_URL}
     #        apiKey: ${VALTIMO_HAALCENTRAAL_APIKEY}
@@ -96,3 +94,9 @@ valtimo:
                 allowedHeaders: "*"
                 allowedOrigins: "*"
                 allowedMethods: "*"
+
+nl-portal:
+    zgw:
+        taak:
+            taakobject:
+                typeUrl: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
