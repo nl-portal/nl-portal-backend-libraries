@@ -31,6 +31,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.reactive.server.WebTestClient
@@ -118,6 +119,66 @@ internal class ZaakQueryIT(
             .jsonPath("$basePath.statusGeschiedenis[0].datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
             .jsonPath("$basePath.statusGeschiedenis[0].statustype.omschrijving").isEqualTo("Zaak afgerond")
             .jsonPath("$basePath.statusGeschiedenis[0].statustype.isEindstatus").isEqualTo(true)
+    }
+
+    @Test
+    @WithBurgerUser("")
+    fun getZakenNotFound() {
+
+        // Make the GraphQL request
+        testClient.post()
+            .uri("/not_found")
+            .accept(APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .exchange()
+            .expectStatus().isNotFound() // Assert NOT_FOUND status
+    }
+
+
+    @Test
+    fun getZakenUnAuthorized() {
+
+        zakenApiConfig.clientId = ""
+
+        val query = """
+            query {
+                getZaken(page: 0) {
+                    uuid,
+                    identificatie,
+                    omschrijving,
+                    zaaktype {
+                        identificatie,
+                        omschrijving
+                    },
+                    startdatum,
+                    status {
+                        datumStatusGezet,
+                        statustype {
+                            omschrijving,
+                            isEindstatus
+                        }
+                    },
+                    statusGeschiedenis {
+                        datumStatusGezet,
+                        statustype {
+                            omschrijving,
+                            isEindstatus
+                        }
+                    }
+                }
+            }
+        """.trimIndent()
+
+        val basePath = "$.data.getZaken[0]"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(query)
+            .exchange()
+            .expectBody()
+            .jsonPath(basePath)
     }
 
     @Test
