@@ -121,6 +121,65 @@ internal class ZaakQueryIT(
     }
 
     @Test
+    @WithBurgerUser("")
+    fun getZakenNotFound() {
+
+        // Make the GraphQL request
+        testClient.post()
+            .uri("/not_found")
+            .accept(APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .exchange()
+            .expectStatus().isNotFound() // Assert NOT_FOUND status
+    }
+
+    @Test
+    fun getZakenUnAuthorized() {
+
+        zakenApiConfig.clientId = ""
+
+        val query = """
+            query {
+                getZaken(page: 0) {
+                    uuid,
+                    identificatie,
+                    omschrijving,
+                    zaaktype {
+                        identificatie,
+                        omschrijving
+                    },
+                    startdatum,
+                    status {
+                        datumStatusGezet,
+                        statustype {
+                            omschrijving,
+                            isEindstatus
+                        }
+                    },
+                    statusGeschiedenis {
+                        datumStatusGezet,
+                        statustype {
+                            omschrijving,
+                            isEindstatus
+                        }
+                    }
+                }
+            }
+        """.trimIndent()
+
+        val basePath = "$.data.getZaken[0]"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(query)
+            .exchange()
+            .expectBody()
+            .jsonPath(basePath)
+    }
+
+    @Test
     @WithBurgerUser("123")
     fun `getZaken no page`() {
 
