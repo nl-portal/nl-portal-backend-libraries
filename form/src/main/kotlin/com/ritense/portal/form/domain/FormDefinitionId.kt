@@ -17,15 +17,18 @@ package com.ritense.portal.form.domain
 
 import com.ritense.portal.core.util.ObjectValidator
 import com.ritense.portal.data.domain.AbstractId
-import java.util.UUID
-import javax.persistence.Column
-import javax.persistence.Embeddable
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
+import jakarta.persistence.GeneratedValue
+import org.hibernate.annotations.UuidGenerator
+import java.util.*
 
 @Embeddable
 data class FormDefinitionId(
 
     @Column(name = "form_definition_id", columnDefinition = "UUID")
-    @org.hibernate.annotations.Type(type = "pg-uuid")
+    @UuidGenerator(style = UuidGenerator.Style.TIME)
+    @GeneratedValue
     val value: UUID
 
 ) : AbstractId<FormDefinitionId>() {

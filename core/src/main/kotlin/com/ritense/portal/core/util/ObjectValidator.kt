@@ -15,8 +15,8 @@
  */
 package com.ritense.portal.core.util
 
-import javax.validation.ConstraintViolationException
-import javax.validation.Validation
+import jakarta.validation.ConstraintViolationException
+import jakarta.validation.Validation
 
 object ObjectValidator {
 

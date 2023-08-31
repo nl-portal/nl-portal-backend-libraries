@@ -62,7 +62,6 @@ class CaseDefinitionService(
         logger.info("Deploying all case definition's")
         val resources: Array<Resource> = loadCaseResources()
         for (resource in resources) {
-
             val resourcePath = resource.url.path.split('/')
             val resourceDir = resourcePath[resourcePath.size - 2]
             val statusResource = loadCaseStatusResource(resourceDir)
@@ -74,13 +73,13 @@ class CaseDefinitionService(
                             StreamUtils.copyToString(
                                 resource.inputStream, StandardCharsets.UTF_8
                             ),
-                            ObjectNode::class.java
+                                ObjectNode::class.java
                         ),
                         Mapper.get().readValue(
                             StreamUtils.copyToString(
                                 statusResource.inputStream, StandardCharsets.UTF_8
                             ),
-                            object : TypeReference<List<String>>() {}
+                                object : TypeReference<List<String>>() {}
                         )
                     )
                 } catch (ex: Exception) {

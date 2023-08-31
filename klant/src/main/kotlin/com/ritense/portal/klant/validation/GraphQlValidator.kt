@@ -15,9 +15,9 @@
  */
 package com.ritense.portal.klant.validation
 
-import javax.validation.Validation
-import javax.validation.ValidationException
-import javax.validation.Validator
+import jakarta.validation.Validation
+import jakarta.validation.ValidationException
+import jakarta.validation.Validator
 
 class GraphQlValidator {
 

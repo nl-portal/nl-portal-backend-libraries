@@ -18,7 +18,6 @@ package com.ritense.portal.graphql.security
 import com.expediagroup.graphql.generator.execution.KotlinDataFetcherFactoryProvider
 import com.expediagroup.graphql.server.spring.GraphQLAutoConfiguration
 import com.expediagroup.graphql.server.spring.execution.SpringGraphQLContextFactory
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.ritense.portal.graphql.security.context.AuthenticationGraphQLContextFactory
 import com.ritense.portal.graphql.security.directive.ReactiveDataFactoryProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,7 +40,7 @@ class GraphQLContextAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    fun reactiveDataFactoryProvider(objectMapper: ObjectMapper, applicationContext: ApplicationContext): KotlinDataFetcherFactoryProvider {
-        return ReactiveDataFactoryProvider(objectMapper, applicationContext)
+    fun reactiveDataFactoryProvider(applicationContext: ApplicationContext): KotlinDataFetcherFactoryProvider {
+        return ReactiveDataFactoryProvider(applicationContext)
     }
 }

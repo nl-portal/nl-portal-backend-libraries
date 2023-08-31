@@ -122,7 +122,6 @@ class CaseServiceUnitTest : BaseTest() {
 
     @Test
     fun `should handle external case event`() {
-
         val externalCaseCreatedEvent = UpdateExternalIdPortalCaseMessage(UUID.randomUUID(), "anExternalId")
 
         val submissionData = JsonNodeFactory.instance.objectNode()
@@ -165,7 +164,6 @@ class CaseServiceUnitTest : BaseTest() {
 
     @Test
     fun `should handle status update case event`() {
-
         val event = UpdateStatusPortalCaseMessage("externalId", "b")
 
         val submissionData = JsonNodeFactory.instance.objectNode()

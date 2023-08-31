@@ -16,15 +16,16 @@
 package com.ritense.portal.case.domain
 
 import com.ritense.portal.core.util.ObjectValidator
-import org.hibernate.annotations.Type
-import javax.persistence.Column
-import javax.persistence.Embeddable
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 
 @Embeddable
 data class StatusDefinition(
 
     @Column(name = "status_definition", columnDefinition = "json")
-    @Type(type = "com.vladmihalcea.hibernate.type.json.JsonBinaryType")
+    @JdbcTypeCode(SqlTypes.JSON)
     val statuses: List<String>
 
 ) {

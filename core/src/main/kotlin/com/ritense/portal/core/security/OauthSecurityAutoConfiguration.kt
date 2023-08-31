@@ -26,6 +26,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.oauth2.jwt.Jwt
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter
+import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter
 import org.springframework.security.web.server.SecurityWebFilterChain
 import org.springframework.web.cors.reactive.CorsWebFilter
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
@@ -45,22 +47,30 @@ class OauthSecurityAutoConfiguration {
 
         securityConfigurers.forEach { it.configure(http) }
 
-        val jwtSpec = http
-            .csrf()
-            .disable()
-            .authorizeExchange()
-            .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-            .pathMatchers("/playground").permitAll()
-            .pathMatchers("/graphql").permitAll()
-            .anyExchange().authenticated()
-            .and()
-            .oauth2ResourceServer()
-            .jwt()
+       return http
+            .csrf { it.disable() }
+            .authorizeExchange {
+                it.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                it.pathMatchers("/playground").permitAll()
+                it.pathMatchers("/graphql").permitAll()
+                it.anyExchange().authenticated()
+            }
+            .oauth2ResourceServer {
+                it.jwt {
+                    it.jwtAuthenticationConverter(customerConverter())
+                }
+            }
+            .build()
 
         // assign custom jwt authentication converter if one is found in application context
-        converter?.apply { jwtSpec.jwtAuthenticationConverter(converter) }
+        //converter?.apply { jwtSpec.jwtAuthenticationConverter(converter) }
 
-        return http.build()
+        //return http.build()
+    }
+
+    fun customerConverter(): Converter<Jwt, Mono<AbstractAuthenticationToken>> {
+        val jwtAuthenticationConverter = JwtAuthenticationConverter()
+        return ReactiveJwtAuthenticationConverterAdapter(jwtAuthenticationConverter)
     }
 
     @Bean
