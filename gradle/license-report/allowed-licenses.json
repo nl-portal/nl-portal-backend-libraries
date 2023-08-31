@@ -13,6 +13,9 @@
             "moduleLicense": "The 3-Clause BSD License"
         },
         {
+            "moduleLicense": "BSD licence"
+        },
+        {
             "moduleLicense": "Go License"
         },
         {
@@ -124,6 +127,16 @@
             "moduleLicense": null,
             "moduleVersion": "3.*",
             "moduleName": "io.github.microutils:kotlin-logging"
+        },
+        {
+            "moduleLicense": null,
+            "moduleVersion": "4.3",
+            "moduleName": "org.antlr:ST4"
+        },
+        {
+            "moduleLicense": "\n                Dual license consisting of the CDDL v1.1 and GPL v2\n            ",
+            "moduleVersion": "1.0.4",
+            "moduleName": "org.glassfish:javax.json"
         }
     ]
 }
