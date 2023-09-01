@@ -23,12 +23,12 @@ import com.ritense.portal.klant.graphql.BurgerMutation
 import com.ritense.portal.klant.graphql.BurgerQuery
 import com.ritense.portal.klant.service.BurgerService
 import com.ritense.portal.klant.validation.GraphQlValidator
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 
-@Configuration
+@AutoConfiguration
 @EnableConfigurationProperties(OpenKlantClientConfig::class)
 class KlantAutoConfiguration {
 

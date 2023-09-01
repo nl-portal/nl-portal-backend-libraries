@@ -23,7 +23,7 @@ import com.ritense.portal.haalcentraal.brp.domain.persoon.Persoon
 import com.ritense.portal.haalcentraal.brp.domain.persoon.PersoonNaam
 import com.ritense.portal.haalcentraal.brp.service.HaalCentraalBrpService
 
-class HaalCentraalBrpService(
+class HaalCentraalBrpServiceImpl(
     val haalCentraalBrpClient: HaalCentraalBrpClient,
 ) : HaalCentraalBrpService {
 

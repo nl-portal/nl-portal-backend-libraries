@@ -16,10 +16,10 @@
 package com.ritense.portal.formflow.autoconfiguration
 
 import com.ritense.portal.data.liquibase.LiquibaseMasterChangeLogLocation
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 
-@Configuration
+@AutoConfiguration
 class FormFlowPortalAutoConfiguration {
 
     @Bean

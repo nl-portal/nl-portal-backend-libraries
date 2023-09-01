@@ -1,0 +1,3 @@
+com.ritense.portal.graphql.GraphqlAutoConfiguration
+com.ritense.portal.graphql.security.GraphQLContextAutoConfiguration
+

@@ -15,9 +15,10 @@
  */
 package com.ritense.portal.data
 
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Configuration
 
-@Configuration
+@AutoConfiguration
 @EntityScan("com.ritense.portal.data.domain")
 class DataAutoConfiguration

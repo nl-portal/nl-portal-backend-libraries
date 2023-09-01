@@ -17,6 +17,7 @@ package com.ritense.portal.core.security
 
 import com.ritense.portal.core.security.config.HttpSecurityConfigurer
 import com.ritense.portal.graphql.autoconfigure.CorsPathConfiguration
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -30,13 +31,11 @@ import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter
 import org.springframework.security.web.server.SecurityWebFilterChain
-import org.springframework.web.cors.CorsConfiguration
-import org.springframework.web.cors.reactive.CorsConfigurationSource
+import org.springframework.web.cors.reactive.CorsWebFilter
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 import reactor.core.publisher.Mono
 
-
-@Configuration
+@AutoConfiguration
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
 @EnableConfigurationProperties(CorsPathConfiguration::class)
@@ -53,7 +52,6 @@ class OauthSecurityAutoConfiguration {
 
         return http
                 .csrf { it.disable() }
-                .cors { it.configurationSource(corsConfigurationSource(corsPathConfiguration)) }
                 .authorizeExchange {
                     it.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     it.pathMatchers("/playground").permitAll()
@@ -73,11 +71,6 @@ class OauthSecurityAutoConfiguration {
         return ReactiveJwtAuthenticationConverterAdapter(jwtAuthenticationConverter)
     }
 
-    /*@Bean
-    fun corsPathConfiguration(): CorsPathConfiguration {
-        return CorsPathConfiguration()
-    }
-
     @Bean
     fun corsWebFilter(corsPathConfiguration: CorsPathConfiguration): CorsWebFilter {
         val source = UrlBasedCorsConfigurationSource()
@@ -87,13 +80,6 @@ class OauthSecurityAutoConfiguration {
         }
 
         return CorsWebFilter(source)
-    }*/
-
-    fun corsConfigurationSource(corsPathConfiguration: CorsPathConfiguration): CorsConfigurationSource {
-        val source = UrlBasedCorsConfigurationSource()
-        corsPathConfiguration.cors.forEach {
-            source.registerCorsConfiguration(it.path, it.config)
-        }
-        return source
     }
+
 }

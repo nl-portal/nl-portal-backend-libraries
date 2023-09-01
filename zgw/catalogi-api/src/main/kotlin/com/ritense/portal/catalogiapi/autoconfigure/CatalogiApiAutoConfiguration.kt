@@ -19,12 +19,12 @@ import com.ritense.portal.catalogiapi.client.CatalogiApiClient
 import com.ritense.portal.catalogiapi.client.CatalogiApiConfig
 import com.ritense.portal.catalogiapi.service.CatalogiApiService
 import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 
-@Configuration
+@AutoConfiguration
 @EnableConfigurationProperties(CatalogiApiConfig::class)
 class CatalogiApiAutoConfiguration {
 

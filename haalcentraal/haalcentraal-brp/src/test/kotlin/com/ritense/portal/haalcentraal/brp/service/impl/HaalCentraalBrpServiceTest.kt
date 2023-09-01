@@ -15,9 +15,6 @@
  */
 package com.ritense.portal.haalcentraal.brp.service.impl
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import com.ritense.portal.commonground.authentication.JwtBuilder
 import com.ritense.portal.haalcentraal.brp.domain.persoon.Persoon
 import com.ritense.portal.haalcentraal.brp.domain.persoon.PersoonNaam
@@ -27,11 +24,14 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
+import org.mockito.kotlin.whenever
 
 @ExperimentalCoroutinesApi
 class HaalCentraalBrpServiceTest {
     val haalCentraalBrpClient = mock<HaalCentraalBrpClient>()
-    val haalCentraalBrpService = HaalCentraalBrpService(haalCentraalBrpClient)
+    val haalCentraalBrpServiceImpl = HaalCentraalBrpServiceImpl(haalCentraalBrpClient)
 
     @Test
     fun `getPerson calls client and gets Persoon`() = runBlockingTest {
@@ -53,7 +53,7 @@ class HaalCentraalBrpServiceTest {
             )
         )
 
-        val persoon = haalCentraalBrpService.getPersoon(authentication)!!
+        val persoon = haalCentraalBrpServiceImpl.getPersoon(authentication)!!
 
         assertEquals("Achternaam", persoon.naam?.geslachtsnaam)
 
@@ -63,7 +63,7 @@ class HaalCentraalBrpServiceTest {
     @Test
     fun `getPerson with invalid bsn`() = runBlockingTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
-        val persoon = haalCentraalBrpService.getPersoon(authentication)
+        val persoon = haalCentraalBrpServiceImpl.getPersoon(authentication)
 
         assertNull(persoon)
     }
@@ -84,7 +84,7 @@ class HaalCentraalBrpServiceTest {
             )
         )
 
-        val persoonNaam = haalCentraalBrpService.getGemachtigde(authentication)!!
+        val persoonNaam = haalCentraalBrpServiceImpl.getGemachtigde(authentication)!!
 
         assertEquals("Achternaam", persoonNaam.geslachtsnaam)
 
@@ -97,7 +97,7 @@ class HaalCentraalBrpServiceTest {
             .aanvragerBsn("123")
             .gemachtigdeBsn("456")
             .buildBurgerAuthentication()
-        val persoonNaam = haalCentraalBrpService.getPersoon(authentication)
+        val persoonNaam = haalCentraalBrpServiceImpl.getPersoon(authentication)
 
         assertNull(persoonNaam)
     }
