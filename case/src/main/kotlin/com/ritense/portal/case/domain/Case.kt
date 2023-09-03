@@ -20,7 +20,11 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.ritense.portal.core.util.ObjectValidator
 import com.ritense.portal.data.domain.AggregateRoot
 import com.ritense.portal.data.domain.DomainEvent
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.EmbeddedId
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
+import jakarta.persistence.Embedded
 import jakarta.validation.constraints.NotBlank
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes

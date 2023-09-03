@@ -26,7 +26,7 @@ internal class ReactiveDataFactoryProviderTest {
 
     val objectMapper = mock(ObjectMapper::class.java)
     val applicationContext = mock(ApplicationContext::class.java)
-    val reactiveDataFactoryProvider = ReactiveDataFactoryProvider(objectMapper, applicationContext)
+    val reactiveDataFactoryProvider = ReactiveDataFactoryProvider(applicationContext)
 
     @Test
     fun `should use authenticated data fetcher when method is not annotated`() {

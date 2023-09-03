@@ -34,7 +34,7 @@ class GraphQLContextAutoConfiguration {
     @ExperimentalCoroutinesApi
     @Bean
     @ConditionalOnMissingBean
-    fun authenticationGraphQLContextFactory(): SpringGraphQLContextFactory<*> {
+    fun authenticationGraphQLContextFactory(): SpringGraphQLContextFactory {
         return AuthenticationGraphQLContextFactory()
     }
 

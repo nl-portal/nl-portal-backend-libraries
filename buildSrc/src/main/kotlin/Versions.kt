@@ -33,7 +33,7 @@ object ApiVersions {
     const val commonsIo = "2.13.0"
     const val formFlow = "10.6.0.RELEASE"
     const val graphqlJava ="21.0"
-    const val graphqlKotlin = "6.5.3"
+    const val graphqlKotlin = "7.0.0-alpha.6"
     const val hibernateTypes = "2.21.1"
     const val kotlinLogging = "3.0.5"
     const val springCloud = "4.0.4"

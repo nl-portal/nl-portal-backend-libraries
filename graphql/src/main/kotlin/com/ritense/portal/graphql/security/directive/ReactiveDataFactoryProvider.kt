@@ -27,7 +27,7 @@ class ReactiveDataFactoryProvider(
 ) :
     SimpleKotlinDataFetcherFactoryProvider() {
 
-    override fun functionDataFetcherFactory(target: Any?, kFunction: KFunction<*>) = DataFetcherFactory {
+    fun functionDataFetcherFactory(target: Any?, kFunction: KFunction<*>) = DataFetcherFactory {
         val isUnauthenticated = kFunction.findAnnotation<IsUnauthenticated>()
         val defaultDataFetcher = SpringDataFetcher(
             target = target,
