@@ -15,8 +15,6 @@
  */
 package com.ritense.portal.graphql.security.context
 
-import com.apollographql.federation.graphqljava.tracing.FederatedTracingInstrumentation.FEDERATED_TRACING_HEADER_NAME
-import com.expediagroup.graphql.generator.extensions.toGraphQLContext
 import com.expediagroup.graphql.server.spring.execution.DefaultSpringGraphQLContextFactory
 import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import graphql.GraphQLContext
@@ -40,12 +38,7 @@ class AuthenticationGraphQLContextFactory : DefaultSpringGraphQLContextFactory()
         )!!
 
         val context = mutableMapOf<Any, Any>()
-
         securityContext.awaitFirstOrNull()?.authentication?.apply { context[AUTHENTICATION_KEY] = this }
-
-        //System.out.println(context)
-
-        // securityContext.awaitFirstOrNull()?.authentication?.apply { context[AUTHENTICATION_KEY] = this }
 
         return super.generateContext(request).putAll(context)
     }
