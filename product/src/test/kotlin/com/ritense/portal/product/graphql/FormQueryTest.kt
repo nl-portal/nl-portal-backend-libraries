@@ -17,7 +17,7 @@ package com.ritense.portal.product.graphql
 
 import com.ritense.portal.product.service.FormService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
@@ -29,7 +29,7 @@ internal class FormQueryTest {
     val query = FormQuery(formService)
 
     @Test
-    fun `getFormList calls service`() = runBlockingTest {
+    fun `getFormList calls service`() = runTest {
         query.getFormList()
         verify(formService).getForms()
     }

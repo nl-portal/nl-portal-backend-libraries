@@ -21,7 +21,7 @@ import com.ritense.portal.klant.service.BurgerService
 import graphql.GraphQLContext
 import graphql.schema.DataFetchingEnvironment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
@@ -45,7 +45,7 @@ internal class BurgerQueryTest {
     }
 
     @Test
-    fun getBurgerProfiel() = runBlockingTest {
+    fun getBurgerProfiel() = runTest {
         burgerQuery.getBurgerProfiel(environment)
         verify(burgerService).getBurgerProfiel(authentication)
     }

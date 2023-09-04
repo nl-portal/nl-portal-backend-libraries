@@ -19,7 +19,7 @@ import com.ritense.portal.zakenapi.service.ZakenApiService
 import java.time.LocalDate
 import java.util.UUID
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
@@ -32,14 +32,14 @@ internal class ZaakTest {
     var zaakService = mock(ZakenApiService::class.java)
 
     @Test
-    fun status() = runBlockingTest {
+    fun status() = runTest {
         val zaak = createTestZaak("test-status")
         zaak.status(zaakService)
         verify(zaakService).getZaakStatus("test-status")
     }
 
     @Test
-    fun `status null`() = runBlockingTest {
+    fun `status null`() = runTest {
         val zaak = createTestZaak(null)
         val status = zaak.status(zaakService)
         verifyNoInteractions(zaakService)
@@ -47,7 +47,7 @@ internal class ZaakTest {
     }
 
     @Test
-    fun statusGeschiedenis() = runBlockingTest {
+    fun statusGeschiedenis() = runTest {
         val zaak = createTestZaak()
         zaak.statusGeschiedenis(zaakService)
         verify(zaakService).getZaakStatusHistory(zaak.uuid)

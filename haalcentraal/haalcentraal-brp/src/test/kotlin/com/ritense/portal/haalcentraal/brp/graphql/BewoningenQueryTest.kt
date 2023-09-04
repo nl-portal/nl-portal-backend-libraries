@@ -16,7 +16,7 @@
 package com.ritense.portal.haalcentraal.brp.graphql
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
 
@@ -24,7 +24,7 @@ import org.mockito.Mockito.verify
 internal class BewoningenQueryTest : QueryTestBase() {
 
     @Test
-    fun `getBewonersAantal should call service`() = runBlockingTest {
+    fun `getBewonersAantal should call service`() = runTest {
         query.getBewonersAantal(environment)
         verify(haalCentraalBrpService).getBewonersAantal(authentication)
     }

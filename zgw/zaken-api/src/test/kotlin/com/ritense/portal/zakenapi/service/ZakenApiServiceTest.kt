@@ -21,18 +21,16 @@ import com.ritense.portal.documentenapi.service.DocumentenApiService
 import com.ritense.portal.zakenapi.client.ZakenApiClient
 import com.ritense.portal.zakenapi.domain.ResultPage
 import com.ritense.portal.zakenapi.domain.ZaakRol
-import java.util.UUID
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.anyInt
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
-import org.mockito.Mockito.`when`
+import org.mockito.Mockito.*
 import org.springframework.security.oauth2.jwt.Jwt
+import java.util.*
 
 @ExperimentalCoroutinesApi
 internal class ZakenApiServiceTest {
@@ -42,7 +40,7 @@ internal class ZakenApiServiceTest {
     var zaakService = ZakenApiService(zakenApiClient, documentenApiService)
 
     @Test
-    fun `getZaken calls openzaak client with BSN for burger`() = runBlockingTest {
+    fun `getZaken calls openzaak client with BSN for burger`() = runTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
 
         zaakService.getZaken(5, authentication)
@@ -50,7 +48,7 @@ internal class ZakenApiServiceTest {
     }
 
     @Test
-    fun `getZaken gets rollen and zaken for rollen for bedrijf`() = runBlockingTest {
+    fun `getZaken gets rollen and zaken for rollen for bedrijf`() = runTest {
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
         val firstZaakId = UUID.randomUUID()
         val secondZaakId = UUID.randomUUID()
@@ -84,7 +82,7 @@ internal class ZakenApiServiceTest {
         val authentication = object : CommonGroundAuthentication(jwt, emptyList()) {}
 
         val illegalArgumentException = Assertions.assertThrows(IllegalArgumentException::class.java) {
-            runBlockingTest {
+            runTest {
                 zaakService.getZaken(1, authentication)
             }
         }
@@ -93,7 +91,7 @@ internal class ZakenApiServiceTest {
     }
 
     @Test
-    fun `getZaak gets zaak and checks rol for burger`() = runBlockingTest {
+    fun `getZaak gets zaak and checks rol for burger`() = runTest {
         val uuid = UUID.randomUUID()
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
 
@@ -115,7 +113,7 @@ internal class ZakenApiServiceTest {
     }
 
     @Test
-    fun `getZaak gets zaak and checks rol for bedrijf`() = runBlockingTest {
+    fun `getZaak gets zaak and checks rol for bedrijf`() = runTest {
         val uuid = UUID.randomUUID()
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
 
@@ -137,7 +135,7 @@ internal class ZakenApiServiceTest {
     }
 
     @Test
-    fun `getZaak throws exception when getting zaak user has no rol`() = runBlockingTest {
+    fun `getZaak throws exception when getting zaak user has no rol`() = runTest {
         val uuid = UUID.randomUUID()
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
 
@@ -146,7 +144,7 @@ internal class ZakenApiServiceTest {
         )
 
         val illegalStateException = Assertions.assertThrows(IllegalStateException::class.java) {
-            runBlockingTest {
+            runTest {
                 zaakService.getZaak(uuid, authentication)
             }
         }
@@ -155,7 +153,7 @@ internal class ZakenApiServiceTest {
     }
 
     @Test
-    fun `getZaak throws exception when called with unsupported authentication`() = runBlockingTest {
+    fun `getZaak throws exception when called with unsupported authentication`() = runTest {
         val uuid = UUID.randomUUID()
         val jwt = Jwt
             .withTokenValue("token")
@@ -165,7 +163,7 @@ internal class ZakenApiServiceTest {
         val authentication = object : CommonGroundAuthentication(jwt, emptyList()) {}
 
         val illegalArgumentException = Assertions.assertThrows(IllegalArgumentException::class.java) {
-            runBlockingTest {
+            runTest {
                 zaakService.getZaak(uuid, authentication)
             }
         }
@@ -174,14 +172,14 @@ internal class ZakenApiServiceTest {
     }
 
     @Test
-    fun getZaakStatus() = runBlockingTest {
+    fun getZaakStatus() = runTest {
         val uuid = UUID.randomUUID()
         zaakService.getZaakStatus("http://some.domain.com/zaken/api/v1/statussen/$uuid")
         verify(zakenApiClient).getStatus(uuid)
     }
 
     @Test
-    fun getZaakStatusHistory() = runBlockingTest {
+    fun getZaakStatusHistory() = runTest {
         val uuid = UUID.randomUUID()
         zaakService.getZaakStatusHistory(uuid)
         verify(zakenApiClient).getStatusHistory(uuid)
