@@ -68,8 +68,9 @@ class JwtBuilder {
     }
 
     fun buildJwt(): Jwt {
-        if (this.aanvragerBsn == null && this.aanvragerKvk == null)
+        if (this.aanvragerBsn == null && this.aanvragerKvk == null) {
             throw IllegalStateException("aanvrager needs to be set with either bsn or kvk")
+        }
 
         return jwtBuilder.build()
     }

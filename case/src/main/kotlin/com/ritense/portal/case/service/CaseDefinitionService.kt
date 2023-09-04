@@ -71,15 +71,17 @@ class CaseDefinitionService(
                     deploy(
                         Mapper.get().readValue(
                             StreamUtils.copyToString(
-                                resource.inputStream, StandardCharsets.UTF_8
+                                resource.inputStream,
+                                StandardCharsets.UTF_8
                             ),
-                                ObjectNode::class.java
+                            ObjectNode::class.java
                         ),
                         Mapper.get().readValue(
                             StreamUtils.copyToString(
-                                statusResource.inputStream, StandardCharsets.UTF_8
+                                statusResource.inputStream,
+                                StandardCharsets.UTF_8
                             ),
-                                object : TypeReference<List<String>>() {}
+                            object : TypeReference<List<String>>() {}
                         )
                     )
                 } catch (ex: Exception) {

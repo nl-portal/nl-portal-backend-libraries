@@ -17,7 +17,7 @@ package nl.nlportal.zgw.objectenapi.domain
 
 data class UpdateObjectsApiObjectRequest<T>(
     val type: String,
-    val record: UpdateObjectsApiObjectRequestRecord<T>,
+    val record: UpdateObjectsApiObjectRequestRecord<T>
 ) {
 
     companion object {
@@ -35,7 +35,7 @@ data class UpdateObjectsApiObjectRequestRecord<T>(
     val data: T,
     val startAt: String,
     var correctionFor: String? = null,
-    var correctedBy: String? = null,
+    var correctedBy: String? = null
 ) {
 
     companion object {
@@ -43,7 +43,7 @@ data class UpdateObjectsApiObjectRequestRecord<T>(
             return UpdateObjectsApiObjectRequestRecord(
                 objectsApiObjectRecord.typeVersion,
                 objectsApiObjectRecord.data,
-                objectsApiObjectRecord.startAt,
+                objectsApiObjectRecord.startAt
             )
         }
     }

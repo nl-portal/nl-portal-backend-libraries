@@ -86,7 +86,7 @@ open class TaakService(
             objectSearchParameters = userSearchParameters + taskIdSearchParameter,
             objectTypeUrl = objectsApiTaskConfig.typeUrl,
             page = 1,
-            pageSize = 2,
+            pageSize = 2
         ).results.single()
     }
 

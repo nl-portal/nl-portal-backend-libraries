@@ -36,7 +36,7 @@ class ObjectenApiService(
             objectSearchParameters = objectSearchParameters,
             objectTypeUrl = objectTypeUrl,
             page = pageNumber,
-            pageSize = pageSize,
+            pageSize = pageSize
         )
     }
 

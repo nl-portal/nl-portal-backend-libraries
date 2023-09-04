@@ -33,8 +33,8 @@ class AuthenticationGraphQLContextFactory : DefaultSpringGraphQLContextFactory()
         val reactorContext = coroutineContext[ReactorContext]?.context ?: throw RuntimeException("ReactorContext not found")
 
         val securityContext = reactorContext.getOrDefault<Mono<SecurityContext>>(
-                SecurityContext::class.java,
-                null
+            SecurityContext::class.java,
+            null
         )!!
 
         val context = mutableMapOf<Any, Any>()

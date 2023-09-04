@@ -59,7 +59,6 @@ internal class BurgerMutationIT(
     @Test
     @WithBurgerUser("111111111")
     fun `updateBurgerProfiel should update klant when klant exists`() {
-
         val mutation = """
             mutation {
                 updateBurgerProfiel(
@@ -88,7 +87,6 @@ internal class BurgerMutationIT(
     @Test
     @WithBurgerUser("222222222")
     fun `updateBurgerProfiel should create klant when klant doesn't exist`() {
-
         val mutation = """
             mutation {
                 updateBurgerProfiel(

@@ -48,7 +48,7 @@ class DocumentenApiService(
                 taal = "nld",
                 bestandsnaam = file.filename(),
                 indicatieGebruiksrecht = false,
-                informatieobjecttype = documentenApiConfig.documentTypeUrl,
+                informatieobjecttype = documentenApiConfig.documentTypeUrl
             ),
             file.content()
         )

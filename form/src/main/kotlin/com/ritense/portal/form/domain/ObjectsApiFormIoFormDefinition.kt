@@ -18,5 +18,5 @@ package com.ritense.portal.form.domain
 import com.fasterxml.jackson.databind.node.ObjectNode
 
 data class ObjectsApiFormIoFormDefinition(
-    val formDefinition: ObjectNode,
+    val formDefinition: ObjectNode
 )

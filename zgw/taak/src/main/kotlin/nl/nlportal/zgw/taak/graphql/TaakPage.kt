@@ -25,7 +25,7 @@ class TaakPage(
     size: Int,
     content: List<Taak>,
     results: List<Taak>,
-    totalElements: Int,
+    totalElements: Int
 ) : Page<Taak>(number, size, content, results, totalElements) {
 
     companion object {

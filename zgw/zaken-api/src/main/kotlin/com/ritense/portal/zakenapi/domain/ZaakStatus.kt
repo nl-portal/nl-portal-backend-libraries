@@ -25,7 +25,10 @@ data class ZaakStatus(
     @GraphQLIgnore
     val statustype: String
 ) {
-    suspend fun statustype(@GraphQLIgnore @Autowired catalogiApiService: CatalogiApiService): ZaakStatusType {
+    suspend fun statustype(
+        @GraphQLIgnore @Autowired
+        catalogiApiService: CatalogiApiService
+    ): ZaakStatusType {
         return catalogiApiService.getZaakStatusType(statustype)
     }
 }

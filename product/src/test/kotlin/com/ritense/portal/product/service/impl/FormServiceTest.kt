@@ -15,7 +15,6 @@
  */
 package com.ritense.portal.product.service.impl
 
-import com.nhaarman.mockitokotlin2.verify
 import com.ritense.portal.product.client.OpenFormulierenClient
 import com.ritense.portal.product.domain.Form
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,6 +23,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 import java.util.UUID
 
 @ExperimentalCoroutinesApi

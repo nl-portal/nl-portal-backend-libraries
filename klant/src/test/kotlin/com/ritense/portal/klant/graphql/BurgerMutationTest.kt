@@ -22,7 +22,7 @@ import com.ritense.portal.klant.service.BurgerService
 import com.ritense.portal.klant.validation.GraphQlValidator
 import graphql.GraphQLContext
 import graphql.schema.DataFetchingEnvironment
-import javax.validation.ValidationException
+import jakarta.validation.ValidationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat

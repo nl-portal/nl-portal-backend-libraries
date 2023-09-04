@@ -54,8 +54,9 @@ class BurgerService(
     }
 
     override suspend fun updateBurgerProfiel(klantUpdate: KlantUpdate, authentication: CommonGroundAuthentication): Klant {
-        if (authentication !is BurgerAuthentication)
+        if (authentication !is BurgerAuthentication) {
             throw IllegalArgumentException("Can only update burger profile for burger user")
+        }
 
         val existingKlant = getBurgerProfiel(authentication)
 
@@ -69,7 +70,6 @@ class BurgerService(
     }
 
     private suspend fun createBurgerProfiel(authentication: BurgerAuthentication, updatedKlant: KlantUpdate): Klant {
-
         val websiteUrl = "http://www.invalid-url.com/"
         val telefoonnummer = updatedKlant.telefoonnummer ?: ""
         val emailadres = updatedKlant.emailadres ?: ""

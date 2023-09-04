@@ -31,7 +31,7 @@ internal class TaskTest {
             "task-def-key",
             "external-case-id",
             "user-id",
-            Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java),
+            Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java)
         )
         assertThat(task.isCompleted()).isFalse
         assertThat(task.createdOn).isNotNull

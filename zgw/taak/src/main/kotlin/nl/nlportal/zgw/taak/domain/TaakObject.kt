@@ -27,5 +27,5 @@ data class TaakObject(
     @JsonProperty("verzonden_data") var verzondenData: Map<String, Any>? = null,
     var status: TaakStatus,
     val formulier: TaakFormulier,
-    @JsonProperty("verwerker_taak_id") val verwerkerTaakId: UUID,
+    @JsonProperty("verwerker_taak_id") val verwerkerTaakId: UUID
 )

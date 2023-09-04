@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.haalcentraal
+package com.ritense.valtimo.portal.haalcentraal
 
 import com.ritense.portal.core.security.OauthSecurityAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -34,12 +34,11 @@ class TestApplication {
 
     @Bean
     fun springSecurityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
-        http
-            .csrf()
-            .disable()
-            .authorizeExchange()
-            .anyExchange()
-            .permitAll()
-        return http.build()
+        return http
+            .csrf { it.disable() }
+            .authorizeExchange {
+                it.anyExchange().permitAll()
+            }
+            .build()
     }
 }

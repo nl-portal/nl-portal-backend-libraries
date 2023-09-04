@@ -21,5 +21,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 data class CatalogiApiConfig(
     var url: String = "",
     var clientId: String = "",
-    var secret: String = "",
+    var secret: String = ""
 )

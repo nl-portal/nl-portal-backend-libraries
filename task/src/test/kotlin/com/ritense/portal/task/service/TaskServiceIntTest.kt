@@ -44,7 +44,6 @@ internal class TaskServiceIntTest : BaseIntegrationTest() {
     @Test
     @Transactional
     fun `should create a new portal public task`() {
-
         val createPortalTaskMessage = CreatePortalTaskMessage(
             "some-task-id",
             "some-external-id",

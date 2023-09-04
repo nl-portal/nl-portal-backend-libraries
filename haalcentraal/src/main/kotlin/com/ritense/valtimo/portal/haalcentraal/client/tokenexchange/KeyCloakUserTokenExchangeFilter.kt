@@ -54,7 +54,6 @@ class KeyCloakUserTokenExchangeFilter(
     }
 
     private fun exchangeToken(): TokenResponse? {
-
         val authentication = SecurityContextHolder.getContext().authentication
         if (authentication is JwtAuthenticationToken) {
             val currentToken = authentication.token
@@ -81,7 +80,11 @@ class KeyCloakUserTokenExchangeFilter(
         return null
     }
 
-    data class TokenResponse(@JsonValue @JsonProperty("access_token") val accessToken: String)
+    data class TokenResponse(
+        @JsonValue
+        @JsonProperty("access_token")
+        val accessToken: String
+    )
 
     companion object {
         private val logger: KLogger = KotlinLogging.logger {}

@@ -59,7 +59,6 @@ internal class BurgerQueryIT(
     @Test
     @WithBurgerUser("123")
     fun getBurgerProfiel() {
-
         val query = """
             query {
                 getBurgerProfiel {

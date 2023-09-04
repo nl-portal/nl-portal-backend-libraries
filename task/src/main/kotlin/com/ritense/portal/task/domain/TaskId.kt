@@ -18,14 +18,17 @@ package com.ritense.portal.task.domain
 import com.ritense.portal.core.util.ObjectValidator
 import com.ritense.portal.data.domain.AbstractId
 import java.util.UUID
-import javax.persistence.Column
-import javax.persistence.Embeddable
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
+import jakarta.persistence.GeneratedValue
+import org.hibernate.annotations.UuidGenerator
 
 @Embeddable
 data class TaskId(
 
     @Column(name = "task_id", columnDefinition = "UUID")
-    @org.hibernate.annotations.Type(type = "pg-uuid")
+    @UuidGenerator(style = UuidGenerator.Style.TIME)
+    @GeneratedValue
     val value: UUID
 
 ) : AbstractId<TaskId>() {

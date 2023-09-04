@@ -15,9 +15,6 @@
  */
 package com.ritense.portal.haalcentraal.hr.service
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import com.ritense.portal.commonground.authentication.JwtBuilder
 import com.ritense.portal.haalcentraal.hr.client.HandelsregisterClient
 import com.ritense.portal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
@@ -26,6 +23,9 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
+import org.mockito.kotlin.whenever
 
 @ExperimentalCoroutinesApi
 class HandelsregisterServiceTest {

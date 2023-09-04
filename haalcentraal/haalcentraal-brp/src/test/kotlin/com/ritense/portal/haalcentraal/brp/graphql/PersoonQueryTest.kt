@@ -15,10 +15,10 @@
  */
 package com.ritense.portal.haalcentraal.brp.graphql
 
-import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.verify
 
 @ExperimentalCoroutinesApi
 internal class PersoonQueryTest : QueryTestBase() {

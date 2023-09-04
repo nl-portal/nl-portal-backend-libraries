@@ -64,7 +64,6 @@ internal class ZaakQueryIT(
     @Test
     @WithBurgerUser("123")
     fun getZaken() {
-
         val query = """
             query {
                 getZaken(page: 1) {
@@ -123,7 +122,6 @@ internal class ZaakQueryIT(
     @Test
     @WithBurgerUser("")
     fun getZakenNotFound() {
-
         // Make the GraphQL request
         testClient.post()
             .uri("/not_found")
@@ -135,7 +133,6 @@ internal class ZaakQueryIT(
 
     @Test
     fun getZakenUnAuthorized() {
-
         zakenApiConfig.clientId = ""
 
         val query = """
@@ -182,7 +179,6 @@ internal class ZaakQueryIT(
     @Test
     @WithBurgerUser("123")
     fun `getZaken no page`() {
-
         val query = """
             query {
                 getZaken {
@@ -239,7 +235,6 @@ internal class ZaakQueryIT(
     @Test
     @WithBurgerUser("123")
     fun getZaak() {
-
         val query = """
             query {
                 getZaak(id: "5d479908-fbb7-49c2-98c9-9afecf8de79a") {
@@ -284,13 +279,16 @@ internal class ZaakQueryIT(
 
         val basePath = "$.data.getZaak"
 
-        testClient.post()
+        val response = testClient.post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
             .expectBody()
+                .consumeWith(System.out::println)
+
+            response
             .jsonPath(basePath).exists()
             .jsonPath("$basePath.uuid").isEqualTo("5d479908-fbb7-49c2-98c9-9afecf8de79a")
             .jsonPath("$basePath.identificatie").isEqualTo("ZAAK-2021-0000000003")

@@ -16,5 +16,5 @@
 package com.ritense.portal.haalcentraal.hr.domain
 
 data class MaatschappelijkeActiviteit(
-    val naam: String,
+    val naam: String
 )

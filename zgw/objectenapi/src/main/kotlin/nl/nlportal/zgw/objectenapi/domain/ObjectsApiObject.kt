@@ -20,12 +20,12 @@ import java.util.UUID
 data class ObjectsApiObject<T>(
     val uuid: UUID,
     val type: String,
-    val record: ObjectsApiObjectRecord<T>,
+    val record: ObjectsApiObjectRecord<T>
 )
 
 data class ObjectsApiObjectRecord<T>(
     val index: Int,
     val typeVersion: Int,
     val data: T,
-    val startAt: String,
+    val startAt: String
 )

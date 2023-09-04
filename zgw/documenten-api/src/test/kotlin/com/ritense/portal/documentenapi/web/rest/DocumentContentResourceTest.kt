@@ -15,10 +15,6 @@
  */
 package com.ritense.portal.documentenapi.web.rest
 
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
 import com.ritense.portal.documentenapi.domain.Document
 import com.ritense.portal.documentenapi.service.DocumentenApiService
@@ -31,6 +27,10 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.doReturn
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
+import org.mockito.kotlin.whenever
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.core.io.buffer.DefaultDataBufferFactory
 import reactor.core.publisher.Flux

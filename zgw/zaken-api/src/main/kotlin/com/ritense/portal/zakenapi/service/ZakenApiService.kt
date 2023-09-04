@@ -55,8 +55,9 @@ class ZakenApiService(
         }
 
         // if no rol is found, the current user does not have access to this zaak
-        if (rollen.isEmpty())
+        if (rollen.isEmpty()) {
             throw IllegalStateException("Access denied to this zaak")
+        }
 
         return zaak
     }

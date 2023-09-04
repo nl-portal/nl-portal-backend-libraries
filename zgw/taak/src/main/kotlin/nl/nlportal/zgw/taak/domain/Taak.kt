@@ -29,7 +29,7 @@ class Taak(
     val formId: String,
     val status: TaakStatus,
     val date: String,
-    var data: ObjectNode,
+    var data: ObjectNode
 ) {
     companion object {
         fun fromObjectsApiTask(objectsApiTask: ObjectsApiObject<TaakObject>): Taak {

@@ -62,7 +62,6 @@ internal class DocumentContentQueryIT(
     @Test
     @WithMockUser("test")
     fun getDocumentContent() {
-
         val query = """
             query {
                 getDocumentContent(id :"095be615-a8ad-4c33-8e9c-c7612fbf6c9f") {

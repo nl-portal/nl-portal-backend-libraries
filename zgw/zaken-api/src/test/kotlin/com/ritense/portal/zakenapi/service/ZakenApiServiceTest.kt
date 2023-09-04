@@ -15,7 +15,6 @@
  */
 package com.ritense.portal.zakenapi.service
 
-import com.nhaarman.mockitokotlin2.mock
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.commonground.authentication.JwtBuilder
 import com.ritense.portal.documentenapi.service.DocumentenApiService
@@ -58,7 +57,9 @@ internal class ZakenApiServiceTest {
 
         `when`(zakenApiClient.getZaakRollen(anyInt(), any(), any(), any())).thenReturn(
             ResultPage(
-                1, null, null,
+                1,
+                null,
+                null,
                 listOf(
                     ZaakRol("http://example.com/some-path/$firstZaakId"),
                     ZaakRol("http://example.com/some-path/$secondZaakId")
@@ -98,7 +99,9 @@ internal class ZakenApiServiceTest {
 
         `when`(zakenApiClient.getZaakRollen(anyInt(), any(), any(), any())).thenReturn(
             ResultPage(
-                1, null, null,
+                1,
+                null,
+                null,
                 listOf(
                     ZaakRol("http://example.com/some-path/a5753b01-a6af-426e-96fb-9d54c7d47368")
                 )
@@ -118,7 +121,9 @@ internal class ZakenApiServiceTest {
 
         `when`(zakenApiClient.getZaakRollen(anyInt(), any(), any(), any())).thenReturn(
             ResultPage(
-                1, null, null,
+                1,
+                null,
+                null,
                 listOf(
                     ZaakRol("http://example.com/some-path/a5753b01-a6af-426e-96fb-9d54c7d47368")
                 )

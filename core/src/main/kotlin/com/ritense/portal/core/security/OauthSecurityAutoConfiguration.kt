@@ -45,23 +45,22 @@ class OauthSecurityAutoConfiguration {
         corsPathConfiguration: CorsPathConfiguration,
         securityConfigurers: List<HttpSecurityConfigurer>
     ): SecurityWebFilterChain {
-
         securityConfigurers.forEach { it.configure(http) }
 
         return http
-                .csrf { it.disable() }
-                .authorizeExchange {
-                    it.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                    it.pathMatchers("/playground").permitAll()
-                    it.pathMatchers("/graphql").permitAll()
-                    it.anyExchange().authenticated()
+            .csrf { it.disable() }
+            .authorizeExchange {
+                it.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                it.pathMatchers("/playground").permitAll()
+                it.pathMatchers("/graphql").permitAll()
+                it.anyExchange().authenticated()
+            }
+            .oauth2ResourceServer {
+                it.jwt {
+                    it.jwtAuthenticationConverter(converter)
                 }
-                .oauth2ResourceServer {
-                    it.jwt {
-                        it.jwtAuthenticationConverter(converter)
-                    }
-                }
-                .build()
+            }
+            .build()
     }
 
     @Bean
@@ -74,5 +73,4 @@ class OauthSecurityAutoConfiguration {
 
         return CorsWebFilter(source)
     }
-
 }
