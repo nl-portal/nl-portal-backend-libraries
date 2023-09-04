@@ -19,15 +19,16 @@ import com.expediagroup.graphql.generator.execution.SimpleKotlinDataFetcherFacto
 import com.expediagroup.graphql.server.spring.execution.SpringDataFetcher
 import graphql.schema.DataFetcherFactory
 import org.springframework.context.ApplicationContext
+import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.findAnnotation
 
 class ReactiveDataFactoryProvider(
     private val applicationContext: ApplicationContext
 ) :
-    SimpleKotlinDataFetcherFactoryProvider() {
+        SimpleKotlinDataFetcherFactoryProvider() {
 
-    fun functionDataFetcherFactory(target: Any?, kFunction: KFunction<*>) = DataFetcherFactory {
+    override fun functionDataFetcherFactory(target: Any?, kClass: KClass<*>, kFunction: KFunction<*>) = DataFetcherFactory {
         val isUnauthenticated = kFunction.findAnnotation<IsUnauthenticated>()
         val defaultDataFetcher = SpringDataFetcher(
             target = target,
