@@ -26,7 +26,7 @@ import kotlin.reflect.full.findAnnotation
 class ReactiveDataFactoryProvider(
     private val applicationContext: ApplicationContext
 ) :
-        SimpleKotlinDataFetcherFactoryProvider() {
+    SimpleKotlinDataFetcherFactoryProvider() {
 
     override fun functionDataFetcherFactory(target: Any?, kClass: KClass<*>, kFunction: KFunction<*>) = DataFetcherFactory {
         val isUnauthenticated = kFunction.findAnnotation<IsUnauthenticated>()

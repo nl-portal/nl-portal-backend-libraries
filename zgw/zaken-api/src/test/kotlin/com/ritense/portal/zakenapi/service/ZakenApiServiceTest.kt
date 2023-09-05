@@ -22,13 +22,17 @@ import com.ritense.portal.zakenapi.client.ZakenApiClient
 import com.ritense.portal.zakenapi.domain.ResultPage
 import com.ritense.portal.zakenapi.domain.ZaakRol
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.*
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
+
 import org.springframework.security.oauth2.jwt.Jwt
 import java.util.*
 
@@ -48,7 +52,7 @@ internal class ZakenApiServiceTest {
     }
 
     @Test
-    fun `getZaken gets rollen and zaken for rollen for bedrijf`() = runTest {
+    fun `getZaken gets rollen and zaken for rollen for bedrijf`() = runBlockingTest {
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
         val firstZaakId = UUID.randomUUID()
         val secondZaakId = UUID.randomUUID()
@@ -135,7 +139,7 @@ internal class ZakenApiServiceTest {
     }
 
     @Test
-    fun `getZaak throws exception when getting zaak user has no rol`() = runTest {
+    fun `getZaak throws exception when getting zaak user has no rol`() = runBlockingTest {
         val uuid = UUID.randomUUID()
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
 
@@ -153,7 +157,7 @@ internal class ZakenApiServiceTest {
     }
 
     @Test
-    fun `getZaak throws exception when called with unsupported authentication`() = runTest {
+    fun `getZaak throws exception when called with unsupported authentication`() = runBlockingTest {
         val uuid = UUID.randomUUID()
         val jwt = Jwt
             .withTokenValue("token")
