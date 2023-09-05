@@ -279,16 +279,13 @@ internal class ZaakQueryIT(
 
         val basePath = "$.data.getZaak"
 
-        val response = testClient.post()
+        testClient.post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
             .expectBody()
-                .consumeWith(System.out::println)
-
-            response
             .jsonPath(basePath).exists()
             .jsonPath("$basePath.uuid").isEqualTo("5d479908-fbb7-49c2-98c9-9afecf8de79a")
             .jsonPath("$basePath.identificatie").isEqualTo("ZAAK-2021-0000000003")
