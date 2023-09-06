@@ -18,7 +18,6 @@ package com.ritense.portal.klant.autoconfiguration
 import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
 import com.ritense.portal.klant.client.OpenKlantClient
 import com.ritense.portal.klant.client.OpenKlantClientConfig
-import com.ritense.portal.klant.client.OpenKlantTokenGenerator
 import com.ritense.portal.klant.graphql.BurgerMutation
 import com.ritense.portal.klant.graphql.BurgerQuery
 import com.ritense.portal.klant.service.BurgerService
@@ -44,11 +43,6 @@ class KlantAutoConfiguration {
     @Bean
     fun openKlantClientConfig(): OpenKlantClientConfig {
         return OpenKlantClientConfig()
-    }
-
-    @Bean
-    fun openKlantTokenGenerator(): OpenKlantTokenGenerator {
-        return OpenKlantTokenGenerator()
     }
 
     @Bean
