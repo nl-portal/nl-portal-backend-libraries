@@ -42,7 +42,7 @@ class HaalCentraalAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty("valtimo.haalcentraal.tokenExchange.targetAudience", matchIfMissing = false)
+    @ConditionalOnProperty("valtimo.haalcentraal.token-exchange.target-audience", matchIfMissing = false)
     @ConditionalOnMissingBean(UserTokenExchangeFilter::class)
     fun userTokenExchangeFilterFactory(
         haalCentraalClientConfig: HaalCentraalClientConfig
