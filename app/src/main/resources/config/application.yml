@@ -79,15 +79,19 @@ valtimo:
         url: http://localhost:8010
         token: 182c13e2209161852c53cef53a879f7a2f923430
     haalcentraal:
+        token-exchange:
+            target-audience:
     #        url: ${VALTIMO_HAALCENTRAAL_URL}
-    #        apiKey: ${VALTIMO_HAALCENTRAAL_APIKEY}
+    #        api-key: ${VALTIMO_HAALCENTRAAL_APIKEY}
+    #        token-exchange:
+    #            target-audience: ${VALTIMO_HAALCENTRAAL_TOKENEXCHANGE_TARGETAUDIENCE}
     #        ssl:
     #            enabled: ${VALTIMO_HAALCENTRAAL_SSL_ENABLED}
     #            key:
-    #                key: ${VALTIMO_HAALCENTRAAL_SSL_KEY_KEY}
-    #                certChain: ${VALTIMO_HAALCENTRAAL_SSL_KEY_CERT_CHAIN}
-    #                keyPassword: ${VALTIMO_HAALCENTRAAL_SSL_KEY_KEY_PASSWORD}
-    #            trustedCertificate: ${VALTIMO_HAALCENTRAAL_SSL_TRUSTED_CERTIFICATE}
+    #                key: ${VALTIMO_HAALCENTRAAL_SSL_KEY}
+    #                cert-chain: ${VALTIMO_HAALCENTRAAL_SSL_KEY_CERT_CHAIN}
+    #                key-password: ${VALTIMO_HAALCENTRAAL_SSL_KEY_KEY_PASSWORD}
+    #            trusted-certificate: ${VALTIMO_HAALCENTRAAL_SSL_TRUSTED_CERTIFICATE}
     cors:
         -   path: "/**"
             config:
