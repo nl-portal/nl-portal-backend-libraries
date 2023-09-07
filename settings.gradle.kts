@@ -40,6 +40,7 @@ include(
     "haalcentraal:haalcentraal-hr",
     "klant",
     "klant-generiek",
+    "klantcontactmomenten",
     "messaging",
     "product",
     "task",

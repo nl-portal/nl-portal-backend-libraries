@@ -1,0 +1,20 @@
+{
+  "count": 1,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "url": "/contactmomenten/api/v1/contactmomenten/5d479908-fbb7-49c2-98c9-9afecf8de79a",
+      "vorigContactmoment": "/contactmomenten/api/v1/contactmomenten/5d479908-fbb7-49c2-98c9-9afecf8de79a",
+      "volgendContactmoment": "/contactmomenten/api/v1/contactmomenten/5d479908-fbb7-49c2-98c9-9afecf8de79a",
+      "bronorganisatie": "051845623",
+      "registratiedatum": "2019-08-24T14:15:22Z",
+      "kanaal": "mail",
+      "voorkeurskanaal": "mail",
+      "voorkeurstaal": "nl",
+      "tekst": "Contact moment",
+      "initiatiefnemer": "medewerker",
+      "medewerker": "http://www.dummy.nl"
+    }
+  ]
+}
