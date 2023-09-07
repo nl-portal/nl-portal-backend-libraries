@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.klant.autoconfiguration
+package nl.nlportal.klant.generiek.autoconfiguration
 
-import com.ritense.portal.klant.client.OpenKlantClient
+import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
 import nl.nlportal.klant.generiek.client.OpenKlantClientConfig
-import com.ritense.portal.klant.graphql.BurgerMutation
-import com.ritense.portal.klant.graphql.BurgerQuery
-import com.ritense.portal.klant.service.BurgerService
 import nl.nlportal.klant.generiek.validation.GraphQlValidator
 import nl.nlportal.klant.generiek.client.OpenKlantClientProvider
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -29,31 +26,27 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @EnableConfigurationProperties(OpenKlantClientConfig::class)
-class KlantAutoConfiguration {
+class KlantGeneriekAutoConfiguration {
 
     @Bean
-    @ConditionalOnMissingBean(BurgerService::class)
-    fun burgerService(
+    fun openKlantClientConfig(): OpenKlantClientConfig {
+        return OpenKlantClientConfig()
+    }
+
+    @Bean
+    fun graphqlValidator(): GraphQlValidator {
+        return GraphQlValidator()
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(OpenKlantClientProvider::class)
+    fun openKlantClientProvider(
         openKlantClientConfig: OpenKlantClientConfig,
-        openKlantClient: OpenKlantClient
-    ): BurgerService {
-        return com.ritense.portal.klant.service.impl.BurgerService(openKlantClientConfig, openKlantClient)
-    }
-
-    @Bean
-    fun openKlantClient(
-        openKlantClientProvider: OpenKlantClientProvider
-    ): OpenKlantClient {
-        return OpenKlantClient(openKlantClientProvider)
-    }
-
-    @Bean
-    fun burgerQuery(burgerService: BurgerService): BurgerQuery {
-        return BurgerQuery(burgerService)
-    }
-
-    @Bean
-    fun burgerMutation(burgerService: BurgerService, graphQlValidator: GraphQlValidator): BurgerMutation {
-        return BurgerMutation(burgerService, graphQlValidator)
+        idTokenGenerator: IdTokenGenerator
+    ): OpenKlantClientProvider {
+        return OpenKlantClientProvider(
+            openKlantClientConfig,
+            idTokenGenerator
+        )
     }
 }

@@ -39,6 +39,7 @@ include(
     "haalcentraal:haalcentraal-brp",
     "haalcentraal:haalcentraal-hr",
     "klant",
+    "klant-generiek",
     "messaging",
     "product",
     "task",

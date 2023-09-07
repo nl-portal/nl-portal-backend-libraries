@@ -24,7 +24,6 @@ dependencies {
     api(project(":graphql"))
     api(project(":zgw:common-ground-authentication"))
     api(project(":zgw:idtoken-authentication"))
-    api(project(":klant-generiek"))
 
     // jjwt
     implementation(Dependencies.jsonWebTokensApi)

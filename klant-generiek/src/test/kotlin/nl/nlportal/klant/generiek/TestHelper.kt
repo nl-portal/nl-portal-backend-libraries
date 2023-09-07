@@ -13,24 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.klant.domain
+package nl.nlportal.klant.generiek
 
-import java.net.URI
+import okhttp3.mockwebserver.MockResponse
 
-data class ResultPage<T>(
-    val count: Int,
-    val next: URI? = null,
-    val previous: URI? = null,
-    val results: List<T>
-) {
-    fun getNextPageNumber(): Int? {
-        return next
-            ?.query
-            ?.split("&")
-            ?.map { Pair(it.substringBefore("="), it.substringAfter("=")) }
-            ?.filter { it.first.equals("page") }
-            ?.map { it.second }
-            ?.map { it.toInt() }
-            ?.single()
+object TestHelper {
+
+    fun mockResponseFromFile(fileName: String): MockResponse {
+        return MockResponse()
+            .addHeader("Content-Type", "application/json; charset=utf-8")
+            .setResponseCode(200)
+            .setBody(readFileAsString(fileName))
     }
+
+    private fun readFileAsString(fileName: String): String = this::class.java.getResource(fileName).readText(Charsets.UTF_8)
 }

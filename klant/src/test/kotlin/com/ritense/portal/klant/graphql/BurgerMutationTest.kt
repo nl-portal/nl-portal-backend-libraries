@@ -19,7 +19,7 @@ import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import com.ritense.portal.klant.domain.klanten.KlantUpdate
 import com.ritense.portal.klant.service.BurgerService
-import com.ritense.portal.klant.validation.GraphQlValidator
+import nl.nlportal.klant.generiek.validation.GraphQlValidator
 import graphql.GraphQLContext
 import graphql.schema.DataFetchingEnvironment
 import javax.validation.ValidationException
