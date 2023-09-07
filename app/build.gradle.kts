@@ -21,6 +21,7 @@ plugins {
 dependencies {
     implementation(project(":haalcentraal:haalcentraal-all"))
     implementation(project(":klant"))
+    implementation(project(":klantcontactmomenten"))
     implementation(project(":product"))
     implementation(project(":form"))
     implementation(project(":zgw:taak"))
