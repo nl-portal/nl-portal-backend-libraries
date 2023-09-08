@@ -41,7 +41,7 @@ dependencies {
 
     testImplementation("org.jetbrains.kotlinx", "kotlinx-coroutines-test", "1.5.2")
     testImplementation("com.nhaarman.mockitokotlin2", "mockito-kotlin", "2.2.0")
-    testImplementation("com.squareup.okhttp3", "mockwebserver", "4.9.3")
+    testImplementation("com.squareup.okhttp3", "mockwebserver", "4.11.0")
     testImplementation("com.squareup.okhttp3", "okhttp", "4.9.3")
     testImplementation("com.squareup.okhttp3", "okhttp-tls", "4.9.3")
     testImplementation("org.hamcrest", "hamcrest", "2.2")
