@@ -16,25 +16,23 @@
 package nl.nlportal.klant.contactmomenten.service.impl
 
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.klant.contactmomenten.client.OpenKlantContactMomentenClient
+import nl.nlportal.klant.contactmomenten.client.KlantContactMomentenClient
 import nl.nlportal.klant.contactmomenten.graphql.ContactMomentPage
 import nl.nlportal.klant.contactmomenten.service.KlantContactMomentenService
 
 class KlantContactMomentenService(
-    val openKlantContactMomentenClient: OpenKlantContactMomentenClient
+    val klantContactMomentenClient: KlantContactMomentenClient
 ) : KlantContactMomentenService {
 
     override suspend fun getKlantContactMomenten(
         authentication: CommonGroundAuthentication,
         klant: String,
-        page: Int,
-        ordering: String
+        page: Int
     ): ContactMomentPage {
-        return openKlantContactMomentenClient.getContactMomenten(
+        return klantContactMomentenClient.getContactMomenten(
             authentication,
             klant,
-            page,
-            ordering
+            page
         ).let { ContactMomentPage.fromResultPage(page, it) }
     }
 }

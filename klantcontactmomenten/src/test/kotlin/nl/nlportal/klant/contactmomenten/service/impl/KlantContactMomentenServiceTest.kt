@@ -3,7 +3,7 @@ package nl.nlportal.klant.contactmomenten.service.impl
 import com.ritense.portal.commonground.authentication.JwtBuilder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import nl.nlportal.klant.contactmomenten.client.OpenKlantContactMomentenClient
+import nl.nlportal.klant.contactmomenten.client.KlantContactMomentenClient
 import nl.nlportal.klant.contactmomenten.domain.ContactMoment
 import nl.nlportal.klant.generiek.domain.ResultPage
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -16,13 +16,13 @@ import org.mockito.Mockito.`when`
 @ExperimentalCoroutinesApi
 internal class KlantContactMomentenServiceTest {
 
-    var openKlantContactMomentenClient = mock(OpenKlantContactMomentenClient::class.java)
-    var klantContactMomentenService = KlantContactMomentenService(openKlantContactMomentenClient)
+    var klantContactMomentenClient = mock(KlantContactMomentenClient::class.java)
+    var klantContactMomentenService = KlantContactMomentenService(klantContactMomentenClient)
 
     @Test
     fun `get klantcontactmomenten`() = runBlockingTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
-        `when`(openKlantContactMomentenClient.getContactMomenten(authentication, "http://dummy.nl", 1, "ordering")).thenReturn(
+        `when`(klantContactMomentenClient.getContactMomenten(authentication, "http://dummy.nl", 1)).thenReturn(
             ResultPage(
                 1,
                 null,
@@ -33,9 +33,9 @@ internal class KlantContactMomentenServiceTest {
             )
         )
 
-        val result = klantContactMomentenService.getKlantContactMomenten(authentication, "http://dummy.nl", 1, "ordering")
+        val result = klantContactMomentenService.getKlantContactMomenten(authentication, "http://dummy.nl", 1)
 
-        verify(openKlantContactMomentenClient, times(1)).getContactMomenten(authentication, "http://dummy.nl", 1, "ordering")
+        verify(klantContactMomentenClient, times(1)).getContactMomenten(authentication, "http://dummy.nl", 1)
 
         assertEquals(1, result.content.size)
     }

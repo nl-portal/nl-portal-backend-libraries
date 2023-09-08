@@ -28,14 +28,12 @@ class ContactMomentQuery(
     suspend fun getKlantContactMomenten(
         dfe: DataFetchingEnvironment,
         klant: String,
-        pageNumber: Int? = 1,
-        ordering: String? = "registratiedatum"
+        pageNumber: Int? = 1
     ): ContactMomentPage {
         return klantContactMomentenService.getKlantContactMomenten(
             dfe.graphQlContext.get(AUTHENTICATION_KEY),
             klant,
-            pageNumber ?: 1,
-            ordering ?: "registratiedatum"
+            pageNumber ?: 1
         )
     }
 }

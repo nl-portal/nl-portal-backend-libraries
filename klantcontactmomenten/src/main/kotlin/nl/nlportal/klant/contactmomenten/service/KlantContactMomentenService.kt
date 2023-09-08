@@ -19,5 +19,9 @@ import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.klant.contactmomenten.graphql.ContactMomentPage
 
 interface KlantContactMomentenService {
-    suspend fun getKlantContactMomenten(authentication: CommonGroundAuthentication, klant: String, page: Int, ordering: String): ContactMomentPage
+    suspend fun getKlantContactMomenten(
+            authentication: CommonGroundAuthentication,
+            klant: String,
+            page: Int
+    ): ContactMomentPage
 }

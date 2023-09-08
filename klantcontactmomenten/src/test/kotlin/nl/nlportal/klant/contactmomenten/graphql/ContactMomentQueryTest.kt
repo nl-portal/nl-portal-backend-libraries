@@ -37,12 +37,11 @@ internal class ContactMomentQueryTest {
             contactMomentenService.getKlantContactMomenten(
                 authentication,
                 "http://dummy.nl",
-                1,
-                "ordering"
+                1
             )
         ).thenReturn(mock(ContactMomentPage::class.java))
 
-        contactMomentQuery.getKlantContactMomenten(environment, "http://dummy.nl", 1, "ordering")
+        contactMomentQuery.getKlantContactMomenten(environment, "http://dummy.nl", 1)
         verify(contactMomentenService, times(1))
     }
 }

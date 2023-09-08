@@ -21,17 +21,17 @@ import nl.nlportal.klant.generiek.client.OpenKlantClientProvider
 import nl.nlportal.klant.generiek.domain.ResultPage
 import org.springframework.web.reactive.function.client.awaitBody
 
-class OpenKlantContactMomentenClient(
+class KlantContactMomentenClient(
     private val openKlantClientProvider: OpenKlantClientProvider
 ) {
-    suspend fun getContactMomenten(authentication: CommonGroundAuthentication, klant: String, page: Int, ordering: String): ResultPage<ContactMoment> {
+    suspend fun getContactMomenten(authentication: CommonGroundAuthentication, klant: String, page: Int): ResultPage<ContactMoment> {
         return openKlantClientProvider.webClient(authentication)
             .get()
             .uri {
                 val uriBuilder = it.path("/contactmomenten/api/v1/contactmomenten")
                     .queryParam("page", page)
                     .queryParam("klant", klant)
-                    .queryParam("ordering")
+                    .queryParam("ordering", "-registratiedatum")
                 uriBuilder.build()
             }
             .retrieve()
