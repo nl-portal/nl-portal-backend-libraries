@@ -32,7 +32,7 @@ class KlantContactMomentenAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(KlantContactMomentenService::class)
     fun klantContactMomentenService(
-            klantContactMomentenClient: KlantContactMomentenClient
+        klantContactMomentenClient: KlantContactMomentenClient
     ): KlantContactMomentenService {
         return nl.nlportal.klant.contactmomenten.service.impl.KlantContactMomentenService(
             klantContactMomentenClient
