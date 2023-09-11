@@ -31,7 +31,6 @@ class KlantContactMomentenClient(
                 val uriBuilder = it.path("/contactmomenten/api/v1/contactmomenten")
                     .queryParam("page", page)
                     .queryParam("klant", klant)
-                    .queryParam("ordering", "-registratiedatum")
                 uriBuilder.build()
             }
             .retrieve()
