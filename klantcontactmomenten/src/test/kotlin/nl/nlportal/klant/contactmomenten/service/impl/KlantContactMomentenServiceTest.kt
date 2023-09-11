@@ -22,16 +22,26 @@ import nl.nlportal.klant.contactmomenten.client.KlantContactMomentenClient
 import nl.nlportal.klant.contactmomenten.domain.ContactMoment
 import nl.nlportal.klant.generiek.domain.ResultPage
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
+import org.mockito.MockitoAnnotations
 
 @ExperimentalCoroutinesApi
 internal class KlantContactMomentenServiceTest {
 
-    var klantContactMomentenClient = mock(KlantContactMomentenClient::class.java)
-    var klantContactMomentenService = KlantContactMomentenService(klantContactMomentenClient)
+    @Mock
+    lateinit var klantContactMomentenClient: KlantContactMomentenClient
 
+    lateinit var klantContactMomentenService: KlantContactMomentenService
+
+    @BeforeEach
+    fun setup() {
+        MockitoAnnotations.openMocks(this)
+        klantContactMomentenService = KlantContactMomentenService(klantContactMomentenClient)
+    }
     @Test
     fun `get klantcontactmomenten`() = runTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
