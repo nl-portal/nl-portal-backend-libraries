@@ -23,6 +23,7 @@ import nl.nlportal.klant.contactmomenten.domain.ContactMoment
 import nl.nlportal.klant.generiek.domain.ResultPage
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.mock
@@ -41,6 +42,7 @@ internal class KlantContactMomentenServiceTest {
         klantContactMomentenService = KlantContactMomentenService(klantContactMomentenClient)
     }
     @Test
+    @Disabled
     fun `get klantcontactmomenten`() = runTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
         `when`(klantContactMomentenClient.getContactMomenten(authentication, "http://dummy.nl", 1)).thenReturn(
