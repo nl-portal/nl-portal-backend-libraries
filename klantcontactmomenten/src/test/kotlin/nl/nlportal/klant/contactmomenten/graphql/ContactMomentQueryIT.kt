@@ -16,7 +16,6 @@
 package nl.nlportal.klant.contactmomenten.graphql
 
 import com.ritense.portal.commonground.authentication.WithBurgerUser
-import kotlinx.coroutines.test.runTest
 import nl.nlportal.klant.contactmomenten.TestHelper
 import nl.nlportal.klant.generiek.client.OpenKlantClientConfig
 import okhttp3.mockwebserver.Dispatcher
@@ -57,7 +56,7 @@ internal class ContactMomentQueryIT(
 
     @Test
     @WithBurgerUser("123")
-    fun getKlantContactMomenten() = runTest {
+    fun getKlantContactMomenten() {
         val query = """
             query {
                 getKlantContactMomenten(klant: "dummy") {

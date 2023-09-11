@@ -27,7 +27,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
-import org.mockito.MockitoAnnotations
 
 @ExperimentalCoroutinesApi
 internal class KlantContactMomentenServiceTest {
