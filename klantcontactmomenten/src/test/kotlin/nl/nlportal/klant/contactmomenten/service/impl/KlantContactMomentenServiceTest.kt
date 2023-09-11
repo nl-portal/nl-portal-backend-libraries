@@ -39,7 +39,6 @@ internal class KlantContactMomentenServiceTest {
 
     @BeforeEach
     fun setup() {
-        MockitoAnnotations.openMocks(this)
         klantContactMomentenService = KlantContactMomentenService(klantContactMomentenClient)
     }
     @Test
