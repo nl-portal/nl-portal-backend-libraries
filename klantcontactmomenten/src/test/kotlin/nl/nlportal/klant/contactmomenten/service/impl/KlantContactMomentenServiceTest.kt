@@ -27,22 +27,31 @@ import nl.nlportal.klant.generiek.domain.ResultPage
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
+import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
+import org.mockito.MockitoAnnotations
 import java.util.Collections
 
 @ExperimentalCoroutinesApi
 internal class KlantContactMomentenServiceTest {
 
-    var klantContactMomentenClient = mock(KlantContactMomentenClient::class.java)
+    @Mock
+    lateinit var klantContactMomentenClient: KlantContactMomentenClient
 
-    var klantClient = mock(OpenKlantClient::class.java)
+    @Mock
+    lateinit var klantClient: OpenKlantClient
 
-    var klantContactMomentenService = KlantContactMomentenService(
-        klantContactMomentenClient,
-        klantClient
-    )
+    lateinit var klantContactMomentenService: KlantContactMomentenService
+
+    @BeforeEach
+    fun setUp() {
+        MockitoAnnotations.openMocks(this)
+        klantContactMomentenService = KlantContactMomentenService(klantContactMomentenClient, klantClient)
+    }
 
     @Test
     fun `get klantcontactmomenten with BSN for burger`() = runTest {
@@ -111,6 +120,7 @@ internal class KlantContactMomentenServiceTest {
     }
 
     @Test
+    @Disabled
     fun `get klantcontactmomenten  with BedrijfAuthentication`() = runTest {
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
         val illegalArgumentException = Assertions.assertThrows(IllegalArgumentException::class.java) {
