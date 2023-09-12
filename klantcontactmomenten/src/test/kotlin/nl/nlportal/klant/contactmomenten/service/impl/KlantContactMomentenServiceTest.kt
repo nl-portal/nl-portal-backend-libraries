@@ -19,7 +19,6 @@ import com.ritense.portal.commonground.authentication.JwtBuilder
 import com.ritense.portal.klant.client.OpenKlantClient
 import com.ritense.portal.klant.domain.klanten.Klant
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.klant.contactmomenten.client.KlantContactMomentenClient
 import nl.nlportal.klant.contactmomenten.domain.ContactMoment
@@ -27,33 +26,23 @@ import nl.nlportal.klant.generiek.domain.ResultPage
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
-import org.mockito.MockitoAnnotations
 import java.util.Collections
 
 @ExperimentalCoroutinesApi
 internal class KlantContactMomentenServiceTest {
 
-    @Mock
-    lateinit var klantContactMomentenClient: KlantContactMomentenClient
+    var klantContactMomentenClient = mock(KlantContactMomentenClient::class.java)
 
-    @Mock
-    lateinit var klantClient: OpenKlantClient
+    var klantClient = mock(OpenKlantClient::class.java)
 
-    lateinit var klantContactMomentenService: KlantContactMomentenService
+    var klantContactMomentenService = KlantContactMomentenService(
+        klantContactMomentenClient,
+        klantClient
+    )
 
-    @BeforeEach
-    fun setup() {
-        MockitoAnnotations.openMocks(this)
-        klantContactMomentenService = KlantContactMomentenService(
-            klantContactMomentenClient,
-            klantClient
-        )
-    }
     @Test
     fun `get klantcontactmomenten with BSN for burger`() = runTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
