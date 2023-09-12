@@ -18,12 +18,13 @@ class ClamAVService(
 
     override fun scan(content: Flux<DataBuffer>): VirusScanResult {
         val result = VirusScanResult()
-        val inputStream = dataBufferToInputStream(content)
-        when (val scanResult = clamAVClient.scan(inputStream)) {
-            is ScanResult.OK -> result.status = VirusScanStatus.OK
-            is ScanResult.VirusFound -> {
-                result.status = VirusScanStatus.VIRUS_FOUND
-                result.foundViruses = scanResult.foundViruses
+        dataBufferToInputStream(content).use {
+            when (val scanResult = clamAVClient.scan(it)) {
+                is ScanResult.OK -> result.status = VirusScanStatus.OK
+                is ScanResult.VirusFound -> {
+                    result.status = VirusScanStatus.VIRUS_FOUND
+                    result.foundViruses = scanResult.foundViruses
+                }
             }
         }
 

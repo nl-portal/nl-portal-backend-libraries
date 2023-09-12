@@ -28,6 +28,7 @@ import com.ritense.portal.documentenapi.web.rest.DocumentContentResource
 import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
 import mu.KotlinLogging
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -55,12 +56,13 @@ class DocumentenApiAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnProperty("valtimo.zgw.documentenapi.virusscan.clamav", matchIfMissing = false)
     fun clamAVClient(
         clamAVVirusScanConfig: ClamAVVirusScanConfig
     ): ClamavClient {
         logger.info("ClamAV virusscan is loaded with host: {} and port: {}", clamAVVirusScanConfig.hostName, clamAVVirusScanConfig.port)
         return ClamavClient(
-            clamAVVirusScanConfig.hostName,
+            clamAVVirusScanConfig.hostName!!,
             clamAVVirusScanConfig.port
         )
     }

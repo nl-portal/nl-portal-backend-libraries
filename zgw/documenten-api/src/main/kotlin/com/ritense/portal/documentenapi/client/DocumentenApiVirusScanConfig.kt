@@ -19,5 +19,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "valtimo.zgw.documentenapi.virusscan")
 data class DocumentenApiVirusScanConfig(
-    var enabled: Boolean = false
+    val enabled: Boolean = false
 )
