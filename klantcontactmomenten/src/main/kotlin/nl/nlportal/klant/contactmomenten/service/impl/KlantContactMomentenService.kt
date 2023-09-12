@@ -15,24 +15,44 @@
  */
 package nl.nlportal.klant.contactmomenten.service.impl
 
+import com.ritense.portal.commonground.authentication.BedrijfAuthentication
+import com.ritense.portal.commonground.authentication.BurgerAuthentication
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
+import com.ritense.portal.klant.client.OpenKlantClient
 import nl.nlportal.klant.contactmomenten.client.KlantContactMomentenClient
 import nl.nlportal.klant.contactmomenten.graphql.ContactMomentPage
 import nl.nlportal.klant.contactmomenten.service.KlantContactMomentenService
 
 class KlantContactMomentenService(
-    val klantContactMomentenClient: KlantContactMomentenClient
+    val klantContactMomentenClient: KlantContactMomentenClient,
+    val klantClient: OpenKlantClient
 ) : KlantContactMomentenService {
 
     override suspend fun getKlantContactMomenten(
         authentication: CommonGroundAuthentication,
-        klant: String,
         page: Int
-    ): ContactMomentPage {
-        return klantContactMomentenClient.getContactMomenten(
-            authentication,
-            klant,
-            page
-        ).let { ContactMomentPage.fromResultPage(page, it) }
+    ): ContactMomentPage? {
+        when (authentication) {
+            is BurgerAuthentication -> {
+                val klanten = klantClient.getKlanten(authentication, 1, authentication.getBsn())
+                return if (klanten.isEmpty()) {
+                    null
+                } else if (klanten.size == 1) {
+                    return klantContactMomentenClient.getContactMomenten(
+                        authentication,
+                        klanten[0].url,
+                        page
+                    ).let { ContactMomentPage.fromResultPage(page, it) }
+                } else {
+                    throw IllegalStateException("Multiple klanten found for BSN: ${authentication.getBsn()}")
+                }
+            }
+            is BedrijfAuthentication -> {
+                throw IllegalArgumentException("Cannot get klant by KVK")
+            }
+            else -> {
+                throw IllegalArgumentException("Cannot get klant for this user")
+            }
+        }
     }
 }

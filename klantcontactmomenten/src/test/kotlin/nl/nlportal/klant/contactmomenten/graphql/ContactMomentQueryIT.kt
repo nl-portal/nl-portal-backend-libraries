@@ -59,7 +59,7 @@ internal class ContactMomentQueryIT(
     fun getKlantContactMomenten() {
         val query = """
             query {
-                getKlantContactMomenten(klant: "dummy") {
+                getKlantContactMomenten {
                     content {
                         registratiedatum
                         tekst
@@ -94,6 +94,7 @@ internal class ContactMomentQueryIT(
             override fun dispatch(request: RecordedRequest): MockResponse {
                 val response = when (request.path?.substringBefore('?')) {
                     "/contactmomenten/api/v1/contactmomenten" -> TestHelper.mockResponseFromFile("/data/get-contactmomenten-list-response.json")
+                    "/klanten/api/v1/klanten" -> TestHelper.mockResponseFromFile("/data/get-klant-list-response.json")
                     else -> MockResponse().setResponseCode(404)
                 }
                 return response

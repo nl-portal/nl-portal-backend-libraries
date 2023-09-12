@@ -51,12 +51,11 @@ internal class ContactMomentQueryTest {
         `when`(
             contactMomentenService.getKlantContactMomenten(
                 authentication,
-                "http://dummy.nl",
                 1
             )
         ).thenReturn(mock(ContactMomentPage::class.java))
 
-        contactMomentQuery.getKlantContactMomenten(environment, "http://dummy.nl", 1)
+        contactMomentQuery.getKlantContactMomenten(environment, 1)
         verify(contactMomentenService, times(1))
     }
 }

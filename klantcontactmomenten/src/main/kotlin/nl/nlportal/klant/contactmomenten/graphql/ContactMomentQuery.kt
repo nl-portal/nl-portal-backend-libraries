@@ -27,12 +27,10 @@ class ContactMomentQuery(
     @GraphQLDescription("Gets the contactmomenten of a klant")
     suspend fun getKlantContactMomenten(
         dfe: DataFetchingEnvironment,
-        klant: String,
         pageNumber: Int? = 1
-    ): ContactMomentPage {
+    ): ContactMomentPage? {
         return klantContactMomentenService.getKlantContactMomenten(
             dfe.graphQlContext.get(AUTHENTICATION_KEY),
-            klant,
             pageNumber ?: 1
         )
     }
