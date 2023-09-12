@@ -16,5 +16,4 @@ valtimo:
             documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000
             virusscan:
                 enabled: false
-                hostname: localhost
-                port: 3310
+

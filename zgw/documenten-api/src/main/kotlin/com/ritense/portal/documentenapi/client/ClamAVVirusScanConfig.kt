@@ -16,9 +16,11 @@
 package com.ritense.portal.documentenapi.client
 
 import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.context.properties.ConstructorBinding
 
+@ConstructorBinding
 @ConfigurationProperties(prefix = "valtimo.zgw.documentenapi.virusscan.clamav")
 data class ClamAVVirusScanConfig(
-    val hostName: String?,
+    val hostName: String = "",
     var port: Int = 3310
 )

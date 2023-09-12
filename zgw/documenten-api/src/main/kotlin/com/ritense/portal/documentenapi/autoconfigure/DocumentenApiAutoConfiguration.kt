@@ -56,13 +56,12 @@ class DocumentenApiAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty("valtimo.zgw.documentenapi.virusscan.clamav", matchIfMissing = false)
     fun clamAVClient(
         clamAVVirusScanConfig: ClamAVVirusScanConfig
     ): ClamavClient {
         logger.info("ClamAV virusscan is loaded with host: {} and port: {}", clamAVVirusScanConfig.hostName, clamAVVirusScanConfig.port)
         return ClamavClient(
-            clamAVVirusScanConfig.hostName!!,
+            clamAVVirusScanConfig.hostName,
             clamAVVirusScanConfig.port
         )
     }
@@ -74,6 +73,12 @@ class DocumentenApiAutoConfiguration {
     @Bean
     fun documentenApiVirusScanConfig(): DocumentenApiVirusScanConfig {
         return DocumentenApiVirusScanConfig()
+    }
+
+    @Bean
+    @ConditionalOnProperty("valtimo.zgw.documentenapi.virusscan.clamav", matchIfMissing = false)
+    fun clamAVVirusScanConfig(): ClamAVVirusScanConfig {
+        return ClamAVVirusScanConfig()
     }
 
     @Bean
