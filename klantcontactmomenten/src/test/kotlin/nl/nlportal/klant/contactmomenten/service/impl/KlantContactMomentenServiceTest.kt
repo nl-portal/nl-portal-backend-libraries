@@ -15,6 +15,7 @@
  */
 package nl.nlportal.klant.contactmomenten.service.impl
 
+import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.commonground.authentication.JwtBuilder
 import com.ritense.portal.klant.client.OpenKlantClient
 import com.ritense.portal.klant.domain.klanten.Klant
@@ -112,17 +113,6 @@ internal class KlantContactMomentenServiceTest {
     @Test
     fun `get klantcontactmomenten  with BedrijfAuthentication`() = runTest {
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
-        `when`(klantContactMomentenClient.getContactMomenten(authentication, "http://dummy.nl", 1)).thenReturn(
-            ResultPage(
-                1,
-                null,
-                null,
-                listOf(
-                    mock(ContactMoment::class.java)
-                )
-            )
-        )
-
         val illegalArgumentException = Assertions.assertThrows(IllegalArgumentException::class.java) {
             kotlinx.coroutines.test.runBlockingTest {
                 klantContactMomentenService.getKlantContactMomenten(authentication, 1)
@@ -130,5 +120,17 @@ internal class KlantContactMomentenServiceTest {
         }
 
         assertEquals("Cannot get klant by KVK", illegalArgumentException.message)
+    }
+
+    @Test
+    fun `get klantcontactmomenten  with unknown Authentication`() = runTest {
+        val authentication = mock(CommonGroundAuthentication::class.java)
+        val illegalArgumentException = Assertions.assertThrows(IllegalArgumentException::class.java) {
+            kotlinx.coroutines.test.runBlockingTest {
+                klantContactMomentenService.getKlantContactMomenten(authentication, 1)
+            }
+        }
+
+        assertEquals("Cannot get klant for this user", illegalArgumentException.message)
     }
 }
