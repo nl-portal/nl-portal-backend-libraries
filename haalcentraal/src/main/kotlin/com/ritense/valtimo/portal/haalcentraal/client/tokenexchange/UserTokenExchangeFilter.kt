@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.haalcentraal.client.tokenexchange
+package com.ritense.valtimo.portal.haalcentraal.client.tokenexchange
 
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 
