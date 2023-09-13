@@ -20,7 +20,7 @@ import com.ritense.portal.commonground.authentication.JwtBuilder
 import com.ritense.portal.klant.client.OpenKlantClient
 import com.ritense.portal.klant.domain.klanten.Klant
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.runBlockingTest
 import nl.nlportal.klant.contactmomenten.client.KlantContactMomentenClient
 import nl.nlportal.klant.contactmomenten.domain.ContactMoment
 import nl.nlportal.klant.generiek.domain.ResultPage
@@ -34,7 +34,6 @@ import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
-import java.util.Collections
 
 @ExperimentalCoroutinesApi
 internal class KlantContactMomentenServiceTest {
@@ -54,7 +53,7 @@ internal class KlantContactMomentenServiceTest {
     }
 
     @Test
-    fun `get klantcontactmomenten with BSN for burger`() = runTest {
+    fun `get klantcontactmomenten with BSN for burger`() = runBlockingTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
         val klant = mock(Klant::class.java)
         `when`(klant.url).thenReturn("http://dummy.nl")
@@ -75,7 +74,7 @@ internal class KlantContactMomentenServiceTest {
     }
 
     @Test
-    fun `get klantcontactmomenten with BSN for burger get meerdere klanten`() = runTest {
+    fun `get klantcontactmomenten with BSN for burger get meerdere klanten`() = runBlockingTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
         val klant = mock(Klant::class.java)
         `when`(klant.url).thenReturn("http://dummy.nl")
@@ -92,7 +91,7 @@ internal class KlantContactMomentenServiceTest {
         )
 
         val illegalStateException = Assertions.assertThrows(IllegalStateException::class.java) {
-            kotlinx.coroutines.test.runBlockingTest {
+            runBlockingTest {
                 klantContactMomentenService.getKlantContactMomenten(authentication, 1)
             }
         }
@@ -101,9 +100,9 @@ internal class KlantContactMomentenServiceTest {
     }
 
     @Test
-    fun `get klantcontactmomenten with BSN for burger maar geen klanten gevonden`() = runTest {
+    fun `get klantcontactmomenten with BSN for burger maar geen klanten gevonden`() = runBlockingTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
-        `when`(klantClient.getKlanten(authentication, 1, "123")).thenReturn(Collections.emptyList())
+        `when`(klantClient.getKlanten(authentication, 1, "123")).thenReturn(listOf())
         `when`(klantContactMomentenClient.getContactMomenten(authentication, "http://dummy.nl", 1)).thenReturn(
             ResultPage(
                 1,
@@ -121,10 +120,10 @@ internal class KlantContactMomentenServiceTest {
 
     @Test
     @Disabled
-    fun `get klantcontactmomenten  with BedrijfAuthentication`() = runTest {
+    fun `get klantcontactmomenten  with BedrijfAuthentication`() = runBlockingTest {
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
         val illegalArgumentException = Assertions.assertThrows(IllegalArgumentException::class.java) {
-            kotlinx.coroutines.test.runBlockingTest {
+            runBlockingTest {
                 klantContactMomentenService.getKlantContactMomenten(authentication, 1)
             }
         }
@@ -133,10 +132,10 @@ internal class KlantContactMomentenServiceTest {
     }
 
     @Test
-    fun `get klantcontactmomenten  with unknown Authentication`() = runTest {
+    fun `get klantcontactmomenten  with unknown Authentication`() = runBlockingTest {
         val authentication = mock(CommonGroundAuthentication::class.java)
         val illegalArgumentException = Assertions.assertThrows(IllegalArgumentException::class.java) {
-            kotlinx.coroutines.test.runBlockingTest {
+            runBlockingTest {
                 klantContactMomentenService.getKlantContactMomenten(authentication, 1)
             }
         }
