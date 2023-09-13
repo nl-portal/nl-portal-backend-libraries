@@ -15,7 +15,6 @@
  */
 package com.ritense.portal.graphql.security.directive
 
-import com.expediagroup.graphql.server.spring.execution.SpringDataFetcher
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -24,7 +23,6 @@ import org.springframework.context.ApplicationContext
 import kotlin.reflect.KClass
 
 internal class ReactiveDataFactoryProviderTest {
-
     val applicationContext = mock(ApplicationContext::class.java)
     val objectMapper = mock(ObjectMapper::class.java)
     val reactiveDataFactoryProvider = ReactiveDataFactoryProvider(objectMapper, applicationContext)
