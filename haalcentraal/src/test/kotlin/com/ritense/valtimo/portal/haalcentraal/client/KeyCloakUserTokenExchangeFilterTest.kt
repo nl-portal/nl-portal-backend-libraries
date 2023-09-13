@@ -18,11 +18,6 @@ package com.ritense.portal.haalcentraal.client
 import com.ritense.portal.haalcentraal.client.tokenexchange.KeyCloakUserTokenExchangeFilter
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
-import java.net.URLDecoder
-import java.nio.charset.Charset
-import java.time.Instant
-import java.util.Date
-import java.util.UUID
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -33,15 +28,17 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
+import java.net.URLDecoder
+import java.nio.charset.Charset
+import java.time.Instant
+import java.util.*
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class KeyCloakUserTokenExchangeFilterTest {
-
     private lateinit var server: MockWebServer
     private val signingKey = Keys.hmacShaKeyFor(UUID.randomUUID().toString().toByteArray(Charset.forName("UTF-8")))
     private val exchangeToken = Jwts.builder()
@@ -82,9 +79,13 @@ internal class KeyCloakUserTokenExchangeFilterTest {
             .issuer(serverPath)
             .build()
 
-        SecurityContextHolder.getContext().authentication = JwtAuthenticationToken(userToken)
-
         val clientBuilder = WebClient.builder()
+            .defaultRequest { spec ->
+                spec.attribute(
+                    HaalCentraalClientProvider.AUTHENTICATION_ATTRIBUTE_NAME,
+                    JwtAuthenticationToken(userToken)
+                )
+            }
             .baseUrl(serverPath)
 
         val client = clientBuilder.clone()
