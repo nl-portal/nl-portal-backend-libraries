@@ -27,9 +27,9 @@ import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
 
 class HaalCentraalClientProvider(
-        private val haalCentraalClientConfig: HaalCentraalClientConfig,
-        private val clientSslContextResolver: ClientSslContextResolver? = null,
-        private val userTokenExchangeFilter: UserTokenExchangeFilter? = null
+    private val haalCentraalClientConfig: HaalCentraalClientConfig,
+    private val clientSslContextResolver: ClientSslContextResolver? = null,
+    private val userTokenExchangeFilter: UserTokenExchangeFilter? = null
 ) {
     fun webClient(authentication: Authentication): WebClient {
         return WebClient.builder()

@@ -44,8 +44,8 @@ class KeyCloakUserTokenExchangeFilter(
                 if (accessToken != null) {
                     logger.debug { "Setting accessToken from token exchange..." }
                     val r = ClientRequest.from(request)
-                            .headers { headers -> headers.setBearerAuth(accessToken) }
-                            .build()
+                        .headers { headers -> headers.setBearerAuth(accessToken) }
+                        .build()
                     return next.exchange(r)
                 } else {
                     logger.error { "Token exchange failed: access token was null!" }
@@ -78,22 +78,22 @@ class KeyCloakUserTokenExchangeFilter(
         val currentToken = authentication.token
         logger.debug { "Exchanging token for ${authentication.name}" }
         return webClient.post()
-                .uri(URI.create("${currentToken.issuer.toString().trimEnd('/')}/protocol/openid-connect/token"))
-                .body(
-                        BodyInserters.fromFormData(
-                                LinkedMultiValueMap<String, String>()
-                                        .apply {
-                                            add("client_id", currentToken.getClaim("azp"))
-                                            add("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange")
-                                            add("subject_token", currentToken.tokenValue)
-                                            add("requested_token_type", "urn:ietf:params:oauth:token-type:access_token")
-                                            add("audience", targetAudience)
-                                        }
-                        )
+            .uri(URI.create("${currentToken.issuer.toString().trimEnd('/')}/protocol/openid-connect/token"))
+            .body(
+                BodyInserters.fromFormData(
+                    LinkedMultiValueMap<String, String>()
+                        .apply {
+                            add("client_id", currentToken.getClaim("azp"))
+                            add("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange")
+                            add("subject_token", currentToken.tokenValue)
+                            add("requested_token_type", "urn:ietf:params:oauth:token-type:access_token")
+                            add("audience", targetAudience)
+                        }
                 )
-                .retrieve()
-                .bodyToMono<TokenResponse>()
-                .block()
+            )
+            .retrieve()
+            .bodyToMono<TokenResponse>()
+            .block()
     }
 
     data class TokenResponse(@JsonValue @JsonProperty("access_token") val accessToken: String)
