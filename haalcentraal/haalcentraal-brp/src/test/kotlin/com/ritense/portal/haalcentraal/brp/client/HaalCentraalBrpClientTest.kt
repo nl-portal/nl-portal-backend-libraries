@@ -16,6 +16,7 @@
 package com.ritense.portal.haalcentraal.brp.client
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.nhaarman.mockitokotlin2.mock
 import com.ritense.portal.core.ssl.ClientKey
 import com.ritense.portal.core.ssl.StringClientSslContextResolver
 import com.ritense.portal.haalcentraal.brp.domain.persoon.Persoon
@@ -65,7 +66,7 @@ internal class HaalCentraalBrpClientTest {
         val provider = HaalCentraalClientProvider(haalCentraalClientConfig, null)
         val client = HaalCentraalBrpClient(provider)
         runBlocking {
-            val persoon = client.getPersoon(bsn)
+            val persoon = client.getPersoon(bsn, mock())
             assertThat(persoon).isNotNull
         }
     }
@@ -112,7 +113,7 @@ internal class HaalCentraalBrpClientTest {
         val provider = HaalCentraalClientProvider(haalCentraalClientConfig, StringClientSslContextResolver())
         val client = HaalCentraalBrpClient(provider)
         runBlocking {
-            val persoon = client.getPersoon(bsn)
+            val persoon = client.getPersoon(bsn, mock())
             assertThat(persoon).isNotNull
 
             val recordedRequest = server.takeRequest()

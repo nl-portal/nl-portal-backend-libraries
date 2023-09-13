@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.valtimo.portal.haalcentraal.client
+package com.ritense.portal.haalcentraal.client
 
 import com.ritense.portal.core.ssl.ClientSslContextResolver
-import com.ritense.portal.haalcentraal.client.HaalCentraalClientConfig
-import com.ritense.valtimo.portal.haalcentraal.client.tokenexchange.UserTokenExchangeFilter
+import com.ritense.portal.haalcentraal.client.tokenexchange.UserTokenExchangeFilter
 import io.netty.handler.logging.LogLevel
 import mu.KLogger
 import mu.KotlinLogging

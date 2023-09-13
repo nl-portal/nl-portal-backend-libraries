@@ -29,7 +29,7 @@ class HaalCentraalBrpService(
 
     override suspend fun getPersoon(authentication: CommonGroundAuthentication): Persoon? {
         return if (authentication is BurgerAuthentication) {
-            haalCentraalBrpClient.getPersoon(authentication.getBsn())
+            haalCentraalBrpClient.getPersoon(authentication.getBsn(), authentication)
         } else {
             null
         }
@@ -37,7 +37,7 @@ class HaalCentraalBrpService(
 
     override suspend fun getBewoningen(authentication: CommonGroundAuthentication): Bewoning? {
         return if (authentication is BurgerAuthentication) {
-            haalCentraalBrpClient.getBewoningen(authentication.getBsn())
+            haalCentraalBrpClient.getBewoningen(authentication.getBsn(), authentication)
         } else {
             null
         }
@@ -55,7 +55,7 @@ class HaalCentraalBrpService(
         val authenticationGemachtigde = authentication.getGemachtigde()
 
         return authenticationGemachtigde?.bsn?.let {
-            haalCentraalBrpClient.getPersoonNaam(it)
+            haalCentraalBrpClient.getPersoonNaam(it, authentication)
         }
     }
 }

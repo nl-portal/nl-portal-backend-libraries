@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.valtimo.portal.haalcentraal.client.tokenexchange
+package com.ritense.portal.haalcentraal.client.tokenexchange
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
-import com.ritense.valtimo.portal.haalcentraal.client.HaalCentraalClientProvider
-import java.net.URI
+import com.ritense.portal.haalcentraal.client.HaalCentraalClientProvider
 import mu.KLogger
 import mu.KotlinLogging
 import org.springframework.http.HttpHeaders
@@ -31,6 +30,7 @@ import org.springframework.web.reactive.function.client.ExchangeFunction
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 import reactor.core.publisher.Mono
+import java.net.URI
 
 class KeyCloakUserTokenExchangeFilter(
     private val webClient: WebClient,

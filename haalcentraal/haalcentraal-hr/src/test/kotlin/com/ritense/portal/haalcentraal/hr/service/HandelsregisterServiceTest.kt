@@ -35,14 +35,14 @@ class HandelsregisterServiceTest {
     @Test
     fun `getMaatschappelijkeActiviteit calls client and gets MaatschappelijkeActiviteit`() = runBlockingTest {
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
-        whenever(handelsregisterClient.getMaatschappelijkeActiviteit("123")).thenReturn(
+        whenever(handelsregisterClient.getMaatschappelijkeActiviteit("123", authentication)).thenReturn(
             MaatschappelijkeActiviteit("Test bedrijf")
         )
 
         val bedrijf = handelsregisterService.getMaatschappelijkeActiviteit(authentication)!!
 
         assertEquals("Test bedrijf", bedrijf.naam)
-        verify(handelsregisterClient).getMaatschappelijkeActiviteit("123")
+        verify(handelsregisterClient).getMaatschappelijkeActiviteit("123", authentication)
     }
 
     @Test
