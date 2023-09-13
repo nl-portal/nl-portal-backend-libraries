@@ -89,6 +89,9 @@ class ZakenApiService(
     }
 
     suspend fun getZaakDetails(zaakUrl: String): Object {
+        // first get the zaakobjects
+
+
         return Object()
     }
 
