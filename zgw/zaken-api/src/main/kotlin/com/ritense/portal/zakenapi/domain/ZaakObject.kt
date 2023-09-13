@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class ZaakObject(
     val url: String,
     val uuid: String,
-        val zaak: String,
+    val zaak: String,
     @JsonProperty("object") val objectUrl: String,
     val objectType: String,
     val objectTypeOverige: String,

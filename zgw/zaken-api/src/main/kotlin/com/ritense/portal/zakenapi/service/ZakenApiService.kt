@@ -23,7 +23,6 @@ import com.ritense.portal.documentenapi.domain.DocumentStatus
 import com.ritense.portal.documentenapi.service.DocumentenApiService
 import com.ritense.portal.zakenapi.client.ZakenApiClient
 import com.ritense.portal.zakenapi.client.ZakenApiConfig
-import com.ritense.portal.zakenapi.domain.ResultPage
 import com.ritense.portal.zakenapi.domain.Zaak
 import com.ritense.portal.zakenapi.domain.ZaakDetail
 import com.ritense.portal.zakenapi.domain.ZaakDocument
@@ -97,7 +96,7 @@ class ZakenApiService(
         val zaakId = extractId(zaakUrl)
         var zaakDetail = ZaakDetail(zaakUrl, listOf())
         zaakDetail.data = getZaakObjecten(zaakId)
-                .map { getObjectsApiZaakDetails(it.objectUrl) }
+            .map { getObjectsApiZaakDetails(it.objectUrl) }
         return zaakDetail
     }
 
@@ -131,7 +130,7 @@ class ZakenApiService(
         objectUrl: String
     ): ObjectsApiObject<Any> {
         val userSearchParameters = listOf(ObjectSearchParameter("verwerker_taak_id", Comparator.EQUAL_TO, "taskId.toString()"))
-        //val taskIdSearchParameter = ObjectSearchParameter("verwerker_taak_id", Comparator.EQUAL_TO, taskId.toString())
+        // val taskIdSearchParameter = ObjectSearchParameter("verwerker_taak_id", Comparator.EQUAL_TO, taskId.toString())
 
         return objectsApiClient.getObjects<Any>(
             objectSearchParameters = userSearchParameters,

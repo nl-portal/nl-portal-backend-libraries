@@ -34,16 +34,16 @@ class ZakenApiAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(ZakenApiService::class)
     fun zakenApiService(
-            zakenApiClient: ZakenApiClient,
-            documentenApiService: DocumentenApiService,
-            objectsApiClient: ObjectsApiClient,
-            zakenApiConfig: ZakenApiConfig
+        zakenApiClient: ZakenApiClient,
+        documentenApiService: DocumentenApiService,
+        objectsApiClient: ObjectsApiClient,
+        zakenApiConfig: ZakenApiConfig
     ): ZakenApiService {
         return ZakenApiService(
-                zakenApiClient,
-                documentenApiService,
-                objectsApiClient,
-                zakenApiConfig
+            zakenApiClient,
+            documentenApiService,
+            objectsApiClient,
+            zakenApiConfig
         )
     }
 

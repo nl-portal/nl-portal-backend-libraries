@@ -83,18 +83,18 @@ class ZakenApiClient(
 
     suspend fun getZaakObjecten(page: Int, zaakId: UUID?): ResultPage<ZaakObject> {
         return webClient()
-                .get()
-                .uri {
-                    val uriBuilder = it.path("/zaken/api/v1/zaakobjecten")
-                            .queryParam("page", page)
-                            .queryParam("objectType", "overige")
-                            .queryParam("objectTypeOverige", "zaakdetails")
-                    zaakId?.let { uriBuilder.queryParam("zaak", "${zakenApiConfig.url}/zaken/api/v1/zaken/$zaakId") }
-                    uriBuilder.build()
-                }
-                .retrieve()
-                .handleStatus()
-                .awaitBody()
+            .get()
+            .uri {
+                val uriBuilder = it.path("/zaken/api/v1/zaakobjecten")
+                    .queryParam("page", page)
+                    .queryParam("objectType", "overige")
+                    .queryParam("objectTypeOverige", "zaakdetails")
+                zaakId?.let { uriBuilder.queryParam("zaak", "${zakenApiConfig.url}/zaken/api/v1/zaken/$zaakId") }
+                uriBuilder.build()
+            }
+            .retrieve()
+            .handleStatus()
+            .awaitBody()
     }
 
     suspend fun getStatus(statusId: UUID): ZaakStatus {
