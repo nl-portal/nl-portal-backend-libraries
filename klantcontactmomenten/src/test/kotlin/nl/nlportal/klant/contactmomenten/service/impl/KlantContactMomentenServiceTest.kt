@@ -119,7 +119,6 @@ internal class KlantContactMomentenServiceTest {
     }
 
     @Test
-    @Disabled
     fun `get klantcontactmomenten  with BedrijfAuthentication`() = runBlockingTest {
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
         val illegalArgumentException = Assertions.assertThrows(IllegalArgumentException::class.java) {
