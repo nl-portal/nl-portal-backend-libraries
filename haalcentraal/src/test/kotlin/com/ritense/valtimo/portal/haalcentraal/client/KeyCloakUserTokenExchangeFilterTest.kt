@@ -35,7 +35,8 @@ import org.springframework.web.reactive.function.client.bodyToMono
 import java.net.URLDecoder
 import java.nio.charset.Charset
 import java.time.Instant
-import java.util.*
+import java.util.UUID
+import java.util.Date
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class KeyCloakUserTokenExchangeFilterTest {
