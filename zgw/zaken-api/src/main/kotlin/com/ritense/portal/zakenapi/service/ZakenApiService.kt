@@ -26,11 +26,16 @@ import com.ritense.portal.zakenapi.domain.Zaak
 import com.ritense.portal.zakenapi.domain.ZaakDocument
 import com.ritense.portal.zakenapi.domain.ZaakRol
 import com.ritense.portal.zakenapi.domain.ZaakStatus
+import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
+import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
+import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
+import nl.nlportal.zgw.objectenapi.domain.Comparator
 import java.util.UUID
 
 class ZakenApiService(
     private val zakenApiClient: ZakenApiClient,
-    private val documentenApiService: DocumentenApiService
+    private val documentenApiService: DocumentenApiService,
+    private val objectsApiClient: ObjectsApiClient,
 ) {
 
     suspend fun getZaken(page: Int, authentication: CommonGroundAuthentication): List<Zaak> {
@@ -83,6 +88,10 @@ class ZakenApiService(
         return zakenApiClient.getZaakDocumenten(zaakUrl)
     }
 
+    suspend fun getZaakDetails(zaakUrl: String): Object {
+        return Object()
+    }
+
     private suspend fun getZaakRollen(bsn: String?, kvknummer: String?, zaakId: UUID?): List<ZaakRol> {
         val rollen = arrayListOf<ZaakRol>()
         var nextPageNumber: Int? = 1
@@ -94,6 +103,21 @@ class ZakenApiService(
         }
 
         return rollen
+    }
+
+    private suspend fun getObjectsApiTaak(
+        objectTypeUrl: String,
+        authentication: CommonGroundAuthentication
+    ): ObjectsApiObject<Object> {
+        val userSearchParameters = listOf(ObjectSearchParameter("verwerker_taak_id", Comparator.EQUAL_TO, "taskId.toString()"))
+        //val taskIdSearchParameter = ObjectSearchParameter("verwerker_taak_id", Comparator.EQUAL_TO, taskId.toString())
+
+        return objectsApiClient.getObjects<Object>(
+            objectSearchParameters = userSearchParameters,
+            objectTypeUrl = objectTypeUrl,
+            page = 1,
+            pageSize = 2,
+        ).results.single()
     }
 
     companion object {
