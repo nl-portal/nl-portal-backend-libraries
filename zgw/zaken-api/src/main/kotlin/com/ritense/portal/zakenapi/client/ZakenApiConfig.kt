@@ -22,4 +22,5 @@ data class ZakenApiConfig(
     var url: String = "",
     var clientId: String = "",
     var secret: String = "",
+    var detailsTypeUrl: String = "",
 )

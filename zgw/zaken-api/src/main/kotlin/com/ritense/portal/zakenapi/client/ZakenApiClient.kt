@@ -19,6 +19,7 @@ import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
 import com.ritense.portal.zakenapi.domain.ResultPage
 import com.ritense.portal.zakenapi.domain.Zaak
 import com.ritense.portal.zakenapi.domain.ZaakDocument
+import com.ritense.portal.zakenapi.domain.ZaakObject
 import com.ritense.portal.zakenapi.domain.ZaakRol
 import com.ritense.portal.zakenapi.domain.ZaakStatus
 import io.netty.handler.logging.LogLevel
@@ -78,6 +79,20 @@ class ZakenApiClient(
             .retrieve()
             .handleStatus()
             .awaitBody()
+    }
+
+    suspend fun getZaakObjecten(page: Int, zaakId: UUID?): ResultPage<ZaakObject> {
+        return webClient()
+                .get()
+                .uri {
+                    val uriBuilder = it.path("/zaken/api/v1/zaakobjecten")
+                            .queryParam("page", page)
+                    zaakId?.let { uriBuilder.queryParam("zaak", "${zakenApiConfig.url}/zaken/api/v1/zaken/$zaakId") }
+                    uriBuilder.build()
+                }
+                .retrieve()
+                .handleStatus()
+                .awaitBody()
     }
 
     suspend fun getStatus(statusId: UUID): ZaakStatus {

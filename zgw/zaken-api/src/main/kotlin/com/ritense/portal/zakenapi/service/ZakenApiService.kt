@@ -22,8 +22,11 @@ import com.ritense.portal.documentenapi.domain.Document
 import com.ritense.portal.documentenapi.domain.DocumentStatus
 import com.ritense.portal.documentenapi.service.DocumentenApiService
 import com.ritense.portal.zakenapi.client.ZakenApiClient
+import com.ritense.portal.zakenapi.client.ZakenApiConfig
+import com.ritense.portal.zakenapi.domain.ResultPage
 import com.ritense.portal.zakenapi.domain.Zaak
 import com.ritense.portal.zakenapi.domain.ZaakDocument
+import com.ritense.portal.zakenapi.domain.ZaakObject
 import com.ritense.portal.zakenapi.domain.ZaakRol
 import com.ritense.portal.zakenapi.domain.ZaakStatus
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
@@ -36,6 +39,7 @@ class ZakenApiService(
     private val zakenApiClient: ZakenApiClient,
     private val documentenApiService: DocumentenApiService,
     private val objectsApiClient: ObjectsApiClient,
+    private val zakenApiConfig: ZakenApiConfig
 ) {
 
     suspend fun getZaken(page: Int, authentication: CommonGroundAuthentication): List<Zaak> {
@@ -88,11 +92,22 @@ class ZakenApiService(
         return zakenApiClient.getZaakDocumenten(zaakUrl)
     }
 
-    suspend fun getZaakDetails(zaakUrl: String): Object {
-        // first get the zaakobjects
+    suspend fun getZaakDetails(zaakId: UUID?): Any {
+        return getZaakObjecten(zaakId)
+                .map { getObjectsApiZaakDetails(it.objectUrl) }
+    }
 
+    suspend fun getZaakObjecten(zaakId: UUID?): List<ZaakObject> {
+        val zaakObjecten = arrayListOf<ZaakObject>()
+        var nextPageNumber: Int? = 1
 
-        return Object()
+        while (nextPageNumber != null) {
+            val zaakObjectenPage = zakenApiClient.getZaakObjecten(nextPageNumber, zaakId)
+            zaakObjecten.addAll(zaakObjectenPage.results)
+            nextPageNumber = zaakObjectenPage.getNextPageNumber()
+        }
+
+        return zaakObjecten
     }
 
     private suspend fun getZaakRollen(bsn: String?, kvknummer: String?, zaakId: UUID?): List<ZaakRol> {
@@ -108,16 +123,15 @@ class ZakenApiService(
         return rollen
     }
 
-    private suspend fun getObjectsApiTaak(
-        objectTypeUrl: String,
-        authentication: CommonGroundAuthentication
-    ): ObjectsApiObject<Object> {
+    private suspend fun getObjectsApiZaakDetails(
+        objectUrl: String
+    ): ObjectsApiObject<Any> {
         val userSearchParameters = listOf(ObjectSearchParameter("verwerker_taak_id", Comparator.EQUAL_TO, "taskId.toString()"))
         //val taskIdSearchParameter = ObjectSearchParameter("verwerker_taak_id", Comparator.EQUAL_TO, taskId.toString())
 
-        return objectsApiClient.getObjects<Object>(
+        return objectsApiClient.getObjects<Any>(
             objectSearchParameters = userSearchParameters,
-            objectTypeUrl = objectTypeUrl,
+            objectTypeUrl = zakenApiConfig.detailsTypeUrl,
             page = 1,
             pageSize = 2,
         ).results.single()
