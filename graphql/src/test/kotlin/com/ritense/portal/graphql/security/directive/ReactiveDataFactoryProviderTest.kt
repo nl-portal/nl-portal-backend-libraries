@@ -40,7 +40,7 @@ internal class ReactiveDataFactoryProviderTest {
     fun `should use default data fetcher when method is annotated IsUnauthenticated`() {
         val kClass: KClass<*> = mock()
         val dataFetcher = reactiveDataFactoryProvider.functionDataFetcherFactory(null, kClass, ::unauthenticatedTestMethod).get(null)
-        assertThat(dataFetcher).isInstanceOf(SpringDataFetcher::class.java)
+        assertThat(dataFetcher).isInstanceOf(CustomSpringDataFetcher::class.java)
     }
 
     @IsUnauthenticated
