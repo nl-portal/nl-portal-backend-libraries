@@ -17,8 +17,8 @@ package com.ritense.portal.haalcentraal.hr.client
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.nhaarman.mockitokotlin2.mock
-import com.ritense.valtimo.portal.haalcentraal.client.HaalCentraalClientConfig
-import com.ritense.valtimo.portal.haalcentraal.client.HaalCentraalClientProvider
+import com.ritense.portal.haalcentraal.client.HaalCentraalClientConfig
+import com.ritense.portal.haalcentraal.client.HaalCentraalClientProvider
 import com.ritense.portal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
