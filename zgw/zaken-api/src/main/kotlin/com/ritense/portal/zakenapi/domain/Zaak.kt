@@ -56,7 +56,7 @@ data class Zaak(
         return catalogiApiService.getZaakType(zaaktype)
     }
 
-    suspend fun zaakdetails(@GraphQLIgnore @Autowired zakenApiService: ZakenApiService): Object {
+    suspend fun zaakdetails(@GraphQLIgnore @Autowired zakenApiService: ZakenApiService): ZaakDetail {
         return zakenApiService.getZaakDetails(url)
     }
 }

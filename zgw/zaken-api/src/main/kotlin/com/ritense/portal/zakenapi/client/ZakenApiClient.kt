@@ -87,6 +87,8 @@ class ZakenApiClient(
                 .uri {
                     val uriBuilder = it.path("/zaken/api/v1/zaakobjecten")
                             .queryParam("page", page)
+                            .queryParam("objectType", "overige")
+                            .queryParam("objectTypeOverige", "zaakdetails")
                     zaakId?.let { uriBuilder.queryParam("zaak", "${zakenApiConfig.url}/zaken/api/v1/zaken/$zaakId") }
                     uriBuilder.build()
                 }

@@ -17,5 +17,5 @@ package com.ritense.portal.zakenapi.domain
 
 data class ZaakDetail(
     val zaak: String,
-    val data: Any
+    var data: List<Any>?
 )

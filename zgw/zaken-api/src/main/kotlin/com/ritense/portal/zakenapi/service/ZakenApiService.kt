@@ -25,6 +25,7 @@ import com.ritense.portal.zakenapi.client.ZakenApiClient
 import com.ritense.portal.zakenapi.client.ZakenApiConfig
 import com.ritense.portal.zakenapi.domain.ResultPage
 import com.ritense.portal.zakenapi.domain.Zaak
+import com.ritense.portal.zakenapi.domain.ZaakDetail
 import com.ritense.portal.zakenapi.domain.ZaakDocument
 import com.ritense.portal.zakenapi.domain.ZaakObject
 import com.ritense.portal.zakenapi.domain.ZaakRol
@@ -92,9 +93,12 @@ class ZakenApiService(
         return zakenApiClient.getZaakDocumenten(zaakUrl)
     }
 
-    suspend fun getZaakDetails(zaakId: UUID?): Any {
-        return getZaakObjecten(zaakId)
+    suspend fun getZaakDetails(zaakUrl: String): ZaakDetail {
+        val zaakId = extractId(zaakUrl)
+        var zaakDetail = ZaakDetail(zaakUrl, listOf())
+        zaakDetail.data = getZaakObjecten(zaakId)
                 .map { getObjectsApiZaakDetails(it.objectUrl) }
+        return zaakDetail
     }
 
     suspend fun getZaakObjecten(zaakId: UUID?): List<ZaakObject> {
