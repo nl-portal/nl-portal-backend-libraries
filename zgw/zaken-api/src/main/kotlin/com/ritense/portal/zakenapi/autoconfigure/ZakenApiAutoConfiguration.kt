@@ -38,14 +38,12 @@ class ZakenApiAutoConfiguration {
         zakenApiClient: ZakenApiClient,
         documentenApiService: DocumentenApiService,
         objectsApiClient: ObjectsApiClient,
-        zakenApiConfig: ZakenApiConfig,
         objectMapper: ObjectMapper
     ): ZakenApiService {
         return ZakenApiService(
             zakenApiClient,
             documentenApiService,
             objectsApiClient,
-            zakenApiConfig,
             objectMapper
         )
     }

@@ -24,7 +24,6 @@ import com.ritense.portal.documentenapi.domain.Document
 import com.ritense.portal.documentenapi.domain.DocumentStatus
 import com.ritense.portal.documentenapi.service.DocumentenApiService
 import com.ritense.portal.zakenapi.client.ZakenApiClient
-import com.ritense.portal.zakenapi.client.ZakenApiConfig
 import com.ritense.portal.zakenapi.domain.Zaak
 import com.ritense.portal.zakenapi.domain.ZaakDetails
 import com.ritense.portal.zakenapi.domain.ZaakDetailsObject
@@ -33,16 +32,13 @@ import com.ritense.portal.zakenapi.domain.ZaakObject
 import com.ritense.portal.zakenapi.domain.ZaakRol
 import com.ritense.portal.zakenapi.domain.ZaakStatus
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
-import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
-import nl.nlportal.zgw.objectenapi.domain.Comparator
-import java.util.UUID
+import java.util.*
 
 class ZakenApiService(
     private val zakenApiClient: ZakenApiClient,
     private val documentenApiService: DocumentenApiService,
     private val objectsApiClient: ObjectsApiClient,
-    private val zakenApiConfig: ZakenApiConfig,
     private val objectMapper: ObjectMapper
 ) {
 

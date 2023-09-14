@@ -51,7 +51,6 @@ internal class ZakenApiServiceTest {
             zakenApiClient,
             documentenApiService,
             objectsApiClient,
-            zakenApiConfig,
             objectMapper
     )
 
