@@ -16,7 +16,6 @@
 package com.ritense.portal.zakenapi.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.node.ObjectNode
 import com.ritense.portal.commonground.authentication.BedrijfAuthentication
 import com.ritense.portal.commonground.authentication.BurgerAuthentication
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
@@ -94,11 +93,12 @@ class ZakenApiService(
 
     suspend fun getZaakDetails(zaakUrl: String): ZaakDetails {
         val zaakId = extractId(zaakUrl)
-        val zaakObjecten = getZaakObjecten(zaakId)
-        val zaakDetailsObjecten = zaakObjecten
-            .map { getObjectApiZaakDetails(it.objectUrl) }
-            .map{ it?.record?.data?.data }
-        return ZaakDetails(zaakUrl, objectMapper.convertValue(zaakDetailsObjecten, ObjectNode::class.java))
+        val zaakDetailsObjects = getZaakObjecten(zaakId)
+                .filter { it.objectTypeOverige.lowercase(Locale.getDefault()) == "zaakdetails" }
+                .map { getObjectApiZaakDetails(it.objectUrl) }
+                .map{ it?.record?.data?.data!! }
+                .flatten()
+        return ZaakDetails(zaakUrl, zaakDetailsObjects)
     }
 
     suspend fun getZaakObjecten(zaakId: UUID?): List<ZaakObject> {
