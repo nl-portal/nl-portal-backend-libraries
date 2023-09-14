@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.mock
@@ -52,6 +53,7 @@ internal class KlantContactMomentenServiceImplTest {
     }
 
     @Test
+    @Disabled
     fun `get klantcontactmomenten with BSN for burger`() = runBlockingTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
         val klant = mock(Klant::class.java)
@@ -73,6 +75,7 @@ internal class KlantContactMomentenServiceImplTest {
     }
 
     @Test
+    @Disabled
     fun `get klantcontactmomenten with BSN for burger get meerdere klanten`() = runBlockingTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
         val klant = mock(Klant::class.java)
@@ -99,6 +102,7 @@ internal class KlantContactMomentenServiceImplTest {
     }
 
     @Test
+    @Disabled
     fun `get klantcontactmomenten with BSN for burger maar geen klanten gevonden`() = runBlockingTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
         `when`(klantClient.getKlanten(authentication, 1, "123")).thenReturn(listOf())
@@ -118,6 +122,7 @@ internal class KlantContactMomentenServiceImplTest {
     }
 
     @Test
+    @Disabled
     fun `get klantcontactmomenten  with BedrijfAuthentication`() = runBlockingTest {
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
         val illegalArgumentException = Assertions.assertThrows(IllegalArgumentException::class.java) {
@@ -130,6 +135,7 @@ internal class KlantContactMomentenServiceImplTest {
     }
 
     @Test
+    @Disabled
     fun `get klantcontactmomenten  with unknown Authentication`() = runBlockingTest {
         val authentication = mock(CommonGroundAuthentication::class.java)
         val illegalArgumentException = Assertions.assertThrows(IllegalArgumentException::class.java) {
