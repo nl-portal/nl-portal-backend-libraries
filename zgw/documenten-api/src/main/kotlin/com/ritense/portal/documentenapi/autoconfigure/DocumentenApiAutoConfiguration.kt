@@ -18,24 +18,19 @@ package com.ritense.portal.documentenapi.autoconfigure
 import com.ritense.portal.documentenapi.client.ClamAVVirusScanConfig
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
 import com.ritense.portal.documentenapi.client.DocumentenApiConfig
-import com.ritense.portal.documentenapi.client.DocumentenApiVirusScanConfig
 import com.ritense.portal.documentenapi.graphql.DocumentContentQuery
 import com.ritense.portal.documentenapi.security.config.DocumentContentResourceHttpSecurityConfigurer
 import com.ritense.portal.documentenapi.service.DocumentenApiService
 import com.ritense.portal.documentenapi.service.VirusScanService
-import com.ritense.portal.documentenapi.service.impl.ClamAVService
 import com.ritense.portal.documentenapi.web.rest.DocumentContentResource
 import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
-import mu.KotlinLogging
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import xyz.capybara.clamav.ClamavClient
 
 @Configuration
-@EnableConfigurationProperties(DocumentenApiConfig::class, DocumentenApiVirusScanConfig::class, ClamAVVirusScanConfig::class)
+@EnableConfigurationProperties(DocumentenApiConfig::class)
 class DocumentenApiAutoConfiguration {
 
     @Bean
@@ -48,35 +43,11 @@ class DocumentenApiAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(VirusScanService::class)
-    fun virusScanService(
-        clamAVClient: ClamavClient
-    ): VirusScanService {
-        return ClamAVService(clamAVClient)
-    }
-
-    @Bean
-    fun clamAVClient(
-        clamAVVirusScanConfig: ClamAVVirusScanConfig
-    ): ClamavClient {
-        logger.info("ClamAV virusscan is loaded with host: {} and port: {}", clamAVVirusScanConfig.hostName, clamAVVirusScanConfig.port)
-        return ClamavClient(
-            clamAVVirusScanConfig.hostName,
-            clamAVVirusScanConfig.port
-        )
-    }
-    @Bean
     fun documentenApiConfig(): DocumentenApiConfig {
         return DocumentenApiConfig()
     }
 
     @Bean
-    fun documentenApiVirusScanConfig(): DocumentenApiVirusScanConfig {
-        return DocumentenApiVirusScanConfig()
-    }
-
-    @Bean
-    @ConditionalOnProperty("valtimo.zgw.documentenapi.virusscan.clamav", matchIfMissing = false)
     fun clamAVVirusScanConfig(): ClamAVVirusScanConfig {
         return ClamAVVirusScanConfig()
     }
@@ -105,13 +76,8 @@ class DocumentenApiAutoConfiguration {
     fun documentContentResource2(
         documentenApiClient: DocumentenApiClient,
         documentenApiService: DocumentenApiService,
-        virusScanService: VirusScanService,
-        documentenApiVirusScanConfig: DocumentenApiVirusScanConfig
+        virusScanService: VirusScanService?
     ): DocumentContentResource {
-        return DocumentContentResource(documentenApiClient, documentenApiService, virusScanService, documentenApiVirusScanConfig)
-    }
-
-    companion object {
-        private val logger = KotlinLogging.logger {}
+        return DocumentContentResource(documentenApiClient, documentenApiService, virusScanService)
     }
 }
