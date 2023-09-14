@@ -17,11 +17,10 @@ package com.ritense.portal.haalcentraal.client.tokenexchange
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
-import java.net.URI
+import com.ritense.portal.haalcentraal.client.HaalCentraalClientProvider
 import mu.KLogger
 import mu.KotlinLogging
 import org.springframework.http.HttpHeaders
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.reactive.function.BodyInserters
@@ -31,6 +30,7 @@ import org.springframework.web.reactive.function.client.ExchangeFunction
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 import reactor.core.publisher.Mono
+import java.net.URI
 
 class KeyCloakUserTokenExchangeFilter(
     private val webClient: WebClient,
@@ -39,12 +39,17 @@ class KeyCloakUserTokenExchangeFilter(
 
     override fun filter(request: ClientRequest, next: ExchangeFunction): Mono<ClientResponse> {
         if (request.headers()[HttpHeaders.AUTHORIZATION].isNullOrEmpty()) {
-            val accessToken = exchangeToken()?.accessToken
-            if (accessToken != null) {
-                val r = ClientRequest.from(request)
-                    .headers { headers -> headers.setBearerAuth(accessToken) }
-                    .build()
-                return next.exchange(r)
+            getJwtAuthentication(request)?.let { authentication ->
+                val accessToken = exchangeToken(authentication)?.accessToken
+                if (accessToken != null) {
+                    logger.debug { "Setting accessToken from token exchange..." }
+                    val r = ClientRequest.from(request)
+                        .headers { headers -> headers.setBearerAuth(accessToken) }
+                        .build()
+                    return next.exchange(r)
+                } else {
+                    logger.error { "Token exchange failed: access token was null!" }
+                }
             }
         } else {
             logger.debug { "${HttpHeaders.AUTHORIZATION} was already set. Skipping user token exchange." }
@@ -53,32 +58,42 @@ class KeyCloakUserTokenExchangeFilter(
         return next.exchange(request)
     }
 
-    private fun exchangeToken(): TokenResponse? {
-
-        val authentication = SecurityContextHolder.getContext().authentication
-        if (authentication is JwtAuthenticationToken) {
-            val currentToken = authentication.token
-
-            return webClient.post()
-                .uri(URI.create("${currentToken.issuer.toString().trimEnd('/')}/protocol/openid-connect/token"))
-                .body(
-                    BodyInserters.fromFormData(
-                        LinkedMultiValueMap<String, String>()
-                            .apply {
-                                add("client_id", currentToken.getClaim("azp"))
-                                add("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange")
-                                add("subject_token", currentToken.tokenValue)
-                                add("requested_token_type", "urn:ietf:params:oauth:token-type:access_token")
-                                add("audience", targetAudience)
-                            }
-                    )
-                )
-                .retrieve()
-                .bodyToMono<TokenResponse>()
-                .block()
+    private fun getJwtAuthentication(request: ClientRequest): JwtAuthenticationToken? {
+        when (val authentication = request.attribute(HaalCentraalClientProvider.AUTHENTICATION_ATTRIBUTE_NAME).orElse(null)) {
+            is JwtAuthenticationToken -> {
+                return authentication
+            }
+            null -> {
+                logger.debug { "Current authentication object was null!" }
+            }
+            else -> {
+                logger.debug { "Current authentication object was not of type JwtAuthenticationToken: ${authentication.javaClass.name}!" }
+            }
         }
 
         return null
+    }
+
+    private fun exchangeToken(authentication: JwtAuthenticationToken): TokenResponse? {
+        val currentToken = authentication.token
+        logger.debug { "Exchanging token for ${authentication.name}" }
+        return webClient.post()
+            .uri(URI.create("${currentToken.issuer.toString().trimEnd('/')}/protocol/openid-connect/token"))
+            .body(
+                BodyInserters.fromFormData(
+                    LinkedMultiValueMap<String, String>()
+                        .apply {
+                            add("client_id", currentToken.getClaim("azp"))
+                            add("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange")
+                            add("subject_token", currentToken.tokenValue)
+                            add("requested_token_type", "urn:ietf:params:oauth:token-type:access_token")
+                            add("audience", targetAudience)
+                        }
+                )
+            )
+            .retrieve()
+            .bodyToMono<TokenResponse>()
+            .block()
     }
 
     data class TokenResponse(@JsonValue @JsonProperty("access_token") val accessToken: String)

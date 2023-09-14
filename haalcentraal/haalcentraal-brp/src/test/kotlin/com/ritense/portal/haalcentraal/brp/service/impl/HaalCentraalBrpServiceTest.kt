@@ -36,7 +36,7 @@ class HaalCentraalBrpServiceTest {
     @Test
     fun `getPerson calls client and gets Persoon`() = runBlockingTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
-        whenever(haalCentraalBrpClient.getPersoon("123")).thenReturn(
+        whenever(haalCentraalBrpClient.getPersoon("123", authentication)).thenReturn(
             Persoon(
                 "123",
                 "geslacht",
@@ -57,7 +57,7 @@ class HaalCentraalBrpServiceTest {
 
         assertEquals("Achternaam", persoon.naam?.geslachtsnaam)
 
-        verify(haalCentraalBrpClient).getPersoon("123")
+        verify(haalCentraalBrpClient).getPersoon("123", authentication)
     }
 
     @Test
@@ -74,7 +74,7 @@ class HaalCentraalBrpServiceTest {
             .aanvragerBsn("123")
             .gemachtigdeBsn("456")
             .buildBurgerAuthentication()
-        whenever(haalCentraalBrpClient.getPersoonNaam("456")).thenReturn(
+        whenever(haalCentraalBrpClient.getPersoonNaam("456", authentication)).thenReturn(
             PersoonNaam(
                 "Aanhef",
                 "Voornaam",
@@ -88,7 +88,7 @@ class HaalCentraalBrpServiceTest {
 
         assertEquals("Achternaam", persoonNaam.geslachtsnaam)
 
-        verify(haalCentraalBrpClient).getPersoonNaam("456")
+        verify(haalCentraalBrpClient).getPersoonNaam("456", authentication)
     }
 
     @Test

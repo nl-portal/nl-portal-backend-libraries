@@ -16,6 +16,7 @@
 package com.ritense.portal.haalcentraal.hr.client
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.nhaarman.mockitokotlin2.mock
 import com.ritense.portal.haalcentraal.client.HaalCentraalClientConfig
 import com.ritense.portal.haalcentraal.client.HaalCentraalClientProvider
 import com.ritense.portal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
@@ -27,6 +28,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.mockito.Mockito.mock
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class HandelsregisterClientTest {
@@ -61,7 +63,7 @@ internal class HandelsregisterClientTest {
     @Test
     fun `should get bedrijf by without certificate`() {
         runBlocking {
-            val bedrijf = client.getMaatschappelijkeActiviteit(kvkNummer)
+            val bedrijf = client.getMaatschappelijkeActiviteit(kvkNummer, mock())
 
             assertThat(bedrijf).isNotNull
         }

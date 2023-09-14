@@ -19,6 +19,7 @@ import com.ritense.portal.haalcentraal.brp.domain.bewoning.Bewoning
 import com.ritense.portal.haalcentraal.brp.domain.persoon.Persoon
 import com.ritense.portal.haalcentraal.brp.domain.persoon.PersoonNaam
 import com.ritense.portal.haalcentraal.client.HaalCentraalClientProvider
+import org.springframework.security.core.Authentication
 import org.springframework.web.reactive.function.client.awaitBody
 import java.time.LocalDate
 
@@ -26,8 +27,8 @@ class HaalCentraalBrpClient(
     val haalCentraalClientProvider: HaalCentraalClientProvider
 ) {
 
-    suspend fun getPersoon(bsn: String): Persoon {
-        return haalCentraalClientProvider.webClient()
+    suspend fun getPersoon(bsn: String, authentication: Authentication): Persoon {
+        return haalCentraalClientProvider.webClient(authentication)
             .get()
             .uri {
                 val uriBuilder = it.path("/brp/ingeschrevenpersonen/$bsn")
@@ -41,8 +42,8 @@ class HaalCentraalBrpClient(
             .awaitBody()
     }
 
-    suspend fun getPersoonNaam(bsn: String): PersoonNaam? {
-        return haalCentraalClientProvider.webClient()
+    suspend fun getPersoonNaam(bsn: String, authentication: Authentication): PersoonNaam? {
+        return haalCentraalClientProvider.webClient(authentication)
             .get()
             .uri {
                 val uriBuilder = it.path("/brp/ingeschrevenpersonen/$bsn")
@@ -57,8 +58,8 @@ class HaalCentraalBrpClient(
             .naam
     }
 
-    suspend fun getBewoningen(bsn: String): Bewoning {
-        return haalCentraalClientProvider.webClient()
+    suspend fun getBewoningen(bsn: String, authentication: Authentication): Bewoning {
+        return haalCentraalClientProvider.webClient(authentication)
             .get()
             .uri {
                 val uriBuilder = it.path("/bewoning/bewoningen")
