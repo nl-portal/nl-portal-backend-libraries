@@ -19,6 +19,8 @@ import com.ritense.portal.catalogiapi.client.CatalogiApiConfig
 import com.ritense.portal.commonground.authentication.WithBurgerUser
 import com.ritense.portal.documentenapi.client.DocumentenApiConfig
 import com.ritense.portal.zakenapi.client.ZakenApiConfig
+import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
+import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -34,15 +36,18 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.reactive.server.WebTestClient
+import java.net.URI
 
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(PER_CLASS)
 internal class ZaakQueryIT(
-    @Autowired private val testClient: WebTestClient,
-    @Autowired private val zakenApiConfig: ZakenApiConfig,
-    @Autowired private val catalogiApiConfig: CatalogiApiConfig,
-    @Autowired private val documentenApiConfig: DocumentenApiConfig
+        @Autowired private val testClient: WebTestClient,
+        @Autowired private val zakenApiConfig: ZakenApiConfig,
+        @Autowired private val catalogiApiConfig: CatalogiApiConfig,
+        @Autowired private val documentenApiConfig: DocumentenApiConfig,
+        @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig
+
 ) {
     lateinit var server: MockWebServer
 
@@ -54,6 +59,7 @@ internal class ZaakQueryIT(
         zakenApiConfig.url = server.url("/").toString()
         catalogiApiConfig.url = server.url("/").toString()
         documentenApiConfig.url = server.url("/").toString()
+        objectsApiClientConfig.url = server.url("/").toUri()
     }
 
     @AfterEach
@@ -313,6 +319,40 @@ internal class ZaakQueryIT(
             .jsonPath("$basePath.statussen[2].isEindstatus").isEqualTo(true)
     }
 
+    @Test
+    @WithBurgerUser("123")
+    fun getZaakWithZaakDetails() {
+
+        val query = """
+            query {
+                getZaak(id: "5d479908-fbb7-49c2-98c9-9afecf8de79a") {
+                    uuid,
+                    identificatie,
+                    omschrijving,
+                    zaakdetails {
+                        data
+                    }
+                }
+            }
+        """.trimIndent()
+
+        val basePath = "$.data.getZaak"
+
+        testClient.post()
+                .uri("/graphql")
+                .accept(APPLICATION_JSON)
+                .contentType(MediaType("application", "graphql"))
+                .bodyValue(query)
+                .exchange()
+                .expectBody()
+                .consumeWith(System.out::println)
+                .jsonPath(basePath).exists()
+                .jsonPath("$basePath.uuid").isEqualTo("5d479908-fbb7-49c2-98c9-9afecf8de79a")
+                .jsonPath("$basePath.identificatie").isEqualTo("ZAAK-2021-0000000003")
+                .jsonPath("$basePath.omschrijving").isEqualTo("Voorbeeld afgesloten zaak 1")
+                .jsonPath("$basePath.zaakdetails.data[0].key").isEqualTo("Locatie")
+    }
+
     fun setupMockOpenZaakServer() {
         val dispatcher: Dispatcher = object : Dispatcher() {
             @Throws(InterruptedException::class)
@@ -329,6 +369,8 @@ internal class ZaakQueryIT(
                     "/zaken/api/v1/zaakinformatieobjecten" -> handleZaakInformatieObjectenRequest()
                     "/documenten/api/v1/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> handleDocumentRequest()
                     "/zaken/api/v1/rollen" -> handleZaakRollenRequest()
+                    "/zaken/api/v1/zaakobjecten" -> handleZaakObjectenRequest()
+                    "GET /api/v2/objects" -> handleZaakDetailsObjectenRequest()
                     else -> MockResponse().setResponseCode(404)
                 }
                 return response
@@ -690,6 +732,45 @@ internal class ZaakQueryIT(
                   "roltoelichting": "string",
                   "registratiedatum": "2019-08-24T14:15:22Z",
                   "indicatieMachtiging": "gemachtigde"
+                }
+              ]
+            }
+        """.trimIndent()
+
+        return mockResponse(body)
+    }
+
+    fun handleZaakObjectenRequest(): MockResponse {
+        val body = """
+           {
+              "count": 3,
+              "next": "http://example.com",
+              "previous": "http://example.com",
+              "results": [
+                {
+                  "url": "http://example.com",
+                  "uuid": "095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+                  "zaak": "http://example.com",
+                  "object": "/api/v2/objects/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+                  "objectType": "overige",
+                  "objectTypeOverige": "zaakdetails"
+                }
+              ]
+            }
+        """.trimIndent()
+
+        return mockResponse(body)
+    }
+
+    fun handleZaakDetailsObjectenRequest(): MockResponse {
+        val body = """
+           {
+              "zaak": "http://example.com",
+              "data": [
+                {
+                    "key": "Locatie",
+                    "description": "Locatie waar...",
+                    "value": "Spui 70"
                 }
               ]
             }

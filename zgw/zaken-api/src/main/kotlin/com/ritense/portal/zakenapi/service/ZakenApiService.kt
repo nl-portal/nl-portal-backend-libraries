@@ -15,6 +15,8 @@
  */
 package com.ritense.portal.zakenapi.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.node.ObjectNode
 import com.ritense.portal.commonground.authentication.BedrijfAuthentication
 import com.ritense.portal.commonground.authentication.BurgerAuthentication
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
@@ -24,7 +26,8 @@ import com.ritense.portal.documentenapi.service.DocumentenApiService
 import com.ritense.portal.zakenapi.client.ZakenApiClient
 import com.ritense.portal.zakenapi.client.ZakenApiConfig
 import com.ritense.portal.zakenapi.domain.Zaak
-import com.ritense.portal.zakenapi.domain.ZaakDetail
+import com.ritense.portal.zakenapi.domain.ZaakDetails
+import com.ritense.portal.zakenapi.domain.ZaakDetailsObject
 import com.ritense.portal.zakenapi.domain.ZaakDocument
 import com.ritense.portal.zakenapi.domain.ZaakObject
 import com.ritense.portal.zakenapi.domain.ZaakRol
@@ -39,7 +42,8 @@ class ZakenApiService(
     private val zakenApiClient: ZakenApiClient,
     private val documentenApiService: DocumentenApiService,
     private val objectsApiClient: ObjectsApiClient,
-    private val zakenApiConfig: ZakenApiConfig
+    private val zakenApiConfig: ZakenApiConfig,
+    private val objectMapper: ObjectMapper
 ) {
 
     suspend fun getZaken(page: Int, authentication: CommonGroundAuthentication): List<Zaak> {
@@ -92,12 +96,13 @@ class ZakenApiService(
         return zakenApiClient.getZaakDocumenten(zaakUrl)
     }
 
-    suspend fun getZaakDetails(zaakUrl: String): ZaakDetail {
+    suspend fun getZaakDetails(zaakUrl: String): ZaakDetails {
         val zaakId = extractId(zaakUrl)
-        var zaakDetail = ZaakDetail(zaakUrl, listOf())
-        zaakDetail.data = getZaakObjecten(zaakId)
-            .map { getObjectsApiZaakDetails(it.objectUrl) }
-        return zaakDetail
+        val zaakObjecten = getZaakObjecten(zaakId)
+        val zaakDetailsObjecten = zaakObjecten
+            .map { getObjectApiZaakDetails(it.objectUrl) }
+            .map{ it?.record?.data?.data }
+        return ZaakDetails(zaakUrl, objectMapper.convertValue(zaakDetailsObjecten, ObjectNode::class.java))
     }
 
     suspend fun getZaakObjecten(zaakId: UUID?): List<ZaakObject> {
@@ -126,18 +131,12 @@ class ZakenApiService(
         return rollen
     }
 
-    private suspend fun getObjectsApiZaakDetails(
+    private suspend fun getObjectApiZaakDetails(
         objectUrl: String
-    ): ObjectsApiObject<Any> {
-        val userSearchParameters = listOf(ObjectSearchParameter("verwerker_taak_id", Comparator.EQUAL_TO, "taskId.toString()"))
-        // val taskIdSearchParameter = ObjectSearchParameter("verwerker_taak_id", Comparator.EQUAL_TO, taskId.toString())
-
-        return objectsApiClient.getObjects<Any>(
-            objectSearchParameters = userSearchParameters,
-            objectTypeUrl = zakenApiConfig.detailsTypeUrl,
-            page = 1,
-            pageSize = 2,
-        ).results.single()
+    ): ObjectsApiObject<ZaakDetailsObject>? {
+        return objectsApiClient.getObjectByUrl<ZaakDetailsObject>(
+            url = objectUrl
+        )
     }
 
     companion object {

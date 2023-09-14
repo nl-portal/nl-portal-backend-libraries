@@ -15,6 +15,7 @@
  */
 package com.ritense.portal.zakenapi.autoconfigure
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.ritense.portal.documentenapi.service.DocumentenApiService
 import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
 import com.ritense.portal.zakenapi.client.ZakenApiClient
@@ -37,13 +38,15 @@ class ZakenApiAutoConfiguration {
         zakenApiClient: ZakenApiClient,
         documentenApiService: DocumentenApiService,
         objectsApiClient: ObjectsApiClient,
-        zakenApiConfig: ZakenApiConfig
+        zakenApiConfig: ZakenApiConfig,
+        objectMapper: ObjectMapper
     ): ZakenApiService {
         return ZakenApiService(
             zakenApiClient,
             documentenApiService,
             objectsApiClient,
-            zakenApiConfig
+            zakenApiConfig,
+            objectMapper
         )
     }
 

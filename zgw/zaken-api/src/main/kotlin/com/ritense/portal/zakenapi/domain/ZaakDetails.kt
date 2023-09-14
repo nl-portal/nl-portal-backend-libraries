@@ -15,7 +15,9 @@
  */
 package com.ritense.portal.zakenapi.domain
 
-data class ZaakDetail(
+import com.fasterxml.jackson.databind.node.ObjectNode
+
+data class ZaakDetails(
     val zaak: String,
-    var data: List<Any>?
+    var data: ObjectNode
 )
