@@ -49,13 +49,11 @@ class KlantAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(BurgerQuery::class)
     fun burgerQuery(burgerService: BurgerService): BurgerQuery {
         return BurgerQuery(burgerService)
     }
 
     @Bean
-    @ConditionalOnMissingBean(BurgerMutation::class)
     fun burgerMutation(burgerService: BurgerService, graphQlValidator: GraphQlValidator): BurgerMutation {
         return BurgerMutation(burgerService, graphQlValidator)
     }

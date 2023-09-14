@@ -51,7 +51,6 @@ class KlantContactMomentenAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(KlantContactMomentenService::class)
     fun contactMomentenQuery(
         klantContactMomentenService: KlantContactMomentenService
     ): ContactMomentQuery {
