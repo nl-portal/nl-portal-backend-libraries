@@ -23,7 +23,7 @@ import nl.nlportal.klant.contactmomenten.client.KlantContactMomentenClient
 import nl.nlportal.klant.contactmomenten.graphql.ContactMomentPage
 import nl.nlportal.klant.contactmomenten.service.KlantContactMomentenService
 
-class KlantContactMomentenService(
+class KlantContactMomentenServiceImpl(
     val klantContactMomentenClient: KlantContactMomentenClient,
     val klantClient: OpenKlantClient
 ) : KlantContactMomentenService {

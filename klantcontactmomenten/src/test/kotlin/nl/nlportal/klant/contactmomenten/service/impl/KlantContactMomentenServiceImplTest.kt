@@ -35,7 +35,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 
 @ExperimentalCoroutinesApi
-internal class KlantContactMomentenServiceTest {
+internal class KlantContactMomentenServiceImplTest {
 
     @Mock
     lateinit var klantContactMomentenClient: KlantContactMomentenClient
@@ -43,12 +43,12 @@ internal class KlantContactMomentenServiceTest {
     @Mock
     lateinit var klantClient: OpenKlantClient
 
-    lateinit var klantContactMomentenService: KlantContactMomentenService
+    lateinit var klantContactMomentenServiceImpl: KlantContactMomentenServiceImpl
 
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        klantContactMomentenService = KlantContactMomentenService(klantContactMomentenClient, klantClient)
+        klantContactMomentenServiceImpl = KlantContactMomentenServiceImpl(klantContactMomentenClient, klantClient)
     }
 
     @Test
@@ -68,7 +68,7 @@ internal class KlantContactMomentenServiceTest {
             )
         )
 
-        val result = klantContactMomentenService.getKlantContactMomenten(authentication, 1)
+        val result = klantContactMomentenServiceImpl.getKlantContactMomenten(authentication, 1)
         assertEquals(1, result?.content?.size)
     }
 
@@ -91,7 +91,7 @@ internal class KlantContactMomentenServiceTest {
 
         val illegalStateException = Assertions.assertThrows(IllegalStateException::class.java) {
             runBlockingTest {
-                klantContactMomentenService.getKlantContactMomenten(authentication, 1)
+                klantContactMomentenServiceImpl.getKlantContactMomenten(authentication, 1)
             }
         }
 
@@ -113,7 +113,7 @@ internal class KlantContactMomentenServiceTest {
             )
         )
 
-        val result = klantContactMomentenService.getKlantContactMomenten(authentication, 1)
+        val result = klantContactMomentenServiceImpl.getKlantContactMomenten(authentication, 1)
         assertNull(result)
     }
 
@@ -122,7 +122,7 @@ internal class KlantContactMomentenServiceTest {
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
         val illegalArgumentException = Assertions.assertThrows(IllegalArgumentException::class.java) {
             runBlockingTest {
-                klantContactMomentenService.getKlantContactMomenten(authentication, 1)
+                klantContactMomentenServiceImpl.getKlantContactMomenten(authentication, 1)
             }
         }
 
@@ -134,7 +134,7 @@ internal class KlantContactMomentenServiceTest {
         val authentication = mock(CommonGroundAuthentication::class.java)
         val illegalArgumentException = Assertions.assertThrows(IllegalArgumentException::class.java) {
             runBlockingTest {
-                klantContactMomentenService.getKlantContactMomenten(authentication, 1)
+                klantContactMomentenServiceImpl.getKlantContactMomenten(authentication, 1)
             }
         }
 

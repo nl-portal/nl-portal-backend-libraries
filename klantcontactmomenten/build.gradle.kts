@@ -20,7 +20,6 @@ plugins {
 val isLib = true
 
 dependencies {
-    api(project(":klant-generiek"))
     api(project(":klant"))
     implementation(project(mapOf("path" to ":klant")))
 

@@ -21,7 +21,7 @@ import graphql.GraphQLContext
 import graphql.schema.DataFetchingEnvironment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import nl.nlportal.klant.contactmomenten.service.impl.KlantContactMomentenService
+import nl.nlportal.klant.contactmomenten.service.impl.KlantContactMomentenServiceImpl
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
@@ -33,7 +33,7 @@ import org.springframework.security.core.Authentication
 @ExperimentalCoroutinesApi
 internal class ContactMomentQueryTest {
 
-    val contactMomentenService = mock(KlantContactMomentenService::class.java)
+    val contactMomentenService = mock(KlantContactMomentenServiceImpl::class.java)
     val contactMomentQuery = ContactMomentQuery(contactMomentenService)
     var environment = mock(DataFetchingEnvironment::class.java)
     var authentication = mock(CommonGroundAuthentication::class.java)
