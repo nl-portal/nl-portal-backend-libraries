@@ -157,7 +157,7 @@ internal class TaakQueryIT(
     }
 
     @Test
-    @WithBedrijfUser("14127294")
+    @WithBurgerUser("569312864")
     fun `should unauthorized get task by id for burger`() {
         val basePath = "$.data.getTaakById"
 
@@ -182,7 +182,7 @@ internal class TaakQueryIT(
                     "GET /api/v2/objects" -> {
                         if (queryParams.any { it.contains("identificatie__value__exact__569312863") }) {
                             TestHelper.mockResponseFromFile("/data/get-bsn-task-list.json")
-                        } else if (queryParams.any { it.contains("identificatie__value__exact__14127294") }) {
+                        } else if (queryParams.any { it.contains("identificatie__value__exact__569312863") }) {
                             TestHelper.mockResponseFromFile("/data/get-bsn-task-list-unauthorized.json")
                         } else if (queryParams.any { it.contains("identificatie__value__exact__14127293") }) {
                             TestHelper.mockResponseFromFile("/data/get-kvk-task-list.json")
