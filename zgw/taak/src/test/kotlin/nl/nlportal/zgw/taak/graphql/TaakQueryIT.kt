@@ -119,7 +119,7 @@ internal class TaakQueryIT(
     }
 
     @Test
-    @WithBedrijfUser("14127293")
+    @WithBurgerUser("569312863")
     fun `should get task by id for burger`() {
         val basePath = "$.data.getTaakById"
 
@@ -134,11 +134,11 @@ internal class TaakQueryIT(
             .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
             .jsonPath("$basePath.formulier.value").isEqualTo("check-loan-form")
             .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
-            .jsonPath("$basePath.date").isEqualTo("2022-05-30")
+            .jsonPath("$basePath.date").isEqualTo("2022-05-25")
     }
 
     @Test
-    @WithBurgerUser("569312863")
+    @WithBedrijfUser("14127293")
     fun `should get task by id for bedrijf`() {
         val basePath = "$.data.getTaakById"
 
@@ -153,7 +153,7 @@ internal class TaakQueryIT(
             .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
             .jsonPath("$basePath.formulier.value").isEqualTo("check-loan-form")
             .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
-            .jsonPath("$basePath.date").isEqualTo("2022-05-25")
+            .jsonPath("$basePath.date").isEqualTo("2022-05-30")
     }
 
     fun setupMockObjectsApiServer() {

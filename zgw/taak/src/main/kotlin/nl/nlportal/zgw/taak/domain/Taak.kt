@@ -18,6 +18,7 @@ package nl.nlportal.zgw.taak.domain
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
+import java.time.LocalDateTime
 import java.util.UUID
 
 class Taak(
@@ -30,6 +31,8 @@ class Taak(
     val status: TaakStatus,
     val date: String,
     var data: ObjectNode,
+    val zaak: String?,
+    val verloopdatum: LocalDateTime?,
 ) {
     companion object {
         fun fromObjectsApiTask(objectsApiTask: ObjectsApiObject<TaakObject>): Taak {
@@ -43,7 +46,9 @@ class Taak(
                 date = objectsApiTask.record.startAt,
                 data = ObjectMapper().valueToTree(objectsApiTask.record.data.data),
                 identificatie = taakObject.identificatie,
-                formId = taakObject.formulier.value
+                formId = taakObject.formulier.value,
+                zaak = taakObject.zaak,
+                verloopdatum = taakObject.verloopdatum
             )
         }
     }
