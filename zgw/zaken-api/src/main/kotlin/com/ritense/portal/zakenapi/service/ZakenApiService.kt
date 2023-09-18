@@ -32,7 +32,8 @@ import com.ritense.portal.zakenapi.domain.ZaakRol
 import com.ritense.portal.zakenapi.domain.ZaakStatus
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
-import java.util.*
+import java.util.Locale
+import java.util.UUID
 
 class ZakenApiService(
     private val zakenApiClient: ZakenApiClient,
@@ -94,10 +95,10 @@ class ZakenApiService(
     suspend fun getZaakDetails(zaakUrl: String): ZaakDetails {
         val zaakId = extractId(zaakUrl)
         val zaakDetailsObjects = getZaakObjecten(zaakId)
-                .filter { it.objectTypeOverige.lowercase(Locale.getDefault()) == "zaakdetails" }
-                .map { getObjectApiZaakDetails(it.objectUrl) }
-                .map{ it?.record?.data?.data!! }
-                .flatten()
+            .filter { it.objectTypeOverige.lowercase(Locale.getDefault()) == "zaakdetails" }
+            .map { getObjectApiZaakDetails(it.objectUrl) }
+            .map { it?.record?.data?.data!! }
+            .flatten()
         return ZaakDetails(zaakUrl, zaakDetailsObjects)
     }
 

@@ -37,7 +37,7 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.springframework.security.oauth2.jwt.Jwt
-import java.util.*
+import java.util.UUID
 
 @ExperimentalCoroutinesApi
 internal class ZakenApiServiceTest {
@@ -48,10 +48,10 @@ internal class ZakenApiServiceTest {
     var zakenApiConfig: ZakenApiConfig = mock()
     var objectMapper: ObjectMapper = mock()
     var zaakService = ZakenApiService(
-            zakenApiClient,
-            documentenApiService,
-            objectsApiClient,
-            objectMapper
+        zakenApiClient,
+        documentenApiService,
+        objectsApiClient,
+        objectMapper
     )
 
     @Test
