@@ -156,6 +156,22 @@ internal class TaakQueryIT(
             .jsonPath("$basePath.date").isEqualTo("2022-05-25")
     }
 
+    @Test
+    @WithBedrijfUser("14127294")
+    fun `should unauthorized get task by id for burger`() {
+        val basePath = "$.data.getTaakById"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(getTaakByIdPayload)
+            .exchange()
+            .expectBody()
+            .consumeWith(System.out::println)
+            .jsonPath(basePath)
+    }
+
     fun setupMockObjectsApiServer() {
         val dispatcher: Dispatcher = object : Dispatcher() {
             @Throws(InterruptedException::class)
@@ -166,6 +182,8 @@ internal class TaakQueryIT(
                     "GET /api/v2/objects" -> {
                         if (queryParams.any { it.contains("identificatie__value__exact__569312863") }) {
                             TestHelper.mockResponseFromFile("/data/get-bsn-task-list.json")
+                        } else if (queryParams.any { it.contains("identificatie__value__exact__14127294") }) {
+                            TestHelper.mockResponseFromFile("/data/get-bsn-task-list-unauthorized.json")
                         } else if (queryParams.any { it.contains("identificatie__value__exact__14127293") }) {
                             TestHelper.mockResponseFromFile("/data/get-kvk-task-list.json")
                         } else {
