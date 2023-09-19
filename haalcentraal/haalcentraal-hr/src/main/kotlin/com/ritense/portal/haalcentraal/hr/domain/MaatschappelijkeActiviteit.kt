@@ -15,6 +15,8 @@
  */
 package com.ritense.portal.haalcentraal.hr.domain
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 data class MaatschappelijkeActiviteit(
     val naam: String,
     val kvkNummer: String,
@@ -25,5 +27,7 @@ data class MaatschappelijkeActiviteit(
     val statutaireNaam: String?,
     val handelsnamen: List<HandelsNaam>?,
     val sbiActiviteiten: List<SbiActiviteit>?,
+
+    @JsonProperty("_embedded")
     val embedded: Embedded?
 )
