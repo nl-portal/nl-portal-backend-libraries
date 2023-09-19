@@ -86,7 +86,7 @@ internal class HandelsregisterQueryIT(
             @Throws(InterruptedException::class)
             override fun dispatch(request: RecordedRequest): MockResponse {
                 val response = when (request.path?.substringBefore('?')) {
-                    "/handelsregister/v1/maatschappelijkeactiviteiten/90012768" -> TestHelper.mockResponseFromFile("/data/get-maatschappelijke-activiteiten.json")
+                    "/api/v1/basisprofielen/90012768" -> TestHelper.mockResponseFromFile("/data/get-maatschappelijke-activiteiten.json")
                     else -> MockResponse().setResponseCode(404)
                 }
                 return response
