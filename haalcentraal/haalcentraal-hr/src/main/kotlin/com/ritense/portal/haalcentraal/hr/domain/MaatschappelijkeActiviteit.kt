@@ -17,4 +17,13 @@ package com.ritense.portal.haalcentraal.hr.domain
 
 data class MaatschappelijkeActiviteit(
     val naam: String,
+    val kvkNummer: String,
+    val indNonMailing: String?,
+    val formeleRegistratiedatum: String?,
+    val materieleRegistratie: MaterieleRegistratie?,
+    val totaalWerkzamePersonen: Int?,
+    val statutaireNaam: String?,
+    val handelsnamen: List<HandelsNaam>?,
+    val sbiActiviteiten: List<SbiActiviteit>?,
+    val embedded: Embedded?
 )

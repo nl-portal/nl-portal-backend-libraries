@@ -27,7 +27,7 @@ class HandelsregisterClient(
     suspend fun getMaatschappelijkeActiviteit(kvkNummer: String, authentication: Authentication): MaatschappelijkeActiviteit {
         return haalCentraalClientProvider.webClient(authentication)
             .get()
-            .uri("/handelsregister/v1/maatschappelijkeactiviteiten/$kvkNummer")
+            .uri("/api/v1/basisprofielen/$kvkNummer")
             .retrieve()
             .awaitBody()
     }

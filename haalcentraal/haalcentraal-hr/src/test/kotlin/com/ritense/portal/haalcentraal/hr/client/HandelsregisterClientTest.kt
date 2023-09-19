@@ -20,6 +20,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.ritense.portal.haalcentraal.client.HaalCentraalClientConfig
 import com.ritense.portal.haalcentraal.client.HaalCentraalClientProvider
 import com.ritense.portal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
+import com.ritense.portal.haalcentraal.hr.domain.MaterieleRegistratie
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -46,7 +47,22 @@ internal class HandelsregisterClientTest {
 
         server.enqueue(
             MockResponse()
-                .setBody(jacksonObjectMapper().writeValueAsString(MaatschappelijkeActiviteit(naam = "Test bedrijf")))
+                .setBody(
+                    jacksonObjectMapper().writeValueAsString(
+                        MaatschappelijkeActiviteit(
+                            naam = "Test bedrijf",
+                            "90012768",
+                            "test",
+                            "20230101",
+                            MaterieleRegistratie("20020202"),
+                            1,
+                            "Test bedrijf",
+                            listOf(),
+                            listOf(),
+                            null
+                        )
+                    )
+                )
                 .addHeader("Content-Type", "application/json")
         )
 

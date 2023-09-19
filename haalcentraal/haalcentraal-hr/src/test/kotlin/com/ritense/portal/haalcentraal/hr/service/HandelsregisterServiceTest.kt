@@ -21,6 +21,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.ritense.portal.commonground.authentication.JwtBuilder
 import com.ritense.portal.haalcentraal.hr.client.HandelsregisterClient
 import com.ritense.portal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
+import com.ritense.portal.haalcentraal.hr.domain.MaterieleRegistratie
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -36,7 +37,18 @@ class HandelsregisterServiceTest {
     fun `getMaatschappelijkeActiviteit calls client and gets MaatschappelijkeActiviteit`() = runBlockingTest {
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
         whenever(handelsregisterClient.getMaatschappelijkeActiviteit("123", authentication)).thenReturn(
-            MaatschappelijkeActiviteit("Test bedrijf")
+            MaatschappelijkeActiviteit(
+                naam = "Test bedrijf",
+                "90012768",
+                "test",
+                "20230101",
+                MaterieleRegistratie("20020202"),
+                1,
+                "Test bedrijf",
+                listOf(),
+                listOf(),
+                null
+            )
         )
 
         val bedrijf = handelsregisterService.getMaatschappelijkeActiviteit(authentication)!!
