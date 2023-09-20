@@ -33,7 +33,5 @@ jobs:
     - uses: ncipollo/release-action@v1
       with:
         name: ${{ env.GITHUB_REF_NAME }}
-        tag: ${{ env.GITHUB_REF_NAME }}
         artifacts: "build/libs/*.jar"
-        bodyFile: "body.log"
         token: ${{ secrets.GITHUB_TOKEN }}
