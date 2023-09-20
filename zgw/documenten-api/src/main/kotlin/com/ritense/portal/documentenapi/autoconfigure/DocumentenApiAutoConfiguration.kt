@@ -15,7 +15,6 @@
  */
 package com.ritense.portal.documentenapi.autoconfigure
 
-import com.ritense.portal.documentenapi.client.ClamAVVirusScanConfig
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
 import com.ritense.portal.documentenapi.client.DocumentenApiConfig
 import com.ritense.portal.documentenapi.graphql.DocumentContentQuery
@@ -45,11 +44,6 @@ class DocumentenApiAutoConfiguration {
     @Bean
     fun documentenApiConfig(): DocumentenApiConfig {
         return DocumentenApiConfig()
-    }
-
-    @Bean
-    fun clamAVVirusScanConfig(): ClamAVVirusScanConfig {
-        return ClamAVVirusScanConfig()
     }
 
     @Bean
