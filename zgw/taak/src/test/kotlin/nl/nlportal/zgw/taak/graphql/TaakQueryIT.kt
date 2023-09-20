@@ -168,7 +168,6 @@ internal class TaakQueryIT(
             .bodyValue(getTaakByIdPayload)
             .exchange()
             .expectBody()
-            .consumeWith(System.out::println)
             .jsonPath(basePath)
     }
 
