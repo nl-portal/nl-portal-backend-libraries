@@ -16,9 +16,7 @@
 package com.ritense.portal.haalcentraal.hr.client
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.nhaarman.mockitokotlin2.mock
-import com.ritense.portal.haalcentraal.client.HaalCentraalClientConfig
-import com.ritense.portal.haalcentraal.client.HaalCentraalClientProvider
+import com.ritense.portal.haalcentraal.client.HaalCentraalHrClientConfig
 import com.ritense.portal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 import com.ritense.portal.haalcentraal.hr.domain.MaterieleRegistratie
 import kotlinx.coroutines.runBlocking
@@ -29,13 +27,11 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.mockito.Mockito.mock
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class HandelsregisterClientTest {
 
-    private lateinit var haalCentraalClientConfig: HaalCentraalClientConfig
-    private lateinit var haalCentraalClientProvider: HaalCentraalClientProvider
+    private lateinit var haalCentraalHrClientConfig: HaalCentraalHrClientConfig
     private lateinit var client: HandelsregisterClient
     private lateinit var server: MockWebServer
     private val kvkNummer = "90012768"
@@ -66,9 +62,8 @@ internal class HandelsregisterClientTest {
                 .addHeader("Content-Type", "application/json")
         )
 
-        haalCentraalClientConfig = HaalCentraalClientConfig(url = server.url("/").toString())
-        haalCentraalClientProvider = HaalCentraalClientProvider(haalCentraalClientConfig, null)
-        client = HandelsregisterClient(haalCentraalClientProvider)
+        haalCentraalHrClientConfig = HaalCentraalHrClientConfig(url = server.url("/").toString())
+        client = HandelsregisterClient(haalCentraalHrClientConfig)
     }
 
     @AfterEach
@@ -79,7 +74,7 @@ internal class HandelsregisterClientTest {
     @Test
     fun `should get bedrijf by without certificate`() {
         runBlocking {
-            val bedrijf = client.getMaatschappelijkeActiviteit(kvkNummer, mock())
+            val bedrijf = client.getMaatschappelijkeActiviteit(kvkNummer)
 
             assertThat(bedrijf).isNotNull
         }

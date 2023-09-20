@@ -23,6 +23,7 @@ import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import com.ritense.portal.haalcentraal.brp.domain.persoon.PersoonNaam
 import com.ritense.portal.haalcentraal.brp.service.HaalCentraalBrpService
 import com.ritense.portal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
+import com.ritense.portal.haalcentraal.hr.domain.MaterieleRegistratie
 import com.ritense.portal.haalcentraal.hr.service.HandelsregisterService
 import graphql.GraphQLContext
 import graphql.schema.DataFetchingEnvironment
@@ -58,7 +59,18 @@ internal class GemachtigdeQueryTest {
             )
         )
         whenever(handelsregisterService.getGemachtigde(authentication)).thenReturn(
-            MaatschappelijkeActiviteit("test")
+            MaatschappelijkeActiviteit(
+                naam = "Test bedrijf",
+                "90012768",
+                "test",
+                "20230101",
+                MaterieleRegistratie("20020202"),
+                1,
+                "Test bedrijf",
+                listOf(),
+                listOf(),
+                null
+            )
         )
 
         val gemachtigde = query.getGemachtigde(environment)
