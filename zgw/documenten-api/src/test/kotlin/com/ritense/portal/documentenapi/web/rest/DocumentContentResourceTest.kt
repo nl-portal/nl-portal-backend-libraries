@@ -22,6 +22,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
 import com.ritense.portal.documentenapi.domain.Document
 import com.ritense.portal.documentenapi.service.DocumentenApiService
+import com.ritense.portal.documentenapi.service.VirusScanService
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
@@ -40,7 +41,8 @@ class DocumentContentResourceTest {
 
     private val documentenApiClient: DocumentenApiClient = mock()
     private val documentenApiService: DocumentenApiService = mock()
-    private val downloadResource = DocumentContentResource(documentenApiClient, documentenApiService)
+    private val virusScanService: VirusScanService = mock()
+    private val downloadResource = DocumentContentResource(documentenApiClient, documentenApiService, virusScanService)
     val document: Document = mock()
 
     @Test

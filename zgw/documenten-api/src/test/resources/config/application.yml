@@ -14,3 +14,6 @@ valtimo:
             secret: e09b8bc5-5831-4618-ab28-41411304309d
             rsin: "051845623"
             documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000
+            virusscan:
+                enabled: false
+

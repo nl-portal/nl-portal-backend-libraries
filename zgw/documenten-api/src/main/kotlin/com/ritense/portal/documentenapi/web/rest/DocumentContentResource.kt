@@ -16,12 +16,13 @@
 package com.ritense.portal.documentenapi.web.rest
 
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
-import com.ritense.portal.documentenapi.domain.Document
+import com.ritense.portal.documentenapi.domain.VirusScanStatus
 import com.ritense.portal.documentenapi.service.DocumentenApiService
-import java.util.UUID
+import com.ritense.portal.documentenapi.service.VirusScanService
 import kotlinx.coroutines.runBlocking
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.http.codec.multipart.FilePart
@@ -32,12 +33,14 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Flux
+import java.util.UUID
 
 @RestController
 @RequestMapping(value = ["/api"])
 class DocumentContentResource(
     val documentenApiClient: DocumentenApiClient,
-    val documentenApiService: DocumentenApiService
+    val documentenApiService: DocumentenApiService,
+    val virusScanService: VirusScanService?
 ) {
 
     @GetMapping(value = ["/document/{documentId}/content"])
@@ -47,8 +50,9 @@ class DocumentContentResource(
 
         val document = runBlocking { documentenApiService.getDocument(documentId) }
 
-        val responseHeaders = HttpHeaders()
-        responseHeaders.set("Content-Disposition", "attachment; filename=\"${document.bestandsnaam}\"")
+        val responseHeaders = HttpHeaders().apply {
+            set("Content-Disposition", "attachment; filename=\"${document.bestandsnaam}\"")
+        }
 
         return ResponseEntity
             .ok()
@@ -58,7 +62,13 @@ class DocumentContentResource(
     }
 
     @PostMapping(value = ["/document/content"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    suspend fun uploadStreaming(@RequestPart("file") file: FilePart): ResponseEntity<Document> {
+    suspend fun uploadStreaming(@RequestPart("file") file: FilePart): ResponseEntity<Any> {
+        val virusScanResult = virusScanService?.scan(file.content())
+
+        // only return a bad request as a virus is found, otherwise continue....
+        if (VirusScanStatus.VIRUS_FOUND == virusScanResult?.status) {
+            return ResponseEntity(virusScanResult, HttpStatus.BAD_REQUEST)
+        }
         return ResponseEntity.ok(documentenApiService.uploadDocument(file))
     }
 }
