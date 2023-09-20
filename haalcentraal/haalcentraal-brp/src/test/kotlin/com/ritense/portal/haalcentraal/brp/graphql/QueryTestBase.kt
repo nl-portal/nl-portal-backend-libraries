@@ -23,7 +23,7 @@ import graphql.schema.DataFetchingEnvironment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.whenever
 import org.springframework.security.core.Authentication
 
 @ExperimentalCoroutinesApi
@@ -36,7 +36,7 @@ internal open class QueryTestBase {
 
     @BeforeEach
     fun setup() {
-        `when`(environment.graphQlContext).thenReturn(context)
-        `when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
+        whenever(environment.graphQlContext).thenReturn(context)
+        whenever(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
     }
 }

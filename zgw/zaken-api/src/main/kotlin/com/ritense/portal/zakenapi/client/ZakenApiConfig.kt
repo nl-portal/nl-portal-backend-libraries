@@ -19,7 +19,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "valtimo.zgw.zakenapi")
 data class ZakenApiConfig(
-    var url: String = "",
-    var clientId: String = "",
-    var secret: String = ""
+    val url: String = "",
+    val clientId: String = "",
+    val secret: String = ""
 )
