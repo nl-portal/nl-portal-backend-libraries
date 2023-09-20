@@ -34,4 +34,5 @@ jobs:
       with:
         name: ${{ env.GITHUB_REF_NAME }}
         artifacts: "build/libs/*.jar"
+        tag: "SNAPSHOT"
         token: ${{ secrets.GITHUB_TOKEN }}
