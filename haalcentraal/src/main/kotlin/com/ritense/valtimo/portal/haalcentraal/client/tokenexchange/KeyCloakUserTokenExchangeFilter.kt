@@ -17,6 +17,7 @@ package com.ritense.portal.haalcentraal.client.tokenexchange
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
+import com.ritense.portal.haalcentraal.client.HaalCentraalClientProvider
 import mu.KLogger
 import mu.KotlinLogging
 import org.springframework.http.HttpHeaders
@@ -95,7 +96,11 @@ class KeyCloakUserTokenExchangeFilter(
             .block()
     }
 
-    data class TokenResponse(@JsonValue @JsonProperty("access_token") val accessToken: String)
+    data class TokenResponse(
+        @JsonValue
+        @JsonProperty("access_token")
+        val accessToken: String
+    )
 
     companion object {
         private val logger: KLogger = KotlinLogging.logger {}

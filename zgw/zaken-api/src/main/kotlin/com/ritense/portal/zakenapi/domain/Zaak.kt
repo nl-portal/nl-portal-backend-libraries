@@ -37,41 +37,50 @@ data class Zaak(
     val status: String?
 ) {
     suspend fun status(
-        @GraphQLIgnore @Autowired
+        @GraphQLIgnore
+        @Autowired
         zakenApiService: ZakenApiService
     ): ZaakStatus? {
         return status?.let { zakenApiService.getZaakStatus(it) }
     }
 
     suspend fun statusGeschiedenis(
-        @GraphQLIgnore @Autowired
+        @GraphQLIgnore
+        @Autowired
         zakenApiService: ZakenApiService
     ): List<ZaakStatus> {
         return zakenApiService.getZaakStatusHistory(uuid)
     }
 
     suspend fun documenten(
-        @GraphQLIgnore @Autowired
+        @GraphQLIgnore
+        @Autowired
         zakenApiService: ZakenApiService
     ): List<Document> {
         return zakenApiService.getDocumenten(url)
     }
 
     suspend fun statussen(
-        @GraphQLIgnore @Autowired
+        @GraphQLIgnore
+        @Autowired
         catalogiApiService: CatalogiApiService
     ): List<StatusType> {
         return catalogiApiService.getZaakStatusTypes(zaaktype)
     }
 
     suspend fun zaaktype(
-        @GraphQLIgnore @Autowired
+        @GraphQLIgnore
+        @Autowired
         catalogiApiService: CatalogiApiService
     ): ZaakType {
         return catalogiApiService.getZaakType(zaaktype)
     }
 
-    suspend fun zaakdetails(@GraphQLIgnore @Autowired zakenApiService: ZakenApiService): ZaakDetails {
+    suspend fun zaakdetails(
+        @GraphQLIgnore
+        @Autowired
+        zakenApiService: ZakenApiService
+    ): ZaakDetails {
         return zakenApiService.getZaakDetails(url)
     }
 }
