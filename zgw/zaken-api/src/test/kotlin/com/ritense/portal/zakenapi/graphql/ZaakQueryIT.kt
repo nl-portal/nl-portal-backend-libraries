@@ -43,6 +43,7 @@ internal class ZaakQueryIT(
     @Autowired private val zakenApiConfig: ZakenApiConfig,
     @Autowired private val catalogiApiConfig: CatalogiApiConfig,
     @Autowired private val documentenApiConfig: DocumentenApiConfig
+
 ) {
     lateinit var server: MockWebServer
 

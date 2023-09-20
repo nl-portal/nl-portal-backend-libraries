@@ -27,6 +27,7 @@ class Taak(
     val objectId: UUID,
     val identificatie: TaakIdentificatie,
     val formulier: TaakFormulier,
+    @Deprecated("Use formulier type/value")
     val formId: String,
     val status: TaakStatus,
     val date: String,

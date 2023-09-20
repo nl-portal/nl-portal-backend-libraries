@@ -28,6 +28,7 @@ dependencies {
     api(project(":zgw:common-ground-authentication"))
     api(project(":zgw:documenten-api"))
     api(project(":zgw:idtoken-authentication"))
+    api(project(":zgw:objectenapi"))
 
     implementation("org.springframework.boot:spring-boot-starter")
 

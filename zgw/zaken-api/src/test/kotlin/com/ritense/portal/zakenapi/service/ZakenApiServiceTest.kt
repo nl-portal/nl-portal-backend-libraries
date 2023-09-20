@@ -15,16 +15,19 @@
  */
 package com.ritense.portal.zakenapi.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.mock
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.commonground.authentication.JwtBuilder
 import com.ritense.portal.documentenapi.service.DocumentenApiService
 import com.ritense.portal.zakenapi.client.ZakenApiClient
+import com.ritense.portal.zakenapi.client.ZakenApiConfig
 import com.ritense.portal.zakenapi.domain.ResultPage
+import com.ritense.portal.zakenapi.domain.ZaakObject
 import com.ritense.portal.zakenapi.domain.ZaakRol
-import java.util.UUID
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -34,13 +37,22 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.springframework.security.oauth2.jwt.Jwt
+import java.util.UUID
 
 @ExperimentalCoroutinesApi
 internal class ZakenApiServiceTest {
 
     var documentenApiService: DocumentenApiService = mock()
     var zakenApiClient = mock(ZakenApiClient::class.java)
-    var zaakService = ZakenApiService(zakenApiClient, documentenApiService)
+    var objectsApiClient: ObjectsApiClient = mock()
+    var zakenApiConfig: ZakenApiConfig = mock()
+    var objectMapper: ObjectMapper = mock()
+    var zaakService = ZakenApiService(
+        zakenApiClient,
+        documentenApiService,
+        objectsApiClient,
+        objectMapper
+    )
 
     @Test
     fun `getZaken calls openzaak client with BSN for burger`() = runBlockingTest {
@@ -180,5 +192,15 @@ internal class ZakenApiServiceTest {
         val uuid = UUID.randomUUID()
         zaakService.getZaakStatusHistory(uuid)
         verify(zakenApiClient).getStatusHistory(uuid)
+    }
+
+    @Test
+    fun getZaakObjecten() = runBlockingTest {
+        val uuid = UUID.randomUUID()
+        val resultPage = ResultPage(1, null, null, listOf(mock(ZaakObject::class.java)))
+        `when`(zakenApiClient.getZaakObjecten(1, uuid)).thenReturn(resultPage)
+        val zaakObjecten = zaakService.getZaakObjecten(uuid)
+
+        assertEquals(1, zaakObjecten.size)
     }
 }

@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.zakenapi.client
+package com.ritense.portal.zakenapi.domain
 
-import org.springframework.boot.context.properties.ConfigurationProperties
+import com.fasterxml.jackson.databind.node.ObjectNode
 
-@ConfigurationProperties(prefix = "valtimo.zgw.zakenapi")
-data class ZakenApiConfig(
-    var url: String = "",
-    var clientId: String = "",
-    var secret: String = ""
+data class ZaakDetails(
+    val zaak: String,
+    var data: List<ObjectNode>
 )

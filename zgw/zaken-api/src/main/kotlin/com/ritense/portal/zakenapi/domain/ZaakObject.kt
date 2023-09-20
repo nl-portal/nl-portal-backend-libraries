@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.zakenapi.client
+package com.ritense.portal.zakenapi.domain
 
-import org.springframework.boot.context.properties.ConfigurationProperties
+import com.fasterxml.jackson.annotation.JsonProperty
 
-@ConfigurationProperties(prefix = "valtimo.zgw.zakenapi")
-data class ZakenApiConfig(
-    var url: String = "",
-    var clientId: String = "",
-    var secret: String = ""
+data class ZaakObject(
+    val url: String,
+    val uuid: String,
+    val zaak: String,
+    @JsonProperty("object") val objectUrl: String,
+    val objectType: String,
+    val objectTypeOverige: String,
 )
