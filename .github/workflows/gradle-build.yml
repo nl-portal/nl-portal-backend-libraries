@@ -30,3 +30,10 @@ jobs:
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
         arguments: bootJar
+    - uses: ncipollo/release-action@v1
+      with:
+        name: ${{ env.GITHUB_REF_NAME }}
+        tag: ${{ env.GITHUB_REF_NAME }}
+        artifacts: "build/libs/*.jar"
+        bodyFile: "body.log"
+        token: ${{ secrets.GITHUB_TOKEN }
