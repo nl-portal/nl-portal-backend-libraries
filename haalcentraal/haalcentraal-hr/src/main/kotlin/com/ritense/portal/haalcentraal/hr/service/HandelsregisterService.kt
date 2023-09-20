@@ -26,7 +26,7 @@ class HandelsregisterService(
 
     suspend fun getMaatschappelijkeActiviteit(authentication: CommonGroundAuthentication): MaatschappelijkeActiviteit? {
         if (authentication is BedrijfAuthentication) {
-            return handelsregisterClient.getMaatschappelijkeActiviteit(authentication.getKvkNummer())
+            return handelsregisterClient.getMaatschappelijkeActiviteit(authentication.getKvkNummer(), authentication)
         }
 
         return null
@@ -36,7 +36,7 @@ class HandelsregisterService(
         val authenticationGemachtigde = authentication.getGemachtigde()
 
         return authenticationGemachtigde?.kvk?.let {
-            handelsregisterClient.getMaatschappelijkeActiviteit(it)
+            handelsregisterClient.getMaatschappelijkeActiviteit(it, authentication)
         }
     }
 }

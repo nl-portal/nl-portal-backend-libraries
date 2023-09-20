@@ -21,6 +21,7 @@ import io.netty.handler.logging.LogLevel
 import mu.KLogger
 import mu.KotlinLogging
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
+import org.springframework.security.core.Authentication
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
@@ -30,8 +31,11 @@ class HaalCentraalClientProvider(
     private val clientSslContextResolver: ClientSslContextResolver? = null,
     private val userTokenExchangeFilter: UserTokenExchangeFilter? = null
 ) {
-    fun webClient(): WebClient {
+    fun webClient(authentication: Authentication): WebClient {
         return WebClient.builder()
+            .defaultRequest { spec ->
+                spec.attribute(AUTHENTICATION_ATTRIBUTE_NAME, authentication)
+            }
             .clientConnector(
                 ReactorClientHttpConnector(
                     HttpClient.create().wiretap(
@@ -76,5 +80,6 @@ class HaalCentraalClientProvider(
 
     companion object {
         private val logger: KLogger = KotlinLogging.logger {}
+        const val AUTHENTICATION_ATTRIBUTE_NAME = "userAuthentication"
     }
 }

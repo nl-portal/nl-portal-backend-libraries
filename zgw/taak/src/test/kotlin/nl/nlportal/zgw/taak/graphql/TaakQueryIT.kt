@@ -119,8 +119,27 @@ internal class TaakQueryIT(
     }
 
     @Test
-    @WithBedrijfUser("14127293")
+    @WithBurgerUser("569312863")
     fun `should get task by id for burger`() {
+        val basePath = "$.data.getTaakById"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(getTaakByIdPayload)
+            .exchange()
+            .expectBody()
+            .jsonPath(basePath).exists()
+            .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
+            .jsonPath("$basePath.formulier.value").isEqualTo("check-loan-form")
+            .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
+            .jsonPath("$basePath.date").isEqualTo("2022-05-25")
+    }
+
+    @Test
+    @WithBedrijfUser("14127293")
+    fun `should get task by id for bedrijf`() {
         val basePath = "$.data.getTaakById"
 
         testClient.post()
@@ -138,8 +157,8 @@ internal class TaakQueryIT(
     }
 
     @Test
-    @WithBurgerUser("569312863")
-    fun `should get task by id for bedrijf`() {
+    @WithBurgerUser("569312864")
+    fun `should unauthorized get task by id for burger`() {
         val basePath = "$.data.getTaakById"
 
         testClient.post()
@@ -149,11 +168,7 @@ internal class TaakQueryIT(
             .bodyValue(getTaakByIdPayload)
             .exchange()
             .expectBody()
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
-            .jsonPath("$basePath.formulier.value").isEqualTo("check-loan-form")
-            .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
-            .jsonPath("$basePath.date").isEqualTo("2022-05-25")
+            .jsonPath(basePath)
     }
 
     fun setupMockObjectsApiServer() {
@@ -166,6 +181,8 @@ internal class TaakQueryIT(
                     "GET /api/v2/objects" -> {
                         if (queryParams.any { it.contains("identificatie__value__exact__569312863") }) {
                             TestHelper.mockResponseFromFile("/data/get-bsn-task-list.json")
+                        } else if (queryParams.any { it.contains("identificatie__value__exact__569312863") }) {
+                            TestHelper.mockResponseFromFile("/data/get-bsn-task-list-unauthorized.json")
                         } else if (queryParams.any { it.contains("identificatie__value__exact__14127293") }) {
                             TestHelper.mockResponseFromFile("/data/get-kvk-task-list.json")
                         } else {

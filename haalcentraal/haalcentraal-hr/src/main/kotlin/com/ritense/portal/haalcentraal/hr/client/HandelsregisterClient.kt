@@ -17,14 +17,15 @@ package com.ritense.portal.haalcentraal.hr.client
 
 import com.ritense.portal.haalcentraal.client.HaalCentraalClientProvider
 import com.ritense.portal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
+import org.springframework.security.core.Authentication
 import org.springframework.web.reactive.function.client.awaitBody
 
 class HandelsregisterClient(
     val haalCentraalClientProvider: HaalCentraalClientProvider
 ) {
 
-    suspend fun getMaatschappelijkeActiviteit(kvkNummer: String): MaatschappelijkeActiviteit {
-        return haalCentraalClientProvider.webClient()
+    suspend fun getMaatschappelijkeActiviteit(kvkNummer: String, authentication: Authentication): MaatschappelijkeActiviteit {
+        return haalCentraalClientProvider.webClient(authentication)
             .get()
             .uri("/handelsregister/v1/maatschappelijkeactiviteiten/$kvkNummer")
             .retrieve()

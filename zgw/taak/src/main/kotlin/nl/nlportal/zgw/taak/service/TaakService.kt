@@ -57,7 +57,13 @@ open class TaakService(
     }
 
     suspend fun getTaakById(id: UUID, authentication: CommonGroundAuthentication): Taak {
-        return Taak.fromObjectsApiTask(getObjectsApiTaak(id, authentication))
+        val taak = Taak.fromObjectsApiTask(getObjectsApiTaak(id, authentication))
+        // do validation if the user is authenticated for this task
+        val isAuthorized = isAuthorizedForTaak(authentication, taak)
+        if (isAuthorized) {
+            return taak
+        }
+        throw IllegalStateException("Access denied to this taak")
     }
 
     suspend fun submitTaak(id: UUID, submission: ObjectNode, authentication: CommonGroundAuthentication): Taak {
@@ -95,9 +101,11 @@ open class TaakService(
             is BurgerAuthentication -> {
                 createIdentificatieSearchParameters("bsn", authentication.getBsn())
             }
+
             is BedrijfAuthentication -> {
                 createIdentificatieSearchParameters("kvk", authentication.getKvkNummer())
             }
+
             else -> throw UserTypeUnsupportedException("User type not supported")
         }
     }
@@ -107,5 +115,19 @@ open class TaakService(
             ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, type),
             ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, value)
         )
+    }
+
+    private fun isAuthorizedForTaak(authentication: CommonGroundAuthentication, taak: Taak): Boolean {
+        return when (authentication) {
+            is BurgerAuthentication -> {
+                taak.identificatie.type.lowercase() == "bsn" && taak.identificatie.value == authentication.getBsn()
+            }
+
+            is BedrijfAuthentication -> {
+                taak.identificatie.type.lowercase() == "kvk" && taak.identificatie.value == authentication.getKvkNummer()
+            }
+
+            else -> false
+        }
     }
 }

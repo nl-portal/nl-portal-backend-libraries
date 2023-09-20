@@ -20,6 +20,7 @@ import com.ritense.portal.documentenapi.client.DocumentenApiConfig
 import com.ritense.portal.documentenapi.graphql.DocumentContentQuery
 import com.ritense.portal.documentenapi.security.config.DocumentContentResourceHttpSecurityConfigurer
 import com.ritense.portal.documentenapi.service.DocumentenApiService
+import com.ritense.portal.documentenapi.service.VirusScanService
 import com.ritense.portal.documentenapi.web.rest.DocumentContentResource
 import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
 import org.springframework.boot.autoconfigure.AutoConfiguration
@@ -68,8 +69,9 @@ class DocumentenApiAutoConfiguration {
     @ConditionalOnMissingBean(DocumentContentResource::class)
     fun documentContentResource2(
         documentenApiClient: DocumentenApiClient,
-        documentenApiService: DocumentenApiService
+        documentenApiService: DocumentenApiService,
+        virusScanService: VirusScanService?
     ): DocumentContentResource {
-        return DocumentContentResource(documentenApiClient, documentenApiService)
+        return DocumentContentResource(documentenApiClient, documentenApiService, virusScanService)
     }
 }

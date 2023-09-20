@@ -13,22 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.zgw.taak.domain
+package com.ritense.portal.zakenapi.domain
 
-import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.time.LocalDateTime
-import java.util.UUID
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-data class TaakObject(
-    val identificatie: TaakIdentificatie,
-    val title: String,
-    val data: Map<String, Any>,
-    @JsonProperty("verzonden_data") var verzondenData: Map<String, Any>? = null,
-    var status: TaakStatus,
-    val formulier: TaakFormulier,
-    @JsonProperty("verwerker_taak_id") val verwerkerTaakId: UUID,
-    val zaak: String?,
-    val verloopdatum: LocalDateTime?,
+data class ZaakObject(
+    val url: String,
+    val uuid: String,
+    val zaak: String,
+    @JsonProperty("object") val objectUrl: String,
+    val objectType: String,
+    val objectTypeOverige: String,
 )

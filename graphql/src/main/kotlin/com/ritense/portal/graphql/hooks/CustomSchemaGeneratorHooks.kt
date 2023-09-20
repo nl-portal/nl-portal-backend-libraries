@@ -19,12 +19,14 @@ import com.expediagroup.graphql.generator.directives.KotlinDirectiveWiringFactor
 import com.expediagroup.graphql.generator.hooks.SchemaGeneratorHooks
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.ritense.portal.graphql.customtype.graphqlJSONType
+import com.ritense.portal.graphql.customtype.graphqlLocalDateTimeType
 import com.ritense.portal.graphql.customtype.graphqlLocalDateType
 import com.ritense.portal.graphql.customtype.graphqlUUIDType
 import graphql.schema.GraphQLType
 import org.springframework.beans.factory.BeanFactoryAware
 import reactor.core.publisher.Mono
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -39,6 +41,7 @@ class CustomSchemaGeneratorHooks(override val wiringFactory: KotlinDirectiveWiri
         UUID::class -> graphqlUUIDType
         ObjectNode::class -> graphqlJSONType
         LocalDate::class -> graphqlLocalDateType
+        LocalDateTime::class -> graphqlLocalDateTimeType
         else -> null
     }
 

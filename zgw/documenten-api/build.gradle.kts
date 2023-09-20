@@ -28,6 +28,7 @@ dependencies {
     api(project(":zgw:idtoken-authentication"))
 
     implementation("org.springframework.boot:spring-boot-starter")
+    implementation("xyz.capybara:clamav-client:2.1.2")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.junit.jupiter:junit-jupiter")

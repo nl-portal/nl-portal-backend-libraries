@@ -15,6 +15,7 @@
  */
 package com.ritense.portal.zakenapi.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.ritense.portal.commonground.authentication.BedrijfAuthentication
 import com.ritense.portal.commonground.authentication.BurgerAuthentication
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
@@ -23,14 +24,22 @@ import com.ritense.portal.documentenapi.domain.DocumentStatus
 import com.ritense.portal.documentenapi.service.DocumentenApiService
 import com.ritense.portal.zakenapi.client.ZakenApiClient
 import com.ritense.portal.zakenapi.domain.Zaak
+import com.ritense.portal.zakenapi.domain.ZaakDetails
+import com.ritense.portal.zakenapi.domain.ZaakDetailsObject
 import com.ritense.portal.zakenapi.domain.ZaakDocument
+import com.ritense.portal.zakenapi.domain.ZaakObject
 import com.ritense.portal.zakenapi.domain.ZaakRol
 import com.ritense.portal.zakenapi.domain.ZaakStatus
+import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
+import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
+import java.util.Locale
 import java.util.UUID
 
 class ZakenApiService(
     private val zakenApiClient: ZakenApiClient,
-    private val documentenApiService: DocumentenApiService
+    private val documentenApiService: DocumentenApiService,
+    private val objectsApiClient: ObjectsApiClient,
+    private val objectMapper: ObjectMapper
 ) {
 
     suspend fun getZaken(page: Int, authentication: CommonGroundAuthentication): List<Zaak> {
@@ -84,6 +93,29 @@ class ZakenApiService(
         return zakenApiClient.getZaakDocumenten(zaakUrl)
     }
 
+    suspend fun getZaakDetails(zaakUrl: String): ZaakDetails {
+        val zaakId = extractId(zaakUrl)
+        val zaakDetailsObjects = getZaakObjecten(zaakId)
+            .filter { it.objectTypeOverige.lowercase(Locale.getDefault()).contains("zaakdetails") }
+            .map { getObjectApiZaakDetails(it.objectUrl) }
+            .map { it?.record?.data?.data!! }
+            .flatten()
+        return ZaakDetails(zaakUrl, zaakDetailsObjects)
+    }
+
+    suspend fun getZaakObjecten(zaakId: UUID?): List<ZaakObject> {
+        val zaakObjecten = arrayListOf<ZaakObject>()
+        var nextPageNumber: Int? = 1
+
+        while (nextPageNumber != null) {
+            val zaakObjectenPage = zakenApiClient.getZaakObjecten(nextPageNumber, zaakId)
+            zaakObjecten.addAll(zaakObjectenPage.results)
+            nextPageNumber = zaakObjectenPage.getNextPageNumber()
+        }
+
+        return zaakObjecten
+    }
+
     private suspend fun getZaakRollen(bsn: String?, kvknummer: String?, zaakId: UUID?): List<ZaakRol> {
         val rollen = arrayListOf<ZaakRol>()
         var nextPageNumber: Int? = 1
@@ -95,6 +127,14 @@ class ZakenApiService(
         }
 
         return rollen
+    }
+
+    private suspend fun getObjectApiZaakDetails(
+        objectUrl: String
+    ): ObjectsApiObject<ZaakDetailsObject>? {
+        return objectsApiClient.getObjectByUrl<ZaakDetailsObject>(
+            url = objectUrl
+        )
     }
 
     companion object {

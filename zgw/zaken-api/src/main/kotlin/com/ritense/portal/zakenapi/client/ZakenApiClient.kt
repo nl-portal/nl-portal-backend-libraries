@@ -19,17 +19,18 @@ import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
 import com.ritense.portal.zakenapi.domain.ResultPage
 import com.ritense.portal.zakenapi.domain.Zaak
 import com.ritense.portal.zakenapi.domain.ZaakDocument
+import com.ritense.portal.zakenapi.domain.ZaakObject
 import com.ritense.portal.zakenapi.domain.ZaakRol
 import com.ritense.portal.zakenapi.domain.ZaakStatus
 import io.netty.handler.logging.LogLevel
 import org.springframework.http.HttpStatus
-import java.util.UUID
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.server.ResponseStatusException
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
+import java.util.UUID
 
 class ZakenApiClient(
     private val zakenApiConfig: ZakenApiConfig,
@@ -72,6 +73,21 @@ class ZakenApiClient(
                     .queryParam("page", page)
                 bsn?.let { uriBuilder.queryParam("betrokkeneIdentificatie__natuurlijkPersoon__inpBsn", it) }
                 kvknummer?.let { uriBuilder.queryParam("betrokkeneIdentificatie__nietNatuurlijkPersoon__annIdentificatie", it) }
+                zaakId?.let { uriBuilder.queryParam("zaak", "${zakenApiConfig.url}/zaken/api/v1/zaken/$zaakId") }
+                uriBuilder.build()
+            }
+            .retrieve()
+            .handleStatus()
+            .awaitBody()
+    }
+
+    suspend fun getZaakObjecten(page: Int, zaakId: UUID?): ResultPage<ZaakObject> {
+        return webClient()
+            .get()
+            .uri {
+                val uriBuilder = it.path("/zaken/api/v1/zaakobjecten")
+                    .queryParam("page", page)
+                    .queryParam("objectType", "overige")
                 zaakId?.let { uriBuilder.queryParam("zaak", "${zakenApiConfig.url}/zaken/api/v1/zaken/$zaakId") }
                 uriBuilder.build()
             }
