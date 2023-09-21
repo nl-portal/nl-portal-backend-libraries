@@ -28,7 +28,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
-import org.mockito.Mockito.`when`
 import org.springframework.security.core.Authentication
 
 @ExperimentalCoroutinesApi
