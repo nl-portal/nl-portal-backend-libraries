@@ -15,6 +15,7 @@
  */
 package nl.nlportal.klant.contactmomenten.graphql
 
+import com.nhaarman.mockitokotlin2.whenever
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.graphql.security.SecurityConstants
 import graphql.GraphQLContext
@@ -41,14 +42,14 @@ internal class ContactMomentQueryTest {
 
     @BeforeEach
     fun setup() {
-        `when`(environment.graphQlContext).thenReturn(context)
-        `when`(context.get<Authentication>(SecurityConstants.AUTHENTICATION_KEY)).thenReturn(authentication)
+        whenever(environment.graphQlContext).thenReturn(context)
+        whenever(context.get<Authentication>(SecurityConstants.AUTHENTICATION_KEY)).thenReturn(authentication)
     }
 
     @Test
     fun getKlantContactMomenten() = runTest {
 
-        `when`(
+        whenever(
             contactMomentenService.getKlantContactMomenten(
                 authentication,
                 1

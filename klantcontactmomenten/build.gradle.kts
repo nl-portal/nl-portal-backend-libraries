@@ -24,6 +24,7 @@ dependencies {
     implementation(project(mapOf("path" to ":klant")))
 
     testImplementation(project(":zgw:common-ground-authentication-test"))
+    testImplementation("com.nhaarman.mockitokotlin2", "mockito-kotlin", "2.2.0")
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.springframework.security", "spring-security-test")
     testImplementation(TestDependencies.kotlinCoroutines)
