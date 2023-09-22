@@ -13,14 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.klant.client
+package nl.nlportal.klant.generiek.validation
 
-import org.springframework.boot.context.properties.ConfigurationProperties
+import javax.validation.Validation
+import javax.validation.ValidationException
+import javax.validation.Validator
 
-@ConfigurationProperties(prefix = "valtimo.openklant")
-class OpenKlantClientConfig(
-    var url: String = "",
-    var clientId: String = "",
-    var secret: String = "",
-    var rsin: String = ""
-)
+class GraphQlValidator {
+
+    private var validator: Validator? = null
+
+    fun <T> validate(payload: T?) {
+        for (violation in getValidator().validate(payload)) {
+            throw ValidationException(violation.message)
+        }
+    }
+
+    private fun getValidator(): Validator {
+        if (validator == null) {
+            validator = Validation.buildDefaultValidatorFactory().validator!!
+        }
+        return validator!!
+    }
+}

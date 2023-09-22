@@ -19,7 +19,7 @@ import com.ritense.portal.commonground.authentication.BedrijfAuthentication
 import com.ritense.portal.commonground.authentication.BurgerAuthentication
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.klant.client.OpenKlantClient
-import com.ritense.portal.klant.client.OpenKlantClientConfig
+import nl.nlportal.klant.generiek.client.OpenKlantClientConfig
 import com.ritense.portal.klant.domain.klanten.Klant
 import com.ritense.portal.klant.domain.klanten.KlantCreationRequest
 import com.ritense.portal.klant.domain.klanten.KlantUpdate

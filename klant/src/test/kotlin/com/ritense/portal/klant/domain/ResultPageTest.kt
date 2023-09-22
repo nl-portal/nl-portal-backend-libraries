@@ -15,6 +15,7 @@
  */
 package com.ritense.portal.klant.domain
 
+import nl.nlportal.klant.generiek.domain.ResultPage
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test

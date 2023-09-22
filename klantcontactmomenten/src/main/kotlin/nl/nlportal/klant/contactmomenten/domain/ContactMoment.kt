@@ -13,24 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.klant.domain
+package nl.nlportal.klant.contactmomenten.domain
 
-import java.net.URI
+import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 
-data class ResultPage<T>(
-    val count: Int,
-    val next: URI? = null,
-    val previous: URI? = null,
-    val results: List<T>
-) {
-    fun getNextPageNumber(): Int? {
-        return next
-            ?.query
-            ?.split("&")
-            ?.map { Pair(it.substringBefore("="), it.substringAfter("=")) }
-            ?.filter { it.first.equals("page") }
-            ?.map { it.second }
-            ?.map { it.toInt() }
-            ?.single()
-    }
-}
+data class ContactMoment(
+    @GraphQLIgnore
+    val url: String,
+    val vorigContactmoment: String?,
+    val volgendContactmoment: String?,
+    val bronorganisatie: String?,
+    val registratiedatum: String,
+    val kanaal: String,
+    val voorkeurskanaal: String?,
+    val voorkeurstaal: String?,
+    val tekst: String,
+    val initiatiefnemer: String?,
+    val medewerker: String?
+)
