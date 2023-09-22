@@ -29,10 +29,11 @@ jobs:
     - name: Build with Gradle
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
+        working-directory: app
         arguments: bootJar
     - uses: ncipollo/release-action@v1
       with:
         name: ${{ env.GITHUB_REF_NAME }}
-        artifacts: "build/libs/*.jar"
+        artifacts: "app/build/libs/*.jar"
         tag: "SNAPSHOT"
         token: ${{ secrets.GITHUB_TOKEN }}
