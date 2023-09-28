@@ -56,6 +56,25 @@ open class TaakService(
         ).let { TaakPage.fromResultPage(pageNumber, pageSize, it) }
     }
 
+    suspend fun getTakenBijZaak(
+        pageNumber: Int,
+        pageSize: Int,
+        authentication: CommonGroundAuthentication,
+        zaakUUID: String
+    ): TaakPage {
+        val userSearchParameters = getUserSearchParameters(authentication)
+        val statusOpenSearchParameter = ObjectSearchParameter("status", Comparator.EQUAL_TO, "open")
+        val zaakIdParameter = ObjectSearchParameter("zaak", Comparator.STRING_CONTAINS, zaakUUID)
+
+        return objectsApiClient.getObjects<TaakObject>(
+            objectSearchParameters = userSearchParameters + statusOpenSearchParameter + zaakIdParameter,
+            objectTypeUrl = objectsApiTaskConfig.typeUrl,
+            page = pageNumber,
+            pageSize = pageSize,
+            ordering = "-record__startAt"
+        ).let { TaakPage.fromResultPage(pageNumber, pageSize, it) }
+    }
+
     suspend fun getTaakById(id: UUID, authentication: CommonGroundAuthentication): Taak {
         val taak = Taak.fromObjectsApiTask(getObjectsApiTaak(id, authentication))
         // do validation if the user is authenticated for this task

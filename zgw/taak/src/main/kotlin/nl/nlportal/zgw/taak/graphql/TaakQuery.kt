@@ -53,6 +53,23 @@ class TaakQuery(
         )
     }
 
+    @GraphQLDescription("Get a list of tasks belonging to a case")
+    suspend fun getTakenBijZaak(
+        zaakUUID: String,
+        dfe: DataFetchingEnvironment,
+        pageNumber: Int? = 1,
+        pageSize: Int? = 20
+    ): TaakPage {
+        val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
+
+        return taskService.getTakenBijZaak(
+            pageNumber = pageNumber ?: 1,
+            pageSize = pageSize ?: 20,
+            authentication = authentication,
+            zaakUUID = zaakUUID
+        )
+    }
+
     @GraphQLDescription("Get task by id")
     suspend fun getTaakById(id: UUID, dfe: DataFetchingEnvironment): Taak {
         val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
