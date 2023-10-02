@@ -42,32 +42,25 @@ open class TaakService(
     suspend fun getTaken(
         pageNumber: Int,
         pageSize: Int,
-        authentication: CommonGroundAuthentication
-    ): TaakPage {
-        val userSearchParameters = getUserSearchParameters(authentication)
-        val statusOpenSearchParameter = ObjectSearchParameter("status", Comparator.EQUAL_TO, "open")
-
-        return objectsApiClient.getObjects<TaakObject>(
-            objectSearchParameters = userSearchParameters + statusOpenSearchParameter,
-            objectTypeUrl = objectsApiTaskConfig.typeUrl,
-            page = pageNumber,
-            pageSize = pageSize,
-            ordering = "-record__startAt"
-        ).let { TaakPage.fromResultPage(pageNumber, pageSize, it) }
-    }
-
-    suspend fun getTakenBijZaak(
-        pageNumber: Int,
-        pageSize: Int,
         authentication: CommonGroundAuthentication,
-        zaakUUID: UUID
+        zaakUUID: UUID? = null
     ): TaakPage {
         val userSearchParameters = getUserSearchParameters(authentication)
-        val statusOpenSearchParameter = ObjectSearchParameter("status", Comparator.EQUAL_TO, "open")
-        val zaakIdParameter = ObjectSearchParameter("zaak", Comparator.STRING_CONTAINS, zaakUUID.toString())
+        val objectSearchParameters = mutableListOf<ObjectSearchParameter>()
+
+        objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, "open"))
+        zaakUUID.let {
+            objectSearchParameters.add(
+                ObjectSearchParameter(
+                    "zaak",
+                    Comparator.STRING_CONTAINS,
+                    zaakUUID.toString()
+                )
+            )
+        }
 
         return objectsApiClient.getObjects<TaakObject>(
-            objectSearchParameters = userSearchParameters + statusOpenSearchParameter + zaakIdParameter,
+            objectSearchParameters = objectSearchParameters,
             objectTypeUrl = objectsApiTaskConfig.typeUrl,
             page = pageNumber,
             pageSize = pageSize,
