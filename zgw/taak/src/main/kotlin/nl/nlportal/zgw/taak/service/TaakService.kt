@@ -49,16 +49,16 @@ open class TaakService(
         val objectSearchParameters = mutableListOf<ObjectSearchParameter>()
 
         objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, "open"))
-        zaakUUID.let {
+        zaakUUID?.let {
             objectSearchParameters.add(
                 ObjectSearchParameter(
                     "zaak",
                     Comparator.STRING_CONTAINS,
-                    zaakUUID.toString()
+                    it.toString()
                 )
             )
         }
-
+        
         return objectsApiClient.getObjects<TaakObject>(
             objectSearchParameters = objectSearchParameters,
             objectTypeUrl = objectsApiTaskConfig.typeUrl,
