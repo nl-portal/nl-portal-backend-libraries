@@ -38,18 +38,20 @@ class TaakQuery(
         return getTaken(dfe, pageNumber, pageSize)
     }
 
-    @GraphQLDescription("Get a list of tasks")
+    @GraphQLDescription("Get a list of tasks. Optional filter for zaak")
     suspend fun getTaken(
         dfe: DataFetchingEnvironment,
         pageNumber: Int? = 1,
-        pageSize: Int? = 20
+        pageSize: Int? = 20,
+        zaakUUID: UUID? = null,
     ): TaakPage {
         val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
 
         return taskService.getTaken(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
-            authentication = authentication
+            authentication = authentication,
+            zaakUUID = zaakUUID
         )
     }
 

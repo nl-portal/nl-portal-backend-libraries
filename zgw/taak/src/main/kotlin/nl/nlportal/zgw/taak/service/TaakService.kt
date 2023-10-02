@@ -42,13 +42,26 @@ open class TaakService(
     suspend fun getTaken(
         pageNumber: Int,
         pageSize: Int,
-        authentication: CommonGroundAuthentication
+        authentication: CommonGroundAuthentication,
+        zaakUUID: UUID? = null
     ): TaakPage {
-        val userSearchParameters = getUserSearchParameters(authentication)
-        val statusOpenSearchParameter = ObjectSearchParameter("status", Comparator.EQUAL_TO, "open")
+        val objectSearchParameters = mutableListOf<ObjectSearchParameter>()
+
+        objectSearchParameters.addAll(getUserSearchParameters(authentication))
+        objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, "open"))
+
+        zaakUUID?.let {
+            objectSearchParameters.add(
+                ObjectSearchParameter(
+                    "zaak",
+                    Comparator.STRING_CONTAINS,
+                    it.toString()
+                )
+            )
+        }
 
         return objectsApiClient.getObjects<TaakObject>(
-            objectSearchParameters = userSearchParameters + statusOpenSearchParameter,
+            objectSearchParameters = objectSearchParameters,
             objectTypeUrl = objectsApiTaskConfig.typeUrl,
             page = pageNumber,
             pageSize = pageSize,
