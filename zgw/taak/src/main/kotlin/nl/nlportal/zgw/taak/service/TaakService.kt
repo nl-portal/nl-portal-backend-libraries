@@ -45,10 +45,11 @@ open class TaakService(
         authentication: CommonGroundAuthentication,
         zaakUUID: UUID? = null
     ): TaakPage {
-        val userSearchParameters = getUserSearchParameters(authentication)
         val objectSearchParameters = mutableListOf<ObjectSearchParameter>()
 
+        objectSearchParameters.addAll(getUserSearchParameters(authentication))
         objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, "open"))
+
         zaakUUID?.let {
             objectSearchParameters.add(
                 ObjectSearchParameter(
@@ -58,7 +59,7 @@ open class TaakService(
                 )
             )
         }
-        
+
         return objectsApiClient.getObjects<TaakObject>(
             objectSearchParameters = objectSearchParameters,
             objectTypeUrl = objectsApiTaskConfig.typeUrl,
