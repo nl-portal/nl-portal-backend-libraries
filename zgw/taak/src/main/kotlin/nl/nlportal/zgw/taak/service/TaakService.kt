@@ -60,11 +60,11 @@ open class TaakService(
         pageNumber: Int,
         pageSize: Int,
         authentication: CommonGroundAuthentication,
-        zaakUUID: String
+        zaakUUID: UUID
     ): TaakPage {
         val userSearchParameters = getUserSearchParameters(authentication)
         val statusOpenSearchParameter = ObjectSearchParameter("status", Comparator.EQUAL_TO, "open")
-        val zaakIdParameter = ObjectSearchParameter("zaak", Comparator.STRING_CONTAINS, zaakUUID)
+        val zaakIdParameter = ObjectSearchParameter("zaak", Comparator.STRING_CONTAINS, zaakUUID.toString())
 
         return objectsApiClient.getObjects<TaakObject>(
             objectSearchParameters = userSearchParameters + statusOpenSearchParameter + zaakIdParameter,

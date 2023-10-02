@@ -55,7 +55,7 @@ class TaakQuery(
 
     @GraphQLDescription("Get a list of tasks belonging to a case")
     suspend fun getTakenBijZaak(
-        zaakUUID: String,
+        zaakUUID: UUID,
         dfe: DataFetchingEnvironment,
         pageNumber: Int? = 1,
         pageSize: Int? = 20
