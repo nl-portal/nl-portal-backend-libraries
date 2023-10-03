@@ -8,8 +8,10 @@
 name: Build bootJar
 
 on:
+  workflow_dispatch:
+
   push:
-    branches: [ "*" ]
+    branches: [ "feature/*" ]
 
 permissions:
   contents: write
@@ -30,10 +32,5 @@ jobs:
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
         working-directory: app
-        arguments: bootJar
-    - uses: ncipollo/release-action@v1
-      with:
-        name: ${{ env.GITHUB_REF_NAME }}
-        artifacts: "app/build/libs/*.jar"
-        tag: "SNAPSHOT"
-        token: ${{ secrets.GITHUB_TOKEN }}
+        arguments: clean build publish
+
