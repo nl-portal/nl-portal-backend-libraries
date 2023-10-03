@@ -138,8 +138,8 @@ subprojects {
         }
 
         publications {
-            register<MavenPublication>("jar") {
-                artifactId = "nl-portal-backend-libraries"
+            register<MavenPublication>("case") {
+                artifactId = "case"
                 from(components["java"])
             }
         }
