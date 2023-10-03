@@ -24,14 +24,14 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
     - name: Build with Gradle
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         working-directory: app
         arguments: clean build publish
