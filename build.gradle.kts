@@ -136,8 +136,9 @@ subprojects {
                 }
             }
         }
+
         publications {
-            register<MavenPublication>("gpr") {
+            register<MavenPublication>("jar") {
                 from(components["java"])
             }
         }
