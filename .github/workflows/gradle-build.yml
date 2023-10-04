@@ -32,8 +32,7 @@ jobs:
       uses: gradle/gradle-build-action@v2
       with:
           gradle-version: 7.6
-          working-directory: app
-          arguments: bootJar publish
+          arguments: build publish
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
