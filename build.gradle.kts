@@ -138,8 +138,10 @@ subprojects {
         }
 
         publications {
+
             register<MavenPublication>("default") {
-                from(components["java"])
+                groupId = "nl.nl-portal"
+                //from(components["java"])
             }
         }
     }
