@@ -28,17 +28,16 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-    - name: Setup Gradle
+    - name: Gradle build
       uses: gradle/gradle-build-action@v2
       with:
           gradle-version: 7.6
           working-directory: app
-          arguments: clean build publish
+          arguments: bootJar publish
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
-    - name: Execute gradle build
-      run: ./gradlew bootJar publish
+
 
 
 
