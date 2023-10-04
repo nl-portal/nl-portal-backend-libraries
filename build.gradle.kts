@@ -138,7 +138,7 @@ subprojects {
         }
 
         publications {
-            register<MavenPublication>("bootJar") {
+            register<MavenPublication>("jar") {
                 from(components["java"])
             }
         }
