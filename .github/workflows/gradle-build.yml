@@ -38,7 +38,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
     - name: Execute gradle build
-      run: ./gradle build publish
+      run: ./gradlew bootJar publish
 
 
 
