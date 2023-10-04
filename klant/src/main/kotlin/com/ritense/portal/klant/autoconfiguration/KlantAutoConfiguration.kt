@@ -41,7 +41,7 @@ class KlantAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(OpenKlantClientProvider::class)
+    @ConditionalOnMissingBean(OpenKlantClient::class)
     fun openKlantClient(
         openKlantClientProvider: OpenKlantClientProvider
     ): OpenKlantClient {
