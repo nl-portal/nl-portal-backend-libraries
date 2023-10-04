@@ -138,8 +138,7 @@ subprojects {
         }
 
         publications {
-            register<MavenPublication>("case") {
-                artifactId = "case"
+            register<MavenPublication>("bootJar") {
                 from(components["java"])
             }
         }
