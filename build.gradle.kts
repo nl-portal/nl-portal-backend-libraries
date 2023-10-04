@@ -141,7 +141,7 @@ subprojects {
 
             register<MavenPublication>("default") {
                 groupId = "nl.nl-portal"
-                //from(components["java"])
+                // from(components["java"])
             }
         }
     }
