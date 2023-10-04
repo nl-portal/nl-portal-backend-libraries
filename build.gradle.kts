@@ -129,10 +129,10 @@ subprojects {
         repositories {
             maven {
                 name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/nl-portal")
+                url = uri("https://maven.pkg.github.com/nl-portal/nl-portal-backend-libraries/nl-portal")
                 credentials {
-                    username = System.getenv("USER")
-                    password = System.getenv("TOKEN")
+                    username = System.getenv("GITHUB_ACTOR")
+                    password = System.getenv("GITHUB_TOKEN")
                 }
             }
         }
