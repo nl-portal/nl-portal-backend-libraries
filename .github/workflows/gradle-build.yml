@@ -39,7 +39,7 @@ jobs:
           gradle-version: 7.6.3
           arguments: publish
       env:
-          USER: ${{ secrets.GITHUB_TOKEN }}
-          TOKEN: ${{ secrets.GITHUB_ACTOR }}
-          #USER: ${{ secrets.USER }}
-          #TOKEN: ${{ secrets.TOKEN }}
+          #USER: ${{ secrets.GITHUB_TOKEN }}
+          #TOKEN: ${{ secrets.GITHUB_ACTOR }}
+          USER: ${{ secrets.USER }}
+          TOKEN: ${{ secrets.TOKEN }}
