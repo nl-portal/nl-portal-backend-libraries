@@ -14,7 +14,7 @@ on:
     branches: [ "*" ]
 
 permissions:
-  contents: write
+  packages: write
 
 jobs:
   build:
@@ -27,3 +27,4 @@ jobs:
             package-name: 'nl.nl-portal.case'
             package-type: 'maven'
             min-versions-to-keep: 1
+            token: ${{ secrets.TOKEN }}
