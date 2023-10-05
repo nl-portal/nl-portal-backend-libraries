@@ -8,6 +8,8 @@
 name: Build bootJar
 
 on:
+  workflow_dispatch:
+
   push:
     branches: [ "*" ]
 
@@ -26,14 +28,18 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-    - name: Build with Gradle
-      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+    - name: Gradle build
+      uses: gradle/gradle-build-action@v2
       with:
-        working-directory: app
-        arguments: bootJar
-    - uses: ncipollo/release-action@v1
+          gradle-version: 7.6
+          arguments: clean build
+    - name: Gradle publish
+      uses: gradle/gradle-build-action@v2
       with:
-        name: ${{ env.GITHUB_REF_NAME }}
-        artifacts: "app/build/libs/*.jar"
-        tag: "SNAPSHOT"
-        token: ${{ secrets.GITHUB_TOKEN }}
+          gradle-version: 7.6.3
+          arguments: publish
+      env:
+          #USER: ${{ secrets.GITHUB_TOKEN }}
+          #TOKEN: ${{ secrets.GITHUB_ACTOR }}
+          USER: ${{ secrets.USER }}
+          TOKEN: ${{ secrets.TOKEN }}
