@@ -128,6 +128,7 @@ subprojects {
     configure<PublishingExtension> {
         repositories {
             maven {
+
                 name = "GitHubPackages"
                 url = uri("https://maven.pkg.github.com/nl-portal/nl-portal-backend-libraries")
                 credentials {
@@ -141,7 +142,7 @@ subprojects {
 
             register<MavenPublication>("default") {
                 groupId = "nl.nl-portal"
-                // from(components["java"])
+                from(components["java"])
             }
         }
     }
