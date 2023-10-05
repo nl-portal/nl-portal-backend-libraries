@@ -36,10 +36,10 @@ jobs:
     - name: Gradle publish
       uses: gradle/gradle-build-action@v2
       with:
-          gradle-version: 7.6
+          gradle-version: 7.6.3
           arguments: publish
       env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
-          USER: ${{ secrets.USER }}
-          TOKEN: ${{ secrets.TOKEN }}
+          USER: ${{ secrets.GITHUB_TOKEN }}
+          TOKEN: ${{ secrets.GITHUB_ACTOR }}
+          #USER: ${{ secrets.USER }}
+          #TOKEN: ${{ secrets.TOKEN }}
