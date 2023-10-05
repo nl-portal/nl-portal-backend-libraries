@@ -8,10 +8,9 @@
 name: Clean packages
 
 on:
-  workflow_dispatch:
-
-  push:
-    branches: [ "*" ]
+    schedule:
+        # * is a special character in YAML so you have to quote this string
+        - cron:  '0 0 * * *'
 
 permissions:
   packages: write
