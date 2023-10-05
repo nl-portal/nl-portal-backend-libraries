@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
   push:
-    branches: [ "feature/*" ]
+    branches: [ "*" ]
 
 permissions:
   contents: write
