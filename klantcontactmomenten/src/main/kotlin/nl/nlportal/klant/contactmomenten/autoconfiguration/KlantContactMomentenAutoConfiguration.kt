@@ -43,7 +43,7 @@ class KlantContactMomentenAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(OpenKlantClientProvider::class)
+    @ConditionalOnMissingBean(KlantContactMomentenClient::class)
     fun openKlantContactMomentenClient(
         openKlantClientProvider: OpenKlantClientProvider
     ): KlantContactMomentenClient {
