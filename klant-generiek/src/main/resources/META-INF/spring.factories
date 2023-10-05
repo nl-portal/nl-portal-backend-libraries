@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  nl.nlportal.klant.generiek.autoconfiguration.KlantGeneriekAutoConfiguration
+
+
