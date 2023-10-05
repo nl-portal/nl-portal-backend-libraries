@@ -24,6 +24,6 @@ jobs:
     steps:
       - uses: actions/delete-package-versions@v4
         with:
-            package-name: 'case'
+            package-name: 'nl.nl-portal.case'
             package-type: 'maven'
             min-versions-to-keep: 1
