@@ -34,4 +34,17 @@ class ContactMomentQuery(
             pageNumber ?: 1
         )
     }
+
+    @GraphQLDescription("Gets the contactmomenten of a object(zaak)")
+    suspend fun getObjectContactMomenten(
+        dfe: DataFetchingEnvironment,
+        objectUrl: String,
+        pageNumber: Int? = 1
+    ): ContactMomentPage? {
+        return klantContactMomentenService.getObjectContactMomenten(
+            dfe.graphQlContext.get(AUTHENTICATION_KEY),
+            objectUrl,
+            pageNumber ?: 1
+        )
+    }
 }

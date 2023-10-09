@@ -59,7 +59,7 @@ internal class KlantContactMomentenServiceImplTest {
         val klant = mock(Klant::class.java)
         `when`(klant.url).thenReturn("http://dummy.nl")
         `when`(klantClient.getKlanten(authentication, 1, "123")).thenReturn(listOf(klant))
-        `when`(klantContactMomentenClient.getContactMomenten(authentication, "http://dummy.nl", 1)).thenReturn(
+        `when`(klantContactMomentenClient.getKlantContactMomenten(authentication, "http://dummy.nl", 1)).thenReturn(
             ResultPage(
                 1,
                 null,
@@ -81,7 +81,7 @@ internal class KlantContactMomentenServiceImplTest {
         val klant = mock(Klant::class.java)
         `when`(klant.url).thenReturn("http://dummy.nl")
         `when`(klantClient.getKlanten(authentication, 1, "123")).thenReturn(listOf(klant, klant))
-        `when`(klantContactMomentenClient.getContactMomenten(authentication, "http://dummy.nl", 1)).thenReturn(
+        `when`(klantContactMomentenClient.getKlantContactMomenten(authentication, "http://dummy.nl", 1)).thenReturn(
             ResultPage(
                 1,
                 null,
@@ -106,7 +106,7 @@ internal class KlantContactMomentenServiceImplTest {
     fun `get klantcontactmomenten with BSN for burger maar geen klanten gevonden`() = runBlockingTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
         `when`(klantClient.getKlanten(authentication, 1, "123")).thenReturn(listOf())
-        `when`(klantContactMomentenClient.getContactMomenten(authentication, "http://dummy.nl", 1)).thenReturn(
+        `when`(klantContactMomentenClient.getKlantContactMomenten(authentication, "http://dummy.nl", 1)).thenReturn(
             ResultPage(
                 1,
                 null,
@@ -145,5 +145,24 @@ internal class KlantContactMomentenServiceImplTest {
         }
 
         assertEquals("Cannot get klant for this user", illegalArgumentException.message)
+    }
+
+    @Test
+    @Disabled
+    fun `get objectcontactmomenten`() = runBlockingTest {
+        val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
+        `when`(klantContactMomentenClient.getObjectContactMomenten(authentication, "http://dummy.nl", 1)).thenReturn(
+            ResultPage(
+                1,
+                null,
+                null,
+                listOf(
+                    mock(ContactMoment::class.java)
+                )
+            )
+        )
+
+        val result = klantContactMomentenServiceImpl.getObjectContactMomenten(authentication, "http://dummy.nl", 1)
+        assertEquals(1, result.content.size)
     }
 }
