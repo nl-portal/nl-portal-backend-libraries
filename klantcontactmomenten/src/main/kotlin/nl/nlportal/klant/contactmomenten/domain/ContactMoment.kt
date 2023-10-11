@@ -13,14 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.klant.client
+package nl.nlportal.klant.contactmomenten.domain
 
-import org.springframework.boot.context.properties.ConfigurationProperties
+import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 
-@ConfigurationProperties(prefix = "valtimo.openklant")
-class OpenKlantClientConfig(
-    var url: String = "",
-    var clientId: String = "",
-    var secret: String = "",
-    var rsin: String = ""
+data class ContactMoment(
+    @GraphQLIgnore
+    val url: String,
+    val vorigContactmoment: String?,
+    val volgendContactmoment: String?,
+    val bronorganisatie: String?,
+    val registratiedatum: String,
+    val kanaal: String,
+    val voorkeurskanaal: String?,
+    val voorkeurstaal: String?,
+    val tekst: String,
+    val initiatiefnemer: String?,
+    val medewerker: String?
 )

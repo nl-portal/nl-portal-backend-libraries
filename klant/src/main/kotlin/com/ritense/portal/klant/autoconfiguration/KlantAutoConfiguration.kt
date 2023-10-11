@@ -23,6 +23,7 @@ import com.ritense.portal.klant.graphql.BurgerQuery
 import com.ritense.portal.klant.service.BurgerService
 import com.ritense.portal.klant.validation.GraphQlValidator
 import org.springframework.boot.autoconfigure.AutoConfiguration
+import nl.nlportal.klant.generiek.client.OpenKlantClientProvider
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -41,16 +42,11 @@ class KlantAutoConfiguration {
     }
 
     @Bean
-    fun openKlantClientConfig(): OpenKlantClientConfig {
-        return OpenKlantClientConfig()
-    }
-
-    @Bean
+    @ConditionalOnMissingBean(OpenKlantClient::class)
     fun openKlantClient(
-        openKlantClientConfig: OpenKlantClientConfig,
-        idTokenGenerator: IdTokenGenerator
+        openKlantClientProvider: OpenKlantClientProvider
     ): OpenKlantClient {
-        return OpenKlantClient(openKlantClientConfig, idTokenGenerator)
+        return OpenKlantClient(openKlantClientProvider)
     }
 
     @Bean
@@ -61,10 +57,5 @@ class KlantAutoConfiguration {
     @Bean
     fun burgerMutation(burgerService: BurgerService, graphQlValidator: GraphQlValidator): BurgerMutation {
         return BurgerMutation(burgerService, graphQlValidator)
-    }
-
-    @Bean
-    fun graphqlValidator(): GraphQlValidator {
-        return GraphQlValidator()
     }
 }

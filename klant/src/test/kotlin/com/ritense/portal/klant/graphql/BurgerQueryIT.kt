@@ -17,7 +17,7 @@ package com.ritense.portal.klant.graphql
 
 import com.ritense.portal.commonground.authentication.WithBurgerUser
 import com.ritense.portal.klant.TestHelper
-import com.ritense.portal.klant.client.OpenKlantClientConfig
+import nl.nlportal.klant.generiek.client.OpenKlantClientConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
