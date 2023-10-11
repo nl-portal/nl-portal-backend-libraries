@@ -148,7 +148,6 @@ internal class KlantContactMomentenServiceImplTest {
     }
 
     @Test
-    @Disabled
     fun `get objectcontactmomenten`() = runBlockingTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
         `when`(klantContactMomentenClient.getObjectContactMomenten(authentication, "http://dummy.nl", 1)).thenReturn(
