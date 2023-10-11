@@ -16,13 +16,13 @@
 package com.ritense.portal.klant.autoconfiguration
 
 import com.ritense.portal.klant.client.OpenKlantClient
-import com.ritense.portal.klant.client.OpenKlantClientConfig
 import com.ritense.portal.klant.graphql.BurgerMutation
 import com.ritense.portal.klant.graphql.BurgerQuery
 import com.ritense.portal.klant.service.BurgerService
-import com.ritense.portal.klant.validation.GraphQlValidator
+import nl.nlportal.klant.generiek.client.OpenKlantClientConfig
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import nl.nlportal.klant.generiek.client.OpenKlantClientProvider
+import nl.nlportal.klant.generiek.validation.GraphQlValidator
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
