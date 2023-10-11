@@ -56,6 +56,21 @@ internal class ContactMomentQueryTest {
         ).thenReturn(mock(ContactMomentPage::class.java))
 
         contactMomentQuery.getKlantContactMomenten(environment, 1)
-        verify(contactMomentenService, times(1))
+        verify(contactMomentenService, times(1)).getKlantContactMomenten(authentication, 1)
+    }
+
+    @Test
+    fun getObjectContactMomenten() = runTest {
+
+        whenever(
+            contactMomentenService.getObjectContactMomenten(
+                authentication,
+                "http://dummy.nl",
+                1
+            )
+        ).thenReturn(mock(ContactMomentPage::class.java))
+
+        contactMomentQuery.getObjectContactMomenten(environment, "http://dummy.nl", 1)
+        verify(contactMomentenService, times(1)).getObjectContactMomenten(authentication, "http://dummy.nl", 1)
     }
 }
