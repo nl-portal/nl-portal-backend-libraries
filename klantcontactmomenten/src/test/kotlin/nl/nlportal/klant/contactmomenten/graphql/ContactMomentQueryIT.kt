@@ -41,6 +41,7 @@ internal class ContactMomentQueryIT(
 ) {
 
     lateinit var server: MockWebServer
+
     @BeforeEach
     internal fun setUp() {
         server = MockWebServer()

@@ -47,7 +47,6 @@ internal class ContactMomentQueryTest {
 
     @Test
     fun getKlantContactMomenten() = runTest {
-
         whenever(
             contactMomentenService.getKlantContactMomenten(
                 authentication,
@@ -61,7 +60,6 @@ internal class ContactMomentQueryTest {
 
     @Test
     fun getObjectContactMomenten() = runTest {
-
         whenever(
             contactMomentenService.getObjectContactMomenten(
                 authentication,

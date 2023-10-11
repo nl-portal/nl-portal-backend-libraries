@@ -21,7 +21,7 @@ import nl.nlportal.klant.generiek.domain.ResultPage
 class ContactMomentPage(
     number: Int,
     content: List<ContactMoment>,
-    totalElements: Int,
+    totalElements: Int
 ) : Page<ContactMoment>(number, content, totalElements) {
 
     companion object {

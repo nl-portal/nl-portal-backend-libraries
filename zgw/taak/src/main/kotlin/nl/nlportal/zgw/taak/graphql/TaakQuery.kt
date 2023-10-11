@@ -43,7 +43,7 @@ class TaakQuery(
         dfe: DataFetchingEnvironment,
         pageNumber: Int? = 1,
         pageSize: Int? = 20,
-        zaakUUID: UUID? = null,
+        zaakUUID: UUID? = null
     ): TaakPage {
         val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
 
