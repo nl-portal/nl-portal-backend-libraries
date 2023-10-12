@@ -10,8 +10,7 @@ data class TaakFormulier(
     val formuliertype: String?,
     val value: String
 ) {
-    @Deprecated("Formuliertype will be removed when underlying systems has been changed. Currently available for backwards compatibility")
-    fun formuliertype(): String? {
-        return formuliertype ?: type
+    fun formuliertype(): String {
+        return (formuliertype ?: type)!!
     }
 }
