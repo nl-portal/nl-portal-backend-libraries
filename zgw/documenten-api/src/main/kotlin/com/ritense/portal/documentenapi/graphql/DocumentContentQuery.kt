@@ -25,6 +25,6 @@ class DocumentContentQuery(private val documentenApiService: DocumentenApiServic
 
     @GraphQLDescription("Gets a document content by id as base64 encoded")
     suspend fun getDocumentContent(id: UUID, documentApi: String = ""): DocumentContent {
-        return documentenApiService.getDocumentContent(id,documentApi)
+        return documentenApiService.getDocumentContent(id, documentApi)
     }
 }

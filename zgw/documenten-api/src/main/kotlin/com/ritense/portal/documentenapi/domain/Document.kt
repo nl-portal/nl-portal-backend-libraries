@@ -37,7 +37,6 @@ data class Document(
                 throw IllegalStateException("No Document url found")
             }
             return UUID.fromString(url.substringAfterLast('/'))
-
         }
 
     val documentapi: String
