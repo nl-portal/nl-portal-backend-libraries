@@ -39,13 +39,4 @@ class DocumentApiConfig {
     lateinit var secret: String
     lateinit var rsin: String
     lateinit var documentTypeUrl: String
-
-/*    constructor(default: Boolean, url: String, clientId: String, secret: String, rsin: String, documentTypeUrl: String) {
-        this.default = default
-        this.url = url
-        this.clientId = clientId
-        this.secret = secret
-        this.rsin = rsin
-        this.documentTypeUrl = documentTypeUrl
-    }*/
 }

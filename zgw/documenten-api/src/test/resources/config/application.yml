@@ -22,5 +22,3 @@ valtimo:
                     url: #filled in test
                     clientId: valtimo_client
                     secret: e09b8bc5-5831-4618-ab28-111111111111
-                    rsin: "111222333"
-                    documentTypeUrl: http://localhost:8801/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000
