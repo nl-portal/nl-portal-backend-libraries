@@ -35,5 +35,4 @@ internal class DocumentContentQueryTest {
         documentContentQuery.getDocumentContent(documentId)
         verify(documentenApiService).getDocumentContent(documentId, "")
     }
-
 }

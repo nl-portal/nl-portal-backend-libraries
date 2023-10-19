@@ -52,16 +52,16 @@ class DocumentContentResourceTest {
         val fluxDataBuffer = getFluxDataBufferFromString(testString)
 
         doReturn(fluxDataBuffer).`when`(documentenApiClient).getDocumentContentStream(uuid, "localhost")
-        whenever(documentenApiService.getDocument(uuid,"localhost")).thenReturn(document)
+        whenever(documentenApiService.getDocument(uuid, "localhost")).thenReturn(document)
         whenever(document.bestandsnaam).thenReturn("bestandsnaam.png")
 
-        val result = downloadResource.downloadStreaming(uuid,"localhost")
+        val result = downloadResource.downloadStreaming(uuid, "localhost")
 
         val bodyByteArray = result.body.let { it?.blockLast()?.asByteBuffer()?.array() }
         assertNotNull(bodyByteArray)
         val resultString = String(bodyByteArray!!, StandardCharsets.UTF_8)
 
-        verify(documentenApiClient).getDocumentContentStream(uuid,"localhost")
+        verify(documentenApiClient).getDocumentContentStream(uuid, "localhost")
         assertEquals(testString, resultString)
     }
 

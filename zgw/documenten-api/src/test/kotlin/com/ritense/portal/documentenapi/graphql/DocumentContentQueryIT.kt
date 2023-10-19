@@ -15,7 +15,6 @@
  */
 package com.ritense.portal.documentenapi.graphql
 
-import com.ritense.portal.documentenapi.client.DocumentApiConfig
 import com.ritense.portal.documentenapi.client.DocumentApisConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse

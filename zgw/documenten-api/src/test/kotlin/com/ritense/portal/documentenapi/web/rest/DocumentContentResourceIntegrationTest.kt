@@ -18,7 +18,6 @@ package com.ritense.portal.documentenapi.web.rest
 import com.ritense.portal.commonground.authentication.WithBurgerUser
 import com.ritense.portal.core.util.Mapper
 import com.ritense.portal.documentenapi.TestHelper
-import com.ritense.portal.documentenapi.client.DocumentApiConfig
 import com.ritense.portal.documentenapi.client.DocumentApisConfig
 import com.ritense.portal.documentenapi.domain.DocumentStatus
 import com.ritense.portal.documentenapi.domain.PostEnkelvoudiginformatieobjectRequest
