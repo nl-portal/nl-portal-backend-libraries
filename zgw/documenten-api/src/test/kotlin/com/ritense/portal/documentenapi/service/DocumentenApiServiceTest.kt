@@ -17,8 +17,8 @@ package com.ritense.portal.documentenapi.service
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import com.ritense.portal.documentenapi.client.DocumentApisConfig
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
-import com.ritense.portal.documentenapi.client.DocumentenApiConfig
 import com.ritense.portal.documentenapi.domain.Document
 import com.ritense.portal.documentenapi.domain.DocumentStatus
 import java.net.URI
@@ -34,20 +34,20 @@ import org.mockito.Mockito.verify
 internal class DocumentenApiServiceTest {
 
     var documentenApiClient: DocumentenApiClient = mock()
-    var documentenApiConfig: DocumentenApiConfig = mock()
-    var documentenApiService: DocumentenApiService = DocumentenApiService(documentenApiClient, documentenApiConfig)
+    var documentApisConfig: DocumentApisConfig = mock()
+    var documentenApiService: DocumentenApiService = DocumentenApiService(documentenApiClient, documentApisConfig)
 
     @Test
     fun `should find single document by UUID`() = runTest {
         val documentId = UUID.randomUUID()
 
-        whenever(documentenApiClient.getDocument(documentId)).thenReturn(
+        whenever(documentenApiClient.getDocument(documentId, "localhost")).thenReturn(
             getTestDocument(null)
         )
 
-        val document = documentenApiService.getDocument(documentId)
+        val document = documentenApiService.getDocument(documentId, "localhost")
 
-        verify(documentenApiClient, times(1)).getDocument(documentId)
+        verify(documentenApiClient, times(1)).getDocument(documentId, "localhost")
 
         assertDocumentReturned(document)
     }
@@ -57,13 +57,13 @@ internal class DocumentenApiServiceTest {
         val documentId = UUID.randomUUID()
         val documentURI = URI.create("example.com/$documentId").toASCIIString()
 
-        whenever(documentenApiClient.getDocument(documentId)).thenReturn(
+        whenever(documentenApiClient.getDocument(documentId, "localhost")).thenReturn(
             getTestDocument(null)
         )
 
-        val document = documentenApiService.getDocument(documentURI)
+        val document = documentenApiService.getDocument(documentURI, "localhost")
 
-        verify(documentenApiClient, times(1)).getDocument(documentId)
+        verify(documentenApiClient, times(1)).getDocument(documentId, "localhost")
 
         assertDocumentReturned(document)
     }

@@ -43,12 +43,13 @@ class DocumentContentResource(
     val virusScanService: VirusScanService?
 ) {
 
-    @GetMapping(value = ["/document/{documentId}/content"])
-    fun downloadStreaming(@PathVariable documentId: UUID): ResponseEntity<Flux<DataBuffer>> {
+    @GetMapping(value = ["/document/{documentId}/documentapi/{documentapi}/content"])
+    fun downloadStreaming(@PathVariable documentId: UUID, @PathVariable documentapi: String): ResponseEntity<Flux<DataBuffer>> {
         // Request service to get the file's data stream
-        val fileDataStream = documentenApiClient.getDocumentContentStream(documentId)
+        println("downloadStreaming" + documentapi)
+        val fileDataStream = documentenApiClient.getDocumentContentStream(documentId, documentapi)
 
-        val document = runBlocking { documentenApiService.getDocument(documentId) }
+        val document = runBlocking { documentenApiService.getDocument(documentId, documentapi) }
 
         val responseHeaders = HttpHeaders().apply {
             set("Content-Disposition", "attachment; filename=\"${document.bestandsnaam}\"")

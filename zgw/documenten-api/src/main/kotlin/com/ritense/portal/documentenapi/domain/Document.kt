@@ -20,8 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.UUID
 
 data class Document(
-    @GraphQLIgnore
-    var url: String?,
+    val url: String?,
     var identificatie: String?,
     val creatiedatum: String?,
     val titel: String?,
@@ -36,8 +35,16 @@ data class Document(
         get() {
             if (url.isNullOrBlank()) {
                 throw IllegalStateException("No Document url found")
-            } else {
-                return UUID.fromString(url!!.substringAfterLast('/'))
             }
+            return UUID.fromString(url.substringAfterLast('/'))
+
+        }
+
+    val documentapi: String
+        get() {
+            if (url.isNullOrBlank()) {
+                throw IllegalStateException("No Document url found")
+            }
+            return url.substringAfter("//").substringBefore('/')
         }
 }

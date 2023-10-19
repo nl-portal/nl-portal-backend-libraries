@@ -2,7 +2,7 @@ package com.ritense.portal.documentenapi.service
 
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
-import com.ritense.portal.documentenapi.client.DocumentenApiConfig
+import com.ritense.portal.documentenapi.client.DocumentApisConfig
 import com.ritense.portal.documentenapi.domain.Document
 import com.ritense.portal.documentenapi.domain.DocumentContent
 import com.ritense.portal.documentenapi.domain.DocumentStatus
@@ -17,19 +17,19 @@ import org.springframework.security.core.context.ReactiveSecurityContextHolder
 
 class DocumentenApiService(
     val documentenApiClient: DocumentenApiClient,
-    val documentenApiConfig: DocumentenApiConfig
+    val documentenApiConfig: DocumentApisConfig
 ) {
 
-    suspend fun getDocument(documentId: UUID): Document {
-        return documentenApiClient.getDocument(documentId)
+    suspend fun getDocument(documentId: UUID, documentApi: String = ""): Document {
+        return documentenApiClient.getDocument(documentId, documentApi)
     }
 
-    suspend fun getDocument(documentUrl: String): Document {
-        return documentenApiClient.getDocument(extractId(documentUrl))
+    suspend fun getDocument(documentUrl: String, documentApi: String = ""): Document {
+        return documentenApiClient.getDocument(extractId(documentUrl), documentApi)
     }
 
-    suspend fun getDocumentContent(documentId: UUID): DocumentContent {
-        val documentContent = documentenApiClient.getDocumentContent(documentId)
+    suspend fun getDocumentContent(documentId: UUID, documentApi: String = ""): DocumentContent {
+        val documentContent = documentenApiClient.getDocumentContent(documentId, documentApi)
         return DocumentContent(Base64.getEncoder().encodeToString(documentContent))
     }
 
@@ -40,7 +40,7 @@ class DocumentenApiService(
 
         return documentenApiClient.postDocument(
             PostEnkelvoudiginformatieobjectRequest(
-                bronorganisatie = documentenApiConfig.rsin,
+                bronorganisatie = documentenApiConfig.getDefault().rsin,
                 creatiedatum = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE),
                 titel = file.filename(),
                 auteur = auteur,
@@ -48,7 +48,7 @@ class DocumentenApiService(
                 taal = "nld",
                 bestandsnaam = file.filename(),
                 indicatieGebruiksrecht = false,
-                informatieobjecttype = documentenApiConfig.documentTypeUrl,
+                informatieobjecttype = documentenApiConfig.getDefault().documentTypeUrl,
             ),
             file.content()
         )

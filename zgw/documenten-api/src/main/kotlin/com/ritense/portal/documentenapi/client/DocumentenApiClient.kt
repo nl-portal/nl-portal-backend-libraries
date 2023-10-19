@@ -42,19 +42,19 @@ import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
 
 class DocumentenApiClient(
-    private val documentenApiConfig: DocumentenApiConfig,
+    private val documentenApiConfigs: DocumentApisConfig,
     private val idTokenGenerator: IdTokenGenerator
 ) {
-    suspend fun getDocument(id: UUID): Document {
-        return webClient()
+    suspend fun getDocument(id: UUID, documentApi: String): Document {
+        return webClient(documentApi)
             .get()
             .uri("/documenten/api/v1/enkelvoudiginformatieobjecten/$id")
             .retrieve()
             .awaitBody()
     }
 
-    suspend fun getDocumentContent(id: UUID): ByteArray {
-        return webClient()
+    suspend fun getDocumentContent(id: UUID, documentApi: String): ByteArray {
+        return webClient(documentApi)
             .get()
             .uri("/documenten/api/v1/enkelvoudiginformatieobjecten/$id/download")
             .accept(MediaType.APPLICATION_OCTET_STREAM)
@@ -62,8 +62,8 @@ class DocumentenApiClient(
             .awaitBody()
     }
 
-    fun getDocumentContentStream(id: UUID): Flux<DataBuffer> {
-        return webClient()
+    fun getDocumentContentStream(id: UUID, documentApi: String): Flux<DataBuffer> {
+        return webClient(documentApi)
             .get()
             .uri("/documenten/api/v1/enkelvoudiginformatieobjecten/$id/download")
             .accept(MediaType.APPLICATION_OCTET_STREAM)
@@ -73,7 +73,8 @@ class DocumentenApiClient(
 
     suspend fun postDocument(
         request: PostEnkelvoudiginformatieobjectRequest,
-        documentContent: Flux<DataBuffer>
+        documentContent: Flux<DataBuffer>,
+        documentApi: String = ""
     ): Document {
         request.inhoud = UUID.randomUUID().toString()
         val (requestPrefix, requestPostfix) = Mapper.get().writeValueAsString(request).split(request.inhoud!!)
@@ -90,7 +91,7 @@ class DocumentenApiClient(
         }
         file.writeText(requestPostfix, Charsets.UTF_8, StandardOpenOption.APPEND)
 
-        val response = webClient()
+        val response = webClient(documentApi)
             .post()
             .uri("/documenten/api/v1/enkelvoudiginformatieobjecten")
             .contentType(MediaType.APPLICATION_JSON)
@@ -103,7 +104,8 @@ class DocumentenApiClient(
         return response
     }
 
-    private fun webClient(): WebClient {
+    private fun webClient(documentApi: String): WebClient {
+        var documentenApiConfig = documentenApiConfigs.getConfig(documentApi)
         val token = idTokenGenerator.generateToken(
             documentenApiConfig.secret,
             documentenApiConfig.clientId

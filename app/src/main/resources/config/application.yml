@@ -18,7 +18,7 @@ spring:
         driver-class-name: org.postgresql.Driver
         url: jdbc:postgresql://localhost:54321/nl-portal
         username: nlportal
-        password: password
+        passw ord: password
         name: nl-portal-database
         hikari:
             auto-commit: false
@@ -59,14 +59,26 @@ valtimo:
             secret: e09b8bc5-5831-4618-ab28-41411304309d
             rsin: "051845623"
             documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/efc332f2-be3b-4bad-9e3c-49a6219c92ad
-        documentenapi:
-            url: http://localhost:8001
-            clientId: valtimo_client
-            secret: e09b8bc5-5831-4618-ab28-41411304309d
         zakenapi:
             url: http://localhost:8001
             clientId: valtimo_client
             secret: e09b8bc5-5831-4618-ab28-41411304309d
+        documentenapis:
+            documentapis:
+                -
+                    default: true
+                    url: http://localhost:8001
+                    clientId: valtimo_client
+                    secret: e09b8bc5-5831-4618-ab28-41411304309d
+                    rsin: "051845623"
+                    documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000
+                -
+                    default: false
+                    url: http://localhost:8002
+                    clientId: docdoc
+                    secret: e09b8bc5-5831-4618-ab28-41411304309d
+                    rsin: "051845623"
+                    documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000
     openklant:
         url: http://localhost:8006
         clientId: valtimo_client

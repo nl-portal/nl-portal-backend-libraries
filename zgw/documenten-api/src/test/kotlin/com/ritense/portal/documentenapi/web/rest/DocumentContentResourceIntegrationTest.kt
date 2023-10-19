@@ -18,7 +18,8 @@ package com.ritense.portal.documentenapi.web.rest
 import com.ritense.portal.commonground.authentication.WithBurgerUser
 import com.ritense.portal.core.util.Mapper
 import com.ritense.portal.documentenapi.TestHelper
-import com.ritense.portal.documentenapi.client.DocumentenApiConfig
+import com.ritense.portal.documentenapi.client.DocumentApiConfig
+import com.ritense.portal.documentenapi.client.DocumentApisConfig
 import com.ritense.portal.documentenapi.domain.DocumentStatus
 import com.ritense.portal.documentenapi.domain.PostEnkelvoudiginformatieobjectRequest
 import java.io.InputStream
@@ -51,7 +52,7 @@ import org.assertj.core.api.Assertions.assertThat
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DocumentContentResourceIntegrationTest(
     @Autowired private val webTestClient: WebTestClient,
-    @Autowired private val documentenApiConfig: DocumentenApiConfig
+    @Autowired private val documentApisConfig: DocumentApisConfig
 ) {
     lateinit var server: MockWebServer
     protected var executedRequests: MutableList<RecordedRequest> = mutableListOf()
@@ -61,7 +62,7 @@ class DocumentContentResourceIntegrationTest(
         server = MockWebServer()
         setupMockDocumentServer()
         server.start()
-        documentenApiConfig.url = server.url("/").toString()
+        documentApisConfig.getDefault().url = server.url("/").toString()
     }
 
     @AfterAll
@@ -75,7 +76,7 @@ class DocumentContentResourceIntegrationTest(
 
         // Call rest endpoint with webtestclient
         webTestClient.get()
-            .uri("/api/document/{documentId}/content", uuid.toString())
+            .uri("/api/document/{documentId}/documentapi/localhost/content", uuid.toString())
             .exchange()
             .expectStatus().isOk
             .expectHeader().contentType(MediaType.APPLICATION_OCTET_STREAM)

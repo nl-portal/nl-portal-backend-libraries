@@ -33,6 +33,7 @@ internal class DocumentContentQueryTest {
     fun getDocumentContent() = runTest {
         val documentId = UUID.randomUUID()
         documentContentQuery.getDocumentContent(documentId)
-        verify(documentenApiService).getDocumentContent(documentId)
+        verify(documentenApiService).getDocumentContent(documentId, "")
     }
+
 }
