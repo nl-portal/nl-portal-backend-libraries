@@ -21,19 +21,18 @@ import org.springframework.boot.context.properties.ConstructorBinding
 @ConstructorBinding
 @ConfigurationProperties(prefix = "valtimo.zgw.documentenapis")
 class DocumentApisConfig {
-    var documentapis: MutableList<DocumentApiConfig> = mutableListOf()
+    var documentapis: Map<String, DocumentApiConfig> = mapOf()
 
-    fun getDefault(): DocumentApiConfig {
-        return documentapis.filter { documentenApiConfig -> documentenApiConfig.default }.get(0)
+    fun getConfig(documentApi: String): DocumentApiConfig {
+        return documentapis[documentApi]!!
     }
 
-    fun getConfig(documentApi: String = ""): DocumentApiConfig {
-        return documentapis.filter({ documentenApiConfig -> documentenApiConfig.url.contains(documentApi) && !documentApi.isNullOrEmpty() }).getOrElse(0, { getDefault() })
+    fun getConfigForDocumentUrl(documentUrl: String): String {
+        return documentapis.filterValues { documentApiConfig -> documentUrl.contains(documentApiConfig.url) }.keys.stream().findFirst().orElseThrow()
     }
 }
 
 class DocumentApiConfig {
-    var default: Boolean = true
     lateinit var url: String
     lateinit var clientId: String
     lateinit var secret: String

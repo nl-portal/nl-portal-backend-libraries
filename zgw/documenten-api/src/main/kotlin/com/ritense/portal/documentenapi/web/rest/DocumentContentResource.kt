@@ -37,16 +37,11 @@ import java.util.UUID
 
 @RestController
 @RequestMapping(value = ["/api"])
-class DocumentContentResource(
-    val documentenApiClient: DocumentenApiClient,
-    val documentenApiService: DocumentenApiService,
-    val virusScanService: VirusScanService?
-) {
+class DocumentContentResource(val documentenApiClient: DocumentenApiClient, val documentenApiService: DocumentenApiService, val virusScanService: VirusScanService?) {
 
-    @GetMapping(value = ["/document/{documentId}/documentapi/{documentapi}/content"])
+    @GetMapping(value = ["/documentapi/{documentapi}/document/{documentId}/content"])
     fun downloadStreaming(@PathVariable documentId: UUID, @PathVariable documentapi: String): ResponseEntity<Flux<DataBuffer>> {
         // Request service to get the file's data stream
-        println("downloadStreaming" + documentapi)
         val fileDataStream = documentenApiClient.getDocumentContentStream(documentId, documentapi)
 
         val document = runBlocking { documentenApiService.getDocument(documentId, documentapi) }
@@ -55,21 +50,17 @@ class DocumentContentResource(
             set("Content-Disposition", "attachment; filename=\"${document.bestandsnaam}\"")
         }
 
-        return ResponseEntity
-            .ok()
-            .headers(responseHeaders)
-            .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .body(fileDataStream)
+        return ResponseEntity.ok().headers(responseHeaders).contentType(MediaType.APPLICATION_OCTET_STREAM).body(fileDataStream)
     }
 
-    @PostMapping(value = ["/document/content"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    suspend fun uploadStreaming(@RequestPart("file") file: FilePart): ResponseEntity<Any> {
+    @PostMapping(value = ["/documentapi/{documentapi}/document/content"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    suspend fun uploadStreaming(@RequestPart("file") file: FilePart, @PathVariable documentapi: String): ResponseEntity<Any> {
         val virusScanResult = virusScanService?.scan(file.content())
 
         // only return a bad request as a virus is found, otherwise continue....
         if (VirusScanStatus.VIRUS_FOUND == virusScanResult?.status) {
             return ResponseEntity(virusScanResult, HttpStatus.BAD_REQUEST)
         }
-        return ResponseEntity.ok(documentenApiService.uploadDocument(file))
+        return ResponseEntity.ok(documentenApiService.uploadDocument(file, documentapi))
     }
 }

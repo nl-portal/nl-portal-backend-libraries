@@ -29,7 +29,8 @@ data class Document(
     val bestandsomvang: Int?,
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @GraphQLIgnore
-    val status: DocumentStatus?
+    val status: DocumentStatus?,
+    var documentapi: String = ""
 ) {
     val uuid: UUID
         get() {
@@ -37,13 +38,5 @@ data class Document(
                 throw IllegalStateException("No Document url found")
             }
             return UUID.fromString(url.substringAfterLast('/'))
-        }
-
-    val documentapi: String
-        get() {
-            if (url.isNullOrBlank()) {
-                throw IllegalStateException("No Document url found")
-            }
-            return url.substringAfter("//").substringBefore('/')
         }
 }

@@ -51,8 +51,8 @@ internal class DocumentContentQueryIT(
     internal fun setUp() {
         server1 = setupMockOpenZaakServer("logo.png")
         server2 = setupMockOpenZaakServer("github.png")
-        documentApisConfig.documentapis.get(0).url = server1.url("/").toString()
-        documentApisConfig.documentapis.get(1).url = server2.url("/").toString()
+        documentApisConfig.documentapis.get("openzaak")?.url = server1.url("/").toString()
+        documentApisConfig.documentapis.get("example")?.url = server2.url("/").toString()
     }
 
     @AfterEach
@@ -64,10 +64,9 @@ internal class DocumentContentQueryIT(
     @Test
     @WithMockUser("test")
     fun getDocumentContentServer1() {
-        val documentApi = documentApisConfig.getConfig(server1.url("/").toString())
         val query = """
             query {
-                getDocumentContent(id :"095be615-a8ad-4c33-8e9c-c7612fbf6c9f",documentApi : "${documentApi.url}") {
+                getDocumentContent(documentApi : "openzaak", id :"095be615-a8ad-4c33-8e9c-c7612fbf6c9f") {
                     content
                 }
             }
@@ -91,10 +90,9 @@ internal class DocumentContentQueryIT(
     @Test
     @WithMockUser("test")
     fun getDocumentContentServer2() {
-        val documentApi = documentApisConfig.getConfig(server2.url("/").toString())
         val query = """
             query {
-                getDocumentContent(id :"095be615-a8ad-4c33-8e9c-c7612fbf6c9f",documentApi : "${documentApi.url}") {
+                getDocumentContent(documentApi : "example", id :"095be615-a8ad-4c33-8e9c-c7612fbf6c9f") {
                     content
                 }
             }

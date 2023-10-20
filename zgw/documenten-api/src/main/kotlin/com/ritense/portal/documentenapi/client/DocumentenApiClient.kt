@@ -41,41 +41,22 @@ import reactor.core.publisher.Flux
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
 
-class DocumentenApiClient(
-    private val documentenApiConfigs: DocumentApisConfig,
-    private val idTokenGenerator: IdTokenGenerator
-) {
+class DocumentenApiClient(private val documentenApiConfigs: DocumentApisConfig, private val idTokenGenerator: IdTokenGenerator) {
     suspend fun getDocument(id: UUID, documentApi: String): Document {
-        return webClient(documentApi)
-            .get()
-            .uri("/documenten/api/v1/enkelvoudiginformatieobjecten/$id")
-            .retrieve()
-            .awaitBody()
+        var document: Document = webClient(documentApi).get().uri("/documenten/api/v1/enkelvoudiginformatieobjecten/$id").retrieve().awaitBody()
+        document.documentapi = documentApi
+        return document
     }
 
     suspend fun getDocumentContent(id: UUID, documentApi: String): ByteArray {
-        return webClient(documentApi)
-            .get()
-            .uri("/documenten/api/v1/enkelvoudiginformatieobjecten/$id/download")
-            .accept(MediaType.APPLICATION_OCTET_STREAM)
-            .retrieve()
-            .awaitBody()
+        return webClient(documentApi).get().uri("/documenten/api/v1/enkelvoudiginformatieobjecten/$id/download").accept(MediaType.APPLICATION_OCTET_STREAM).retrieve().awaitBody()
     }
 
     fun getDocumentContentStream(id: UUID, documentApi: String): Flux<DataBuffer> {
-        return webClient(documentApi)
-            .get()
-            .uri("/documenten/api/v1/enkelvoudiginformatieobjecten/$id/download")
-            .accept(MediaType.APPLICATION_OCTET_STREAM)
-            .retrieve()
-            .bodyToFlux(DataBuffer::class.java)
+        return webClient(documentApi).get().uri("/documenten/api/v1/enkelvoudiginformatieobjecten/$id/download").accept(MediaType.APPLICATION_OCTET_STREAM).retrieve().bodyToFlux(DataBuffer::class.java)
     }
 
-    suspend fun postDocument(
-        request: PostEnkelvoudiginformatieobjectRequest,
-        documentContent: Flux<DataBuffer>,
-        documentApi: String = ""
-    ): Document {
+    suspend fun postDocument(request: PostEnkelvoudiginformatieobjectRequest, documentContent: Flux<DataBuffer>, documentApi: String): Document {
         request.inhoud = UUID.randomUUID().toString()
         val (requestPrefix, requestPostfix) = Mapper.get().writeValueAsString(request).split(request.inhoud!!)
 
@@ -85,20 +66,11 @@ class DocumentenApiClient(
 
         file.writeText(requestPrefix)
         Base64.getEncoder().wrap(file.outputStream(StandardOpenOption.APPEND)).use { base64Output ->
-            documentContent
-                .map { dataPart -> base64Output.write(dataPart.asInputStream().readBytes()) }
-                .blockLast(Duration.ofMinutes(5))
+            documentContent.map { dataPart -> base64Output.write(dataPart.asInputStream().readBytes()) }.blockLast(Duration.ofMinutes(5))
         }
         file.writeText(requestPostfix, Charsets.UTF_8, StandardOpenOption.APPEND)
 
-        val response = webClient(documentApi)
-            .post()
-            .uri("/documenten/api/v1/enkelvoudiginformatieobjecten")
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON)
-            .body(BodyInserters.fromResource(FileSystemResource(file)))
-            .retrieve()
-            .awaitBody<Document>()
+        val response = webClient(documentApi).post().uri("/documenten/api/v1/enkelvoudiginformatieobjecten").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).body(BodyInserters.fromResource(FileSystemResource(file))).retrieve().awaitBody<Document>()
 
         file.deleteIfExists()
         return response
@@ -106,25 +78,8 @@ class DocumentenApiClient(
 
     private fun webClient(documentApi: String): WebClient {
         var documentenApiConfig = documentenApiConfigs.getConfig(documentApi)
-        val token = idTokenGenerator.generateToken(
-            documentenApiConfig.secret,
-            documentenApiConfig.clientId
-        )
+        val token = idTokenGenerator.generateToken(documentenApiConfig.secret, documentenApiConfig.clientId)
 
-        return WebClient.builder()
-            .clientConnector(
-                ReactorClientHttpConnector(
-                    HttpClient.create().wiretap(
-                        "reactor.netty.http.client.HttpClient",
-                        LogLevel.DEBUG,
-                        AdvancedByteBufFormat.TEXTUAL
-                    )
-                )
-            )
-            .baseUrl(documentenApiConfig.url)
-            .defaultHeader("Accept-Crs", "EPSG:4326")
-            .defaultHeader("Content-Crs", "EPSG:4326")
-            .defaultHeader("Authorization", "Bearer $token")
-            .build()
+        return WebClient.builder().clientConnector(ReactorClientHttpConnector(HttpClient.create().wiretap("reactor.netty.http.client.HttpClient", LogLevel.DEBUG, AdvancedByteBufFormat.TEXTUAL))).baseUrl(documentenApiConfig.url).defaultHeader("Accept-Crs", "EPSG:4326").defaultHeader("Content-Crs", "EPSG:4326").defaultHeader("Authorization", "Bearer $token").build()
     }
 }

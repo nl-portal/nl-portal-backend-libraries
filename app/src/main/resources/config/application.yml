@@ -18,7 +18,7 @@ spring:
         driver-class-name: org.postgresql.Driver
         url: jdbc:postgresql://localhost:54321/nl-portal
         username: nlportal
-        passw ord: password
+        password: password
         name: nl-portal-database
         hikari:
             auto-commit: false
@@ -65,13 +65,11 @@ valtimo:
             secret: e09b8bc5-5831-4618-ab28-41411304309d
         documentenapis:
             documentapis:
-                -
-                    default: true
+                openzaak:
                     url: http://localhost:8001
                     clientId: valtimo_client
                     secret: e09b8bc5-5831-4618-ab28-41411304309d
-                -
-                    default: false
+                dummydoc:
                     url: http://localhost:8002
                     clientId: docdoc
                     secret: e09b8bc5-5831-4618-ab28-41411304309d

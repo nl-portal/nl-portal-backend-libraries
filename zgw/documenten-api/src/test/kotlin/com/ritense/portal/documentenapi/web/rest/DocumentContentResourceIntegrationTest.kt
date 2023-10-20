@@ -61,7 +61,7 @@ class DocumentContentResourceIntegrationTest(
         server = MockWebServer()
         setupMockDocumentServer()
         server.start()
-        documentApisConfig.getDefault().url = server.url("/").toString()
+        documentApisConfig.getConfig("openzaak").url = server.url("/").toString()
     }
 
     @AfterAll
@@ -75,7 +75,7 @@ class DocumentContentResourceIntegrationTest(
 
         // Call rest endpoint with webtestclient
         webTestClient.get()
-            .uri("/api/document/{documentId}/documentapi/localhost/content", uuid.toString())
+            .uri("/api/documentapi/openzaak/document/{documentId}/content", uuid.toString())
             .exchange()
             .expectStatus().isOk
             .expectHeader().contentType(MediaType.APPLICATION_OCTET_STREAM)
@@ -92,7 +92,7 @@ class DocumentContentResourceIntegrationTest(
         bodyBuilder.part("file", ClassPathResource("/data/test-file.txt", this::class.java.classLoader))
 
         webTestClient.post()
-            .uri("/api/document/content")
+            .uri("/api/documentapi/openzaak/document/content")
             .contentType(MediaType.MULTIPART_FORM_DATA)
             .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
             .exchange()

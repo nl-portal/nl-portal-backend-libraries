@@ -29,12 +29,14 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
 
 @ExperimentalCoroutinesApi
-internal class DocumentenApiServiceTest {
+@SpringBootTest
+internal class DocumentenApiServiceTest(@Autowired private var documentApisConfig: DocumentApisConfig) {
 
     var documentenApiClient: DocumentenApiClient = mock()
-    var documentApisConfig: DocumentApisConfig = mock()
     var documentenApiService: DocumentenApiService = DocumentenApiService(documentenApiClient, documentApisConfig)
 
     @Test
@@ -55,15 +57,15 @@ internal class DocumentenApiServiceTest {
     @Test
     fun `should find single document by URI String`() = runTest {
         val documentId = UUID.randomUUID()
-        val documentURI = URI.create("example.com/$documentId").toASCIIString()
+        val documentURI = URI.create("https://example.org/$documentId").toASCIIString()
 
-        whenever(documentenApiClient.getDocument(documentId, "localhost")).thenReturn(
+        whenever(documentenApiClient.getDocument(documentId, "example")).thenReturn(
             getTestDocument(null)
         )
 
-        val document = documentenApiService.getDocument(documentURI, "localhost")
+        val document = documentenApiService.getDocument(documentURI)
 
-        verify(documentenApiClient, times(1)).getDocument(documentId, "localhost")
+        verify(documentenApiClient, times(1)).getDocument(documentId, "example")
 
         assertDocumentReturned(document)
     }

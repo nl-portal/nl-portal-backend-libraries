@@ -17,7 +17,7 @@ package com.ritense.portal.zakenapi.graphql
 
 import com.ritense.portal.catalogiapi.client.CatalogiApiConfig
 import com.ritense.portal.commonground.authentication.WithBurgerUser
-import com.ritense.portal.documentenapi.client.DocumentenApiConfig
+import com.ritense.portal.documentenapi.client.DocumentApisConfig
 import com.ritense.portal.zakenapi.client.ZakenApiConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -38,23 +38,19 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(PER_CLASS)
-internal class ZaakQueryIT(
-    @Autowired private val testClient: WebTestClient,
-    @Autowired private val zakenApiConfig: ZakenApiConfig,
-    @Autowired private val catalogiApiConfig: CatalogiApiConfig,
-    @Autowired private val documentenApiConfig: DocumentenApiConfig
-
-) {
+internal class ZaakQueryIT(@Autowired private val testClient: WebTestClient, @Autowired private val zakenApiConfig: ZakenApiConfig, @Autowired private val catalogiApiConfig: CatalogiApiConfig, @Autowired private val documentApisConfig: DocumentApisConfig) {
     lateinit var server: MockWebServer
+    lateinit var url: String
 
     @BeforeEach
     internal fun setUp() {
         server = MockWebServer()
         setupMockOpenZaakServer()
         server.start()
-        zakenApiConfig.url = server.url("/").toString()
-        catalogiApiConfig.url = server.url("/").toString()
-        documentenApiConfig.url = server.url("/").toString()
+        url = server.url("/").toString()
+        zakenApiConfig.url = url
+        catalogiApiConfig.url = url
+        documentApisConfig.getConfig("openzaak").url = url
     }
 
     @AfterEach
@@ -97,28 +93,9 @@ internal class ZaakQueryIT(
 
         val basePath = "$.data.getZaken[0]"
 
-        val response = testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
-            .exchange()
-            .expectBody()
+        val response = testClient.post().uri("/graphql").accept(APPLICATION_JSON).contentType(MediaType("application", "graphql")).bodyValue(query).exchange().expectBody()
 
-        response
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.uuid").isEqualTo("5d479908-fbb7-49c2-98c9-9afecf8de79a")
-            .jsonPath("$basePath.identificatie").isEqualTo("ZAAK-2021-0000000003")
-            .jsonPath("$basePath.omschrijving").isEqualTo("Voorbeeld afgesloten zaak 1")
-            .jsonPath("$basePath.startdatum").isEqualTo("2021-09-16")
-            .jsonPath("$basePath.zaaktype.identificatie").isEqualTo("bezwaar-behandelen")
-            .jsonPath("$basePath.zaaktype.omschrijving").isEqualTo("Bezwaar behandelen")
-            .jsonPath("$basePath.status.datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
-            .jsonPath("$basePath.status.statustype.omschrijving").isEqualTo("Zaak afgerond")
-            .jsonPath("$basePath.status.statustype.isEindstatus").isEqualTo(true)
-            .jsonPath("$basePath.statusGeschiedenis[0].datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
-            .jsonPath("$basePath.statusGeschiedenis[0].statustype.omschrijving").isEqualTo("Zaak afgerond")
-            .jsonPath("$basePath.statusGeschiedenis[0].statustype.isEindstatus").isEqualTo(true)
+        response.jsonPath(basePath).exists().jsonPath("$basePath.uuid").isEqualTo("5d479908-fbb7-49c2-98c9-9afecf8de79a").jsonPath("$basePath.identificatie").isEqualTo("ZAAK-2021-0000000003").jsonPath("$basePath.omschrijving").isEqualTo("Voorbeeld afgesloten zaak 1").jsonPath("$basePath.startdatum").isEqualTo("2021-09-16").jsonPath("$basePath.zaaktype.identificatie").isEqualTo("bezwaar-behandelen").jsonPath("$basePath.zaaktype.omschrijving").isEqualTo("Bezwaar behandelen").jsonPath("$basePath.status.datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z").jsonPath("$basePath.status.statustype.omschrijving").isEqualTo("Zaak afgerond").jsonPath("$basePath.status.statustype.isEindstatus").isEqualTo(true).jsonPath("$basePath.statusGeschiedenis[0].datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z").jsonPath("$basePath.statusGeschiedenis[0].statustype.omschrijving").isEqualTo("Zaak afgerond").jsonPath("$basePath.statusGeschiedenis[0].statustype.isEindstatus").isEqualTo(true)
     }
 
     @Test
@@ -126,12 +103,7 @@ internal class ZaakQueryIT(
     fun getZakenNotFound() {
 
         // Make the GraphQL request
-        testClient.post()
-            .uri("/not_found")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .exchange()
-            .expectStatus().isNotFound() // Assert NOT_FOUND status
+        testClient.post().uri("/not_found").accept(APPLICATION_JSON).contentType(MediaType("application", "graphql")).exchange().expectStatus().isNotFound() // Assert NOT_FOUND status
     }
 
     @Test
@@ -170,14 +142,7 @@ internal class ZaakQueryIT(
 
         val basePath = "$.data.getZaken[0]"
 
-        testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
-            .exchange()
-            .expectBody()
-            .jsonPath(basePath)
+        testClient.post().uri("/graphql").accept(APPLICATION_JSON).contentType(MediaType("application", "graphql")).bodyValue(query).exchange().expectBody().jsonPath(basePath)
     }
 
     @Test
@@ -215,26 +180,7 @@ internal class ZaakQueryIT(
 
         val basePath = "$.data.getZaken[0]"
 
-        testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
-            .exchange()
-            .expectBody()
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.uuid").isEqualTo("5d479908-fbb7-49c2-98c9-9afecf8de79a")
-            .jsonPath("$basePath.identificatie").isEqualTo("ZAAK-2021-0000000003")
-            .jsonPath("$basePath.omschrijving").isEqualTo("Voorbeeld afgesloten zaak 1")
-            .jsonPath("$basePath.startdatum").isEqualTo("2021-09-16")
-            .jsonPath("$basePath.zaaktype.identificatie").isEqualTo("bezwaar-behandelen")
-            .jsonPath("$basePath.zaaktype.omschrijving").isEqualTo("Bezwaar behandelen")
-            .jsonPath("$basePath.status.datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
-            .jsonPath("$basePath.status.statustype.omschrijving").isEqualTo("Zaak afgerond")
-            .jsonPath("$basePath.status.statustype.isEindstatus").isEqualTo(true)
-            .jsonPath("$basePath.statusGeschiedenis[0].datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
-            .jsonPath("$basePath.statusGeschiedenis[0].statustype.omschrijving").isEqualTo("Zaak afgerond")
-            .jsonPath("$basePath.statusGeschiedenis[0].statustype.isEindstatus").isEqualTo(true)
+        testClient.post().uri("/graphql").accept(APPLICATION_JSON).contentType(MediaType("application", "graphql")).bodyValue(query).exchange().expectBody().jsonPath(basePath).exists().jsonPath("$basePath.uuid").isEqualTo("5d479908-fbb7-49c2-98c9-9afecf8de79a").jsonPath("$basePath.identificatie").isEqualTo("ZAAK-2021-0000000003").jsonPath("$basePath.omschrijving").isEqualTo("Voorbeeld afgesloten zaak 1").jsonPath("$basePath.startdatum").isEqualTo("2021-09-16").jsonPath("$basePath.zaaktype.identificatie").isEqualTo("bezwaar-behandelen").jsonPath("$basePath.zaaktype.omschrijving").isEqualTo("Bezwaar behandelen").jsonPath("$basePath.status.datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z").jsonPath("$basePath.status.statustype.omschrijving").isEqualTo("Zaak afgerond").jsonPath("$basePath.status.statustype.isEindstatus").isEqualTo(true).jsonPath("$basePath.statusGeschiedenis[0].datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z").jsonPath("$basePath.statusGeschiedenis[0].statustype.omschrijving").isEqualTo("Zaak afgerond").jsonPath("$basePath.statusGeschiedenis[0].statustype.isEindstatus").isEqualTo(true)
     }
 
     @Test
@@ -268,6 +214,7 @@ internal class ZaakQueryIT(
                     },
                     documenten {
                         uuid,
+                        documentapi,
                         identificatie,
                         creatiedatum,
                         titel,
@@ -285,33 +232,7 @@ internal class ZaakQueryIT(
 
         val basePath = "$.data.getZaak"
 
-        testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
-            .exchange()
-            .expectBody()
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.uuid").isEqualTo("5d479908-fbb7-49c2-98c9-9afecf8de79a")
-            .jsonPath("$basePath.identificatie").isEqualTo("ZAAK-2021-0000000003")
-            .jsonPath("$basePath.omschrijving").isEqualTo("Voorbeeld afgesloten zaak 1")
-            .jsonPath("$basePath.startdatum").isEqualTo("2021-09-16")
-            .jsonPath("$basePath.zaaktype.identificatie").isEqualTo("bezwaar-behandelen")
-            .jsonPath("$basePath.zaaktype.omschrijving").isEqualTo("Bezwaar behandelen")
-            .jsonPath("$basePath.status.datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
-            .jsonPath("$basePath.status.statustype.omschrijving").isEqualTo("Zaak afgerond")
-            .jsonPath("$basePath.status.statustype.isEindstatus").isEqualTo(true)
-            .jsonPath("$basePath.statusGeschiedenis[0].datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
-            .jsonPath("$basePath.statusGeschiedenis[0].statustype.omschrijving").isEqualTo("Zaak afgerond")
-            .jsonPath("$basePath.statusGeschiedenis[0].statustype.isEindstatus").isEqualTo(true)
-            .jsonPath("$basePath.documenten[0].uuid").isEqualTo("095be615-a8ad-4c33-8e9c-c7612fbf6c9f")
-            .jsonPath("$basePath.documenten[0].titel").isEqualTo("Een titel")
-            .jsonPath("$basePath.documenten[0].formaat").isEqualTo(".pdf")
-            .jsonPath("$basePath.statussen[0].omschrijving").isEqualTo("Eerste status")
-            .jsonPath("$basePath.statussen[0].isEindstatus").isEqualTo(false)
-            .jsonPath("$basePath.statussen[2].omschrijving").isEqualTo("Derde status")
-            .jsonPath("$basePath.statussen[2].isEindstatus").isEqualTo(true)
+        testClient.post().uri("/graphql").accept(APPLICATION_JSON).contentType(MediaType("application", "graphql")).bodyValue(query).exchange().expectBody().jsonPath(basePath).exists().jsonPath("$basePath.uuid").isEqualTo("5d479908-fbb7-49c2-98c9-9afecf8de79a").jsonPath("$basePath.identificatie").isEqualTo("ZAAK-2021-0000000003").jsonPath("$basePath.omschrijving").isEqualTo("Voorbeeld afgesloten zaak 1").jsonPath("$basePath.startdatum").isEqualTo("2021-09-16").jsonPath("$basePath.zaaktype.identificatie").isEqualTo("bezwaar-behandelen").jsonPath("$basePath.zaaktype.omschrijving").isEqualTo("Bezwaar behandelen").jsonPath("$basePath.status.datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z").jsonPath("$basePath.status.statustype.omschrijving").isEqualTo("Zaak afgerond").jsonPath("$basePath.status.statustype.isEindstatus").isEqualTo(true).jsonPath("$basePath.statusGeschiedenis[0].datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z").jsonPath("$basePath.statusGeschiedenis[0].statustype.omschrijving").isEqualTo("Zaak afgerond").jsonPath("$basePath.statusGeschiedenis[0].statustype.isEindstatus").isEqualTo(true).jsonPath("$basePath.documenten[0].uuid").isEqualTo("095be615-a8ad-4c33-8e9c-c7612fbf6c9f").jsonPath("$basePath.documenten[0].titel").isEqualTo("Een titel").jsonPath("$basePath.documenten[0].formaat").isEqualTo(".pdf").jsonPath("$basePath.statussen[0].omschrijving").isEqualTo("Eerste status").jsonPath("$basePath.statussen[0].isEindstatus").isEqualTo(false).jsonPath("$basePath.statussen[2].omschrijving").isEqualTo("Derde status").jsonPath("$basePath.statussen[2].isEindstatus").isEqualTo(true)
     }
 
     fun setupMockOpenZaakServer() {
@@ -346,7 +267,7 @@ internal class ZaakQueryIT(
                 "previous": null,
                 "results": [
                     {
-                        "url": "http://localhost:8000/zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a",
+                        "url": "$url/zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a",
                         "uuid": "5d479908-fbb7-49c2-98c9-9afecf8de79a",
                         "identificatie": "ZAAK-2021-0000000003",
                         "bronorganisatie": "051845623",
@@ -397,7 +318,7 @@ internal class ZaakQueryIT(
     fun handleZaakRequest(): MockResponse {
         val body = """
             {
-                "url": "http://localhost:8000/zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a",
+                "url": "$url/zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a",
                 "uuid": "5d479908-fbb7-49c2-98c9-9afecf8de79a",
                 "identificatie": "ZAAK-2021-0000000003",
                 "bronorganisatie": "051845623",
@@ -565,10 +486,10 @@ internal class ZaakQueryIT(
         val body = """
            [
               {
-                "url": "http://example.com",
+                "url": "$url",
                 "uuid": "095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
-                "informatieobject": "http://example.com/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
-                "zaak": "http://example.com",
+                "informatieobject": "$url/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+                "zaak": "$url",
                 "aardRelatieWeergave": "Hoort bij, omgekeerd: kent",
                 "titel": "string",
                 "beschrijving": "string",
@@ -700,9 +621,6 @@ internal class ZaakQueryIT(
     }
 
     fun mockResponse(body: String): MockResponse {
-        return MockResponse()
-            .addHeader("Content-Type", "application/json; charset=utf-8")
-            .setResponseCode(200)
-            .setBody(body)
+        return MockResponse().addHeader("Content-Type", "application/json; charset=utf-8").setResponseCode(200).setBody(body)
     }
 }
