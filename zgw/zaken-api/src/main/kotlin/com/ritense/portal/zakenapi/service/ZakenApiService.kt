@@ -50,7 +50,6 @@ class ZakenApiService(
             // we will need to change this when a better filter becomes available for kvk nummer in zaak list endpoint
             is BedrijfAuthentication -> getZaakRollen(null, authentication.getKvkNummer(), null)
                 .map { getZaakFromZaakApi(extractId(it.zaak)) }
-
             else -> throw IllegalArgumentException("Cannot get zaken for this user")
         }
     }
@@ -65,7 +64,6 @@ class ZakenApiService(
 
         // if no rol is found, the current user does not have access to this zaak
         if (rollen.isEmpty())
-            //return a more correct httpstatus response
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this zaak")
 
         return getZaakFromZaakApi(id)
