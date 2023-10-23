@@ -37,6 +37,7 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.springframework.security.oauth2.jwt.Jwt
+import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
 
 @ExperimentalCoroutinesApi
@@ -152,13 +153,13 @@ internal class ZakenApiServiceTest {
             ResultPage(1, null, null, listOf())
         )
 
-        val illegalStateException = Assertions.assertThrows(IllegalStateException::class.java) {
+        val exception = Assertions.assertThrows(ResponseStatusException::class.java) {
             runBlockingTest {
                 zaakService.getZaak(uuid, authentication)
             }
         }
 
-        assertEquals("Access denied to this zaak", illegalStateException.message)
+        assertEquals("Access denied to this zaak", exception.reason)
     }
 
     @Test
@@ -177,7 +178,7 @@ internal class ZakenApiServiceTest {
             }
         }
 
-        assertEquals("Cannot get zaak for this user", illegalArgumentException.message)
+        assertEquals("Authentication not (yet) supported", illegalArgumentException.message)
     }
 
     @Test
