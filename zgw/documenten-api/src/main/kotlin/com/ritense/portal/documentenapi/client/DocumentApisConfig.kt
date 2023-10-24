@@ -29,7 +29,7 @@ class DocumentApisConfig {
     }
 
     fun getConfigForDocumentUrl(documentUrl: String): String {
-        return configurations.filterValues { documentApiConfig -> documentUrl.contains(documentApiConfig.url) }.keys.stream().findFirst().orElseThrow({ NullPointerException("No documentapi configuration found for zaakdocument with url " + documentUrl)})
+        return configurations.filterValues { documentApiConfig -> documentUrl.contains(documentApiConfig.url) }.keys.stream().findFirst().orElseThrow({ NullPointerException("No documentapi configuration found for zaakdocument with url " + documentUrl) })
     }
 }
 
