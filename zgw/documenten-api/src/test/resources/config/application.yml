@@ -8,12 +8,15 @@ logging:
 
 valtimo:
     zgw:
-        documentenapi:
-            url: #filled in test
-            clientId: valtimo_client
-            secret: e09b8bc5-5831-4618-ab28-41411304309d
-            rsin: "051845623"
-            documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000
-            virusscan:
-                enabled: false
-
+        documentenapis:
+            configurations:
+                openzaak:
+                    url: https://localhost:8001/
+                    clientId: valtimo_client
+                    secret: e09b8bc5-5831-4618-ab28-41411304309d
+                    rsin: "051845623"
+                    documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000
+                example:
+                    url: https://example.org/
+                    clientId: valtimo_client
+                    secret: e09b8bc5-5831-4618-ab28-111111111111

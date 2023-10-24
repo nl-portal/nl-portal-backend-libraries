@@ -88,6 +88,40 @@ internal class ContactMomentQueryIT(
             .jsonPath("$resultPath.registratiedatum").isEqualTo("2019-08-24T14:15:22Z")
     }
 
+    @Test
+    @WithBurgerUser("123")
+    fun getObjectContactMomenten() {
+        val query = """
+            query {
+                getObjectContactMomenten(objectUrl: "http://dummy.nl") {
+                    content {
+                        registratiedatum
+                        tekst
+                        kanaal
+                    }
+                }
+            }
+        """.trimIndent()
+
+        val basePath = "$.data.getObjectContactMomenten"
+        val resultPath = "$basePath.content[0]"
+
+        val response = testClient.post()
+            .uri("/graphql")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(query)
+            .exchange()
+            .expectBody()
+            .consumeWith(System.out::println)
+
+        response
+            .jsonPath(basePath).exists()
+            .jsonPath("$resultPath.tekst").isEqualTo("Contact moment")
+            .jsonPath("$resultPath.kanaal").isEqualTo("mail")
+            .jsonPath("$resultPath.registratiedatum").isEqualTo("2019-08-24T14:15:22Z")
+    }
+
     fun setupMockOpenKlantServer() {
         val dispatcher: Dispatcher = object : Dispatcher() {
             @Throws(InterruptedException::class)

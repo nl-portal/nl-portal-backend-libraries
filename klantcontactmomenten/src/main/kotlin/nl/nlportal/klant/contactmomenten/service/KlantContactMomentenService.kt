@@ -23,4 +23,10 @@ interface KlantContactMomentenService {
         authentication: CommonGroundAuthentication,
         page: Int
     ): ContactMomentPage?
+
+    suspend fun getObjectContactMomenten(
+        authentication: CommonGroundAuthentication,
+        objectUrl: String,
+        page: Int
+    ): ContactMomentPage?
 }

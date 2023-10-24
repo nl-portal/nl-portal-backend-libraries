@@ -21,7 +21,7 @@ import java.util.UUID
 
 data class Document(
     @GraphQLIgnore
-    var url: String?,
+    val url: String?,
     var identificatie: String?,
     val creatiedatum: String?,
     val titel: String?,
@@ -30,14 +30,14 @@ data class Document(
     val bestandsomvang: Int?,
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @GraphQLIgnore
-    val status: DocumentStatus?
+    val status: DocumentStatus?,
+    var documentapi: String = ""
 ) {
     val uuid: UUID
         get() {
             if (url.isNullOrBlank()) {
                 throw IllegalStateException("No Document url found")
-            } else {
-                return UUID.fromString(url!!.substringAfterLast('/'))
             }
+            return UUID.fromString(url.substringAfterLast('/'))
         }
 }

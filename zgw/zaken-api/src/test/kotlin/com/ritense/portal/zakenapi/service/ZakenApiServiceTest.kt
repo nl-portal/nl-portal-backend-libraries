@@ -37,6 +37,7 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.springframework.security.oauth2.jwt.Jwt
+import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
 
 @ExperimentalCoroutinesApi
@@ -47,12 +48,7 @@ internal class ZakenApiServiceTest {
     var objectsApiClient: ObjectsApiClient = mock()
     var zakenApiConfig: ZakenApiConfig = mock()
     var objectMapper: ObjectMapper = mock()
-    var zaakService = ZakenApiService(
-        zakenApiClient,
-        documentenApiService,
-        objectsApiClient,
-        objectMapper
-    )
+    var zaakService = ZakenApiService(zakenApiClient, documentenApiService, objectsApiClient, objectMapper)
 
     @Test
     fun `getZaken calls openzaak client with BSN for burger`() = runBlockingTest {
@@ -68,15 +64,7 @@ internal class ZakenApiServiceTest {
         val firstZaakId = UUID.randomUUID()
         val secondZaakId = UUID.randomUUID()
 
-        `when`(zakenApiClient.getZaakRollen(anyInt(), any(), any(), any())).thenReturn(
-            ResultPage(
-                1, null, null,
-                listOf(
-                    ZaakRol("http://example.com/some-path/$firstZaakId"),
-                    ZaakRol("http://example.com/some-path/$secondZaakId")
-                )
-            )
-        )
+        `when`(zakenApiClient.getZaakRollen(anyInt(), any(), any(), any())).thenReturn(ResultPage(1, null, null, listOf(ZaakRol("http://example.com/some-path/$firstZaakId"), ZaakRol("http://example.com/some-path/$secondZaakId"))))
 
         zaakService.getZaken(5, authentication)
 
@@ -87,11 +75,7 @@ internal class ZakenApiServiceTest {
 
     @Test
     fun `getZaken throws exception when called with unsupported authentication`() {
-        val jwt = Jwt
-            .withTokenValue("token")
-            .header("alg", "none")
-            .claim("random", "1234")
-            .build()
+        val jwt = Jwt.withTokenValue("token").header("alg", "none").claim("random", "1234").build()
         val authentication = object : CommonGroundAuthentication(jwt, emptyList()) {}
 
         val illegalArgumentException = Assertions.assertThrows(IllegalArgumentException::class.java) {
@@ -108,14 +92,7 @@ internal class ZakenApiServiceTest {
         val uuid = UUID.randomUUID()
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
 
-        `when`(zakenApiClient.getZaakRollen(anyInt(), any(), any(), any())).thenReturn(
-            ResultPage(
-                1, null, null,
-                listOf(
-                    ZaakRol("http://example.com/some-path/a5753b01-a6af-426e-96fb-9d54c7d47368")
-                )
-            )
-        )
+        `when`(zakenApiClient.getZaakRollen(anyInt(), any(), any(), any())).thenReturn(ResultPage(1, null, null, listOf(ZaakRol("http://example.com/some-path/a5753b01-a6af-426e-96fb-9d54c7d47368"))))
 
         zaakService.getZaak(uuid, authentication)
 
@@ -128,14 +105,7 @@ internal class ZakenApiServiceTest {
         val uuid = UUID.randomUUID()
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
 
-        `when`(zakenApiClient.getZaakRollen(anyInt(), any(), any(), any())).thenReturn(
-            ResultPage(
-                1, null, null,
-                listOf(
-                    ZaakRol("http://example.com/some-path/a5753b01-a6af-426e-96fb-9d54c7d47368")
-                )
-            )
-        )
+        `when`(zakenApiClient.getZaakRollen(anyInt(), any(), any(), any())).thenReturn(ResultPage(1, null, null, listOf(ZaakRol("http://example.com/some-path/a5753b01-a6af-426e-96fb-9d54c7d47368"))))
 
         zaakService.getZaak(uuid, authentication)
 
@@ -148,27 +118,21 @@ internal class ZakenApiServiceTest {
         val uuid = UUID.randomUUID()
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
 
-        `when`(zakenApiClient.getZaakRollen(anyInt(), any(), any(), any())).thenReturn(
-            ResultPage(1, null, null, listOf())
-        )
+        `when`(zakenApiClient.getZaakRollen(anyInt(), any(), any(), any())).thenReturn(ResultPage(1, null, null, listOf()))
 
-        val illegalStateException = Assertions.assertThrows(IllegalStateException::class.java) {
+        val exception = Assertions.assertThrows(ResponseStatusException::class.java) {
             runBlockingTest {
                 zaakService.getZaak(uuid, authentication)
             }
         }
 
-        assertEquals("Access denied to this zaak", illegalStateException.message)
+        assertEquals("Access denied to this zaak", exception.reason)
     }
 
     @Test
     fun `getZaak throws exception when called with unsupported authentication`() = runBlockingTest {
         val uuid = UUID.randomUUID()
-        val jwt = Jwt
-            .withTokenValue("token")
-            .header("alg", "none")
-            .claim("random", "1234")
-            .build()
+        val jwt = Jwt.withTokenValue("token").header("alg", "none").claim("random", "1234").build()
         val authentication = object : CommonGroundAuthentication(jwt, emptyList()) {}
 
         val illegalArgumentException = Assertions.assertThrows(IllegalArgumentException::class.java) {
@@ -177,7 +141,7 @@ internal class ZakenApiServiceTest {
             }
         }
 
-        assertEquals("Cannot get zaak for this user", illegalArgumentException.message)
+        assertEquals("Authentication not (yet) supported", illegalArgumentException.message)
     }
 
     @Test

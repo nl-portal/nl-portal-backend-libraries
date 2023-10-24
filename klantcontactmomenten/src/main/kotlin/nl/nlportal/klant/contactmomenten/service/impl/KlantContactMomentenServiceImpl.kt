@@ -38,7 +38,7 @@ class KlantContactMomentenServiceImpl(
                 return if (klanten.isEmpty()) {
                     null
                 } else if (klanten.size == 1) {
-                    return klantContactMomentenClient.getContactMomenten(
+                    return klantContactMomentenClient.getKlantContactMomenten(
                         authentication,
                         klanten[0].url,
                         page
@@ -54,5 +54,17 @@ class KlantContactMomentenServiceImpl(
                 throw IllegalArgumentException("Cannot get klant for this user")
             }
         }
+    }
+
+    override suspend fun getObjectContactMomenten(
+        authentication: CommonGroundAuthentication,
+        objectUrl: String,
+        page: Int
+    ): ContactMomentPage {
+        return klantContactMomentenClient.getObjectContactMomenten(
+            authentication,
+            objectUrl,
+            page
+        ).let { ContactMomentPage.fromResultPage(page, it) }
     }
 }

@@ -15,7 +15,7 @@
  */
 package com.ritense.portal.documentenapi.graphql
 
-import com.ritense.portal.documentenapi.client.DocumentenApiConfig
+import com.ritense.portal.documentenapi.client.DocumentApisConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -42,30 +42,31 @@ import java.util.Base64
 @TestInstance(PER_CLASS)
 internal class DocumentContentQueryIT(
     @Autowired private val testClient: WebTestClient,
-    @Autowired private val documentenApiConfig: DocumentenApiConfig
+    @Autowired private var documentApisConfig: DocumentApisConfig
 ) {
-    lateinit var server: MockWebServer
+    lateinit var server1: MockWebServer
+    lateinit var server2: MockWebServer
 
     @BeforeEach
     internal fun setUp() {
-        server = MockWebServer()
-        setupMockOpenZaakServer()
-        server.start()
-        documentenApiConfig.url = server.url("/").toString()
+        server1 = setupMockOpenZaakServer("logo.png")
+        server2 = setupMockOpenZaakServer("github.png")
+        documentApisConfig.configurations.get("openzaak")?.url = server1.url("/").toString()
+        documentApisConfig.configurations.get("example")?.url = server2.url("/").toString()
     }
 
     @AfterEach
     internal fun tearDown() {
-        server.shutdown()
+        server1.shutdown()
+        server2.shutdown()
     }
 
     @Test
     @WithMockUser("test")
-    fun getDocumentContent() {
-
+    fun getDocumentContentServer1() {
         val query = """
             query {
-                getDocumentContent(id :"095be615-a8ad-4c33-8e9c-c7612fbf6c9f") {
+                getDocumentContent(documentApi : "openzaak", id :"095be615-a8ad-4c33-8e9c-c7612fbf6c9f") {
                     content
                 }
             }
@@ -86,24 +87,54 @@ internal class DocumentContentQueryIT(
             )
     }
 
-    fun setupMockOpenZaakServer() {
+    @Test
+    @WithMockUser("test")
+    fun getDocumentContentServer2() {
+        val query = """
+            query {
+                getDocumentContent(documentApi : "example", id :"095be615-a8ad-4c33-8e9c-c7612fbf6c9f") {
+                    content
+                }
+            }
+        """.trimIndent()
+
+        val basePath = "$.data.getDocumentContent"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(query)
+            .exchange()
+            .expectBody()
+            .jsonPath(basePath).exists()
+            .jsonPath("$basePath.content").isEqualTo(
+                getResourceAsStream("github.png").use { Base64.getEncoder().encodeToString(it.readAllBytes()) }
+            )
+    }
+
+    fun setupMockOpenZaakServer(resource: String): MockWebServer {
+        val server = MockWebServer()
         val dispatcher: Dispatcher = object : Dispatcher() {
             @Throws(InterruptedException::class)
             override fun dispatch(request: RecordedRequest): MockResponse {
                 val path = request.path?.substringBefore('?')
                 val response = when (path) {
                     "/documenten/api/v1/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f/download"
-                    -> handleDocumentRequest()
+                    -> handleDocumentRequest(resource)
+
                     else -> MockResponse().setResponseCode(404)
                 }
                 return response
             }
         }
         server.dispatcher = dispatcher
+        server.start()
+        return server
     }
 
-    fun handleDocumentRequest(): MockResponse {
-        val body = Buffer().apply { writeAll(getResourceAsStream("logo.png").source()) }
+    fun handleDocumentRequest(resource: String): MockResponse {
+        val body = Buffer().apply { writeAll(getResourceAsStream(resource).source()) }
         return mockResponse(body)
     }
 
