@@ -21,7 +21,7 @@ data class ResultPage<T>(
     val count: Int,
     val next: URI? = null,
     val previous: URI? = null,
-    val results: List<T>
+    val results: List<T>,
 ) {
     fun getNextPageNumber(): Int? {
         return next

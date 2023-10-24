@@ -17,5 +17,5 @@ package com.ritense.portal.case.graphql
 
 data class HistoricStatus(
     val status: Status,
-    val createdOn: String
+    val createdOn: String,
 )

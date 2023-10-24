@@ -44,7 +44,7 @@ internal class DocumentenApiServiceTest(@Autowired private var documentApisConfi
         val documentId = UUID.randomUUID()
 
         whenever(documentenApiClient.getDocument(documentId, "localhost")).thenReturn(
-            getTestDocument(null)
+            getTestDocument(null),
         )
 
         val document = documentenApiService.getDocument(documentId, "localhost")
@@ -60,7 +60,7 @@ internal class DocumentenApiServiceTest(@Autowired private var documentApisConfi
         val documentURI = URI.create("https://example.org/$documentId").toASCIIString()
 
         whenever(documentenApiClient.getDocument(documentId, "example")).thenReturn(
-            getTestDocument(null)
+            getTestDocument(null),
         )
 
         val document = documentenApiService.getDocument(documentURI)
@@ -79,14 +79,14 @@ internal class DocumentenApiServiceTest(@Autowired private var documentApisConfi
             "text/plain",
             "bestandsnaam.txt",
             123,
-            status
+            status,
         )
     }
 
     private fun assertDocumentReturned(document: Document) {
         assertEquals(
             "http://example.com/enkelvoudiginformatieobjecten/0727b025-eaae-4587-a375-3fe671a19dd8",
-            document.url
+            document.url,
         )
         assertEquals("identificatie", document.identificatie)
         assertEquals("2020-04-17", document.creatiedatum)

@@ -25,8 +25,8 @@ import org.springframework.security.web.server.SecurityWebFilterChain
 
 @SpringBootApplication(
     exclude = [
-        OauthSecurityAutoConfiguration::class
-    ]
+        OauthSecurityAutoConfiguration::class,
+    ],
 )
 class TestApplication {
     fun main(args: Array<String>) {

@@ -21,5 +21,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 data class ZakenApiConfig(
     var url: String = "",
     var clientId: String = "",
-    var secret: String = ""
+    var secret: String = "",
 )

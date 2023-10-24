@@ -26,7 +26,7 @@ data class CaseDefinitionId(
 
     @Column(name = "case_definition_id", columnDefinition = "VARCHAR(255)")
     @field:Length(max = 255)
-    val value: String
+    val value: String,
 
 ) : AbstractId<CaseDefinitionId>() {
 

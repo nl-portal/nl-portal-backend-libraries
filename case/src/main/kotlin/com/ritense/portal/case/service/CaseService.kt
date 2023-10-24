@@ -41,14 +41,14 @@ import java.util.UUID
 class CaseService(
     private val caseRepository: CaseRepository,
     private val caseDefinitionService: CaseDefinitionService,
-    private val sink: Sinks.Many<PortalMessage>
+    private val sink: Sinks.Many<PortalMessage>,
 ) {
 
     fun create(
         caseDefinitionId: String,
         submission: ObjectNode,
         authentication: Authentication,
-        initialStatus: String? = null
+        initialStatus: String? = null,
     ): Case {
         val caseDefinition = caseDefinitionService.findById(CaseDefinitionId.existingId(caseDefinitionId))!!
         val messageData = submission.deepCopy()
@@ -64,15 +64,15 @@ class CaseService(
             userId = authentication.name,
             status = status,
             submission = Submission(caseData),
-            caseDefinitionId = caseDefinition.caseDefinitionId
+            caseDefinitionId = caseDefinition.caseDefinitionId,
         )
         caseRepository.save(case)
         sink.tryEmitNext(
             CreateExternalCaseMessage(
                 case.caseId.value,
                 messageData,
-                caseDefinition.caseDefinitionId.value
-            )
+                caseDefinition.caseDefinitionId.value,
+            ),
         )
         return case
     }
@@ -123,7 +123,7 @@ class CaseService(
 
     private fun validateSubmissionAgainstSchema(
         submission: ObjectNode,
-        caseDefinition: CaseDefinition
+        caseDefinition: CaseDefinition,
     ): ObjectNode {
         logger.debug { "Validating submission against json schema: ${caseDefinition.caseDefinitionId.value}" }
         val keys = getKeys(caseDefinition.schema.value, mutableListOf())

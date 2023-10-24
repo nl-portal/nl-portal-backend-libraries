@@ -20,5 +20,5 @@ data class PersoonNaam(
     val voornamen: String? = null,
     val voorletters: String? = null,
     val voorvoegsel: String? = null,
-    val geslachtsnaam: String? = null
+    val geslachtsnaam: String? = null,
 )

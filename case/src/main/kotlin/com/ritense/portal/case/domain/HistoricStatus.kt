@@ -20,7 +20,7 @@ import java.time.LocalDateTime
 
 data class HistoricStatus(
     val status: Status,
-    val createdOn: LocalDateTime = LocalDateTime.now()
+    val createdOn: LocalDateTime = LocalDateTime.now(),
 ) {
 
     init {

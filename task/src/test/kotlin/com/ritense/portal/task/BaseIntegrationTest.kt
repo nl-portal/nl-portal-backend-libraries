@@ -62,8 +62,8 @@ abstract class BaseIntegrationTest {
             status = Status("a"),
             caseDefinitionId = CaseDefinitionId.existingId("person"),
             submission = Submission(
-                Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java)
-            )
+                Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java),
+            ),
         )
 
         `when`(caseService.getCase("some-external-id")).thenReturn(case)
@@ -75,7 +75,7 @@ abstract class BaseIntegrationTest {
             "some-external-id",
             Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java),
             "some-task-def-key",
-            isPublic
+            isPublic,
         )
     }
 

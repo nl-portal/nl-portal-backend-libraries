@@ -28,7 +28,7 @@ data class Schema(
 
     @Column(name = "`schema`", columnDefinition = "json")
     @Type(type = "com.vladmihalcea.hibernate.type.json.JsonBinaryType")
-    var value: ObjectNode
+    var value: ObjectNode,
 ) {
     init {
         ObjectValidator.validate(this)

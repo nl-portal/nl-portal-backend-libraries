@@ -16,5 +16,5 @@
 package com.ritense.portal.documentenapi.domain
 
 data class DocumentContent(
-    val content: String
+    val content: String,
 )

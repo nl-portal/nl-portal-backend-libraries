@@ -26,7 +26,7 @@ data class TaskId(
 
     @Column(name = "task_id", columnDefinition = "UUID")
     @org.hibernate.annotations.Type(type = "pg-uuid")
-    val value: UUID
+    val value: UUID,
 
 ) : AbstractId<TaskId>() {
 

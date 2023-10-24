@@ -27,7 +27,7 @@ data class Submission(
 
     @Column(name = "submission", columnDefinition = "json")
     @Type(type = "com.vladmihalcea.hibernate.type.json.JsonBinaryType")
-    val value: ObjectNode
+    val value: ObjectNode,
 
 ) {
 

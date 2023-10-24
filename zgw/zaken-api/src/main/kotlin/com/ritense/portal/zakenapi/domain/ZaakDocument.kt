@@ -17,5 +17,5 @@ package com.ritense.portal.zakenapi.domain
 
 data class ZaakDocument(
     var uuid: String,
-    var informatieobject: String?
+    var informatieobject: String?,
 )

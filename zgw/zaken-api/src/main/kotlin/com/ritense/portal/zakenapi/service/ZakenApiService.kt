@@ -41,7 +41,7 @@ class ZakenApiService(
     private val zakenApiClient: ZakenApiClient,
     private val documentenApiService: DocumentenApiService,
     private val objectsApiClient: ObjectsApiClient,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
 ) {
 
     suspend fun getZaken(page: Int, authentication: CommonGroundAuthentication): List<Zaak> {
@@ -63,8 +63,9 @@ class ZakenApiService(
         }
 
         // if no rol is found, the current user does not have access to this zaak
-        if (rollen.isEmpty())
+        if (rollen.isEmpty()) {
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this zaak")
+        }
 
         return getZaakFromZaakApi(id)
     }
@@ -128,10 +129,10 @@ class ZakenApiService(
     }
 
     private suspend fun getObjectApiZaakDetails(
-        objectUrl: String
+        objectUrl: String,
     ): ObjectsApiObject<ZaakDetailsObject>? {
         return objectsApiClient.getObjectByUrl<ZaakDetailsObject>(
-            url = objectUrl
+            url = objectUrl,
         )
     }
 

@@ -21,8 +21,8 @@ import org.springframework.boot.runApplication
 
 @SpringBootApplication(
     exclude = [
-        OauthSecurityAutoConfiguration::class
-    ]
+        OauthSecurityAutoConfiguration::class,
+    ],
 )
 class TestApplication {
 

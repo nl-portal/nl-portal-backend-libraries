@@ -23,19 +23,19 @@ class ClamAVConfiguration {
 
     @Bean
     fun clamAVClient(
-        clamAVVirusScanConfig: ClamAVVirusScanConfig
+        clamAVVirusScanConfig: ClamAVVirusScanConfig,
     ): ClamavClient {
         logger.info("ClamAV virusscan is loaded with host: {} and port: {}", clamAVVirusScanConfig.hostName, clamAVVirusScanConfig.port)
         return ClamavClient(
             clamAVVirusScanConfig.hostName,
-            clamAVVirusScanConfig.port
+            clamAVVirusScanConfig.port,
         )
     }
 
     @Bean
     @ConditionalOnMissingBean(VirusScanService::class)
     fun virusScanService(
-        clamAVClient: ClamavClient
+        clamAVClient: ClamavClient,
     ): VirusScanService {
         return ClamAVService(clamAVClient)
     }

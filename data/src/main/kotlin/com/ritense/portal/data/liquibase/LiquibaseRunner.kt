@@ -31,7 +31,7 @@ import javax.sql.DataSource
 class LiquibaseRunner(
     private val liquibaseMasterChangeLogLocations: List<LiquibaseMasterChangeLogLocation>,
     liquibaseProperties: LiquibaseProperties,
-    private val datasource: DataSource
+    private val datasource: DataSource,
 ) {
     private val context: Contexts
 

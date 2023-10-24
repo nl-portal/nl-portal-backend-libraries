@@ -36,7 +36,7 @@ internal class FormIoFormDefinitionTest {
                 FormDefinitionId.newId(UUID.randomUUID()),
                 "name",
                 formDef,
-                true
+                true,
             )
 
         assertThat(formIoFormDefinition.readOnly).isTrue

@@ -20,5 +20,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties(prefix = "valtimo.zgw.documentenapi.virusscan.clamav")
 data class ClamAVVirusScanConfig(
     val hostName: String = "",
-    var port: Int = 3310
+    var port: Int = 3310,
 )

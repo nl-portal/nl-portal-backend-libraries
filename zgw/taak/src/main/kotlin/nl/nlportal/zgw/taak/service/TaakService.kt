@@ -36,14 +36,14 @@ import java.util.UUID
 
 open class TaakService(
     private val objectsApiClient: ObjectsApiClient,
-    private val objectsApiTaskConfig: TaakObjectConfig
+    private val objectsApiTaskConfig: TaakObjectConfig,
 ) {
 
     suspend fun getTaken(
         pageNumber: Int,
         pageSize: Int,
         authentication: CommonGroundAuthentication,
-        zaakUUID: UUID? = null
+        zaakUUID: UUID? = null,
     ): TaakPage {
         val objectSearchParameters = mutableListOf<ObjectSearchParameter>()
 
@@ -55,8 +55,8 @@ open class TaakService(
                 ObjectSearchParameter(
                     "zaak",
                     Comparator.STRING_CONTAINS,
-                    it.toString()
-                )
+                    it.toString(),
+                ),
             )
         }
 
@@ -65,7 +65,7 @@ open class TaakService(
             objectTypeUrl = objectsApiTaskConfig.typeUrl,
             page = pageNumber,
             pageSize = pageSize,
-            ordering = "-record__startAt"
+            ordering = "-record__startAt",
         ).let { TaakPage.fromResultPage(pageNumber, pageSize, it) }
     }
 
@@ -96,7 +96,7 @@ open class TaakService(
 
     private suspend fun getObjectsApiTaak(
         taskId: UUID,
-        authentication: CommonGroundAuthentication
+        authentication: CommonGroundAuthentication,
     ): ObjectsApiObject<TaakObject> {
         val userSearchParameters = getUserSearchParameters(authentication)
         val taskIdSearchParameter = ObjectSearchParameter("verwerker_taak_id", Comparator.EQUAL_TO, taskId.toString())
@@ -126,7 +126,7 @@ open class TaakService(
     private fun createIdentificatieSearchParameters(type: String, value: String): List<ObjectSearchParameter> {
         return listOf(
             ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, type),
-            ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, value)
+            ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, value),
         )
     }
 

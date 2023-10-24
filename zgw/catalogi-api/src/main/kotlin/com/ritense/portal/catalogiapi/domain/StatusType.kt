@@ -21,5 +21,5 @@ data class StatusType(
     val omschrijving: String?,
     val isEindstatus: Boolean? = null,
     @GraphQLIgnore
-    val volgnummer: Int
+    val volgnummer: Int,
 )

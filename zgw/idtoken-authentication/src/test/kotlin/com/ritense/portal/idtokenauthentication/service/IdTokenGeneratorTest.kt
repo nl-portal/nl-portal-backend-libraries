@@ -31,7 +31,7 @@ class IdTokenGeneratorTest {
 
         val generatedToken = idTokenGenerator.generateToken(
             testSecretKey,
-            testClientId
+            testClientId,
         )
 
         val claims = Jwts.parserBuilder()
@@ -53,7 +53,7 @@ class IdTokenGeneratorTest {
             testSecretKey,
             testClientId,
             testUserId,
-            testUserRepresentation
+            testUserRepresentation,
         )
 
         val claims = Jwts.parserBuilder()
@@ -74,7 +74,7 @@ class IdTokenGeneratorTest {
         val exception = assertThrows(IllegalArgumentException::class.java) {
             idTokenGenerator.generateToken(
                 testSecretKey,
-                testClientId
+                testClientId,
             )
         }
 

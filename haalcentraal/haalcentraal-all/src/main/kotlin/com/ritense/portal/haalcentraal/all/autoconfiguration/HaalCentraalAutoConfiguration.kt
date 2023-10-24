@@ -32,7 +32,7 @@ class HaalCentraalAutoConfiguration {
     @ConditionalOnMissingBean(GemachtigdeQuery::class)
     fun gemachtigdeQuery(
         haalCentraalBrpService: HaalCentraalBrpService,
-        handelsregisterService: HandelsregisterService
+        handelsregisterService: HandelsregisterService,
     ): GemachtigdeQuery {
         return GemachtigdeQuery(haalCentraalBrpService, handelsregisterService)
     }

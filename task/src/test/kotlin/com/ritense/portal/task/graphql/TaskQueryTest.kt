@@ -72,7 +72,7 @@ internal class TaskQueryTest : BaseTest() {
 
         `when`(caseService.getCase(CaseId.existingId(caseId), "userId")).thenReturn(case)
         `when`(taskService.findTasksForCase("externalId", "userId")).thenReturn(
-            listOf(taskCreatedYesterday, taskCreatedToday)
+            listOf(taskCreatedYesterday, taskCreatedToday),
         )
 
         val tasks = taskQuery.findTasks(caseId, environment)
@@ -95,7 +95,7 @@ internal class TaskQueryTest : BaseTest() {
 
         `when`(caseService.getCase("externalCaseId")).thenReturn(case)
         `when`(taskService.findAllTasks("userId")).thenReturn(
-            listOf(taskCreatedYesterday, taskCreatedToday)
+            listOf(taskCreatedYesterday, taskCreatedToday),
         )
 
         val tasks = taskQuery.findAllTasks(environment)

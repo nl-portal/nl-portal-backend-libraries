@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 class ObjectsApiFormDefinitionService(
-    private val objectenApiService: ObjectenApiService
+    private val objectenApiService: ObjectenApiService,
 ) {
     suspend fun findObjectsApiFormDefinitionById(objectId: String): ObjectsApiFormIoFormDefinition? {
         return objectenApiService.getObjectById<ObjectsApiFormIoFormDefinition>(objectId)?.record?.data

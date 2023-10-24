@@ -49,7 +49,7 @@ class Taak(
                 identificatie = taakObject.identificatie,
                 formId = taakObject.formulier.value,
                 zaak = taakObject.zaak,
-                verloopdatum = taakObject.verloopdatum
+                verloopdatum = taakObject.verloopdatum,
             )
         }
     }

@@ -35,7 +35,7 @@ class ProductAutoConfiguration {
 
     @Bean
     fun openFormulierenClient(
-        openFormulierenClientConfig: OpenFormulierenClientConfig
+        openFormulierenClientConfig: OpenFormulierenClientConfig,
     ): OpenFormulierenClient {
         return OpenFormulierenClient(openFormulierenClientConfig)
     }
@@ -43,14 +43,14 @@ class ProductAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(FormService::class)
     fun formService(
-        openFormulierenClient: OpenFormulierenClient
+        openFormulierenClient: OpenFormulierenClient,
     ): FormService {
         return com.ritense.portal.product.service.impl.FormService(openFormulierenClient)
     }
 
     @Bean
     fun formQuery(
-        formService: FormService
+        formService: FormService,
     ): FormQuery {
         return FormQuery(formService)
     }

@@ -21,5 +21,5 @@ import org.springframework.boot.context.properties.ConstructorBinding
 data class ClientKey(
     val certChain: String,
     val key: String,
-    val keyPassword: String? = null
+    val keyPassword: String? = null,
 )

@@ -29,7 +29,7 @@ class HandelsregisterAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(HandelsregisterClient::class)
     fun handelsregisterClient(
-        haalCentraalClientProvider: HaalCentraalClientProvider
+        haalCentraalClientProvider: HaalCentraalClientProvider,
     ): HandelsregisterClient {
         return HandelsregisterClient(haalCentraalClientProvider)
     }
@@ -37,7 +37,7 @@ class HandelsregisterAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(HandelsregisterService::class)
     fun handelsregisterService(
-        handelsregisterClient: HandelsregisterClient
+        handelsregisterClient: HandelsregisterClient,
     ): HandelsregisterService {
         return HandelsregisterService(handelsregisterClient)
     }
@@ -45,7 +45,7 @@ class HandelsregisterAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(HandelsregisterQuery::class)
     fun handelsregisterQuery(
-        handelsregisterService: HandelsregisterService
+        handelsregisterService: HandelsregisterService,
     ): HandelsregisterQuery {
         return HandelsregisterQuery(handelsregisterService)
     }
