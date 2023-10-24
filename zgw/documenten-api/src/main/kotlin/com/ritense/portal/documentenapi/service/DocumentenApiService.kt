@@ -2,7 +2,7 @@ package com.ritense.portal.documentenapi.service
 
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
-import com.ritense.portal.documentenapi.client.DocumentenApiConfig
+import com.ritense.portal.documentenapi.client.DocumentApisConfig
 import com.ritense.portal.documentenapi.domain.Document
 import com.ritense.portal.documentenapi.domain.DocumentContent
 import com.ritense.portal.documentenapi.domain.DocumentStatus
@@ -17,30 +17,30 @@ import org.springframework.security.core.context.ReactiveSecurityContextHolder
 
 class DocumentenApiService(
     val documentenApiClient: DocumentenApiClient,
-    val documentenApiConfig: DocumentenApiConfig
+    val documentenApiConfig: DocumentApisConfig
 ) {
 
-    suspend fun getDocument(documentId: UUID): Document {
-        return documentenApiClient.getDocument(documentId)
+    suspend fun getDocument(documentId: UUID, documentApi: String): Document {
+        return documentenApiClient.getDocument(documentId, documentApi)
     }
 
     suspend fun getDocument(documentUrl: String): Document {
-        return documentenApiClient.getDocument(extractId(documentUrl))
+        return documentenApiClient.getDocument(extractId(documentUrl), documentenApiConfig.getConfigForDocumentUrl(documentUrl))
     }
 
-    suspend fun getDocumentContent(documentId: UUID): DocumentContent {
-        val documentContent = documentenApiClient.getDocumentContent(documentId)
+    suspend fun getDocumentContent(documentId: UUID, documentApi: String): DocumentContent {
+        val documentContent = documentenApiClient.getDocumentContent(documentId, documentApi)
         return DocumentContent(Base64.getEncoder().encodeToString(documentContent))
     }
 
-    suspend fun uploadDocument(file: FilePart): Document {
+    suspend fun uploadDocument(file: FilePart, documentApi: String): Document {
         val auteur = ReactiveSecurityContextHolder.getContext()
             .map { (it.authentication as CommonGroundAuthentication).getUserId() }
             .awaitSingleOrNull() ?: "valtimo"
 
         return documentenApiClient.postDocument(
             PostEnkelvoudiginformatieobjectRequest(
-                bronorganisatie = documentenApiConfig.rsin,
+                bronorganisatie = documentenApiConfig.getConfig(documentApi).rsin,
                 creatiedatum = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE),
                 titel = file.filename(),
                 auteur = auteur,
@@ -48,9 +48,10 @@ class DocumentenApiService(
                 taal = "nld",
                 bestandsnaam = file.filename(),
                 indicatieGebruiksrecht = false,
-                informatieobjecttype = documentenApiConfig.documentTypeUrl,
+                informatieobjecttype = documentenApiConfig.getConfig(documentApi).documentTypeUrl,
             ),
-            file.content()
+            file.content(),
+            documentApi
         )
     }
 

@@ -79,7 +79,7 @@ class ZakenApiService(
 
     suspend fun getDocumenten(zaakUrl: String): List<Document> {
         return getZaakDocumenten(zaakUrl)
-            .map { documentenApiService.getDocument(DocumentenApiService.extractId(it.informatieobject!!)) }
+            .map { documentenApiService.getDocument(it.informatieobject!!) }
             .filter { it.status in listOf(DocumentStatus.DEFINITIEF, DocumentStatus.GEARCHIVEERD) }
     }
 
