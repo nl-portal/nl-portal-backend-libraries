@@ -61,7 +61,7 @@ internal class ZaakTest {
             "test-omschrijving",
             "test-zaaktype",
             LocalDate.now(),
-            status
+            status,
         )
     }
 }

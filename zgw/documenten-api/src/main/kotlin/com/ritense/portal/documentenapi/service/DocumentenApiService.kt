@@ -17,7 +17,7 @@ import org.springframework.security.core.context.ReactiveSecurityContextHolder
 
 class DocumentenApiService(
     val documentenApiClient: DocumentenApiClient,
-    val documentenApiConfig: DocumentApisConfig
+    val documentenApiConfig: DocumentApisConfig,
 ) {
 
     suspend fun getDocument(documentId: UUID, documentApi: String): Document {
@@ -51,7 +51,7 @@ class DocumentenApiService(
                 informatieobjecttype = documentenApiConfig.getConfig(documentApi).documentTypeUrl,
             ),
             file.content(),
-            documentApi
+            documentApi,
         )
     }
 

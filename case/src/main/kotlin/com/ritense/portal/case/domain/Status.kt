@@ -30,7 +30,7 @@ data class Status(
     var name: String,
 
     @Column(name = "status_created_on", columnDefinition = "TIMESTAMPTZ", nullable = false)
-    val createdOn: LocalDateTime = LocalDateTime.now()
+    val createdOn: LocalDateTime = LocalDateTime.now(),
 ) {
 
     init {

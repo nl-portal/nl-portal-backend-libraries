@@ -27,7 +27,7 @@ class CaseDefinitionQuery(val caseDefinitionService: CaseDefinitionService) : Qu
             CaseDefinition(
                 it.caseDefinitionId.value,
                 it.schema.value,
-                it.statusDefinition.statuses.toList()
+                it.statusDefinition.statuses.toList(),
             )
         }
     }

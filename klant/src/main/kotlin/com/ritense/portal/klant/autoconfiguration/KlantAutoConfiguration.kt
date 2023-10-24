@@ -35,7 +35,7 @@ class KlantAutoConfiguration {
     @ConditionalOnMissingBean(BurgerService::class)
     fun burgerService(
         openKlantClientConfig: OpenKlantClientConfig,
-        openKlantClient: OpenKlantClient
+        openKlantClient: OpenKlantClient,
     ): BurgerService {
         return com.ritense.portal.klant.service.impl.BurgerService(openKlantClientConfig, openKlantClient)
     }
@@ -43,7 +43,7 @@ class KlantAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(OpenKlantClient::class)
     fun openKlantClient(
-        openKlantClientProvider: OpenKlantClientProvider
+        openKlantClientProvider: OpenKlantClientProvider,
     ): OpenKlantClient {
         return OpenKlantClient(openKlantClientProvider)
     }

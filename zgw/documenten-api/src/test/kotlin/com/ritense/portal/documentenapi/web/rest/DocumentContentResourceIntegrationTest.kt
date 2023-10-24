@@ -51,7 +51,7 @@ import org.assertj.core.api.Assertions.assertThat
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DocumentContentResourceIntegrationTest(
     @Autowired private val webTestClient: WebTestClient,
-    @Autowired private val documentApisConfig: DocumentApisConfig
+    @Autowired private val documentApisConfig: DocumentApisConfig,
 ) {
     lateinit var server: MockWebServer
     protected var executedRequests: MutableList<RecordedRequest> = mutableListOf()
@@ -119,13 +119,13 @@ class DocumentContentResourceIntegrationTest(
                 executedRequests.add(request)
                 val path = request.path?.substringBefore('?')
                 val response = when (request.method + " " + path) {
-                    "GET /documenten/api/v1/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f/download"
+                    "GET /documenten/api/v1/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f/download",
                     -> handleDocumentContentRequest()
 
-                    "GET /documenten/api/v1/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
+                    "GET /documenten/api/v1/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
                     -> TestHelper.mockResponseFromFile("/data/get-enkelvoudiginformatieobject-response.json")
 
-                    "POST /documenten/api/v1/enkelvoudiginformatieobjecten"
+                    "POST /documenten/api/v1/enkelvoudiginformatieobjecten",
                     -> TestHelper.mockResponseFromFile("/data/post-enkelvoudiginformatieobject-response.json")
 
                     else -> MockResponse().setResponseCode(404)

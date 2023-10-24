@@ -69,7 +69,7 @@ class DocumentContentResourceTest {
         val dataBuffer = DefaultDataBufferFactory()
             .wrap(
                 ByteBuffer
-                    .wrap(value.toByteArray(Charset.defaultCharset()))
+                    .wrap(value.toByteArray(Charset.defaultCharset())),
             )
 
         return Flux.just(dataBuffer) as Flux<DataBuffer>

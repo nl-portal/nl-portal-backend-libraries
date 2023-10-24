@@ -19,5 +19,5 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 
 data class ZaakDetailsObject(
     val zaak: String,
-    var data: List<ObjectNode>
+    var data: List<ObjectNode>,
 )

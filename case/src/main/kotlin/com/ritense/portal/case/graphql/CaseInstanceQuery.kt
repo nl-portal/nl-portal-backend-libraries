@@ -30,7 +30,7 @@ class CaseInstanceQuery(private val caseService: CaseService) : Query {
     fun allCaseInstances(
         @GraphQLDescription("The case instance orderBy ")
         orderBy: CaseInstanceOrdering = CaseInstanceOrdering(createdOn = Sort.DESC),
-        dfe: DataFetchingEnvironment
+        dfe: DataFetchingEnvironment,
     ): List<CaseInstance> {
         var caseInstances = caseService.getAllCases(dfe.graphQlContext.get<Authentication>(AUTHENTICATION_KEY).name)
         if (orderBy.createdOn == Sort.ASC) {
@@ -44,11 +44,11 @@ class CaseInstanceQuery(private val caseService: CaseService) : Query {
     @GraphQLDescription("retrieves single case instance from repository")
     fun getCaseInstance(
         @GraphQLDescription("The case instance id ") id: UUID,
-        dfe: DataFetchingEnvironment
+        dfe: DataFetchingEnvironment,
     ): CaseInstance? {
         val case = caseService.getCase(
             CaseId.existingId(id),
-            dfe.graphQlContext.get<Authentication>(AUTHENTICATION_KEY).name
+            dfe.graphQlContext.get<Authentication>(AUTHENTICATION_KEY).name,
         ) ?: return null
         return CaseInstance.from(case)
     }

@@ -39,7 +39,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @TestInstance(PER_CLASS)
 internal class BurgerQueryIT(
     @Autowired private val testClient: WebTestClient,
-    @Autowired private val openKlantClientConfig: OpenKlantClientConfig
+    @Autowired private val openKlantClientConfig: OpenKlantClientConfig,
 ) {
     lateinit var server: MockWebServer
 
@@ -59,7 +59,6 @@ internal class BurgerQueryIT(
     @Test
     @WithBurgerUser("123")
     fun getBurgerProfiel() {
-
         val query = """
             query {
                 getBurgerProfiel {

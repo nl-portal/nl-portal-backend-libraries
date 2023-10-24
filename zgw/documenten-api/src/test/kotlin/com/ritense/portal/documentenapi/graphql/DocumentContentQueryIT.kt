@@ -42,7 +42,7 @@ import java.util.Base64
 @TestInstance(PER_CLASS)
 internal class DocumentContentQueryIT(
     @Autowired private val testClient: WebTestClient,
-    @Autowired private var documentApisConfig: DocumentApisConfig
+    @Autowired private var documentApisConfig: DocumentApisConfig,
 ) {
     lateinit var server1: MockWebServer
     lateinit var server2: MockWebServer
@@ -83,7 +83,7 @@ internal class DocumentContentQueryIT(
             .expectBody()
             .jsonPath(basePath).exists()
             .jsonPath("$basePath.content").isEqualTo(
-                getResourceAsStream("logo.png").use { Base64.getEncoder().encodeToString(it.readAllBytes()) }
+                getResourceAsStream("logo.png").use { Base64.getEncoder().encodeToString(it.readAllBytes()) },
             )
     }
 
@@ -109,7 +109,7 @@ internal class DocumentContentQueryIT(
             .expectBody()
             .jsonPath(basePath).exists()
             .jsonPath("$basePath.content").isEqualTo(
-                getResourceAsStream("github.png").use { Base64.getEncoder().encodeToString(it.readAllBytes()) }
+                getResourceAsStream("github.png").use { Base64.getEncoder().encodeToString(it.readAllBytes()) },
             )
     }
 
@@ -120,7 +120,7 @@ internal class DocumentContentQueryIT(
             override fun dispatch(request: RecordedRequest): MockResponse {
                 val path = request.path?.substringBefore('?')
                 val response = when (path) {
-                    "/documenten/api/v1/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f/download"
+                    "/documenten/api/v1/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f/download",
                     -> handleDocumentRequest(resource)
 
                     else -> MockResponse().setResponseCode(404)

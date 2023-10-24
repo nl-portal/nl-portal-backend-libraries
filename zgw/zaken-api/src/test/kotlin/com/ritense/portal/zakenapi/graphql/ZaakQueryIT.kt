@@ -42,7 +42,7 @@ internal class ZaakQueryIT(
     @Autowired private val testClient: WebTestClient,
     @Autowired private val zakenApiConfig: ZakenApiConfig,
     @Autowired private val catalogiApiConfig: CatalogiApiConfig,
-    @Autowired private val documentApisConfig: DocumentApisConfig
+    @Autowired private val documentApisConfig: DocumentApisConfig,
 ) {
     lateinit var server: MockWebServer
     lateinit var url: String
@@ -66,7 +66,6 @@ internal class ZaakQueryIT(
     @Test
     @WithBurgerUser("123")
     fun getZaken() {
-
         val query = """
             query {
                 getZaken(page: 1) {
@@ -125,7 +124,6 @@ internal class ZaakQueryIT(
     @Test
     @WithBurgerUser("")
     fun getZakenNotFound() {
-
         // Make the GraphQL request
         testClient.post()
             .uri("/not_found")
@@ -137,7 +135,6 @@ internal class ZaakQueryIT(
 
     @Test
     fun getZakenUnAuthorized() {
-
         zakenApiConfig.clientId = ""
 
         val query = """
@@ -184,7 +181,6 @@ internal class ZaakQueryIT(
     @Test
     @WithBurgerUser("123")
     fun `getZaken no page`() {
-
         val query = """
             query {
                 getZaken {
@@ -240,7 +236,6 @@ internal class ZaakQueryIT(
     @Test
     @WithBurgerUser("123")
     fun getZaak() {
-
         val query = """
             query {
                 getZaak(id: "5d479908-fbb7-49c2-98c9-9afecf8de79a") {

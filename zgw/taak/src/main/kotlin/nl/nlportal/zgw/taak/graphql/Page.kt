@@ -28,6 +28,7 @@ open class Page<T> (
     @GraphQLDescription("The number of elements on this page")
     val numberOfElements: Int
         get() = content.size
+
     @GraphQLDescription("The total number of available pages")
     val totalPages: Int
         get() = ceil(totalElements.toDouble() / size).toInt()

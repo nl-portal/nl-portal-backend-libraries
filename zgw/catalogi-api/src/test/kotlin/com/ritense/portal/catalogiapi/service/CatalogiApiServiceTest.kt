@@ -55,8 +55,8 @@ internal class CatalogiApiServiceTest {
             listOf(
                 StatusType("desc2", false, 2),
                 StatusType("desc1", false, 1),
-                StatusType("desc3", true, 3)
-            )
+                StatusType("desc3", true, 3),
+            ),
         )
 
         val zaakStatusTypes = catalogiApiService.getZaakStatusTypes(zaakUrl)

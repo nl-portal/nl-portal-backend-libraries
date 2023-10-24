@@ -63,9 +63,9 @@ internal class KlantContactMomentenServiceImplTest {
                 null,
                 null,
                 listOf(
-                    mock(ContactMoment::class.java)
-                )
-            )
+                    mock(ContactMoment::class.java),
+                ),
+            ),
         )
 
         val result = klantContactMomentenServiceImpl.getKlantContactMomenten(authentication, 1)
@@ -84,9 +84,9 @@ internal class KlantContactMomentenServiceImplTest {
                 null,
                 null,
                 listOf(
-                    mock(ContactMoment::class.java)
-                )
-            )
+                    mock(ContactMoment::class.java),
+                ),
+            ),
         )
 
         val illegalStateException = Assertions.assertThrows(IllegalStateException::class.java) {
@@ -108,9 +108,9 @@ internal class KlantContactMomentenServiceImplTest {
                 null,
                 null,
                 listOf(
-                    mock(ContactMoment::class.java)
-                )
-            )
+                    mock(ContactMoment::class.java),
+                ),
+            ),
         )
 
         val result = klantContactMomentenServiceImpl.getKlantContactMomenten(authentication, 1)
@@ -150,9 +150,9 @@ internal class KlantContactMomentenServiceImplTest {
                 null,
                 null,
                 listOf(
-                    mock(ContactMoment::class.java)
-                )
-            )
+                    mock(ContactMoment::class.java),
+                ),
+            ),
         )
 
         val result = klantContactMomentenServiceImpl.getObjectContactMomenten(authentication, "http://dummy.nl", 1)

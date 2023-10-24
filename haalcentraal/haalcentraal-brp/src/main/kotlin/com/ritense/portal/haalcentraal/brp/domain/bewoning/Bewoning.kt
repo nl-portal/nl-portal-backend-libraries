@@ -16,5 +16,5 @@
 package com.ritense.portal.haalcentraal.brp.domain.bewoning
 
 data class Bewoning(
-    val _embedded: Embedded
+    val _embedded: Embedded,
 )

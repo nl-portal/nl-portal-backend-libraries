@@ -50,7 +50,7 @@ internal class HaalCentraalBrpClientTest {
         server.enqueue(
             MockResponse()
                 .setBody(jacksonObjectMapper().writeValueAsString(persoon))
-                .addHeader("Content-Type", "application/json")
+                .addHeader("Content-Type", "application/json"),
         )
 
         haalCentraalClientConfig = HaalCentraalClientConfig(url = server.url("/").toString())
@@ -104,10 +104,10 @@ internal class HaalCentraalBrpClientTest {
             ssl = HaalCentraalClientConfig.Ssl(
                 key = ClientKey(
                     certChain = "${clientCertificate.certificatePem()}\n${rootCertificate.certificatePem()}",
-                    key = clientCertificate.privateKeyPkcs8Pem()
+                    key = clientCertificate.privateKeyPkcs8Pem(),
                 ),
-                trustedCertificate = rootCertificate.certificatePem()
-            )
+                trustedCertificate = rootCertificate.certificatePem(),
+            ),
         )
 
         val provider = HaalCentraalClientProvider(haalCentraalClientConfig, StringClientSslContextResolver())

@@ -19,6 +19,6 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDirective
 
 @GraphQLDirective(
     name = "isAuthenticated",
-    description = "The user needs to be authenticated to use this"
+    description = "The user needs to be authenticated to use this",
 )
 annotation class IsUnauthenticated

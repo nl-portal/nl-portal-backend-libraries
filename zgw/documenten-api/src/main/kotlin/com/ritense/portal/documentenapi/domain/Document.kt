@@ -31,7 +31,7 @@ data class Document(
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @GraphQLIgnore
     val status: DocumentStatus?,
-    var documentapi: String = ""
+    var documentapi: String = "",
 ) {
     val uuid: UUID
         get() {

@@ -26,7 +26,7 @@ internal class ResultPageTest {
         val nextPageNumber = ResultPage<Any>(
             count = 5,
             next = URI("https://test.local?page=1337"),
-            results = listOf()
+            results = listOf(),
         ).getNextPageNumber()
 
         assertThat(nextPageNumber).isEqualTo(1337)
@@ -37,7 +37,7 @@ internal class ResultPageTest {
         val nextPageNumber = ResultPage<Any>(
             count = 5,
             next = URI("https://test.local?page=1337&page=2337"),
-            results = listOf()
+            results = listOf(),
         ).getNextPageNumber()
 
         assertThat(nextPageNumber).isEqualTo(1337)
@@ -48,7 +48,7 @@ internal class ResultPageTest {
         val nextPageNumber = ResultPage<Any>(
             count = 5,
             next = URI("https://test.local?page=xyz"),
-            results = listOf()
+            results = listOf(),
         ).getNextPageNumber()
 
         assertThat(nextPageNumber).isNull()
@@ -59,7 +59,7 @@ internal class ResultPageTest {
         val nextPageNumber = ResultPage<Any>(
             count = 5,
             next = URI("https://test.local?page="),
-            results = listOf()
+            results = listOf(),
         ).getNextPageNumber()
 
         assertThat(nextPageNumber).isNull()
@@ -70,7 +70,7 @@ internal class ResultPageTest {
         val nextPageNumber = ResultPage<Any>(
             count = 5,
             next = URI("https://test.local"),
-            results = listOf()
+            results = listOf(),
         ).getNextPageNumber()
 
         assertThat(nextPageNumber).isNull()

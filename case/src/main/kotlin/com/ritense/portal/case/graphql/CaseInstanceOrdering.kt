@@ -16,10 +16,10 @@
 package com.ritense.portal.case.graphql
 
 data class CaseInstanceOrdering(
-    var createdOn: Sort
+    var createdOn: Sort,
 )
 
 enum class Sort {
     ASC,
-    DESC
+    DESC,
 }

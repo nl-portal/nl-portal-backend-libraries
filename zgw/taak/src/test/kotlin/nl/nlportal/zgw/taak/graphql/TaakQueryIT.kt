@@ -41,7 +41,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @TestInstance(PER_CLASS)
 internal class TaakQueryIT(
     @Autowired private val testClient: WebTestClient,
-    @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig
+    @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
 ) {
     lateinit var server: MockWebServer
 

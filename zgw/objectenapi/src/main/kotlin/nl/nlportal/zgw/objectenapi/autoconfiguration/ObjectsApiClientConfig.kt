@@ -21,5 +21,5 @@ import java.net.URI
 @ConfigurationProperties(prefix = "valtimo.objectsapi")
 class ObjectsApiClientConfig(
     var url: URI = URI.create(""),
-    var token: String = ""
+    var token: String = "",
 )

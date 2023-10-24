@@ -36,7 +36,7 @@ class DocumentenApiAutoConfiguration {
     @ConditionalOnMissingBean(DocumentenApiService::class)
     fun documentenApiService(
         documentenApiClient: DocumentenApiClient,
-        documentApisConfig: DocumentApisConfig
+        documentApisConfig: DocumentApisConfig,
     ): DocumentenApiService {
         return DocumentenApiService(documentenApiClient, documentApisConfig)
     }
@@ -44,7 +44,7 @@ class DocumentenApiAutoConfiguration {
     @Bean
     fun documentenApiClient(
         documentApisConfig: DocumentApisConfig,
-        idTokenGenerator: IdTokenGenerator
+        idTokenGenerator: IdTokenGenerator,
     ): DocumentenApiClient {
         return DocumentenApiClient(documentApisConfig, idTokenGenerator)
     }
@@ -65,7 +65,7 @@ class DocumentenApiAutoConfiguration {
     fun documentContentResource2(
         documentenApiClient: DocumentenApiClient,
         documentenApiService: DocumentenApiService,
-        virusScanService: VirusScanService?
+        virusScanService: VirusScanService?,
     ): DocumentContentResource {
         return DocumentContentResource(documentenApiClient, documentenApiService, virusScanService)
     }

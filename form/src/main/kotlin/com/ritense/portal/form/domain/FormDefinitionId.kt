@@ -26,7 +26,7 @@ data class FormDefinitionId(
 
     @Column(name = "form_definition_id", columnDefinition = "UUID")
     @org.hibernate.annotations.Type(type = "pg-uuid")
-    val value: UUID
+    val value: UUID,
 
 ) : AbstractId<FormDefinitionId>() {
 

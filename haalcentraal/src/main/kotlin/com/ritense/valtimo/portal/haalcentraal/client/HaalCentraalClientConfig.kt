@@ -25,16 +25,16 @@ data class HaalCentraalClientConfig(
     var url: String = "",
     val apiKey: String? = null,
     val ssl: Ssl? = null,
-    val tokenExchange: TokenExchange? = null
+    val tokenExchange: TokenExchange? = null,
 ) {
     @ConstructorBinding
     data class Ssl(
         val key: ClientKey? = null,
-        val trustedCertificate: String? = null
+        val trustedCertificate: String? = null,
     )
 
     @ConstructorBinding
     data class TokenExchange(
-        val targetAudience: String
+        val targetAudience: String,
     )
 }

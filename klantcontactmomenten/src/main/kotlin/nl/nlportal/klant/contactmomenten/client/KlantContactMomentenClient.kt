@@ -22,7 +22,7 @@ import nl.nlportal.klant.generiek.domain.ResultPage
 import org.springframework.web.reactive.function.client.awaitBody
 
 class KlantContactMomentenClient(
-    private val openKlantClientProvider: OpenKlantClientProvider
+    private val openKlantClientProvider: OpenKlantClientProvider,
 ) {
     suspend fun getKlantContactMomenten(authentication: CommonGroundAuthentication, klant: String, page: Int): ResultPage<ContactMoment> {
         return openKlantClientProvider.webClient(authentication)

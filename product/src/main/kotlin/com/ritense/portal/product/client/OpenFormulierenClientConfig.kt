@@ -20,5 +20,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties(prefix = "valtimo.openformulieren")
 class OpenFormulierenClientConfig(
     var url: String = "",
-    var token: String = ""
+    var token: String = "",
 )

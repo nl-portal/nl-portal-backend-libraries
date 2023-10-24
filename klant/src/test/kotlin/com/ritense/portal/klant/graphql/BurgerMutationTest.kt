@@ -65,7 +65,7 @@ internal class BurgerMutationTest {
         Mockito.`when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
         val klant = KlantUpdate(
             telefoonnummer = "0611111111",
-            emailadres = "new@email.nl"
+            emailadres = "new@email.nl",
         )
 
         burgerMutation.updateBurgerProfiel(klant, environment)
@@ -79,7 +79,7 @@ internal class BurgerMutationTest {
         Mockito.`when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
         val klant = KlantUpdate(
             telefoonnummer = "",
-            emailadres = ""
+            emailadres = "",
         )
 
         burgerMutation.updateBurgerProfiel(klant, environment)
@@ -91,7 +91,7 @@ internal class BurgerMutationTest {
     fun `cant update klant with invalid phone number`() {
         val klant = KlantUpdate(
             telefoonnummer = "invalid-phone-number",
-            emailadres = ""
+            emailadres = "",
         )
         val exception = Assertions.assertThrows(ValidationException::class.java) {
             runBlockingTest { burgerMutation.updateBurgerProfiel(klant, environment) }
@@ -103,7 +103,7 @@ internal class BurgerMutationTest {
     fun `cant update klant with invalid email`() {
         val klant = KlantUpdate(
             telefoonnummer = "",
-            emailadres = "invalid-email"
+            emailadres = "invalid-email",
         )
         val exception = Assertions.assertThrows(ValidationException::class.java) {
             runBlockingTest { burgerMutation.updateBurgerProfiel(klant, environment) }

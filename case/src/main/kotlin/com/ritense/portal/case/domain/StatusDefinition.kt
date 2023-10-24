@@ -25,7 +25,7 @@ data class StatusDefinition(
 
     @Column(name = "status_definition", columnDefinition = "json")
     @Type(type = "com.vladmihalcea.hibernate.type.json.JsonBinaryType")
-    val statuses: List<String>
+    val statuses: List<String>,
 
 ) {
 

@@ -45,12 +45,12 @@ class HaalCentraalBrpServiceTest {
                     "Voornaam",
                     "V.",
                     "van",
-                    "Achternaam"
+                    "Achternaam",
                 ),
                 null,
                 null,
-                null
-            )
+                null,
+            ),
         )
 
         val persoon = haalCentraalBrpService.getPersoon(authentication)!!
@@ -80,8 +80,8 @@ class HaalCentraalBrpServiceTest {
                 "Voornaam",
                 "V.",
                 "van",
-                "Achternaam"
-            )
+                "Achternaam",
+            ),
         )
 
         val persoonNaam = haalCentraalBrpService.getGemachtigde(authentication)!!

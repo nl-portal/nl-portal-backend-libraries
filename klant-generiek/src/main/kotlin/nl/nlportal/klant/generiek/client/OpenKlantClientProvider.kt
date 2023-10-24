@@ -25,14 +25,14 @@ import reactor.netty.transport.logging.AdvancedByteBufFormat
 
 class OpenKlantClientProvider(
     private val openKlantClientConfig: OpenKlantClientConfig,
-    private val idTokenGenerator: IdTokenGenerator
+    private val idTokenGenerator: IdTokenGenerator,
 ) {
     fun webClient(authentication: CommonGroundAuthentication): WebClient {
         val token = idTokenGenerator.generateToken(
             openKlantClientConfig.secret,
             openKlantClientConfig.clientId,
             authentication.getUserId(),
-            authentication.getUserRepresentation()
+            authentication.getUserRepresentation(),
         )
 
         return WebClient.builder()
@@ -41,9 +41,9 @@ class OpenKlantClientProvider(
                     HttpClient.create().wiretap(
                         "reactor.netty.http.client.HttpClient",
                         LogLevel.DEBUG,
-                        AdvancedByteBufFormat.TEXTUAL
-                    )
-                )
+                        AdvancedByteBufFormat.TEXTUAL,
+                    ),
+                ),
             )
             .baseUrl(openKlantClientConfig.url)
             .defaultHeader("Accept-Crs", "EPSG:4326")

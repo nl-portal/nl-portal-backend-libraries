@@ -41,9 +41,9 @@ class FormServiceTest {
                     formId,
                     "name",
                     true,
-                    true
-                )
-            )
+                    true,
+                ),
+            ),
         )
 
         val forms = formService.getForms()
@@ -64,9 +64,9 @@ class FormServiceTest {
                     formId,
                     "name",
                     false,
-                    true
-                )
-            )
+                    true,
+                ),
+            ),
         )
 
         val forms = formService.getForms()
@@ -85,9 +85,9 @@ class FormServiceTest {
                     formId,
                     "name",
                     true,
-                    false
-                )
-            )
+                    false,
+                ),
+            ),
         )
 
         val forms = formService.getForms()

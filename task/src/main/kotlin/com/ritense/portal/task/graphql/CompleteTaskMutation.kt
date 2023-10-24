@@ -29,14 +29,14 @@ import java.util.UUID
 
 class CompleteTaskMutation(
     private val taskService: TaskService,
-    private val caseService: CaseService
+    private val caseService: CaseService,
 ) : Mutation {
 
     @GraphQLDescription("Complete task mutation")
     fun completeTask(
         taskId: UUID,
         submission: ObjectNode,
-        dfe: DataFetchingEnvironment
+        dfe: DataFetchingEnvironment,
     ): TaskInstance {
         try {
             val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)

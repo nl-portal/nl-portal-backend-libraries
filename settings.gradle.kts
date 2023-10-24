@@ -51,5 +51,5 @@ include(
     "zgw:idtoken-authentication",
     "zgw:taak",
     "zgw:zaken-api",
-    "zgw:objectenapi"
+    "zgw:objectenapi",
 )

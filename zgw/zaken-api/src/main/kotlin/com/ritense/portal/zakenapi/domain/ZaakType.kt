@@ -17,5 +17,5 @@ package com.ritense.portal.zakenapi.domain
 
 data class ZaakType(
     val identificatie: String,
-    val omschrijving: String
+    val omschrijving: String,
 )

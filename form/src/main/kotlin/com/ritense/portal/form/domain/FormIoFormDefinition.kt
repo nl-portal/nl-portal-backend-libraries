@@ -38,7 +38,7 @@ data class FormIoFormDefinition(
     var formDefinition: ObjectNode,
 
     @Column(name = "read_only", columnDefinition = "BOOLEAN")
-    var readOnly: Boolean
+    var readOnly: Boolean,
 
 ) : Persistable<FormDefinitionId> {
 

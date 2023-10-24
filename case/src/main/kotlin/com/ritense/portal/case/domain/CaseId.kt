@@ -26,7 +26,7 @@ data class CaseId(
 
     @Column(name = "case_id", columnDefinition = "UUID")
     @org.hibernate.annotations.Type(type = "pg-uuid")
-    val value: UUID
+    val value: UUID,
 
 ) : AbstractId<CaseId>() {
 

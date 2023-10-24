@@ -21,12 +21,12 @@ import nl.nlportal.klant.contactmomenten.graphql.ContactMomentPage
 interface KlantContactMomentenService {
     suspend fun getKlantContactMomenten(
         authentication: CommonGroundAuthentication,
-        page: Int
+        page: Int,
     ): ContactMomentPage?
 
     suspend fun getObjectContactMomenten(
         authentication: CommonGroundAuthentication,
         objectUrl: String,
-        page: Int
+        page: Int,
     ): ContactMomentPage?
 }

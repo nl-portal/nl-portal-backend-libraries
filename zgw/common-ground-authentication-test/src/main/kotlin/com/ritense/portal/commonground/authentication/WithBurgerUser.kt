@@ -25,5 +25,5 @@ import java.lang.annotation.Inherited
 annotation class WithBurgerUser(
     val aanvragerBsn: String,
     val gemachtigdeBsn: String = "",
-    val gemachtigdeKvk: String = ""
+    val gemachtigdeKvk: String = "",
 )

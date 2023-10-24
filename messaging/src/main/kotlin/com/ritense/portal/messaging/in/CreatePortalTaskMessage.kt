@@ -22,5 +22,5 @@ data class CreatePortalTaskMessage(
     val externalCaseId: String,
     val formDefinition: ObjectNode,
     val taskDefinitionKey: String,
-    val isPublic: Boolean = false
+    val isPublic: Boolean = false,
 )

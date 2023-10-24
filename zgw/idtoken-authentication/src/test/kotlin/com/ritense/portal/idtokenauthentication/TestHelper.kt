@@ -24,6 +24,6 @@ object TestHelper {
     val TEST_USER_REPRESENTATION = mapOf<String, Any>(
         "name" to "User",
         "age" to 18,
-        "human" to true
+        "human" to true,
     )
 }

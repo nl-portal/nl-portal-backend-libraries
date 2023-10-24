@@ -27,7 +27,7 @@ import java.util.UUID
 
 class TaskQuery(
     private val taskService: TaskService,
-    private val caseService: CaseService
+    private val caseService: CaseService,
 ) : Query {
 
     @GraphQLDescription("find all available tasks for external case id")

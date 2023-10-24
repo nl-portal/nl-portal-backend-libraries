@@ -61,19 +61,19 @@ abstract class BaseTest {
         val schema = Schema(
             Mapper.get().readValue(
                 getResourceAsStream("config/case/definition/person/person.schema.json"),
-                ObjectNode::class.java
-            )
+                ObjectNode::class.java,
+            ),
         )
         val statusDefinition = StatusDefinition(
             Mapper.get().readValue(
                 getResourceAsStream("config/case/definition/person/status.json"),
-                object : TypeReference<List<String>>() {}
-            )
+                object : TypeReference<List<String>>() {},
+            ),
         )
         val caseDefinition = CaseDefinition(
             caseDefinitionId = caseDefinitionId,
             schema = schema,
-            statusDefinition = statusDefinition
+            statusDefinition = statusDefinition,
         )
         return caseDefinition
     }
@@ -86,7 +86,7 @@ abstract class BaseTest {
             externalId = "externalId",
             status = Status("a"),
             caseDefinitionId = CaseDefinitionId.existingId("person"),
-            submission = Submission(JsonNodeFactory.instance.objectNode())
+            submission = Submission(JsonNodeFactory.instance.objectNode()),
         )
     }
 }

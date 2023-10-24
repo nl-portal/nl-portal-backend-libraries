@@ -54,11 +54,15 @@ internal class GemachtigdeQueryTest {
     fun `getGemachtigde should call service`() = runBlockingTest {
         whenever(haalCentraalBrpService.getGemachtigde(authentication)).thenReturn(
             PersoonNaam(
-                "test", "test", "test", "test", "test"
-            )
+                "test",
+                "test",
+                "test",
+                "test",
+                "test",
+            ),
         )
         whenever(handelsregisterService.getGemachtigde(authentication)).thenReturn(
-            MaatschappelijkeActiviteit("test")
+            MaatschappelijkeActiviteit("test"),
         )
 
         val gemachtigde = query.getGemachtigde(environment)

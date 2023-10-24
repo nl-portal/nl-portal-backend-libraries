@@ -21,7 +21,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 
 abstract class CommonGroundAuthentication(
     val jwt: Jwt,
-    authorities: Collection<GrantedAuthority>?
+    authorities: Collection<GrantedAuthority>?,
 ) : JwtAuthenticationToken(jwt, authorities) {
 
     /**
@@ -34,7 +34,7 @@ abstract class CommonGroundAuthentication(
         if (gemachtigde is Map<*, *>) {
             return AuthenticationGemachtigde(
                 gemachtigde[BSN_KEY]?.toString(),
-                gemachtigde[KVK_NUMMER_KEY]?.toString()
+                gemachtigde[KVK_NUMMER_KEY]?.toString(),
             )
         }
 

@@ -22,5 +22,5 @@ class OpenKlantClientConfig(
     var url: String = "",
     var clientId: String = "",
     var secret: String = "",
-    var rsin: String = ""
+    var rsin: String = "",
 )

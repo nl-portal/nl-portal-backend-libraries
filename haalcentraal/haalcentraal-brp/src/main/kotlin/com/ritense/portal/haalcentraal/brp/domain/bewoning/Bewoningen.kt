@@ -16,5 +16,5 @@
 package com.ritense.portal.haalcentraal.brp.domain.bewoning
 
 data class Bewoningen(
-    val bewoners: List<Bewoner>
+    val bewoners: List<Bewoner>,
 )

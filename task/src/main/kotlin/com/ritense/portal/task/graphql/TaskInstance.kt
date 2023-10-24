@@ -28,7 +28,7 @@ data class TaskInstance(
     val caseDefinitionId: String? = null,
     val formDefinition: ObjectNode,
     val isCompleted: Boolean,
-    val createdOn: String
+    val createdOn: String,
 ) {
     companion object {
         fun from(task: Task, caseDefinitionId: String? = null): TaskInstance {
@@ -40,7 +40,7 @@ data class TaskInstance(
                 caseDefinitionId,
                 task.formDefinition,
                 task.isCompleted(),
-                task.createdOn.format(DateTimeFormatter.ISO_DATE_TIME)
+                task.createdOn.format(DateTimeFormatter.ISO_DATE_TIME),
             )
         }
     }

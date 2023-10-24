@@ -40,9 +40,8 @@ class OauthSecurityAutoConfiguration {
     fun springSecurityWebFilterChain(
         http: ServerHttpSecurity,
         converter: Converter<Jwt, out Mono<out AbstractAuthenticationToken>>?,
-        securityConfigurers: List<HttpSecurityConfigurer>
+        securityConfigurers: List<HttpSecurityConfigurer>,
     ): SecurityWebFilterChain {
-
         securityConfigurers.forEach { it.configure(http) }
 
         val jwtSpec = http

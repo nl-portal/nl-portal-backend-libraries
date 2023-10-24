@@ -30,6 +30,7 @@ internal class FormDefinitionDeploymentServiceTest {
 
     @Mock
     lateinit var formDefinitionService: FormIoFormDefinitionService
+
     @Mock
     lateinit var resourceLoader: ResourceLoader
 

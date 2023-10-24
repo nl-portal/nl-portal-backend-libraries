@@ -17,5 +17,5 @@ package com.ritense.portal.catalogiapi.domain
 
 data class ZaakStatusType(
     val omschrijving: String,
-    val isEindstatus: Boolean
+    val isEindstatus: Boolean,
 )

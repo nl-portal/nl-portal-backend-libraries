@@ -47,7 +47,7 @@ internal class HandelsregisterClientTest {
         server.enqueue(
             MockResponse()
                 .setBody(jacksonObjectMapper().writeValueAsString(MaatschappelijkeActiviteit(naam = "Test bedrijf")))
-                .addHeader("Content-Type", "application/json")
+                .addHeader("Content-Type", "application/json"),
         )
 
         haalCentraalClientConfig = HaalCentraalClientConfig(url = server.url("/").toString())

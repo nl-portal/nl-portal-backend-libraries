@@ -54,7 +54,7 @@ class CaseServiceIntTest : BaseIntegrationTest() {
                 "person",
                 submission,
                 authentication,
-                initialStatus
+                initialStatus,
             )
         }
         assertThat(illegalStateException).hasMessage("Empty case data")
@@ -69,7 +69,7 @@ class CaseServiceIntTest : BaseIntegrationTest() {
             "person",
             submission,
             authentication,
-            initialStatus
+            initialStatus,
         )
 
         assertThat(case).isNotNull

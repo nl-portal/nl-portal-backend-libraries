@@ -99,8 +99,8 @@ internal class BurgerServiceTest {
         `when`(openKlantClient.getKlanten(authentication, 1, "123")).thenReturn(
             listOf(
                 mock(Klant::class.java),
-                mock(Klant::class.java)
-            )
+                mock(Klant::class.java),
+            ),
         )
 
         val illegalStateException = Assertions.assertThrows(IllegalStateException::class.java) {

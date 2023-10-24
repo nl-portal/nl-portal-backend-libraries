@@ -24,8 +24,8 @@ internal class ObjectSearchParameterTest {
         val queryParameter = ObjectSearchParameter.toQueryParameter(
             listOf(
                 ObjectSearchParameter("bsn", Comparator.EQUAL_TO, "123456789"),
-                ObjectSearchParameter("bsn", Comparator.EQUAL_TO, "987654321")
-            )
+                ObjectSearchParameter("bsn", Comparator.EQUAL_TO, "987654321"),
+            ),
         )
 
         assertThat(queryParameter).isEqualTo("bsn__exact__123456789,bsn__exact__987654321")
@@ -34,7 +34,7 @@ internal class ObjectSearchParameterTest {
     @Test
     fun `should create empty query parameter for empty list`() {
         val queryParameter = ObjectSearchParameter.toQueryParameter(
-            listOf()
+            listOf(),
         )
 
         assertThat(queryParameter).isEqualTo("")

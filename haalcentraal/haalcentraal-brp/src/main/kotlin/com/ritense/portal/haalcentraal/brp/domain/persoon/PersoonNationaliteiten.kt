@@ -16,5 +16,5 @@
 package com.ritense.portal.haalcentraal.brp.domain.persoon
 
 data class PersoonNationaliteiten(
-    val nationaliteit: PersoonNationaliteit? = null
+    val nationaliteit: PersoonNationaliteit? = null,
 )

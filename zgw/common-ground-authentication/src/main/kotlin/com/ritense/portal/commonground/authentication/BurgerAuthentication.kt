@@ -20,7 +20,7 @@ import org.springframework.security.oauth2.jwt.Jwt
 
 class BurgerAuthentication(
     jwt: Jwt,
-    authorities: Collection<GrantedAuthority>?
+    authorities: Collection<GrantedAuthority>?,
 ) : CommonGroundAuthentication(jwt, authorities) {
     fun getBsn(): String {
         val aanvrager = jwt.claims[AANVRAGER_KEY]

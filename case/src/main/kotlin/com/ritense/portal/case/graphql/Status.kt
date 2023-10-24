@@ -17,5 +17,5 @@ package com.ritense.portal.case.graphql
 
 data class Status(
     val name: String,
-    val createdOn: String
+    val createdOn: String,
 )
