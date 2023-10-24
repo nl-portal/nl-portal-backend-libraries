@@ -17,18 +17,19 @@ package com.ritense.portal.documentenapi.client
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
+import java.lang.NullPointerException
 
 @ConstructorBinding
 @ConfigurationProperties(prefix = "valtimo.zgw.documentenapis")
 class DocumentApisConfig {
-    var documentapis: Map<String, DocumentApiConfig> = mapOf()
+    var configurations: Map<String, DocumentApiConfig> = mapOf()
 
     fun getConfig(documentApi: String): DocumentApiConfig {
-        return documentapis[documentApi]!!
+        return configurations[documentApi]!!
     }
 
     fun getConfigForDocumentUrl(documentUrl: String): String {
-        return documentapis.filterValues { documentApiConfig -> documentUrl.contains(documentApiConfig.url) }.keys.stream().findFirst().orElseThrow()
+        return configurations.filterValues { documentApiConfig -> documentUrl.contains(documentApiConfig.url) }.keys.stream().findFirst().orElseThrow({ NullPointerException("No documentapi configuration found for zaakdocument with url " + documentUrl)})
     }
 }
 

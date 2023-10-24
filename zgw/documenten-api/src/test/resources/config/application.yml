@@ -9,7 +9,7 @@ logging:
 valtimo:
     zgw:
         documentenapis:
-            documentapis:
+            configurations:
                 openzaak:
                     url: https://localhost:8001/
                     clientId: valtimo_client

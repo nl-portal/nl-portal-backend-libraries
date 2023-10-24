@@ -51,8 +51,8 @@ internal class DocumentContentQueryIT(
     internal fun setUp() {
         server1 = setupMockOpenZaakServer("logo.png")
         server2 = setupMockOpenZaakServer("github.png")
-        documentApisConfig.documentapis.get("openzaak")?.url = server1.url("/").toString()
-        documentApisConfig.documentapis.get("example")?.url = server2.url("/").toString()
+        documentApisConfig.configurations.get("openzaak")?.url = server1.url("/").toString()
+        documentApisConfig.configurations.get("example")?.url = server2.url("/").toString()
     }
 
     @AfterEach

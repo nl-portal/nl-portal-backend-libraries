@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.UUID
 
 data class Document(
+    @GraphQLIgnore
     val url: String?,
     var identificatie: String?,
     val creatiedatum: String?,
