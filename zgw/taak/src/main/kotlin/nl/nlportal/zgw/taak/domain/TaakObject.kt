@@ -30,5 +30,5 @@ data class TaakObject(
     val formulier: TaakFormulier,
     @JsonProperty("verwerker_taak_id") val verwerkerTaakId: UUID,
     val zaak: String?,
-    val verloopdatum: LocalDateTime?
+    val verloopdatum: LocalDateTime?,
 )

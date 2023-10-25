@@ -21,7 +21,7 @@ import com.ritense.portal.haalcentraal.hr.client.HandelsregisterClient
 import com.ritense.portal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 
 class HandelsregisterService(
-    private val handelsregisterClient: HandelsregisterClient
+    private val handelsregisterClient: HandelsregisterClient,
 ) {
 
     suspend fun getMaatschappelijkeActiviteit(authentication: CommonGroundAuthentication): MaatschappelijkeActiviteit? {

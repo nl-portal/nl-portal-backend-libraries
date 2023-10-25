@@ -29,7 +29,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
-@EnableConfigurationProperties(DocumentenApiConfig::class)
+@EnableConfigurationProperties(DocumentApisConfig::class)
 class DocumentenApiAutoConfiguration {
 
     @Bean
@@ -65,7 +65,7 @@ class DocumentenApiAutoConfiguration {
     fun documentContentResource2(
         documentenApiClient: DocumentenApiClient,
         documentenApiService: DocumentenApiService,
-        virusScanService: VirusScanService?
+        virusScanService: VirusScanService?,
     ): DocumentContentResource {
         return DocumentContentResource(documentenApiClient, documentenApiService, virusScanService)
     }

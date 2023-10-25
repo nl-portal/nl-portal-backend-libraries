@@ -41,7 +41,7 @@ class CustomSpringDataFetcher(
     private val target: Any?,
     private val fn: KFunction<*>,
     private val objectMapper: ObjectMapper = jacksonObjectMapper(),
-    private val applicationContext: ApplicationContext
+    private val applicationContext: ApplicationContext,
 ) : FunctionDataFetcher(target, fn) {
 
     override fun mapParameterToValue(param: KParameter, environment: DataFetchingEnvironment): Pair<KParameter, Any?>? =
@@ -75,7 +75,7 @@ class CustomSpringDataFetcher(
         param: KParameter,
         environment: DataFetchingEnvironment,
         argumentName: String,
-        argumentValue: Any?
+        argumentValue: Any?,
     ): Any? = when {
         param.type.isOptionalInputType() -> {
             when {
@@ -93,7 +93,7 @@ class CustomSpringDataFetcher(
 
     private fun convertValue(
         paramType: KType,
-        argumentValue: Any?
+        argumentValue: Any?,
     ): Any? = when {
         paramType.isList() -> {
             val argumentClass = paramType.getTypeOfFirstArgument().getJavaClass()

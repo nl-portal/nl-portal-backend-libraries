@@ -29,7 +29,7 @@ data class CaseId(
     @Column(name = "case_id", columnDefinition = "UUID")
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     @GeneratedValue
-    val value: UUID
+    val value: UUID,
 
 ) : AbstractId<CaseId>() {
 

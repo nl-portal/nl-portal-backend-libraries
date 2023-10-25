@@ -31,5 +31,5 @@ data class Klant(
 
     var telefoonnummer: String?,
 
-    var emailadres: String?
+    var emailadres: String?,
 )

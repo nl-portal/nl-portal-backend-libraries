@@ -24,5 +24,5 @@ data class KlantUpdate(
     val telefoonnummer: String?,
 
     @field:Email
-    val emailadres: String?
+    val emailadres: String?,
 )

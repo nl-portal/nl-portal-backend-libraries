@@ -29,7 +29,7 @@ data class Schema(
 
     @Column(name = "`schema`", columnDefinition = "json")
     @JdbcTypeCode(SqlTypes.JSON)
-    var value: ObjectNode
+    var value: ObjectNode,
 ) {
     init {
         ObjectValidator.validate(this)

@@ -29,7 +29,7 @@ data class FormDefinitionId(
     @Column(name = "form_definition_id", columnDefinition = "UUID")
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     @GeneratedValue
-    val value: UUID
+    val value: UUID,
 
 ) : AbstractId<FormDefinitionId>() {
 

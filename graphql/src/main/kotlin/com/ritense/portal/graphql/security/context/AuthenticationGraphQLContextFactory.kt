@@ -34,7 +34,7 @@ class AuthenticationGraphQLContextFactory : DefaultSpringGraphQLContextFactory()
 
         val securityContext = reactorContext.getOrDefault<Mono<SecurityContext>>(
             SecurityContext::class.java,
-            null
+            null,
         )!!
 
         val context = mutableMapOf<Any, Any>()

@@ -24,7 +24,7 @@ import com.ritense.portal.haalcentraal.brp.domain.persoon.PersoonNaam
 import com.ritense.portal.haalcentraal.brp.service.HaalCentraalBrpService
 
 class HaalCentraalBrpServiceImpl(
-    val haalCentraalBrpClient: HaalCentraalBrpClient
+    val haalCentraalBrpClient: HaalCentraalBrpClient,
 ) : HaalCentraalBrpService {
 
     override suspend fun getPersoon(authentication: CommonGroundAuthentication): Persoon? {

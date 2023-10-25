@@ -20,7 +20,7 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 open class Page<T> (
     @GraphQLDescription("The requested page number") val number: Int,
     @GraphQLDescription("The elements on this page")val content: List<T>,
-    @GraphQLDescription("The total number of elements") val totalElements: Int
+    @GraphQLDescription("The total number of elements") val totalElements: Int,
 ) {
     @GraphQLDescription("The number of elements on this page")
     val numberOfElements: Int

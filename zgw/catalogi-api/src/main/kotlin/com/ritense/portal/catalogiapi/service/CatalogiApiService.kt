@@ -22,7 +22,7 @@ import com.ritense.portal.catalogiapi.domain.ZaakType
 import java.util.UUID
 
 class CatalogiApiService(
-    val catalogiApiClient: CatalogiApiClient
+    val catalogiApiClient: CatalogiApiClient,
 ) {
 
     suspend fun getZaakStatusTypes(zaakType: String): List<StatusType> {

@@ -16,10 +16,7 @@
 package com.ritense.portal.documentenapi.client
 
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
-import java.lang.NullPointerException
 
-@ConstructorBinding
 @ConfigurationProperties(prefix = "valtimo.zgw.documentenapis")
 class DocumentApisConfig {
     var configurations: Map<String, DocumentApiConfig> = mapOf()

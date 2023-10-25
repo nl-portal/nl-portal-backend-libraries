@@ -26,7 +26,7 @@ data class StatusDefinition(
 
     @Column(name = "status_definition", columnDefinition = "json")
     @JdbcTypeCode(SqlTypes.JSON)
-    val statuses: List<String>
+    val statuses: List<String>,
 
 ) {
 

@@ -43,7 +43,7 @@ class OauthSecurityAutoConfiguration {
         http: ServerHttpSecurity,
         converter: Converter<Jwt, out Mono<out AbstractAuthenticationToken>>?,
         corsPathConfiguration: CorsPathConfiguration,
-        securityConfigurers: List<HttpSecurityConfigurer>
+        securityConfigurers: List<HttpSecurityConfigurer>,
     ): SecurityWebFilterChain {
         securityConfigurers.forEach { it.configure(http) }
 

@@ -28,7 +28,7 @@ data class Submission(
 
     @Column(name = "submission", columnDefinition = "json")
     @JdbcTypeCode(SqlTypes.JSON)
-    val value: ObjectNode
+    val value: ObjectNode,
 
 ) {
 

@@ -15,19 +15,17 @@
  */
 package com.ritense.portal.zakenapi.service
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.commonground.authentication.JwtBuilder
 import com.ritense.portal.documentenapi.service.DocumentenApiService
 import com.ritense.portal.zakenapi.client.ZakenApiClient
-import com.ritense.portal.zakenapi.client.ZakenApiConfig
 import com.ritense.portal.zakenapi.domain.ResultPage
 import com.ritense.portal.zakenapi.domain.ZaakObject
 import com.ritense.portal.zakenapi.domain.ZaakRol
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -37,10 +35,9 @@ import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
-
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.web.server.ResponseStatusException
-import java.util.UUID
+import java.util.*
 
 @ExperimentalCoroutinesApi
 internal class ZakenApiServiceTest {
@@ -48,13 +45,10 @@ internal class ZakenApiServiceTest {
     var documentenApiService: DocumentenApiService = mock()
     var zakenApiClient = mock(ZakenApiClient::class.java)
     var objectsApiClient: ObjectsApiClient = mock()
-    var zakenApiConfig: ZakenApiConfig = mock()
-    var objectMapper: ObjectMapper = mock()
     var zaakService = ZakenApiService(
         zakenApiClient,
         documentenApiService,
         objectsApiClient,
-        objectMapper
     )
 
     @Test
@@ -78,9 +72,9 @@ internal class ZakenApiServiceTest {
                 null,
                 listOf(
                     ZaakRol("http://example.com/some-path/$firstZaakId"),
-                    ZaakRol("http://example.com/some-path/$secondZaakId")
-                )
-            )
+                    ZaakRol("http://example.com/some-path/$secondZaakId"),
+                ),
+            ),
         )
 
         zaakService.getZaken(5, authentication)
@@ -119,9 +113,9 @@ internal class ZakenApiServiceTest {
                 null,
                 null,
                 listOf(
-                    ZaakRol("http://example.com/some-path/a5753b01-a6af-426e-96fb-9d54c7d47368")
-                )
-            )
+                    ZaakRol("http://example.com/some-path/a5753b01-a6af-426e-96fb-9d54c7d47368"),
+                ),
+            ),
         )
 
         zaakService.getZaak(uuid, authentication)
@@ -141,9 +135,9 @@ internal class ZakenApiServiceTest {
                 null,
                 null,
                 listOf(
-                    ZaakRol("http://example.com/some-path/a5753b01-a6af-426e-96fb-9d54c7d47368")
-                )
-            )
+                    ZaakRol("http://example.com/some-path/a5753b01-a6af-426e-96fb-9d54c7d47368"),
+                ),
+            ),
         )
 
         zaakService.getZaak(uuid, authentication)
@@ -158,16 +152,16 @@ internal class ZakenApiServiceTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
 
         `when`(zakenApiClient.getZaakRollen(anyInt(), any(), any(), any())).thenReturn(
-            ResultPage(1, null, null, listOf())
+            ResultPage(1, null, null, listOf()),
         )
 
-        val illegalStateException = Assertions.assertThrows(IllegalStateException::class.java) {
+        val exception = Assertions.assertThrows(ResponseStatusException::class.java) {
             runTest {
                 zaakService.getZaak(uuid, authentication)
             }
         }
 
-        assertEquals("Access denied to this zaak", illegalStateException.message)
+        assertEquals("Access denied to this zaak", exception.reason)
     }
 
     @Test
@@ -186,7 +180,7 @@ internal class ZakenApiServiceTest {
             }
         }
 
-        assertEquals("Cannot get zaak for this user", illegalArgumentException.message)
+        assertEquals("Authentication not (yet) supported", illegalArgumentException.message)
     }
 
     @Test

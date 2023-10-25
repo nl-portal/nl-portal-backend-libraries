@@ -15,7 +15,6 @@
  */
 package com.ritense.portal.zakenapi.service
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.ritense.portal.commonground.authentication.BedrijfAuthentication
 import com.ritense.portal.commonground.authentication.BurgerAuthentication
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
@@ -34,14 +33,12 @@ import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
-import java.util.Locale
-import java.util.UUID
+import java.util.*
 
 class ZakenApiService(
     private val zakenApiClient: ZakenApiClient,
     private val documentenApiService: DocumentenApiService,
     private val objectsApiClient: ObjectsApiClient,
-    private val objectMapper: ObjectMapper,
 ) {
 
     suspend fun getZaken(page: Int, authentication: CommonGroundAuthentication): List<Zaak> {

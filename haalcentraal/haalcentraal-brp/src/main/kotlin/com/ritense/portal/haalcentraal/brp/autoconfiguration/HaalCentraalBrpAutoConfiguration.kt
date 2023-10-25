@@ -35,7 +35,7 @@ class HaalCentraalBrpAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(HaalCentraalBrpClient::class)
     fun haalCentraalBrpClient(
-        haalCentraalClientProvider: HaalCentraalClientProvider
+        haalCentraalClientProvider: HaalCentraalClientProvider,
     ): HaalCentraalBrpClient {
         return HaalCentraalBrpClient(haalCentraalClientProvider)
     }
@@ -43,7 +43,7 @@ class HaalCentraalBrpAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(HaalCentraalBrpService::class)
     fun haalCentraalBrpServiceImpl(
-        haalCentraalBrpClient: HaalCentraalBrpClient
+        haalCentraalBrpClient: HaalCentraalBrpClient,
     ): HaalCentraalBrpService {
         return HaalCentraalBrpServiceImpl(haalCentraalBrpClient)
     }
@@ -51,7 +51,7 @@ class HaalCentraalBrpAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(HaalCentraalBrpQuery::class)
     fun haalCentraalBrpQuery(
-        haalCentraalBrpService: HaalCentraalBrpService
+        haalCentraalBrpService: HaalCentraalBrpService,
     ): HaalCentraalBrpQuery {
         return HaalCentraalBrpQuery(haalCentraalBrpService)
     }

@@ -23,5 +23,5 @@ data class ZaakObject(
     val zaak: String,
     @JsonProperty("object") val objectUrl: String,
     val objectType: String,
-    val objectTypeOverige: String
+    val objectTypeOverige: String,
 )

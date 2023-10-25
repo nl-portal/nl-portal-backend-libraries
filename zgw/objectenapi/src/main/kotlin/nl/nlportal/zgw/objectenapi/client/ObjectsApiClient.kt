@@ -32,7 +32,7 @@ import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
 
 open class ObjectsApiClient(
-    private val objectsApiClientConfig: ObjectsApiClientConfig
+    private val objectsApiClientConfig: ObjectsApiClientConfig,
 ) {
     suspend inline fun <reified T> getObjectById(id: String): ObjectsApiObject<T>? {
         return webClient()

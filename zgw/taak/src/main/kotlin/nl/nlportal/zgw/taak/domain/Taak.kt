@@ -33,7 +33,7 @@ class Taak(
     val date: String,
     var data: ObjectNode,
     val zaak: String?,
-    val verloopdatum: LocalDateTime?
+    val verloopdatum: LocalDateTime?,
 ) {
     companion object {
         fun fromObjectsApiTask(objectsApiTask: ObjectsApiObject<TaakObject>): Taak {

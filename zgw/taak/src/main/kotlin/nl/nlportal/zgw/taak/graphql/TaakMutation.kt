@@ -33,7 +33,7 @@ class TaakMutation(
     suspend fun submitTaak(
         dfe: DataFetchingEnvironment,
         id: UUID,
-        submission: ObjectNode
+        submission: ObjectNode,
     ): Taak {
         val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
 
@@ -44,7 +44,7 @@ class TaakMutation(
     suspend fun submitTask(
         dfe: DataFetchingEnvironment,
         id: UUID,
-        submission: ObjectNode
+        submission: ObjectNode,
     ): Taak {
         return submitTaak(dfe, id, submission)
     }

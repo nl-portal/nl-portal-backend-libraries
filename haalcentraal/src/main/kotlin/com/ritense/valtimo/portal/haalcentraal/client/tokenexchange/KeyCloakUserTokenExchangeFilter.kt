@@ -34,7 +34,7 @@ import java.net.URI
 
 class KeyCloakUserTokenExchangeFilter(
     private val webClient: WebClient,
-    private val targetAudience: String
+    private val targetAudience: String,
 ) : UserTokenExchangeFilter {
 
     override fun filter(request: ClientRequest, next: ExchangeFunction): Mono<ClientResponse> {
@@ -88,8 +88,8 @@ class KeyCloakUserTokenExchangeFilter(
                             add("subject_token", currentToken.tokenValue)
                             add("requested_token_type", "urn:ietf:params:oauth:token-type:access_token")
                             add("audience", targetAudience)
-                        }
-                )
+                        },
+                ),
             )
             .retrieve()
             .bodyToMono<TokenResponse>()
@@ -99,7 +99,7 @@ class KeyCloakUserTokenExchangeFilter(
     data class TokenResponse(
         @JsonValue
         @JsonProperty("access_token")
-        val accessToken: String
+        val accessToken: String,
     )
 
     companion object {

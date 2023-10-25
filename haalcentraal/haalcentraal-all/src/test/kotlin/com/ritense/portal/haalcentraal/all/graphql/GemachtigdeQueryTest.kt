@@ -57,8 +57,8 @@ internal class GemachtigdeQueryTest {
                 "test",
                 "test",
                 "test",
-                "test"
-            )
+                "test",
+            ),
         )
         whenever(handelsregisterService.getGemachtigde(authentication)).thenReturn(
             MaatschappelijkeActiviteit("test"),
