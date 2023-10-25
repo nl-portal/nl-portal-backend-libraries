@@ -26,7 +26,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import java.util.function.Consumer
 
 class AuthenticationIT(
-    @Autowired private val testClient: WebTestClient
+    @Autowired private val testClient: WebTestClient,
 ) : BaseIntegrationTest() {
 
     val GRAPHQL_ENDPOINT = "/graphql"

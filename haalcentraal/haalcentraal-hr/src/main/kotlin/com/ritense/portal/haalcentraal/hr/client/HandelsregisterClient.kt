@@ -21,7 +21,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.web.reactive.function.client.awaitBody
 
 class HandelsregisterClient(
-    val haalCentraalClientProvider: HaalCentraalClientProvider
+    val haalCentraalClientProvider: HaalCentraalClientProvider,
 ) {
 
     suspend fun getMaatschappelijkeActiviteit(kvkNummer: String, authentication: Authentication): MaatschappelijkeActiviteit {

@@ -22,16 +22,16 @@ import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.klant.contactmomenten.service.KlantContactMomentenService
 
 class ContactMomentQuery(
-    val klantContactMomentenService: KlantContactMomentenService
+    val klantContactMomentenService: KlantContactMomentenService,
 ) : Query {
     @GraphQLDescription("Gets the contactmomenten of a klant")
     suspend fun getKlantContactMomenten(
         dfe: DataFetchingEnvironment,
-        pageNumber: Int? = 1
+        pageNumber: Int? = 1,
     ): ContactMomentPage? {
         return klantContactMomentenService.getKlantContactMomenten(
             dfe.graphQlContext.get(AUTHENTICATION_KEY),
-            pageNumber ?: 1
+            pageNumber ?: 1,
         )
     }
 
@@ -39,12 +39,12 @@ class ContactMomentQuery(
     suspend fun getObjectContactMomenten(
         dfe: DataFetchingEnvironment,
         objectUrl: String,
-        pageNumber: Int? = 1
+        pageNumber: Int? = 1,
     ): ContactMomentPage? {
         return klantContactMomentenService.getObjectContactMomenten(
             dfe.graphQlContext.get(AUTHENTICATION_KEY),
             objectUrl,
-            pageNumber ?: 1
+            pageNumber ?: 1,
         )
     }
 }

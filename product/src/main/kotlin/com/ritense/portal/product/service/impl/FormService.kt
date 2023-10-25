@@ -21,7 +21,7 @@ import com.ritense.portal.product.service.FormService
 import java.util.stream.Collectors.toList
 
 class FormService(
-    val openFormulierenClient: OpenFormulierenClient
+    val openFormulierenClient: OpenFormulierenClient,
 ) : FormService {
     override suspend fun getForms(): List<Form> {
         return openFormulierenClient

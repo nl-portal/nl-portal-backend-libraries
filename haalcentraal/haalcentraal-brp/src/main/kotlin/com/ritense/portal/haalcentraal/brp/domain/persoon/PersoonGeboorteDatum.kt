@@ -19,5 +19,5 @@ data class PersoonGeboorteDatum(
     val datum: String? = null,
     val jaar: Int? = null,
     val maand: Int? = null,
-    val dag: Int? = null
+    val dag: Int? = null,
 )

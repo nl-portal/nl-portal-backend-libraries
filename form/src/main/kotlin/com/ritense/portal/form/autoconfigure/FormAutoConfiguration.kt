@@ -37,7 +37,7 @@ class FormAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(FormApplicationReadyEventListener::class)
     fun formApplicationReadyEventListener(
-        formDefinitionDeploymentService: FormDefinitionDeploymentService
+        formDefinitionDeploymentService: FormDefinitionDeploymentService,
     ): FormApplicationReadyEventListener {
         return FormApplicationReadyEventListener(formDefinitionDeploymentService)
     }
@@ -45,7 +45,7 @@ class FormAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(FormIoFormDefinitionService::class)
     fun formIoFormDefinitionService(
-        formIoFormDefinitionRepository: FormIoFormDefinitionRepository
+        formIoFormDefinitionRepository: FormIoFormDefinitionRepository,
     ): FormIoFormDefinitionService {
         return FormIoFormDefinitionService(formIoFormDefinitionRepository)
     }
@@ -53,7 +53,7 @@ class FormAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(ObjectsApiFormDefinitionService::class)
     fun objectsApiFormDefinitionService(
-        objectenApiService: ObjectenApiService
+        objectenApiService: ObjectenApiService,
     ): ObjectsApiFormDefinitionService {
         return ObjectsApiFormDefinitionService(objectenApiService)
     }
@@ -62,7 +62,7 @@ class FormAutoConfiguration {
     @ConditionalOnMissingBean(FormDefinitionDeploymentService::class)
     fun formDefinitionDeploymentService(
         formIoFormDefinitionService: FormIoFormDefinitionService,
-        resourceLoader: ResourceLoader
+        resourceLoader: ResourceLoader,
     ): FormDefinitionDeploymentService {
         return FormDefinitionDeploymentService(formIoFormDefinitionService, resourceLoader)
     }

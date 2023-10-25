@@ -16,5 +16,5 @@
 package com.ritense.portal.messaging.`in`
 
 data class DeletePortalTaskMessage(
-    val taskId: String
+    val taskId: String,
 )

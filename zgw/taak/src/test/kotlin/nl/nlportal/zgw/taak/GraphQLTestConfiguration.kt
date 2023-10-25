@@ -35,7 +35,7 @@ class GraphQLTestConfiguration {
     fun getTakenPayload(): String {
         return StreamUtils.copyToString(
             getTakenFile.inputStream,
-            StandardCharsets.UTF_8
+            StandardCharsets.UTF_8,
         )
     }
 
@@ -43,7 +43,7 @@ class GraphQLTestConfiguration {
     fun getTaakByIdPayload(): String {
         return StreamUtils.copyToString(
             getTaakByIdFile.inputStream,
-            StandardCharsets.UTF_8
+            StandardCharsets.UTF_8,
         )
     }
 }

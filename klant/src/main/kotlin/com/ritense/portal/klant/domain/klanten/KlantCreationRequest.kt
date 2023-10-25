@@ -22,9 +22,9 @@ data class KlantCreationRequest(
     val telefoonnummer: String?,
     val emailadres: String?,
     val subjectType: String,
-    val subjectIdentificatie: SubjectIdentificatie
+    val subjectIdentificatie: SubjectIdentificatie,
 )
 
 data class SubjectIdentificatie(
-    val inpBsn: String
+    val inpBsn: String,
 )

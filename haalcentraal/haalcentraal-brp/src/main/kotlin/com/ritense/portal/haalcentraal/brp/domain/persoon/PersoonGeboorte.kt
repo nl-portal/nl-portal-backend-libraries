@@ -17,5 +17,5 @@ package com.ritense.portal.haalcentraal.brp.domain.persoon
 
 data class PersoonGeboorte(
     val datum: PersoonGeboorteDatum? = null,
-    val land: PersoonGeboorteLand? = null
+    val land: PersoonGeboorteLand? = null,
 )

@@ -34,7 +34,7 @@ import java.util.UUID
 
 class ZakenApiClient(
     private val zakenApiConfig: ZakenApiConfig,
-    private val idTokenGenerator: IdTokenGenerator
+    private val idTokenGenerator: IdTokenGenerator,
 ) {
     private fun WebClient.ResponseSpec.handleStatus() = this
         .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
@@ -135,7 +135,7 @@ class ZakenApiClient(
     private fun webClient(): WebClient {
         val token = idTokenGenerator.generateToken(
             zakenApiConfig.secret,
-            zakenApiConfig.clientId
+            zakenApiConfig.clientId,
         )
 
         return WebClient.builder()
@@ -144,9 +144,9 @@ class ZakenApiClient(
                     HttpClient.create().wiretap(
                         "reactor.netty.http.client.HttpClient",
                         LogLevel.DEBUG,
-                        AdvancedByteBufFormat.TEXTUAL
-                    )
-                )
+                        AdvancedByteBufFormat.TEXTUAL,
+                    ),
+                ),
             )
             .baseUrl(zakenApiConfig.url)
             .defaultHeader("Accept-Crs", "EPSG:4326")

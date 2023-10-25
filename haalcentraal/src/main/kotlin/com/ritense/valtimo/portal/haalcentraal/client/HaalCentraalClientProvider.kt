@@ -29,7 +29,7 @@ import reactor.netty.transport.logging.AdvancedByteBufFormat
 class HaalCentraalClientProvider(
     private val haalCentraalClientConfig: HaalCentraalClientConfig,
     private val clientSslContextResolver: ClientSslContextResolver? = null,
-    private val userTokenExchangeFilter: UserTokenExchangeFilter? = null
+    private val userTokenExchangeFilter: UserTokenExchangeFilter? = null,
 ) {
     fun webClient(authentication: Authentication): WebClient {
         return WebClient.builder()
@@ -41,14 +41,14 @@ class HaalCentraalClientProvider(
                     HttpClient.create().wiretap(
                         "reactor.netty.http.client.HttpClient",
                         LogLevel.DEBUG,
-                        AdvancedByteBufFormat.TEXTUAL
+                        AdvancedByteBufFormat.TEXTUAL,
                     ).let { client ->
                         var result = client
                         if (clientSslContextResolver != null) {
                             haalCentraalClientConfig.ssl?.let {
                                 val sslContext = clientSslContextResolver.resolve(
                                     it.key,
-                                    it.trustedCertificate
+                                    it.trustedCertificate,
                                 )
 
                                 result = client.secure { builder -> builder.sslContext(sslContext) }
@@ -57,8 +57,8 @@ class HaalCentraalClientProvider(
                             }
                         }
                         result
-                    }
-                )
+                    },
+                ),
             )
             .baseUrl(haalCentraalClientConfig.url)
             .apply {

@@ -31,7 +31,7 @@ class CatalogiApiAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(CatalogiApiService::class)
     fun catalogiApiService(
-        catalogiApiClient: CatalogiApiClient
+        catalogiApiClient: CatalogiApiClient,
     ): CatalogiApiService {
         return CatalogiApiService(catalogiApiClient)
     }
@@ -44,7 +44,7 @@ class CatalogiApiAutoConfiguration {
     @Bean
     fun catalogiApiClient(
         catalogiApiConfig: CatalogiApiConfig,
-        idTokenGenerator: IdTokenGenerator
+        idTokenGenerator: IdTokenGenerator,
     ): CatalogiApiClient {
         return CatalogiApiClient(catalogiApiConfig, idTokenGenerator)
     }

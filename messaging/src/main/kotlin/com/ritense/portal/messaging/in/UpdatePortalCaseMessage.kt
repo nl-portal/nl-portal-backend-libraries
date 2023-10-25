@@ -20,5 +20,5 @@ import com.fasterxml.jackson.databind.JsonNode
 
 data class UpdatePortalCaseMessage(
     val externalId: String,
-    val properties: Map<JsonPointer, JsonNode>
+    val properties: Map<JsonPointer, JsonNode>,
 )

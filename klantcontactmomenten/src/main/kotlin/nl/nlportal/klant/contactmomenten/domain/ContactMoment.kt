@@ -29,5 +29,5 @@ data class ContactMoment(
     val voorkeurstaal: String?,
     val tekst: String,
     val initiatiefnemer: String?,
-    val medewerker: String?
+    val medewerker: String?,
 )

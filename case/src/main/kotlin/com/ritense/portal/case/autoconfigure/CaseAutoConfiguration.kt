@@ -44,7 +44,7 @@ class CaseAutoConfiguration {
     @ConditionalOnMissingBean(CaseDefinitionService::class)
     fun caseDefinitionService(
         caseDefinitionRepository: CaseDefinitionRepository,
-        resourceLoader: ResourceLoader
+        resourceLoader: ResourceLoader,
     ): CaseDefinitionService {
         return CaseDefinitionService(caseDefinitionRepository, resourceLoader)
     }
@@ -54,7 +54,7 @@ class CaseAutoConfiguration {
     fun caseService(
         caseRepository: CaseRepository,
         caseDefinitionService: CaseDefinitionService,
-        sink: Sinks.Many<PortalMessage>
+        sink: Sinks.Many<PortalMessage>,
     ): CaseService {
         return CaseService(caseRepository, caseDefinitionService, sink)
     }
@@ -62,7 +62,7 @@ class CaseAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(CaseDefinitionApplicationReadyEventListener::class)
     fun caseDefinitionApplicationReadyEventListener(
-        caseDefinitionService: CaseDefinitionService
+        caseDefinitionService: CaseDefinitionService,
     ): CaseDefinitionApplicationReadyEventListener {
         return CaseDefinitionApplicationReadyEventListener(caseDefinitionService)
     }

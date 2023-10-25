@@ -29,7 +29,7 @@ class ContactMomentPage(
             return ContactMomentPage(
                 number = pageNumber,
                 content = resultPage.results,
-                totalElements = resultPage.count
+                totalElements = resultPage.count,
             )
         }
     }

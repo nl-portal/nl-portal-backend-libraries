@@ -25,5 +25,5 @@ import java.lang.annotation.Inherited
 annotation class WithBedrijfUser(
     val kvkNummer: String,
     val gemachtigdeBsn: String = "",
-    val gemachtigdeKvk: String = ""
+    val gemachtigdeKvk: String = "",
 )

@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 data class CreateFormDefinitionRequest(
     private val name: String,
     private val formDefinition: ObjectNode,
-    private val isReadOnly: Boolean
+    private val isReadOnly: Boolean,
 ) {
     fun getName(): String {
         return name

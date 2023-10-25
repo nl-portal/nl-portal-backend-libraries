@@ -61,7 +61,7 @@ internal class GemachtigdeQueryTest {
             )
         )
         whenever(handelsregisterService.getGemachtigde(authentication)).thenReturn(
-            MaatschappelijkeActiviteit("test")
+            MaatschappelijkeActiviteit("test"),
         )
 
         val gemachtigde = query.getGemachtigde(environment)

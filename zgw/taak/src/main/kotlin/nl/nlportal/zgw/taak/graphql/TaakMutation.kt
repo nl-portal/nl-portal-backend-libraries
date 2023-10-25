@@ -26,7 +26,7 @@ import graphql.schema.DataFetchingEnvironment
 import java.util.UUID
 
 class TaakMutation(
-    private val taskService: TaakService
+    private val taskService: TaakService,
 ) : Mutation {
 
     @GraphQLDescription("Submit a task")

@@ -37,7 +37,7 @@ class TaakPage(
                 size = pageSize,
                 content = tasks,
                 results = tasks,
-                totalElements = resultPage.count
+                totalElements = resultPage.count,
             )
         }
     }

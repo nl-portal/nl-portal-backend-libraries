@@ -21,5 +21,5 @@ data class PersoonVerblijfplaats(
     val huisletter: String? = null,
     val huisnummertoevoeging: String? = null,
     val postcode: String? = null,
-    val woonplaats: String? = null
+    val woonplaats: String? = null,
 )

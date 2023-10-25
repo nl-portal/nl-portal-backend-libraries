@@ -44,11 +44,11 @@ class KlantGeneriekAutoConfiguration {
     @ConditionalOnMissingBean(OpenKlantClientProvider::class)
     fun openKlantClientProvider(
         openKlantClientConfig: OpenKlantClientConfig,
-        idTokenGenerator: IdTokenGenerator
+        idTokenGenerator: IdTokenGenerator,
     ): OpenKlantClientProvider {
         return OpenKlantClientProvider(
             openKlantClientConfig,
-            idTokenGenerator
+            idTokenGenerator,
         )
     }
 }

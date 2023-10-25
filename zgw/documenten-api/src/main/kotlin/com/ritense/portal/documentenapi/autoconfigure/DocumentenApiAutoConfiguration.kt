@@ -15,8 +15,8 @@
  */
 package com.ritense.portal.documentenapi.autoconfigure
 
+import com.ritense.portal.documentenapi.client.DocumentApisConfig
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
-import com.ritense.portal.documentenapi.client.DocumentenApiConfig
 import com.ritense.portal.documentenapi.graphql.DocumentContentQuery
 import com.ritense.portal.documentenapi.security.config.DocumentContentResourceHttpSecurityConfigurer
 import com.ritense.portal.documentenapi.service.DocumentenApiService
@@ -36,22 +36,17 @@ class DocumentenApiAutoConfiguration {
     @ConditionalOnMissingBean(DocumentenApiService::class)
     fun documentenApiService(
         documentenApiClient: DocumentenApiClient,
-        documentenApiConfig: DocumentenApiConfig
+        documentApisConfig: DocumentApisConfig,
     ): DocumentenApiService {
-        return DocumentenApiService(documentenApiClient, documentenApiConfig)
-    }
-
-    @Bean
-    fun documentenApiConfig(): DocumentenApiConfig {
-        return DocumentenApiConfig()
+        return DocumentenApiService(documentenApiClient, documentApisConfig)
     }
 
     @Bean
     fun documentenApiClient(
-        documentenApiConfig: DocumentenApiConfig,
-        idTokenGenerator: IdTokenGenerator
+        documentApisConfig: DocumentApisConfig,
+        idTokenGenerator: IdTokenGenerator,
     ): DocumentenApiClient {
-        return DocumentenApiClient(documentenApiConfig, idTokenGenerator)
+        return DocumentenApiClient(documentApisConfig, idTokenGenerator)
     }
 
     @Bean

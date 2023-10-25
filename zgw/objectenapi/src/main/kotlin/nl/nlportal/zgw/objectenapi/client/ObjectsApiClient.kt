@@ -59,7 +59,7 @@ open class ObjectsApiClient(
         objectTypeUrl: String? = null,
         page: Int,
         pageSize: Int,
-        ordering: String? = null
+        ordering: String? = null,
     ): ResultPage<ObjectsApiObject<T>> {
         return webClient()
             .get()
@@ -97,9 +97,9 @@ open class ObjectsApiClient(
                     HttpClient.create().wiretap(
                         "reactor.netty.http.client.HttpClient",
                         LogLevel.DEBUG,
-                        AdvancedByteBufFormat.TEXTUAL
-                    )
-                )
+                        AdvancedByteBufFormat.TEXTUAL,
+                    ),
+                ),
             )
             .baseUrl(objectsApiClientConfig.url.toString())
             .defaultHeader("Accept-Crs", "EPSG:4326")
@@ -115,9 +115,9 @@ open class ObjectsApiClient(
                     HttpClient.create().wiretap(
                         "reactor.netty.http.client.HttpClient",
                         LogLevel.DEBUG,
-                        AdvancedByteBufFormat.TEXTUAL
-                    )
-                )
+                        AdvancedByteBufFormat.TEXTUAL,
+                    ),
+                ),
             )
             .defaultHeader("Accept-Crs", "EPSG:4326")
             .defaultHeader("Content-Crs", "EPSG:4326")

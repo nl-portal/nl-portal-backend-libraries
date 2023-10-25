@@ -16,5 +16,5 @@
 package com.ritense.portal.zakenapi.domain
 
 data class ZaakRol(
-    val zaak: String
+    val zaak: String,
 )

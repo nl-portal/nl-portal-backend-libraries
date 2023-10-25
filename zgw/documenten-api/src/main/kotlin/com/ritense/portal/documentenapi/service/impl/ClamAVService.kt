@@ -13,7 +13,7 @@ import java.io.PipedInputStream
 import java.io.PipedOutputStream
 
 class ClamAVService(
-    private val clamAVClient: ClamavClient
+    private val clamAVClient: ClamavClient,
 ) : VirusScanService {
 
     override fun scan(content: Flux<DataBuffer>): VirusScanResult {

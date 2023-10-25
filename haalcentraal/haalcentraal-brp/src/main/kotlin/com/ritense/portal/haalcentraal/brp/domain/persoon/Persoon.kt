@@ -21,5 +21,5 @@ data class Persoon(
     val naam: PersoonNaam? = null,
     val geboorte: PersoonGeboorte? = null,
     val nationaliteiten: List<PersoonNationaliteiten>? = null,
-    val verblijfplaats: PersoonVerblijfplaats? = null
+    val verblijfplaats: PersoonVerblijfplaats? = null,
 )

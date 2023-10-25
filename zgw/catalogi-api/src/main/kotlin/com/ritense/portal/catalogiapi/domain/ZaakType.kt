@@ -17,5 +17,5 @@ package com.ritense.portal.catalogiapi.domain
 
 data class ZaakType(
     val identificatie: String,
-    val omschrijving: String
+    val omschrijving: String,
 )

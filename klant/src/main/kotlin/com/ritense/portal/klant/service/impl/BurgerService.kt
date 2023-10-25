@@ -29,7 +29,7 @@ import kotlin.random.Random
 
 class BurgerService(
     val openKlantClientConfig: OpenKlantClientConfig,
-    val openKlantClient: OpenKlantClient
+    val openKlantClient: OpenKlantClient,
 ) : BurgerService {
 
     override suspend fun getBurgerProfiel(authentication: CommonGroundAuthentication): Klant? {
@@ -82,8 +82,8 @@ class BurgerService(
             emailadres,
             "natuurlijk_persoon",
             SubjectIdentificatie(
-                authentication.getBsn()
-            )
+                authentication.getBsn(),
+            ),
         )
 
         return openKlantClient.postKlant(authentication, klantRequest)

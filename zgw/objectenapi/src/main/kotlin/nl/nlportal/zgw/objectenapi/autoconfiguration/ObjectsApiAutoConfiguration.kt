@@ -29,7 +29,7 @@ class ObjectsApiAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(ObjectsApiClient::class)
     fun objectsApiClient(
-        objectsApiClientConfig: ObjectsApiClientConfig
+        objectsApiClientConfig: ObjectsApiClientConfig,
     ): ObjectsApiClient {
         return ObjectsApiClient(objectsApiClientConfig)
     }
@@ -38,7 +38,7 @@ class ObjectsApiAutoConfiguration {
     @ConditionalOnMissingBean(ObjectenApiService::class)
     fun objectenApiService(
         objectsApiClient: ObjectsApiClient,
-        objectsApiClientConfig: ObjectsApiClientConfig
+        objectsApiClientConfig: ObjectsApiClientConfig,
     ): ObjectenApiService {
         return ObjectenApiService(objectsApiClient, objectsApiClientConfig)
     }

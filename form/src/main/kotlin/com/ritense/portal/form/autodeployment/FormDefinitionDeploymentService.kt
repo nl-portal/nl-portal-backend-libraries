@@ -30,7 +30,7 @@ import java.nio.charset.StandardCharsets
 
 class FormDefinitionDeploymentService(
     private val formIoFormDefinitionService: FormIoFormDefinitionService,
-    private val resourceLoader: ResourceLoader
+    private val resourceLoader: ResourceLoader,
 ) {
 
     fun deployAllFromResourceFiles() = try {
@@ -47,8 +47,8 @@ class FormDefinitionDeploymentService(
                     CreateFormDefinitionRequest(
                         name,
                         rawFormDefinition,
-                        true
-                    )
+                        true,
+                    ),
                 )
             } else {
                 if (form.formDefinition != rawFormDefinition) {
@@ -77,7 +77,7 @@ class FormDefinitionDeploymentService(
     @Throws(IOException::class)
     private fun loadResources(): Array<Resource> {
         return ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources(
-            PATH
+            PATH,
         )
     }
 

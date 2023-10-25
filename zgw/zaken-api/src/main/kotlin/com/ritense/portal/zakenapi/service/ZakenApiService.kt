@@ -32,6 +32,8 @@ import com.ritense.portal.zakenapi.domain.ZaakRol
 import com.ritense.portal.zakenapi.domain.ZaakStatus
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 import java.util.Locale
 import java.util.UUID
 
@@ -39,7 +41,7 @@ class ZakenApiService(
     private val zakenApiClient: ZakenApiClient,
     private val documentenApiService: DocumentenApiService,
     private val objectsApiClient: ObjectsApiClient,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
 ) {
 
     suspend fun getZaken(page: Int, authentication: CommonGroundAuthentication): List<Zaak> {
@@ -48,27 +50,24 @@ class ZakenApiService(
             // we will need to change this when a better filter becomes available for kvk nummer in zaak list endpoint
             is BedrijfAuthentication -> getZaakRollen(null, authentication.getKvkNummer(), null)
                 .map { getZaakFromZaakApi(extractId(it.zaak)) }
-
             else -> throw IllegalArgumentException("Cannot get zaken for this user")
         }
     }
 
     suspend fun getZaak(id: UUID, authentication: CommonGroundAuthentication): Zaak {
-        val zaak = getZaakFromZaakApi(id)
-
         // get rollen for zaak based on current user
         val rollen: List<ZaakRol> = when (authentication) {
             is BurgerAuthentication -> getZaakRollen(authentication.getBsn(), null, id)
             is BedrijfAuthentication -> getZaakRollen(null, authentication.getKvkNummer(), id)
-            else -> throw IllegalArgumentException("Cannot get zaak for this user")
+            else -> throw IllegalArgumentException("Authentication not (yet) supported")
         }
 
         // if no rol is found, the current user does not have access to this zaak
         if (rollen.isEmpty()) {
-            throw IllegalStateException("Access denied to this zaak")
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this zaak")
         }
 
-        return zaak
+        return getZaakFromZaakApi(id)
     }
 
     suspend fun getZaakFromZaakApi(id: UUID): Zaak {
@@ -81,7 +80,7 @@ class ZakenApiService(
 
     suspend fun getDocumenten(zaakUrl: String): List<Document> {
         return getZaakDocumenten(zaakUrl)
-            .map { documentenApiService.getDocument(DocumentenApiService.extractId(it.informatieobject!!)) }
+            .map { documentenApiService.getDocument(it.informatieobject!!) }
             .filter { it.status in listOf(DocumentStatus.DEFINITIEF, DocumentStatus.GEARCHIVEERD) }
     }
 
@@ -130,10 +129,10 @@ class ZakenApiService(
     }
 
     private suspend fun getObjectApiZaakDetails(
-        objectUrl: String
+        objectUrl: String,
     ): ObjectsApiObject<ZaakDetailsObject>? {
         return objectsApiClient.getObjectByUrl<ZaakDetailsObject>(
-            url = objectUrl
+            url = objectUrl,
         )
     }
 

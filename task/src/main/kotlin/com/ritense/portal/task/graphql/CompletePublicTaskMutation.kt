@@ -26,14 +26,14 @@ import com.ritense.portal.task.service.TaskService
 
 class CompletePublicTaskMutation(
     private val taskService: TaskService,
-    private val caseService: CaseService
+    private val caseService: CaseService,
 ) : Mutation {
 
     @IsUnauthenticated
     @GraphQLDescription("Mutation used to complete public tasks")
     fun completePublicTask(
         taskExternalId: String,
-        submission: ObjectNode
+        submission: ObjectNode,
     ): TaskInstance {
         try {
             val completedTask = taskService.completePublicTask(taskExternalId, submission)

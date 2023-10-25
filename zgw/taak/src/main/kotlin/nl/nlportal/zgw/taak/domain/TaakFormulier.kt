@@ -9,7 +9,7 @@ data class TaakFormulier(
     val type: String?,
     @GraphQLIgnore
     val formuliertype: String?,
-    val value: String
+    val value: String,
 ) {
     @GraphQLDescription(value = "Will return only 'portalid', 'objecturl', 'externalurl'")
     fun formuliertype(): String {

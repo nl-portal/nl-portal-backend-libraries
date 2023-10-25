@@ -35,7 +35,7 @@ class GraphQLTestConfiguration {
     fun getTasksPayload(): String {
         return StreamUtils.copyToString(
             getTasksFile.inputStream,
-            StandardCharsets.UTF_8
+            StandardCharsets.UTF_8,
         )
     }
 
@@ -43,7 +43,7 @@ class GraphQLTestConfiguration {
     fun getTaskByIdPayload(): String {
         return StreamUtils.copyToString(
             getTaskByIdFile.inputStream,
-            StandardCharsets.UTF_8
+            StandardCharsets.UTF_8,
         )
     }
 }

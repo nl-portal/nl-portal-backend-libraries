@@ -38,13 +38,13 @@ class ZakenApiAutoConfiguration {
         zakenApiClient: ZakenApiClient,
         documentenApiService: DocumentenApiService,
         objectsApiClient: ObjectsApiClient,
-        objectMapper: ObjectMapper
+        objectMapper: ObjectMapper,
     ): ZakenApiService {
         return ZakenApiService(
             zakenApiClient,
             documentenApiService,
             objectsApiClient,
-            objectMapper
+            objectMapper,
         )
     }
 
@@ -56,7 +56,7 @@ class ZakenApiAutoConfiguration {
     @Bean
     fun zakenApiClient(
         zakenApiConfig: ZakenApiConfig,
-        idTokenGenerator: IdTokenGenerator
+        idTokenGenerator: IdTokenGenerator,
     ): ZakenApiClient {
         return ZakenApiClient(zakenApiConfig, idTokenGenerator)
     }

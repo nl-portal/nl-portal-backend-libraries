@@ -20,10 +20,10 @@ import org.springframework.web.cors.CorsConfiguration
 
 @ConfigurationProperties(prefix = "valtimo")
 data class CorsPathConfiguration(
-    var cors: List<CorsPathConfigurationItem> = emptyList()
+    var cors: List<CorsPathConfigurationItem> = emptyList(),
 )
 
 data class CorsPathConfigurationItem(
     var path: String = "",
-    var config: CorsConfiguration = CorsConfiguration()
+    var config: CorsConfiguration = CorsConfiguration(),
 )

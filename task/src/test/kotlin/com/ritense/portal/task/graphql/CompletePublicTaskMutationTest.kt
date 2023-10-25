@@ -65,8 +65,8 @@ class CompletePublicTaskMutationTest : BaseTest() {
                 Mapper.get().createObjectNode(),
                 true,
                 LocalDateTime.now(),
-                false
-            )
+                false,
+            ),
         )
         Mockito.`when`(caseService.getCase(externalCaseId)).thenReturn(case)
         Mockito.`when`(case.caseDefinitionId).thenReturn(CaseDefinitionId.existingId("caseDefinitionId"))
@@ -93,7 +93,7 @@ class CompletePublicTaskMutationTest : BaseTest() {
         val submission = Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java)
 
         Mockito.`when`(taskService.completePublicTask(taskId.toString(), submission)).thenThrow(
-            UnauthorizedTaskException()
+            UnauthorizedTaskException(),
         )
 
         Assertions.assertThrows(UnauthorizedException::class.java) {

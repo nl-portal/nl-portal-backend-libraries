@@ -49,7 +49,7 @@ internal class TaskServiceIntTest : BaseIntegrationTest() {
             "some-external-id",
             Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java),
             "some-task-def-key",
-            true
+            true,
         )
 
         val newTask = taskService.createPortalTask(createPortalTaskMessage)
@@ -81,7 +81,7 @@ internal class TaskServiceIntTest : BaseIntegrationTest() {
         val completedTask = taskService.completeTask(
             dummyTask.taskId.value,
             Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java),
-            "some-user-id"
+            "some-user-id",
         )
         assertThat(completedTask.isCompleted()).isTrue
     }
@@ -95,7 +95,7 @@ internal class TaskServiceIntTest : BaseIntegrationTest() {
             taskService.completeTask(
                 dummyTask.taskId.value,
                 Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java),
-                "some-other-user-id"
+                "some-other-user-id",
             )
         }
     }
@@ -107,7 +107,7 @@ internal class TaskServiceIntTest : BaseIntegrationTest() {
 
         val completedTask = taskService.completePublicTask(
             dummyTask.externalTaskId,
-            Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java)
+            Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java),
         )
         assertThat(completedTask.isCompleted()).isTrue
     }
@@ -120,7 +120,7 @@ internal class TaskServiceIntTest : BaseIntegrationTest() {
         Assertions.assertThrows(UnauthorizedTaskException::class.java) {
             taskService.completePublicTask(
                 dummyTask.externalTaskId,
-                Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java)
+                Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java),
             )
         }
     }
@@ -132,7 +132,7 @@ internal class TaskServiceIntTest : BaseIntegrationTest() {
         assertThat(task.externalTaskId).isNotNull
 
         val deleteMessage = DeletePortalTaskMessage(
-            task.externalTaskId
+            task.externalTaskId,
         )
         taskService.deletePortalTask(deleteMessage)
 
@@ -149,7 +149,7 @@ internal class TaskServiceIntTest : BaseIntegrationTest() {
         assertThat(task.externalTaskId).isNotNull
 
         val deleteMessage = DeletePortalTaskMessage(
-            task.externalTaskId
+            task.externalTaskId,
         )
         taskService.deletePortalTask(deleteMessage)
 

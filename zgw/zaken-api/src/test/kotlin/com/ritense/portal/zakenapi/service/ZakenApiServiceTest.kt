@@ -39,6 +39,7 @@ import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 
 import org.springframework.security.oauth2.jwt.Jwt
+import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
 
 @ExperimentalCoroutinesApi

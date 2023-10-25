@@ -18,7 +18,7 @@ package nl.nlportal.zgw.objectenapi.domain
 data class ObjectSearchParameter(
     val attribute: String,
     val comparator: Comparator,
-    val value: String
+    val value: String,
 ) {
     fun toQueryParameter() = attribute + "__" + comparator.value + "__" + value
 

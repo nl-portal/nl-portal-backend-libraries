@@ -17,5 +17,5 @@ package com.ritense.portal.commonground.authentication
 
 class AuthenticationGemachtigde(
     val bsn: String? = null,
-    val kvk: String? = null
+    val kvk: String? = null,
 )

@@ -24,7 +24,7 @@ data class UpdateObjectsApiObjectRequest<T>(
         fun <T> fromObjectsApiObject(objectsApiObject: ObjectsApiObject<T>): UpdateObjectsApiObjectRequest<T> {
             return UpdateObjectsApiObjectRequest(
                 objectsApiObject.type,
-                UpdateObjectsApiObjectRequestRecord.fromObjectsApiObjectRecord(objectsApiObject.record)
+                UpdateObjectsApiObjectRequestRecord.fromObjectsApiObjectRecord(objectsApiObject.record),
             )
         }
     }

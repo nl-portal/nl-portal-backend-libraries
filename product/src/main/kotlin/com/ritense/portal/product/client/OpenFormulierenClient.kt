@@ -24,7 +24,7 @@ import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
 
 class OpenFormulierenClient(
-    val openFormulierenClientConfig: OpenFormulierenClientConfig
+    val openFormulierenClientConfig: OpenFormulierenClientConfig,
 ) {
     suspend fun getForms(): List<Form> {
         return webClient()
@@ -41,9 +41,9 @@ class OpenFormulierenClient(
                     HttpClient.create().wiretap(
                         "reactor.netty.http.client.HttpClient",
                         LogLevel.DEBUG,
-                        AdvancedByteBufFormat.TEXTUAL
-                    )
-                )
+                        AdvancedByteBufFormat.TEXTUAL,
+                    ),
+                ),
             )
             .baseUrl(openFormulierenClientConfig.url)
             .defaultHeader("Authorization", "Token ${openFormulierenClientConfig.token}")

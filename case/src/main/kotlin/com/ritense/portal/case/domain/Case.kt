@@ -62,7 +62,7 @@ data class Case(
     val caseDefinitionId: CaseDefinitionId,
 
     @Column(name = "created_on", columnDefinition = "TIMESTAMPTZ", nullable = false)
-    val createdOn: LocalDateTime = LocalDateTime.now()
+    val createdOn: LocalDateTime = LocalDateTime.now(),
 
 ) : Persistable<CaseId>, AggregateRoot<DomainEvent>() {
 

@@ -37,7 +37,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class ContactMomentQueryIT(
     @Autowired private val testClient: WebTestClient,
-    @Autowired private val openKlantClientConfig: OpenKlantClientConfig
+    @Autowired private val openKlantClientConfig: OpenKlantClientConfig,
 ) {
 
     lateinit var server: MockWebServer

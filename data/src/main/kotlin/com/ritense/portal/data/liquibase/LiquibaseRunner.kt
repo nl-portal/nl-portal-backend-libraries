@@ -31,7 +31,7 @@ import javax.sql.DataSource
 class LiquibaseRunner(
     private val liquibaseMasterChangeLogLocations: List<LiquibaseMasterChangeLogLocation>,
     liquibaseProperties: LiquibaseProperties,
-    private val datasource: DataSource
+    private val datasource: DataSource,
 ) {
     private val context: Contexts
 
@@ -60,12 +60,12 @@ class LiquibaseRunner(
 
     private fun runChangeLog(database: Database, filePath: String?) {
         val liquibase = Liquibase(filePath, ClassLoaderResourceAccessor(), database)
-        logger.info("Running liquibase master changelog: {}", liquibase.getChangeLogFile())
+        logger.info("Running liquibase master changelog: {}", liquibase.changeLogFile)
         liquibase.update(context)
     }
 
     init {
-        context = Contexts(liquibaseProperties.getContexts())
+        context = Contexts(liquibaseProperties.contexts)
     }
 
     companion object {

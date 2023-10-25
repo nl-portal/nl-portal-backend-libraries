@@ -20,5 +20,5 @@ import com.ritense.portal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 
 class Gemachtigde(
     val persoon: PersoonNaam?,
-    val bedrijf: MaatschappelijkeActiviteit?
+    val bedrijf: MaatschappelijkeActiviteit?,
 )

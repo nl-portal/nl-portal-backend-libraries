@@ -55,13 +55,13 @@ internal class KeyCloakUserTokenExchangeFilterTest {
         server.enqueue(
             MockResponse()
                 .setBody("""{"access_token":"$exchangeToken"}""")
-                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE),
         )
 
         server.enqueue(
             MockResponse()
                 .setBody("OK")
-                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN)
+                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN),
         )
     }
 
@@ -84,7 +84,7 @@ internal class KeyCloakUserTokenExchangeFilterTest {
             .defaultRequest { spec ->
                 spec.attribute(
                     HaalCentraalClientProvider.AUTHENTICATION_ATTRIBUTE_NAME,
-                    JwtAuthenticationToken(userToken)
+                    JwtAuthenticationToken(userToken),
                 )
             }
             .baseUrl(serverPath)
@@ -93,8 +93,8 @@ internal class KeyCloakUserTokenExchangeFilterTest {
             .filter(
                 KeyCloakUserTokenExchangeFilter(
                     clientBuilder.clone().build(),
-                    "targetClient"
-                )
+                    "targetClient",
+                ),
             )
             .build()
 

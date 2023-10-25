@@ -36,7 +36,7 @@ class HandelsregisterServiceTest {
     fun `getMaatschappelijkeActiviteit calls client and gets MaatschappelijkeActiviteit`() = runTest {
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
         whenever(handelsregisterClient.getMaatschappelijkeActiviteit("123", authentication)).thenReturn(
-            MaatschappelijkeActiviteit("Test bedrijf")
+            MaatschappelijkeActiviteit("Test bedrijf"),
         )
 
         val bedrijf = handelsregisterService.getMaatschappelijkeActiviteit(authentication)!!

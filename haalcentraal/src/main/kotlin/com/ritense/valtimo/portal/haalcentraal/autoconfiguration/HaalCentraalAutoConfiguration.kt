@@ -45,7 +45,7 @@ class HaalCentraalAutoConfiguration {
     @ConditionalOnProperty("valtimo.haalcentraal.tokenExchange.targetAudience", matchIfMissing = false)
     @ConditionalOnMissingBean(UserTokenExchangeFilter::class)
     fun userTokenExchangeFilterFactory(
-        haalCentraalClientConfig: HaalCentraalClientConfig
+        haalCentraalClientConfig: HaalCentraalClientConfig,
     ): UserTokenExchangeFilter {
         requireNotNull(haalCentraalClientConfig.tokenExchange)
         return KeyCloakUserTokenExchangeFilter(WebClient.create(), haalCentraalClientConfig.tokenExchange.targetAudience)
@@ -56,7 +56,7 @@ class HaalCentraalAutoConfiguration {
     fun haalCentraalClientProvider(
         haalCentraalClientConfig: HaalCentraalClientConfig,
         @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
-        @Autowired(required = false) userTokenExchangeFilter: UserTokenExchangeFilter? = null
+        @Autowired(required = false) userTokenExchangeFilter: UserTokenExchangeFilter? = null,
     ): HaalCentraalClientProvider {
         return HaalCentraalClientProvider(haalCentraalClientConfig, clientSslContextResolver, userTokenExchangeFilter)
     }

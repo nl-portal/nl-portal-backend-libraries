@@ -29,7 +29,7 @@ class JwtBuilder {
         assert(aanvragerKvk == null, { "cannot set bsn for jwt that already has kvk" })
 
         val aanvrager = mapOf<String, Any>(
-            BSN_KEY to bsn
+            BSN_KEY to bsn,
         )
         jwtBuilder.claim(AANVRAGER_KEY, aanvrager)
         this.aanvragerBsn = bsn
@@ -41,7 +41,7 @@ class JwtBuilder {
         assert(aanvragerBsn == null, { "cannot set kvk for jwt that already has bsn" })
 
         val aanvrager = mapOf<String, Any>(
-            KVK_NUMMER_KEY to kvk
+            KVK_NUMMER_KEY to kvk,
         )
         jwtBuilder.claim(AANVRAGER_KEY, aanvrager)
         this.aanvragerKvk = kvk
@@ -51,7 +51,7 @@ class JwtBuilder {
 
     fun gemachtigdeBsn(bsn: String): JwtBuilder {
         val gemachtigde = mapOf<String, Any>(
-            BSN_KEY to bsn
+            BSN_KEY to bsn,
         )
         jwtBuilder.claim(GEMACHTIGDE_KEY, gemachtigde)
 
@@ -60,7 +60,7 @@ class JwtBuilder {
 
     fun gemachtigdeKvk(kvk: String): JwtBuilder {
         val gemachtigde = mapOf<String, Any>(
-            KVK_NUMMER_KEY to kvk
+            KVK_NUMMER_KEY to kvk,
         )
         jwtBuilder.claim(GEMACHTIGDE_KEY, gemachtigde)
 

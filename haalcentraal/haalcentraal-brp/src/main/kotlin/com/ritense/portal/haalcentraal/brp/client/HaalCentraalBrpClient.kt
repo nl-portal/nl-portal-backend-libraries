@@ -24,7 +24,7 @@ import org.springframework.web.reactive.function.client.awaitBody
 import java.time.LocalDate
 
 class HaalCentraalBrpClient(
-    val haalCentraalClientProvider: HaalCentraalClientProvider
+    val haalCentraalClientProvider: HaalCentraalClientProvider,
 ) {
 
     suspend fun getPersoon(bsn: String, authentication: Authentication): Persoon {
@@ -34,7 +34,7 @@ class HaalCentraalBrpClient(
                 val uriBuilder = it.path("/brp/ingeschrevenpersonen/$bsn")
                     .queryParam(
                         "fields",
-                        "naam,nationaliteiten,geslachtsaanduiding,geboorte,burgerservicenummer,verblijfplaats"
+                        "naam,nationaliteiten,geslachtsaanduiding,geboorte,burgerservicenummer,verblijfplaats",
                     )
                 uriBuilder.build()
             }
@@ -49,7 +49,7 @@ class HaalCentraalBrpClient(
                 val uriBuilder = it.path("/brp/ingeschrevenpersonen/$bsn")
                     .queryParam(
                         "fields",
-                        "naam"
+                        "naam",
                     )
                 uriBuilder.build()
             }

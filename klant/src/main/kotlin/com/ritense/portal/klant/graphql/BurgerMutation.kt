@@ -26,7 +26,7 @@ import graphql.schema.DataFetchingEnvironment
 
 class BurgerMutation(
     val burgerService: BurgerService,
-    val graphQlValidator: GraphQlValidator
+    val graphQlValidator: GraphQlValidator,
 ) : Mutation {
 
     @GraphQLDescription("Updates the profile for the user")

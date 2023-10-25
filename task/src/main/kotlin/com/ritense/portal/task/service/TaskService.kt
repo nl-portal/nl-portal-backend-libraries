@@ -32,7 +32,7 @@ import java.util.UUID
 open class TaskService(
     private val taskRepository: TaskRepository,
     private val sink: Sinks.Many<PortalMessage>,
-    private val caseService: CaseService
+    private val caseService: CaseService,
 ) {
 
     fun createPortalTask(message: CreatePortalTaskMessage): Task {
@@ -45,8 +45,8 @@ open class TaskService(
                 externalCaseId = message.externalCaseId,
                 formDefinition = message.formDefinition,
                 isPublic = message.isPublic,
-                userId = case!!.userId
-            )
+                userId = case!!.userId,
+            ),
         )
     }
 

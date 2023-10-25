@@ -66,7 +66,7 @@ data class Task(
     val createdOn: LocalDateTime = LocalDateTime.now(),
 
     @Column(name = "public", columnDefinition = "BOOLEAN")
-    val isPublic: Boolean = false
+    val isPublic: Boolean = false,
 ) : Persistable<TaskId> {
 
     init {

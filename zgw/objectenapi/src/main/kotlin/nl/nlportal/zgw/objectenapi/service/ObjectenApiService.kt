@@ -24,13 +24,13 @@ import java.net.URI
 
 class ObjectenApiService(
     val objectsApiClient: ObjectsApiClient,
-    val objectsApiClientConfig: ObjectsApiClientConfig
+    val objectsApiClientConfig: ObjectsApiClientConfig,
 ) {
     suspend inline fun <reified T> getObjects(
         objectSearchParameters: List<ObjectSearchParameter>,
         objectTypeUrl: String,
         pageNumber: Int,
-        pageSize: Int
+        pageSize: Int,
     ): ResultPage<ObjectsApiObject<T>> {
         return objectsApiClient.getObjects(
             objectSearchParameters = objectSearchParameters,
@@ -41,13 +41,13 @@ class ObjectenApiService(
     }
 
     suspend inline fun <reified T> getObjectById(
-        objectId: String
+        objectId: String,
     ): ObjectsApiObject<T>? {
         return objectsApiClient.getObjectById(objectId)
     }
 
     suspend inline fun <reified T> getObjectByUrl(
-        url: String
+        url: String,
     ): ObjectsApiObject<T>? {
         val requestedObjectenApiHost = URI.create(url).host
         val configuredObjectenApiHost = objectsApiClientConfig.url.host

@@ -25,12 +25,12 @@ import nl.nlportal.klant.contactmomenten.service.KlantContactMomentenService
 
 class KlantContactMomentenServiceImpl(
     val klantContactMomentenClient: KlantContactMomentenClient,
-    val klantClient: OpenKlantClient
+    val klantClient: OpenKlantClient,
 ) : KlantContactMomentenService {
 
     override suspend fun getKlantContactMomenten(
         authentication: CommonGroundAuthentication,
-        page: Int
+        page: Int,
     ): ContactMomentPage? {
         when (authentication) {
             is BurgerAuthentication -> {
@@ -41,7 +41,7 @@ class KlantContactMomentenServiceImpl(
                     return klantContactMomentenClient.getKlantContactMomenten(
                         authentication,
                         klanten[0].url,
-                        page
+                        page,
                     ).let { ContactMomentPage.fromResultPage(page, it) }
                 } else {
                     throw IllegalStateException("Multiple klanten found for BSN: ${authentication.getBsn()}")
@@ -59,12 +59,12 @@ class KlantContactMomentenServiceImpl(
     override suspend fun getObjectContactMomenten(
         authentication: CommonGroundAuthentication,
         objectUrl: String,
-        page: Int
+        page: Int,
     ): ContactMomentPage {
         return klantContactMomentenClient.getObjectContactMomenten(
             authentication,
             objectUrl,
-            page
+            page,
         ).let { ContactMomentPage.fromResultPage(page, it) }
     }
 }

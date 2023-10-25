@@ -24,7 +24,7 @@ import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.client.awaitBody
 
 class OpenKlantClient(
-    private val openKlantClientProvider: OpenKlantClientProvider
+    private val openKlantClientProvider: OpenKlantClientProvider,
 ) {
     suspend fun getKlanten(authentication: CommonGroundAuthentication, page: Int, bsn: String?): List<Klant> {
         return openKlantClientProvider.webClient(authentication)

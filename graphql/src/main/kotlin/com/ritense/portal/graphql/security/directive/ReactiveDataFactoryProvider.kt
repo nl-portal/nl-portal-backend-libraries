@@ -25,7 +25,7 @@ import kotlin.reflect.full.findAnnotation
 
 class ReactiveDataFactoryProvider(
     private val objectMapper: ObjectMapper,
-    private val applicationContext: ApplicationContext
+    private val applicationContext: ApplicationContext,
 ) :
     SimpleKotlinDataFetcherFactoryProvider() {
 
@@ -35,7 +35,7 @@ class ReactiveDataFactoryProvider(
             target = target,
             fn = kFunction,
             objectMapper = objectMapper,
-            applicationContext = applicationContext
+            applicationContext = applicationContext,
         )
         when {
             isUnauthenticated != null -> defaultDataFetcher

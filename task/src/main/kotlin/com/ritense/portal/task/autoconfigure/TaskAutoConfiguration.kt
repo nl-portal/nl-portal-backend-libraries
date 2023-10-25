@@ -41,7 +41,7 @@ class TaskAutoConfiguration {
     fun taskService(
         taskRepository: TaskRepository,
         sink: Sinks.Many<PortalMessage>,
-        caseService: CaseService
+        caseService: CaseService,
     ): TaskService {
         return TaskService(taskRepository, sink, caseService)
     }
