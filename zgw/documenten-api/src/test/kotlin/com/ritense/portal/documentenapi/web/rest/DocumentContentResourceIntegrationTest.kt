@@ -99,7 +99,7 @@ class DocumentContentResourceIntegrationTest(
             .expectStatus().isOk
             .expectBody()
 
-        val requestBody = getRequestBody(HttpMethod.POST, "/documenten/api/v1/enkelvoudiginformatieobjecten", PostEnkelvoudiginformatieobjectRequest::class.java)
+        val requestBody = getRequestBody(HttpMethod.POST, "/enkelvoudiginformatieobjecten", PostEnkelvoudiginformatieobjectRequest::class.java)
         assertThat(requestBody.bronorganisatie).isEqualTo("051845623")
         assertThat(requestBody.creatiedatum).isNotBlank
         assertThat(requestBody.titel).isEqualTo("test-file.txt")
@@ -119,13 +119,13 @@ class DocumentContentResourceIntegrationTest(
                 executedRequests.add(request)
                 val path = request.path?.substringBefore('?')
                 val response = when (request.method + " " + path) {
-                    "GET /documenten/api/v1/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f/download",
+                    "GET /enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f/download",
                     -> handleDocumentContentRequest()
 
-                    "GET /documenten/api/v1/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+                    "GET /enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
                     -> TestHelper.mockResponseFromFile("/data/get-enkelvoudiginformatieobject-response.json")
 
-                    "POST /documenten/api/v1/enkelvoudiginformatieobjecten",
+                    "POST /enkelvoudiginformatieobjecten",
                     -> TestHelper.mockResponseFromFile("/data/post-enkelvoudiginformatieobject-response.json")
 
                     else -> MockResponse().setResponseCode(404)

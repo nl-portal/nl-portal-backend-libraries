@@ -324,7 +324,7 @@ internal class ZaakQueryIT(
                     "/catalogi/api/v1/statustypen/a4bd90f4-b80c-446b-9f68-62c5b39298ff" -> handleStatusTypeRequest()
                     "/zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a" -> handleZaakRequest()
                     "/zaken/api/v1/zaakinformatieobjecten" -> handleZaakInformatieObjectenRequest()
-                    "/documenten/api/v1/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> handleDocumentRequest()
+                    "/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> handleDocumentRequest()
                     "/zaken/api/v1/rollen" -> handleZaakRollenRequest()
                     else -> MockResponse().setResponseCode(404)
                 }
