@@ -120,7 +120,7 @@ internal class DocumentContentQueryIT(
             override fun dispatch(request: RecordedRequest): MockResponse {
                 val path = request.path?.substringBefore('?')
                 val response = when (path) {
-                    "/documenten/api/v1/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f/download",
+                    "/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f/download",
                     -> handleDocumentRequest(resource)
 
                     else -> MockResponse().setResponseCode(404)

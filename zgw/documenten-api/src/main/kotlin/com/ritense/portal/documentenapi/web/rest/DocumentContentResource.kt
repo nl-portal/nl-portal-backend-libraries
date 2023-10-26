@@ -37,7 +37,11 @@ import java.util.UUID
 
 @RestController
 @RequestMapping(value = ["/api"])
-class DocumentContentResource(val documentenApiClient: DocumentenApiClient, val documentenApiService: DocumentenApiService, val virusScanService: VirusScanService?) {
+class DocumentContentResource(
+    val documentenApiClient: DocumentenApiClient,
+    val documentenApiService: DocumentenApiService,
+    val virusScanService: VirusScanService?,
+) {
 
     @GetMapping(value = ["/documentapi/{documentapi}/document/{documentId}/content"])
     fun downloadStreaming(@PathVariable documentId: UUID, @PathVariable documentapi: String): ResponseEntity<Flux<DataBuffer>> {
