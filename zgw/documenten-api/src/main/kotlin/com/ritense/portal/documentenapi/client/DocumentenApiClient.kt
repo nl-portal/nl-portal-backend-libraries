@@ -119,7 +119,7 @@ class DocumentenApiClient(private val documentenApiConfigs: DocumentApisConfig, 
             .defaultHeader("Accept-Crs", "EPSG:4326")
             .defaultHeader("Content-Crs", "EPSG:4326")
             .apply {
-                if (documentenApiConfig.secret.isNotBlank() && documentenApiConfig.clientId.isNotBlank()) {
+                if (!documentenApiConfig.secret.isNullOrBlank() && !documentenApiConfig.clientId.isNullOrBlank()) {
                     // only add an authorization header if there is a secret and clientId
                     val token = idTokenGenerator.generateToken(documentenApiConfig.secret!!, documentenApiConfig.clientId!!)
                     it.defaultHeader("Authorization", "Bearer $token")

@@ -46,8 +46,8 @@ class DocumentApisConfig {
 
 class DocumentApiConfig {
     lateinit var url: String
-    lateinit var clientId: String
-    lateinit var secret: String
+    var clientId: String? = null
+    var secret: String? = null
     lateinit var rsin: String
     lateinit var documentTypeUrl: String
 }
