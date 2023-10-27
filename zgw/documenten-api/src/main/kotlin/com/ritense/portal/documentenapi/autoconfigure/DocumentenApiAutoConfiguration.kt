@@ -15,6 +15,7 @@
  */
 package com.ritense.portal.documentenapi.autoconfigure
 
+import com.ritense.portal.core.ssl.ClientSslContextResolver
 import com.ritense.portal.documentenapi.client.DocumentApisConfig
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
 import com.ritense.portal.documentenapi.graphql.DocumentContentQuery
@@ -23,6 +24,7 @@ import com.ritense.portal.documentenapi.service.DocumentenApiService
 import com.ritense.portal.documentenapi.service.VirusScanService
 import com.ritense.portal.documentenapi.web.rest.DocumentContentResource
 import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -45,6 +47,7 @@ class DocumentenApiAutoConfiguration {
     fun documentenApiClient(
         documentApisConfig: DocumentApisConfig,
         idTokenGenerator: IdTokenGenerator,
+        @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
     ): DocumentenApiClient {
         return DocumentenApiClient(documentApisConfig, idTokenGenerator)
     }

@@ -30,6 +30,8 @@ import kotlin.io.path.outputStream
 import kotlin.io.path.writeText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import mu.KLogger
+import mu.KotlinLogging
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.MediaType
@@ -40,8 +42,13 @@ import org.springframework.web.reactive.function.client.awaitBody
 import reactor.core.publisher.Flux
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
+import com.ritense.portal.core.ssl.ClientSslContextResolver
 
-class DocumentenApiClient(private val documentenApiConfigs: DocumentApisConfig, private val idTokenGenerator: IdTokenGenerator) {
+class DocumentenApiClient(
+    private val documentenApiConfigs: DocumentApisConfig,
+    private val idTokenGenerator: IdTokenGenerator,
+    private val clientSslContextResolver: ClientSslContextResolver? = null,
+) {
     suspend fun getDocument(id: UUID, documentApi: String): Document {
         var document: Document = webClient(documentApi)
             .get()
@@ -111,8 +118,26 @@ class DocumentenApiClient(private val documentenApiConfigs: DocumentApisConfig, 
         return WebClient.builder()
             .clientConnector(
                 ReactorClientHttpConnector(
-                    HttpClient.create()
-                        .wiretap("reactor.netty.http.client.HttpClient", LogLevel.DEBUG, AdvancedByteBufFormat.TEXTUAL),
+                    HttpClient.create().wiretap(
+                        "reactor.netty.http.client.HttpClient",
+                        LogLevel.DEBUG,
+                        AdvancedByteBufFormat.TEXTUAL,
+                    ).let { client ->
+                        var result = client
+                        if (clientSslContextResolver != null) {
+                            documentenApiConfig.ssl?.let {
+                                val sslContext = clientSslContextResolver.resolve(
+                                    it.key,
+                                    it.trustedCertificate,
+                                )
+
+                                result = client.secure { builder -> builder.sslContext(sslContext) }
+
+                                logger.debug { "Client SSL context was set: private key=${it.key != null}, trusted certificate=${it.trustedCertificate != null}." }
+                            }
+                        }
+                        result
+                    },
                 ),
             )
             .baseUrl(documentenApiConfig.url)
@@ -126,5 +151,9 @@ class DocumentenApiClient(private val documentenApiConfigs: DocumentApisConfig, 
                 }
             }
             .build()
+    }
+
+    companion object {
+        private val logger: KLogger = KotlinLogging.logger {}
     }
 }
