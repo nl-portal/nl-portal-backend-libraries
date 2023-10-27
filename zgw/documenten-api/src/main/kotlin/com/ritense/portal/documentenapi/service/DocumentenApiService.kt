@@ -40,7 +40,7 @@ class DocumentenApiService(
 
         return documentenApiClient.postDocument(
             PostEnkelvoudiginformatieobjectRequest(
-                bronorganisatie = documentenApiConfig.getConfig(documentApi).rsin,
+                bronorganisatie = documentenApiConfig.getConfig(documentApi).rsin!!,
                 creatiedatum = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE),
                 titel = file.filename(),
                 auteur = auteur,
@@ -48,7 +48,7 @@ class DocumentenApiService(
                 taal = "nld",
                 bestandsnaam = file.filename(),
                 indicatieGebruiksrecht = false,
-                informatieobjecttype = documentenApiConfig.getConfig(documentApi).documentTypeUrl,
+                informatieobjecttype = documentenApiConfig.getConfig(documentApi).documentTypeUrl!!,
             ),
             file.content(),
             documentApi,

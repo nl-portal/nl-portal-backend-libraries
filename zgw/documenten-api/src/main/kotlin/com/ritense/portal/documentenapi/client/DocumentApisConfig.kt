@@ -21,9 +21,10 @@ import java.lang.NullPointerException
 import com.ritense.portal.core.ssl.ClientKey
 
 @ConstructorBinding
-@ConfigurationProperties(prefix = "valtimo.zgw.documentenapis")
-class DocumentApisConfig {
-    var configurations: Map<String, DocumentApiConfig> = mapOf()
+@ConfigurationProperties(prefix = "valtimo.zgw.documentenapis", ignoreUnknownFields = true)
+data class DocumentApisConfig(
+    var configurations: Map<String, DocumentApiConfig> = mapOf(),
+) {
 
     fun getConfig(documentApi: String): DocumentApiConfig {
         return configurations[documentApi]!!
@@ -45,16 +46,18 @@ class DocumentApisConfig {
     }
 }
 
-class DocumentApiConfig {
-    lateinit var url: String
-    var clientId: String? = null
-    var secret: String? = null
-    lateinit var rsin: String
-    lateinit var documentTypeUrl: String
-    val ssl: Ssl? = null
-}
+@ConstructorBinding
+data class DocumentApiConfig(
+    var url: String,
+    var clientId: String? = null,
+    var secret: String? = null,
+    var rsin: String? = null,
+    var documentTypeUrl: String? = null,
+    val ssl: Ssl? = null,
+)
 
-class Ssl(
+@ConstructorBinding
+data class Ssl(
     val key: ClientKey? = null,
     val trustedCertificate: String? = null,
 )
