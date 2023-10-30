@@ -198,7 +198,7 @@ internal class ZakenApiServiceTest {
     }
 
     @Test
-    fun getZaakObjecten() = runBlockingTest {
+    fun getZaakObjecten() = runTest {
         val uuid = UUID.randomUUID()
         val resultPage = ResultPage(1, null, null, listOf(mock(ZaakObject::class.java)))
         `when`(zakenApiClient.getZaakObjecten(1, uuid)).thenReturn(resultPage)
