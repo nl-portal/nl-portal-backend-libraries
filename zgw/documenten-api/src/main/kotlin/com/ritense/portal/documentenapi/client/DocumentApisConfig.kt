@@ -16,24 +16,48 @@
 package com.ritense.portal.documentenapi.client
 
 import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.context.properties.ConstructorBinding
+import java.lang.NullPointerException
+import com.ritense.portal.core.ssl.ClientKey
 
-@ConfigurationProperties(prefix = "valtimo.zgw.documentenapis")
-class DocumentApisConfig {
-    var configurations: Map<String, DocumentApiConfig> = mapOf()
+@ConstructorBinding
+@ConfigurationProperties(prefix = "valtimo.zgw.documentenapis", ignoreUnknownFields = true)
+data class DocumentApisConfig(
+    var configurations: Map<String, DocumentApiConfig> = mapOf(),
+) {
 
     fun getConfig(documentApi: String): DocumentApiConfig {
         return configurations[documentApi]!!
     }
 
     fun getConfigForDocumentUrl(documentUrl: String): String {
-        return configurations.filterValues { documentApiConfig -> documentUrl.contains(documentApiConfig.url) }.keys.stream().findFirst().orElseThrow({ NullPointerException("No documentapi configuration found for zaakdocument with url " + documentUrl) })
+        return configurations
+            .filterValues {
+                    documentApiConfig ->
+                documentUrl
+                    .contains(documentApiConfig.url)
+            }
+            .keys
+            .stream()
+            .findFirst()
+            .orElseThrow(
+                { NullPointerException("No documentapi configuration found for zaakdocument with url " + documentUrl) },
+            )
     }
 }
 
-class DocumentApiConfig {
-    lateinit var url: String
-    lateinit var clientId: String
-    lateinit var secret: String
-    lateinit var rsin: String
-    lateinit var documentTypeUrl: String
-}
+@ConstructorBinding
+data class DocumentApiConfig(
+    var url: String,
+    var clientId: String? = null,
+    var secret: String? = null,
+    var rsin: String? = null,
+    var documentTypeUrl: String? = null,
+    val ssl: Ssl? = null,
+)
+
+@ConstructorBinding
+data class Ssl(
+    val key: ClientKey? = null,
+    val trustedCertificate: String? = null,
+)

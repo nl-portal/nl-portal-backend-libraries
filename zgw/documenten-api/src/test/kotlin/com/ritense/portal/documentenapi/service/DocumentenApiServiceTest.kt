@@ -57,7 +57,7 @@ internal class DocumentenApiServiceTest(@Autowired private var documentApisConfi
     @Test
     fun `should find single document by URI String`() = runTest {
         val documentId = UUID.randomUUID()
-        val documentURI = URI.create("https://example.org/$documentId").toASCIIString()
+        val documentURI = URI.create("https://example.org/documenten/api/v1/$documentId").toASCIIString()
 
         whenever(documentenApiClient.getDocument(documentId, "example")).thenReturn(
             getTestDocument(null),

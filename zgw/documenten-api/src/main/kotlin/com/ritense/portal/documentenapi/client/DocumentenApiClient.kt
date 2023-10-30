@@ -30,6 +30,8 @@ import kotlin.io.path.outputStream
 import kotlin.io.path.writeText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import mu.KLogger
+import mu.KotlinLogging
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.MediaType
@@ -40,20 +42,39 @@ import org.springframework.web.reactive.function.client.awaitBody
 import reactor.core.publisher.Flux
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
+import com.ritense.portal.core.ssl.ClientSslContextResolver
 
-class DocumentenApiClient(private val documentenApiConfigs: DocumentApisConfig, private val idTokenGenerator: IdTokenGenerator) {
+class DocumentenApiClient(
+    private val documentenApiConfigs: DocumentApisConfig,
+    private val idTokenGenerator: IdTokenGenerator,
+    private val clientSslContextResolver: ClientSslContextResolver? = null,
+) {
     suspend fun getDocument(id: UUID, documentApi: String): Document {
-        var document: Document = webClient(documentApi).get().uri("/documenten/api/v1/enkelvoudiginformatieobjecten/$id").retrieve().awaitBody()
+        var document: Document = webClient(documentApi)
+            .get()
+            .uri("/enkelvoudiginformatieobjecten/$id")
+            .retrieve()
+            .awaitBody()
         document.documentapi = documentApi
         return document
     }
 
     suspend fun getDocumentContent(id: UUID, documentApi: String): ByteArray {
-        return webClient(documentApi).get().uri("/documenten/api/v1/enkelvoudiginformatieobjecten/$id/download").accept(MediaType.APPLICATION_OCTET_STREAM).retrieve().awaitBody()
+        return webClient(documentApi)
+            .get()
+            .uri("/enkelvoudiginformatieobjecten/$id/download")
+            .accept(MediaType.APPLICATION_OCTET_STREAM)
+            .retrieve()
+            .awaitBody()
     }
 
     fun getDocumentContentStream(id: UUID, documentApi: String): Flux<DataBuffer> {
-        return webClient(documentApi).get().uri("/documenten/api/v1/enkelvoudiginformatieobjecten/$id/download").accept(MediaType.APPLICATION_OCTET_STREAM).retrieve().bodyToFlux(DataBuffer::class.java)
+        return webClient(documentApi)
+            .get()
+            .uri("/enkelvoudiginformatieobjecten/$id/download")
+            .accept(MediaType.APPLICATION_OCTET_STREAM)
+            .retrieve()
+            .bodyToFlux(DataBuffer::class.java)
     }
 
     suspend fun postDocument(request: PostEnkelvoudiginformatieobjectRequest, documentContent: Flux<DataBuffer>, documentApi: String): Document {
@@ -66,11 +87,26 @@ class DocumentenApiClient(private val documentenApiConfigs: DocumentApisConfig, 
 
         file.writeText(requestPrefix)
         Base64.getEncoder().wrap(file.outputStream(StandardOpenOption.APPEND)).use { base64Output ->
-            documentContent.map { dataPart -> base64Output.write(dataPart.asInputStream().readBytes()) }.blockLast(Duration.ofMinutes(5))
+            documentContent
+                .map {
+                        dataPart ->
+                    base64Output.write(dataPart.asInputStream().readBytes())
+                }
+                .blockLast(Duration.ofMinutes(5))
         }
         file.writeText(requestPostfix, Charsets.UTF_8, StandardOpenOption.APPEND)
 
-        val response = webClient(documentApi).post().uri("/documenten/api/v1/enkelvoudiginformatieobjecten").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).body(BodyInserters.fromResource(FileSystemResource(file))).retrieve().awaitBody<Document>()
+        val response = webClient(documentApi)
+            .post()
+            .uri("/enkelvoudiginformatieobjecten")
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .body(
+                BodyInserters
+                    .fromResource(FileSystemResource(file)),
+            )
+            .retrieve()
+            .awaitBody<Document>()
 
         file.deleteIfExists()
         return response
@@ -78,8 +114,46 @@ class DocumentenApiClient(private val documentenApiConfigs: DocumentApisConfig, 
 
     private fun webClient(documentApi: String): WebClient {
         var documentenApiConfig = documentenApiConfigs.getConfig(documentApi)
-        val token = idTokenGenerator.generateToken(documentenApiConfig.secret, documentenApiConfig.clientId)
 
-        return WebClient.builder().clientConnector(ReactorClientHttpConnector(HttpClient.create().wiretap("reactor.netty.http.client.HttpClient", LogLevel.DEBUG, AdvancedByteBufFormat.TEXTUAL))).baseUrl(documentenApiConfig.url).defaultHeader("Accept-Crs", "EPSG:4326").defaultHeader("Content-Crs", "EPSG:4326").defaultHeader("Authorization", "Bearer $token").build()
+        return WebClient.builder()
+            .clientConnector(
+                ReactorClientHttpConnector(
+                    HttpClient.create().wiretap(
+                        "reactor.netty.http.client.HttpClient",
+                        LogLevel.DEBUG,
+                        AdvancedByteBufFormat.TEXTUAL,
+                    ).let { client ->
+                        var result = client
+                        if (clientSslContextResolver != null) {
+                            documentenApiConfig.ssl?.let {
+                                val sslContext = clientSslContextResolver.resolve(
+                                    it.key,
+                                    it.trustedCertificate,
+                                )
+
+                                result = client.secure { builder -> builder.sslContext(sslContext) }
+
+                                logger.debug { "Client SSL context was set: private key=${it.key != null}, trusted certificate=${it.trustedCertificate != null}." }
+                            }
+                        }
+                        result
+                    },
+                ),
+            )
+            .baseUrl(documentenApiConfig.url)
+            .defaultHeader("Accept-Crs", "EPSG:4326")
+            .defaultHeader("Content-Crs", "EPSG:4326")
+            .apply {
+                if (!documentenApiConfig.secret.isNullOrBlank() && !documentenApiConfig.clientId.isNullOrBlank()) {
+                    // only add an authorization header if there is a secret and clientId
+                    val token = idTokenGenerator.generateToken(documentenApiConfig.secret!!, documentenApiConfig.clientId!!)
+                    it.defaultHeader("Authorization", "Bearer $token")
+                }
+            }
+            .build()
+    }
+
+    companion object {
+        private val logger: KLogger = KotlinLogging.logger {}
     }
 }

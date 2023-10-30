@@ -67,11 +67,11 @@ valtimo:
         documentenapis:
             configurations:
                 openzaak:
-                    url: http://localhost:8001
+                    url: http://localhost:8001/documenten/api/v1
                     clientId: valtimo_client
                     secret: e09b8bc5-5831-4618-ab28-41411304309d
                 dummydoc:
-                    url: http://localhost:8002
+                    url: http://localhost:8002/documenten/api/v1
                     clientId: docdoc
                     secret: e09b8bc5-5831-4618-ab28-41411304309d
     openklant:
