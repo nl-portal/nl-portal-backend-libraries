@@ -24,7 +24,6 @@ import com.ritense.portal.zakenapi.domain.ZaakObject
 import com.ritense.portal.zakenapi.domain.ZaakRol
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import org.junit.jupiter.api.Assertions
