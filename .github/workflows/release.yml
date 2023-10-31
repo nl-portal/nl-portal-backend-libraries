@@ -1,0 +1,53 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Build validation with Gradle
+
+on:
+    on:
+        workflow_dispatch:
+            branches:
+                - rc/*
+
+permissions:
+    contents: read
+
+jobs:
+    build:
+
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Set up JDK 17
+              uses: actions/setup-java@v3
+              with:
+                  java-version: '17'
+                  distribution: 'temurin'
+            - name: Build with Gradle
+              uses: gradle/gradle-build-action@0bfe00a136db5e61ba3416b372542a65863a9fee
+              with:
+                  arguments: build
+            - name: Gradle publish
+              uses: gradle/gradle-build-action@v2
+              with:
+                  gradle-version: 7.6.3
+                  arguments: publish
+              env:
+                  #USER: ${{ secrets.GITHUB_TOKEN }}
+                  #TOKEN: ${{ secrets.GITHUB_ACTOR }}
+                  USER: ${{ secrets.USER }}
+                  TOKEN: ${{ secrets.TOKEN }}
+            - name: Create release
+              id: create_release
+              uses: actions/create-release@latest
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+              with:
+                  tag_name: ${{ github.ref }}
+                  release_name: Release ${{ github.ref }}
+                  draft: false
+                  prerelease: false
