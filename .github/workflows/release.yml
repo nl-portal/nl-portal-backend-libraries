@@ -9,9 +9,9 @@ name: Build release
 
 
 on:
-    workflow_dispatch:
-        branches:
-            - rc/*
+    push:
+        tags:
+            - '*'
 
 permissions:
     contents: read
@@ -32,13 +32,9 @@ jobs:
               uses: gradle/gradle-build-action@0bfe00a136db5e61ba3416b372542a65863a9fee
               with:
                   arguments: build
-            - name: Create release
-              id: create_release
-              uses: actions/create-release@latest
+            - name: Create a Release
+              uses: elgohr/Github-Release-Action@v5
               env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
               with:
-                  tag_name: ${{ github.ref }}
-                  release_name: Release ${{ github.ref }}
-                  draft: false
-                  prerelease: false
+                  title: PortalBackendLibrariesRelease
