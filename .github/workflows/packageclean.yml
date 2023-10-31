@@ -11,7 +11,6 @@ on:
     schedule:
         # * is a special character in YAML so you have to quote this string
         - cron:  '0 0 * * *'
-    workflow_dispatch:
 
 permissions:
   packages: write
@@ -26,222 +25,222 @@ jobs:
         with:
             package-name: 'nl.nl-portal.case'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.core'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.data'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.form'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.form-flow'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.graphql'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.klant-generiek'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.klant'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.product'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.messaging'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.haalcentraal-brp'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.catalogi-api'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.common-ground-authentication-test'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.documenten-api'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.common-ground-authentication'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.objectenapi'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.zaken-api'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.taak'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.haalcentraal'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.idtoken-authentication'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.klantcontactmomenten'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.gradle'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.task'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl-portal-backend-libraries.zgw'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.zgw'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.haalcentraal-all'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl.nl-portal.haalcentraal-hr'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl-portal-backend-libraries.zgw.catalogi-api'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl-portal-backend-libraries.zgw.idtoken-authentication'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl-portal-backend-libraries.zgw.documenten-api'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl-portal-backend-libraries.zgw.taak'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
 
       - uses: actions/delete-package-versions@v4
         with:
             package-name: 'nl-portal-backend-libraries.zgw.zaken-api'
             package-type: 'maven'
-            min-versions-to-keep: 0
+            min-versions-to-keep: 3
             token: ${{ secrets.TOKEN }}
