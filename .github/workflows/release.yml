@@ -31,21 +31,12 @@ jobs:
               uses: gradle/gradle-build-action@0bfe00a136db5e61ba3416b372542a65863a9fee
               with:
                   arguments: build
-            - name: Gradle publish
-              uses: gradle/gradle-build-action@v2
-              with:
-                  gradle-version: 7.6.3
-                  arguments: publish
-              env:
-                  #USER: ${{ secrets.GITHUB_TOKEN }}
-                  #TOKEN: ${{ secrets.GITHUB_ACTOR }}
-                  USER: ${{ secrets.USER }}
-                  TOKEN: ${{ secrets.TOKEN }}
             - name: Create release
               id: create_release
               uses: actions/create-release@latest
               env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+                  USER: ${{ secrets.USER }}
+                  TOKEN: ${{ secrets.TOKEN }}
               with:
                   tag_name: ${{ github.ref }}
                   release_name: Release ${{ github.ref }}
