@@ -9,17 +9,18 @@ name: Build release
 
 
 on:
-    workflow_dispatch:
-        branches:
-            - rc/*
+    push:
+        tags:
+            - '*'
 
 permissions:
     contents: read
 
 jobs:
     build:
-
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
         steps:
             - uses: actions/checkout@v3
             - name: Set up JDK 17
@@ -41,13 +42,9 @@ jobs:
                   #TOKEN: ${{ secrets.GITHUB_ACTOR }}
                   USER: ${{ secrets.USER }}
                   TOKEN: ${{ secrets.TOKEN }}
-            - name: Create release
-              id: create_release
-              uses: actions/create-release@latest
+            - name: Create a Release
+              uses: elgohr/Github-Release-Action@v5
               env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+                  GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
               with:
-                  tag_name: ${{ github.ref }}
-                  release_name: Release ${{ github.ref }}
-                  draft: false
-                  prerelease: false
+                  title: PortalBackendLibrariesRelease
