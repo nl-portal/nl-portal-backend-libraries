@@ -2,6 +2,7 @@ package nl.nlportal.zgw.taak.domain
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
+import com.fasterxml.jackson.annotation.JsonGetter
 
 data class TaakFormulier(
     @Deprecated("Type will be removed when underlying systems has been changed. Currently available for backwards compatibility")
@@ -13,6 +14,14 @@ data class TaakFormulier(
 ) {
     @GraphQLDescription(value = "Will return only 'portalid', 'objecturl', 'externalurl'")
     fun formuliertype(): String {
+        val typeValue = (formuliertype ?: type)!!
+        return convertFormulierType(typeValue)
+    }
+
+    @Deprecated("This getter will be removed when underlying systems has been changed. Currently available for backwards compatibility")
+    // to calculate the correct formuliertype
+    @JsonGetter("formuliertype")
+    fun formulierTypeGetter(): String? {
         val typeValue = (formuliertype ?: type)!!
         return convertFormulierType(typeValue)
     }
