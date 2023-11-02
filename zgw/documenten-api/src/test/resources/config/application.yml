@@ -9,6 +9,7 @@ logging:
 valtimo:
     zgw:
         documentenapis:
+            default-document-api: openzaak
             configurations:
                 openzaak:
                     url: https://localhost:8001/documenten/api/v1

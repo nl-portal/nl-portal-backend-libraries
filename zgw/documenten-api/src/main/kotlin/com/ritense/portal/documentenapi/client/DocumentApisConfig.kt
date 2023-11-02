@@ -23,6 +23,7 @@ import com.ritense.portal.core.ssl.ClientKey
 @ConstructorBinding
 @ConfigurationProperties(prefix = "valtimo.zgw.documentenapis", ignoreUnknownFields = true)
 data class DocumentApisConfig(
+    var defaultDocumentApi: String,
     var configurations: Map<String, DocumentApiConfig> = mapOf(),
 ) {
 

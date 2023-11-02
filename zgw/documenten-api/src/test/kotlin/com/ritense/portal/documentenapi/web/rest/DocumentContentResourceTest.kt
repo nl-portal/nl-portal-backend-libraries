@@ -19,6 +19,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import com.ritense.portal.documentenapi.client.DocumentApisConfig
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
 import com.ritense.portal.documentenapi.domain.Document
 import com.ritense.portal.documentenapi.service.DocumentenApiService
@@ -42,7 +43,8 @@ class DocumentContentResourceTest {
     private val documentenApiClient: DocumentenApiClient = mock()
     private val documentenApiService: DocumentenApiService = mock()
     private val virusScanService: VirusScanService = mock()
-    private val downloadResource = DocumentContentResource(documentenApiClient, documentenApiService, virusScanService)
+    private val documentApisConfig: DocumentApisConfig = mock()
+    private val downloadResource = DocumentContentResource(documentenApiClient, documentenApiService, virusScanService, documentApisConfig)
     val document: Document = mock()
 
     @Test
