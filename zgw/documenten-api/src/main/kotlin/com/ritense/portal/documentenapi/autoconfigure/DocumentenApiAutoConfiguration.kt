@@ -77,7 +77,8 @@ class DocumentenApiAutoConfiguration {
         documentenApiClient: DocumentenApiClient,
         documentenApiService: DocumentenApiService,
         virusScanService: VirusScanService?,
+        documentApisConfig: DocumentApisConfig,
     ): DocumentContentResource {
-        return DocumentContentResource(documentenApiClient, documentenApiService, virusScanService)
+        return DocumentContentResource(documentenApiClient, documentenApiService, virusScanService, documentApisConfig)
     }
 }
