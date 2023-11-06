@@ -10,13 +10,13 @@ spring:
         oauth2:
             resourceserver:
                 jwt:
-                    issuer-uri: http://localhost:8082/auth/realms/master
+                    issuer-uri: http://nlportal.local:8082/auth/realms/master
     liquibase:
         enabled: false
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://localhost:54321/nl-portal
+        url: jdbc:postgresql://nlportal.local:54321/nl-portal
         username: nlportal
         password: password
         name: nl-portal-database
@@ -54,20 +54,20 @@ logging:
 valtimo:
     zgw:
         catalogiapi:
-            url: http://localhost:8001
+            url: http://nlportal.local:8001
             clientId: valtimo_client
             secret: e09b8bc5-5831-4618-ab28-41411304309d
             rsin: "051845623"
-            documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/efc332f2-be3b-4bad-9e3c-49a6219c92ad
+            documentTypeUrl: http://nlportal.local:8001/catalogi/api/v1/informatieobjecttypen/efc332f2-be3b-4bad-9e3c-49a6219c92ad
         zakenapi:
-            url: http://localhost:8001
+            url: http://nlportal.local:8001
             clientId: valtimo_client
             secret: e09b8bc5-5831-4618-ab28-41411304309d
         documentenapis:
             default-document-api: openzaak
             configurations:
                 openzaak:
-                    url: http://localhost:8001/documenten/api/v1
+                    url: http://nlportal.local:8001/documenten/api/v1
                     clientId: valtimo_client
                     secret: e09b8bc5-5831-4618-ab28-41411304309d
                 dummydoc:
@@ -75,15 +75,15 @@ valtimo:
                     clientId: docdoc
                     secret: e09b8bc5-5831-4618-ab28-41411304309d
     openklant:
-        url: http://localhost:8006
+        url: http://nlportal.local:8006
         clientId: valtimo_client
         secret: e09b8bc5-5831-4618-ab28-41411304309d
         rsin: "051845623"
     openformulieren:
-        url: http://localhost:8003
+        url: http://nlportal.local:8003
         token: 3ca04f4c11159811877444fdb1e019b7eac13f78
     objectsapi:
-        url: http://localhost:8010
+        url: http://nlportal.local:8010
         token: 182c13e2209161852c53cef53a879f7a2f923430
     haalcentraal:
     #        url: ${VALTIMO_HAALCENTRAAL_URL}
@@ -106,4 +106,4 @@ nl-portal:
     zgw:
         taak:
             taakobject:
-                typeUrl: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
+                typeUrl: "http://nlportal.local:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"

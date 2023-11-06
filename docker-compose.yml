@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+    nl-portal-api:
+        container_name: nl-portal-api
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - 8090:8090
+        environment:
+            - spring.security.oauth2.resourceserver.jwt.issuer-uri=http://nlportal.local:8082/auth/realms/master
+        extra_hosts:
+            - "nlportal.local:host-gateway"

@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+
 /*
  * Copyright 2015-2023 Ritense BV, the Netherlands.
  *
@@ -28,7 +30,6 @@ dependencies {
     implementation(project(":zgw:zaken-api"))
     implementation(project(":zgw:catalogi-api"))
     implementation(project(":zgw:documenten-api"))
-
     api("org.postgresql", "postgresql")
 }
 
@@ -40,5 +41,11 @@ tasks.withType<PublishToMavenRepository>().configureEach {
     enabled = false
 }
 tasks.withType<PublishToMavenLocal>().configureEach {
+    enabled = false
+}
+tasks.named<BootJar>("bootJar") {
+    archiveClassifier.set("boot")
+}
+tasks.named<Jar>("jar") {
     enabled = false
 }
