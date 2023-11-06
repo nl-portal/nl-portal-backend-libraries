@@ -16,6 +16,7 @@
 package com.ritense.portal.documentenapi.web.rest
 
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
+import com.ritense.portal.documentenapi.client.DocumentApisConfig
 import com.ritense.portal.documentenapi.domain.Document
 import com.ritense.portal.documentenapi.service.DocumentenApiService
 import com.ritense.portal.documentenapi.service.VirusScanService
