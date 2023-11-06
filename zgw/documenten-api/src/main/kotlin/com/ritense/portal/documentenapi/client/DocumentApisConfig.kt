@@ -20,6 +20,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "valtimo.zgw.documentenapis", ignoreUnknownFields = true)
 data class DocumentApisConfig(
+    var defaultDocumentApi: String,
     var configurations: Map<String, DocumentApiConfig> = mapOf(),
 ) {
 
