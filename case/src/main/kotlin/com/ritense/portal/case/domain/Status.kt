@@ -18,9 +18,9 @@ package com.ritense.portal.case.domain
 import com.ritense.portal.core.util.ObjectValidator
 import org.hibernate.validator.constraints.Length
 import java.time.LocalDateTime
-import javax.persistence.Column
-import javax.persistence.Embeddable
-import javax.validation.constraints.NotBlank
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
+import jakarta.validation.constraints.NotBlank
 
 @Embeddable
 data class Status(

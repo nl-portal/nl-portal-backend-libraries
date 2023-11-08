@@ -18,13 +18,18 @@ package com.ritense.portal.haalcentraal.brp.autoconfiguration
 import com.ritense.portal.haalcentraal.brp.client.HaalCentraalBrpClient
 import com.ritense.portal.haalcentraal.brp.graphql.HaalCentraalBrpQuery
 import com.ritense.portal.haalcentraal.brp.service.HaalCentraalBrpService
+import com.ritense.portal.haalcentraal.client.HaalCentraalClientConfig
 import com.ritense.portal.haalcentraal.client.HaalCentraalClientProvider
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import com.ritense.portal.haalcentraal.brp.service.impl.HaalCentraalBrpService as HaalCentraalBrpServiceImpl
+import org.springframework.context.annotation.Import
+import com.ritense.portal.haalcentraal.brp.service.impl.HaalCentraalBrpServiceImpl as HaalCentraalBrpServiceImpl
 
-@Configuration
+@AutoConfiguration
+@EnableConfigurationProperties(HaalCentraalClientConfig::class)
+@Import(HaalCentraalClientProvider::class)
 class HaalCentraalBrpAutoConfiguration {
 
     @Bean
@@ -37,7 +42,7 @@ class HaalCentraalBrpAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(HaalCentraalBrpService::class)
-    fun haalCentraalBrpService(
+    fun haalCentraalBrpServiceImpl(
         haalCentraalBrpClient: HaalCentraalBrpClient,
     ): HaalCentraalBrpService {
         return HaalCentraalBrpServiceImpl(haalCentraalBrpClient)

@@ -17,9 +17,7 @@ package com.ritense.portal.haalcentraal.client
 
 import com.ritense.portal.core.ssl.ClientKey
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 
-@ConstructorBinding
 @ConfigurationProperties(prefix = "valtimo.haalcentraal", ignoreUnknownFields = true)
 data class HaalCentraalClientConfig(
     var url: String = "",
@@ -27,13 +25,11 @@ data class HaalCentraalClientConfig(
     val ssl: Ssl? = null,
     val tokenExchange: TokenExchange? = null,
 ) {
-    @ConstructorBinding
     data class Ssl(
         val key: ClientKey? = null,
         val trustedCertificate: String? = null,
     )
 
-    @ConstructorBinding
     data class TokenExchange(
         val targetAudience: String,
     )

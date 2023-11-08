@@ -1,0 +1,2 @@
+com.ritense.portal.form.autoconfigure.FormAutoConfiguration
+com.ritense.portal.form.autoconfigure.GraphqlAutoConfiguration

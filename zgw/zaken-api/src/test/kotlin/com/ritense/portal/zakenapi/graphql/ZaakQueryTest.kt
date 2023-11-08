@@ -15,7 +15,6 @@
  */
 package com.ritense.portal.zakenapi.graphql
 
-import com.nhaarman.mockitokotlin2.mock
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import com.ritense.portal.zakenapi.service.ZakenApiService
@@ -27,6 +26,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
+import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.springframework.security.core.Authentication
 

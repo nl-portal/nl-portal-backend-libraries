@@ -18,16 +18,17 @@ package com.ritense.portal.case.domain
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.ritense.portal.case.domain.meta.MetaJsonSchemaV7Draft
 import com.ritense.portal.core.util.ObjectValidator
-import org.hibernate.annotations.Type
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 import org.json.JSONObject
-import javax.persistence.Column
-import javax.persistence.Embeddable
 
 @Embeddable
 data class Schema(
 
     @Column(name = "`schema`", columnDefinition = "json")
-    @Type(type = "com.vladmihalcea.hibernate.type.json.JsonBinaryType")
+    @JdbcTypeCode(SqlTypes.JSON)
     var value: ObjectNode,
 ) {
     init {

@@ -23,7 +23,7 @@ import com.ritense.portal.klant.domain.klanten.Klant
 import com.ritense.portal.klant.domain.klanten.KlantCreationRequest
 import com.ritense.portal.klant.domain.klanten.KlantUpdate
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -54,7 +54,7 @@ internal class BurgerServiceTest {
     }
 
     @Test
-    fun `getBurgerProfiel calls openklant client with BSN for burger`() = runBlockingTest {
+    fun `getBurgerProfiel calls openklant client with BSN for burger`() = runTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
         `when`(openKlantClient.getKlanten(authentication, 1, "123")).thenReturn(listOf(mock(Klant::class.java)))
 
@@ -72,7 +72,7 @@ internal class BurgerServiceTest {
         val authentication = object : CommonGroundAuthentication(jwt, emptyList()) {}
 
         val illegalArgumentException = Assertions.assertThrows(IllegalArgumentException::class.java) {
-            runBlockingTest {
+            runTest {
                 burgerService.getBurgerProfiel(authentication)
             }
         }
@@ -85,7 +85,7 @@ internal class BurgerServiceTest {
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
 
         val illegalArgumentException = Assertions.assertThrows(IllegalArgumentException::class.java) {
-            runBlockingTest {
+            runTest {
                 burgerService.getBurgerProfiel(authentication)
             }
         }
@@ -104,7 +104,7 @@ internal class BurgerServiceTest {
         )
 
         val illegalStateException = Assertions.assertThrows(IllegalStateException::class.java) {
-            runBlockingTest {
+            runTest {
                 burgerService.getBurgerProfiel(authentication)
             }
         }
@@ -113,7 +113,7 @@ internal class BurgerServiceTest {
     }
 
     @Test
-    fun `updateBurgerProfiel should update klant if exist`() = runBlockingTest {
+    fun `updateBurgerProfiel should update klant if exist`() = runTest {
         val klant = mock(Klant::class.java)
         `when`(klant.url).thenReturn("some-url")
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
@@ -126,7 +126,7 @@ internal class BurgerServiceTest {
     }
 
     @Test
-    fun `updateBurgerProfiel should create klant if not exist`() = runBlockingTest {
+    fun `updateBurgerProfiel should create klant if not exist`() = runTest {
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
         `when`(openKlantClient.getKlanten(authentication, 1, "123")).thenReturn(emptyList())
         val klantUpdate = KlantUpdate("0600000000", "example@email.com")

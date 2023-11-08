@@ -22,9 +22,9 @@ import com.ritense.portal.klant.service.BurgerService
 import nl.nlportal.klant.generiek.validation.GraphQlValidator
 import graphql.GraphQLContext
 import graphql.schema.DataFetchingEnvironment
-import javax.validation.ValidationException
+import jakarta.validation.ValidationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -60,7 +60,7 @@ internal class BurgerMutationTest {
     }
 
     @Test
-    fun `can update klant with valid phone number and email`() = runBlockingTest {
+    fun `can update klant with valid phone number and email`() = runTest {
         Mockito.`when`(environment.graphQlContext).thenReturn(context)
         Mockito.`when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
         val klant = KlantUpdate(
@@ -74,7 +74,7 @@ internal class BurgerMutationTest {
     }
 
     @Test
-    fun `can update klant with empty phone number and email`() = runBlockingTest {
+    fun `can update klant with empty phone number and email`() = runTest {
         Mockito.`when`(environment.graphQlContext).thenReturn(context)
         Mockito.`when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
         val klant = KlantUpdate(
@@ -94,7 +94,7 @@ internal class BurgerMutationTest {
             emailadres = "",
         )
         val exception = Assertions.assertThrows(ValidationException::class.java) {
-            runBlockingTest { burgerMutation.updateBurgerProfiel(klant, environment) }
+            runTest { burgerMutation.updateBurgerProfiel(klant, environment) }
         }
         assertThat(exception).hasMessage("Must be a valid phone number")
     }
@@ -106,7 +106,7 @@ internal class BurgerMutationTest {
             emailadres = "invalid-email",
         )
         val exception = Assertions.assertThrows(ValidationException::class.java) {
-            runBlockingTest { burgerMutation.updateBurgerProfiel(klant, environment) }
+            runTest { burgerMutation.updateBurgerProfiel(klant, environment) }
         }
         assertThat(exception).hasMessage("must be a well-formed email address")
     }

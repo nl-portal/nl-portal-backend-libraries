@@ -19,12 +19,12 @@ import com.ritense.portal.product.client.OpenFormulierenClient
 import com.ritense.portal.product.client.OpenFormulierenClientConfig
 import com.ritense.portal.product.graphql.FormQuery
 import com.ritense.portal.product.service.FormService
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 
-@Configuration
+@AutoConfiguration
 @EnableConfigurationProperties(OpenFormulierenClientConfig::class)
 class ProductAutoConfiguration {
 

@@ -22,15 +22,15 @@ import com.ritense.portal.haalcentraal.client.HaalCentraalClientProvider
 import com.ritense.portal.haalcentraal.client.tokenexchange.KeyCloakUserTokenExchangeFilter
 import com.ritense.portal.haalcentraal.client.tokenexchange.UserTokenExchangeFilter
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.ResourceLoader
 import org.springframework.web.reactive.function.client.WebClient
 
-@Configuration
+@AutoConfiguration
 @EnableConfigurationProperties(HaalCentraalClientConfig::class)
 class HaalCentraalAutoConfiguration {
 

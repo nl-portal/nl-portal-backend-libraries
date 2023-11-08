@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.haalcentraal
+package com.ritense.valtimo.portal.haalcentraal
 
 import okhttp3.mockwebserver.MockResponse
 

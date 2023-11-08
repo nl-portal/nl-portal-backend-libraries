@@ -19,11 +19,13 @@ import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.taak.graphql.TaakMutation
 import nl.nlportal.zgw.taak.graphql.TaakQuery
 import nl.nlportal.zgw.taak.service.TaakService
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 
-@Configuration
+@AutoConfiguration
+@EnableConfigurationProperties(TaakObjectConfig::class)
 class TaakAutoConfiguration {
 
     @Bean

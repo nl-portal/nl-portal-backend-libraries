@@ -21,11 +21,11 @@ import com.ritense.portal.task.graphql.CompleteTaskMutation
 import com.ritense.portal.task.graphql.PublicTaskQuery
 import com.ritense.portal.task.graphql.TaskQuery
 import com.ritense.portal.task.service.TaskService
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 
-@Configuration
+@AutoConfiguration
 class GraphqlAutoConfiguration {
 
     @Bean

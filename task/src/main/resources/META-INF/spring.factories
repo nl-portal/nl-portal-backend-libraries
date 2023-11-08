@@ -1,4 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.ritense.portal.task.autoconfigure.TaskAutoConfiguration,\
-  com.ritense.portal.task.autoconfigure.GraphqlAutoConfiguration
-

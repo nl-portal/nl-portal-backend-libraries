@@ -42,9 +42,6 @@ dependencies {
     api(ApiDependencies.commonsIo)
     api(ApiDependencies.apacheCommons)
 
-    // Hibernate json support
-    api(ApiDependencies.hibernateTypes)
-
     // Logging for Kotlin
     api(ApiDependencies.kotlinLogging)
 

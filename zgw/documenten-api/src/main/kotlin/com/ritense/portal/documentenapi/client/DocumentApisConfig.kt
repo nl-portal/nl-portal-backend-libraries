@@ -15,12 +15,9 @@
  */
 package com.ritense.portal.documentenapi.client
 
-import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
-import java.lang.NullPointerException
 import com.ritense.portal.core.ssl.ClientKey
+import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConstructorBinding
 @ConfigurationProperties(prefix = "valtimo.zgw.documentenapis", ignoreUnknownFields = true)
 data class DocumentApisConfig(
     var defaultDocumentApi: String,
@@ -47,7 +44,6 @@ data class DocumentApisConfig(
     }
 }
 
-@ConstructorBinding
 data class DocumentApiConfig(
     var url: String,
     var clientId: String? = null,
@@ -57,7 +53,6 @@ data class DocumentApiConfig(
     val ssl: Ssl? = null,
 )
 
-@ConstructorBinding
 data class Ssl(
     val key: ClientKey? = null,
     val trustedCertificate: String? = null,

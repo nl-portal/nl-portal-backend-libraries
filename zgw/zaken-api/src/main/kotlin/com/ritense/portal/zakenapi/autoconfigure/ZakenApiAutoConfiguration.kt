@@ -23,12 +23,12 @@ import com.ritense.portal.zakenapi.client.ZakenApiConfig
 import com.ritense.portal.zakenapi.graphql.ZaakQuery
 import com.ritense.portal.zakenapi.service.ZakenApiService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 
-@Configuration
+@AutoConfiguration
 @EnableConfigurationProperties(ZakenApiConfig::class)
 class ZakenApiAutoConfiguration {
 
@@ -44,7 +44,6 @@ class ZakenApiAutoConfiguration {
             zakenApiClient,
             documentenApiService,
             objectsApiClient,
-            objectMapper,
         )
     }
 

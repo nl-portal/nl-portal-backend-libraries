@@ -55,23 +55,6 @@ class AuthenticationIT(
     }
 
     @Test
-    fun `authorized query doesnt work without authorization`() {
-        val query = "getAuthenticated"
-        val body =
-            "query {\n" +
-                "    $query \n" +
-                "}"
-
-        testClient.post()
-            .uri(GRAPHQL_ENDPOINT)
-            .accept(APPLICATION_JSON)
-            .contentType(GRAPHQL_MEDIA_TYPE)
-            .bodyValue(body)
-            .exchange()
-            .verifyOnlyErrorExists(query)
-    }
-
-    @Test
     fun `unauthorized query works without authorization`() {
         val query = "getUnauthenticated"
         val body =

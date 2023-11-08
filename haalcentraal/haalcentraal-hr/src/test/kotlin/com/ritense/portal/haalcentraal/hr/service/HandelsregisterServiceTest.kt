@@ -15,17 +15,17 @@
  */
 package com.ritense.portal.haalcentraal.hr.service
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import com.ritense.portal.commonground.authentication.JwtBuilder
 import com.ritense.portal.haalcentraal.hr.client.HandelsregisterClient
 import com.ritense.portal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
+import org.mockito.kotlin.whenever
 
 @ExperimentalCoroutinesApi
 class HandelsregisterServiceTest {
@@ -33,7 +33,7 @@ class HandelsregisterServiceTest {
     val handelsregisterService = HandelsregisterService(handelsregisterClient)
 
     @Test
-    fun `getMaatschappelijkeActiviteit calls client and gets MaatschappelijkeActiviteit`() = runBlockingTest {
+    fun `getMaatschappelijkeActiviteit calls client and gets MaatschappelijkeActiviteit`() = runTest {
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
         whenever(handelsregisterClient.getMaatschappelijkeActiviteit("123", authentication)).thenReturn(
             MaatschappelijkeActiviteit("Test bedrijf"),
@@ -46,7 +46,7 @@ class HandelsregisterServiceTest {
     }
 
     @Test
-    fun `getMaatschappelijkeActiviteit with invalid kvk`() = runBlockingTest {
+    fun `getMaatschappelijkeActiviteit with invalid kvk`() = runTest {
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
 
         val bedrijf = handelsregisterService.getMaatschappelijkeActiviteit(authentication)
