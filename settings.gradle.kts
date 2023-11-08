@@ -32,7 +32,6 @@ include(
     "core",
     "data",
     "form",
-    "form-flow",
     "gradle:license-report",
     "graphql",
     "haalcentraal:haalcentraal-all",

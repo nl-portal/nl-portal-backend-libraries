@@ -17,7 +17,6 @@
 object ApiDependencies {
     val commonsIo by lazy { "commons-io:commons-io:${ApiVersions.commonsIo}" }
     val apacheCommons by lazy { "org.apache.commons:commons-lang3:${ApiVersions.apacheCommons}"}
-    val formFlow by lazy { "com.ritense.valtimo:form-flow:${ApiVersions.formFlow}"}
     val graphqlJava by lazy { "com.graphql-java:graphql-java:${ApiVersions.graphqlJava}"}
     val graphqlJavaExtendedScalars by lazy { "com.graphql-java:graphql-java-extended-scalars:${ApiVersions.graphqlJava}"}
     val graphqlKotlinHooksProvider by lazy { "com.expediagroup:graphql-kotlin-hooks-provider:${ApiVersions.graphqlKotlin}"}

@@ -31,7 +31,6 @@ internal object TestVersions {
 object ApiVersions {
     const val apacheCommons = "3.13.0"
     const val commonsIo = "2.13.0"
-    const val formFlow = "10.6.0.RELEASE"
     const val graphqlJava ="21.0"
     const val graphqlKotlin = "7.0.1"
     const val kotlinLogging = "3.0.5"
