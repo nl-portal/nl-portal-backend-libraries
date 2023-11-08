@@ -16,6 +16,7 @@
 package com.ritense.portal.core.security
 
 import com.ritense.portal.core.security.config.HttpSecurityConfigurer
+import com.ritense.portal.core.security.config.SecurityHeadersConfig
 import com.ritense.portal.graphql.autoconfigure.CorsPathConfiguration
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -35,7 +36,7 @@ import reactor.core.publisher.Mono
 @AutoConfiguration
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
-@EnableConfigurationProperties(CorsPathConfiguration::class)
+@EnableConfigurationProperties(CorsPathConfiguration::class, SecurityHeadersConfig::class)
 class OauthSecurityAutoConfiguration {
 
     @Bean
@@ -44,11 +45,18 @@ class OauthSecurityAutoConfiguration {
         converter: Converter<Jwt, out Mono<out AbstractAuthenticationToken>>?,
         corsPathConfiguration: CorsPathConfiguration,
         securityConfigurers: List<HttpSecurityConfigurer>,
+        securityHeadersConfig: SecurityHeadersConfig,
     ): SecurityWebFilterChain {
         securityConfigurers.forEach { it.configure(http) }
 
         return http
             .csrf { it.disable() }
+                .headers {h ->
+                    securityHeadersConfig.contentSecurityPolicy.let {
+                        val spec1 = it
+                        h.contentSecurityPolicy { it }
+                    }
+                }
             .authorizeExchange {
                 it.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 it.pathMatchers("/playground").permitAll()
