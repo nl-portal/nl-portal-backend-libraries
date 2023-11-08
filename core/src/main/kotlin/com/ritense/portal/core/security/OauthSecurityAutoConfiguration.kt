@@ -33,6 +33,11 @@ import org.springframework.web.cors.reactive.CorsWebFilter
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 import reactor.core.publisher.Mono
 
+import org.springframework.security.config.Customizer.withDefaults
+import org.springframework.security.web.server.header.ReferrerPolicyServerHttpHeadersWriter
+import org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter
+import java.time.Duration
+
 @AutoConfiguration
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
@@ -51,12 +56,28 @@ class OauthSecurityAutoConfiguration {
 
         return http
             .csrf { it.disable() }
-                .headers {h ->
-                    securityHeadersConfig.contentSecurityPolicy.let {
-                        val spec1 = it
-                        h.contentSecurityPolicy { it }
+            .headers { h ->
+                h.frameOptions {
+                    XFrameOptionsServerHttpHeadersWriter.Mode.SAMEORIGIN
+                }
+                h.xssProtection(withDefaults())
+                h.cache(withDefaults())
+                securityHeadersConfig.contentSecurityPolicy.let { spec ->
+                    h.contentSecurityPolicy {
+                        it.policyDirectives(spec)
                     }
                 }
+                h.hsts { c ->
+                    c
+                        .maxAge(Duration.ofDays(securityHeadersConfig.hstsMaxAgeInDays))
+                        .includeSubdomains(true)
+                        .preload(true)
+                }
+                h.contentTypeOptions(withDefaults())
+                h.referrerPolicy { c ->
+                    c.policy(ReferrerPolicyServerHttpHeadersWriter.ReferrerPolicy.SAME_ORIGIN)
+                }
+            }
             .authorizeExchange {
                 it.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 it.pathMatchers("/playground").permitAll()
