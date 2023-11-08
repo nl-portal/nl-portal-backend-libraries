@@ -7,7 +7,7 @@ spring:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://localhost:5432/form-test
+        url: jdbc:postgresql://localhost:5436/form-test
         username: postgres
         password: test
         hikari:
