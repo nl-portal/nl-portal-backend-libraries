@@ -52,13 +52,6 @@ jobs:
 
       - uses: actions/delete-package-versions@v4
         with:
-            package-name: 'nl.nl-portal.form-flow'
-            package-type: 'maven'
-            min-versions-to-keep: 3
-            token: ${{ secrets.TOKEN }}
-
-      - uses: actions/delete-package-versions@v4
-        with:
             package-name: 'nl.nl-portal.graphql'
             package-type: 'maven'
             min-versions-to-keep: 3
