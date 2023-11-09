@@ -62,7 +62,7 @@ class OauthSecurityAutoConfiguration {
                 }
                 h.xssProtection(withDefaults())
                 h.cache(withDefaults())
-                securityHeadersConfig.contentSecurityPolicy.let { spec ->
+                securityHeadersConfig.contentSecurityPolicy?.let { spec ->
                     h.contentSecurityPolicy {
                         it.policyDirectives(spec)
                     }
