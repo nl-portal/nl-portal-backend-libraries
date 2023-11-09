@@ -40,15 +40,18 @@ class KeyCloakUserTokenExchangeFilter(
     override fun filter(request: ClientRequest, next: ExchangeFunction): Mono<ClientResponse> {
         if (request.headers()[HttpHeaders.AUTHORIZATION].isNullOrEmpty()) {
             getJwtAuthentication(request)?.let { authentication ->
-                val accessToken = exchangeToken(authentication)?.accessToken
-                if (accessToken != null) {
-                    logger.debug { "Setting accessToken from token exchange..." }
-                    val r = ClientRequest.from(request)
-                        .headers { headers -> headers.setBearerAuth(accessToken) }
-                        .build()
-                    return next.exchange(r)
-                } else {
-                    logger.error { "Token exchange failed: access token was null!" }
+                return exchangeToken(authentication).flatMap {
+                    val accessToken = it.accessToken
+                    if (accessToken != null) {
+                        logger.debug { "Setting accessToken from token exchange..." }
+                        val r = ClientRequest.from(request)
+                            .headers { headers -> headers.setBearerAuth(accessToken) }
+                            .build()
+                        next.exchange(r)
+                    } else {
+                        logger.error { "Token exchange failed: access token was null!" }
+                        next.exchange(request)
+                    }
                 }
             }
         } else {
@@ -74,7 +77,7 @@ class KeyCloakUserTokenExchangeFilter(
         return null
     }
 
-    private fun exchangeToken(authentication: JwtAuthenticationToken): TokenResponse? {
+    private fun exchangeToken(authentication: JwtAuthenticationToken): Mono<TokenResponse> {
         val currentToken = authentication.token
         logger.debug { "Exchanging token for ${authentication.name}" }
         return webClient.post()
@@ -93,7 +96,6 @@ class KeyCloakUserTokenExchangeFilter(
             )
             .retrieve()
             .bodyToMono<TokenResponse>()
-            .block()
     }
 
     data class TokenResponse(
