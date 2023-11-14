@@ -35,11 +35,10 @@ class TestApplication {
     @Bean
     fun springSecurityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
         http
-            .csrf()
-            .disable()
-            .authorizeExchange()
-            .anyExchange()
-            .permitAll()
+            .csrf { it.disable() }
+            .authorizeExchange {
+                it.anyExchange().permitAll()
+            }
         return http.build()
     }
 }
