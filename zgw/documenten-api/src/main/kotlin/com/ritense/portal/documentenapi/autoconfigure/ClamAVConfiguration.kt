@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration
 import xyz.capybara.clamav.ClamavClient
 
 @Configuration
-@ConditionalOnProperty("valtimo.zgw.documentenapi.virusscan.clamav", matchIfMissing = false)
+@ConditionalOnProperty(prefix = "valtimo.zgw.documentenapis.virusscan.clamav", name = ["enabled"], havingValue = "true")
 @EnableConfigurationProperties(ClamAVVirusScanConfig::class)
 class ClamAVConfiguration {
 
