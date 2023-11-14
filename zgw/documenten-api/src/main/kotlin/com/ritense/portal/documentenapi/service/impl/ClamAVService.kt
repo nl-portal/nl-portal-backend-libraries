@@ -6,8 +6,10 @@ import com.ritense.portal.documentenapi.service.VirusScanService
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.core.io.buffer.DataBufferUtils
 import reactor.core.publisher.Flux
+import reactor.core.scheduler.Schedulers
 import xyz.capybara.clamav.ClamavClient
 import xyz.capybara.clamav.commands.scan.result.ScanResult
+import java.io.IOException
 import java.io.InputStream
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
@@ -17,7 +19,7 @@ class ClamAVService(
 ) : VirusScanService {
 
     override fun scan(content: Flux<DataBuffer>): VirusScanResult {
-        return dataBufferToInputStream(content).use {
+        return getInputStreamFromFluxDataBuffer(content).use {
             when (val scanResult = clamAVClient.scan(it)) {
                 is ScanResult.OK -> {
                     VirusScanResult(VirusScanStatus.OK, mapOf())
@@ -29,12 +31,16 @@ class ClamAVService(
         }
     }
 
-    private fun dataBufferToInputStream(content: Flux<DataBuffer>): InputStream {
+    @Throws(IOException::class)
+    private fun getInputStreamFromFluxDataBuffer(content: Flux<DataBuffer>): InputStream {
         val osPipe = PipedOutputStream()
         val isPipe = PipedInputStream(osPipe)
         DataBufferUtils.write(content, osPipe)
+            .subscribeOn(Schedulers.boundedElastic())
+            .doOnComplete {
+                osPipe.close()
+            }
             .subscribe(DataBufferUtils.releaseConsumer())
-
         return isPipe
     }
 }
