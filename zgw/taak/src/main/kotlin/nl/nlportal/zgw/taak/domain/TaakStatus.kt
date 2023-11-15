@@ -21,5 +21,5 @@ enum class TaakStatus(@JsonValue val value: String) {
     OPEN("open"),
     INGEDIEND("ingediend"),
     VERWERKT("verwerkt"),
-    GESLOTEN("gesloten");
+    GESLOTEN("gesloten"),
 }

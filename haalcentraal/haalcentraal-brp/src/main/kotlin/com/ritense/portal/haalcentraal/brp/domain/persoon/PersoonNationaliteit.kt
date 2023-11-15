@@ -17,5 +17,5 @@ package com.ritense.portal.haalcentraal.brp.domain.persoon
 
 data class PersoonNationaliteit(
     val code: String? = null,
-    val omschrijving: String? = null
+    val omschrijving: String? = null,
 )

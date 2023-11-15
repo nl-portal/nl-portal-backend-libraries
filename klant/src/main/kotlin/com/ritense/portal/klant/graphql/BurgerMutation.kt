@@ -21,12 +21,12 @@ import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import com.ritense.portal.klant.domain.klanten.Klant
 import com.ritense.portal.klant.domain.klanten.KlantUpdate
 import com.ritense.portal.klant.service.BurgerService
-import com.ritense.portal.klant.validation.GraphQlValidator
+import nl.nlportal.klant.generiek.validation.GraphQlValidator
 import graphql.schema.DataFetchingEnvironment
 
 class BurgerMutation(
     val burgerService: BurgerService,
-    val graphQlValidator: GraphQlValidator
+    val graphQlValidator: GraphQlValidator,
 ) : Mutation {
 
     @GraphQLDescription("Updates the profile for the user")

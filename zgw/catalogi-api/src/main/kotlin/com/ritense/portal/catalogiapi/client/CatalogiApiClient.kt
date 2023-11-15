@@ -31,7 +31,7 @@ import reactor.netty.transport.logging.AdvancedByteBufFormat
 
 class CatalogiApiClient(
     private val catalogiApiConfig: CatalogiApiConfig,
-    private val idTokenGenerator: IdTokenGenerator
+    private val idTokenGenerator: IdTokenGenerator,
 ) {
 
     suspend fun getStatusTypes(zaakType: String): List<StatusType> {
@@ -71,7 +71,7 @@ class CatalogiApiClient(
     private fun webClient(): WebClient {
         val token = idTokenGenerator.generateToken(
             catalogiApiConfig.secret,
-            catalogiApiConfig.clientId
+            catalogiApiConfig.clientId,
         )
 
         return WebClient.builder()
@@ -80,9 +80,9 @@ class CatalogiApiClient(
                     HttpClient.create().wiretap(
                         "reactor.netty.http.client.HttpClient",
                         LogLevel.DEBUG,
-                        AdvancedByteBufFormat.TEXTUAL
-                    )
-                )
+                        AdvancedByteBufFormat.TEXTUAL,
+                    ),
+                ),
             )
             .baseUrl(catalogiApiConfig.url)
             .defaultHeader("Accept-Crs", "EPSG:4326")

@@ -17,6 +17,7 @@ package nl.nlportal.zgw.taak.domain
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.time.LocalDateTime
 import java.util.UUID
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -28,4 +29,6 @@ data class TaakObject(
     var status: TaakStatus,
     val formulier: TaakFormulier,
     @JsonProperty("verwerker_taak_id") val verwerkerTaakId: UUID,
+    val zaak: String?,
+    val verloopdatum: LocalDateTime?,
 )

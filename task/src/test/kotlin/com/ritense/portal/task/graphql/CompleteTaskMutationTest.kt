@@ -78,8 +78,8 @@ class CompleteTaskMutationTest : BaseTest() {
                 Mapper.get().createObjectNode(),
                 true,
                 LocalDateTime.now(),
-                false
-            )
+                false,
+            ),
         )
         `when`(caseService.getCase(externalCaseId)).thenReturn(case)
         `when`(case.caseDefinitionId).thenReturn(CaseDefinitionId.existingId("caseDefinitionId"))

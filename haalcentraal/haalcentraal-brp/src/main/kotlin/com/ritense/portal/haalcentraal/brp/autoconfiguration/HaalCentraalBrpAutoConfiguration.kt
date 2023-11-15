@@ -18,27 +18,32 @@ package com.ritense.portal.haalcentraal.brp.autoconfiguration
 import com.ritense.portal.haalcentraal.brp.client.HaalCentraalBrpClient
 import com.ritense.portal.haalcentraal.brp.graphql.HaalCentraalBrpQuery
 import com.ritense.portal.haalcentraal.brp.service.HaalCentraalBrpService
+import com.ritense.portal.haalcentraal.client.HaalCentraalClientConfig
 import com.ritense.portal.haalcentraal.client.HaalCentraalClientProvider
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import com.ritense.portal.haalcentraal.brp.service.impl.HaalCentraalBrpService as HaalCentraalBrpServiceImpl
+import org.springframework.context.annotation.Import
+import com.ritense.portal.haalcentraal.brp.service.impl.HaalCentraalBrpServiceImpl as HaalCentraalBrpServiceImpl
 
-@Configuration
+@AutoConfiguration
+@EnableConfigurationProperties(HaalCentraalClientConfig::class)
+@Import(HaalCentraalClientProvider::class)
 class HaalCentraalBrpAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(HaalCentraalBrpClient::class)
     fun haalCentraalBrpClient(
-        haalCentraalClientProvider: HaalCentraalClientProvider
+        haalCentraalClientProvider: HaalCentraalClientProvider,
     ): HaalCentraalBrpClient {
         return HaalCentraalBrpClient(haalCentraalClientProvider)
     }
 
     @Bean
     @ConditionalOnMissingBean(HaalCentraalBrpService::class)
-    fun haalCentraalBrpService(
-        haalCentraalBrpClient: HaalCentraalBrpClient
+    fun haalCentraalBrpServiceImpl(
+        haalCentraalBrpClient: HaalCentraalBrpClient,
     ): HaalCentraalBrpService {
         return HaalCentraalBrpServiceImpl(haalCentraalBrpClient)
     }
@@ -46,7 +51,7 @@ class HaalCentraalBrpAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(HaalCentraalBrpQuery::class)
     fun haalCentraalBrpQuery(
-        haalCentraalBrpService: HaalCentraalBrpService
+        haalCentraalBrpService: HaalCentraalBrpService,
     ): HaalCentraalBrpQuery {
         return HaalCentraalBrpQuery(haalCentraalBrpService)
     }

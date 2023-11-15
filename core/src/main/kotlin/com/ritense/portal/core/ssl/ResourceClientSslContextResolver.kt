@@ -23,7 +23,7 @@ import org.springframework.core.io.DefaultResourceLoader
 import org.springframework.core.io.ResourceLoader
 
 class ResourceClientSslContextResolver(
-    private val resourceLoader: ResourceLoader = DefaultResourceLoader()
+    private val resourceLoader: ResourceLoader = DefaultResourceLoader(),
 ) : ClientSslContextResolver {
     private val certificateFactory = CertificateFactory.getInstance("X509")
 

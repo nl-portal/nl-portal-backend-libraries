@@ -16,7 +16,6 @@
 package com.ritense.portal.haalcentraal.brp.client
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.nhaarman.mockitokotlin2.mock
 import com.ritense.portal.core.ssl.ClientKey
 import com.ritense.portal.core.ssl.StringClientSslContextResolver
 import com.ritense.portal.haalcentraal.brp.domain.persoon.Persoon
@@ -33,6 +32,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.mockito.Mockito.mock
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class HaalCentraalBrpClientTest {
@@ -50,7 +50,7 @@ internal class HaalCentraalBrpClientTest {
         server.enqueue(
             MockResponse()
                 .setBody(jacksonObjectMapper().writeValueAsString(persoon))
-                .addHeader("Content-Type", "application/json")
+                .addHeader("Content-Type", "application/json"),
         )
 
         haalCentraalClientConfig = HaalCentraalClientConfig(url = server.url("/").toString())
@@ -104,10 +104,10 @@ internal class HaalCentraalBrpClientTest {
             ssl = HaalCentraalClientConfig.Ssl(
                 key = ClientKey(
                     certChain = "${clientCertificate.certificatePem()}\n${rootCertificate.certificatePem()}",
-                    key = clientCertificate.privateKeyPkcs8Pem()
+                    key = clientCertificate.privateKeyPkcs8Pem(),
                 ),
-                trustedCertificate = rootCertificate.certificatePem()
-            )
+                trustedCertificate = rootCertificate.certificatePem(),
+            ),
         )
 
         val provider = HaalCentraalClientProvider(haalCentraalClientConfig, StringClientSslContextResolver())

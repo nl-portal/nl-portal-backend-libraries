@@ -24,5 +24,5 @@ class Form(
     @GraphQLIgnore
     val active: Boolean,
     @GraphQLIgnore
-    val loginRequired: Boolean
+    val loginRequired: Boolean,
 )

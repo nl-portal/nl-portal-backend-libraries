@@ -12,7 +12,7 @@ query {
             date
             data
             formulier {
-                type
+                formuliertype
                 value
             }
             identificatie {

@@ -16,24 +16,18 @@
 package com.ritense.portal.klant.client
 
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
-import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
-import com.ritense.portal.klant.domain.ResultPage
+import nl.nlportal.klant.generiek.domain.ResultPage
 import com.ritense.portal.klant.domain.klanten.Klant
 import com.ritense.portal.klant.domain.klanten.KlantCreationRequest
-import io.netty.handler.logging.LogLevel
+import nl.nlportal.klant.generiek.client.OpenKlantClientProvider
 import org.springframework.http.MediaType
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
-import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
-import reactor.netty.http.client.HttpClient
-import reactor.netty.transport.logging.AdvancedByteBufFormat
 
 class OpenKlantClient(
-    private val openKlantClientConfig: OpenKlantClientConfig,
-    private val idTokenGenerator: IdTokenGenerator
+    private val openKlantClientProvider: OpenKlantClientProvider,
 ) {
     suspend fun getKlanten(authentication: CommonGroundAuthentication, page: Int, bsn: String?): List<Klant> {
-        return webClient(authentication)
+        return openKlantClientProvider.webClient(authentication)
             .get()
             .uri {
                 val uriBuilder = it.path("/klanten/api/v1/klanten")
@@ -47,7 +41,7 @@ class OpenKlantClient(
     }
 
     suspend fun patchKlant(authentication: CommonGroundAuthentication, klantUrl: String, klant: Klant): Klant {
-        return webClient(authentication)
+        return openKlantClientProvider.webClient(authentication)
             .patch()
             .uri(klantUrl)
             .contentType(MediaType.APPLICATION_JSON)
@@ -58,7 +52,7 @@ class OpenKlantClient(
     }
 
     suspend fun postKlant(authentication: CommonGroundAuthentication, klant: KlantCreationRequest): Klant {
-        return webClient(authentication)
+        return openKlantClientProvider.webClient(authentication)
             .post()
             .uri("/klanten/api/v1/klanten")
             .contentType(MediaType.APPLICATION_JSON)
@@ -66,30 +60,5 @@ class OpenKlantClient(
             .bodyValue(klant)
             .retrieve()
             .awaitBody()
-    }
-
-    private fun webClient(authentication: CommonGroundAuthentication): WebClient {
-        val token = idTokenGenerator.generateToken(
-            openKlantClientConfig.secret,
-            openKlantClientConfig.clientId,
-            authentication.getUserId(),
-            authentication.getUserRepresentation()
-        )
-
-        return WebClient.builder()
-            .clientConnector(
-                ReactorClientHttpConnector(
-                    HttpClient.create().wiretap(
-                        "reactor.netty.http.client.HttpClient",
-                        LogLevel.DEBUG,
-                        AdvancedByteBufFormat.TEXTUAL
-                    )
-                )
-            )
-            .baseUrl(openKlantClientConfig.url)
-            .defaultHeader("Accept-Crs", "EPSG:4326")
-            .defaultHeader("Content-Crs", "EPSG:4326")
-            .defaultHeader("Authorization", "Bearer $token")
-            .build()
     }
 }

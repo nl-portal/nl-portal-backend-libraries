@@ -15,8 +15,9 @@
  */
 package com.ritense.portal.graphql.security.context
 
-import com.expediagroup.graphql.server.spring.execution.SpringGraphQLContextFactory
+import com.expediagroup.graphql.server.spring.execution.DefaultSpringGraphQLContextFactory
 import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
+import graphql.GraphQLContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactor.ReactorContext
@@ -26,31 +27,19 @@ import reactor.core.publisher.Mono
 import kotlin.coroutines.coroutineContext
 
 @ExperimentalCoroutinesApi
-class AuthenticationGraphQLContextFactory : SpringGraphQLContextFactory<AuthenticationGraphQLContext>() {
+class AuthenticationGraphQLContextFactory : DefaultSpringGraphQLContextFactory() {
 
-    @Deprecated("Support for custom GraphQL context is deprecated from graphql-kotlin. Use GraphQL context Map in DataFetchingEnvironment instead")
-    override suspend fun generateContext(request: ServerRequest): AuthenticationGraphQLContext {
+    override suspend fun generateContext(request: ServerRequest): GraphQLContext {
         val reactorContext = coroutineContext[ReactorContext]?.context ?: throw RuntimeException("ReactorContext not found")
 
         val securityContext = reactorContext.getOrDefault<Mono<SecurityContext>>(
             SecurityContext::class.java,
-            null
-        )!!
-
-        return AuthenticationGraphQLContext(securityContext.awaitFirstOrNull()?.authentication, request)
-    }
-
-    override suspend fun generateContextMap(request: ServerRequest): Map<*, Any> {
-        val reactorContext = coroutineContext[ReactorContext]?.context ?: throw RuntimeException("ReactorContext not found")
-
-        val securityContext = reactorContext.getOrDefault<Mono<SecurityContext>>(
-            SecurityContext::class.java,
-            null
+            null,
         )!!
 
         val context = mutableMapOf<Any, Any>()
         securityContext.awaitFirstOrNull()?.authentication?.apply { context[AUTHENTICATION_KEY] = this }
 
-        return context
+        return super.generateContext(request).putAll(context)
     }
 }

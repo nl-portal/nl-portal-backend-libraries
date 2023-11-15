@@ -37,7 +37,7 @@ plugins {
     // Docker-compose plugin
     id("com.avast.gradle.docker-compose")
 
-    id("com.github.jk1.dependency-license-report") version "2.1"
+    id("com.github.jk1.dependency-license-report") version "2.5"
 
     id("org.jetbrains.dokka")
 }
@@ -67,6 +67,8 @@ subprojects {
     apply(plugin = "org.jetbrains.dokka")
 
     apply(plugin = "java")
+
+    apply(plugin = "maven-publish")
 
     if (project.properties.containsKey("isLib") || project.properties.containsKey("isApp")) {
         configure<com.diffplug.gradle.spotless.SpotlessExtension> {
@@ -121,6 +123,28 @@ subprojects {
 
     tasks.withType<Test> {
         useJUnitPlatform()
+    }
+
+    configure<PublishingExtension> {
+        repositories {
+            maven {
+
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/nl-portal/nl-portal-backend-libraries")
+                credentials {
+                    username = System.getenv("USER")
+                    password = System.getenv("TOKEN")
+                }
+            }
+        }
+
+        publications {
+
+            register<MavenPublication>("default") {
+                groupId = "nl.nl-portal"
+                from(components["java"])
+            }
+        }
     }
 }
 

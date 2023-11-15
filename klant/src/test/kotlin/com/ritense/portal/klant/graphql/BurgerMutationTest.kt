@@ -19,12 +19,12 @@ import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import com.ritense.portal.klant.domain.klanten.KlantUpdate
 import com.ritense.portal.klant.service.BurgerService
-import com.ritense.portal.klant.validation.GraphQlValidator
+import nl.nlportal.klant.generiek.validation.GraphQlValidator
 import graphql.GraphQLContext
 import graphql.schema.DataFetchingEnvironment
-import javax.validation.ValidationException
+import jakarta.validation.ValidationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -60,12 +60,12 @@ internal class BurgerMutationTest {
     }
 
     @Test
-    fun `can update klant with valid phone number and email`() = runBlockingTest {
+    fun `can update klant with valid phone number and email`() = runTest {
         Mockito.`when`(environment.graphQlContext).thenReturn(context)
         Mockito.`when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
         val klant = KlantUpdate(
             telefoonnummer = "0611111111",
-            emailadres = "new@email.nl"
+            emailadres = "new@email.nl",
         )
 
         burgerMutation.updateBurgerProfiel(klant, environment)
@@ -74,12 +74,12 @@ internal class BurgerMutationTest {
     }
 
     @Test
-    fun `can update klant with empty phone number and email`() = runBlockingTest {
+    fun `can update klant with empty phone number and email`() = runTest {
         Mockito.`when`(environment.graphQlContext).thenReturn(context)
         Mockito.`when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
         val klant = KlantUpdate(
             telefoonnummer = "",
-            emailadres = ""
+            emailadres = "",
         )
 
         burgerMutation.updateBurgerProfiel(klant, environment)
@@ -91,10 +91,10 @@ internal class BurgerMutationTest {
     fun `cant update klant with invalid phone number`() {
         val klant = KlantUpdate(
             telefoonnummer = "invalid-phone-number",
-            emailadres = ""
+            emailadres = "",
         )
         val exception = Assertions.assertThrows(ValidationException::class.java) {
-            runBlockingTest { burgerMutation.updateBurgerProfiel(klant, environment) }
+            runTest { burgerMutation.updateBurgerProfiel(klant, environment) }
         }
         assertThat(exception).hasMessage("Must be a valid phone number")
     }
@@ -103,10 +103,10 @@ internal class BurgerMutationTest {
     fun `cant update klant with invalid email`() {
         val klant = KlantUpdate(
             telefoonnummer = "",
-            emailadres = "invalid-email"
+            emailadres = "invalid-email",
         )
         val exception = Assertions.assertThrows(ValidationException::class.java) {
-            runBlockingTest { burgerMutation.updateBurgerProfiel(klant, environment) }
+            runTest { burgerMutation.updateBurgerProfiel(klant, environment) }
         }
         assertThat(exception).hasMessage("must be a well-formed email address")
     }

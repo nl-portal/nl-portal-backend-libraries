@@ -19,12 +19,13 @@ import com.ritense.portal.haalcentraal.client.HaalCentraalHrClientConfig
 import com.ritense.portal.haalcentraal.hr.client.HandelsregisterClient
 import com.ritense.portal.haalcentraal.hr.graphql.HandelsregisterQuery
 import com.ritense.portal.haalcentraal.hr.service.HandelsregisterService
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
-@Configuration
+@AutoConfiguration
 @EnableConfigurationProperties(HaalCentraalHrClientConfig::class)
 class HandelsregisterAutoConfiguration {
 

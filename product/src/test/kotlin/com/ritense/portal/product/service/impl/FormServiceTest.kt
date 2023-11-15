@@ -15,15 +15,15 @@
  */
 package com.ritense.portal.product.service.impl
 
-import com.nhaarman.mockitokotlin2.verify
 import com.ritense.portal.product.client.OpenFormulierenClient
 import com.ritense.portal.product.domain.Form
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 import java.util.UUID
 
 @ExperimentalCoroutinesApi
@@ -33,7 +33,7 @@ class FormServiceTest {
     val formService = FormService(openFormulierenClient)
 
     @Test
-    fun `getForms calls client and gets forms`() = runBlockingTest {
+    fun `getForms calls client and gets forms`() = runTest {
         val formId = UUID.randomUUID()
         `when`(openFormulierenClient.getForms()).thenReturn(
             listOf(
@@ -41,9 +41,9 @@ class FormServiceTest {
                     formId,
                     "name",
                     true,
-                    true
-                )
-            )
+                    true,
+                ),
+            ),
         )
 
         val forms = formService.getForms()
@@ -56,7 +56,7 @@ class FormServiceTest {
     }
 
     @Test
-    fun `getForms filters inactive forms`() = runBlockingTest {
+    fun `getForms filters inactive forms`() = runTest {
         val formId = UUID.randomUUID()
         `when`(openFormulierenClient.getForms()).thenReturn(
             listOf(
@@ -64,9 +64,9 @@ class FormServiceTest {
                     formId,
                     "name",
                     false,
-                    true
-                )
-            )
+                    true,
+                ),
+            ),
         )
 
         val forms = formService.getForms()
@@ -77,7 +77,7 @@ class FormServiceTest {
     }
 
     @Test
-    fun `getForms filters forms without authentication`() = runBlockingTest {
+    fun `getForms filters forms without authentication`() = runTest {
         val formId = UUID.randomUUID()
         `when`(openFormulierenClient.getForms()).thenReturn(
             listOf(
@@ -85,9 +85,9 @@ class FormServiceTest {
                     formId,
                     "name",
                     true,
-                    false
-                )
-            )
+                    false,
+                ),
+            ),
         )
 
         val forms = formService.getForms()

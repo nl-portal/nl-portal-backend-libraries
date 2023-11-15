@@ -16,12 +16,13 @@
 package com.ritense.portal.form.domain
 
 import com.fasterxml.jackson.databind.node.ObjectNode
-import org.hibernate.annotations.Type
+import jakarta.persistence.Column
+import jakarta.persistence.EmbeddedId
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 import org.springframework.data.domain.Persistable
-import javax.persistence.Column
-import javax.persistence.EmbeddedId
-import javax.persistence.Entity
-import javax.persistence.Table
 
 @Entity
 @Table(name = "form_io_form_definition")
@@ -34,11 +35,11 @@ data class FormIoFormDefinition(
     var name: String,
 
     @Column(name = "form_definition", columnDefinition = "json")
-    @Type(type = "com.vladmihalcea.hibernate.type.json.JsonBinaryType")
+    @JdbcTypeCode(SqlTypes.JSON)
     var formDefinition: ObjectNode,
 
     @Column(name = "read_only", columnDefinition = "BOOLEAN")
-    var readOnly: Boolean
+    var readOnly: Boolean,
 
 ) : Persistable<FormDefinitionId> {
 

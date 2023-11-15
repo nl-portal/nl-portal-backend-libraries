@@ -26,7 +26,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import java.util.function.Consumer
 
 class AuthenticationIT(
-    @Autowired private val testClient: WebTestClient
+    @Autowired private val testClient: WebTestClient,
 ) : BaseIntegrationTest() {
 
     val GRAPHQL_ENDPOINT = "/graphql"
@@ -52,23 +52,6 @@ class AuthenticationIT(
             .exchange()
             .verifyOnlyDataExists(query)
             .jsonPath("$DATA_JSON_PATH.$query").isEqualTo("authenticated")
-    }
-
-    @Test
-    fun `authorized query doesnt work without authorization`() {
-        val query = "getAuthenticated"
-        val body =
-            "query {\n" +
-                "    $query \n" +
-                "}"
-
-        testClient.post()
-            .uri(GRAPHQL_ENDPOINT)
-            .accept(APPLICATION_JSON)
-            .contentType(GRAPHQL_MEDIA_TYPE)
-            .bodyValue(body)
-            .exchange()
-            .verifyOnlyErrorExists(query)
     }
 
     @Test

@@ -28,7 +28,7 @@ data class CaseInstance(
     val submission: ObjectNode,
     val statusHistory: List<HistoricStatus>?,
     val caseDefinitionId: String,
-    val createdOn: String
+    val createdOn: String,
 ) {
     companion object {
         fun from(case: Case): CaseInstance {
@@ -38,17 +38,17 @@ data class CaseInstance(
                 case.userId,
                 Status(
                     case.status.name,
-                    case.status.createdOn.format(DateTimeFormatter.ISO_DATE_TIME)
+                    case.status.createdOn.format(DateTimeFormatter.ISO_DATE_TIME),
                 ),
                 case.submission.value,
                 case.statusHistory?.map {
                     HistoricStatus(
                         Status(it.status.name, it.status.createdOn.format(DateTimeFormatter.ISO_DATE_TIME)),
-                        it.createdOn.format(DateTimeFormatter.ISO_DATE_TIME)
+                        it.createdOn.format(DateTimeFormatter.ISO_DATE_TIME),
                     )
                 }?.toList(),
                 case.caseDefinitionId.value,
-                case.createdOn.format(DateTimeFormatter.ISO_DATE_TIME)
+                case.createdOn.format(DateTimeFormatter.ISO_DATE_TIME),
             )
         }
     }

@@ -29,13 +29,13 @@ class CreateCaseMutation(private val caseService: CaseService) : Mutation {
         submission: ObjectNode,
         caseDefinitionId: String,
         initialStatus: String? = null,
-        dfe: DataFetchingEnvironment
+        dfe: DataFetchingEnvironment,
     ): CaseCreated {
         val case = caseService.create(
             caseDefinitionId,
             submission,
             dfe.graphQlContext.get(AUTHENTICATION_KEY),
-            initialStatus
+            initialStatus,
         )
         return CaseCreated(case.caseId.value)
     }

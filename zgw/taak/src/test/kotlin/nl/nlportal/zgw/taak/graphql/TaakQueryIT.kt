@@ -41,7 +41,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @TestInstance(PER_CLASS)
 internal class TaakQueryIT(
     @Autowired private val testClient: WebTestClient,
-    @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig
+    @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
 ) {
     lateinit var server: MockWebServer
 
@@ -80,6 +80,7 @@ internal class TaakQueryIT(
             .jsonPath(basePath).exists()
             .jsonPath("$resultPath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
             .jsonPath("$resultPath.objectId").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
+            .jsonPath("$resultPath.formulier.formuliertype").isEqualTo("portalid")
             .jsonPath("$resultPath.formulier.value").isEqualTo("check-loan-form")
             .jsonPath("$resultPath.status").isEqualTo(TaakStatus.OPEN.toString())
             .jsonPath("$resultPath.date").isEqualTo("2022-05-25")
@@ -107,6 +108,7 @@ internal class TaakQueryIT(
             .jsonPath(resultPath).exists()
             .jsonPath("$resultPath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
             .jsonPath("$resultPath.objectId").isEqualTo("2d94fedb-3d99-43c4-b333-f04e0ccfe78a")
+            .jsonPath("$resultPath.formulier.formuliertype").isEqualTo("portalid")
             .jsonPath("$resultPath.formulier.value").isEqualTo("check-loan-form")
             .jsonPath("$resultPath.status").isEqualTo(TaakStatus.OPEN.toString())
             .jsonPath("$resultPath.date").isEqualTo("2022-05-30")
@@ -119,7 +121,7 @@ internal class TaakQueryIT(
     }
 
     @Test
-    @WithBedrijfUser("14127293")
+    @WithBurgerUser("569312863")
     fun `should get task by id for burger`() {
         val basePath = "$.data.getTaakById"
 
@@ -132,13 +134,14 @@ internal class TaakQueryIT(
             .expectBody()
             .jsonPath(basePath).exists()
             .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
+            .jsonPath("$basePath.formulier.formuliertype").isEqualTo("portalid")
             .jsonPath("$basePath.formulier.value").isEqualTo("check-loan-form")
             .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
-            .jsonPath("$basePath.date").isEqualTo("2022-05-30")
+            .jsonPath("$basePath.date").isEqualTo("2022-05-25")
     }
 
     @Test
-    @WithBurgerUser("569312863")
+    @WithBedrijfUser("14127293")
     fun `should get task by id for bedrijf`() {
         val basePath = "$.data.getTaakById"
 
@@ -151,9 +154,25 @@ internal class TaakQueryIT(
             .expectBody()
             .jsonPath(basePath).exists()
             .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
+            .jsonPath("$basePath.formulier.formuliertype").isEqualTo("portalid")
             .jsonPath("$basePath.formulier.value").isEqualTo("check-loan-form")
             .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
-            .jsonPath("$basePath.date").isEqualTo("2022-05-25")
+            .jsonPath("$basePath.date").isEqualTo("2022-05-30")
+    }
+
+    @Test
+    @WithBurgerUser("569312864")
+    fun `should unauthorized get task by id for burger`() {
+        val basePath = "$.data.getTaakById"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(getTaakByIdPayload)
+            .exchange()
+            .expectBody()
+            .jsonPath(basePath)
     }
 
     fun setupMockObjectsApiServer() {
@@ -166,6 +185,8 @@ internal class TaakQueryIT(
                     "GET /api/v2/objects" -> {
                         if (queryParams.any { it.contains("identificatie__value__exact__569312863") }) {
                             TestHelper.mockResponseFromFile("/data/get-bsn-task-list.json")
+                        } else if (queryParams.any { it.contains("identificatie__value__exact__569312863") }) {
+                            TestHelper.mockResponseFromFile("/data/get-bsn-task-list-unauthorized.json")
                         } else if (queryParams.any { it.contains("identificatie__value__exact__14127293") }) {
                             TestHelper.mockResponseFromFile("/data/get-kvk-task-list.json")
                         } else {

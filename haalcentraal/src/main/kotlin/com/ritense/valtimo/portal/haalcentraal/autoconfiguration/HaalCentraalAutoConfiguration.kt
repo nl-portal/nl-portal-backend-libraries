@@ -22,15 +22,15 @@ import com.ritense.portal.haalcentraal.client.HaalCentraalClientProvider
 import com.ritense.portal.haalcentraal.client.tokenexchange.KeyCloakUserTokenExchangeFilter
 import com.ritense.portal.haalcentraal.client.tokenexchange.UserTokenExchangeFilter
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.ResourceLoader
 import org.springframework.web.reactive.function.client.WebClient
 
-@Configuration
+@AutoConfiguration
 @EnableConfigurationProperties(HaalCentraalClientConfig::class)
 class HaalCentraalAutoConfiguration {
 
@@ -45,7 +45,7 @@ class HaalCentraalAutoConfiguration {
     @ConditionalOnProperty("valtimo.haalcentraal.tokenExchange.targetAudience", matchIfMissing = false)
     @ConditionalOnMissingBean(UserTokenExchangeFilter::class)
     fun userTokenExchangeFilterFactory(
-        haalCentraalClientConfig: HaalCentraalClientConfig
+        haalCentraalClientConfig: HaalCentraalClientConfig,
     ): UserTokenExchangeFilter {
         requireNotNull(haalCentraalClientConfig.tokenExchange)
         return KeyCloakUserTokenExchangeFilter(WebClient.create(), haalCentraalClientConfig.tokenExchange.targetAudience)
@@ -56,7 +56,7 @@ class HaalCentraalAutoConfiguration {
     fun haalCentraalClientProvider(
         haalCentraalClientConfig: HaalCentraalClientConfig,
         @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
-        @Autowired(required = false) userTokenExchangeFilter: UserTokenExchangeFilter? = null
+        @Autowired(required = false) userTokenExchangeFilter: UserTokenExchangeFilter? = null,
     ): HaalCentraalClientProvider {
         return HaalCentraalClientProvider(haalCentraalClientConfig, clientSslContextResolver, userTokenExchangeFilter)
     }

@@ -23,7 +23,7 @@ import java.util.UUID.fromString
 
 class FormDefinitionQuery(
     private val formIoFormDefinitionService: FormIoFormDefinitionService,
-    private val objectenApiFormDefinitionService: ObjectsApiFormDefinitionService
+    private val objectenApiFormDefinitionService: ObjectsApiFormDefinitionService,
 ) : Query {
 
     @GraphQLDescription("find all form definitions from repository")
@@ -35,7 +35,7 @@ class FormDefinitionQuery(
 
     @GraphQLDescription("find single form definition from repository")
     fun getFormDefinitionByName(
-        @GraphQLDescription("The form definition name") name: String
+        @GraphQLDescription("The form definition name") name: String,
     ): FormDefinition? {
         val formIoFormDefinition = formIoFormDefinitionService.findFormIoFormDefinitionByName(name) ?: return null
         return FormDefinition(formIoFormDefinition.formDefinition)
@@ -43,7 +43,7 @@ class FormDefinitionQuery(
 
     @GraphQLDescription("find single form definition from the Objecten API")
     suspend fun getFormDefinitionByObjectenApiUrl(
-        @GraphQLDescription("The form definition url") url: String
+        @GraphQLDescription("The form definition url") url: String,
     ): FormDefinition? {
         val objectenApiFormDefinition = objectenApiFormDefinitionService.findObjectsApiFormDefinitionByUrl(url) ?: return null
         return FormDefinition(objectenApiFormDefinition.formDefinition)
@@ -51,11 +51,11 @@ class FormDefinitionQuery(
 
     @Deprecated(
         message = "Replaced by getFormDefinitionByName and getFormDefinitionByObjectenApiUrl",
-        replaceWith = ReplaceWith("getFormDefinitionByName or getFormDefinitionByObjectenApiUrl")
+        replaceWith = ReplaceWith("getFormDefinitionByName or getFormDefinitionByObjectenApiUrl"),
     )
     @GraphQLDescription("find single form definition from repository or Objecten API")
     suspend fun getFormDefinitionById(
-        @GraphQLDescription("The form definition id") id: String
+        @GraphQLDescription("The form definition id") id: String,
     ): FormDefinition? {
         // for backwards compatibility
         // if the requested id is a UUID, we assume it's an Objecten API id

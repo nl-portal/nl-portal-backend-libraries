@@ -15,11 +15,8 @@
  */
 package com.ritense.portal.core.ssl
 
-import org.springframework.boot.context.properties.ConstructorBinding
-
-@ConstructorBinding
 data class ClientKey(
     val certChain: String,
     val key: String,
-    val keyPassword: String? = null
+    val keyPassword: String? = null,
 )

@@ -15,7 +15,6 @@
  */
 package com.ritense.portal.haalcentraal.brp.graphql
 
-import com.nhaarman.mockitokotlin2.mock
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import com.ritense.portal.haalcentraal.brp.service.HaalCentraalBrpService
@@ -23,20 +22,21 @@ import graphql.GraphQLContext
 import graphql.schema.DataFetchingEnvironment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.jupiter.api.BeforeEach
-import org.mockito.Mockito
+import org.mockito.Mockito.mock
+import org.mockito.kotlin.whenever
 import org.springframework.security.core.Authentication
 
 @ExperimentalCoroutinesApi
 internal open class QueryTestBase {
     val haalCentraalBrpService = mock<HaalCentraalBrpService>()
     val query = HaalCentraalBrpQuery(haalCentraalBrpService)
-    var environment = Mockito.mock(DataFetchingEnvironment::class.java)
-    var authentication = Mockito.mock(CommonGroundAuthentication::class.java)
-    val context = Mockito.mock(GraphQLContext::class.java)
+    var environment = mock(DataFetchingEnvironment::class.java)
+    var authentication = mock(CommonGroundAuthentication::class.java)
+    val context = mock(GraphQLContext::class.java)
 
     @BeforeEach
     fun setup() {
-        Mockito.`when`(environment.graphQlContext).thenReturn(context)
-        Mockito.`when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
+        whenever(environment.graphQlContext).thenReturn(context)
+        whenever(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
     }
 }

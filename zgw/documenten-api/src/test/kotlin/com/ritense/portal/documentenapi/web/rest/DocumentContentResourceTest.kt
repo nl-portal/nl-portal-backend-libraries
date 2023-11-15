@@ -15,13 +15,11 @@
  */
 package com.ritense.portal.documentenapi.web.rest
 
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
+import com.ritense.portal.documentenapi.client.DocumentApisConfig
 import com.ritense.portal.documentenapi.domain.Document
 import com.ritense.portal.documentenapi.service.DocumentenApiService
+import com.ritense.portal.documentenapi.service.VirusScanService
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
@@ -31,6 +29,10 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.doReturn
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
+import org.mockito.kotlin.whenever
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.core.io.buffer.DefaultDataBufferFactory
 import reactor.core.publisher.Flux
@@ -40,7 +42,9 @@ class DocumentContentResourceTest {
 
     private val documentenApiClient: DocumentenApiClient = mock()
     private val documentenApiService: DocumentenApiService = mock()
-    private val downloadResource = DocumentContentResource(documentenApiClient, documentenApiService)
+    private val virusScanService: VirusScanService = mock()
+    private val documentApisConfig: DocumentApisConfig = mock()
+    private val downloadResource = DocumentContentResource(documentenApiClient, documentenApiService, virusScanService, documentApisConfig)
     val document: Document = mock()
 
     @Test
@@ -49,17 +53,17 @@ class DocumentContentResourceTest {
         val testString = "This is a test string for the DataBuffer, it should end up in the result"
         val fluxDataBuffer = getFluxDataBufferFromString(testString)
 
-        doReturn(fluxDataBuffer).`when`(documentenApiClient).getDocumentContentStream(uuid)
-        whenever(documentenApiService.getDocument(uuid)).thenReturn(document)
+        doReturn(fluxDataBuffer).`when`(documentenApiClient).getDocumentContentStream(uuid, "localhost")
+        whenever(documentenApiService.getDocument(uuid, "localhost")).thenReturn(document)
         whenever(document.bestandsnaam).thenReturn("bestandsnaam.png")
 
-        val result = downloadResource.downloadStreaming(uuid)
+        val result = downloadResource.downloadStreaming(uuid, "localhost")
 
         val bodyByteArray = result.body.let { it?.blockLast()?.asByteBuffer()?.array() }
         assertNotNull(bodyByteArray)
         val resultString = String(bodyByteArray!!, StandardCharsets.UTF_8)
 
-        verify(documentenApiClient).getDocumentContentStream(uuid)
+        verify(documentenApiClient).getDocumentContentStream(uuid, "localhost")
         assertEquals(testString, resultString)
     }
 
@@ -67,7 +71,7 @@ class DocumentContentResourceTest {
         val dataBuffer = DefaultDataBufferFactory()
             .wrap(
                 ByteBuffer
-                    .wrap(value.toByteArray(Charset.defaultCharset()))
+                    .wrap(value.toByteArray(Charset.defaultCharset())),
             )
 
         return Flux.just(dataBuffer) as Flux<DataBuffer>

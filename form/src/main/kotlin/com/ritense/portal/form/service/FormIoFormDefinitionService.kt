@@ -24,19 +24,19 @@ import java.util.UUID
 
 @Transactional
 class FormIoFormDefinitionService(
-    private val formIoFormDefinitionRepository: FormIoFormDefinitionRepository
+    private val formIoFormDefinitionRepository: FormIoFormDefinitionRepository,
 ) {
 
     fun createFormDefinition(request: CreateFormDefinitionRequest): FormIoFormDefinition {
         return formIoFormDefinitionRepository.saveAndFlush(
             FormIoFormDefinition(
                 FormDefinitionId.newId(
-                    UUID.randomUUID()
+                    UUID.randomUUID(),
                 ),
                 request.getName(),
                 request.getFormDefinition(),
-                request.isReadOnly()
-            )
+                request.isReadOnly(),
+            ),
         )
     }
 

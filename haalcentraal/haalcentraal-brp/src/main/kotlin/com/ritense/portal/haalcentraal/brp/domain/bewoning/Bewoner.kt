@@ -16,5 +16,5 @@
 package com.ritense.portal.haalcentraal.brp.domain.bewoning
 
 data class Bewoner(
-    val burgerservicenummer: String
+    val burgerservicenummer: String,
 )

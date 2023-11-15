@@ -19,5 +19,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.zgw.taak.taakobject")
 class TaakObjectConfig(
-    var typeUrl: String = ""
+    var typeUrl: String = "",
 )

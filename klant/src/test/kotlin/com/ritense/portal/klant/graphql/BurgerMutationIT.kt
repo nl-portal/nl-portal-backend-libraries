@@ -17,7 +17,7 @@ package com.ritense.portal.klant.graphql
 
 import com.ritense.portal.commonground.authentication.WithBurgerUser
 import com.ritense.portal.klant.TestHelper
-import com.ritense.portal.klant.client.OpenKlantClientConfig
+import nl.nlportal.klant.generiek.client.OpenKlantClientConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -39,7 +39,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @TestInstance(PER_CLASS)
 internal class BurgerMutationIT(
     @Autowired private val testClient: WebTestClient,
-    @Autowired private val openKlantClientConfig: OpenKlantClientConfig
+    @Autowired private val openKlantClientConfig: OpenKlantClientConfig,
 ) {
     lateinit var server: MockWebServer
 
@@ -59,7 +59,6 @@ internal class BurgerMutationIT(
     @Test
     @WithBurgerUser("111111111")
     fun `updateBurgerProfiel should update klant when klant exists`() {
-
         val mutation = """
             mutation {
                 updateBurgerProfiel(
@@ -88,7 +87,6 @@ internal class BurgerMutationIT(
     @Test
     @WithBurgerUser("222222222")
     fun `updateBurgerProfiel should create klant when klant doesn't exist`() {
-
         val mutation = """
             mutation {
                 updateBurgerProfiel(

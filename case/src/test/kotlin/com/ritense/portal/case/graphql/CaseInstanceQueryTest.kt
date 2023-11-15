@@ -49,7 +49,7 @@ class CaseInstanceQueryTest : BaseTest() {
 
         val allCaseInstances = caseInstanceQuery.allCaseInstances(
             CaseInstanceOrdering(createdOn = Sort.ASC),
-            environment
+            environment,
         )
 
         assertThat(allCaseInstances.first().createdOn).isEqualTo(yesterday.format(DateTimeFormatter.ISO_DATE_TIME))
@@ -68,7 +68,7 @@ class CaseInstanceQueryTest : BaseTest() {
 
         val allCaseInstances = caseInstanceQuery.allCaseInstances(
             CaseInstanceOrdering(createdOn = Sort.DESC),
-            environment
+            environment,
         )
 
         assertThat(allCaseInstances.first().createdOn).isEqualTo(today.format(DateTimeFormatter.ISO_DATE_TIME))

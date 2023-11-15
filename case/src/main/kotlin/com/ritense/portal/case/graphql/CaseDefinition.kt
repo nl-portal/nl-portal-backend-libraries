@@ -20,5 +20,5 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 data class CaseDefinition(
     val id: String,
     val schema: ObjectNode,
-    val statusDefinition: List<String>
+    val statusDefinition: List<String>,
 )

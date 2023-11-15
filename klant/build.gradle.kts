@@ -20,15 +20,7 @@ plugins {
 val isLib = true
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    api(project(":graphql"))
-    api(project(":zgw:common-ground-authentication"))
-    api(project(":zgw:idtoken-authentication"))
-
-    // jjwt
-    implementation(Dependencies.jsonWebTokensApi)
-    implementation(Dependencies.jsonWebTokensImpl)
-    implementation(Dependencies.jsonWebTokensJackson)
+    api(project(":klant-generiek"))
 
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation("org.springframework.boot", "spring-boot-starter-test")

@@ -25,9 +25,12 @@ import org.springframework.security.config.web.server.ServerHttpSecurity
 class DocumentContentResourceHttpSecurityConfigurer : HttpSecurityConfigurer {
 
     override fun configure(http: ServerHttpSecurity) {
-        http.authorizeExchange()
-            .pathMatchers(GET, "/api/document/{documentId}/content").authenticated()
-        http.authorizeExchange()
-            .pathMatchers(POST, "/api/document/content").authenticated()
+        http.authorizeExchange { authorize ->
+            authorize.pathMatchers(GET, "/api/document/{documentId}/content").authenticated()
+        }
+
+        http.authorizeExchange { authorize ->
+            authorize.pathMatchers(POST, "/api/document/content").authenticated()
+        }
     }
 }

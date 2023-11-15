@@ -17,8 +17,9 @@ package com.ritense.portal.core.security
 
 import com.ritense.portal.core.security.config.HttpSecurityConfigurer
 import com.ritense.portal.graphql.autoconfigure.CorsPathConfiguration
+import org.springframework.boot.autoconfigure.AutoConfiguration
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.core.convert.converter.Converter
 import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AbstractAuthenticationToken
@@ -31,41 +32,35 @@ import org.springframework.web.cors.reactive.CorsWebFilter
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 import reactor.core.publisher.Mono
 
-@Configuration
+@AutoConfiguration
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
+@EnableConfigurationProperties(CorsPathConfiguration::class)
 class OauthSecurityAutoConfiguration {
 
     @Bean
     fun springSecurityWebFilterChain(
         http: ServerHttpSecurity,
         converter: Converter<Jwt, out Mono<out AbstractAuthenticationToken>>?,
-        securityConfigurers: List<HttpSecurityConfigurer>
+        corsPathConfiguration: CorsPathConfiguration,
+        securityConfigurers: List<HttpSecurityConfigurer>,
     ): SecurityWebFilterChain {
-
         securityConfigurers.forEach { it.configure(http) }
 
-        val jwtSpec = http
-            .csrf()
-            .disable()
-            .authorizeExchange()
-            .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-            .pathMatchers("/playground").permitAll()
-            .pathMatchers("/graphql").permitAll()
-            .anyExchange().authenticated()
-            .and()
-            .oauth2ResourceServer()
-            .jwt()
-
-        // assign custom jwt authentication converter if one is found in application context
-        converter?.apply { jwtSpec.jwtAuthenticationConverter(converter) }
-
-        return http.build()
-    }
-
-    @Bean
-    fun corsPathConfiguration(): CorsPathConfiguration {
-        return CorsPathConfiguration()
+        return http
+            .csrf { it.disable() }
+            .authorizeExchange {
+                it.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                it.pathMatchers("/playground").permitAll()
+                it.pathMatchers("/graphql").permitAll()
+                it.anyExchange().authenticated()
+            }
+            .oauth2ResourceServer {
+                it.jwt {
+                    it.jwtAuthenticationConverter(converter)
+                }
+            }
+            .build()
     }
 
     @Bean

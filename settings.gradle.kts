@@ -32,13 +32,14 @@ include(
     "core",
     "data",
     "form",
-    "form-flow",
     "gradle:license-report",
     "graphql",
     "haalcentraal:haalcentraal-all",
     "haalcentraal:haalcentraal-brp",
     "haalcentraal:haalcentraal-hr",
     "klant",
+    "klant-generiek",
+    "klantcontactmomenten",
     "messaging",
     "product",
     "task",
@@ -49,5 +50,5 @@ include(
     "zgw:idtoken-authentication",
     "zgw:taak",
     "zgw:zaken-api",
-    "zgw:objectenapi"
+    "zgw:objectenapi",
 )

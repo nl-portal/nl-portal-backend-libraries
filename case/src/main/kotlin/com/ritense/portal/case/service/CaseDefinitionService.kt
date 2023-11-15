@@ -35,7 +35,7 @@ import java.nio.charset.StandardCharsets
 @Transactional
 class CaseDefinitionService(
     private val caseDefinitionRepository: CaseDefinitionRepository,
-    private val resourceLoader: ResourceLoader
+    private val resourceLoader: ResourceLoader,
 ) {
 
     fun findById(caseDefinitionId: CaseDefinitionId): CaseDefinition? {
@@ -49,7 +49,7 @@ class CaseDefinitionService(
             val caseDefinition = CaseDefinition(
                 caseDefinitionId = retrieveIdFrom(caseSchema),
                 schema = Schema(caseSchema),
-                statusDefinition = StatusDefinition(statuses)
+                statusDefinition = StatusDefinition(statuses),
             )
             caseDefinitionRepository.save(caseDefinition)
         } else if (existingCaseDefinition.schema.value != caseSchema) {
@@ -62,7 +62,6 @@ class CaseDefinitionService(
         logger.info("Deploying all case definition's")
         val resources: Array<Resource> = loadCaseResources()
         for (resource in resources) {
-
             val resourcePath = resource.url.path.split('/')
             val resourceDir = resourcePath[resourcePath.size - 2]
             val statusResource = loadCaseStatusResource(resourceDir)
@@ -72,16 +71,18 @@ class CaseDefinitionService(
                     deploy(
                         Mapper.get().readValue(
                             StreamUtils.copyToString(
-                                resource.inputStream, StandardCharsets.UTF_8
+                                resource.inputStream,
+                                StandardCharsets.UTF_8,
                             ),
-                            ObjectNode::class.java
+                            ObjectNode::class.java,
                         ),
                         Mapper.get().readValue(
                             StreamUtils.copyToString(
-                                statusResource.inputStream, StandardCharsets.UTF_8
+                                statusResource.inputStream,
+                                StandardCharsets.UTF_8,
                             ),
-                            object : TypeReference<List<String>>() {}
-                        )
+                            object : TypeReference<List<String>>() {},
+                        ),
                     )
                 } catch (ex: Exception) {
                     logger.error("Error deploying case definition's", ex)
@@ -100,7 +101,7 @@ class CaseDefinitionService(
 
     private fun getResources(path: String): Array<Resource> {
         return ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources(
-            path
+            path,
         )
     }
 

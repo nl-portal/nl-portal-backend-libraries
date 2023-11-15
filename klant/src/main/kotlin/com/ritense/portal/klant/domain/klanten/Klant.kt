@@ -20,7 +20,6 @@ import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 data class Klant(
     @GraphQLIgnore
     val url: String,
-
     @GraphQLIgnore
     val bronorganisatie: String,
 

@@ -16,15 +16,15 @@
 package com.ritense.portal.messaging.autoconfigure
 
 import com.ritense.portal.messaging.out.PortalMessage
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.integration.support.MessageBuilder
 import org.springframework.messaging.Message
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Sinks
 import java.util.function.Supplier
 
-@Configuration
+@AutoConfiguration
 class MessagingAutoConfiguration {
 
     @Bean

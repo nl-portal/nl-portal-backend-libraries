@@ -1,0 +1,2 @@
+com.ritense.portal.case.autoconfigure.CaseAutoConfiguration
+com.ritense.portal.case.autoconfigure.GraphqlAutoConfiguration

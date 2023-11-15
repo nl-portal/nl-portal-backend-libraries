@@ -15,42 +15,51 @@
  */
 package com.ritense.portal.documentenapi.autoconfigure
 
+import com.ritense.portal.core.ssl.ClientSslContextResolver
+import com.ritense.portal.core.ssl.ResourceClientSslContextResolver
+import com.ritense.portal.documentenapi.client.DocumentApisConfig
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
-import com.ritense.portal.documentenapi.client.DocumentenApiConfig
 import com.ritense.portal.documentenapi.graphql.DocumentContentQuery
 import com.ritense.portal.documentenapi.security.config.DocumentContentResourceHttpSecurityConfigurer
 import com.ritense.portal.documentenapi.service.DocumentenApiService
+import com.ritense.portal.documentenapi.service.VirusScanService
 import com.ritense.portal.documentenapi.web.rest.DocumentContentResource
 import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
+import org.springframework.core.io.ResourceLoader
 
 @Configuration
-@EnableConfigurationProperties(DocumentenApiConfig::class)
+@EnableConfigurationProperties(DocumentApisConfig::class)
+@Import(ClamAVConfiguration::class)
 class DocumentenApiAutoConfiguration {
+
+    @Bean
+    @ConditionalOnMissingBean(ClientSslContextResolver::class)
+    fun clientSslContextResolver(resourceLoader: ResourceLoader): ClientSslContextResolver {
+        return ResourceClientSslContextResolver(resourceLoader)
+    }
 
     @Bean
     @ConditionalOnMissingBean(DocumentenApiService::class)
     fun documentenApiService(
         documentenApiClient: DocumentenApiClient,
-        documentenApiConfig: DocumentenApiConfig
+        documentApisConfig: DocumentApisConfig,
     ): DocumentenApiService {
-        return DocumentenApiService(documentenApiClient, documentenApiConfig)
-    }
-
-    @Bean
-    fun documentenApiConfig(): DocumentenApiConfig {
-        return DocumentenApiConfig()
+        return DocumentenApiService(documentenApiClient, documentApisConfig)
     }
 
     @Bean
     fun documentenApiClient(
-        documentenApiConfig: DocumentenApiConfig,
-        idTokenGenerator: IdTokenGenerator
+        documentApisConfig: DocumentApisConfig,
+        idTokenGenerator: IdTokenGenerator,
+        @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
     ): DocumentenApiClient {
-        return DocumentenApiClient(documentenApiConfig, idTokenGenerator)
+        return DocumentenApiClient(documentApisConfig, idTokenGenerator, clientSslContextResolver)
     }
 
     @Bean
@@ -68,8 +77,10 @@ class DocumentenApiAutoConfiguration {
     @ConditionalOnMissingBean(DocumentContentResource::class)
     fun documentContentResource2(
         documentenApiClient: DocumentenApiClient,
-        documentenApiService: DocumentenApiService
+        documentenApiService: DocumentenApiService,
+        virusScanService: VirusScanService?,
+        documentApisConfig: DocumentApisConfig,
     ): DocumentContentResource {
-        return DocumentContentResource(documentenApiClient, documentenApiService)
+        return DocumentContentResource(documentenApiClient, documentenApiService, virusScanService, documentApisConfig)
     }
 }

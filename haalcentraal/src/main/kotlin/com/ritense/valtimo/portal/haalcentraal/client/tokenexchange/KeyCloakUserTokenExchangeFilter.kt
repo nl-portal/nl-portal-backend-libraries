@@ -34,21 +34,24 @@ import java.net.URI
 
 class KeyCloakUserTokenExchangeFilter(
     private val webClient: WebClient,
-    private val targetAudience: String
+    private val targetAudience: String,
 ) : UserTokenExchangeFilter {
 
     override fun filter(request: ClientRequest, next: ExchangeFunction): Mono<ClientResponse> {
         if (request.headers()[HttpHeaders.AUTHORIZATION].isNullOrEmpty()) {
             getJwtAuthentication(request)?.let { authentication ->
-                val accessToken = exchangeToken(authentication)?.accessToken
-                if (accessToken != null) {
-                    logger.debug { "Setting accessToken from token exchange..." }
-                    val r = ClientRequest.from(request)
-                        .headers { headers -> headers.setBearerAuth(accessToken) }
-                        .build()
-                    return next.exchange(r)
-                } else {
-                    logger.error { "Token exchange failed: access token was null!" }
+                return exchangeToken(authentication).flatMap {
+                    val accessToken = it.accessToken
+                    if (accessToken != null) {
+                        logger.debug { "Setting accessToken from token exchange..." }
+                        val r = ClientRequest.from(request)
+                            .headers { headers -> headers.setBearerAuth(accessToken) }
+                            .build()
+                        next.exchange(r)
+                    } else {
+                        logger.error { "Token exchange failed: access token was null!" }
+                        next.exchange(request)
+                    }
                 }
             }
         } else {
@@ -74,7 +77,7 @@ class KeyCloakUserTokenExchangeFilter(
         return null
     }
 
-    private fun exchangeToken(authentication: JwtAuthenticationToken): TokenResponse? {
+    private fun exchangeToken(authentication: JwtAuthenticationToken): Mono<TokenResponse> {
         val currentToken = authentication.token
         logger.debug { "Exchanging token for ${authentication.name}" }
         return webClient.post()
@@ -88,15 +91,18 @@ class KeyCloakUserTokenExchangeFilter(
                             add("subject_token", currentToken.tokenValue)
                             add("requested_token_type", "urn:ietf:params:oauth:token-type:access_token")
                             add("audience", targetAudience)
-                        }
-                )
+                        },
+                ),
             )
             .retrieve()
             .bodyToMono<TokenResponse>()
-            .block()
     }
 
-    data class TokenResponse(@JsonValue @JsonProperty("access_token") val accessToken: String)
+    data class TokenResponse(
+        @JsonValue
+        @JsonProperty("access_token")
+        val accessToken: String,
+    )
 
     companion object {
         private val logger: KLogger = KotlinLogging.logger {}

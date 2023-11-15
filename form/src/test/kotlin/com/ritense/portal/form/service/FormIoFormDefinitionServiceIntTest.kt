@@ -41,8 +41,8 @@ class FormIoFormDefinitionServiceIntTest : BaseIntegrationTest() {
             CreateFormDefinitionRequest(
                 "name",
                 Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java),
-                true
-            )
+                true,
+            ),
         )
 
         assertThat(createdEntity.isNew).isTrue

@@ -18,7 +18,7 @@ package com.ritense.portal.documentenapi.web.rest
 import com.ritense.portal.commonground.authentication.WithBurgerUser
 import com.ritense.portal.core.util.Mapper
 import com.ritense.portal.documentenapi.TestHelper
-import com.ritense.portal.documentenapi.client.DocumentenApiConfig
+import com.ritense.portal.documentenapi.client.DocumentApisConfig
 import com.ritense.portal.documentenapi.domain.DocumentStatus
 import com.ritense.portal.documentenapi.domain.PostEnkelvoudiginformatieobjectRequest
 import java.io.InputStream
@@ -51,7 +51,7 @@ import org.assertj.core.api.Assertions.assertThat
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DocumentContentResourceIntegrationTest(
     @Autowired private val webTestClient: WebTestClient,
-    @Autowired private val documentenApiConfig: DocumentenApiConfig
+    @Autowired private val documentApisConfig: DocumentApisConfig,
 ) {
     lateinit var server: MockWebServer
     protected var executedRequests: MutableList<RecordedRequest> = mutableListOf()
@@ -61,7 +61,7 @@ class DocumentContentResourceIntegrationTest(
         server = MockWebServer()
         setupMockDocumentServer()
         server.start()
-        documentenApiConfig.url = server.url("/").toString()
+        documentApisConfig.getConfig("openzaak").url = server.url("/").toString()
     }
 
     @AfterAll
@@ -75,7 +75,7 @@ class DocumentContentResourceIntegrationTest(
 
         // Call rest endpoint with webtestclient
         webTestClient.get()
-            .uri("/api/document/{documentId}/content", uuid.toString())
+            .uri("/api/documentapi/openzaak/document/{documentId}/content", uuid.toString())
             .exchange()
             .expectStatus().isOk
             .expectHeader().contentType(MediaType.APPLICATION_OCTET_STREAM)
@@ -92,14 +92,14 @@ class DocumentContentResourceIntegrationTest(
         bodyBuilder.part("file", ClassPathResource("/data/test-file.txt", this::class.java.classLoader))
 
         webTestClient.post()
-            .uri("/api/document/content")
+            .uri("/api/documentapi/openzaak/document/content")
             .contentType(MediaType.MULTIPART_FORM_DATA)
             .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
             .exchange()
             .expectStatus().isOk
             .expectBody()
 
-        val requestBody = getRequestBody(HttpMethod.POST, "/documenten/api/v1/enkelvoudiginformatieobjecten", PostEnkelvoudiginformatieobjectRequest::class.java)
+        val requestBody = getRequestBody(HttpMethod.POST, "/enkelvoudiginformatieobjecten", PostEnkelvoudiginformatieobjectRequest::class.java)
         assertThat(requestBody.bronorganisatie).isEqualTo("051845623")
         assertThat(requestBody.creatiedatum).isNotBlank
         assertThat(requestBody.titel).isEqualTo("test-file.txt")
@@ -119,13 +119,13 @@ class DocumentContentResourceIntegrationTest(
                 executedRequests.add(request)
                 val path = request.path?.substringBefore('?')
                 val response = when (request.method + " " + path) {
-                    "GET /documenten/api/v1/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f/download"
+                    "GET /enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f/download",
                     -> handleDocumentContentRequest()
 
-                    "GET /documenten/api/v1/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
+                    "GET /enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
                     -> TestHelper.mockResponseFromFile("/data/get-enkelvoudiginformatieobject-response.json")
 
-                    "POST /documenten/api/v1/enkelvoudiginformatieobjecten"
+                    "POST /enkelvoudiginformatieobjecten",
                     -> TestHelper.mockResponseFromFile("/data/post-enkelvoudiginformatieobject-response.json")
 
                     else -> MockResponse().setResponseCode(404)

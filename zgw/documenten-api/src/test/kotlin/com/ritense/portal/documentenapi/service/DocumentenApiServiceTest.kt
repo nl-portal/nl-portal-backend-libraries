@@ -15,10 +15,8 @@
  */
 package com.ritense.portal.documentenapi.service
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import com.ritense.portal.documentenapi.client.DocumentApisConfig
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
-import com.ritense.portal.documentenapi.client.DocumentenApiConfig
 import com.ritense.portal.documentenapi.domain.Document
 import com.ritense.portal.documentenapi.domain.DocumentStatus
 import java.net.URI
@@ -27,27 +25,31 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
+import org.mockito.kotlin.whenever
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
 
 @ExperimentalCoroutinesApi
-internal class DocumentenApiServiceTest {
+@SpringBootTest
+internal class DocumentenApiServiceTest(@Autowired private var documentApisConfig: DocumentApisConfig) {
 
     var documentenApiClient: DocumentenApiClient = mock()
-    var documentenApiConfig: DocumentenApiConfig = mock()
-    var documentenApiService: DocumentenApiService = DocumentenApiService(documentenApiClient, documentenApiConfig)
+    var documentenApiService: DocumentenApiService = DocumentenApiService(documentenApiClient, documentApisConfig)
 
     @Test
     fun `should find single document by UUID`() = runTest {
         val documentId = UUID.randomUUID()
 
-        whenever(documentenApiClient.getDocument(documentId)).thenReturn(
-            getTestDocument(null)
+        whenever(documentenApiClient.getDocument(documentId, "localhost")).thenReturn(
+            getTestDocument(null),
         )
 
-        val document = documentenApiService.getDocument(documentId)
+        val document = documentenApiService.getDocument(documentId, "localhost")
 
-        verify(documentenApiClient, times(1)).getDocument(documentId)
+        verify(documentenApiClient, times(1)).getDocument(documentId, "localhost")
 
         assertDocumentReturned(document)
     }
@@ -55,15 +57,15 @@ internal class DocumentenApiServiceTest {
     @Test
     fun `should find single document by URI String`() = runTest {
         val documentId = UUID.randomUUID()
-        val documentURI = URI.create("example.com/$documentId").toASCIIString()
+        val documentURI = URI.create("https://example.org/documenten/api/v1/$documentId").toASCIIString()
 
-        whenever(documentenApiClient.getDocument(documentId)).thenReturn(
-            getTestDocument(null)
+        whenever(documentenApiClient.getDocument(documentId, "example")).thenReturn(
+            getTestDocument(null),
         )
 
         val document = documentenApiService.getDocument(documentURI)
 
-        verify(documentenApiClient, times(1)).getDocument(documentId)
+        verify(documentenApiClient, times(1)).getDocument(documentId, "example")
 
         assertDocumentReturned(document)
     }
@@ -77,14 +79,14 @@ internal class DocumentenApiServiceTest {
             "text/plain",
             "bestandsnaam.txt",
             123,
-            status
+            status,
         )
     }
 
     private fun assertDocumentReturned(document: Document) {
         assertEquals(
             "http://example.com/enkelvoudiginformatieobjecten/0727b025-eaae-4587-a375-3fe671a19dd8",
-            document.url
+            document.url,
         )
         assertEquals("identificatie", document.identificatie)
         assertEquals("2020-04-17", document.creatiedatum)

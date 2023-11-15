@@ -18,15 +18,15 @@ package com.ritense.portal.case.domain
 import com.ritense.portal.core.util.ObjectValidator
 import com.ritense.portal.data.domain.AbstractId
 import org.hibernate.validator.constraints.Length
-import javax.persistence.Column
-import javax.persistence.Embeddable
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
 
 @Embeddable
 data class CaseDefinitionId(
 
     @Column(name = "case_definition_id", columnDefinition = "VARCHAR(255)")
     @field:Length(max = 255)
-    val value: String
+    val value: String,
 
 ) : AbstractId<CaseDefinitionId>() {
 

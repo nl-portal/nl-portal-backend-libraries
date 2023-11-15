@@ -16,26 +16,26 @@
 package com.ritense.portal.graphql.security.directive
 
 import com.expediagroup.graphql.generator.execution.SimpleKotlinDataFetcherFactoryProvider
-import com.expediagroup.graphql.server.spring.execution.SpringDataFetcher
 import com.fasterxml.jackson.databind.ObjectMapper
 import graphql.schema.DataFetcherFactory
 import org.springframework.context.ApplicationContext
+import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.findAnnotation
 
 class ReactiveDataFactoryProvider(
     private val objectMapper: ObjectMapper,
-    private val applicationContext: ApplicationContext
+    private val applicationContext: ApplicationContext,
 ) :
-    SimpleKotlinDataFetcherFactoryProvider(objectMapper) {
+    SimpleKotlinDataFetcherFactoryProvider() {
 
-    override fun functionDataFetcherFactory(target: Any?, kFunction: KFunction<*>) = DataFetcherFactory {
+    override fun functionDataFetcherFactory(target: Any?, kClass: KClass<*>, kFunction: KFunction<*>) = DataFetcherFactory {
         val isUnauthenticated = kFunction.findAnnotation<IsUnauthenticated>()
-        val defaultDataFetcher = SpringDataFetcher(
+        val defaultDataFetcher = CustomSpringDataFetcher(
             target = target,
             fn = kFunction,
             objectMapper = objectMapper,
-            applicationContext = applicationContext
+            applicationContext = applicationContext,
         )
         when {
             isUnauthenticated != null -> defaultDataFetcher

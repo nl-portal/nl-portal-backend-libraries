@@ -17,12 +17,10 @@
 object ApiDependencies {
     val commonsIo by lazy { "commons-io:commons-io:${ApiVersions.commonsIo}" }
     val apacheCommons by lazy { "org.apache.commons:commons-lang3:${ApiVersions.apacheCommons}"}
-    val formFlow by lazy { "com.ritense.valtimo:form-flow:${ApiVersions.formFlow}"}
     val graphqlJava by lazy { "com.graphql-java:graphql-java:${ApiVersions.graphqlJava}"}
     val graphqlJavaExtendedScalars by lazy { "com.graphql-java:graphql-java-extended-scalars:${ApiVersions.graphqlJava}"}
     val graphqlKotlinHooksProvider by lazy { "com.expediagroup:graphql-kotlin-hooks-provider:${ApiVersions.graphqlKotlin}"}
     val graphqlKotlinSpringServer by lazy { "com.expediagroup:graphql-kotlin-spring-server:${ApiVersions.graphqlKotlin}"}
-    val hibernateTypes by lazy { "com.vladmihalcea:hibernate-types-52:${ApiVersions.hibernateTypes}"}
     val kotlinLogging by lazy { "io.github.microutils:kotlin-logging:${ApiVersions.kotlinLogging}"}
     val springCloudStream by lazy { "org.springframework.cloud:spring-cloud-stream:${ApiVersions.springCloud}" }
     val springCloudStreamBinderRabbit by lazy { "org.springframework.cloud:spring-cloud-stream-binder-rabbit:${ApiVersions.springCloud}" }

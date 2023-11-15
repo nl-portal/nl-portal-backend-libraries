@@ -24,8 +24,8 @@ import org.springframework.security.web.server.SecurityWebFilterChain
 
 @SpringBootApplication(
     exclude = [
-        OauthSecurityAutoConfiguration::class
-    ]
+        OauthSecurityAutoConfiguration::class,
+    ],
 )
 class TestApplication {
     fun main(args: Array<String>) {
@@ -34,12 +34,11 @@ class TestApplication {
 
     @Bean
     fun springSecurityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
-        http
-            .csrf()
-            .disable()
-            .authorizeExchange()
-            .anyExchange()
-            .permitAll()
-        return http.build()
+        return http
+            .csrf { it.disable() }
+            .authorizeExchange {
+                it.anyExchange().permitAll()
+            }
+            .build()
     }
 }

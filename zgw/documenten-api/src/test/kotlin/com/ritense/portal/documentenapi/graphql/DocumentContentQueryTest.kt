@@ -15,12 +15,12 @@
  */
 package com.ritense.portal.documentenapi.graphql
 
-import com.nhaarman.mockitokotlin2.mock
 import com.ritense.portal.documentenapi.service.DocumentenApiService
 import java.util.UUID
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 
 @ExperimentalCoroutinesApi
@@ -32,7 +32,7 @@ internal class DocumentContentQueryTest {
     @Test
     fun getDocumentContent() = runTest {
         val documentId = UUID.randomUUID()
-        documentContentQuery.getDocumentContent(documentId)
-        verify(documentenApiService).getDocumentContent(documentId)
+        documentContentQuery.getDocumentContent("openzaak", documentId)
+        verify(documentenApiService).getDocumentContent(documentId, "openzaak")
     }
 }

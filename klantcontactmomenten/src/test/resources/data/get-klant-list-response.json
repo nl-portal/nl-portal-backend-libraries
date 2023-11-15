@@ -1,0 +1,45 @@
+{
+  "count": 1,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "url": "/klanten/api/v1/klanten/5d479908-fbb7-49c2-98c9-9afecf8de79a",
+      "bronorganisatie": "051845623",
+      "klantnummer": "123",
+      "bedrijfsnaam": "Ritense B.V.",
+      "functie": "Developer",
+      "websiteUrl": "https://peters-website.nl",
+      "voornaam": "Peter",
+      "voorvoegselAchternaam": "van",
+      "achternaam": "Klaver",
+      "telefoonnummer": "0600000000",
+      "emailadres": "peter@example.com",
+      "adres": {
+        "straatnaam": "Pettenflet",
+        "huisnummer": 1,
+        "huisletter": "A",
+        "huisnummertoevoeging": "5",
+        "postcode": "1111 AA",
+        "woonplaatsnaam": "Amsterdam",
+        "landcode": "NL"
+      },
+      "subject": "http://example.com",
+      "subjectType": "natuurlijk_persoon",
+      "aanmaakkanaal": "test",
+      "subjectIdentificatie": {
+        "inpBsn": "569312863",
+        "anpIdentificatie": "anp_identificatie",
+        "inpANummer": "inp_a_num",
+        "geslachtsnaam": "Klaver",
+        "voorvoegselGeslachtsnaam": "van",
+        "voorletters": "P",
+        "voornamen": "Peter",
+        "geslachtsaanduiding": "M",
+        "geboortedatum": "1-1-1870",
+        "verblijfsadres": null,
+        "subVerblijfBuitenland": null
+      }
+    }
+  ]
+}

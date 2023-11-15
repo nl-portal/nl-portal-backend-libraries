@@ -25,5 +25,5 @@ data class PostEnkelvoudiginformatieobjectRequest(
     val bestandsnaam: String?,
     var inhoud: String? = null,
     val indicatieGebruiksrecht: Boolean?,
-    val informatieobjecttype: String
+    val informatieobjecttype: String,
 )

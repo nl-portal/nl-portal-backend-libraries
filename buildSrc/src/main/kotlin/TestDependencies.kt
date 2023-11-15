@@ -17,7 +17,7 @@
 object TestDependencies {
     val hamcrest by lazy { "org.hamcrest:hamcrest:${TestVersions.hamcrest}" }
     val kotlinCoroutines by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-test:${TestVersions.kotlinCoroutines}"}
-    val mockitoKotlin by lazy { "com.nhaarman.mockitokotlin2:mockito-kotlin:${TestVersions.mockitoKotlin}" }
+    val mockitoKotlin by lazy { "org.mockito.kotlin:mockito-kotlin:${TestVersions.mockitoKotlin}" }
     val okHttp by lazy { "com.squareup.okhttp3:okhttp:${TestVersions.okHttp3}" }
     val okHttpMockWebserver by lazy { "com.squareup.okhttp3:mockwebserver:${TestVersions.okHttp3}" }
     val okHttpTls by lazy { "com.squareup.okhttp3:okhttp-tls:${TestVersions.okHttp3}" }

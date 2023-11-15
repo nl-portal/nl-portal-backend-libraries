@@ -15,6 +15,7 @@
  */
 package com.ritense.portal.data.liquibase
 
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.AutoConfigureAfter
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
@@ -22,13 +23,12 @@ import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import javax.sql.DataSource
 
 /**
  * Auto-configuration for Liquibase-runner.
  */
-@Configuration
+@AutoConfiguration
 @AutoConfigureAfter(DataSourceAutoConfiguration::class, HibernateJpaAutoConfiguration::class)
 @EnableConfigurationProperties(value = [LiquibaseProperties::class])
 class LiquibaseRunnerAutoConfiguration {
@@ -37,7 +37,7 @@ class LiquibaseRunnerAutoConfiguration {
     fun liquibaseRunner(
         liquibaseMasterChangeLogLocations: List<LiquibaseMasterChangeLogLocation>,
         liquibaseProperties: LiquibaseProperties,
-        datasource: DataSource
+        datasource: DataSource,
     ): LiquibaseRunner {
         return LiquibaseRunner(liquibaseMasterChangeLogLocations, liquibaseProperties, datasource)
     }
@@ -45,7 +45,7 @@ class LiquibaseRunnerAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(LiquibaseInitializationEventListener::class)
     fun liquibaseInitializationEventListener(
-        liquibaseRunner: LiquibaseRunner
+        liquibaseRunner: LiquibaseRunner,
     ): LiquibaseInitializationEventListener {
         return LiquibaseInitializationEventListener(liquibaseRunner)
     }

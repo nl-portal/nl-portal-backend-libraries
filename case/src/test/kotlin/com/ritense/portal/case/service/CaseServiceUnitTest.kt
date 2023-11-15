@@ -59,7 +59,7 @@ class CaseServiceUnitTest : BaseTest() {
             caseService.create(
                 caseDefinition.caseDefinitionId.value,
                 submission,
-                authentication
+                authentication,
             )
         }
         assertThat(illegalStateException).hasMessage("Empty case data")
@@ -72,7 +72,7 @@ class CaseServiceUnitTest : BaseTest() {
             caseService.create(
                 caseDefinition.caseDefinitionId.value,
                 submission,
-                authentication
+                authentication,
             )
         }
         assertThat(illegalStateException).hasMessage("Empty case data")
@@ -85,7 +85,7 @@ class CaseServiceUnitTest : BaseTest() {
             caseService.create(
                 caseDefinition.caseDefinitionId.value,
                 submission,
-                authentication
+                authentication,
             )
         }
         assertThat(validationException).hasMessage("#/firstName: expected maxLength: 15, actual: 22")
@@ -98,7 +98,7 @@ class CaseServiceUnitTest : BaseTest() {
             caseService.create(
                 caseDefinition.caseDefinitionId.value,
                 submission,
-                authentication
+                authentication,
             )
         }
         assertThat(validationException).hasMessage("#/firstName: expected type: String, found: Integer")
@@ -110,7 +110,7 @@ class CaseServiceUnitTest : BaseTest() {
         val case = caseService.create(
             caseDefinition.caseDefinitionId.value,
             submission,
-            authentication
+            authentication,
         )
 
         assertThat(case).isNotNull
@@ -122,7 +122,6 @@ class CaseServiceUnitTest : BaseTest() {
 
     @Test
     fun `should handle external case event`() {
-
         val externalCaseCreatedEvent = UpdateExternalIdPortalCaseMessage(UUID.randomUUID(), "anExternalId")
 
         val submissionData = JsonNodeFactory.instance.objectNode()
@@ -135,9 +134,9 @@ class CaseServiceUnitTest : BaseTest() {
                     userId = "aUserName",
                     caseDefinitionId = CaseDefinitionId.existingId("aCaseDefinition"),
                     status = Status("in-progress"),
-                    submission = Submission(submissionData)
-                )
-            )
+                    submission = Submission(submissionData),
+                ),
+            ),
         )
 
         val case = caseService.updateExternalId(externalCaseCreatedEvent)
@@ -165,7 +164,6 @@ class CaseServiceUnitTest : BaseTest() {
 
     @Test
     fun `should handle status update case event`() {
-
         val event = UpdateStatusPortalCaseMessage("externalId", "b")
 
         val submissionData = JsonNodeFactory.instance.objectNode()
@@ -178,11 +176,11 @@ class CaseServiceUnitTest : BaseTest() {
                 externalId = "externalId",
                 status = Status("a"),
                 caseDefinitionId = CaseDefinitionId.existingId("person"),
-                submission = Submission(submissionData)
-            )
+                submission = Submission(submissionData),
+            ),
         )
         `when`(caseDefinitionService.findById(CaseDefinitionId.existingId("person"))).thenReturn(
-            personCaseDefinition()
+            personCaseDefinition(),
         )
 
         val case = caseService.updateStatus(event)

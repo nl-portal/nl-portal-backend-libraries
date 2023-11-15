@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.ritense.portal.case.autoconfigure.CaseAutoConfiguration,\
-  com.ritense.portal.case.autoconfigure.GraphqlAutoConfiguration

@@ -15,13 +15,15 @@
  */
 package com.ritense.portal.documentenapi.web.rest
 
+import com.ritense.portal.documentenapi.client.DocumentApisConfig
 import com.ritense.portal.documentenapi.client.DocumentenApiClient
-import com.ritense.portal.documentenapi.domain.Document
+import com.ritense.portal.documentenapi.domain.VirusScanStatus
 import com.ritense.portal.documentenapi.service.DocumentenApiService
-import java.util.UUID
+import com.ritense.portal.documentenapi.service.VirusScanService
 import kotlinx.coroutines.runBlocking
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.http.codec.multipart.FilePart
@@ -32,33 +34,51 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Flux
+import java.util.UUID
 
 @RestController
 @RequestMapping(value = ["/api"])
 class DocumentContentResource(
     val documentenApiClient: DocumentenApiClient,
-    val documentenApiService: DocumentenApiService
+    val documentenApiService: DocumentenApiService,
+    val virusScanService: VirusScanService?,
+    val documentApisConfig: DocumentApisConfig,
 ) {
 
-    @GetMapping(value = ["/document/{documentId}/content"])
-    fun downloadStreaming(@PathVariable documentId: UUID): ResponseEntity<Flux<DataBuffer>> {
+    @GetMapping(value = ["/documentapi/{documentapi}/document/{documentId}/content"])
+    fun downloadStreaming(@PathVariable documentId: UUID, @PathVariable documentapi: String): ResponseEntity<Flux<DataBuffer>> {
         // Request service to get the file's data stream
-        val fileDataStream = documentenApiClient.getDocumentContentStream(documentId)
+        val fileDataStream = documentenApiClient.getDocumentContentStream(documentId, documentapi)
 
-        val document = runBlocking { documentenApiService.getDocument(documentId) }
+        val document = runBlocking { documentenApiService.getDocument(documentId, documentapi) }
 
-        val responseHeaders = HttpHeaders()
-        responseHeaders.set("Content-Disposition", "attachment; filename=\"${document.bestandsnaam}\"")
+        val responseHeaders = HttpHeaders().apply {
+            set("Content-Disposition", "attachment; filename=\"${document.bestandsnaam}\"")
+        }
 
-        return ResponseEntity
-            .ok()
-            .headers(responseHeaders)
-            .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .body(fileDataStream)
+        return ResponseEntity.ok().headers(responseHeaders).contentType(MediaType.APPLICATION_OCTET_STREAM).body(fileDataStream)
+    }
+
+    @PostMapping(value = ["/documentapi/{documentapi}/document/content"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    suspend fun uploadStreaming(@RequestPart("file") file: FilePart, @PathVariable documentapi: String): ResponseEntity<Any> {
+        val virusScanResult = virusScanService?.scan(file.content())
+
+        // only return a bad request as a virus is found, otherwise continue....
+        if (VirusScanStatus.VIRUS_FOUND == virusScanResult?.status) {
+            return ResponseEntity(virusScanResult, HttpStatus.BAD_REQUEST)
+        }
+        return ResponseEntity.ok(documentenApiService.uploadDocument(file, documentapi))
     }
 
     @PostMapping(value = ["/document/content"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    suspend fun uploadStreaming(@RequestPart("file") file: FilePart): ResponseEntity<Document> {
-        return ResponseEntity.ok(documentenApiService.uploadDocument(file))
+    suspend fun uploadStreamingDefault(@RequestPart("file") file: FilePart): ResponseEntity<Any> {
+        val documentapi: String = documentApisConfig.defaultDocumentApi
+        val virusScanResult = virusScanService?.scan(file.content())
+
+        // only return a bad request as a virus is found, otherwise continue....
+        if (VirusScanStatus.VIRUS_FOUND == virusScanResult?.status) {
+            return ResponseEntity(virusScanResult, HttpStatus.BAD_REQUEST)
+        }
+        return ResponseEntity.ok(documentenApiService.uploadDocument(file, documentapi))
     }
 }

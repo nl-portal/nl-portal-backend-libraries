@@ -15,9 +15,6 @@
  */
 package com.ritense.portal.haalcentraal.all.graphql
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import com.ritense.portal.haalcentraal.brp.domain.persoon.PersoonNaam
@@ -28,11 +25,13 @@ import com.ritense.portal.haalcentraal.hr.service.HandelsregisterService
 import graphql.GraphQLContext
 import graphql.schema.DataFetchingEnvironment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
+import org.mockito.kotlin.whenever
 import org.springframework.security.core.Authentication
 
 @ExperimentalCoroutinesApi
@@ -41,9 +40,9 @@ internal class GemachtigdeQueryTest {
     val haalCentraalBrpService = mock<HaalCentraalBrpService>()
     val handelsregisterService = mock<HandelsregisterService>()
     val query = GemachtigdeQuery(haalCentraalBrpService, handelsregisterService)
-    var environment = Mockito.mock(DataFetchingEnvironment::class.java)
-    var authentication = Mockito.mock(CommonGroundAuthentication::class.java)
-    val context = Mockito.mock(GraphQLContext::class.java)
+    var environment = mock(DataFetchingEnvironment::class.java)
+    var authentication = mock(CommonGroundAuthentication::class.java)
+    val context = mock(GraphQLContext::class.java)
 
     @BeforeEach
     fun setup() {

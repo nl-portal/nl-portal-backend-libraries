@@ -36,28 +36,47 @@ import java.util.UUID
 
 open class TaakService(
     private val objectsApiClient: ObjectsApiClient,
-    private val objectsApiTaskConfig: TaakObjectConfig
+    private val objectsApiTaskConfig: TaakObjectConfig,
 ) {
 
     suspend fun getTaken(
         pageNumber: Int,
         pageSize: Int,
-        authentication: CommonGroundAuthentication
+        authentication: CommonGroundAuthentication,
+        zaakUUID: UUID? = null,
     ): TaakPage {
-        val userSearchParameters = getUserSearchParameters(authentication)
-        val statusOpenSearchParameter = ObjectSearchParameter("status", Comparator.EQUAL_TO, "open")
+        val objectSearchParameters = mutableListOf<ObjectSearchParameter>()
+
+        objectSearchParameters.addAll(getUserSearchParameters(authentication))
+        objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, "open"))
+
+        zaakUUID?.let {
+            objectSearchParameters.add(
+                ObjectSearchParameter(
+                    "zaak",
+                    Comparator.STRING_CONTAINS,
+                    it.toString(),
+                ),
+            )
+        }
 
         return objectsApiClient.getObjects<TaakObject>(
-            objectSearchParameters = userSearchParameters + statusOpenSearchParameter,
+            objectSearchParameters = objectSearchParameters,
             objectTypeUrl = objectsApiTaskConfig.typeUrl,
             page = pageNumber,
             pageSize = pageSize,
-            ordering = "-record__startAt"
+            ordering = "-record__startAt",
         ).let { TaakPage.fromResultPage(pageNumber, pageSize, it) }
     }
 
     suspend fun getTaakById(id: UUID, authentication: CommonGroundAuthentication): Taak {
-        return Taak.fromObjectsApiTask(getObjectsApiTaak(id, authentication))
+        val taak = Taak.fromObjectsApiTask(getObjectsApiTaak(id, authentication))
+        // do validation if the user is authenticated for this task
+        val isAuthorized = isAuthorizedForTaak(authentication, taak)
+        if (isAuthorized) {
+            return taak
+        }
+        throw IllegalStateException("Access denied to this taak")
     }
 
     suspend fun submitTaak(id: UUID, submission: ObjectNode, authentication: CommonGroundAuthentication): Taak {
@@ -77,7 +96,7 @@ open class TaakService(
 
     private suspend fun getObjectsApiTaak(
         taskId: UUID,
-        authentication: CommonGroundAuthentication
+        authentication: CommonGroundAuthentication,
     ): ObjectsApiObject<TaakObject> {
         val userSearchParameters = getUserSearchParameters(authentication)
         val taskIdSearchParameter = ObjectSearchParameter("verwerker_taak_id", Comparator.EQUAL_TO, taskId.toString())
@@ -95,9 +114,11 @@ open class TaakService(
             is BurgerAuthentication -> {
                 createIdentificatieSearchParameters("bsn", authentication.getBsn())
             }
+
             is BedrijfAuthentication -> {
                 createIdentificatieSearchParameters("kvk", authentication.getKvkNummer())
             }
+
             else -> throw UserTypeUnsupportedException("User type not supported")
         }
     }
@@ -105,7 +126,21 @@ open class TaakService(
     private fun createIdentificatieSearchParameters(type: String, value: String): List<ObjectSearchParameter> {
         return listOf(
             ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, type),
-            ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, value)
+            ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, value),
         )
+    }
+
+    private fun isAuthorizedForTaak(authentication: CommonGroundAuthentication, taak: Taak): Boolean {
+        return when (authentication) {
+            is BurgerAuthentication -> {
+                taak.identificatie.type.lowercase() == "bsn" && taak.identificatie.value == authentication.getBsn()
+            }
+
+            is BedrijfAuthentication -> {
+                taak.identificatie.type.lowercase() == "kvk" && taak.identificatie.value == authentication.getKvkNummer()
+            }
+
+            else -> false
+        }
     }
 }

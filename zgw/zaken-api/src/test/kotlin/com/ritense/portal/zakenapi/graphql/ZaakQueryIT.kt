@@ -17,7 +17,7 @@ package com.ritense.portal.zakenapi.graphql
 
 import com.ritense.portal.catalogiapi.client.CatalogiApiConfig
 import com.ritense.portal.commonground.authentication.WithBurgerUser
-import com.ritense.portal.documentenapi.client.DocumentenApiConfig
+import com.ritense.portal.documentenapi.client.DocumentApisConfig
 import com.ritense.portal.zakenapi.client.ZakenApiConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -42,18 +42,20 @@ internal class ZaakQueryIT(
     @Autowired private val testClient: WebTestClient,
     @Autowired private val zakenApiConfig: ZakenApiConfig,
     @Autowired private val catalogiApiConfig: CatalogiApiConfig,
-    @Autowired private val documentenApiConfig: DocumentenApiConfig
+    @Autowired private val documentApisConfig: DocumentApisConfig,
 ) {
     lateinit var server: MockWebServer
+    lateinit var url: String
 
     @BeforeEach
     internal fun setUp() {
         server = MockWebServer()
         setupMockOpenZaakServer()
         server.start()
-        zakenApiConfig.url = server.url("/").toString()
-        catalogiApiConfig.url = server.url("/").toString()
-        documentenApiConfig.url = server.url("/").toString()
+        url = server.url("/").toString()
+        zakenApiConfig.url = url
+        catalogiApiConfig.url = url
+        documentApisConfig.getConfig("openzaak").url = url
     }
 
     @AfterEach
@@ -64,7 +66,6 @@ internal class ZaakQueryIT(
     @Test
     @WithBurgerUser("123")
     fun getZaken() {
-
         val query = """
             query {
                 getZaken(page: 1) {
@@ -123,7 +124,6 @@ internal class ZaakQueryIT(
     @Test
     @WithBurgerUser("")
     fun getZakenNotFound() {
-
         // Make the GraphQL request
         testClient.post()
             .uri("/not_found")
@@ -135,7 +135,6 @@ internal class ZaakQueryIT(
 
     @Test
     fun getZakenUnAuthorized() {
-
         zakenApiConfig.clientId = ""
 
         val query = """
@@ -182,7 +181,6 @@ internal class ZaakQueryIT(
     @Test
     @WithBurgerUser("123")
     fun `getZaken no page`() {
-
         val query = """
             query {
                 getZaken {
@@ -213,7 +211,6 @@ internal class ZaakQueryIT(
         """.trimIndent()
 
         val basePath = "$.data.getZaken[0]"
-
         testClient.post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
@@ -239,7 +236,6 @@ internal class ZaakQueryIT(
     @Test
     @WithBurgerUser("123")
     fun getZaak() {
-
         val query = """
             query {
                 getZaak(id: "5d479908-fbb7-49c2-98c9-9afecf8de79a") {
@@ -267,6 +263,7 @@ internal class ZaakQueryIT(
                     },
                     documenten {
                         uuid,
+                        documentapi,
                         identificatie,
                         creatiedatum,
                         titel,
@@ -327,7 +324,7 @@ internal class ZaakQueryIT(
                     "/catalogi/api/v1/statustypen/a4bd90f4-b80c-446b-9f68-62c5b39298ff" -> handleStatusTypeRequest()
                     "/zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a" -> handleZaakRequest()
                     "/zaken/api/v1/zaakinformatieobjecten" -> handleZaakInformatieObjectenRequest()
-                    "/documenten/api/v1/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> handleDocumentRequest()
+                    "/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> handleDocumentRequest()
                     "/zaken/api/v1/rollen" -> handleZaakRollenRequest()
                     else -> MockResponse().setResponseCode(404)
                 }
@@ -345,7 +342,7 @@ internal class ZaakQueryIT(
                 "previous": null,
                 "results": [
                     {
-                        "url": "http://localhost:8000/zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a",
+                        "url": "$url/zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a",
                         "uuid": "5d479908-fbb7-49c2-98c9-9afecf8de79a",
                         "identificatie": "ZAAK-2021-0000000003",
                         "bronorganisatie": "051845623",
@@ -396,7 +393,7 @@ internal class ZaakQueryIT(
     fun handleZaakRequest(): MockResponse {
         val body = """
             {
-                "url": "http://localhost:8000/zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a",
+                "url": "$url/zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a",
                 "uuid": "5d479908-fbb7-49c2-98c9-9afecf8de79a",
                 "identificatie": "ZAAK-2021-0000000003",
                 "bronorganisatie": "051845623",
@@ -564,10 +561,10 @@ internal class ZaakQueryIT(
         val body = """
            [
               {
-                "url": "http://example.com",
+                "url": "$url",
                 "uuid": "095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
-                "informatieobject": "http://example.com/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
-                "zaak": "http://example.com",
+                "informatieobject": "$url/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+                "zaak": "$url",
                 "aardRelatieWeergave": "Hoort bij, omgekeerd: kent",
                 "titel": "string",
                 "beschrijving": "string",
@@ -699,9 +696,6 @@ internal class ZaakQueryIT(
     }
 
     fun mockResponse(body: String): MockResponse {
-        return MockResponse()
-            .addHeader("Content-Type", "application/json; charset=utf-8")
-            .setResponseCode(200)
-            .setBody(body)
+        return MockResponse().addHeader("Content-Type", "application/json; charset=utf-8").setResponseCode(200).setBody(body)
     }
 }

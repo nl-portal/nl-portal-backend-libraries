@@ -19,7 +19,7 @@ import com.ritense.portal.catalogiapi.client.CatalogiApiClient
 import com.ritense.portal.catalogiapi.domain.StatusType
 import java.util.UUID
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
@@ -33,21 +33,21 @@ internal class CatalogiApiServiceTest {
     var catalogiApiService = CatalogiApiService(catalogiApiClient)
 
     @Test
-    fun getZaakStatusType() = runBlockingTest {
+    fun getZaakStatusType() = runTest {
         val uuid = UUID.randomUUID()
         catalogiApiService.getZaakStatusType("http://some.domain.com/catalogi/api/v1/statustypen/$uuid")
         verify(catalogiApiClient).getStatusType(uuid)
     }
 
     @Test
-    fun getZaakType() = runBlockingTest {
+    fun getZaakType() = runTest {
         val uuid = UUID.randomUUID()
         catalogiApiService.getZaakType("http://some.domain.com/catalogi/api/v1/zaaktypen/$uuid")
         verify(catalogiApiClient).getZaakType(uuid)
     }
 
     @Test
-    fun getZaakStatusTypes() = runBlockingTest {
+    fun getZaakStatusTypes() = runTest {
         val uuid = UUID.randomUUID()
         val zaakUrl = "http://some.domain.com/catalogi/api/v1/zaaktypen/$uuid"
 
@@ -55,8 +55,8 @@ internal class CatalogiApiServiceTest {
             listOf(
                 StatusType("desc2", false, 2),
                 StatusType("desc1", false, 1),
-                StatusType("desc3", true, 3)
-            )
+                StatusType("desc3", true, 3),
+            ),
         )
 
         val zaakStatusTypes = catalogiApiService.getZaakStatusTypes(zaakUrl)

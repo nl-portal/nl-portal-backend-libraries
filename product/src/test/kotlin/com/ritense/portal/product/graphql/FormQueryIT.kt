@@ -36,10 +36,9 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-
 internal class FormQueryIT(
     @Autowired private val testClient: WebTestClient,
-    @Autowired private val openFormulierenClientConfig: OpenFormulierenClientConfig
+    @Autowired private val openFormulierenClientConfig: OpenFormulierenClientConfig,
 ) {
     lateinit var server: MockWebServer
 

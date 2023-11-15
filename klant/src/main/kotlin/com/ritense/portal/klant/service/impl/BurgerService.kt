@@ -19,7 +19,7 @@ import com.ritense.portal.commonground.authentication.BedrijfAuthentication
 import com.ritense.portal.commonground.authentication.BurgerAuthentication
 import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
 import com.ritense.portal.klant.client.OpenKlantClient
-import com.ritense.portal.klant.client.OpenKlantClientConfig
+import nl.nlportal.klant.generiek.client.OpenKlantClientConfig
 import com.ritense.portal.klant.domain.klanten.Klant
 import com.ritense.portal.klant.domain.klanten.KlantCreationRequest
 import com.ritense.portal.klant.domain.klanten.KlantUpdate
@@ -29,7 +29,7 @@ import kotlin.random.Random
 
 class BurgerService(
     val openKlantClientConfig: OpenKlantClientConfig,
-    val openKlantClient: OpenKlantClient
+    val openKlantClient: OpenKlantClient,
 ) : BurgerService {
 
     override suspend fun getBurgerProfiel(authentication: CommonGroundAuthentication): Klant? {
@@ -54,8 +54,9 @@ class BurgerService(
     }
 
     override suspend fun updateBurgerProfiel(klantUpdate: KlantUpdate, authentication: CommonGroundAuthentication): Klant {
-        if (authentication !is BurgerAuthentication)
+        if (authentication !is BurgerAuthentication) {
             throw IllegalArgumentException("Can only update burger profile for burger user")
+        }
 
         val existingKlant = getBurgerProfiel(authentication)
 
@@ -69,7 +70,6 @@ class BurgerService(
     }
 
     private suspend fun createBurgerProfiel(authentication: BurgerAuthentication, updatedKlant: KlantUpdate): Klant {
-
         val websiteUrl = "http://www.invalid-url.com/"
         val telefoonnummer = updatedKlant.telefoonnummer ?: ""
         val emailadres = updatedKlant.emailadres ?: ""
@@ -82,8 +82,8 @@ class BurgerService(
             emailadres,
             "natuurlijk_persoon",
             SubjectIdentificatie(
-                authentication.getBsn()
-            )
+                authentication.getBsn(),
+            ),
         )
 
         return openKlantClient.postKlant(authentication, klantRequest)

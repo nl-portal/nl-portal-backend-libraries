@@ -38,7 +38,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class BewoningenQueryIT(
     @Autowired private val testClient: WebTestClient,
-    @Autowired private val haalCentraalClientConfig: HaalCentraalClientConfig
+    @Autowired private val haalCentraalClientConfig: HaalCentraalClientConfig,
 ) {
     lateinit var server: MockWebServer
 

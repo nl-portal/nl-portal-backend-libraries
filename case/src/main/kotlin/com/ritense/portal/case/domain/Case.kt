@@ -20,16 +20,17 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.ritense.portal.core.util.ObjectValidator
 import com.ritense.portal.data.domain.AggregateRoot
 import com.ritense.portal.data.domain.DomainEvent
-import org.hibernate.annotations.Type
+import jakarta.persistence.Column
+import jakarta.persistence.EmbeddedId
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
+import jakarta.persistence.Embedded
+import jakarta.validation.constraints.NotBlank
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 import org.hibernate.validator.constraints.Length
 import org.springframework.data.domain.Persistable
 import java.time.LocalDateTime
-import javax.persistence.Column
-import javax.persistence.Embedded
-import javax.persistence.EmbeddedId
-import javax.persistence.Entity
-import javax.persistence.Table
-import javax.validation.constraints.NotBlank
 
 @Entity
 @Table(name = "`case`")
@@ -50,7 +51,7 @@ data class Case(
     @Embedded
     var status: Status,
 
-    @Type(type = "com.vladmihalcea.hibernate.type.json.JsonBinaryType")
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "status_history", columnDefinition = "json")
     var statusHistory: MutableList<HistoricStatus>? = null,
 
@@ -61,7 +62,7 @@ data class Case(
     val caseDefinitionId: CaseDefinitionId,
 
     @Column(name = "created_on", columnDefinition = "TIMESTAMPTZ", nullable = false)
-    val createdOn: LocalDateTime = LocalDateTime.now()
+    val createdOn: LocalDateTime = LocalDateTime.now(),
 
 ) : Persistable<CaseId>, AggregateRoot<DomainEvent>() {
 

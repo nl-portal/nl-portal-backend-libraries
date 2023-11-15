@@ -17,15 +17,16 @@ package com.ritense.portal.task.domain
 
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.ritense.portal.core.util.ObjectValidator
-import org.hibernate.annotations.Type
+import jakarta.persistence.Column
+import jakarta.persistence.EmbeddedId
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
+import jakarta.validation.constraints.NotBlank
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 import org.hibernate.validator.constraints.Length
 import org.springframework.data.domain.Persistable
 import java.time.LocalDateTime
-import javax.persistence.Column
-import javax.persistence.EmbeddedId
-import javax.persistence.Entity
-import javax.persistence.Table
-import javax.validation.constraints.NotBlank
 
 @Entity
 @Table(name = "task")
@@ -55,7 +56,7 @@ data class Task(
     val userId: String,
 
     @Column(name = "form_definition", columnDefinition = "json")
-    @Type(type = "com.vladmihalcea.hibernate.type.json.JsonBinaryType")
+    @JdbcTypeCode(SqlTypes.JSON)
     val formDefinition: ObjectNode,
 
     @Column(name = "completed", columnDefinition = "BOOLEAN")
@@ -65,7 +66,7 @@ data class Task(
     val createdOn: LocalDateTime = LocalDateTime.now(),
 
     @Column(name = "public", columnDefinition = "BOOLEAN")
-    val isPublic: Boolean = false
+    val isPublic: Boolean = false,
 ) : Persistable<TaskId> {
 
     init {

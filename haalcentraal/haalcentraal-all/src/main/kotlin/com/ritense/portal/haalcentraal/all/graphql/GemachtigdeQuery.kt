@@ -25,7 +25,7 @@ import graphql.schema.DataFetchingEnvironment
 
 class GemachtigdeQuery(
     val haalCentraalBrpService: HaalCentraalBrpService,
-    val handelsregisterService: HandelsregisterService
+    val handelsregisterService: HandelsregisterService,
 ) : Query {
 
     @GraphQLDescription("Gets the data of the gemachtigde")
@@ -34,7 +34,7 @@ class GemachtigdeQuery(
 
         return Gemachtigde(
             haalCentraalBrpService.getGemachtigde(authentication),
-            handelsregisterService.getGemachtigde(authentication)
+            handelsregisterService.getGemachtigde(authentication),
         )
     }
 }

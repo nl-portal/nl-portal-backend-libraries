@@ -51,7 +51,7 @@ abstract class BaseTest {
             taskDefinitionKey = "taskDefinitionKey",
             userId = userId,
             isPublic = isPublic,
-            createdOn = createdOn
+            createdOn = createdOn,
         )
     }
 }
