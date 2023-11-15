@@ -55,11 +55,11 @@ internal class HandelsregisterClientTest {
                             "Test bedrijf",
                             listOf(),
                             listOf(),
-                            null
-                        )
-                    )
+                            null,
+                        ),
+                    ),
                 )
-                .addHeader("Content-Type", "application/json")
+                .addHeader("Content-Type", "application/json"),
         )
 
         haalCentraalHrClientConfig = HaalCentraalHrClientConfig(url = server.url("/").toString())

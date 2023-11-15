@@ -51,11 +51,15 @@ internal class GemachtigdeQueryTest {
     }
 
     @Test
-    fun `getGemachtigde should call service`() = runBlockingTest {
+    fun `getGemachtigde should call service`() = runTest {
         whenever(haalCentraalBrpService.getGemachtigde(authentication)).thenReturn(
             PersoonNaam(
-                "test", "test", "test", "test", "test"
-            )
+                "test",
+                "test",
+                "test",
+                "test",
+                "test",
+            ),
         )
         whenever(handelsregisterService.getGemachtigde(authentication)).thenReturn(
             MaatschappelijkeActiviteit(
@@ -68,8 +72,8 @@ internal class GemachtigdeQueryTest {
                 "Test bedrijf",
                 listOf(),
                 listOf(),
-                null
-            )
+                null,
+            ),
         )
 
         val gemachtigde = query.getGemachtigde(environment)
@@ -77,6 +81,6 @@ internal class GemachtigdeQueryTest {
         verify(handelsregisterService).getGemachtigde(authentication)
 
         assertEquals("test", gemachtigde.persoon?.aanhef)
-        assertEquals("test", gemachtigde.bedrijf?.naam)
+        assertEquals("Test bedrijf", gemachtigde.bedrijf?.naam)
     }
 }

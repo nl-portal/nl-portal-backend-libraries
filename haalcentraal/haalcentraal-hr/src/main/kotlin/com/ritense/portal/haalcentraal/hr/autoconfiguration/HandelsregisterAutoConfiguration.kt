@@ -23,7 +23,6 @@ import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 
 @AutoConfiguration
 @EnableConfigurationProperties(HaalCentraalHrClientConfig::class)
@@ -32,7 +31,7 @@ class HandelsregisterAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(HandelsregisterClient::class)
     fun handelsregisterClient(
-        haalCentraalHrClientConfig: HaalCentraalHrClientConfig
+        haalCentraalHrClientConfig: HaalCentraalHrClientConfig,
     ): HandelsregisterClient {
         return HandelsregisterClient(haalCentraalHrClientConfig)
     }
@@ -40,7 +39,7 @@ class HandelsregisterAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(HandelsregisterService::class)
     fun handelsregisterService(
-        handelsregisterClient: HandelsregisterClient
+        handelsregisterClient: HandelsregisterClient,
     ): HandelsregisterService {
         return HandelsregisterService(handelsregisterClient)
     }
@@ -48,7 +47,7 @@ class HandelsregisterAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(HandelsregisterQuery::class)
     fun handelsregisterQuery(
-        handelsregisterService: HandelsregisterService
+        handelsregisterService: HandelsregisterService,
     ): HandelsregisterQuery {
         return HandelsregisterQuery(handelsregisterService)
     }

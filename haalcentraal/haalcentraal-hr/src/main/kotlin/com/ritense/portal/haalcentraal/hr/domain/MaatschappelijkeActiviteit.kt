@@ -29,5 +29,5 @@ data class MaatschappelijkeActiviteit(
     val sbiActiviteiten: List<SbiActiviteit>?,
 
     @JsonProperty("_embedded")
-    val embedded: Embedded?
+    val embedded: Embedded?,
 )

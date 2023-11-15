@@ -35,7 +35,7 @@ class HandelsregisterClient(
     suspend fun getMaatschappelijkeActiviteit(kvkNummer: String): MaatschappelijkeActiviteit {
         return webClient()
             .get()
-            .uri("/api/v1/basisprofielen/$kvkNummer")
+            .uri("/basisprofielen/$kvkNummer")
             .retrieve()
             .awaitBody()
     }
@@ -47,14 +47,14 @@ class HandelsregisterClient(
                     HttpClient.create().wiretap(
                         "reactor.netty.http.client.HttpClient",
                         LogLevel.DEBUG,
-                        AdvancedByteBufFormat.TEXTUAL
+                        AdvancedByteBufFormat.TEXTUAL,
                     ).let { client ->
                         var result = client
                         if (clientSslContextResolver != null) {
                             haalCentraalHrClientConfig.ssl?.let {
                                 val sslContext = clientSslContextResolver.resolve(
                                     it.key,
-                                    it.trustedCertificate
+                                    it.trustedCertificate,
                                 )
 
                                 result = client.secure { builder -> builder.sslContext(sslContext) }
@@ -63,8 +63,8 @@ class HandelsregisterClient(
                             }
                         }
                         result
-                    }
-                )
+                    },
+                ),
             )
             .baseUrl(haalCentraalHrClientConfig.url)
             .apply {

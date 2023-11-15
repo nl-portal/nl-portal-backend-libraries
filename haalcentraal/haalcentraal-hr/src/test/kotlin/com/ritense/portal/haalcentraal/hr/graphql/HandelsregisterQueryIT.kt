@@ -17,7 +17,7 @@ package com.ritense.portal.haalcentraal.hr.graphql
 
 import com.ritense.portal.commonground.authentication.WithBedrijfUser
 import com.ritense.portal.haalcentraal.hr.TestHelper
-import com.ritense.portal.haalcentraal.client.HaalCentraalClientConfig
+import com.ritense.portal.haalcentraal.client.HaalCentraalHrClientConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -38,7 +38,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class HandelsregisterQueryIT(
     @Autowired private val testClient: WebTestClient,
-    @Autowired private val haalCentraalClientConfig: HaalCentraalClientConfig,
+    @Autowired private val haalCentraalClientConfig: HaalCentraalHrClientConfig,
 ) {
     lateinit var server: MockWebServer
 
@@ -86,7 +86,7 @@ internal class HandelsregisterQueryIT(
             @Throws(InterruptedException::class)
             override fun dispatch(request: RecordedRequest): MockResponse {
                 val response = when (request.path?.substringBefore('?')) {
-                    "/api/v1/basisprofielen/90012768" -> TestHelper.mockResponseFromFile("/data/get-maatschappelijke-activiteiten.json")
+                    "/basisprofielen/90012768" -> TestHelper.mockResponseFromFile("/data/get-maatschappelijke-activiteiten.json")
                     else -> MockResponse().setResponseCode(404)
                 }
                 return response

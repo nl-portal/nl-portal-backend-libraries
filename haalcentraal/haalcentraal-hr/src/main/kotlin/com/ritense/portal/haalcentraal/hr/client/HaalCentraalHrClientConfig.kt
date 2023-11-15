@@ -17,18 +17,15 @@ package com.ritense.portal.haalcentraal.client
 
 import com.ritense.portal.core.ssl.ClientKey
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 
-@ConstructorBinding
 @ConfigurationProperties(prefix = "valtimo.haalcentraal.hr", ignoreUnknownFields = true)
 data class HaalCentraalHrClientConfig(
     var url: String = "",
     val apiKey: String? = null,
     val ssl: Ssl? = null,
 ) {
-    @ConstructorBinding
     data class Ssl(
         val key: ClientKey? = null,
-        val trustedCertificate: String? = null
+        val trustedCertificate: String? = null,
     )
 }

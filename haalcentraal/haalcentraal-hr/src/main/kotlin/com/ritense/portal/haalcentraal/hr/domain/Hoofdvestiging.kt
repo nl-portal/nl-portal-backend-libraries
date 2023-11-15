@@ -22,5 +22,5 @@ data class Hoofdvestiging(
     val indHoofdvestiging: String,
     val indCommercieleVestiging: String,
     val totaalWerkzamePersonen: Int,
-    val adressen: List<Adres>?
+    val adressen: List<Adres>?,
 )
