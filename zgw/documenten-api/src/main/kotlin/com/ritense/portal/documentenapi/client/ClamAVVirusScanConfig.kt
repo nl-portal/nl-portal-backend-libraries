@@ -17,7 +17,7 @@ package com.ritense.portal.documentenapi.client
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "valtimo.zgw.documentenapis.virusscan.clamav")
+@ConfigurationProperties(prefix = "nl-portal.zgw.documentenapis.virusscan.clamav")
 data class ClamAVVirusScanConfig(
     var enabled: Boolean = false,
     var hostName: String = "",

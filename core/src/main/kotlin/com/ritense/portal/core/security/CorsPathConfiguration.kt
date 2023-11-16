@@ -18,7 +18,7 @@ package com.ritense.portal.graphql.autoconfigure
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.web.cors.CorsConfiguration
 
-@ConfigurationProperties(prefix = "valtimo")
+@ConfigurationProperties(prefix = "nl-portal.security")
 data class CorsPathConfiguration(
     var cors: List<CorsPathConfigurationItem> = emptyList(),
 )

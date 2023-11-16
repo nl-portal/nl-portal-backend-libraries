@@ -18,7 +18,7 @@ package com.ritense.portal.documentenapi.client
 import com.ritense.portal.core.ssl.ClientKey
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "valtimo.zgw.documentenapis", ignoreUnknownFields = true)
+@ConfigurationProperties(prefix = "nl-portal.zgw.documentenapis", ignoreUnknownFields = true)
 data class DocumentApisConfig(
     var defaultDocumentApi: String,
     var configurations: Map<String, DocumentApiConfig> = mapOf(),

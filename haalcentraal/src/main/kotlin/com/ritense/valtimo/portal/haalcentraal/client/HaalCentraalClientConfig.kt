@@ -18,7 +18,7 @@ package com.ritense.portal.haalcentraal.client
 import com.ritense.portal.core.ssl.ClientKey
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "valtimo.haalcentraal", ignoreUnknownFields = true)
+@ConfigurationProperties(prefix = "nl-portal.haalcentraal", ignoreUnknownFields = true)
 data class HaalCentraalClientConfig(
     var url: String = "",
     val apiKey: String? = null,

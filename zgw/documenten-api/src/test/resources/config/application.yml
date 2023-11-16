@@ -6,7 +6,7 @@ logging:
     level:
         reactor.netty.http.client.HttpClient: DEBUG
 
-valtimo:
+nl-portal:
     zgw:
         documentenapis:
             default-document-api: openzaak

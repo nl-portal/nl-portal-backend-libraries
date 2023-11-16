@@ -17,7 +17,7 @@ package com.ritense.portal.catalogiapi.client
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "valtimo.zgw.catalogiapi")
+@ConfigurationProperties(prefix = "nl-portal.zgw.catalogiapi")
 data class CatalogiApiConfig(
     var url: String = "",
     var clientId: String = "",

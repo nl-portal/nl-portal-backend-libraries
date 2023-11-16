@@ -17,7 +17,7 @@ package com.ritense.portal.zakenapi.client
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "valtimo.zgw.zakenapi")
+@ConfigurationProperties(prefix = "nl-portal.zgw.zakenapi")
 data class ZakenApiConfig(
     var url: String = "",
     var clientId: String = "",

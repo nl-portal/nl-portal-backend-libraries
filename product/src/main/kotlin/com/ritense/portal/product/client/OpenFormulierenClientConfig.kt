@@ -17,7 +17,7 @@ package com.ritense.portal.product.client
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "valtimo.openformulieren")
+@ConfigurationProperties(prefix = "nl-portal.openformulieren")
 class OpenFormulierenClientConfig(
     var url: String = "",
     var token: String = "",

@@ -6,7 +6,7 @@ logging:
     level:
         reactor.netty.http.client.HttpClient: DEBUG
 
-valtimo:
+nl-portal:
     objectsapi:
         url: http://localhost:8010
         token: 0000000000000000000000000000000000000000
