@@ -15,8 +15,8 @@
  */
 package nl.nlportal.zgw.taak.graphql
 
-import com.ritense.portal.commonground.authentication.WithBedrijfUser
-import com.ritense.portal.commonground.authentication.WithBurgerUser
+import nl.nlportal.commonground.authentication.WithBedrijfUser
+import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import nl.nlportal.zgw.taak.TestHelper
 import nl.nlportal.zgw.taak.domain.TaakStatus

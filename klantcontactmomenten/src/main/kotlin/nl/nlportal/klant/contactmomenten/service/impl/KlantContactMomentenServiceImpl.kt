@@ -15,10 +15,10 @@
  */
 package nl.nlportal.klant.contactmomenten.service.impl
 
-import com.ritense.portal.commonground.authentication.BedrijfAuthentication
-import com.ritense.portal.commonground.authentication.BurgerAuthentication
-import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
-import com.ritense.portal.klant.client.OpenKlantClient
+import nl.nlportal.commonground.authentication.BedrijfAuthentication
+import nl.nlportal.commonground.authentication.BurgerAuthentication
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.klant.client.OpenKlantClient
 import nl.nlportal.klant.contactmomenten.client.KlantContactMomentenClient
 import nl.nlportal.klant.contactmomenten.graphql.ContactMomentPage
 import nl.nlportal.klant.contactmomenten.service.KlantContactMomentenService

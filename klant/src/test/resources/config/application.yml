@@ -1,6 +1,7 @@
 graphql:
     packages:
         - "com.ritense.portal"
+        - "nl.nlportal"
 
 nl-portal:
     openklant:

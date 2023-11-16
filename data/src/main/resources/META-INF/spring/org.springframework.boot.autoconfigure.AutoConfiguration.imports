@@ -1,2 +1,2 @@
-com.ritense.portal.data.DataAutoConfiguration
-com.ritense.portal.data.liquibase.LiquibaseRunnerAutoConfiguration
+nl.nlportal.data.DataAutoConfiguration
+nl.nlportal.data.liquibase.LiquibaseRunnerAutoConfiguration

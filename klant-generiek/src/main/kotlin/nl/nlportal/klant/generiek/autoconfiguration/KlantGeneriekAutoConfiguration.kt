@@ -15,7 +15,7 @@
  */
 package nl.nlportal.klant.generiek.autoconfiguration
 
-import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
+import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import nl.nlportal.klant.generiek.client.OpenKlantClientConfig
 import nl.nlportal.klant.generiek.validation.GraphQlValidator
 import nl.nlportal.klant.generiek.client.OpenKlantClientProvider

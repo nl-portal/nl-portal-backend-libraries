@@ -1,2 +1,2 @@
-com.ritense.portal.case.autoconfigure.CaseAutoConfiguration
-com.ritense.portal.case.autoconfigure.GraphqlAutoConfiguration
+nl.nlportal.case.autoconfigure.CaseAutoConfiguration
+nl.nlportal.case.autoconfigure.GraphqlAutoConfiguration

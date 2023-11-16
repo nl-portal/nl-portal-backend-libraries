@@ -1,6 +1,6 @@
 spring:
     application:
-        name: valtimo-portal
+        name: nl-portal-backend-libraries
     liquibase:
         enabled: true
         change-log: classpath:config/liquibase/task-master.xml
@@ -35,3 +35,4 @@ spring:
 graphql:
     packages:
         - "com.ritense.portal"
+        - "nl.nlportal"

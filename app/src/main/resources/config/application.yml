@@ -96,15 +96,15 @@ nl-portal:
         url: http://localhost:8010
         token: 182c13e2209161852c53cef53a879f7a2f923430
     haalcentraal:
-    #        url: ${VALTIMO_HAALCENTRAAL_URL}
-    #        apiKey: ${VALTIMO_HAALCENTRAAL_APIKEY}
+    #        url: ${NLPORTAL_HAALCENTRAAL_URL}
+    #        apiKey: ${NLPORTAL_HAALCENTRAAL_APIKEY}
     #        ssl:
-    #            enabled: ${VALTIMO_HAALCENTRAAL_SSL_ENABLED}
+    #            enabled: ${NLPORTAL_HAALCENTRAAL_SSL_ENABLED}
     #            key:
-    #                key: ${VALTIMO_HAALCENTRAAL_SSL_KEY_KEY}
-    #                certChain: ${VALTIMO_HAALCENTRAAL_SSL_KEY_CERT_CHAIN}
-    #                keyPassword: ${VALTIMO_HAALCENTRAAL_SSL_KEY_KEY_PASSWORD}
-    #            trustedCertificate: ${VALTIMO_HAALCENTRAAL_SSL_TRUSTED_CERTIFICATE}
+    #                key: ${NLPORTAL_HAALCENTRAAL_SSL_KEY_KEY}
+    #                certChain: ${NLPORTAL_HAALCENTRAAL_SSL_KEY_CERT_CHAIN}
+    #                keyPassword: ${NLPORTAL_HAALCENTRAAL_SSL_KEY_KEY_PASSWORD}
+    #            trustedCertificate: ${NLPORTAL_HAALCENTRAAL_SSL_TRUSTED_CERTIFICATE}
     security:
       cors:
         -   path: "/**"
