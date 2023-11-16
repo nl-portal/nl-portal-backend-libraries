@@ -1,6 +1,5 @@
 graphql:
     packages:
-        - "com.ritense.portal"
         - "nl.nlportal"
 
 logging:
