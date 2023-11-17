@@ -1,6 +1,13 @@
 server:
     port: 8090
 
+management:
+    endpoints:
+        web:
+            exposure:
+                include: "health"
+        enabled-by-default: false
+
 spring:
     profiles:
         default: dev

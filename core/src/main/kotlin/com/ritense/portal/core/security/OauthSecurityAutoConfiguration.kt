@@ -53,6 +53,7 @@ class OauthSecurityAutoConfiguration {
                 it.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 it.pathMatchers("/playground").permitAll()
                 it.pathMatchers("/graphql").permitAll()
+                it.pathMatchers("/actuator/**").permitAll()
                 it.anyExchange().authenticated()
             }
             .oauth2ResourceServer {
