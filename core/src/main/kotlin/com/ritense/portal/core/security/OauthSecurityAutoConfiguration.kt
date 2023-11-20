@@ -16,6 +16,7 @@
 package com.ritense.portal.core.security
 
 import com.ritense.portal.core.security.config.HttpSecurityConfigurer
+import com.ritense.portal.core.security.config.SecurityHeadersConfig
 import com.ritense.portal.graphql.autoconfigure.CorsPathConfiguration
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -32,10 +33,15 @@ import org.springframework.web.cors.reactive.CorsWebFilter
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 import reactor.core.publisher.Mono
 
+import org.springframework.security.config.Customizer.withDefaults
+import org.springframework.security.web.server.header.ReferrerPolicyServerHttpHeadersWriter
+import org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter
+import java.time.Duration
+
 @AutoConfiguration
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
-@EnableConfigurationProperties(CorsPathConfiguration::class)
+@EnableConfigurationProperties(CorsPathConfiguration::class, SecurityHeadersConfig::class)
 class OauthSecurityAutoConfiguration {
 
     @Bean
@@ -44,11 +50,34 @@ class OauthSecurityAutoConfiguration {
         converter: Converter<Jwt, out Mono<out AbstractAuthenticationToken>>?,
         corsPathConfiguration: CorsPathConfiguration,
         securityConfigurers: List<HttpSecurityConfigurer>,
+        securityHeadersConfig: SecurityHeadersConfig,
     ): SecurityWebFilterChain {
         securityConfigurers.forEach { it.configure(http) }
 
         return http
             .csrf { it.disable() }
+            .headers { h ->
+                h.frameOptions {
+                    XFrameOptionsServerHttpHeadersWriter.Mode.SAMEORIGIN
+                }
+                h.xssProtection(withDefaults())
+                h.cache(withDefaults())
+                securityHeadersConfig.contentSecurityPolicy?.let { spec ->
+                    h.contentSecurityPolicy {
+                        it.policyDirectives(spec)
+                    }
+                }
+                h.hsts { c ->
+                    c
+                        .maxAge(Duration.ofDays(securityHeadersConfig.hstsMaxAgeInDays))
+                        .includeSubdomains(true)
+                        .preload(true)
+                }
+                h.contentTypeOptions(withDefaults())
+                h.referrerPolicy { c ->
+                    c.policy(ReferrerPolicyServerHttpHeadersWriter.ReferrerPolicy.SAME_ORIGIN)
+                }
+            }
             .authorizeExchange {
                 it.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 it.pathMatchers("/playground").permitAll()
