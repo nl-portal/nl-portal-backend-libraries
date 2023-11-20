@@ -2,10 +2,13 @@ server:
     port: 8090
 
 management:
+    endpoint:
+      health:
+          enabled: true
     endpoints:
         web:
             exposure:
-                include: "*"
+                include: health
         enabled-by-default: false
 
 spring:
