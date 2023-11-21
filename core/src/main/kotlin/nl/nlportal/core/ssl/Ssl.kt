@@ -13,20 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.haalcentraal.client
+package nl.nlportal.core.ssl
 
-import nl.nlportal.core.ssl.Ssl
-import org.springframework.boot.context.properties.ConfigurationProperties
-
-@ConfigurationProperties(prefix = "nl-portal.haalcentraal", ignoreUnknownFields = true)
-data class HaalCentraalClientConfig(
-    var url: String = "",
-    val apiKey: String? = null,
-    val ssl: Ssl? = null,
-    val tokenExchange: TokenExchange? = null,
-) {
-
-    data class TokenExchange(
-        val targetAudience: String,
-    )
-}
+data class Ssl(
+    val key: ClientKey? = null,
+    val trustedCertificate: String? = null,
+)

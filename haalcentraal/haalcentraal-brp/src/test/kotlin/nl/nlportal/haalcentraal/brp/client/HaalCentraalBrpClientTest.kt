@@ -16,13 +16,14 @@
 package nl.nlportal.haalcentraal.brp.client
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import kotlinx.coroutines.runBlocking
 import nl.nlportal.core.ssl.ClientKey
+import nl.nlportal.core.ssl.Ssl
 import nl.nlportal.core.ssl.StringClientSslContextResolver
 import nl.nlportal.haalcentraal.brp.domain.persoon.Persoon
 import nl.nlportal.haalcentraal.brp.domain.persoon.PersoonNaam
 import nl.nlportal.haalcentraal.client.HaalCentraalClientConfig
 import nl.nlportal.haalcentraal.client.HaalCentraalClientProvider
-import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.tls.HandshakeCertificates
@@ -101,7 +102,7 @@ internal class HaalCentraalBrpClientTest {
 
         val haalCentraalClientConfig = haalCentraalClientConfig.copy(
             url = server.url("/").toString(),
-            ssl = HaalCentraalClientConfig.Ssl(
+            ssl = Ssl(
                 key = ClientKey(
                     certChain = "${clientCertificate.certificatePem()}\n${rootCertificate.certificatePem()}",
                     key = clientCertificate.privateKeyPkcs8Pem(),
