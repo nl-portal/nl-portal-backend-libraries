@@ -1,6 +1,16 @@
 server:
     port: 8090
 
+management:
+    endpoint:
+      health:
+          enabled: true
+    endpoints:
+        web:
+            exposure:
+                include: health
+        enabled-by-default: false
+
 spring:
     profiles:
         default: dev
@@ -95,17 +105,16 @@ nl-portal:
         url: http://localhost:8010
         token: 182c13e2209161852c53cef53a879f7a2f923430
     haalcentraal:
-    #        url: ${NLPORTAL_HAALCENTRAAL_URL}
-    #        apiKey: ${NLPORTAL_HAALCENTRAAL_APIKEY}
+    #        url: ${VALTIMO_HAALCENTRAAL_URL}
+    #        apiKey: ${VALTIMO_HAALCENTRAAL_APIKEY}
     #        ssl:
-    #            enabled: ${NLPORTAL_HAALCENTRAAL_SSL_ENABLED}
+    #            enabled: ${VALTIMO_HAALCENTRAAL_SSL_ENABLED}
     #            key:
-    #                key: ${NLPORTAL_HAALCENTRAAL_SSL_KEY_KEY}
-    #                certChain: ${NLPORTAL_HAALCENTRAAL_SSL_KEY_CERT_CHAIN}
-    #                keyPassword: ${NLPORTAL_HAALCENTRAAL_SSL_KEY_KEY_PASSWORD}
-    #            trustedCertificate: ${NLPORTAL_HAALCENTRAAL_SSL_TRUSTED_CERTIFICATE}
-    security:
-      cors:
+    #                key: ${VALTIMO_HAALCENTRAAL_SSL_KEY_KEY}
+    #                certChain: ${VALTIMO_HAALCENTRAAL_SSL_KEY_CERT_CHAIN}
+    #                keyPassword: ${VALTIMO_HAALCENTRAAL_SSL_KEY_KEY_PASSWORD}
+    #            trustedCertificate: ${VALTIMO_HAALCENTRAAL_SSL_TRUSTED_CERTIFICATE}
+    cors:
         -   path: "/**"
             config:
                 allowedHeaders: "*"
