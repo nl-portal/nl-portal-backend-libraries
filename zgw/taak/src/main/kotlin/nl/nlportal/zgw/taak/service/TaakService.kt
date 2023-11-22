@@ -17,11 +17,11 @@ package nl.nlportal.zgw.taak.service
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.node.ObjectNode
-import com.ritense.portal.commonground.authentication.BedrijfAuthentication
-import com.ritense.portal.commonground.authentication.BurgerAuthentication
-import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
-import com.ritense.portal.commonground.authentication.exception.UserTypeUnsupportedException
-import com.ritense.portal.core.util.Mapper
+import nl.nlportal.commonground.authentication.BedrijfAuthentication
+import nl.nlportal.commonground.authentication.BurgerAuthentication
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.commonground.authentication.exception.UserTypeUnsupportedException
+import nl.nlportal.core.util.Mapper
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter

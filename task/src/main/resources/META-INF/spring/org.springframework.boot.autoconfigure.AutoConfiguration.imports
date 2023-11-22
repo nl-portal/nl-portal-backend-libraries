@@ -1,2 +1,2 @@
-com.ritense.portal.task.autoconfigure.TaskAutoConfiguration
-com.ritense.portal.task.autoconfigure.GraphqlAutoConfiguration
+nl.nlportal.task.autoconfigure.TaskAutoConfiguration
+nl.nlportal.task.autoconfigure.GraphqlAutoConfiguration

@@ -15,7 +15,7 @@
  */
 package nl.nlportal.klant.contactmomenten.service
 
-import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.klant.contactmomenten.graphql.ContactMomentPage
 
 interface KlantContactMomentenService {

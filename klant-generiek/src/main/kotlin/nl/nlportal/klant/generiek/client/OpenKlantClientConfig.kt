@@ -17,7 +17,7 @@ package nl.nlportal.klant.generiek.client
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "valtimo.openklant")
+@ConfigurationProperties(prefix = "nl-portal.openklant")
 class OpenKlantClientConfig(
     var url: String = "",
     var clientId: String = "",

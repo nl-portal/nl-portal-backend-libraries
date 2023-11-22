@@ -18,8 +18,8 @@ package nl.nlportal.zgw.taak.graphql
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Mutation
 import com.fasterxml.jackson.databind.node.ObjectNode
-import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
-import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.zgw.taak.domain.Taak
 import nl.nlportal.zgw.taak.service.TaakService
 import graphql.schema.DataFetchingEnvironment

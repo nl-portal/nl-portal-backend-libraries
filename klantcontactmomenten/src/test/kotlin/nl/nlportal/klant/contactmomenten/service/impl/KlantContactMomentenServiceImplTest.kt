@@ -15,10 +15,10 @@
  */
 package nl.nlportal.klant.contactmomenten.service.impl
 
-import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
-import com.ritense.portal.commonground.authentication.JwtBuilder
-import com.ritense.portal.klant.client.OpenKlantClient
-import com.ritense.portal.klant.domain.klanten.Klant
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.commonground.authentication.JwtBuilder
+import nl.nlportal.klant.client.OpenKlantClient
+import nl.nlportal.klant.domain.klanten.Klant
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import nl.nlportal.klant.contactmomenten.client.KlantContactMomentenClient

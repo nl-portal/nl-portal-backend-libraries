@@ -1,8 +1,8 @@
 graphql:
     packages:
-        - "com.ritense.portal"
+        - "nl.nlportal"
 
-valtimo:
+nl-portal:
     openklant:
         url: #filled in test
         clientId: valtimo_client

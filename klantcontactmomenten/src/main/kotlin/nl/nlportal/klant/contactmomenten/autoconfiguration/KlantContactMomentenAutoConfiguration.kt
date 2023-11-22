@@ -15,7 +15,7 @@
  */
 package nl.nlportal.klant.contactmomenten.autoconfiguration
 
-import com.ritense.portal.klant.client.OpenKlantClient
+import nl.nlportal.klant.client.OpenKlantClient
 import nl.nlportal.klant.contactmomenten.client.KlantContactMomentenClient
 import nl.nlportal.klant.contactmomenten.graphql.ContactMomentQuery
 import nl.nlportal.klant.contactmomenten.service.KlantContactMomentenService

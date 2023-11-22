@@ -1,2 +1,2 @@
-com.ritense.portal.form.autoconfigure.FormAutoConfiguration
-com.ritense.portal.form.autoconfigure.GraphqlAutoConfiguration
+nl.nlportal.form.autoconfigure.FormAutoConfiguration
+nl.nlportal.form.autoconfigure.GraphqlAutoConfiguration

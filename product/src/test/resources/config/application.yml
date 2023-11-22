@@ -1,8 +1,8 @@
 graphql:
     packages:
-        - "com.ritense.portal"
+        - "nl.nlportal"
 
-valtimo:
+nl-portal:
     openformulieren:
         url: #filled in test
         token: "some-test-token"

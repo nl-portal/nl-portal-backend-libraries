@@ -17,7 +17,7 @@ package nl.nlportal.klant.contactmomenten.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Query
-import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
+import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.klant.contactmomenten.service.KlantContactMomentenService
 
