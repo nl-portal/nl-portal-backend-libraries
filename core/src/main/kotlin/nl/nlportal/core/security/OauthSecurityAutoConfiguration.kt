@@ -16,9 +16,7 @@
 package nl.nlportal.core.security
 
 import nl.nlportal.core.security.config.HttpSecurityConfigurer
-import com.ritense.portal.core.security.config.HttpSecurityConfigurer
-import com.ritense.portal.core.security.config.SecurityHeadersConfig
-import com.ritense.portal.graphql.autoconfigure.CorsPathConfiguration
+import nl.nlportal.core.security.config.SecurityHeadersConfig
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
