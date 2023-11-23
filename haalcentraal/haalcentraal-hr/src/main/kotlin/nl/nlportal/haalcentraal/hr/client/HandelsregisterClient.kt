@@ -15,15 +15,11 @@
  */
 package nl.nlportal.haalcentraal.hr.client
 
-import nl.nlportal.haalcentraal.client.HaalCentraalClientProvider
-import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
-import org.springframework.security.core.Authentication
-import com.ritense.portal.core.ssl.ClientSslContextResolver
-import com.ritense.portal.haalcentraal.client.HaalCentraalHrClientConfig
-import com.ritense.portal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 import io.netty.handler.logging.LogLevel
 import mu.KLogger
 import mu.KotlinLogging
+import nl.nlportal.core.ssl.ClientSslContextResolver
+import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody

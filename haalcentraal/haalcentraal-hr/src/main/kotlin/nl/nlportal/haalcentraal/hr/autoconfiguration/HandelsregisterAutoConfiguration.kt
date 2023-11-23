@@ -15,7 +15,7 @@
  */
 package nl.nlportal.haalcentraal.hr.autoconfiguration
 
-import nl.nlportal.haalcentraal.client.HaalCentraalClientProvider
+import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrClientConfig
 import nl.nlportal.haalcentraal.hr.client.HandelsregisterClient
 import nl.nlportal.haalcentraal.hr.graphql.HandelsregisterQuery
 import nl.nlportal.haalcentraal.hr.service.HandelsregisterService

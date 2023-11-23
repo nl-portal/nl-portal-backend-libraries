@@ -13,19 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.haalcentraal.client
+package nl.nlportal.haalcentraal.hr.client
 
-import com.ritense.portal.core.ssl.ClientKey
+import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "valtimo.haalcentraal.hr", ignoreUnknownFields = true)
+@ConfigurationProperties(prefix = "nl-portal.haalcentraal.hr", ignoreUnknownFields = true)
 data class HaalCentraalHrClientConfig(
     var url: String = "",
     val apiKey: String? = null,
     val ssl: Ssl? = null,
-) {
-    data class Ssl(
-        val key: ClientKey? = null,
-        val trustedCertificate: String? = null,
-    )
-}
+)

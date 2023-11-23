@@ -15,23 +15,17 @@
  */
 package nl.nlportal.haalcentraal.all.graphql
 
+import graphql.GraphQLContext
+import graphql.schema.DataFetchingEnvironment
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
+import nl.nlportal.haalcentraal.hr.domain.MaterieleRegistratie
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.haalcentraal.brp.domain.persoon.PersoonNaam
 import nl.nlportal.haalcentraal.brp.service.HaalCentraalBrpService
 import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 import nl.nlportal.haalcentraal.hr.service.HandelsregisterService
-import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
-import com.ritense.portal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
-import com.ritense.portal.haalcentraal.brp.domain.persoon.PersoonNaam
-import com.ritense.portal.haalcentraal.brp.service.HaalCentraalBrpService
-import com.ritense.portal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
-import com.ritense.portal.haalcentraal.hr.domain.MaterieleRegistratie
-import com.ritense.portal.haalcentraal.hr.service.HandelsregisterService
-import graphql.GraphQLContext
-import graphql.schema.DataFetchingEnvironment
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

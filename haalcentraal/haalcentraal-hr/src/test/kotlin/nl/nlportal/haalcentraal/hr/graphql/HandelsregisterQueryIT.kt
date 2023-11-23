@@ -17,8 +17,7 @@ package nl.nlportal.haalcentraal.hr.graphql
 
 import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.haalcentraal.hr.TestHelper
-import nl.nlportal.haalcentraal.client.HaalCentraalClientConfig
-import com.ritense.portal.haalcentraal.client.HaalCentraalHrClientConfig
+import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrClientConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer

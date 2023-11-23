@@ -16,13 +16,9 @@
 package nl.nlportal.haalcentraal.hr.client
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import nl.nlportal.haalcentraal.client.HaalCentraalClientConfig
-import nl.nlportal.haalcentraal.client.HaalCentraalClientProvider
-import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
-import com.ritense.portal.haalcentraal.client.HaalCentraalHrClientConfig
-import com.ritense.portal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
-import com.ritense.portal.haalcentraal.hr.domain.MaterieleRegistratie
 import kotlinx.coroutines.runBlocking
+import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
+import nl.nlportal.haalcentraal.hr.domain.MaterieleRegistratie
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ritense.portal.haalcentraal.hr.domain
+package nl.nlportal.haalcentraal.hr.domain
 
 data class Eigenaar(
     val rsin: String?,
