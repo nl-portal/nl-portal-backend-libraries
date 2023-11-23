@@ -22,7 +22,6 @@ import nl.nlportal.haalcentraal.client.HaalCentraalClientProvider
 import nl.nlportal.haalcentraal.client.tokenexchange.KeyCloakUserTokenExchangeFilter
 import nl.nlportal.haalcentraal.client.tokenexchange.UserTokenExchangeFilter
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
