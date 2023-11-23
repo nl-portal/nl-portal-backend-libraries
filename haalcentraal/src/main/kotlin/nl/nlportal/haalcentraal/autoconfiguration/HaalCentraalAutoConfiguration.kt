@@ -35,14 +35,14 @@ import org.springframework.web.reactive.function.client.WebClient
 class HaalCentraalAutoConfiguration {
 
     @Bean
-    @ConditionalOnProperty("nlportal.haalcentraal.ssl.enabled", matchIfMissing = false)
+    @ConditionalOnProperty("nl-portal.haalcentraal.ssl.enabled", matchIfMissing = false)
     @ConditionalOnMissingBean(ClientSslContextResolver::class)
     fun clientSslContextResolver(resourceLoader: ResourceLoader): ClientSslContextResolver {
         return ResourceClientSslContextResolver(resourceLoader)
     }
 
     @Bean
-    @ConditionalOnProperty("nlportal.haalcentraal.tokenExchange.targetAudience", matchIfMissing = false)
+    @ConditionalOnProperty("nl-portal.haalcentraal.tokenExchange.targetAudience", matchIfMissing = false)
     @ConditionalOnMissingBean(UserTokenExchangeFilter::class)
     fun userTokenExchangeFilterFactory(
         haalCentraalClientConfig: HaalCentraalClientConfig,

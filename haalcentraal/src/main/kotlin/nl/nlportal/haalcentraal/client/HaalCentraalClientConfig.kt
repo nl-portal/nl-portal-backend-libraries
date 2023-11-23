@@ -15,7 +15,7 @@
  */
 package nl.nlportal.haalcentraal.client
 
-import nl.nlportal.core.ssl.ClientKey
+import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.haalcentraal", ignoreUnknownFields = true)
@@ -25,12 +25,6 @@ data class HaalCentraalClientConfig(
     val ssl: Ssl? = null,
     val tokenExchange: TokenExchange? = null,
 ) {
-
-    data class Ssl(
-        val key: ClientKey? = null,
-        val trustedCertificate: String? = null,
-    )
-
     data class TokenExchange(
         val targetAudience: String,
     )

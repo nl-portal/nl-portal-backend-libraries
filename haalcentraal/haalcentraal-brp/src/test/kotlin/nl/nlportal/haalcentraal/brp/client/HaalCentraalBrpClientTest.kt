@@ -102,7 +102,7 @@ internal class HaalCentraalBrpClientTest {
 
         val haalCentraalClientConfig = haalCentraalClientConfig.copy(
             url = server.url("/").toString(),
-            ssl = HaalCentraalClientConfig.Ssl(
+            ssl = Ssl(
                 key = ClientKey(
                     certChain = "${clientCertificate.certificatePem()}\n${rootCertificate.certificatePem()}",
                     key = clientCertificate.privateKeyPkcs8Pem(),
