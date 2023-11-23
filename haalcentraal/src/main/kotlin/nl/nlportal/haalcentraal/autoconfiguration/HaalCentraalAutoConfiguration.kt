@@ -22,6 +22,7 @@ import nl.nlportal.haalcentraal.client.HaalCentraalClientProvider
 import nl.nlportal.haalcentraal.client.tokenexchange.KeyCloakUserTokenExchangeFilter
 import nl.nlportal.haalcentraal.client.tokenexchange.UserTokenExchangeFilter
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -34,9 +35,8 @@ import org.springframework.web.reactive.function.client.WebClient
 @EnableConfigurationProperties(HaalCentraalClientConfig::class)
 class HaalCentraalAutoConfiguration {
 
-    @Bean
+    @Bean("haalCentraalClientSslContextResolver")
     @ConditionalOnProperty("nl-portal.haalcentraal.ssl.enabled", matchIfMissing = false)
-    @ConditionalOnMissingBean(ClientSslContextResolver::class)
     fun clientSslContextResolver(resourceLoader: ResourceLoader): ClientSslContextResolver {
         return ResourceClientSslContextResolver(resourceLoader)
     }
@@ -55,8 +55,10 @@ class HaalCentraalAutoConfiguration {
     @ConditionalOnMissingBean(HaalCentraalClientProvider::class)
     fun haalCentraalClientProvider(
         haalCentraalClientConfig: HaalCentraalClientConfig,
-        @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
-        @Autowired(required = false) userTokenExchangeFilter: UserTokenExchangeFilter? = null,
+        @Autowired(required = false)
+        @Qualifier("haalCentraalClientSslContextResolver")
+        clientSslContextResolver: ClientSslContextResolver?,
+        @Autowired(required = false) userTokenExchangeFilter: UserTokenExchangeFilter?,
     ): HaalCentraalClientProvider {
         return HaalCentraalClientProvider(haalCentraalClientConfig, clientSslContextResolver, userTokenExchangeFilter)
     }
