@@ -35,8 +35,8 @@ import org.springframework.web.reactive.function.client.WebClient
 @EnableConfigurationProperties(HaalCentraalClientConfig::class)
 class HaalCentraalAutoConfiguration {
 
-    @Bean("haalCentraalClientSslContextResolver")
-    @ConditionalOnProperty("nl-portal.haalcentraal.ssl.enabled", matchIfMissing = false)
+    @Bean
+    @ConditionalOnMissingBean(ClientSslContextResolver::class)
     fun clientSslContextResolver(resourceLoader: ResourceLoader): ClientSslContextResolver {
         return ResourceClientSslContextResolver(resourceLoader)
     }
@@ -55,9 +55,7 @@ class HaalCentraalAutoConfiguration {
     @ConditionalOnMissingBean(HaalCentraalClientProvider::class)
     fun haalCentraalClientProvider(
         haalCentraalClientConfig: HaalCentraalClientConfig,
-        @Autowired(required = false)
-        @Qualifier("haalCentraalClientSslContextResolver")
-        clientSslContextResolver: ClientSslContextResolver?,
+        @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver?,
         @Autowired(required = false) userTokenExchangeFilter: UserTokenExchangeFilter?,
     ): HaalCentraalClientProvider {
         return HaalCentraalClientProvider(haalCentraalClientConfig, clientSslContextResolver, userTokenExchangeFilter)
