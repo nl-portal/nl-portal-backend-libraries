@@ -15,7 +15,7 @@
  */
 package nl.nlportal.klant.contactmomenten.client
 
-import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.klant.contactmomenten.domain.ContactMoment
 import nl.nlportal.klant.generiek.client.OpenKlantClientProvider
 import nl.nlportal.klant.generiek.domain.ResultPage

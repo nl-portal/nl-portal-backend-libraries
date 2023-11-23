@@ -5,7 +5,7 @@ Includes an array of additional services for OpenZaak/OpenFormulieren/OpenKlant
 
 ####1 Docker-compose up
 
-Clone external git repo https://github.com/valtimo-platform/valtimo-docker-profiles
+Clone external git repo https://github.com/nl-portal/nl-portal-docker-compose
 
 Run in terminal:
 ```shell
@@ -77,4 +77,4 @@ By default, an admin user is created with the following credentials
 Uses a public test server at https://www.haalcentraal.nl/haalcentraal/api/brp.
 This server is only accessible with a valid apiKey, use the [haal centraal documentation](https://vng-realisatie.github.io/Haal-Centraal-BRP-bevragen//getting-started) to find out how to get your apiKey
 
-Once you have received an apiKey you can set this in the application.yml at valtimo.haalcentraal.apiKey, or you can set an environment variable named VALTIMO_HAALCENTRAAL_APIKEY
+Once you have received an apiKey you can set this in the application.yml at nl-portal.haalcentraal.apiKey, or you can set an environment variable named NLPORTAL_HAALCENTRAAL_APIKEY

@@ -29,6 +29,7 @@ dependencies {
     implementation(project(":zgw:catalogi-api"))
     implementation(project(":zgw:documenten-api"))
 
+    implementation("org.springframework.boot", "spring-boot-starter-actuator")
     api("org.postgresql", "postgresql")
 }
 

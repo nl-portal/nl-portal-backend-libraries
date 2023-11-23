@@ -15,7 +15,7 @@
  */
 package nl.nlportal.zgw.objectenapi
 
-import com.ritense.portal.core.security.OauthSecurityAutoConfiguration
+import nl.nlportal.core.security.OauthSecurityAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean

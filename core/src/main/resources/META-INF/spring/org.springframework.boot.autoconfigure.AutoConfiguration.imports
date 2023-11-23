@@ -1,1 +1,1 @@
-com.ritense.portal.core.security.OauthSecurityAutoConfiguration
+nl.nlportal.core.security.OauthSecurityAutoConfiguration

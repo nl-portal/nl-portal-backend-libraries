@@ -16,8 +16,8 @@
 package nl.nlportal.klant.contactmomenten.graphql
 
 import com.nhaarman.mockitokotlin2.whenever
-import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
-import com.ritense.portal.graphql.security.SecurityConstants
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.graphql.security.SecurityConstants
 import graphql.GraphQLContext
 import graphql.schema.DataFetchingEnvironment
 import kotlinx.coroutines.ExperimentalCoroutinesApi

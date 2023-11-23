@@ -15,7 +15,7 @@
  */
 package nl.nlportal.klant.contactmomenten.graphql
 
-import com.ritense.portal.commonground.authentication.WithBurgerUser
+import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.klant.contactmomenten.TestHelper
 import nl.nlportal.klant.generiek.client.OpenKlantClientConfig
 import okhttp3.mockwebserver.Dispatcher

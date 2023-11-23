@@ -15,8 +15,8 @@
  */
 package nl.nlportal.klant.generiek.client
 
-import com.ritense.portal.commonground.authentication.CommonGroundAuthentication
-import com.ritense.portal.idtokenauthentication.service.IdTokenGenerator
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import io.netty.handler.logging.LogLevel
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient

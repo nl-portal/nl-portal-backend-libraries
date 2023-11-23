@@ -1,12 +1,12 @@
 graphql:
     packages:
-        - "com.ritense.portal"
+        - "nl.nlportal"
 
 logging:
     level:
         reactor.netty.http.client.HttpClient: DEBUG
 
-valtimo:
+nl-portal:
     zgw:
         catalogiapi:
             url: #filled in test
