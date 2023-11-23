@@ -15,7 +15,7 @@
  */
 package nl.nlportal.documentenapi.client
 
-import nl.nlportal.core.ssl.Ssl
+import nl.nlportal.core.ssl.ClientKey
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.zgw.documentenapis", ignoreUnknownFields = true)
@@ -51,4 +51,9 @@ data class DocumentApiConfig(
     var rsin: String? = null,
     var documentTypeUrl: String? = null,
     val ssl: Ssl? = null,
+)
+
+data class Ssl(
+    val key: ClientKey? = null,
+    val trustedCertificate: String? = null,
 )
