@@ -15,25 +15,19 @@
  */
 package nl.nlportal.documentenapi.client
 
-import nl.nlportal.core.util.Mapper
-import nl.nlportal.documentenapi.domain.Document
-import nl.nlportal.documentenapi.domain.PostEnkelvoudiginformatieobjectRequest
-import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import io.netty.handler.logging.LogLevel
-import java.nio.file.Files
-import java.nio.file.StandardOpenOption
-import java.time.Duration
-import java.util.Base64
-import java.util.UUID
-import kotlin.io.path.deleteIfExists
-import kotlin.io.path.outputStream
-import kotlin.io.path.writeText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mu.KLogger
 import mu.KotlinLogging
+import nl.nlportal.core.ssl.ClientSslContextResolver
+import nl.nlportal.core.util.Mapper
+import nl.nlportal.documentenapi.domain.Document
+import nl.nlportal.documentenapi.domain.PostEnkelvoudiginformatieobjectRequest
+import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.buffer.DataBuffer
+import org.springframework.core.io.buffer.DataBufferUtils
 import org.springframework.http.MediaType
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.BodyInserters
@@ -42,7 +36,12 @@ import org.springframework.web.reactive.function.client.awaitBody
 import reactor.core.publisher.Flux
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
-import nl.nlportal.core.ssl.ClientSslContextResolver
+import java.nio.file.Files
+import java.nio.file.StandardOpenOption
+import java.util.Base64
+import java.util.UUID
+import kotlin.io.path.deleteIfExists
+import kotlin.io.path.outputStream
 
 class DocumentenApiClient(
     private val documentenApiConfigs: DocumentApisConfig,
@@ -85,16 +84,18 @@ class DocumentenApiClient(
             Files.createTempFile("tempDocumentUploadRequest", ".json")
         }
 
-        file.writeText(requestPrefix)
-        Base64.getEncoder().wrap(file.outputStream(StandardOpenOption.APPEND)).use { base64Output ->
-            documentContent
-                .map {
-                        dataPart ->
-                    base64Output.write(dataPart.asInputStream().readBytes())
-                }
-                .blockLast(Duration.ofMinutes(5))
+        file.outputStream().use { fileOutput ->
+            requestPrefix.byteInputStream().copyTo(fileOutput)
+            Base64.getEncoder().wrap(file.outputStream(StandardOpenOption.APPEND)).use { base64Output ->
+                DataBufferUtils
+                    .write(
+                        documentContent,
+                        Base64.getEncoder().wrap(fileOutput),
+                    )
+                    .subscribe()
+            }
+            requestPostfix.byteInputStream().copyTo(fileOutput)
         }
-        file.writeText(requestPostfix, Charsets.UTF_8, StandardOpenOption.APPEND)
 
         val response = webClient(documentApi)
             .post()
