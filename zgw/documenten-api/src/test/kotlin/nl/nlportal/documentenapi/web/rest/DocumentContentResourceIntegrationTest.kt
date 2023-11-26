@@ -21,18 +21,17 @@ import nl.nlportal.documentenapi.TestHelper
 import nl.nlportal.documentenapi.client.DocumentApisConfig
 import nl.nlportal.documentenapi.domain.DocumentStatus
 import nl.nlportal.documentenapi.domain.PostEnkelvoudiginformatieobjectRequest
-import java.io.InputStream
-import java.util.Base64
-import java.util.UUID
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import okio.Buffer
 import okio.source
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
@@ -44,7 +43,9 @@ import org.springframework.http.MediaType
 import org.springframework.http.client.MultipartBodyBuilder
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.BodyInserters
-import org.assertj.core.api.Assertions.assertThat
+import java.io.InputStream
+import java.util.Base64
+import java.util.UUID
 
 @SpringBootTest
 @AutoConfigureWebTestClient
@@ -112,6 +113,33 @@ class DocumentContentResourceIntegrationTest(
         assertThat(requestBody.informatieobjecttype).isEqualTo("http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000")
     }
 
+    @RepeatedTest(5)
+    @WithBurgerUser("569312863")
+    fun `should upload multiple files consecutively`() {
+        val bodyBuilder = MultipartBodyBuilder()
+        bodyBuilder.part("file", ClassPathResource("/data/test-file.txt", this::class.java.classLoader))
+
+        webTestClient.post()
+            .uri("/api/documentapi/openzaak/document/content")
+            .contentType(MediaType.MULTIPART_FORM_DATA)
+            .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
+            .exchange()
+            .expectStatus().isOk
+            .expectBody()
+
+        val requestBody = getRequestBody(HttpMethod.POST, "/enkelvoudiginformatieobjecten", PostEnkelvoudiginformatieobjectRequest::class.java)
+        assertThat(requestBody.bronorganisatie).isEqualTo("051845623")
+        assertThat(requestBody.creatiedatum).isNotBlank
+        assertThat(requestBody.titel).isEqualTo("test-file.txt")
+        assertThat(requestBody.auteur).isEqualTo("569312863")
+        assertThat(requestBody.status).isEqualTo(DocumentStatus.DEFINITIEF)
+        assertThat(requestBody.taal).isEqualTo("nld")
+        assertThat(requestBody.bestandsnaam).isEqualTo("test-file.txt")
+        assertThat(requestBody.inhoud).isEqualTo(Base64.getEncoder().encodeToString("Test content".toByteArray()))
+        assertThat(requestBody.indicatieGebruiksrecht).isFalse
+        assertThat(requestBody.informatieobjecttype).isEqualTo("http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000")
+    }
+
     fun setupMockDocumentServer() {
         val dispatcher: Dispatcher = object : Dispatcher() {
             @Throws(InterruptedException::class)
@@ -155,7 +183,7 @@ class DocumentContentResourceIntegrationTest(
     private fun findRequest(method: HttpMethod, path: String): RecordedRequest? {
         return executedRequests
             .filter { method.matches(it.method!!) }
-            .firstOrNull { it.path?.substringBefore('?').equals(path) }
+            .lastOrNull { it.path?.substringBefore('?').equals(path) }
     }
 
     private fun <T> getRequestBody(method: HttpMethod, path: String, clazz: Class<T>): T {
