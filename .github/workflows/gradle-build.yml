@@ -31,15 +31,13 @@ jobs:
     - name: Gradle build
       uses: gradle/gradle-build-action@v2
       with:
-          gradle-version: 8.4
+          gradle-version: 8.5
           arguments: build
     - name: Gradle publish
       uses: gradle/gradle-build-action@v2
       with:
-          gradle-version: 8.4
+          gradle-version: 8.5
           arguments: publish
       env:
-          #USER: ${{ secrets.GITHUB_TOKEN }}
-          #TOKEN: ${{ secrets.GITHUB_ACTOR }}
           USER: ${{ secrets.USER }}
           TOKEN: ${{ secrets.TOKEN }}
