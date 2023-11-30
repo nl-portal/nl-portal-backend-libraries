@@ -22,14 +22,14 @@ jobs:
         permissions:
             contents: write
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
             - name: Set up JDK 17
-              uses: actions/setup-java@v3
+              uses: actions/setup-java@v4
               with:
                   java-version: '17'
                   distribution: 'temurin'
             - name: Build with Gradle
-              uses: gradle/gradle-build-action@0bfe00a136db5e61ba3416b372542a65863a9fee
+              uses: gradle/gradle-build-action@0280eb7de5ad3fb0deb50017b8ce842980b4789a
               with:
                   arguments: build
             - name: Gradle publish
@@ -43,7 +43,7 @@ jobs:
                   USER: ${{ secrets.USER }}
                   TOKEN: ${{ secrets.TOKEN }}
             - name: Create a Release
-              uses: elgohr/Github-Release-Action@20231005120738
+              uses: elgohr/Github-Release-Action@20231116201936
               env:
                   GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
               with:
