@@ -85,8 +85,8 @@ class OauthSecurityAutoConfiguration {
                 it.anyExchange().authenticated()
             }
             .oauth2ResourceServer {
-                it.jwt {
-                    it.jwtAuthenticationConverter(converter)
+                it.jwt { t ->
+                    t.jwtAuthenticationConverter(converter)
                 }
             }
             .build()
