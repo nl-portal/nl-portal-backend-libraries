@@ -43,7 +43,7 @@ jobs:
                   USER: ${{ secrets.USER }}
                   TOKEN: ${{ secrets.TOKEN }}
             - name: Create a Release
-              uses: elgohr/Github-Release-Action@20231005120738
+              uses: elgohr/Github-Release-Action@20231116201936
               env:
                   GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
               with:
