@@ -19,7 +19,8 @@ import nl.nlportal.commonground.authentication.JwtBuilder
 import nl.nlportal.haalcentraal.hr.client.HandelsregisterClient
 import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.runBlockingTest
+import nl.nlportal.haalcentraal.hr.domain.MaterieleRegistratie
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
@@ -33,20 +34,31 @@ class HandelsregisterServiceTest {
     val handelsregisterService = HandelsregisterService(handelsregisterClient)
 
     @Test
-    fun `getMaatschappelijkeActiviteit calls client and gets MaatschappelijkeActiviteit`() = runTest {
+    fun `getMaatschappelijkeActiviteit calls client and gets MaatschappelijkeActiviteit`() = runBlockingTest {
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
-        whenever(handelsregisterClient.getMaatschappelijkeActiviteit("123", authentication)).thenReturn(
-            MaatschappelijkeActiviteit("Test bedrijf"),
+        whenever(handelsregisterClient.getMaatschappelijkeActiviteit("123")).thenReturn(
+            MaatschappelijkeActiviteit(
+                naam = "Test bedrijf",
+                "90012768",
+                "test",
+                "20230101",
+                MaterieleRegistratie("20020202"),
+                1,
+                "Test bedrijf",
+                listOf(),
+                listOf(),
+                null,
+            ),
         )
 
         val bedrijf = handelsregisterService.getMaatschappelijkeActiviteit(authentication)!!
 
         assertEquals("Test bedrijf", bedrijf.naam)
-        verify(handelsregisterClient).getMaatschappelijkeActiviteit("123", authentication)
+        verify(handelsregisterClient).getMaatschappelijkeActiviteit("123")
     }
 
     @Test
-    fun `getMaatschappelijkeActiviteit with invalid kvk`() = runTest {
+    fun `getMaatschappelijkeActiviteit with invalid kvk`() = runBlockingTest {
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
 
         val bedrijf = handelsregisterService.getMaatschappelijkeActiviteit(authentication)

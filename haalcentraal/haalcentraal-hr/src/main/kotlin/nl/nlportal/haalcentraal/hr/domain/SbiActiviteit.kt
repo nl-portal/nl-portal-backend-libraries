@@ -15,19 +15,8 @@
  */
 package nl.nlportal.haalcentraal.hr.domain
 
-import com.fasterxml.jackson.annotation.JsonProperty
-
-data class MaatschappelijkeActiviteit(
-    val naam: String,
-    val kvkNummer: String,
-    val indNonMailing: String?,
-    val formeleRegistratiedatum: String?,
-    val materieleRegistratie: MaterieleRegistratie?,
-    val totaalWerkzamePersonen: Int?,
-    val statutaireNaam: String?,
-    val handelsnamen: List<HandelsNaam>?,
-    val sbiActiviteiten: List<SbiActiviteit>?,
-
-    @JsonProperty("_embedded")
-    val embedded: Embedded?,
+data class SbiActiviteit(
+    val sbiCode: String,
+    val sbiOmschrijving: String,
+    val indHoofdactiviteit: String,
 )

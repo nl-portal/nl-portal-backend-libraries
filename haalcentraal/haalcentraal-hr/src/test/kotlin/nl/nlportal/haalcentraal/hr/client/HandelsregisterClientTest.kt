@@ -16,10 +16,9 @@
 package nl.nlportal.haalcentraal.hr.client
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import nl.nlportal.haalcentraal.client.HaalCentraalClientConfig
-import nl.nlportal.haalcentraal.client.HaalCentraalClientProvider
-import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 import kotlinx.coroutines.runBlocking
+import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
+import nl.nlportal.haalcentraal.hr.domain.MaterieleRegistratie
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
@@ -27,13 +26,11 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.mockito.Mockito.mock
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class HandelsregisterClientTest {
 
-    private lateinit var haalCentraalClientConfig: HaalCentraalClientConfig
-    private lateinit var haalCentraalClientProvider: HaalCentraalClientProvider
+    private lateinit var haalCentraalHrClientConfig: HaalCentraalHrClientConfig
     private lateinit var client: HandelsregisterClient
     private lateinit var server: MockWebServer
     private val kvkNummer = "90012768"
@@ -45,13 +42,27 @@ internal class HandelsregisterClientTest {
 
         server.enqueue(
             MockResponse()
-                .setBody(jacksonObjectMapper().writeValueAsString(MaatschappelijkeActiviteit(naam = "Test bedrijf")))
+                .setBody(
+                    jacksonObjectMapper().writeValueAsString(
+                        MaatschappelijkeActiviteit(
+                            naam = "Test bedrijf",
+                            "90012768",
+                            "test",
+                            "20230101",
+                            MaterieleRegistratie("20020202"),
+                            1,
+                            "Test bedrijf",
+                            listOf(),
+                            listOf(),
+                            null,
+                        ),
+                    ),
+                )
                 .addHeader("Content-Type", "application/json"),
         )
 
-        haalCentraalClientConfig = HaalCentraalClientConfig(url = server.url("/").toString())
-        haalCentraalClientProvider = HaalCentraalClientProvider(haalCentraalClientConfig, null)
-        client = HandelsregisterClient(haalCentraalClientProvider)
+        haalCentraalHrClientConfig = HaalCentraalHrClientConfig(url = server.url("/").toString())
+        client = HandelsregisterClient(haalCentraalHrClientConfig)
     }
 
     @AfterEach
@@ -62,7 +73,7 @@ internal class HandelsregisterClientTest {
     @Test
     fun `should get bedrijf by without certificate`() {
         runBlocking {
-            val bedrijf = client.getMaatschappelijkeActiviteit(kvkNummer, mock())
+            val bedrijf = client.getMaatschappelijkeActiviteit(kvkNummer)
 
             assertThat(bedrijf).isNotNull
         }
