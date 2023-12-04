@@ -15,16 +15,17 @@
  */
 package nl.nlportal.haalcentraal.all.graphql
 
+import graphql.GraphQLContext
+import graphql.schema.DataFetchingEnvironment
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
+import nl.nlportal.haalcentraal.hr.domain.MaterieleRegistratie
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.haalcentraal.brp.domain.persoon.PersoonNaam
 import nl.nlportal.haalcentraal.brp.service.HaalCentraalBrpService
 import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 import nl.nlportal.haalcentraal.hr.service.HandelsregisterService
-import graphql.GraphQLContext
-import graphql.schema.DataFetchingEnvironment
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -61,7 +62,18 @@ internal class GemachtigdeQueryTest {
             ),
         )
         whenever(handelsregisterService.getGemachtigde(authentication)).thenReturn(
-            MaatschappelijkeActiviteit("test"),
+            MaatschappelijkeActiviteit(
+                naam = "Test bedrijf",
+                "90012768",
+                "test",
+                "20230101",
+                MaterieleRegistratie("20020202"),
+                1,
+                "Test bedrijf",
+                listOf(),
+                listOf(),
+                null,
+            ),
         )
 
         val gemachtigde = query.getGemachtigde(environment)
@@ -69,6 +81,6 @@ internal class GemachtigdeQueryTest {
         verify(handelsregisterService).getGemachtigde(authentication)
 
         assertEquals("test", gemachtigde.persoon?.aanhef)
-        assertEquals("test", gemachtigde.bedrijf?.naam)
+        assertEquals("Test bedrijf", gemachtigde.bedrijf?.naam)
     }
 }

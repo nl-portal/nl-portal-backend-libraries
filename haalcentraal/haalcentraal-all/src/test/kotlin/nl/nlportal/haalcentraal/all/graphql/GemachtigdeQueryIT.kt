@@ -18,6 +18,7 @@ package nl.nlportal.haalcentraal.all.graphql
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.haalcentraal.all.TestHelper
 import nl.nlportal.haalcentraal.client.HaalCentraalClientConfig
+import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrClientConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -38,6 +39,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 internal class GemachtigdeQueryIT(
     @Autowired private val testClient: WebTestClient,
     @Autowired private val haalCentraalClientConfig: HaalCentraalClientConfig,
+    @Autowired private val haalCentraalHrClientConfig: HaalCentraalHrClientConfig,
 ) {
     lateinit var server: MockWebServer
 
@@ -48,6 +50,7 @@ internal class GemachtigdeQueryIT(
         server.start()
 
         haalCentraalClientConfig.url = server.url("/").toString()
+        haalCentraalHrClientConfig.url = server.url("/").toString()
     }
 
     @AfterEach
@@ -135,7 +138,7 @@ internal class GemachtigdeQueryIT(
             override fun dispatch(request: RecordedRequest): MockResponse {
                 val response = when (request.path?.substringBefore('?')) {
                     "/brp/ingeschrevenpersonen/999993847" -> TestHelper.mockResponseFromFile("/data/get-ingeschreven-persoon.json")
-                    "/handelsregister/v1/maatschappelijkeactiviteiten/90012768" -> TestHelper.mockResponseFromFile("/data/get-maatschappelijke-activiteiten.json")
+                    "/basisprofielen/90012768" -> TestHelper.mockResponseFromFile("/data/get-maatschappelijke-activiteiten.json")
                     else -> MockResponse().setResponseCode(404)
                 }
                 return response

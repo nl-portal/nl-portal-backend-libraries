@@ -13,21 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.haalcentraal.hr.domain
+package nl.nlportal.haalcentraal.hr.client
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import nl.nlportal.core.ssl.Ssl
+import org.springframework.boot.context.properties.ConfigurationProperties
 
-data class MaatschappelijkeActiviteit(
-    val naam: String,
-    val kvkNummer: String,
-    val indNonMailing: String?,
-    val formeleRegistratiedatum: String?,
-    val materieleRegistratie: MaterieleRegistratie?,
-    val totaalWerkzamePersonen: Int?,
-    val statutaireNaam: String?,
-    val handelsnamen: List<HandelsNaam>?,
-    val sbiActiviteiten: List<SbiActiviteit>?,
-
-    @JsonProperty("_embedded")
-    val embedded: Embedded?,
+@ConfigurationProperties(prefix = "nl-portal.haalcentraal.hr", ignoreUnknownFields = true)
+data class HaalCentraalHrClientConfig(
+    var url: String = "",
+    val apiKey: String? = null,
+    val ssl: Ssl? = null,
 )
