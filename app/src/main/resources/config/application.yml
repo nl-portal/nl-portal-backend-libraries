@@ -107,15 +107,24 @@ nl-portal:
         url: http://localhost:8010
         token: 182c13e2209161852c53cef53a879f7a2f923430
     haalcentraal:
-    #        url: ${VALTIMO_HAALCENTRAAL_URL}
-    #        apiKey: ${VALTIMO_HAALCENTRAAL_APIKEY}
-    #        ssl:
-    #            enabled: ${VALTIMO_HAALCENTRAAL_SSL_ENABLED}
-    #            key:
-    #                key: ${VALTIMO_HAALCENTRAAL_SSL_KEY_KEY}
-    #                certChain: ${VALTIMO_HAALCENTRAAL_SSL_KEY_CERT_CHAIN}
-    #                keyPassword: ${VALTIMO_HAALCENTRAAL_SSL_KEY_KEY_PASSWORD}
-    #            trustedCertificate: ${VALTIMO_HAALCENTRAAL_SSL_TRUSTED_CERTIFICATE}
+        #hr:
+            #api-key: ${VALTIMO_HAALCENTRAAL_HR_APIKEY}
+            #ssl:
+                #trusted-certificate: ${VALTIMO_HAALCENTRAAL_HR_SSL_TRUSTED_CERTIFICATE}
+                #key:
+                    #key: ${VALTIMO_HAALCENTRAAL_HR_SSL_KEY_KEY}
+                    #certChain: ${VALTIMO_HAALCENTRAAL_HR_SSL_KEY_CERT_CHAIN}
+                    #keyPassword: ${VALTIMO_HAALCENTRAAL_HR_SSL_KEY_KEY_PASSWORD}
+            #url: ${VALTIMO_HAALCENTRAAL_HR_URL}
+    #   url: ${VALTIMO_HAALCENTRAAL_URL}
+    #   apiKey: ${VALTIMO_HAALCENTRAAL_APIKEY}
+    #   ssl:
+    #     enabled: ${VALTIMO_HAALCENTRAAL_SSL_ENABLED}
+    #     key:
+    #        key: ${VALTIMO_HAALCENTRAAL_SSL_KEY_KEY}
+    #        certChain: ${VALTIMO_HAALCENTRAAL_SSL_KEY_CERT_CHAIN}
+    #        keyPassword: ${VALTIMO_HAALCENTRAAL_SSL_KEY_KEY_PASSWORD}
+    #     trustedCertificate: ${VALTIMO_HAALCENTRAAL_SSL_TRUSTED_CERTIFICATE}
     cors:
         -   path: "/**"
             config:

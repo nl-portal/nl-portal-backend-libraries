@@ -15,23 +15,25 @@
  */
 package nl.nlportal.haalcentraal.hr.autoconfiguration
 
-import nl.nlportal.haalcentraal.client.HaalCentraalClientProvider
+import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrClientConfig
 import nl.nlportal.haalcentraal.hr.client.HandelsregisterClient
 import nl.nlportal.haalcentraal.hr.graphql.HandelsregisterQuery
 import nl.nlportal.haalcentraal.hr.service.HandelsregisterService
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
+@EnableConfigurationProperties(HaalCentraalHrClientConfig::class)
 class HandelsregisterAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(HandelsregisterClient::class)
     fun handelsregisterClient(
-        haalCentraalClientProvider: HaalCentraalClientProvider,
+        haalCentraalHrClientConfig: HaalCentraalHrClientConfig,
     ): HandelsregisterClient {
-        return HandelsregisterClient(haalCentraalClientProvider)
+        return HandelsregisterClient(haalCentraalHrClientConfig)
     }
 
     @Bean
