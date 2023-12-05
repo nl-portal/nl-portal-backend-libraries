@@ -25,7 +25,7 @@ internal object TestVersions {
     const val kotlinCoroutines = "1.7.3"
     const val mockitoKotlin = "5.1.0"
     const val okHttp3 = "4.12.0"
-    const val postgresql = "42.6.0"
+    const val postgresql = "42.7.0"
 }
 
 object ApiVersions {

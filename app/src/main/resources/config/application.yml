@@ -36,7 +36,7 @@ spring:
             auto-commit: false
             poolName: "gzac-portal-pool"
     jpa:
-        database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
         database: postgresql
         show_sql: true
         open-in-view: false
@@ -125,9 +125,10 @@ nl-portal:
     #        certChain: ${VALTIMO_HAALCENTRAAL_SSL_KEY_CERT_CHAIN}
     #        keyPassword: ${VALTIMO_HAALCENTRAAL_SSL_KEY_KEY_PASSWORD}
     #     trustedCertificate: ${VALTIMO_HAALCENTRAAL_SSL_TRUSTED_CERTIFICATE}
-    cors:
-        -   path: "/**"
-            config:
-                allowedHeaders: "*"
-                allowedOrigins: "*"
-                allowedMethods: "*"
+    security:
+      cors:
+          -   path: "/**"
+              config:
+                  allowedHeaders: "*"
+                  allowedOrigins: "*"
+                  allowedMethods: "*"

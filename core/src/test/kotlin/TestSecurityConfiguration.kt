@@ -13,14 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.task
+package nl.nlportal.core
 
-import nl.nlportal.core.security.OauthSecurityAutoConfiguration
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.ObjectProvider
-import org.springframework.boot.SpringApplication
-import org.springframework.boot.SpringBootConfiguration
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.security.SecurityProperties
 import org.springframework.context.annotation.Bean
@@ -30,13 +26,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.util.regex.Pattern
 
-@SpringBootConfiguration
-@EnableAutoConfiguration(exclude = [OauthSecurityAutoConfiguration::class])
-class TaskTestConfiguration {
-
-    fun main(args: Array<String>) {
-        SpringApplication.run(TaskTestConfiguration::class.java, *args)
-    }
+class TestSecurityConfiguration {
 
     private val NOOP_PASSWORD_PREFIX = "{noop}"
 
