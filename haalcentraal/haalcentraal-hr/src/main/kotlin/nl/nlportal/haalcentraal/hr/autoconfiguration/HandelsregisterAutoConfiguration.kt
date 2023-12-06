@@ -44,7 +44,10 @@ class HandelsregisterAutoConfiguration {
         haalCentraalHrClientConfig: HaalCentraalHrClientConfig,
         @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
     ): HandelsregisterClient {
-        return HandelsregisterClient(haalCentraalHrClientConfig)
+        return HandelsregisterClient(
+            haalCentraalHrClientConfig,
+            clientSslContextResolver
+        )
     }
 
     @Bean
