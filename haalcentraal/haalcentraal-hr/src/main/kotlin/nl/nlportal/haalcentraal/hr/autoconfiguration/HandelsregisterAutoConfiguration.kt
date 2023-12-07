@@ -46,7 +46,7 @@ class HandelsregisterAutoConfiguration {
     ): HandelsregisterClient {
         return HandelsregisterClient(
             haalCentraalHrClientConfig,
-            clientSslContextResolver
+            clientSslContextResolver,
         )
     }
 
