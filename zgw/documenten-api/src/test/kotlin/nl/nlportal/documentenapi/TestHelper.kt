@@ -18,7 +18,6 @@ package nl.nlportal.documentenapi
 import okhttp3.mockwebserver.MockResponse
 
 object TestHelper {
-
     fun mockResponseFromFile(fileName: String): MockResponse {
         return MockResponse()
             .addHeader("Content-Type", "application/json; charset=utf-8")
@@ -26,6 +25,5 @@ object TestHelper {
             .setBody(readFileAsString(fileName))
     }
 
-    private fun readFileAsString(fileName: String): String =
-        this::class.java.getResource(fileName)!!.readText(Charsets.UTF_8)
+    private fun readFileAsString(fileName: String): String = this::class.java.getResource(fileName)!!.readText(Charsets.UTF_8)
 }

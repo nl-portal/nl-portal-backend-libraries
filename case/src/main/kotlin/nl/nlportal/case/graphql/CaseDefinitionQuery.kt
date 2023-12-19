@@ -20,7 +20,6 @@ import com.expediagroup.graphql.server.operations.Query
 import nl.nlportal.case.service.CaseDefinitionService
 
 class CaseDefinitionQuery(val caseDefinitionService: CaseDefinitionService) : Query {
-
     @GraphQLDescription("retrieves all available case definitions")
     fun allCaseDefinitions(): List<CaseDefinition> {
         return caseDefinitionService.getAllCaseDefinitions().map {

@@ -18,12 +18,11 @@ package nl.nlportal.case.graphql
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Mutation
 import com.fasterxml.jackson.databind.node.ObjectNode
+import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.case.service.CaseService
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
-import graphql.schema.DataFetchingEnvironment
 
 class CreateCaseMutation(private val caseService: CaseService) : Mutation {
-
     @GraphQLDescription("Convert submission to json return resulting data")
     fun processSubmission(
         submission: ObjectNode,
@@ -31,12 +30,13 @@ class CreateCaseMutation(private val caseService: CaseService) : Mutation {
         initialStatus: String? = null,
         dfe: DataFetchingEnvironment,
     ): CaseCreated {
-        val case = caseService.create(
-            caseDefinitionId,
-            submission,
-            dfe.graphQlContext.get(AUTHENTICATION_KEY),
-            initialStatus,
-        )
+        val case =
+            caseService.create(
+                caseDefinitionId,
+                submission,
+                dfe.graphQlContext.get(AUTHENTICATION_KEY),
+                initialStatus,
+            )
         return CaseCreated(case.caseId.value)
     }
 }

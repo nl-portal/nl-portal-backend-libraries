@@ -30,6 +30,7 @@ data class ObjectSearchParameter(
         }
     }
 }
+
 enum class Comparator(val value: String) {
     EQUAL_TO("exact"),
     GREATER_THAN("gt"),

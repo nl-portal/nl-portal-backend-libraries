@@ -16,40 +16,33 @@
 package nl.nlportal.case.domain
 
 import com.fasterxml.jackson.databind.node.ObjectNode
+import jakarta.persistence.Column
+import jakarta.persistence.Embedded
+import jakarta.persistence.EmbeddedId
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 import nl.nlportal.core.util.ObjectValidator
 import nl.nlportal.data.domain.AggregateRoot
 import nl.nlportal.data.domain.DomainEvent
 import org.hibernate.validator.constraints.Length
 import org.springframework.data.domain.Persistable
 import java.time.LocalDateTime
-import jakarta.persistence.Column
-import jakarta.persistence.Embedded
-import jakarta.persistence.EmbeddedId
-import jakarta.persistence.Entity
-import jakarta.persistence.Table
 
 @Entity
 @Table(name = "case_definition")
 data class CaseDefinition(
-
     @EmbeddedId
     val caseDefinitionId: CaseDefinitionId,
-
     @Column(name = "external_id", columnDefinition = "VARCHAR(1024)")
     @field:Length(max = 1024)
     var externalId: String? = null,
-
     @Embedded
     var schema: Schema,
-
     @Embedded
     val statusDefinition: StatusDefinition,
-
     @Column(name = "created_on", columnDefinition = "TIMESTAMPTZ", nullable = false)
     val createdOn: LocalDateTime = LocalDateTime.now(),
-
 ) : Persistable<CaseDefinitionId>, AggregateRoot<DomainEvent>() {
-
     init {
         ObjectValidator.validate(this)
     }

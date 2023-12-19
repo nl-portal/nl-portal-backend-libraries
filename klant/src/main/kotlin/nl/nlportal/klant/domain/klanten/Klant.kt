@@ -22,14 +22,10 @@ data class Klant(
     val url: String,
     @GraphQLIgnore
     val bronorganisatie: String,
-
     @GraphQLIgnore
     val klantnummer: String,
-
     @GraphQLIgnore
     val websiteUrl: String,
-
     var telefoonnummer: String?,
-
     var emailadres: String?,
 )

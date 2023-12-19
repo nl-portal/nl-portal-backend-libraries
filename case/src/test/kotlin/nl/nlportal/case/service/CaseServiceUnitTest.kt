@@ -17,8 +17,6 @@ package nl.nlportal.case.service
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory
 import com.fasterxml.jackson.databind.node.ObjectNode
-import nl.nlportal.messaging.`in`.UpdateExternalIdPortalCaseMessage
-import nl.nlportal.messaging.`in`.UpdateStatusPortalCaseMessage
 import nl.nlportal.case.BaseTest
 import nl.nlportal.case.domain.Case
 import nl.nlportal.case.domain.CaseDefinitionId
@@ -26,6 +24,8 @@ import nl.nlportal.case.domain.CaseId
 import nl.nlportal.case.domain.Status
 import nl.nlportal.case.domain.Submission
 import nl.nlportal.core.util.Mapper
+import nl.nlportal.messaging.`in`.UpdateExternalIdPortalCaseMessage
+import nl.nlportal.messaging.`in`.UpdateStatusPortalCaseMessage
 import org.assertj.core.api.Assertions.assertThat
 import org.everit.json.schema.ValidationException
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -35,7 +35,8 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.springframework.security.core.Authentication
-import java.util.*
+import java.util.UUID
+import java.util.Optional
 
 class CaseServiceUnitTest : BaseTest() {
     lateinit var caseService: CaseService
@@ -55,63 +56,68 @@ class CaseServiceUnitTest : BaseTest() {
     @Test
     fun `should not create case with empty submission`() {
         val submission = Mapper.get().readValue("{}", ObjectNode::class.java)
-        val illegalStateException = assertThrows(IllegalStateException::class.java) {
-            caseService.create(
-                caseDefinition.caseDefinitionId.value,
-                submission,
-                authentication,
-            )
-        }
+        val illegalStateException =
+            assertThrows(IllegalStateException::class.java) {
+                caseService.create(
+                    caseDefinition.caseDefinitionId.value,
+                    submission,
+                    authentication,
+                )
+            }
         assertThat(illegalStateException).hasMessage("Empty case data")
     }
 
     @Test
     fun `should eliminate unknown properties from submission prior case def validation`() {
         val submission = Mapper.get().readValue("{\"unknownProperty\" : \"myName\"}", ObjectNode::class.java)
-        val illegalStateException = assertThrows(IllegalStateException::class.java) {
-            caseService.create(
-                caseDefinition.caseDefinitionId.value,
-                submission,
-                authentication,
-            )
-        }
+        val illegalStateException =
+            assertThrows(IllegalStateException::class.java) {
+                caseService.create(
+                    caseDefinition.caseDefinitionId.value,
+                    submission,
+                    authentication,
+                )
+            }
         assertThat(illegalStateException).hasMessage("Empty case data")
     }
 
     @Test
     fun `should not create case due to size validation exception`() {
         val submission = Mapper.get().readValue("{\"firstName\" : \"moreThan15CharsTooLong\"}", ObjectNode::class.java)
-        val validationException = assertThrows(ValidationException::class.java) {
-            caseService.create(
-                caseDefinition.caseDefinitionId.value,
-                submission,
-                authentication,
-            )
-        }
+        val validationException =
+            assertThrows(ValidationException::class.java) {
+                caseService.create(
+                    caseDefinition.caseDefinitionId.value,
+                    submission,
+                    authentication,
+                )
+            }
         assertThat(validationException).hasMessage("#/firstName: expected maxLength: 15, actual: 22")
     }
 
     @Test
     fun `should not create case due to type validation exception`() {
         val submission = Mapper.get().readValue("{\"firstName\" : 1}", ObjectNode::class.java)
-        val validationException = assertThrows(ValidationException::class.java) {
-            caseService.create(
-                caseDefinition.caseDefinitionId.value,
-                submission,
-                authentication,
-            )
-        }
+        val validationException =
+            assertThrows(ValidationException::class.java) {
+                caseService.create(
+                    caseDefinition.caseDefinitionId.value,
+                    submission,
+                    authentication,
+                )
+            }
         assertThat(validationException).hasMessage("#/firstName: expected type: String, found: Integer")
     }
 
     @Test
     fun `should create case with valid submission`() {
         val submission = Mapper.get().readValue("{\"firstName\" : \"myName\"}", ObjectNode::class.java)
-        val case = caseService.create(
-            caseDefinition.caseDefinitionId.value,
-            submission,
-            authentication,
-        )
+        val case =
+            caseService.create(
+                caseDefinition.caseDefinitionId.value,
+                submission,
+                authentication,
+            )
 
         assertNotNull(case)
         assertThat(case.caseId).isNotNull

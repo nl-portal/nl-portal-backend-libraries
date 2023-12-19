@@ -38,7 +38,6 @@ open class TaakService(
     private val objectsApiClient: ObjectsApiClient,
     private val objectsApiTaskConfig: TaakObjectConfig,
 ) {
-
     suspend fun getTaken(
         pageNumber: Int,
         pageSize: Int,
@@ -69,7 +68,10 @@ open class TaakService(
         ).let { TaakPage.fromResultPage(pageNumber, pageSize, it) }
     }
 
-    suspend fun getTaakById(id: UUID, authentication: CommonGroundAuthentication): Taak {
+    suspend fun getTaakById(
+        id: UUID,
+        authentication: CommonGroundAuthentication,
+    ): Taak {
         val taak = Taak.fromObjectsApiTask(getObjectsApiTaak(id, authentication))
         // do validation if the user is authenticated for this task
         val isAuthorized = isAuthorizedForTaak(authentication, taak)
@@ -79,7 +81,11 @@ open class TaakService(
         throw IllegalStateException("Access denied to this taak")
     }
 
-    suspend fun submitTaak(id: UUID, submission: ObjectNode, authentication: CommonGroundAuthentication): Taak {
+    suspend fun submitTaak(
+        id: UUID,
+        submission: ObjectNode,
+        authentication: CommonGroundAuthentication,
+    ): Taak {
         val objectsApiTask = getObjectsApiTaak(id, authentication)
         assert(objectsApiTask.record.data.status == TaakStatus.OPEN)
         val submissionAsMap = Mapper.get().convertValue(submission, object : TypeReference<Map<String, Any>>() {})
@@ -123,14 +129,20 @@ open class TaakService(
         }
     }
 
-    private fun createIdentificatieSearchParameters(type: String, value: String): List<ObjectSearchParameter> {
+    private fun createIdentificatieSearchParameters(
+        type: String,
+        value: String,
+    ): List<ObjectSearchParameter> {
         return listOf(
             ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, type),
             ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, value),
         )
     }
 
-    private fun isAuthorizedForTaak(authentication: CommonGroundAuthentication, taak: Taak): Boolean {
+    private fun isAuthorizedForTaak(
+        authentication: CommonGroundAuthentication,
+        taak: Taak,
+    ): Boolean {
         return when (authentication) {
             is BurgerAuthentication -> {
                 taak.identificatie.type.lowercase() == "bsn" && taak.identificatie.value == authentication.getBsn()

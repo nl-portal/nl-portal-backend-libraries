@@ -40,24 +40,31 @@ class ZakenApiService(
     private val documentenApiService: DocumentenApiService,
     private val objectsApiClient: ObjectsApiClient,
 ) {
-
-    suspend fun getZaken(page: Int, authentication: CommonGroundAuthentication): List<Zaak> {
+    suspend fun getZaken(
+        page: Int,
+        authentication: CommonGroundAuthentication,
+    ): List<Zaak> {
         return when (authentication) {
             is BurgerAuthentication -> zakenApiClient.getZaken(page, authentication.getBsn())
             // we will need to change this when a better filter becomes available for kvk nummer in zaak list endpoint
-            is BedrijfAuthentication -> getZaakRollen(null, authentication.getKvkNummer(), null)
-                .map { getZaakFromZaakApi(extractId(it.zaak)) }
+            is BedrijfAuthentication ->
+                getZaakRollen(null, authentication.getKvkNummer(), null)
+                    .map { getZaakFromZaakApi(extractId(it.zaak)) }
             else -> throw IllegalArgumentException("Cannot get zaken for this user")
         }
     }
 
-    suspend fun getZaak(id: UUID, authentication: CommonGroundAuthentication): Zaak {
+    suspend fun getZaak(
+        id: UUID,
+        authentication: CommonGroundAuthentication,
+    ): Zaak {
         // get rollen for zaak based on current user
-        val rollen: List<ZaakRol> = when (authentication) {
-            is BurgerAuthentication -> getZaakRollen(authentication.getBsn(), null, id)
-            is BedrijfAuthentication -> getZaakRollen(null, authentication.getKvkNummer(), id)
-            else -> throw IllegalArgumentException("Authentication not (yet) supported")
-        }
+        val rollen: List<ZaakRol> =
+            when (authentication) {
+                is BurgerAuthentication -> getZaakRollen(authentication.getBsn(), null, id)
+                is BedrijfAuthentication -> getZaakRollen(null, authentication.getKvkNummer(), id)
+                else -> throw IllegalArgumentException("Authentication not (yet) supported")
+            }
 
         // if no rol is found, the current user does not have access to this zaak
         if (rollen.isEmpty()) {
@@ -91,11 +98,12 @@ class ZakenApiService(
 
     suspend fun getZaakDetails(zaakUrl: String): ZaakDetails {
         val zaakId = extractId(zaakUrl)
-        val zaakDetailsObjects = getZaakObjecten(zaakId)
-            .filter { it.objectTypeOverige.lowercase(Locale.getDefault()).contains("zaakdetails") }
-            .map { getObjectApiZaakDetails(it.objectUrl) }
-            .map { it?.record?.data?.data!! }
-            .flatten()
+        val zaakDetailsObjects =
+            getZaakObjecten(zaakId)
+                .filter { it.objectTypeOverige.lowercase(Locale.getDefault()).contains("zaakdetails") }
+                .map { getObjectApiZaakDetails(it.objectUrl) }
+                .map { it?.record?.data?.data!! }
+                .flatten()
         return ZaakDetails(zaakUrl, zaakDetailsObjects)
     }
 
@@ -112,7 +120,11 @@ class ZakenApiService(
         return zaakObjecten
     }
 
-    private suspend fun getZaakRollen(bsn: String?, kvknummer: String?, zaakId: UUID?): List<ZaakRol> {
+    private suspend fun getZaakRollen(
+        bsn: String?,
+        kvknummer: String?,
+        zaakId: UUID?,
+    ): List<ZaakRol> {
         val rollen = arrayListOf<ZaakRol>()
         var nextPageNumber: Int? = 1
 
@@ -125,9 +137,7 @@ class ZakenApiService(
         return rollen
     }
 
-    private suspend fun getObjectApiZaakDetails(
-        objectUrl: String,
-    ): ObjectsApiObject<ZaakDetailsObject>? {
+    private suspend fun getObjectApiZaakDetails(objectUrl: String): ObjectsApiObject<ZaakDetailsObject>? {
         return objectsApiClient.getObjectByUrl<ZaakDetailsObject>(
             url = objectUrl,
         )

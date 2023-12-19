@@ -44,9 +44,7 @@ class LiquibaseRunnerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(LiquibaseInitializationEventListener::class)
-    fun liquibaseInitializationEventListener(
-        liquibaseRunner: LiquibaseRunner,
-    ): LiquibaseInitializationEventListener {
+    fun liquibaseInitializationEventListener(liquibaseRunner: LiquibaseRunner): LiquibaseInitializationEventListener {
         return LiquibaseInitializationEventListener(liquibaseRunner)
     }
 }

@@ -16,17 +16,16 @@
 package nl.nlportal.case.domain
 
 import com.fasterxml.jackson.databind.node.ObjectNode
-import nl.nlportal.case.domain.meta.MetaJsonSchemaV7Draft
-import nl.nlportal.core.util.ObjectValidator
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
+import nl.nlportal.case.domain.meta.MetaJsonSchemaV7Draft
+import nl.nlportal.core.util.ObjectValidator
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import org.json.JSONObject
 
 @Embeddable
 data class Schema(
-
     @Column(name = "`schema`", columnDefinition = "json")
     @JdbcTypeCode(SqlTypes.JSON)
     var value: ObjectNode,
@@ -42,11 +41,12 @@ data class Schema(
         }
         // If there are some properties missing from input which have "default" values in the schema,
         // then they will be set by the validator during validation.
-        val schema = SchemaLoaderBuilder.get()
-            .schemaJson(JSONObject(value.toString()))
-            .build()
-            .load()
-            .build()
+        val schema =
+            SchemaLoaderBuilder.get()
+                .schemaJson(JSONObject(value.toString()))
+                .build()
+                .load()
+                .build()
         Validator.get().performValidation(schema, caseData)
     }
 }

@@ -22,9 +22,11 @@ import nl.nlportal.documentenapi.domain.DocumentContent
 import java.util.UUID
 
 class DocumentContentQuery(private val documentenApiService: DocumentenApiService) : Query {
-
     @GraphQLDescription("Gets a document content by id as base64 encoded")
-    suspend fun getDocumentContent(documentApi: String, id: UUID): DocumentContent {
+    suspend fun getDocumentContent(
+        documentApi: String,
+        id: UUID,
+    ): DocumentContent {
         return documentenApiService.getDocumentContent(id, documentApi)
     }
 }

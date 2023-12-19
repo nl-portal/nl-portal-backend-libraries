@@ -45,15 +45,17 @@ internal class CommonGroundAuthenticationConverterTest {
 
     @Test
     fun `converter throws exception when JWT has no KvK nummer or BSN`() {
-        val jwt = Jwt
-            .withTokenValue("token")
-            .header("alg", "none")
-            .claim("random", "1234")
-            .build()
+        val jwt =
+            Jwt
+                .withTokenValue("token")
+                .header("alg", "none")
+                .claim("random", "1234")
+                .build()
 
-        val exception = assertThrows(UserTypeUnsupportedException::class.java) {
-            converter.convert(jwt).block()
-        }
+        val exception =
+            assertThrows(UserTypeUnsupportedException::class.java) {
+                converter.convert(jwt).block()
+            }
         assertEquals("User type not supported", exception.message)
     }
 }

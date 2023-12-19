@@ -37,7 +37,6 @@ import java.util.UUID
 
 @Transactional
 internal class TaskQueryTest : BaseTest() {
-
     lateinit var taskQuery: TaskQuery
 
     @Mock

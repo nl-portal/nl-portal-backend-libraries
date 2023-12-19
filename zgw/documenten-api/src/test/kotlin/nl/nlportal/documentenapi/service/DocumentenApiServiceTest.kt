@@ -34,41 +34,44 @@ import org.springframework.boot.test.context.SpringBootTest
 
 @ExperimentalCoroutinesApi
 @SpringBootTest
-internal class DocumentenApiServiceTest(@Autowired private var documentApisConfig: DocumentApisConfig) {
-
+internal class DocumentenApiServiceTest(
+    @Autowired private var documentApisConfig: DocumentApisConfig,
+) {
     var documentenApiClient: DocumentenApiClient = mock()
     var documentenApiService: DocumentenApiService = DocumentenApiService(documentenApiClient, documentApisConfig)
 
     @Test
-    fun `should find single document by UUID`() = runTest {
-        val documentId = UUID.randomUUID()
+    fun `should find single document by UUID`() =
+        runTest {
+            val documentId = UUID.randomUUID()
 
-        whenever(documentenApiClient.getDocument(documentId, "localhost")).thenReturn(
-            getTestDocument(null),
-        )
+            whenever(documentenApiClient.getDocument(documentId, "localhost")).thenReturn(
+                getTestDocument(null),
+            )
 
-        val document = documentenApiService.getDocument(documentId, "localhost")
+            val document = documentenApiService.getDocument(documentId, "localhost")
 
-        verify(documentenApiClient, times(1)).getDocument(documentId, "localhost")
+            verify(documentenApiClient, times(1)).getDocument(documentId, "localhost")
 
-        assertDocumentReturned(document)
-    }
+            assertDocumentReturned(document)
+        }
 
     @Test
-    fun `should find single document by URI String`() = runTest {
-        val documentId = UUID.randomUUID()
-        val documentURI = URI.create("https://example.org/documenten/api/v1/$documentId").toASCIIString()
+    fun `should find single document by URI String`() =
+        runTest {
+            val documentId = UUID.randomUUID()
+            val documentURI = URI.create("https://example.org/documenten/api/v1/$documentId").toASCIIString()
 
-        whenever(documentenApiClient.getDocument(documentId, "example")).thenReturn(
-            getTestDocument(null),
-        )
+            whenever(documentenApiClient.getDocument(documentId, "example")).thenReturn(
+                getTestDocument(null),
+            )
 
-        val document = documentenApiService.getDocument(documentURI)
+            val document = documentenApiService.getDocument(documentURI)
 
-        verify(documentenApiClient, times(1)).getDocument(documentId, "example")
+            verify(documentenApiClient, times(1)).getDocument(documentId, "example")
 
-        assertDocumentReturned(document)
-    }
+            assertDocumentReturned(document)
+        }
 
     private fun getTestDocument(status: DocumentStatus?): Document {
         return Document(

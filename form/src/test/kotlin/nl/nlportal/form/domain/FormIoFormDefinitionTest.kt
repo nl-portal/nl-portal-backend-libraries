@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test
 import java.util.UUID
 
 internal class FormIoFormDefinitionTest {
-
     @BeforeEach
     fun setUp() {
     }

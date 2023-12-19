@@ -24,13 +24,13 @@ import org.mockito.Mockito.verify
 
 @ExperimentalCoroutinesApi
 internal class FormQueryTest {
-
     val formService = mock<FormService>()
     val query = FormQuery(formService)
 
     @Test
-    fun `getFormList calls service`() = runTest {
-        query.getFormList()
-        verify(formService).getForms()
-    }
+    fun `getFormList calls service`() =
+        runTest {
+            query.getFormList()
+            verify(formService).getForms()
+        }
 }

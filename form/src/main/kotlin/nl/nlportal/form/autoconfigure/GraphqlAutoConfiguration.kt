@@ -23,7 +23,6 @@ import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
 class GraphqlAutoConfiguration {
-
     @Bean
     fun formDefinitionQuery(
         formIoFormDefinitionService: FormIoFormDefinitionService,

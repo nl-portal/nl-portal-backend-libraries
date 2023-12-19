@@ -26,7 +26,6 @@ import java.util.function.Supplier
 
 @AutoConfiguration
 class MessagingAutoConfiguration {
-
     @Bean
     fun sink(): Sinks.Many<PortalMessage> {
         return Sinks.many().multicast().onBackpressureBuffer()
@@ -34,12 +33,13 @@ class MessagingAutoConfiguration {
 
     // Supplier
     @Bean
-    fun portalEventSupplier(sink: Sinks.Many<PortalMessage>): Supplier<Flux<Message<PortalMessage>?>> = Supplier {
-        sink.asFlux().map { e ->
-            MessageBuilder
-                .withPayload(e)
-                .setHeader("spring.cloud.stream.sendto.destination", e.destination)
-                .build()
+    fun portalEventSupplier(sink: Sinks.Many<PortalMessage>): Supplier<Flux<Message<PortalMessage>?>> =
+        Supplier {
+            sink.asFlux().map { e ->
+                MessageBuilder
+                    .withPayload(e)
+                    .setHeader("spring.cloud.stream.sendto.destination", e.destination)
+                    .build()
+            }
         }
-    }
 }

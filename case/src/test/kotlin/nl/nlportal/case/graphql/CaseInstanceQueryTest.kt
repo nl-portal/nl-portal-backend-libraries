@@ -15,11 +15,11 @@
  */
 package nl.nlportal.case.graphql
 
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import graphql.GraphQLContext
 import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.case.BaseTest
 import nl.nlportal.case.service.CaseService
+import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
@@ -29,7 +29,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class CaseInstanceQueryTest : BaseTest() {
-
     var environment = mock(DataFetchingEnvironment::class.java)
     var authentication = mock(Authentication::class.java)
     var caseService = mock(CaseService::class.java)
@@ -47,10 +46,11 @@ class CaseInstanceQueryTest : BaseTest() {
         `when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
         `when`(authentication.name).thenReturn(userId)
 
-        val allCaseInstances = caseInstanceQuery.allCaseInstances(
-            CaseInstanceOrdering(createdOn = Sort.ASC),
-            environment,
-        )
+        val allCaseInstances =
+            caseInstanceQuery.allCaseInstances(
+                CaseInstanceOrdering(createdOn = Sort.ASC),
+                environment,
+            )
 
         assertThat(allCaseInstances.first().createdOn).isEqualTo(yesterday.format(DateTimeFormatter.ISO_DATE_TIME))
         assertThat(allCaseInstances.last().createdOn).isEqualTo(today.format(DateTimeFormatter.ISO_DATE_TIME))
@@ -66,10 +66,11 @@ class CaseInstanceQueryTest : BaseTest() {
         `when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
         `when`(authentication.name).thenReturn(userId)
 
-        val allCaseInstances = caseInstanceQuery.allCaseInstances(
-            CaseInstanceOrdering(createdOn = Sort.DESC),
-            environment,
-        )
+        val allCaseInstances =
+            caseInstanceQuery.allCaseInstances(
+                CaseInstanceOrdering(createdOn = Sort.DESC),
+                environment,
+            )
 
         assertThat(allCaseInstances.first().createdOn).isEqualTo(today.format(DateTimeFormatter.ISO_DATE_TIME))
         assertThat(allCaseInstances.last().createdOn).isEqualTo(yesterday.format(DateTimeFormatter.ISO_DATE_TIME))

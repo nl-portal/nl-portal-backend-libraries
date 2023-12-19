@@ -26,7 +26,6 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class GraphqlAutoConfiguration {
-
     @Bean
     @ConditionalOnMissingBean(CreateCaseMutation::class)
     fun createCaseMutation(caseService: CaseService): CreateCaseMutation {

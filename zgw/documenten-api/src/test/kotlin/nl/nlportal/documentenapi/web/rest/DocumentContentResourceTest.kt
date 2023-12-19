@@ -39,7 +39,6 @@ import reactor.core.publisher.Flux
 
 @ExperimentalCoroutinesApi
 class DocumentContentResourceTest {
-
     private val documentenApiClient: DocumentenApiClient = mock()
     private val documentenApiService: DocumentenApiService = mock()
     private val virusScanService: VirusScanService = mock()
@@ -48,31 +47,33 @@ class DocumentContentResourceTest {
     val document: Document = mock()
 
     @Test
-    fun `should fill http servlet response`() = runTest {
-        val uuid = UUID.randomUUID()
-        val testString = "This is a test string for the DataBuffer, it should end up in the result"
-        val fluxDataBuffer = getFluxDataBufferFromString(testString)
+    fun `should fill http servlet response`() =
+        runTest {
+            val uuid = UUID.randomUUID()
+            val testString = "This is a test string for the DataBuffer, it should end up in the result"
+            val fluxDataBuffer = getFluxDataBufferFromString(testString)
 
-        doReturn(fluxDataBuffer).`when`(documentenApiClient).getDocumentContentStream(uuid, "localhost")
-        whenever(documentenApiService.getDocument(uuid, "localhost")).thenReturn(document)
-        whenever(document.bestandsnaam).thenReturn("bestandsnaam.png")
+            doReturn(fluxDataBuffer).`when`(documentenApiClient).getDocumentContentStream(uuid, "localhost")
+            whenever(documentenApiService.getDocument(uuid, "localhost")).thenReturn(document)
+            whenever(document.bestandsnaam).thenReturn("bestandsnaam.png")
 
-        val result = downloadResource.downloadStreaming(uuid, "localhost")
+            val result = downloadResource.downloadStreaming(uuid, "localhost")
 
-        val bodyByteArray = result.body.let { it?.blockLast()?.asByteBuffer()?.array() }
-        assertNotNull(bodyByteArray)
-        val resultString = String(bodyByteArray!!, StandardCharsets.UTF_8)
+            val bodyByteArray = result.body.let { it?.blockLast()?.asByteBuffer()?.array() }
+            assertNotNull(bodyByteArray)
+            val resultString = String(bodyByteArray!!, StandardCharsets.UTF_8)
 
-        verify(documentenApiClient).getDocumentContentStream(uuid, "localhost")
-        assertEquals(testString, resultString)
-    }
+            verify(documentenApiClient).getDocumentContentStream(uuid, "localhost")
+            assertEquals(testString, resultString)
+        }
 
     fun getFluxDataBufferFromString(value: String): Flux<DataBuffer> {
-        val dataBuffer = DefaultDataBufferFactory()
-            .wrap(
-                ByteBuffer
-                    .wrap(value.toByteArray(Charset.defaultCharset())),
-            )
+        val dataBuffer =
+            DefaultDataBufferFactory()
+                .wrap(
+                    ByteBuffer
+                        .wrap(value.toByteArray(Charset.defaultCharset())),
+                )
 
         return Flux.just(dataBuffer) as Flux<DataBuffer>
     }

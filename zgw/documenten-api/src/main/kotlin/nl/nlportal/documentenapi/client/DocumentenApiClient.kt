@@ -48,17 +48,24 @@ class DocumentenApiClient(
     private val idTokenGenerator: IdTokenGenerator,
     private val clientSslContextResolver: ClientSslContextResolver? = null,
 ) {
-    suspend fun getDocument(id: UUID, documentApi: String): Document {
-        var document: Document = webClient(documentApi)
-            .get()
-            .uri("/enkelvoudiginformatieobjecten/$id")
-            .retrieve()
-            .awaitBody()
+    suspend fun getDocument(
+        id: UUID,
+        documentApi: String,
+    ): Document {
+        var document: Document =
+            webClient(documentApi)
+                .get()
+                .uri("/enkelvoudiginformatieobjecten/$id")
+                .retrieve()
+                .awaitBody()
         document.documentapi = documentApi
         return document
     }
 
-    suspend fun getDocumentContent(id: UUID, documentApi: String): ByteArray {
+    suspend fun getDocumentContent(
+        id: UUID,
+        documentApi: String,
+    ): ByteArray {
         return webClient(documentApi)
             .get()
             .uri("/enkelvoudiginformatieobjecten/$id/download")
@@ -67,7 +74,10 @@ class DocumentenApiClient(
             .awaitBody()
     }
 
-    fun getDocumentContentStream(id: UUID, documentApi: String): Flux<DataBuffer> {
+    fun getDocumentContentStream(
+        id: UUID,
+        documentApi: String,
+    ): Flux<DataBuffer> {
         return webClient(documentApi)
             .get()
             .uri("/enkelvoudiginformatieobjecten/$id/download")
@@ -76,13 +86,18 @@ class DocumentenApiClient(
             .bodyToFlux(DataBuffer::class.java)
     }
 
-    suspend fun postDocument(request: PostEnkelvoudiginformatieobjectRequest, documentContent: Flux<DataBuffer>, documentApi: String): Document {
+    suspend fun postDocument(
+        request: PostEnkelvoudiginformatieobjectRequest,
+        documentContent: Flux<DataBuffer>,
+        documentApi: String,
+    ): Document {
         request.inhoud = UUID.randomUUID().toString()
         val (requestPrefix, requestPostfix) = Mapper.get().writeValueAsString(request).split(request.inhoud!!)
 
-        val file = withContext(Dispatchers.IO) {
-            Files.createTempFile("tempDocumentUploadRequest", ".json")
-        }
+        val file =
+            withContext(Dispatchers.IO) {
+                Files.createTempFile("tempDocumentUploadRequest", ".json")
+            }
 
         file.outputStream().use { fileOutput ->
             requestPrefix.byteInputStream().copyTo(fileOutput)
@@ -97,17 +112,18 @@ class DocumentenApiClient(
             requestPostfix.byteInputStream().copyTo(fileOutput)
         }
 
-        val response = webClient(documentApi)
-            .post()
-            .uri("/enkelvoudiginformatieobjecten")
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON)
-            .body(
-                BodyInserters
-                    .fromResource(FileSystemResource(file)),
-            )
-            .retrieve()
-            .awaitBody<Document>()
+        val response =
+            webClient(documentApi)
+                .post()
+                .uri("/enkelvoudiginformatieobjecten")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(
+                    BodyInserters
+                        .fromResource(FileSystemResource(file)),
+                )
+                .retrieve()
+                .awaitBody<Document>()
 
         file.deleteIfExists()
         return response
@@ -127,10 +143,11 @@ class DocumentenApiClient(
                         var result = client
                         if (clientSslContextResolver != null) {
                             documentenApiConfig.ssl?.let {
-                                val sslContext = clientSslContextResolver.resolve(
-                                    it.key,
-                                    it.trustedCertificate,
-                                )
+                                val sslContext =
+                                    clientSslContextResolver.resolve(
+                                        it.key,
+                                        it.trustedCertificate,
+                                    )
 
                                 result = client.secure { builder -> builder.sslContext(sslContext) }
 

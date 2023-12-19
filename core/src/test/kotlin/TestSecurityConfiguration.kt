@@ -27,7 +27,6 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import java.util.regex.Pattern
 
 class TestSecurityConfiguration {
-
     private val NOOP_PASSWORD_PREFIX = "{noop}"
 
     private val PASSWORD_ALGORITHM_PATTERN: Pattern = Pattern.compile("^\\{.+}.*$")
@@ -43,12 +42,18 @@ class TestSecurityConfiguration {
         return MapReactiveUserDetailsService(userDetails)
     }
 
-    private fun getUserDetails(user: SecurityProperties.User, password: String): UserDetails {
+    private fun getUserDetails(
+        user: SecurityProperties.User,
+        password: String,
+    ): UserDetails {
         val roles: List<String> = user.getRoles()
         return User.withUsername(user.getName()).password(password).roles(StringUtils.join(roles)).build()
     }
 
-    private fun getOrDeducePassword(user: SecurityProperties.User, encoder: PasswordEncoder?): String {
+    private fun getOrDeducePassword(
+        user: SecurityProperties.User,
+        encoder: PasswordEncoder?,
+    ): String {
         val password: String = user.getPassword()
         if (user.isPasswordGenerated()) {
         }

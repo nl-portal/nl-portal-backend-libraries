@@ -22,7 +22,6 @@ data class HistoricStatus(
     val status: Status,
     val createdOn: LocalDateTime = LocalDateTime.now(),
 ) {
-
     init {
         ObjectValidator.validate(this)
     }

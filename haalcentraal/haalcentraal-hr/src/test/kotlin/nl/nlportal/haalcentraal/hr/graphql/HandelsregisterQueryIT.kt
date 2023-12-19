@@ -59,13 +59,14 @@ internal class HandelsregisterQueryIT(
     @Test
     @WithBedrijfUser("90012768")
     fun getNaam() {
-        val query = """
+        val query =
+            """
             query {
                 getBedrijf {
                     naam
                 }
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val basePath = "$.data.getBedrijf"
 
@@ -82,16 +83,18 @@ internal class HandelsregisterQueryIT(
     }
 
     private fun setupMockServer() {
-        val dispatcher: Dispatcher = object : Dispatcher() {
-            @Throws(InterruptedException::class)
-            override fun dispatch(request: RecordedRequest): MockResponse {
-                val response = when (request.path?.substringBefore('?')) {
-                    "/basisprofielen/90012768" -> TestHelper.mockResponseFromFile("/data/get-maatschappelijke-activiteiten.json")
-                    else -> MockResponse().setResponseCode(404)
+        val dispatcher: Dispatcher =
+            object : Dispatcher() {
+                @Throws(InterruptedException::class)
+                override fun dispatch(request: RecordedRequest): MockResponse {
+                    val response =
+                        when (request.path?.substringBefore('?')) {
+                            "/basisprofielen/90012768" -> TestHelper.mockResponseFromFile("/data/get-maatschappelijke-activiteiten.json")
+                            else -> MockResponse().setResponseCode(404)
+                        }
+                    return response
                 }
-                return response
             }
-        }
         server.dispatcher = dispatcher
     }
 }

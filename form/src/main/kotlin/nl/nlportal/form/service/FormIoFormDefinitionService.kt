@@ -26,7 +26,6 @@ import java.util.UUID
 class FormIoFormDefinitionService(
     private val formIoFormDefinitionRepository: FormIoFormDefinitionRepository,
 ) {
-
     fun createFormDefinition(request: CreateFormDefinitionRequest): FormIoFormDefinition {
         return formIoFormDefinitionRepository.saveAndFlush(
             FormIoFormDefinition(

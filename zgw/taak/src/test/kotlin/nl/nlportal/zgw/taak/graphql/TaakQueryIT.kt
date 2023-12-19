@@ -176,29 +176,31 @@ internal class TaakQueryIT(
     }
 
     fun setupMockObjectsApiServer() {
-        val dispatcher: Dispatcher = object : Dispatcher() {
-            @Throws(InterruptedException::class)
-            override fun dispatch(request: RecordedRequest): MockResponse {
-                val path = request.path?.substringBefore('?')
-                val queryParams = request.path?.substringAfter('?')?.split('&') ?: emptyList()
-                val response = when (request.method + " " + path) {
-                    "GET /api/v2/objects" -> {
-                        if (queryParams.any { it.contains("identificatie__value__exact__569312863") }) {
-                            TestHelper.mockResponseFromFile("/data/get-bsn-task-list.json")
-                        } else if (queryParams.any { it.contains("identificatie__value__exact__569312863") }) {
-                            TestHelper.mockResponseFromFile("/data/get-bsn-task-list-unauthorized.json")
-                        } else if (queryParams.any { it.contains("identificatie__value__exact__14127293") }) {
-                            TestHelper.mockResponseFromFile("/data/get-kvk-task-list.json")
-                        } else {
-                            MockResponse().setResponseCode(404)
-                        }
-                    }
+        val dispatcher: Dispatcher =
+            object : Dispatcher() {
+                @Throws(InterruptedException::class)
+                override fun dispatch(request: RecordedRequest): MockResponse {
+                    val path = request.path?.substringBefore('?')
+                    val queryParams = request.path?.substringAfter('?')?.split('&') ?: emptyList()
+                    val response =
+                        when (request.method + " " + path) {
+                            "GET /api/v2/objects" -> {
+                                if (queryParams.any { it.contains("identificatie__value__exact__569312863") }) {
+                                    TestHelper.mockResponseFromFile("/data/get-bsn-task-list.json")
+                                } else if (queryParams.any { it.contains("identificatie__value__exact__569312863") }) {
+                                    TestHelper.mockResponseFromFile("/data/get-bsn-task-list-unauthorized.json")
+                                } else if (queryParams.any { it.contains("identificatie__value__exact__14127293") }) {
+                                    TestHelper.mockResponseFromFile("/data/get-kvk-task-list.json")
+                                } else {
+                                    MockResponse().setResponseCode(404)
+                                }
+                            }
 
-                    else -> MockResponse().setResponseCode(404)
+                            else -> MockResponse().setResponseCode(404)
+                        }
+                    return response
                 }
-                return response
             }
-        }
         server.dispatcher = dispatcher
     }
 }

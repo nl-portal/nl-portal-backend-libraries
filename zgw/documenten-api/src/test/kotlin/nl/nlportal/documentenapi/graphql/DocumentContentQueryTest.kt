@@ -21,18 +21,18 @@ import nl.nlportal.documentenapi.service.DocumentenApiService
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
-import java.util.*
+import java.util.UUID
 
 @ExperimentalCoroutinesApi
 internal class DocumentContentQueryTest {
-
     var documentenApiService: DocumentenApiService = mock()
     var documentContentQuery = DocumentContentQuery(documentenApiService)
 
     @Test
-    fun getDocumentContent() = runTest {
-        val documentId = UUID.randomUUID()
-        documentContentQuery.getDocumentContent("openzaak", documentId)
-        verify(documentenApiService).getDocumentContent(documentId, "openzaak")
-    }
+    fun getDocumentContent() =
+        runTest {
+            val documentId = UUID.randomUUID()
+            documentContentQuery.getDocumentContent("openzaak", documentId)
+            verify(documentenApiService).getDocumentContent(documentId, "openzaak")
+        }
 }

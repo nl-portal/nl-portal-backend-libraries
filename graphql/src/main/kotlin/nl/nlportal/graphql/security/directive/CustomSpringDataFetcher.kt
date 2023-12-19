@@ -43,8 +43,10 @@ class CustomSpringDataFetcher(
     private val objectMapper: ObjectMapper = jacksonObjectMapper(),
     private val applicationContext: ApplicationContext,
 ) : FunctionDataFetcher(target, fn) {
-
-    override fun mapParameterToValue(param: KParameter, environment: DataFetchingEnvironment): Pair<KParameter, Any?>? =
+    override fun mapParameterToValue(
+        param: KParameter,
+        environment: DataFetchingEnvironment,
+    ): Pair<KParameter, Any?>? =
         if (param.hasAnnotation<Autowired>()) {
             val qualifier = param.findAnnotation<Qualifier>()?.value
             if (qualifier != null) {
@@ -76,52 +78,59 @@ class CustomSpringDataFetcher(
         environment: DataFetchingEnvironment,
         argumentName: String,
         argumentValue: Any?,
-    ): Any? = when {
-        param.type.isOptionalInputType() -> {
-            when {
-                !environment.containsArgument(argumentName) -> OptionalInput.Undefined
-                argumentValue == null -> OptionalInput.Defined(null)
-                else -> {
-                    val paramType = param.type.getTypeOfFirstArgument()
-                    val value = convertValue(paramType, argumentValue)
-                    OptionalInput.Defined(value)
+    ): Any? =
+        when {
+            param.type.isOptionalInputType() -> {
+                when {
+                    !environment.containsArgument(argumentName) -> OptionalInput.Undefined
+                    argumentValue == null -> OptionalInput.Defined(null)
+                    else -> {
+                        val paramType = param.type.getTypeOfFirstArgument()
+                        val value = convertValue(paramType, argumentValue)
+                        OptionalInput.Defined(value)
+                    }
                 }
             }
+            else -> convertValue(param.type, argumentValue)
         }
-        else -> convertValue(param.type, argumentValue)
-    }
 
     private fun convertValue(
         paramType: KType,
         argumentValue: Any?,
-    ): Any? = when {
-        paramType.isList() -> {
-            val argumentClass = paramType.getTypeOfFirstArgument().getJavaClass()
-            val jacksonCollectionType = objectMapper.typeFactory.constructCollectionType(List::class.java, argumentClass)
-            objectMapper.convertValue(argumentValue, jacksonCollectionType)
+    ): Any? =
+        when {
+            paramType.isList() -> {
+                val argumentClass = paramType.getTypeOfFirstArgument().getJavaClass()
+                val jacksonCollectionType = objectMapper.typeFactory.constructCollectionType(List::class.java, argumentClass)
+                objectMapper.convertValue(argumentValue, jacksonCollectionType)
+            }
+            paramType.isArray() -> {
+                val argumentClass = paramType.getJavaClass()
+                val jacksonCollectionType = objectMapper.typeFactory.constructArrayType(argumentClass)
+                objectMapper.convertValue(argumentValue, jacksonCollectionType)
+            }
+            else -> {
+                val javaClass = paramType.getJavaClass()
+                objectMapper.convertValue(argumentValue, javaClass)
+            }
         }
-        paramType.isArray() -> {
-            val argumentClass = paramType.getJavaClass()
-            val jacksonCollectionType = objectMapper.typeFactory.constructArrayType(argumentClass)
-            objectMapper.convertValue(argumentValue, jacksonCollectionType)
-        }
-        else -> {
-            val javaClass = paramType.getJavaClass()
-            objectMapper.convertValue(argumentValue, javaClass)
-        }
-    }
 
     private fun KType.isList() = this.isSubclassOf(List::class)
+
     private fun KType.isArray() = this.getJavaClass().isArray
+
     private fun KParameter.isDataFetchingEnvironment() = this.type.classifier == DataFetchingEnvironment::class
+
     private fun KType.isOptionalInputType() = this.isSubclassOf(OptionalInput::class)
+
     private fun KType.isSubclassOf(kClass: KClass<*>) = this.jvmErasure.isSubclassOf(kClass)
+
     private fun KType.getJavaClass(): Class<*> = this.jvmErasure.java
-    private fun KParameter.getName(): String =
-        this.getGraphQLName() ?: this.name ?: throw CouldNotGetNameOfKParameterException(this)
+
+    private fun KParameter.getName(): String = this.getGraphQLName() ?: this.name ?: throw CouldNotGetNameOfKParameterException(this)
+
     private fun KAnnotatedElement.getGraphQLName(): String? = this.findAnnotation<GraphQLName>()?.value
 
     @Throws(InvalidWrappedTypeException::class)
-    private fun KType.getTypeOfFirstArgument(): KType =
-        this.arguments.firstOrNull()?.type ?: throw InvalidWrappedTypeException(this)
+    private fun KType.getTypeOfFirstArgument(): KType = this.arguments.firstOrNull()?.type ?: throw InvalidWrappedTypeException(this)
 }

@@ -15,27 +15,23 @@
  */
 package nl.nlportal.case.domain
 
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
 import nl.nlportal.core.util.ObjectValidator
 import nl.nlportal.data.domain.AbstractId
 import org.hibernate.validator.constraints.Length
-import jakarta.persistence.Column
-import jakarta.persistence.Embeddable
 
 @Embeddable
 data class CaseDefinitionId(
-
     @Column(name = "case_definition_id", columnDefinition = "VARCHAR(255)")
     @field:Length(max = 255)
     val value: String,
-
 ) : AbstractId<CaseDefinitionId>() {
-
     init {
         ObjectValidator.validate(this)
     }
 
     companion object {
-
         fun existingId(id: String): CaseDefinitionId {
             return CaseDefinitionId(id)
         }

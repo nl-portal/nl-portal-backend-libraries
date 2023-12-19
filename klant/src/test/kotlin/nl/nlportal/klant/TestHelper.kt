@@ -18,7 +18,6 @@ package nl.nlportal.klant
 import okhttp3.mockwebserver.MockResponse
 
 object TestHelper {
-
     fun mockResponseFromFile(fileName: String): MockResponse {
         return MockResponse()
             .addHeader("Content-Type", "application/json; charset=utf-8")

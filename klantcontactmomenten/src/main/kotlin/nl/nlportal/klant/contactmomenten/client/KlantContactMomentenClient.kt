@@ -24,26 +24,36 @@ import org.springframework.web.reactive.function.client.awaitBody
 class KlantContactMomentenClient(
     private val openKlantClientProvider: OpenKlantClientProvider,
 ) {
-    suspend fun getKlantContactMomenten(authentication: CommonGroundAuthentication, klant: String, page: Int): ResultPage<ContactMoment> {
+    suspend fun getKlantContactMomenten(
+        authentication: CommonGroundAuthentication,
+        klant: String,
+        page: Int,
+    ): ResultPage<ContactMoment> {
         return openKlantClientProvider.webClient(authentication)
             .get()
             .uri {
-                val uriBuilder = it.path("/contactmomenten/api/v1/contactmomenten")
-                    .queryParam("page", page)
-                    .queryParam("klant", klant)
+                val uriBuilder =
+                    it.path("/contactmomenten/api/v1/contactmomenten")
+                        .queryParam("page", page)
+                        .queryParam("klant", klant)
                 uriBuilder.build()
             }
             .retrieve()
             .awaitBody<ResultPage<ContactMoment>>()
     }
 
-    suspend fun getObjectContactMomenten(authentication: CommonGroundAuthentication, objectUrl: String, page: Int): ResultPage<ContactMoment> {
+    suspend fun getObjectContactMomenten(
+        authentication: CommonGroundAuthentication,
+        objectUrl: String,
+        page: Int,
+    ): ResultPage<ContactMoment> {
         return openKlantClientProvider.webClient(authentication)
             .get()
             .uri {
-                val uriBuilder = it.path("/contactmomenten/api/v1/contactmomenten")
-                    .queryParam("page", page)
-                    .queryParam("object", objectUrl)
+                val uriBuilder =
+                    it.path("/contactmomenten/api/v1/contactmomenten")
+                        .queryParam("page", page)
+                        .queryParam("object", objectUrl)
                 uriBuilder.build()
             }
             .retrieve()

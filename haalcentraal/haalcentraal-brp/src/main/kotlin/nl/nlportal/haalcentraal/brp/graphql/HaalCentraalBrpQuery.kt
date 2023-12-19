@@ -23,7 +23,6 @@ import nl.nlportal.haalcentraal.brp.service.HaalCentraalBrpService
 import graphql.schema.DataFetchingEnvironment
 
 class HaalCentraalBrpQuery(val haalCentraalBrpService: HaalCentraalBrpService) : Query {
-
     @GraphQLDescription("Gets the persoon data")
     suspend fun getPersoon(dfe: DataFetchingEnvironment): Persoon? {
         return haalCentraalBrpService.getPersoon(dfe.graphQlContext.get(AUTHENTICATION_KEY))

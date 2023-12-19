@@ -31,7 +31,6 @@ class CompleteTaskMutation(
     private val taskService: TaskService,
     private val caseService: CaseService,
 ) : Mutation {
-
     @GraphQLDescription("Complete task mutation")
     fun completeTask(
         taskId: UUID,

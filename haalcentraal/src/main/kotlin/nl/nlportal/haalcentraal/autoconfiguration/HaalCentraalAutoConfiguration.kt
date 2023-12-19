@@ -33,7 +33,6 @@ import org.springframework.web.reactive.function.client.WebClient
 @AutoConfiguration
 @EnableConfigurationProperties(HaalCentraalClientConfig::class)
 class HaalCentraalAutoConfiguration {
-
     @Bean
     @ConditionalOnProperty("nl-portal.haalcentraal.ssl.enabled", matchIfMissing = false)
     @ConditionalOnMissingBean(ClientSslContextResolver::class)
@@ -44,9 +43,7 @@ class HaalCentraalAutoConfiguration {
     @Bean
     @ConditionalOnProperty("nl-portal.haalcentraal.token-exchange.target-audience", matchIfMissing = false)
     @ConditionalOnMissingBean(UserTokenExchangeFilter::class)
-    fun userTokenExchangeFilterFactory(
-        haalCentraalClientConfig: HaalCentraalClientConfig,
-    ): UserTokenExchangeFilter {
+    fun userTokenExchangeFilterFactory(haalCentraalClientConfig: HaalCentraalClientConfig): UserTokenExchangeFilter {
         requireNotNull(haalCentraalClientConfig.tokenExchange)
         return KeyCloakUserTokenExchangeFilter(WebClient.create(), haalCentraalClientConfig.tokenExchange.targetAudience)
     }

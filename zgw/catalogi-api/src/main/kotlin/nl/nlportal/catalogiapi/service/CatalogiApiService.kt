@@ -24,7 +24,6 @@ import java.util.UUID
 class CatalogiApiService(
     val catalogiApiClient: CatalogiApiClient,
 ) {
-
     suspend fun getZaakStatusTypes(zaakType: String): List<StatusType> {
         return catalogiApiClient.getStatusTypes(zaakType).sortedBy { it.volgnummer }
     }

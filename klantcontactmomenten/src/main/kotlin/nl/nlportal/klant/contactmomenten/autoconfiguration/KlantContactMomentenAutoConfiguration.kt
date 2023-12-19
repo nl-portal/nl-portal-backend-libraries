@@ -29,7 +29,6 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 @EnableConfigurationProperties(OpenKlantClientConfig::class)
 class KlantContactMomentenAutoConfiguration {
-
     @Bean
     @ConditionalOnMissingBean(KlantContactMomentenService::class)
     fun klantContactMomentenService(
@@ -44,16 +43,12 @@ class KlantContactMomentenAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(KlantContactMomentenClient::class)
-    fun openKlantContactMomentenClient(
-        openKlantClientProvider: OpenKlantClientProvider,
-    ): KlantContactMomentenClient {
+    fun openKlantContactMomentenClient(openKlantClientProvider: OpenKlantClientProvider): KlantContactMomentenClient {
         return KlantContactMomentenClient(openKlantClientProvider)
     }
 
     @Bean
-    fun contactMomentenQuery(
-        klantContactMomentenService: KlantContactMomentenService,
-    ): ContactMomentQuery {
+    fun contactMomentenQuery(klantContactMomentenService: KlantContactMomentenService): ContactMomentQuery {
         return ContactMomentQuery(klantContactMomentenService)
     }
 }

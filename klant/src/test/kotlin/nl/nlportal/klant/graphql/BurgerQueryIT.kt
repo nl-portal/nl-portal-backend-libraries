@@ -59,14 +59,15 @@ internal class BurgerQueryIT(
     @Test
     @WithBurgerUser("123")
     fun getBurgerProfiel() {
-        val query = """
+        val query =
+            """
             query {
                 getBurgerProfiel {
                     telefoonnummer,
                     emailadres
                 }
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val basePath = "$.data.getBurgerProfiel"
 
@@ -83,16 +84,18 @@ internal class BurgerQueryIT(
     }
 
     fun setupMockOpenKlantServer() {
-        val dispatcher: Dispatcher = object : Dispatcher() {
-            @Throws(InterruptedException::class)
-            override fun dispatch(request: RecordedRequest): MockResponse {
-                val response = when (request.path?.substringBefore('?')) {
-                    "/klanten/api/v1/klanten" -> TestHelper.mockResponseFromFile("/data/get-klant-list-response.json")
-                    else -> MockResponse().setResponseCode(404)
+        val dispatcher: Dispatcher =
+            object : Dispatcher() {
+                @Throws(InterruptedException::class)
+                override fun dispatch(request: RecordedRequest): MockResponse {
+                    val response =
+                        when (request.path?.substringBefore('?')) {
+                            "/klanten/api/v1/klanten" -> TestHelper.mockResponseFromFile("/data/get-klant-list-response.json")
+                            else -> MockResponse().setResponseCode(404)
+                        }
+                    return response
                 }
-                return response
             }
-        }
         server.dispatcher = dispatcher
     }
 }

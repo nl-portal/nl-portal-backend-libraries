@@ -34,7 +34,6 @@ open class TaskService(
     private val sink: Sinks.Many<PortalMessage>,
     private val caseService: CaseService,
 ) {
-
     fun createPortalTask(message: CreatePortalTaskMessage): Task {
         val case = caseService.getCase(message.externalCaseId)
         return taskRepository.save(
@@ -61,7 +60,10 @@ open class TaskService(
         }
     }
 
-    fun findTasksForCase(externalCaseId: String, userId: String): List<Task>? {
+    fun findTasksForCase(
+        externalCaseId: String,
+        userId: String,
+    ): List<Task>? {
         return taskRepository.findTasksByExternalCaseIdAndUserId(externalCaseId, userId)
     }
 
@@ -69,7 +71,11 @@ open class TaskService(
         return taskRepository.findAllByUserId(userId)
     }
 
-    fun completeTask(id: UUID, submission: ObjectNode, userId: String?): Task {
+    fun completeTask(
+        id: UUID,
+        submission: ObjectNode,
+        userId: String?,
+    ): Task {
         val task = taskRepository.findByTaskId(TaskId.existingId(id))
         if (task.userId.equals(userId)) {
             return completeTask(task, submission)
@@ -78,7 +84,10 @@ open class TaskService(
         }
     }
 
-    fun completePublicTask(taskExternalId: String, submission: ObjectNode): Task {
+    fun completePublicTask(
+        taskExternalId: String,
+        submission: ObjectNode,
+    ): Task {
         val task = findPublicTask(taskExternalId)
         if (task.isPublic) {
             return completeTask(task, submission)
@@ -92,7 +101,10 @@ open class TaskService(
         if (task!!.isPublic) return task else throw UnauthorizedTaskException()
     }
 
-    private fun completeTask(task: Task, submission: ObjectNode): Task {
+    private fun completeTask(
+        task: Task,
+        submission: ObjectNode,
+    ): Task {
         task.completeTask()
         val completedTask = taskRepository.save(task)
         sink.tryEmitNext(CompleteTaskMessage(completedTask.externalTaskId, completedTask.externalCaseId, submission))

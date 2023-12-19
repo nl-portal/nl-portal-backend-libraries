@@ -20,58 +20,62 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 internal class ResultPageTest {
-
     @Test
     fun `should get page number from next URL`() {
-        val nextPageNumber = ResultPage<Any>(
-            count = 5,
-            next = URI("https://test.local?page=1337"),
-            results = listOf(),
-        ).getNextPageNumber()
+        val nextPageNumber =
+            ResultPage<Any>(
+                count = 5,
+                next = URI("https://test.local?page=1337"),
+                results = listOf(),
+            ).getNextPageNumber()
 
         assertThat(nextPageNumber).isEqualTo(1337)
     }
 
     @Test
     fun `should get fist page number from next URL`() {
-        val nextPageNumber = ResultPage<Any>(
-            count = 5,
-            next = URI("https://test.local?page=1337&page=2337"),
-            results = listOf(),
-        ).getNextPageNumber()
+        val nextPageNumber =
+            ResultPage<Any>(
+                count = 5,
+                next = URI("https://test.local?page=1337&page=2337"),
+                results = listOf(),
+            ).getNextPageNumber()
 
         assertThat(nextPageNumber).isEqualTo(1337)
     }
 
     @Test
     fun `should get null from next URL for invalid page number`() {
-        val nextPageNumber = ResultPage<Any>(
-            count = 5,
-            next = URI("https://test.local?page=xyz"),
-            results = listOf(),
-        ).getNextPageNumber()
+        val nextPageNumber =
+            ResultPage<Any>(
+                count = 5,
+                next = URI("https://test.local?page=xyz"),
+                results = listOf(),
+            ).getNextPageNumber()
 
         assertThat(nextPageNumber).isNull()
     }
 
     @Test
     fun `should get null from next URL for empty page number`() {
-        val nextPageNumber = ResultPage<Any>(
-            count = 5,
-            next = URI("https://test.local?page="),
-            results = listOf(),
-        ).getNextPageNumber()
+        val nextPageNumber =
+            ResultPage<Any>(
+                count = 5,
+                next = URI("https://test.local?page="),
+                results = listOf(),
+            ).getNextPageNumber()
 
         assertThat(nextPageNumber).isNull()
     }
 
     @Test
     fun `should get null from next URL for missing page number`() {
-        val nextPageNumber = ResultPage<Any>(
-            count = 5,
-            next = URI("https://test.local"),
-            results = listOf(),
-        ).getNextPageNumber()
+        val nextPageNumber =
+            ResultPage<Any>(
+                count = 5,
+                next = URI("https://test.local"),
+                results = listOf(),
+            ).getNextPageNumber()
 
         assertThat(nextPageNumber).isNull()
     }

@@ -78,7 +78,10 @@ open class ObjectsApiClient(
             .awaitSingle()
     }
 
-    suspend inline fun <reified T> updateObject(objectUuid: UUID, objectsApiObject: UpdateObjectsApiObjectRequest<T>): ObjectsApiObject<T> {
+    suspend inline fun <reified T> updateObject(
+        objectUuid: UUID,
+        objectsApiObject: UpdateObjectsApiObjectRequest<T>,
+    ): ObjectsApiObject<T> {
         return webClient()
             .put()
             .uri("/api/v2/objects/$objectUuid")

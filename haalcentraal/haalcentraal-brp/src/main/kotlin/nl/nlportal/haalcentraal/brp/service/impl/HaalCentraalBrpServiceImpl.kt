@@ -26,7 +26,6 @@ import nl.nlportal.haalcentraal.brp.service.HaalCentraalBrpService
 class HaalCentraalBrpServiceImpl(
     val haalCentraalBrpClient: HaalCentraalBrpClient,
 ) : HaalCentraalBrpService {
-
     override suspend fun getPersoon(authentication: CommonGroundAuthentication): Persoon? {
         return if (authentication is BurgerAuthentication) {
             haalCentraalBrpClient.getPersoon(authentication.getBsn(), authentication)

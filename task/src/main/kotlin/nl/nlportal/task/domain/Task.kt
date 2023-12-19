@@ -31,44 +31,34 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "task")
 data class Task(
-
     @EmbeddedId
     val taskId: TaskId,
-
     @Column(name = "external_task_id", columnDefinition = "VARCHAR(255)")
     @field:Length(max = 255)
     @field:NotBlank
     val externalTaskId: String,
-
     @Column(name = "task_definition_key", columnDefinition = "VARCHAR(255)")
     @field:Length(max = 255)
     @field:NotBlank
     val taskDefinitionKey: String,
-
     @Column(name = "external_case_id", columnDefinition = "VARCHAR(1024)")
     @field:Length(max = 1024)
     @field:NotBlank
     val externalCaseId: String,
-
     @Column(name = "user_id", columnDefinition = "VARCHAR(1024)", nullable = false)
     @field:Length(max = 1024)
     @field:NotBlank
     val userId: String,
-
     @Column(name = "form_definition", columnDefinition = "json")
     @JdbcTypeCode(SqlTypes.JSON)
     val formDefinition: ObjectNode,
-
     @Column(name = "completed", columnDefinition = "BOOLEAN")
     private var isCompleted: Boolean = false,
-
     @Column(name = "created_on", columnDefinition = "TIMESTAMPTZ", nullable = false)
     val createdOn: LocalDateTime = LocalDateTime.now(),
-
     @Column(name = "public", columnDefinition = "BOOLEAN")
     val isPublic: Boolean = false,
 ) : Persistable<TaskId> {
-
     init {
         ObjectValidator.validate(this)
     }

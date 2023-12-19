@@ -29,9 +29,11 @@ class TaskQuery(
     private val taskService: TaskService,
     private val caseService: CaseService,
 ) : Query {
-
     @GraphQLDescription("find all available tasks for external case id")
-    fun findTasks(caseId: UUID, dfe: DataFetchingEnvironment): List<TaskInstance>? {
+    fun findTasks(
+        caseId: UUID,
+        dfe: DataFetchingEnvironment,
+    ): List<TaskInstance>? {
         val authentication = dfe.graphQlContext.get<Authentication>(AUTHENTICATION_KEY)
         val case = caseService.getCase(CaseId.existingId(caseId), authentication.name) ?: return null
         return taskService.findTasksForCase(case.externalId!!, authentication.name)?.sortedByDescending { it.createdOn }

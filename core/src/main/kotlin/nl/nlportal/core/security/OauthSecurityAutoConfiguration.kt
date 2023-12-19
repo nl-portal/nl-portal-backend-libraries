@@ -24,18 +24,17 @@ import org.springframework.context.annotation.Bean
 import org.springframework.core.convert.converter.Converter
 import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AbstractAuthenticationToken
+import org.springframework.security.config.Customizer.withDefaults
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.web.server.SecurityWebFilterChain
+import org.springframework.security.web.server.header.ReferrerPolicyServerHttpHeadersWriter
+import org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter
 import org.springframework.web.cors.reactive.CorsWebFilter
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 import reactor.core.publisher.Mono
-
-import org.springframework.security.config.Customizer.withDefaults
-import org.springframework.security.web.server.header.ReferrerPolicyServerHttpHeadersWriter
-import org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter
 import java.time.Duration
 
 @AutoConfiguration
@@ -43,7 +42,6 @@ import java.time.Duration
 @EnableReactiveMethodSecurity
 @EnableConfigurationProperties(CorsPathConfiguration::class, SecurityHeadersConfig::class, SecurityEndpointsConfig::class)
 class OauthSecurityAutoConfiguration {
-
     @Bean
     fun springSecurityWebFilterChain(
         http: ServerHttpSecurity,

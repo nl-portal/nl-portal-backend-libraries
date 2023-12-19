@@ -29,44 +29,46 @@ import org.mockito.Mockito.`when`
 
 @ExperimentalCoroutinesApi
 internal class CatalogiApiServiceTest {
-
     var catalogiApiClient = mock(CatalogiApiClient::class.java)
     var catalogiApiService = CatalogiApiService(catalogiApiClient)
 
     @Test
-    fun getZaakStatusType() = runTest {
-        val uuid = UUID.randomUUID()
-        catalogiApiService.getZaakStatusType("http://some.domain.com/catalogi/api/v1/statustypen/$uuid")
-        verify(catalogiApiClient).getStatusType(uuid)
-    }
+    fun getZaakStatusType() =
+        runTest {
+            val uuid = UUID.randomUUID()
+            catalogiApiService.getZaakStatusType("http://some.domain.com/catalogi/api/v1/statustypen/$uuid")
+            verify(catalogiApiClient).getStatusType(uuid)
+        }
 
     @Test
-    fun getZaakType() = runTest {
-        val uuid = UUID.randomUUID()
-        catalogiApiService.getZaakType("http://some.domain.com/catalogi/api/v1/zaaktypen/$uuid")
-        verify(catalogiApiClient).getZaakType(uuid)
-    }
+    fun getZaakType() =
+        runTest {
+            val uuid = UUID.randomUUID()
+            catalogiApiService.getZaakType("http://some.domain.com/catalogi/api/v1/zaaktypen/$uuid")
+            verify(catalogiApiClient).getZaakType(uuid)
+        }
 
     @Test
-    fun getZaakStatusTypes() = runTest {
-        val uuid = UUID.randomUUID()
-        val zaakUrl = "http://some.domain.com/catalogi/api/v1/zaaktypen/$uuid"
+    fun getZaakStatusTypes() =
+        runTest {
+            val uuid = UUID.randomUUID()
+            val zaakUrl = "http://some.domain.com/catalogi/api/v1/zaaktypen/$uuid"
 
-        `when`(catalogiApiClient.getStatusTypes(zaakUrl)).thenReturn(
-            listOf(
-                StatusType("desc2", false, 2),
-                StatusType("desc1", false, 1),
-                StatusType("desc3", true, 3),
-            ),
-        )
+            `when`(catalogiApiClient.getStatusTypes(zaakUrl)).thenReturn(
+                listOf(
+                    StatusType("desc2", false, 2),
+                    StatusType("desc1", false, 1),
+                    StatusType("desc3", true, 3),
+                ),
+            )
 
-        val zaakStatusTypes = catalogiApiService.getZaakStatusTypes(zaakUrl)
+            val zaakStatusTypes = catalogiApiService.getZaakStatusTypes(zaakUrl)
 
-        assertEquals(3, zaakStatusTypes.size)
-        assertEquals("desc1", zaakStatusTypes.get(0).omschrijving)
-        assertEquals("desc2", zaakStatusTypes.get(1).omschrijving)
-        assertEquals("desc3", zaakStatusTypes.get(2).omschrijving)
+            assertEquals(3, zaakStatusTypes.size)
+            assertEquals("desc1", zaakStatusTypes.get(0).omschrijving)
+            assertEquals("desc2", zaakStatusTypes.get(1).omschrijving)
+            assertEquals("desc3", zaakStatusTypes.get(2).omschrijving)
 
-        verify(catalogiApiClient).getStatusTypes(zaakUrl)
-    }
+            verify(catalogiApiClient).getStatusTypes(zaakUrl)
+        }
 }

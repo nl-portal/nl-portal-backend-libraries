@@ -30,7 +30,6 @@ import java.io.InputStream
 @ExtendWith(SpringExtension::class)
 @Tag("integration")
 abstract class BaseIntegrationTest {
-
     @MockBean
     lateinit var caseDefinitionApplicationReadyEventListener: CaseDefinitionApplicationReadyEventListener
 
@@ -43,7 +42,6 @@ abstract class BaseIntegrationTest {
     }
 
     companion object {
-
         @BeforeAll
         @JvmStatic
         internal fun beforeAll() {

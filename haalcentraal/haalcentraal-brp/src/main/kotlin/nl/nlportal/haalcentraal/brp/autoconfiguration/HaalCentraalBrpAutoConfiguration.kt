@@ -31,28 +31,21 @@ import org.springframework.context.annotation.Import
 @EnableConfigurationProperties(HaalCentraalClientConfig::class)
 @Import(HaalCentraalClientProvider::class)
 class HaalCentraalBrpAutoConfiguration {
-
     @Bean
     @ConditionalOnMissingBean(HaalCentraalBrpClient::class)
-    fun haalCentraalBrpClient(
-        haalCentraalClientProvider: HaalCentraalClientProvider,
-    ): HaalCentraalBrpClient {
+    fun haalCentraalBrpClient(haalCentraalClientProvider: HaalCentraalClientProvider): HaalCentraalBrpClient {
         return HaalCentraalBrpClient(haalCentraalClientProvider)
     }
 
     @Bean
     @ConditionalOnMissingBean(HaalCentraalBrpService::class)
-    fun haalCentraalBrpServiceImpl(
-        haalCentraalBrpClient: HaalCentraalBrpClient,
-    ): HaalCentraalBrpService {
+    fun haalCentraalBrpServiceImpl(haalCentraalBrpClient: HaalCentraalBrpClient): HaalCentraalBrpService {
         return HaalCentraalBrpServiceImpl(haalCentraalBrpClient)
     }
 
     @Bean
     @ConditionalOnMissingBean(HaalCentraalBrpQuery::class)
-    fun haalCentraalBrpQuery(
-        haalCentraalBrpService: HaalCentraalBrpService,
-    ): HaalCentraalBrpQuery {
+    fun haalCentraalBrpQuery(haalCentraalBrpService: HaalCentraalBrpService): HaalCentraalBrpQuery {
         return HaalCentraalBrpQuery(haalCentraalBrpService)
     }
 }

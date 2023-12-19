@@ -25,13 +25,10 @@ import org.hibernate.type.SqlTypes
 
 @Embeddable
 data class Submission(
-
     @Column(name = "submission", columnDefinition = "json")
     @JdbcTypeCode(SqlTypes.JSON)
     val value: ObjectNode,
-
 ) {
-
     fun update(properties: Map<JsonPointer, JsonNode>): Submission {
         val submission = this.value
         properties.entries.stream().forEach {

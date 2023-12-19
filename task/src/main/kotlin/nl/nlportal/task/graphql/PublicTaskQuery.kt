@@ -21,7 +21,6 @@ import nl.nlportal.graphql.security.directive.IsUnauthenticated
 import nl.nlportal.task.service.TaskService
 
 class PublicTaskQuery(val taskService: TaskService) : Query {
-
     @IsUnauthenticated
     @GraphQLDescription("find public task with id")
     fun findPublicTask(taskId: String): TaskInstance {

@@ -31,7 +31,6 @@ import org.springframework.context.annotation.Bean
 @AutoConfiguration
 @EnableConfigurationProperties(ZakenApiConfig::class)
 class ZakenApiAutoConfiguration {
-
     @Bean
     @ConditionalOnMissingBean(ZakenApiService::class)
     fun zakenApiService(

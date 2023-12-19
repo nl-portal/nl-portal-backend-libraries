@@ -26,12 +26,17 @@ import org.springframework.web.reactive.function.client.awaitBody
 class OpenKlantClient(
     private val openKlantClientProvider: OpenKlantClientProvider,
 ) {
-    suspend fun getKlanten(authentication: CommonGroundAuthentication, page: Int, bsn: String?): List<Klant> {
+    suspend fun getKlanten(
+        authentication: CommonGroundAuthentication,
+        page: Int,
+        bsn: String?,
+    ): List<Klant> {
         return openKlantClientProvider.webClient(authentication)
             .get()
             .uri {
-                val uriBuilder = it.path("/klanten/api/v1/klanten")
-                    .queryParam("page", page)
+                val uriBuilder =
+                    it.path("/klanten/api/v1/klanten")
+                        .queryParam("page", page)
                 bsn?.let { uriBuilder.queryParam("subjectNatuurlijkPersoon__inpBsn", it) }
                 uriBuilder.build()
             }
@@ -40,7 +45,11 @@ class OpenKlantClient(
             .results
     }
 
-    suspend fun patchKlant(authentication: CommonGroundAuthentication, klantUrl: String, klant: Klant): Klant {
+    suspend fun patchKlant(
+        authentication: CommonGroundAuthentication,
+        klantUrl: String,
+        klant: Klant,
+    ): Klant {
         return openKlantClientProvider.webClient(authentication)
             .patch()
             .uri(klantUrl)
@@ -51,7 +60,10 @@ class OpenKlantClient(
             .awaitBody()
     }
 
-    suspend fun postKlant(authentication: CommonGroundAuthentication, klant: KlantCreationRequest): Klant {
+    suspend fun postKlant(
+        authentication: CommonGroundAuthentication,
+        klant: KlantCreationRequest,
+    ): Klant {
         return openKlantClientProvider.webClient(authentication)
             .post()
             .uri("/klanten/api/v1/klanten")

@@ -100,7 +100,8 @@ class DocumentContentResourceIntegrationTest(
             .expectStatus().isOk
             .expectBody()
 
-        val requestBody = getRequestBody(HttpMethod.POST, "/enkelvoudiginformatieobjecten", PostEnkelvoudiginformatieobjectRequest::class.java)
+        val requestBody =
+            getRequestBody(HttpMethod.POST, "/enkelvoudiginformatieobjecten", PostEnkelvoudiginformatieobjectRequest::class.java)
         assertThat(requestBody.bronorganisatie).isEqualTo("051845623")
         assertThat(requestBody.creatiedatum).isNotBlank
         assertThat(requestBody.titel).isEqualTo("test-file.txt")
@@ -110,7 +111,9 @@ class DocumentContentResourceIntegrationTest(
         assertThat(requestBody.bestandsnaam).isEqualTo("test-file.txt")
         assertThat(requestBody.inhoud).isEqualTo(Base64.getEncoder().encodeToString("Test content".toByteArray()))
         assertThat(requestBody.indicatieGebruiksrecht).isFalse
-        assertThat(requestBody.informatieobjecttype).isEqualTo("http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000")
+        assertThat(
+            requestBody.informatieobjecttype,
+        ).isEqualTo("http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000")
     }
 
     @RepeatedTest(5)
@@ -127,7 +130,8 @@ class DocumentContentResourceIntegrationTest(
             .expectStatus().isOk
             .expectBody()
 
-        val requestBody = getRequestBody(HttpMethod.POST, "/enkelvoudiginformatieobjecten", PostEnkelvoudiginformatieobjectRequest::class.java)
+        val requestBody =
+            getRequestBody(HttpMethod.POST, "/enkelvoudiginformatieobjecten", PostEnkelvoudiginformatieobjectRequest::class.java)
         assertThat(requestBody.bronorganisatie).isEqualTo("051845623")
         assertThat(requestBody.creatiedatum).isNotBlank
         assertThat(requestBody.titel).isEqualTo("test-file.txt")
@@ -137,30 +141,34 @@ class DocumentContentResourceIntegrationTest(
         assertThat(requestBody.bestandsnaam).isEqualTo("test-file.txt")
         assertThat(requestBody.inhoud).isEqualTo(Base64.getEncoder().encodeToString("Test content".toByteArray()))
         assertThat(requestBody.indicatieGebruiksrecht).isFalse
-        assertThat(requestBody.informatieobjecttype).isEqualTo("http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000")
+        assertThat(
+            requestBody.informatieobjecttype,
+        ).isEqualTo("http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000")
     }
 
     fun setupMockDocumentServer() {
-        val dispatcher: Dispatcher = object : Dispatcher() {
-            @Throws(InterruptedException::class)
-            override fun dispatch(request: RecordedRequest): MockResponse {
-                executedRequests.add(request)
-                val path = request.path?.substringBefore('?')
-                val response = when (request.method + " " + path) {
-                    "GET /enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f/download",
-                    -> handleDocumentContentRequest()
+        val dispatcher: Dispatcher =
+            object : Dispatcher() {
+                @Throws(InterruptedException::class)
+                override fun dispatch(request: RecordedRequest): MockResponse {
+                    executedRequests.add(request)
+                    val path = request.path?.substringBefore('?')
+                    val response =
+                        when (request.method + " " + path) {
+                            "GET /enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f/download",
+                            -> handleDocumentContentRequest()
 
-                    "GET /enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
-                    -> TestHelper.mockResponseFromFile("/data/get-enkelvoudiginformatieobject-response.json")
+                            "GET /enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+                            -> TestHelper.mockResponseFromFile("/data/get-enkelvoudiginformatieobject-response.json")
 
-                    "POST /enkelvoudiginformatieobjecten",
-                    -> TestHelper.mockResponseFromFile("/data/post-enkelvoudiginformatieobject-response.json")
+                            "POST /enkelvoudiginformatieobjecten",
+                            -> TestHelper.mockResponseFromFile("/data/post-enkelvoudiginformatieobject-response.json")
 
-                    else -> MockResponse().setResponseCode(404)
+                            else -> MockResponse().setResponseCode(404)
+                        }
+                    return response
                 }
-                return response
             }
-        }
         server.dispatcher = dispatcher
     }
 
@@ -180,13 +188,20 @@ class DocumentContentResourceIntegrationTest(
         return Thread.currentThread().contextClassLoader.getResourceAsStream(resource)!!
     }
 
-    private fun findRequest(method: HttpMethod, path: String): RecordedRequest? {
+    private fun findRequest(
+        method: HttpMethod,
+        path: String,
+    ): RecordedRequest? {
         return executedRequests
             .filter { method.matches(it.method!!) }
             .lastOrNull { it.path?.substringBefore('?').equals(path) }
     }
 
-    private fun <T> getRequestBody(method: HttpMethod, path: String, clazz: Class<T>): T {
+    private fun <T> getRequestBody(
+        method: HttpMethod,
+        path: String,
+        clazz: Class<T>,
+    ): T {
         return Mapper.get().readValue(findRequest(method, path)!!.body.readUtf8(), clazz)
     }
 }

@@ -23,9 +23,11 @@ class ContactMomentPage(
     content: List<ContactMoment>,
     totalElements: Int,
 ) : Page<ContactMoment>(number, content, totalElements) {
-
     companion object {
-        fun fromResultPage(pageNumber: Int, resultPage: ResultPage<ContactMoment>): ContactMomentPage {
+        fun fromResultPage(
+            pageNumber: Int,
+            resultPage: ResultPage<ContactMoment>,
+        ): ContactMomentPage {
             return ContactMomentPage(
                 number = pageNumber,
                 content = resultPage.results,

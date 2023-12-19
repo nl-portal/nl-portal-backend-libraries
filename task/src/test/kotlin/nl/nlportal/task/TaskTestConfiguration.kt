@@ -33,7 +33,6 @@ import java.util.regex.Pattern
 @SpringBootConfiguration
 @EnableAutoConfiguration(exclude = [OauthSecurityAutoConfiguration::class])
 class TaskTestConfiguration {
-
     fun main(args: Array<String>) {
         SpringApplication.run(TaskTestConfiguration::class.java, *args)
     }
@@ -53,12 +52,18 @@ class TaskTestConfiguration {
         return MapReactiveUserDetailsService(userDetails)
     }
 
-    private fun getUserDetails(user: SecurityProperties.User, password: String): UserDetails {
+    private fun getUserDetails(
+        user: SecurityProperties.User,
+        password: String,
+    ): UserDetails {
         val roles: List<String> = user.getRoles()
         return User.withUsername(user.getName()).password(password).roles(StringUtils.join(roles)).build()
     }
 
-    private fun getOrDeducePassword(user: SecurityProperties.User, encoder: PasswordEncoder?): String {
+    private fun getOrDeducePassword(
+        user: SecurityProperties.User,
+        encoder: PasswordEncoder?,
+    ): String {
         val password: String = user.getPassword()
         if (user.isPasswordGenerated()) {
         }

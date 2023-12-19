@@ -19,8 +19,10 @@ class DocumentenApiService(
     val documentenApiClient: DocumentenApiClient,
     val documentenApiConfig: DocumentApisConfig,
 ) {
-
-    suspend fun getDocument(documentId: UUID, documentApi: String): Document {
+    suspend fun getDocument(
+        documentId: UUID,
+        documentApi: String,
+    ): Document {
         return documentenApiClient.getDocument(documentId, documentApi)
     }
 
@@ -28,15 +30,22 @@ class DocumentenApiService(
         return documentenApiClient.getDocument(extractId(documentUrl), documentenApiConfig.getConfigForDocumentUrl(documentUrl))
     }
 
-    suspend fun getDocumentContent(documentId: UUID, documentApi: String): DocumentContent {
+    suspend fun getDocumentContent(
+        documentId: UUID,
+        documentApi: String,
+    ): DocumentContent {
         val documentContent = documentenApiClient.getDocumentContent(documentId, documentApi)
         return DocumentContent(Base64.getEncoder().encodeToString(documentContent))
     }
 
-    suspend fun uploadDocument(file: FilePart, documentApi: String): Document {
-        val auteur = ReactiveSecurityContextHolder.getContext()
-            .map { (it.authentication as CommonGroundAuthentication).getUserId() }
-            .awaitSingleOrNull() ?: "valtimo"
+    suspend fun uploadDocument(
+        file: FilePart,
+        documentApi: String,
+    ): Document {
+        val auteur =
+            ReactiveSecurityContextHolder.getContext()
+                .map { (it.authentication as CommonGroundAuthentication).getUserId() }
+                .awaitSingleOrNull() ?: "valtimo"
 
         return documentenApiClient.postDocument(
             PostEnkelvoudiginformatieobjectRequest(

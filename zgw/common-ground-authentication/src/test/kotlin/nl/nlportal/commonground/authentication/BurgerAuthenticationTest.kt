@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 
 internal class BurgerAuthenticationTest {
-
     @Test
     fun `getBsn returns bsn from JWT claims`() {
         val jwt = JwtBuilder().aanvragerBsn("1234").buildJwt()

@@ -30,7 +30,6 @@ import org.mockito.Mockito.verify
 import org.springframework.security.core.Authentication
 
 internal class AuthenticatedDataFetcherTest {
-
     var environment = mock(DataFetchingEnvironment::class.java)
     var originalDataFetcher = mock(DataFetcher::class.java)
 
