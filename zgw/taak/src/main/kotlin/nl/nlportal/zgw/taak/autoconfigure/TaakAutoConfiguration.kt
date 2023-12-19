@@ -30,22 +30,22 @@ class TaakAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(TaakService::class)
-    fun gzacTaskService(
+    fun taskService(
         objectsApiClient: ObjectsApiClient,
-        objectsApiTaskConfig: TaakObjectConfig,
+        taakObjectConfig: TaakObjectConfig,
     ): TaakService {
-        return TaakService(objectsApiClient, objectsApiTaskConfig)
+        return TaakService(objectsApiClient, taakObjectConfig)
     }
 
     @Bean
     @ConditionalOnMissingBean(TaakQuery::class)
-    fun gzacTaskQuery(taskService: TaakService): TaakQuery {
+    fun taskQuery(taskService: TaakService): TaakQuery {
         return TaakQuery(taskService)
     }
 
     @Bean
     @ConditionalOnMissingBean(TaakMutation::class)
-    fun gzacTaskMutation(taskService: TaakService): TaakMutation {
+    fun taskMutation(taskService: TaakService): TaakMutation {
         return TaakMutation(taskService)
     }
 }

@@ -16,6 +16,7 @@
 package nl.nlportal.core.security
 
 import nl.nlportal.core.security.config.HttpSecurityConfigurer
+import nl.nlportal.core.security.config.SecurityEndpointsConfig
 import nl.nlportal.core.security.config.SecurityHeadersConfig
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -40,7 +41,7 @@ import java.time.Duration
 @AutoConfiguration
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
-@EnableConfigurationProperties(CorsPathConfiguration::class, SecurityHeadersConfig::class)
+@EnableConfigurationProperties(CorsPathConfiguration::class, SecurityHeadersConfig::class, SecurityEndpointsConfig::class)
 class OauthSecurityAutoConfiguration {
 
     @Bean
@@ -50,6 +51,7 @@ class OauthSecurityAutoConfiguration {
         corsPathConfiguration: CorsPathConfiguration,
         securityConfigurers: List<HttpSecurityConfigurer>,
         securityHeadersConfig: SecurityHeadersConfig,
+        securityEndpointsConfig: SecurityEndpointsConfig,
     ): SecurityWebFilterChain {
         securityConfigurers.forEach { it.configure(http) }
 
@@ -82,6 +84,11 @@ class OauthSecurityAutoConfiguration {
                 it.pathMatchers("/playground").permitAll()
                 it.pathMatchers("/graphql").permitAll()
                 it.pathMatchers("/actuator/**").permitAll()
+                    .apply {
+                        securityEndpointsConfig.unsecured.forEach { endpoint ->
+                            it.pathMatchers(endpoint).permitAll()
+                        }
+                    }
                 it.anyExchange().authenticated()
             }
             .oauth2ResourceServer {
