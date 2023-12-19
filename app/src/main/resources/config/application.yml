@@ -126,9 +126,11 @@ nl-portal:
     #        keyPassword: ${VALTIMO_HAALCENTRAAL_SSL_KEY_KEY_PASSWORD}
     #     trustedCertificate: ${VALTIMO_HAALCENTRAAL_SSL_TRUSTED_CERTIFICATE}
     security:
-      cors:
+        cors:
           -   path: "/**"
               config:
                   allowedHeaders: "*"
                   allowedOrigins: "*"
                   allowedMethods: "*"
+        #endpoints:
+            #unsecured: /playground, /actuator/**
