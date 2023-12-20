@@ -59,11 +59,12 @@ internal class BewoningenQueryIT(
     @Test
     @WithBurgerUser("999993872")
     fun getBewonersAantal() {
-        val query = """
+        val query =
+            """
             query {
                 getBewonersAantal
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val basePath = "$.data.getBewonersAantal"
 
@@ -80,16 +81,18 @@ internal class BewoningenQueryIT(
     }
 
     private fun setupMockServer() {
-        val dispatcher: Dispatcher = object : Dispatcher() {
-            @Throws(InterruptedException::class)
-            override fun dispatch(request: RecordedRequest): MockResponse {
-                val response = when (request.path?.substringBefore('?')) {
-                    "/bewoning/bewoningen" -> TestHelper.mockResponseFromFile("/data/get-bewoningen.json")
-                    else -> MockResponse().setResponseCode(404)
+        val dispatcher: Dispatcher =
+            object : Dispatcher() {
+                @Throws(InterruptedException::class)
+                override fun dispatch(request: RecordedRequest): MockResponse {
+                    val response =
+                        when (request.path?.substringBefore('?')) {
+                            "/bewoning/bewoningen" -> TestHelper.mockResponseFromFile("/data/get-bewoningen.json")
+                            else -> MockResponse().setResponseCode(404)
+                        }
+                    return response
                 }
-                return response
             }
-        }
         server.dispatcher = dispatcher
     }
 }

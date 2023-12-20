@@ -33,25 +33,26 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
 
 class CustomSchemaGeneratorHooks(override val wiringFactory: KotlinDirectiveWiringFactory) : SchemaGeneratorHooks {
-
     /**
      * Register additional GraphQL scalar types.
      */
-    override fun willGenerateGraphQLType(type: KType): GraphQLType? = when (type.classifier) {
-        UUID::class -> graphqlUUIDType
-        ObjectNode::class -> graphqlJSONType
-        LocalDate::class -> graphqlLocalDateType
-        LocalDateTime::class -> graphqlLocalDateTimeType
-        else -> null
-    }
+    override fun willGenerateGraphQLType(type: KType): GraphQLType? =
+        when (type.classifier) {
+            UUID::class -> graphqlUUIDType
+            ObjectNode::class -> graphqlJSONType
+            LocalDate::class -> graphqlLocalDateType
+            LocalDateTime::class -> graphqlLocalDateTimeType
+            else -> null
+        }
 
     /**
      * Register Reactor Mono monad type.
      */
-    override fun willResolveMonad(type: KType): KType = when (type.classifier) {
-        Mono::class -> type.arguments.firstOrNull()?.type
-        else -> type
-    } ?: type
+    override fun willResolveMonad(type: KType): KType =
+        when (type.classifier) {
+            Mono::class -> type.arguments.firstOrNull()?.type
+            else -> type
+        } ?: type
 
     /**
      * Exclude the Spring bean factory interface

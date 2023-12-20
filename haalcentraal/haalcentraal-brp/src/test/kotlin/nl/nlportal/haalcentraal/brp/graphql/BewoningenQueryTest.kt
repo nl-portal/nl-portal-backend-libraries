@@ -22,10 +22,10 @@ import org.mockito.Mockito.verify
 
 @ExperimentalCoroutinesApi
 internal class BewoningenQueryTest : QueryTestBase() {
-
     @Test
-    fun `getBewonersAantal should call service`() = runTest {
-        query.getBewonersAantal(environment)
-        verify(haalCentraalBrpService).getBewonersAantal(authentication)
-    }
+    fun `getBewonersAantal should call service`() =
+        runTest {
+            query.getBewonersAantal(environment)
+            verify(haalCentraalBrpService).getBewonersAantal(authentication)
+        }
 }

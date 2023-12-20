@@ -31,7 +31,6 @@ import org.springframework.context.annotation.Bean
 @AutoConfiguration
 @AutoConfigureBefore(GraphQLAutoConfiguration::class)
 class GraphQLContextAutoConfiguration {
-
     @ExperimentalCoroutinesApi
     @Bean
     @ConditionalOnMissingBean
@@ -41,7 +40,10 @@ class GraphQLContextAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    fun reactiveDataFactoryProvider(objectMapper: ObjectMapper, applicationContext: ApplicationContext): KotlinDataFetcherFactoryProvider {
+    fun reactiveDataFactoryProvider(
+        objectMapper: ObjectMapper,
+        applicationContext: ApplicationContext,
+    ): KotlinDataFetcherFactoryProvider {
         return ReactiveDataFactoryProvider(objectMapper, applicationContext)
     }
 }

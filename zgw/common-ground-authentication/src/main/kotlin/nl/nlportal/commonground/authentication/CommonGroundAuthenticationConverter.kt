@@ -23,7 +23,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import reactor.core.publisher.Mono
 
 class CommonGroundAuthenticationConverter : Converter<Jwt, Mono<CommonGroundAuthentication>> {
-
     private val jwtGrantedAuthoritiesConverter = JwtGrantedAuthoritiesConverter()
 
     // TODO: remove support for bsn and kvk keys directly in the root of the JWT

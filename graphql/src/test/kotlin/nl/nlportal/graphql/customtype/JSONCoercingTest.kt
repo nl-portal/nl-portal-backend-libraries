@@ -23,7 +23,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class JSONCoercingTest {
-
     @Test
     fun parseObjectValueToJacksonObjectNode() {
         val objectValue = ObjectValue(listOf(ObjectField("key", StringValue("value"))))

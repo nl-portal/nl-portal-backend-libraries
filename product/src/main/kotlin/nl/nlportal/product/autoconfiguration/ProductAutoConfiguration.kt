@@ -27,31 +27,24 @@ import org.springframework.context.annotation.Bean
 @AutoConfiguration
 @EnableConfigurationProperties(OpenFormulierenClientConfig::class)
 class ProductAutoConfiguration {
-
     @Bean
     fun openFormulierenClientConfig(): OpenFormulierenClientConfig {
         return OpenFormulierenClientConfig()
     }
 
     @Bean
-    fun openFormulierenClient(
-        openFormulierenClientConfig: OpenFormulierenClientConfig,
-    ): OpenFormulierenClient {
+    fun openFormulierenClient(openFormulierenClientConfig: OpenFormulierenClientConfig): OpenFormulierenClient {
         return OpenFormulierenClient(openFormulierenClientConfig)
     }
 
     @Bean
     @ConditionalOnMissingBean(FormService::class)
-    fun formService(
-        openFormulierenClient: OpenFormulierenClient,
-    ): FormService {
+    fun formService(openFormulierenClient: OpenFormulierenClient): FormService {
         return nl.nlportal.product.service.impl.FormService(openFormulierenClient)
     }
 
     @Bean
-    fun formQuery(
-        formService: FormService,
-    ): FormQuery {
+    fun formQuery(formService: FormService): FormQuery {
         return FormQuery(formService)
     }
 }

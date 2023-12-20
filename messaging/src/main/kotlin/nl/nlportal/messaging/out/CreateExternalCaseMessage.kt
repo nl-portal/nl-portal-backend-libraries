@@ -20,7 +20,6 @@ import java.util.UUID
 
 data class CreateExternalCaseMessage(val caseId: UUID, val submission: ObjectNode, val caseDefinitionId: String) :
     PortalMessage {
-
     override val destination: String
         get() = "create-external-case"
 }

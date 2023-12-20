@@ -18,12 +18,14 @@ package nl.nlportal.core.ssl
 import io.netty.handler.ssl.SslContext
 
 interface ClientSslContextResolver {
-
     /**
      * This will resolve the SSL context which can be used for client authentication
      *
      * The private key can either be encrypted by a password, or unencrypted.
      * Please note: the supported encryption cyphers depends on the JRE used.
      */
-    fun resolve(keyData: ClientKey? = null, trustedCertificate: String? = null): SslContext
+    fun resolve(
+        keyData: ClientKey? = null,
+        trustedCertificate: String? = null,
+    ): SslContext
 }

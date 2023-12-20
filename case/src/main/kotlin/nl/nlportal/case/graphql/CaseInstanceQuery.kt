@@ -17,15 +17,14 @@ package nl.nlportal.case.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Query
+import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.case.domain.CaseId
 import nl.nlportal.case.service.CaseService
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
-import graphql.schema.DataFetchingEnvironment
 import org.springframework.security.core.Authentication
 import java.util.UUID
 
 class CaseInstanceQuery(private val caseService: CaseService) : Query {
-
     @GraphQLDescription("retrieves all available case instances")
     fun allCaseInstances(
         @GraphQLDescription("The case instance orderBy ")
@@ -46,10 +45,11 @@ class CaseInstanceQuery(private val caseService: CaseService) : Query {
         @GraphQLDescription("The case instance id ") id: UUID,
         dfe: DataFetchingEnvironment,
     ): CaseInstance? {
-        val case = caseService.getCase(
-            CaseId.existingId(id),
-            dfe.graphQlContext.get<Authentication>(AUTHENTICATION_KEY).name,
-        ) ?: return null
+        val case =
+            caseService.getCase(
+                CaseId.existingId(id),
+                dfe.graphQlContext.get<Authentication>(AUTHENTICATION_KEY).name,
+            ) ?: return null
         return CaseInstance.from(case)
     }
 }

@@ -17,7 +17,9 @@ package nl.nlportal.documentenapi.domain
 
 import com.fasterxml.jackson.annotation.JsonValue
 
-enum class DocumentStatus(@JsonValue val key: String) {
+enum class DocumentStatus(
+    @JsonValue val key: String,
+) {
     IN_BEWERKING("in_bewerking"),
     TER_VASTSTELLING("ter_vaststelling"),
     DEFINITIEF("definitief"),

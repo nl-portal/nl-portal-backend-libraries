@@ -58,7 +58,10 @@ class LiquibaseRunner(
         logger.info("Finished running liquibase")
     }
 
-    private fun runChangeLog(database: Database, filePath: String?) {
+    private fun runChangeLog(
+        database: Database,
+        filePath: String?,
+    ) {
         val liquibase = Liquibase(filePath, ClassLoaderResourceAccessor(), database)
         logger.info("Running liquibase master changelog: {}", liquibase.changeLogFile)
         liquibase.update(context)

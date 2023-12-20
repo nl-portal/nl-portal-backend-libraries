@@ -31,7 +31,6 @@ import org.springframework.security.core.Authentication
 
 @ExperimentalCoroutinesApi
 internal class BurgerQueryTest {
-
     var burgerService = mock(BurgerService::class.java)
     var environment = mock(DataFetchingEnvironment::class.java)
     var authentication = mock(CommonGroundAuthentication::class.java)
@@ -45,8 +44,9 @@ internal class BurgerQueryTest {
     }
 
     @Test
-    fun getBurgerProfiel() = runTest {
-        burgerQuery.getBurgerProfiel(environment)
-        verify(burgerService).getBurgerProfiel(authentication)
-    }
+    fun getBurgerProfiel() =
+        runTest {
+            burgerQuery.getBurgerProfiel(environment)
+            verify(burgerService).getBurgerProfiel(authentication)
+        }
 }

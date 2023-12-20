@@ -28,7 +28,6 @@ class CompletePublicTaskMutation(
     private val taskService: TaskService,
     private val caseService: CaseService,
 ) : Mutation {
-
     @IsUnauthenticated
     @GraphQLDescription("Mutation used to complete public tasks")
     fun completePublicTask(

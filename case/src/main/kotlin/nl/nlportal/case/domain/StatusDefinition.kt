@@ -15,21 +15,18 @@
  */
 package nl.nlportal.case.domain
 
-import nl.nlportal.core.util.ObjectValidator
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
+import nl.nlportal.core.util.ObjectValidator
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 
 @Embeddable
 data class StatusDefinition(
-
     @Column(name = "status_definition", columnDefinition = "json")
     @JdbcTypeCode(SqlTypes.JSON)
     val statuses: List<String>,
-
 ) {
-
     init {
         ObjectValidator.validate(this)
     }

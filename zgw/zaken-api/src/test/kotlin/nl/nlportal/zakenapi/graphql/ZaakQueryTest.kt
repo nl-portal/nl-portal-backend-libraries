@@ -32,7 +32,6 @@ import org.springframework.security.core.Authentication
 
 @ExperimentalCoroutinesApi
 internal class ZaakQueryTest {
-
     var zakenApiService: ZakenApiService = mock()
     var environment: DataFetchingEnvironment = mock()
     var authentication: CommonGroundAuthentication = mock()
@@ -46,22 +45,25 @@ internal class ZaakQueryTest {
     }
 
     @Test
-    fun getZaken() = runTest {
-        zaakQuery.getZaken(environment, 3)
-        verify(zakenApiService).getZaken(3, authentication)
-    }
+    fun getZaken() =
+        runTest {
+            zaakQuery.getZaken(environment, 3)
+            verify(zakenApiService).getZaken(3, authentication)
+        }
 
     @Test
-    fun `getZaken no page`() = runTest {
-        zaakQuery.getZaken(environment)
-        verify(zakenApiService).getZaken(1, authentication)
-    }
+    fun `getZaken no page`() =
+        runTest {
+            zaakQuery.getZaken(environment)
+            verify(zakenApiService).getZaken(1, authentication)
+        }
 
     @Test
-    fun getZaak() = runTest {
-        val zaakId = UUID.randomUUID()
+    fun getZaak() =
+        runTest {
+            val zaakId = UUID.randomUUID()
 
-        zaakQuery.getZaak(zaakId, environment)
-        verify(zakenApiService).getZaak(zaakId, authentication)
-    }
+            zaakQuery.getZaak(zaakId, environment)
+            verify(zakenApiService).getZaak(zaakId, authentication)
+        }
 }

@@ -23,7 +23,6 @@ import nl.nlportal.haalcentraal.hr.service.HandelsregisterService
 import graphql.schema.DataFetchingEnvironment
 
 class HandelsregisterQuery(val handelsregisterService: HandelsregisterService) : Query {
-
     @GraphQLDescription("Gets the bedrijf data")
     suspend fun getBedrijf(dfe: DataFetchingEnvironment): MaatschappelijkeActiviteit? {
         return handelsregisterService.getMaatschappelijkeActiviteit(dfe.graphQlContext.get(AUTHENTICATION_KEY))

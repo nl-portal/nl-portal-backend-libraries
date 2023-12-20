@@ -19,7 +19,6 @@ import jakarta.validation.ConstraintViolationException
 import jakarta.validation.Validation
 
 object ObjectValidator {
-
     private val validator = Validation.buildDefaultValidatorFactory().validator
 
     @JvmStatic

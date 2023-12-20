@@ -35,12 +35,51 @@ class HaalCentraalBrpServiceTest {
     val haalCentraalBrpServiceImpl = HaalCentraalBrpServiceImpl(haalCentraalBrpClient)
 
     @Test
-    fun `getPerson calls client and gets Persoon`() = runTest {
-        val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
-        whenever(haalCentraalBrpClient.getPersoon("123", authentication)).thenReturn(
-            Persoon(
-                "123",
-                "geslacht",
+    fun `getPerson calls client and gets Persoon`() =
+        runTest {
+            val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
+            whenever(haalCentraalBrpClient.getPersoon("123", authentication)).thenReturn(
+                Persoon(
+                    "123",
+                    "geslacht",
+                    PersoonNaam(
+                        "Aanhef",
+                        "Voornaam",
+                        "V.",
+                        "van",
+                        "Achternaam",
+                    ),
+                    null,
+                    null,
+                    null,
+                ),
+            )
+
+            val persoon = haalCentraalBrpServiceImpl.getPersoon(authentication)!!
+
+            assertEquals("Achternaam", persoon.naam?.geslachtsnaam)
+
+            verify(haalCentraalBrpClient).getPersoon("123", authentication)
+        }
+
+    @Test
+    fun `getPerson with invalid bsn`() =
+        runTest {
+            val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
+            val persoon = haalCentraalBrpServiceImpl.getPersoon(authentication)
+
+            assertNull(persoon)
+        }
+
+    @Test
+    fun `getGemachtigde calls client and gets PersoonNaam`() =
+        runTest {
+            val authentication =
+                JwtBuilder()
+                    .aanvragerBsn("123")
+                    .gemachtigdeBsn("456")
+                    .buildBurgerAuthentication()
+            whenever(haalCentraalBrpClient.getPersoonNaam("456", authentication)).thenReturn(
                 PersoonNaam(
                     "Aanhef",
                     "Voornaam",
@@ -48,58 +87,25 @@ class HaalCentraalBrpServiceTest {
                     "van",
                     "Achternaam",
                 ),
-                null,
-                null,
-                null,
-            ),
-        )
+            )
 
-        val persoon = haalCentraalBrpServiceImpl.getPersoon(authentication)!!
+            val persoonNaam = haalCentraalBrpServiceImpl.getGemachtigde(authentication)!!
 
-        assertEquals("Achternaam", persoon.naam?.geslachtsnaam)
+            assertEquals("Achternaam", persoonNaam.geslachtsnaam)
 
-        verify(haalCentraalBrpClient).getPersoon("123", authentication)
-    }
+            verify(haalCentraalBrpClient).getPersoonNaam("456", authentication)
+        }
 
     @Test
-    fun `getPerson with invalid bsn`() = runTest {
-        val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
-        val persoon = haalCentraalBrpServiceImpl.getPersoon(authentication)
+    fun `getGemachtigde with invalid bsn`() =
+        runTest {
+            val authentication =
+                JwtBuilder()
+                    .aanvragerBsn("123")
+                    .gemachtigdeBsn("456")
+                    .buildBurgerAuthentication()
+            val persoonNaam = haalCentraalBrpServiceImpl.getPersoon(authentication)
 
-        assertNull(persoon)
-    }
-
-    @Test
-    fun `getGemachtigde calls client and gets PersoonNaam`() = runTest {
-        val authentication = JwtBuilder()
-            .aanvragerBsn("123")
-            .gemachtigdeBsn("456")
-            .buildBurgerAuthentication()
-        whenever(haalCentraalBrpClient.getPersoonNaam("456", authentication)).thenReturn(
-            PersoonNaam(
-                "Aanhef",
-                "Voornaam",
-                "V.",
-                "van",
-                "Achternaam",
-            ),
-        )
-
-        val persoonNaam = haalCentraalBrpServiceImpl.getGemachtigde(authentication)!!
-
-        assertEquals("Achternaam", persoonNaam.geslachtsnaam)
-
-        verify(haalCentraalBrpClient).getPersoonNaam("456", authentication)
-    }
-
-    @Test
-    fun `getGemachtigde with invalid bsn`() = runTest {
-        val authentication = JwtBuilder()
-            .aanvragerBsn("123")
-            .gemachtigdeBsn("456")
-            .buildBurgerAuthentication()
-        val persoonNaam = haalCentraalBrpServiceImpl.getPersoon(authentication)
-
-        assertNull(persoonNaam)
-    }
+            assertNull(persoonNaam)
+        }
 }

@@ -21,16 +21,18 @@ class JwtBuilder {
     private var aanvragerBsn: String? = null
     private var aanvragerKvk: String? = null
 
-    private var jwtBuilder: Jwt.Builder = Jwt
-        .withTokenValue("token")
-        .header("alg", "none")
+    private var jwtBuilder: Jwt.Builder =
+        Jwt
+            .withTokenValue("token")
+            .header("alg", "none")
 
     fun aanvragerBsn(bsn: String): JwtBuilder {
         assert(aanvragerKvk == null, { "cannot set bsn for jwt that already has kvk" })
 
-        val aanvrager = mapOf<String, Any>(
-            BSN_KEY to bsn,
-        )
+        val aanvrager =
+            mapOf<String, Any>(
+                BSN_KEY to bsn,
+            )
         jwtBuilder.claim(AANVRAGER_KEY, aanvrager)
         this.aanvragerBsn = bsn
 
@@ -40,9 +42,10 @@ class JwtBuilder {
     fun aanvragerKvk(kvk: String): JwtBuilder {
         assert(aanvragerBsn == null, { "cannot set kvk for jwt that already has bsn" })
 
-        val aanvrager = mapOf<String, Any>(
-            KVK_NUMMER_KEY to kvk,
-        )
+        val aanvrager =
+            mapOf<String, Any>(
+                KVK_NUMMER_KEY to kvk,
+            )
         jwtBuilder.claim(AANVRAGER_KEY, aanvrager)
         this.aanvragerKvk = kvk
 
@@ -50,18 +53,20 @@ class JwtBuilder {
     }
 
     fun gemachtigdeBsn(bsn: String): JwtBuilder {
-        val gemachtigde = mapOf<String, Any>(
-            BSN_KEY to bsn,
-        )
+        val gemachtigde =
+            mapOf<String, Any>(
+                BSN_KEY to bsn,
+            )
         jwtBuilder.claim(GEMACHTIGDE_KEY, gemachtigde)
 
         return this
     }
 
     fun gemachtigdeKvk(kvk: String): JwtBuilder {
-        val gemachtigde = mapOf<String, Any>(
-            KVK_NUMMER_KEY to kvk,
-        )
+        val gemachtigde =
+            mapOf<String, Any>(
+                KVK_NUMMER_KEY to kvk,
+            )
         jwtBuilder.claim(GEMACHTIGDE_KEY, gemachtigde)
 
         return this

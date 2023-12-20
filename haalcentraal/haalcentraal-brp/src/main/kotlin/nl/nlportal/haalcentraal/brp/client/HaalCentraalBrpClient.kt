@@ -26,31 +26,38 @@ import java.time.LocalDate
 class HaalCentraalBrpClient(
     val haalCentraalClientProvider: HaalCentraalClientProvider,
 ) {
-
-    suspend fun getPersoon(bsn: String, authentication: Authentication): Persoon {
+    suspend fun getPersoon(
+        bsn: String,
+        authentication: Authentication,
+    ): Persoon {
         return haalCentraalClientProvider.webClient(authentication)
             .get()
             .uri {
-                val uriBuilder = it.path("/brp/ingeschrevenpersonen/$bsn")
-                    .queryParam(
-                        "fields",
-                        "naam,nationaliteiten,geslachtsaanduiding,geboorte,burgerservicenummer,verblijfplaats",
-                    )
+                val uriBuilder =
+                    it.path("/brp/ingeschrevenpersonen/$bsn")
+                        .queryParam(
+                            "fields",
+                            "naam,nationaliteiten,geslachtsaanduiding,geboorte,burgerservicenummer,verblijfplaats",
+                        )
                 uriBuilder.build()
             }
             .retrieve()
             .awaitBody()
     }
 
-    suspend fun getPersoonNaam(bsn: String, authentication: Authentication): PersoonNaam? {
+    suspend fun getPersoonNaam(
+        bsn: String,
+        authentication: Authentication,
+    ): PersoonNaam? {
         return haalCentraalClientProvider.webClient(authentication)
             .get()
             .uri {
-                val uriBuilder = it.path("/brp/ingeschrevenpersonen/$bsn")
-                    .queryParam(
-                        "fields",
-                        "naam",
-                    )
+                val uriBuilder =
+                    it.path("/brp/ingeschrevenpersonen/$bsn")
+                        .queryParam(
+                            "fields",
+                            "naam",
+                        )
                 uriBuilder.build()
             }
             .retrieve()
@@ -58,14 +65,18 @@ class HaalCentraalBrpClient(
             .naam
     }
 
-    suspend fun getBewoningen(bsn: String, authentication: Authentication): Bewoning {
+    suspend fun getBewoningen(
+        bsn: String,
+        authentication: Authentication,
+    ): Bewoning {
         return haalCentraalClientProvider.webClient(authentication)
             .get()
             .uri {
-                val uriBuilder = it.path("/bewoning/bewoningen")
-                    .queryParam("burgerservicenummer", bsn)
-                    .queryParam("peildatum", LocalDate.now())
-                    .queryParam("fields", "bewoners")
+                val uriBuilder =
+                    it.path("/bewoning/bewoningen")
+                        .queryParam("burgerservicenummer", bsn)
+                        .queryParam("peildatum", LocalDate.now())
+                        .queryParam("fields", "bewoners")
                 uriBuilder.build()
             }
             .retrieve()

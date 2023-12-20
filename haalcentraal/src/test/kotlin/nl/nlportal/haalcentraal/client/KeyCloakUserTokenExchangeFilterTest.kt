@@ -35,16 +35,18 @@ import org.springframework.web.reactive.function.client.bodyToMono
 import java.net.URLDecoder
 import java.nio.charset.Charset
 import java.time.Instant
-import java.util.*
+import java.util.UUID
+import java.util.Date
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class KeyCloakUserTokenExchangeFilterTest {
     private lateinit var server: MockWebServer
     private val signingKey = Keys.hmacShaKeyFor(UUID.randomUUID().toString().toByteArray(Charset.forName("UTF-8")))
-    private val exchangeToken = Jwts.builder()
-        .setIssuedAt(Date.from(Instant.now()))
-        .signWith(signingKey)
-        .compact()
+    private val exchangeToken =
+        Jwts.builder()
+            .setIssuedAt(Date.from(Instant.now()))
+            .signWith(signingKey)
+            .compact()
 
     @BeforeEach
     internal fun setUp() {
@@ -72,37 +74,41 @@ internal class KeyCloakUserTokenExchangeFilterTest {
     @Test
     fun `should exchange user token for a new one`() {
         val serverPath = server.url("/").toString()
-        val userToken = Jwt
-            .withTokenValue("token")
-            .header("alg", "none")
-            .claim("azp", "userClient")
-            .issuer(serverPath)
-            .build()
+        val userToken =
+            Jwt
+                .withTokenValue("token")
+                .header("alg", "none")
+                .claim("azp", "userClient")
+                .issuer(serverPath)
+                .build()
 
-        val clientBuilder = WebClient.builder()
-            .defaultRequest { spec ->
-                spec.attribute(
-                    HaalCentraalClientProvider.AUTHENTICATION_ATTRIBUTE_NAME,
-                    JwtAuthenticationToken(userToken),
+        val clientBuilder =
+            WebClient.builder()
+                .defaultRequest { spec ->
+                    spec.attribute(
+                        HaalCentraalClientProvider.AUTHENTICATION_ATTRIBUTE_NAME,
+                        JwtAuthenticationToken(userToken),
+                    )
+                }
+                .baseUrl(serverPath)
+
+        val client =
+            clientBuilder.clone()
+                .filter(
+                    KeyCloakUserTokenExchangeFilter(
+                        clientBuilder.clone().build(),
+                        "targetClient",
+                    ),
                 )
-            }
-            .baseUrl(serverPath)
-
-        val client = clientBuilder.clone()
-            .filter(
-                KeyCloakUserTokenExchangeFilter(
-                    clientBuilder.clone().build(),
-                    "targetClient",
-                ),
-            )
-            .build()
+                .build()
 
         runBlocking {
-            val apiResponseBody = client.get()
-                .uri("/")
-                .retrieve()
-                .bodyToMono<String>()
-                .block()
+            val apiResponseBody =
+                client.get()
+                    .uri("/")
+                    .retrieve()
+                    .bodyToMono<String>()
+                    .block()
 
             val tokenRequest = server.takeRequest()
             assertThat(tokenRequest.path).isEqualTo("/protocol/openid-connect/token")

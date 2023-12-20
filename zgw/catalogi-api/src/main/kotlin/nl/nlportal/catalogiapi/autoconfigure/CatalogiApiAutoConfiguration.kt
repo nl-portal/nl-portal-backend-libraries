@@ -27,12 +27,9 @@ import org.springframework.context.annotation.Bean
 @AutoConfiguration
 @EnableConfigurationProperties(CatalogiApiConfig::class)
 class CatalogiApiAutoConfiguration {
-
     @Bean
     @ConditionalOnMissingBean(CatalogiApiService::class)
-    fun catalogiApiService(
-        catalogiApiClient: CatalogiApiClient,
-    ): CatalogiApiService {
+    fun catalogiApiService(catalogiApiClient: CatalogiApiClient): CatalogiApiService {
         return CatalogiApiService(catalogiApiClient)
     }
 

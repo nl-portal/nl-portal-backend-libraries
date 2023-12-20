@@ -27,7 +27,6 @@ class GemachtigdeQuery(
     val haalCentraalBrpService: HaalCentraalBrpService,
     val handelsregisterService: HandelsregisterService,
 ) : Query {
-
     @GraphQLDescription("Gets the data of the gemachtigde")
     suspend fun getGemachtigde(dfe: DataFetchingEnvironment): Gemachtigde {
         val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)

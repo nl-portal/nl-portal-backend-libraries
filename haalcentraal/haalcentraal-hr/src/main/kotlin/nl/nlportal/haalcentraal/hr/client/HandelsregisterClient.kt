@@ -30,7 +30,6 @@ class HandelsregisterClient(
     val haalCentraalHrClientConfig: HaalCentraalHrClientConfig,
     val clientSslContextResolver: ClientSslContextResolver? = null,
 ) {
-
     suspend fun getMaatschappelijkeActiviteit(kvkNummer: String): MaatschappelijkeActiviteit {
         return webClient()
             .get()
@@ -51,10 +50,11 @@ class HandelsregisterClient(
                         var result = client
                         if (clientSslContextResolver != null) {
                             haalCentraalHrClientConfig.ssl?.let {
-                                val sslContext = clientSslContextResolver.resolve(
-                                    it.key,
-                                    it.trustedCertificate,
-                                )
+                                val sslContext =
+                                    clientSslContextResolver.resolve(
+                                        it.key,
+                                        it.trustedCertificate,
+                                    )
 
                                 result = client.secure { builder -> builder.sslContext(sslContext) }
 

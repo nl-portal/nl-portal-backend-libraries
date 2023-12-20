@@ -30,7 +30,6 @@ import org.springframework.context.annotation.Bean
 @AutoConfiguration
 @EnableConfigurationProperties(OpenKlantClientConfig::class)
 class KlantAutoConfiguration {
-
     @Bean
     @ConditionalOnMissingBean(BurgerService::class)
     fun burgerService(
@@ -42,9 +41,7 @@ class KlantAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(OpenKlantClient::class)
-    fun openKlantClient(
-        openKlantClientProvider: OpenKlantClientProvider,
-    ): OpenKlantClient {
+    fun openKlantClient(openKlantClientProvider: OpenKlantClientProvider): OpenKlantClient {
         return OpenKlantClient(openKlantClientProvider)
     }
 
@@ -54,7 +51,10 @@ class KlantAutoConfiguration {
     }
 
     @Bean
-    fun burgerMutation(burgerService: BurgerService, graphQlValidator: GraphQlValidator): BurgerMutation {
+    fun burgerMutation(
+        burgerService: BurgerService,
+        graphQlValidator: GraphQlValidator,
+    ): BurgerMutation {
         return BurgerMutation(burgerService, graphQlValidator)
     }
 }

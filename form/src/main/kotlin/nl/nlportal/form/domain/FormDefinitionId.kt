@@ -21,24 +21,20 @@ import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 import jakarta.persistence.GeneratedValue
 import org.hibernate.annotations.UuidGenerator
-import java.util.*
+import java.util.UUID
 
 @Embeddable
 data class FormDefinitionId(
-
     @Column(name = "form_definition_id", columnDefinition = "UUID")
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     @GeneratedValue
     val value: UUID,
-
 ) : AbstractId<FormDefinitionId>() {
-
     init {
         ObjectValidator.validate(this)
     }
 
     companion object {
-
         fun existingId(value: UUID): FormDefinitionId {
             return FormDefinitionId(value)
         }

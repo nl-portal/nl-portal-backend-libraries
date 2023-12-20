@@ -66,7 +66,8 @@ internal class ZaakQueryIT(
     @Test
     @WithBurgerUser("123")
     fun getZaken() {
-        val query = """
+        val query =
+            """
             query {
                 getZaken(page: 1) {
                     uuid,
@@ -93,17 +94,18 @@ internal class ZaakQueryIT(
                     }
                 }
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val basePath = "$.data.getZaken[0]"
 
-        val response = testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
-            .exchange()
-            .expectBody()
+        val response =
+            testClient.post()
+                .uri("/graphql")
+                .accept(APPLICATION_JSON)
+                .contentType(MediaType("application", "graphql"))
+                .bodyValue(query)
+                .exchange()
+                .expectBody()
 
         response
             .jsonPath(basePath).exists()
@@ -137,7 +139,8 @@ internal class ZaakQueryIT(
     fun getZakenUnAuthorized() {
         zakenApiConfig.clientId = ""
 
-        val query = """
+        val query =
+            """
             query {
                 getZaken(page: 0) {
                     uuid,
@@ -164,7 +167,7 @@ internal class ZaakQueryIT(
                     }
                 }
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val basePath = "$.data.getZaken[0]"
 
@@ -181,7 +184,8 @@ internal class ZaakQueryIT(
     @Test
     @WithBurgerUser("123")
     fun `getZaken no page`() {
-        val query = """
+        val query =
+            """
             query {
                 getZaken {
                     uuid,
@@ -208,7 +212,7 @@ internal class ZaakQueryIT(
                     }
                 }
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val basePath = "$.data.getZaken[0]"
         testClient.post()
@@ -236,7 +240,8 @@ internal class ZaakQueryIT(
     @Test
     @WithBurgerUser("123")
     fun getZaak() {
-        val query = """
+        val query =
+            """
             query {
                 getZaak(id: "5d479908-fbb7-49c2-98c9-9afecf8de79a") {
                     uuid,
@@ -277,7 +282,7 @@ internal class ZaakQueryIT(
                     }
                 }
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val basePath = "$.data.getZaak"
 
@@ -311,31 +316,34 @@ internal class ZaakQueryIT(
     }
 
     fun setupMockOpenZaakServer() {
-        val dispatcher: Dispatcher = object : Dispatcher() {
-            @Throws(InterruptedException::class)
-            override fun dispatch(request: RecordedRequest): MockResponse {
-                val path = request.path?.substringBefore('?')
-                val response = when (path) {
-                    "/zaken/api/v1/zaken" -> handleZaakListRequest()
-                    "/zaken/api/v1/statussen/0c019c8a-2274-4a7b-b381-2f35908500a6" -> handleStatusRequest()
-                    "/zaken/api/v1/statussen" -> handleStatusListRequest()
-                    "/catalogi/api/v1/zaaktypen/496f51fd-ccdb-406e-805a-e7602ae78a2b" -> handleZaakTypeRequest()
-                    "/catalogi/api/v1/statustypen" -> handleStatusTypenRequest()
-                    "/catalogi/api/v1/statustypen/a4bd90f4-b80c-446b-9f68-62c5b39298ff" -> handleStatusTypeRequest()
-                    "/zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a" -> handleZaakRequest()
-                    "/zaken/api/v1/zaakinformatieobjecten" -> handleZaakInformatieObjectenRequest()
-                    "/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> handleDocumentRequest()
-                    "/zaken/api/v1/rollen" -> handleZaakRollenRequest()
-                    else -> MockResponse().setResponseCode(404)
+        val dispatcher: Dispatcher =
+            object : Dispatcher() {
+                @Throws(InterruptedException::class)
+                override fun dispatch(request: RecordedRequest): MockResponse {
+                    val path = request.path?.substringBefore('?')
+                    val response =
+                        when (path) {
+                            "/zaken/api/v1/zaken" -> handleZaakListRequest()
+                            "/zaken/api/v1/statussen/0c019c8a-2274-4a7b-b381-2f35908500a6" -> handleStatusRequest()
+                            "/zaken/api/v1/statussen" -> handleStatusListRequest()
+                            "/catalogi/api/v1/zaaktypen/496f51fd-ccdb-406e-805a-e7602ae78a2b" -> handleZaakTypeRequest()
+                            "/catalogi/api/v1/statustypen" -> handleStatusTypenRequest()
+                            "/catalogi/api/v1/statustypen/a4bd90f4-b80c-446b-9f68-62c5b39298ff" -> handleStatusTypeRequest()
+                            "/zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a" -> handleZaakRequest()
+                            "/zaken/api/v1/zaakinformatieobjecten" -> handleZaakInformatieObjectenRequest()
+                            "/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> handleDocumentRequest()
+                            "/zaken/api/v1/rollen" -> handleZaakRollenRequest()
+                            else -> MockResponse().setResponseCode(404)
+                        }
+                    return response
                 }
-                return response
             }
-        }
         server.dispatcher = dispatcher
     }
 
     fun handleZaakListRequest(): MockResponse {
-        val body = """
+        val body =
+            """
             {
                 "count": 1,
                 "next": null,
@@ -385,13 +393,14 @@ internal class ZaakQueryIT(
                     }
                 ]
             }
-        """.trimIndent()
+            """.trimIndent()
 
         return mockResponse(body)
     }
 
     fun handleZaakRequest(): MockResponse {
-        val body = """
+        val body =
+            """
             {
                 "url": "$url/zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a",
                 "uuid": "5d479908-fbb7-49c2-98c9-9afecf8de79a",
@@ -434,13 +443,14 @@ internal class ZaakQueryIT(
                 "archiefactiedatum": null,
                 "resultaat": null
             }
-        """.trimIndent()
+            """.trimIndent()
 
         return mockResponse(body)
     }
 
     fun handleStatusListRequest(): MockResponse {
-        val body = """
+        val body =
+            """
             {
                 "count": 1,
                 "next": null,
@@ -456,13 +466,14 @@ internal class ZaakQueryIT(
                     }
                 ]
             }
-        """.trimIndent()
+            """.trimIndent()
 
         return mockResponse(body)
     }
 
     fun handleStatusRequest(): MockResponse {
-        val body = """
+        val body =
+            """
             {
                 "url": "http://localhost:8000/zaken/api/v1/statussen/7fd765f5-ce02-475c-8091-0203c531e41f",
                 "uuid": "7fd765f5-ce02-475c-8091-0203c531e41f",
@@ -471,13 +482,14 @@ internal class ZaakQueryIT(
                 "datumStatusGezet": "2021-09-16T14:00:00Z",
                 "statustoelichting": ""
             }
-        """.trimIndent()
+            """.trimIndent()
 
         return mockResponse(body)
     }
 
     fun handleStatusTypeRequest(): MockResponse {
-        val body = """
+        val body =
+            """
             {
                 "url": "http://localhost:8000/catalogi/api/v1/statustypen/3c8f06ab-1c69-4154-9850-31bdb649e376",
                 "omschrijving": "Zaak afgerond",
@@ -488,13 +500,14 @@ internal class ZaakQueryIT(
                 "isEindstatus": true,
                 "informeren": true
             }
-        """.trimIndent()
+            """.trimIndent()
 
         return mockResponse(body)
     }
 
     fun handleZaakTypeRequest(): MockResponse {
-        val body = """
+        val body =
+            """
             {
                 "url": "http://localhost:8000/catalogi/api/v1/zaaktypen/496f51fd-ccdb-406e-805a-e7602ae78a2b",
                 "identificatie": "bezwaar-behandelen",
@@ -552,145 +565,149 @@ internal class ZaakQueryIT(
                 "versiedatum": "2021-01-01",
                 "concept": false
             }
-        """.trimIndent()
+            """.trimIndent()
 
         return mockResponse(body)
     }
 
     fun handleZaakInformatieObjectenRequest(): MockResponse {
-        val body = """
-           [
-              {
-                "url": "$url",
-                "uuid": "095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
-                "informatieobject": "$url/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
-                "zaak": "$url",
-                "aardRelatieWeergave": "Hoort bij, omgekeerd: kent",
-                "titel": "string",
-                "beschrijving": "string",
-                "registratiedatum": "2019-08-24T14:15:22Z"
-              }
-           ]
-        """.trimIndent()
+        val body =
+            """
+            [
+               {
+                 "url": "$url",
+                 "uuid": "095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+                 "informatieobject": "$url/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+                 "zaak": "$url",
+                 "aardRelatieWeergave": "Hoort bij, omgekeerd: kent",
+                 "titel": "string",
+                 "beschrijving": "string",
+                 "registratiedatum": "2019-08-24T14:15:22Z"
+               }
+            ]
+            """.trimIndent()
         return mockResponse(body)
     }
 
     fun handleDocumentRequest(): MockResponse {
-        val body = """
-           {
-              "url": "http://some.domain.com/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
-              "identificatie": "string",
-              "bronorganisatie": "string",
-              "creatiedatum": "2021-10-14",
-              "titel": "Een titel",
-              "vertrouwelijkheidaanduiding": "openbaar",
-              "auteur": "string",
-              "status": "definitief",
-              "formaat": ".pdf",
-              "taal": "str",
-              "versie": 0,
-              "beginRegistratie": "2021-10-14T12:27:43Z",
-              "bestandsnaam": "string",
-              "inhoud": "http://example.com",
-              "bestandsomvang": 0,
-              "link": "http://example.com",
-              "beschrijving": "string",
-              "ontvangstdatum": "2021-10-14",
-              "verzenddatum": "2021-10-14",
-              "indicatieGebruiksrecht": true,
-              "ondertekening": {
-                "soort": "analoog",
-                "datum": "2021-10-14"
-              },
-              "integriteit": {
-                "algoritme": "crc_16",
-                "waarde": "string",
-                "datum": "2021-10-14"
-              },
-              "informatieobjecttype": "http://example.com",
-              "locked": true,
-              "bestandsdelen": [
-                {
-                  "url": "http://example.com",
-                  "volgnummer": 0,
-                  "omvang": 0,
-                  "inhoud": "http://example.com",
-                  "voltooid": true,
-                  "lock": "string"
-                }
-              ]
-            }
-        """.trimIndent()
+        val body =
+            """
+            {
+               "url": "http://some.domain.com/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+               "identificatie": "string",
+               "bronorganisatie": "string",
+               "creatiedatum": "2021-10-14",
+               "titel": "Een titel",
+               "vertrouwelijkheidaanduiding": "openbaar",
+               "auteur": "string",
+               "status": "definitief",
+               "formaat": ".pdf",
+               "taal": "str",
+               "versie": 0,
+               "beginRegistratie": "2021-10-14T12:27:43Z",
+               "bestandsnaam": "string",
+               "inhoud": "http://example.com",
+               "bestandsomvang": 0,
+               "link": "http://example.com",
+               "beschrijving": "string",
+               "ontvangstdatum": "2021-10-14",
+               "verzenddatum": "2021-10-14",
+               "indicatieGebruiksrecht": true,
+               "ondertekening": {
+                 "soort": "analoog",
+                 "datum": "2021-10-14"
+               },
+               "integriteit": {
+                 "algoritme": "crc_16",
+                 "waarde": "string",
+                 "datum": "2021-10-14"
+               },
+               "informatieobjecttype": "http://example.com",
+               "locked": true,
+               "bestandsdelen": [
+                 {
+                   "url": "http://example.com",
+                   "volgnummer": 0,
+                   "omvang": 0,
+                   "inhoud": "http://example.com",
+                   "voltooid": true,
+                   "lock": "string"
+                 }
+               ]
+             }
+            """.trimIndent()
         return mockResponse(body)
     }
 
     fun handleStatusTypenRequest(): MockResponse {
-        val body = """
-           {
-              "count": 3,
-              "next": "http://example.com",
-              "previous": "http://example.com",
-              "results": [
-                {
-                  "url": "http://example.com",
-                  "omschrijving": "Derde status",
-                  "omschrijvingGeneriek": "string",
-                  "statustekst": "string",
-                  "zaaktype": "http://example.com",
-                  "volgnummer": 3,
-                  "isEindstatus": true,
-                  "informeren": true
-                },
-                {
-                  "url": "http://example.com",
-                  "omschrijving": "Eerste status",
-                  "omschrijvingGeneriek": "string",
-                  "statustekst": "string",
-                  "zaaktype": "http://example.com",
-                  "volgnummer": 1,
-                  "isEindstatus": false,
-                  "informeren": true
-                },
-                {
-                  "url": "http://example.com",
-                  "omschrijving": "Tweede status",
-                  "omschrijvingGeneriek": "string",
-                  "statustekst": "string",
-                  "zaaktype": "http://example.com",
-                  "volgnummer": 2,
-                  "isEindstatus": false,
-                  "informeren": true
-                }
-              ]
-            }
-        """.trimIndent()
+        val body =
+            """
+            {
+               "count": 3,
+               "next": "http://example.com",
+               "previous": "http://example.com",
+               "results": [
+                 {
+                   "url": "http://example.com",
+                   "omschrijving": "Derde status",
+                   "omschrijvingGeneriek": "string",
+                   "statustekst": "string",
+                   "zaaktype": "http://example.com",
+                   "volgnummer": 3,
+                   "isEindstatus": true,
+                   "informeren": true
+                 },
+                 {
+                   "url": "http://example.com",
+                   "omschrijving": "Eerste status",
+                   "omschrijvingGeneriek": "string",
+                   "statustekst": "string",
+                   "zaaktype": "http://example.com",
+                   "volgnummer": 1,
+                   "isEindstatus": false,
+                   "informeren": true
+                 },
+                 {
+                   "url": "http://example.com",
+                   "omschrijving": "Tweede status",
+                   "omschrijvingGeneriek": "string",
+                   "statustekst": "string",
+                   "zaaktype": "http://example.com",
+                   "volgnummer": 2,
+                   "isEindstatus": false,
+                   "informeren": true
+                 }
+               ]
+             }
+            """.trimIndent()
 
         return mockResponse(body)
     }
 
     fun handleZaakRollenRequest(): MockResponse {
-        val body = """
-           {
-              "count": 3,
-              "next": "http://example.com",
-              "previous": "http://example.com",
-              "results": [
-                {
-                  "url": "http://example.com",
-                  "uuid": "095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
-                  "zaak": "http://example.com",
-                  "betrokkene": "http://example.com",
-                  "betrokkeneType": "natuurlijk_persoon",
-                  "roltype": "http://example.com",
-                  "omschrijving": "string",
-                  "omschrijvingGeneriek": "string",
-                  "roltoelichting": "string",
-                  "registratiedatum": "2019-08-24T14:15:22Z",
-                  "indicatieMachtiging": "gemachtigde"
-                }
-              ]
-            }
-        """.trimIndent()
+        val body =
+            """
+            {
+               "count": 3,
+               "next": "http://example.com",
+               "previous": "http://example.com",
+               "results": [
+                 {
+                   "url": "http://example.com",
+                   "uuid": "095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+                   "zaak": "http://example.com",
+                   "betrokkene": "http://example.com",
+                   "betrokkeneType": "natuurlijk_persoon",
+                   "roltype": "http://example.com",
+                   "omschrijving": "string",
+                   "omschrijvingGeneriek": "string",
+                   "roltoelichting": "string",
+                   "registratiedatum": "2019-08-24T14:15:22Z",
+                   "indicatieMachtiging": "gemachtigde"
+                 }
+               ]
+             }
+            """.trimIndent()
 
         return mockResponse(body)
     }

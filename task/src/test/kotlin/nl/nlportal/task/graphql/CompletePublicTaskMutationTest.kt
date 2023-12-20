@@ -36,7 +36,6 @@ import java.util.UUID
 
 @Transactional
 class CompletePublicTaskMutationTest : BaseTest() {
-
     lateinit var completePublicTaskMutation: CompletePublicTaskMutation
 
     @BeforeEach

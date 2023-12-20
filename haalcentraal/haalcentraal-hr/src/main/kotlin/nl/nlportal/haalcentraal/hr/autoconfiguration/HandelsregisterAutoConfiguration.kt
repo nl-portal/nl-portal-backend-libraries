@@ -31,7 +31,6 @@ import org.springframework.core.io.ResourceLoader
 @AutoConfiguration
 @EnableConfigurationProperties(HaalCentraalHrClientConfig::class)
 class HandelsregisterAutoConfiguration {
-
     @Bean
     @ConditionalOnMissingBean(ClientSslContextResolver::class)
     fun clientSslContextResolver(resourceLoader: ResourceLoader): ClientSslContextResolver {
@@ -52,17 +51,13 @@ class HandelsregisterAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(HandelsregisterService::class)
-    fun handelsregisterService(
-        handelsregisterClient: HandelsregisterClient,
-    ): HandelsregisterService {
+    fun handelsregisterService(handelsregisterClient: HandelsregisterClient): HandelsregisterService {
         return HandelsregisterService(handelsregisterClient)
     }
 
     @Bean
     @ConditionalOnMissingBean(HandelsregisterQuery::class)
-    fun handelsregisterQuery(
-        handelsregisterService: HandelsregisterService,
-    ): HandelsregisterQuery {
+    fun handelsregisterQuery(handelsregisterService: HandelsregisterService): HandelsregisterQuery {
         return HandelsregisterQuery(handelsregisterService)
     }
 }

@@ -27,7 +27,6 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 @EnableConfigurationProperties(OpenKlantClientConfig::class)
 class KlantGeneriekAutoConfiguration {
-
     @Bean
     @ConditionalOnMissingBean(OpenKlantClientConfig::class)
     fun openKlantClientConfig(): OpenKlantClientConfig {

@@ -27,7 +27,6 @@ import org.springframework.context.annotation.Bean
 @AutoConfiguration
 @EnableConfigurationProperties(TaakObjectConfig::class)
 class TaakAutoConfiguration {
-
     @Bean
     @ConditionalOnMissingBean(TaakService::class)
     fun taskService(

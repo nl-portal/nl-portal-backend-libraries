@@ -20,7 +20,6 @@ import com.expediagroup.graphql.server.operations.Query
 import nl.nlportal.graphql.security.directive.IsUnauthenticated
 
 class DummyQuery : Query {
-
     @IsUnauthenticated
     @GraphQLDescription("unauthenticated test method")
     fun getUnauthenticated(): String {

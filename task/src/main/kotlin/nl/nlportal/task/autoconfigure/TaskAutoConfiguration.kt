@@ -35,7 +35,6 @@ import java.util.function.Consumer
 @EnableJpaRepositories(basePackages = ["nl.nlportal.task.repository"])
 @EntityScan("nl.nlportal.task.domain")
 class TaskAutoConfiguration {
-
     @Bean
     @ConditionalOnMissingBean(TaskService::class)
     fun taskService(

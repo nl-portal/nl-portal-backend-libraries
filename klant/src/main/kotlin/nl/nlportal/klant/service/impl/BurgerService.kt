@@ -31,7 +31,6 @@ class BurgerService(
     val openKlantClientConfig: OpenKlantClientConfig,
     val openKlantClient: OpenKlantClient,
 ) : BurgerService {
-
     override suspend fun getBurgerProfiel(authentication: CommonGroundAuthentication): Klant? {
         when (authentication) {
             is BurgerAuthentication -> {
@@ -53,7 +52,10 @@ class BurgerService(
         }
     }
 
-    override suspend fun updateBurgerProfiel(klantUpdate: KlantUpdate, authentication: CommonGroundAuthentication): Klant {
+    override suspend fun updateBurgerProfiel(
+        klantUpdate: KlantUpdate,
+        authentication: CommonGroundAuthentication,
+    ): Klant {
         if (authentication !is BurgerAuthentication) {
             throw IllegalArgumentException("Can only update burger profile for burger user")
         }
@@ -69,22 +71,26 @@ class BurgerService(
         }
     }
 
-    private suspend fun createBurgerProfiel(authentication: BurgerAuthentication, updatedKlant: KlantUpdate): Klant {
+    private suspend fun createBurgerProfiel(
+        authentication: BurgerAuthentication,
+        updatedKlant: KlantUpdate,
+    ): Klant {
         val websiteUrl = "http://www.invalid-url.com/"
         val telefoonnummer = updatedKlant.telefoonnummer ?: ""
         val emailadres = updatedKlant.emailadres ?: ""
 
-        val klantRequest = KlantCreationRequest(
-            openKlantClientConfig.rsin,
-            generateKlantNummer(),
-            websiteUrl,
-            telefoonnummer,
-            emailadres,
-            "natuurlijk_persoon",
-            SubjectIdentificatie(
-                authentication.getBsn(),
-            ),
-        )
+        val klantRequest =
+            KlantCreationRequest(
+                openKlantClientConfig.rsin,
+                generateKlantNummer(),
+                websiteUrl,
+                telefoonnummer,
+                emailadres,
+                "natuurlijk_persoon",
+                SubjectIdentificatie(
+                    authentication.getBsn(),
+                ),
+            )
 
         return openKlantClient.postKlant(authentication, klantRequest)
     }

@@ -31,7 +31,10 @@ data class TaskInstance(
     val createdOn: String,
 ) {
     companion object {
-        fun from(task: Task, caseDefinitionId: String? = null): TaskInstance {
+        fun from(
+            task: Task,
+            caseDefinitionId: String? = null,
+        ): TaskInstance {
             return TaskInstance(
                 task.id.value,
                 task.externalTaskId,

@@ -16,7 +16,6 @@
 package nl.nlportal.messaging.out
 
 class ExternalIdUpdatedConfirmationMessage(val externalId: String) : PortalMessage {
-
     override val destination: String
         get() = "external-id-portal-case-updated"
 }

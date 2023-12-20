@@ -29,7 +29,6 @@ import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class HandelsregisterClientTest {
-
     private lateinit var haalCentraalHrClientConfig: HaalCentraalHrClientConfig
     private lateinit var client: HandelsregisterClient
     private lateinit var server: MockWebServer

@@ -27,7 +27,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 @Tag("integration")
 abstract class BaseIntegrationTest {
-
     @BeforeEach
     fun beforeEach() {
     }
@@ -37,7 +36,6 @@ abstract class BaseIntegrationTest {
     }
 
     companion object {
-
         @BeforeAll
         @JvmStatic
         internal fun beforeAll() {

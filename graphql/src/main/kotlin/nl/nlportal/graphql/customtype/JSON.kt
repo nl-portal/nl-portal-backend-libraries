@@ -29,7 +29,6 @@ import graphql.schema.CoercingSerializeException
 import graphql.schema.GraphQLScalarType
 
 object JSONCoercing : Coercing<ObjectNode, ObjectNode> {
-
     override fun parseValue(input: Any): ObjectNode {
         if (input is ObjectValue) {
             val jsonNode: ObjectNode = JsonNodeFactory.instance.objectNode()
@@ -52,11 +51,12 @@ object JSONCoercing : Coercing<ObjectNode, ObjectNode> {
         }
     }
 
-    override fun serialize(dataFetcherResult: Any): ObjectNode = runCatching {
-        Mapper.get().readValue(dataFetcherResult.toString(), ObjectNode::class.java)
-    }.getOrElse {
-        throw CoercingSerializeException("Data fetcher result $dataFetcherResult cannot be serialized to a ObjectNode")
-    }
+    override fun serialize(dataFetcherResult: Any): ObjectNode =
+        runCatching {
+            Mapper.get().readValue(dataFetcherResult.toString(), ObjectNode::class.java)
+        }.getOrElse {
+            throw CoercingSerializeException("Data fetcher result $dataFetcherResult cannot be serialized to a ObjectNode")
+        }
 
     private fun parse(o: ObjectField): JsonNode {
         if (o.value is StringValue) {
@@ -81,8 +81,9 @@ object JSONCoercing : Coercing<ObjectNode, ObjectNode> {
     }
 }
 
-internal val graphqlJSONType = GraphQLScalarType.newScalar()
-    .name("JSON")
-    .description("A type representing a formatted JSON")
-    .coercing(JSONCoercing)
-    .build()
+internal val graphqlJSONType =
+    GraphQLScalarType.newScalar()
+        .name("JSON")
+        .description("A type representing a formatted JSON")
+        .coercing(JSONCoercing)
+        .build()

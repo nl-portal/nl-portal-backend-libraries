@@ -28,7 +28,6 @@ import java.util.UUID
 class TaakMutation(
     private val taskService: TaakService,
 ) : Mutation {
-
     @GraphQLDescription("Submit a task")
     suspend fun submitTaak(
         dfe: DataFetchingEnvironment,

@@ -27,7 +27,6 @@ import java.util.UUID
 class TaakQuery(
     private val taskService: TaakService,
 ) : Query {
-
     @GraphQLDescription("Get a list of tasks")
     @Deprecated("Replaced by getTaken")
     suspend fun getTasks(
@@ -56,7 +55,10 @@ class TaakQuery(
     }
 
     @GraphQLDescription("Get task by id")
-    suspend fun getTaakById(id: UUID, dfe: DataFetchingEnvironment): Taak {
+    suspend fun getTaakById(
+        id: UUID,
+        dfe: DataFetchingEnvironment,
+    ): Taak {
         val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
         return taskService.getTaakById(id, authentication)
     }

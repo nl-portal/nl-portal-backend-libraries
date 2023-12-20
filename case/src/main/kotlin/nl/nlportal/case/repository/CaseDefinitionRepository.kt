@@ -20,6 +20,5 @@ import nl.nlportal.case.domain.CaseDefinitionId
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface CaseDefinitionRepository : JpaRepository<CaseDefinition, CaseDefinitionId> {
-
     fun findByCaseDefinitionId(caseDefinitionId: CaseDefinitionId): CaseDefinition?
 }

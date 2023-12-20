@@ -22,17 +22,17 @@ import org.junit.jupiter.api.Test
 import java.util.UUID
 
 internal class TaskTest {
-
     @Test
     fun `should create task`() {
-        val task = Task(
-            TaskId.newId(UUID.randomUUID()),
-            "external-task-id",
-            "task-def-key",
-            "external-case-id",
-            "user-id",
-            Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java),
-        )
+        val task =
+            Task(
+                TaskId.newId(UUID.randomUUID()),
+                "external-task-id",
+                "task-def-key",
+                "external-case-id",
+                "user-id",
+                Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java),
+            )
         assertThat(task.isCompleted()).isFalse
         assertThat(task.createdOn).isNotNull
     }

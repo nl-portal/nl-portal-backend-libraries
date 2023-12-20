@@ -38,7 +38,6 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 abstract class BaseTest {
-
     @Mock
     lateinit var caseRepository: CaseRepository
 
@@ -58,23 +57,26 @@ abstract class BaseTest {
 
     fun personCaseDefinition(): CaseDefinition {
         val caseDefinitionId = CaseDefinitionId.existingId("person")
-        val schema = Schema(
-            Mapper.get().readValue(
-                getResourceAsStream("config/case/definition/person/person.schema.json"),
-                ObjectNode::class.java,
-            ),
-        )
-        val statusDefinition = StatusDefinition(
-            Mapper.get().readValue(
-                getResourceAsStream("config/case/definition/person/status.json"),
-                object : TypeReference<List<String>>() {},
-            ),
-        )
-        val caseDefinition = CaseDefinition(
-            caseDefinitionId = caseDefinitionId,
-            schema = schema,
-            statusDefinition = statusDefinition,
-        )
+        val schema =
+            Schema(
+                Mapper.get().readValue(
+                    getResourceAsStream("config/case/definition/person/person.schema.json"),
+                    ObjectNode::class.java,
+                ),
+            )
+        val statusDefinition =
+            StatusDefinition(
+                Mapper.get().readValue(
+                    getResourceAsStream("config/case/definition/person/status.json"),
+                    object : TypeReference<List<String>>() {},
+                ),
+            )
+        val caseDefinition =
+            CaseDefinition(
+                caseDefinitionId = caseDefinitionId,
+                schema = schema,
+                statusDefinition = statusDefinition,
+            )
         return caseDefinition
     }
 

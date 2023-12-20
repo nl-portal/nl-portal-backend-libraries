@@ -28,14 +28,14 @@ import kotlin.coroutines.coroutineContext
 
 @ExperimentalCoroutinesApi
 class AuthenticationGraphQLContextFactory : DefaultSpringGraphQLContextFactory() {
-
     override suspend fun generateContext(request: ServerRequest): GraphQLContext {
         val reactorContext = coroutineContext[ReactorContext]?.context ?: throw RuntimeException("ReactorContext not found")
 
-        val securityContext = reactorContext.getOrDefault<Mono<SecurityContext>>(
-            SecurityContext::class.java,
-            null,
-        )!!
+        val securityContext =
+            reactorContext.getOrDefault<Mono<SecurityContext>>(
+                SecurityContext::class.java,
+                null,
+            )!!
 
         val context = mutableMapOf<Any, Any>()
         securityContext.awaitFirstOrNull()?.authentication?.apply { context[AUTHENTICATION_KEY] = this }

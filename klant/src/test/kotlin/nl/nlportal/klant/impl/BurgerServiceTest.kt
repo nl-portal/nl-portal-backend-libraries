@@ -39,7 +39,6 @@ import org.springframework.security.oauth2.jwt.Jwt
 
 @ExperimentalCoroutinesApi
 internal class BurgerServiceTest {
-
     @Mock
     lateinit var openKlantClient: OpenKlantClient
 
@@ -55,28 +54,31 @@ internal class BurgerServiceTest {
     }
 
     @Test
-    fun `getBurgerProfiel calls openklant client with BSN for burger`() = runTest {
-        val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
-        `when`(openKlantClient.getKlanten(authentication, 1, "123")).thenReturn(listOf(mock(Klant::class.java)))
+    fun `getBurgerProfiel calls openklant client with BSN for burger`() =
+        runTest {
+            val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
+            `when`(openKlantClient.getKlanten(authentication, 1, "123")).thenReturn(listOf(mock(Klant::class.java)))
 
-        burgerService.getBurgerProfiel(authentication)
-        verify(openKlantClient).getKlanten(authentication, 1, "123")
-    }
+            burgerService.getBurgerProfiel(authentication)
+            verify(openKlantClient).getKlanten(authentication, 1, "123")
+        }
 
     @Test
     fun `getBurgerProfiel throws exception when called with unsupported authentication`() {
-        val jwt = Jwt
-            .withTokenValue("token")
-            .header("alg", "none")
-            .claim("random", "1234")
-            .build()
+        val jwt =
+            Jwt
+                .withTokenValue("token")
+                .header("alg", "none")
+                .claim("random", "1234")
+                .build()
         val authentication = object : CommonGroundAuthentication(jwt, emptyList()) {}
 
-        val illegalArgumentException = Assertions.assertThrows(IllegalArgumentException::class.java) {
-            runTest {
-                burgerService.getBurgerProfiel(authentication)
+        val illegalArgumentException =
+            Assertions.assertThrows(IllegalArgumentException::class.java) {
+                runTest {
+                    burgerService.getBurgerProfiel(authentication)
+                }
             }
-        }
 
         assertEquals("Cannot get klant for this user", illegalArgumentException.message)
     }
@@ -85,11 +87,12 @@ internal class BurgerServiceTest {
     fun `getBurgerProfiel throws exception when called with BedrijfAuthentication`() {
         val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
 
-        val illegalArgumentException = Assertions.assertThrows(IllegalArgumentException::class.java) {
-            runTest {
-                burgerService.getBurgerProfiel(authentication)
+        val illegalArgumentException =
+            Assertions.assertThrows(IllegalArgumentException::class.java) {
+                runTest {
+                    burgerService.getBurgerProfiel(authentication)
+                }
             }
-        }
 
         assertEquals("Cannot get klant by KVK", illegalArgumentException.message)
     }
@@ -104,39 +107,43 @@ internal class BurgerServiceTest {
             ),
         )
 
-        val illegalStateException = Assertions.assertThrows(IllegalStateException::class.java) {
-            runTest {
-                burgerService.getBurgerProfiel(authentication)
+        val illegalStateException =
+            Assertions.assertThrows(IllegalStateException::class.java) {
+                runTest {
+                    burgerService.getBurgerProfiel(authentication)
+                }
             }
-        }
 
         assertEquals("Cannot get klant for this user", illegalStateException.message)
     }
 
     @Test
-    fun `updateBurgerProfiel should update klant if exist`() = runTest {
-        val klant = mock(Klant::class.java)
-        `when`(klant.url).thenReturn("some-url")
-        val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
-        `when`(openKlantClient.getKlanten(authentication, 1, "123")).thenReturn(listOf(klant))
-        val klantUpdate = KlantUpdate("0600000000", "example@email.com")
+    fun `updateBurgerProfiel should update klant if exist`() =
+        runTest {
+            val klant = mock(Klant::class.java)
+            `when`(klant.url).thenReturn("some-url")
+            val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
+            `when`(openKlantClient.getKlanten(authentication, 1, "123")).thenReturn(listOf(klant))
+            val klantUpdate = KlantUpdate("0600000000", "example@email.com")
 
-        burgerService.updateBurgerProfiel(klantUpdate, authentication)
+            burgerService.updateBurgerProfiel(klantUpdate, authentication)
 
-        verify(openKlantClient).patchKlant(eq(authentication), any(String::class.java), any(Klant::class.java))
-    }
+            verify(openKlantClient).patchKlant(eq(authentication), any(String::class.java), any(Klant::class.java))
+        }
 
     @Test
-    fun `updateBurgerProfiel should create klant if not exist`() = runTest {
-        val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
-        `when`(openKlantClient.getKlanten(authentication, 1, "123")).thenReturn(emptyList())
-        val klantUpdate = KlantUpdate("0600000000", "example@email.com")
+    fun `updateBurgerProfiel should create klant if not exist`() =
+        runTest {
+            val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
+            `when`(openKlantClient.getKlanten(authentication, 1, "123")).thenReturn(emptyList())
+            val klantUpdate = KlantUpdate("0600000000", "example@email.com")
 
-        burgerService.updateBurgerProfiel(klantUpdate, authentication)
+            burgerService.updateBurgerProfiel(klantUpdate, authentication)
 
-        verify(openKlantClient).postKlant(eq(authentication), any(KlantCreationRequest::class.java))
-    }
+            verify(openKlantClient).postKlant(eq(authentication), any(KlantCreationRequest::class.java))
+        }
 
     private fun <T> any(type: Class<T>): T = Mockito.any<T>(type)
+
     private fun <T> eq(obj: T): T = Mockito.eq<T>(obj)
 }

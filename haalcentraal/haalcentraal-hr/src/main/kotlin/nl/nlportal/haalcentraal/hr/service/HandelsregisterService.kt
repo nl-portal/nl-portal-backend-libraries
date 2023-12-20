@@ -23,7 +23,6 @@ import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 class HandelsregisterService(
     private val handelsregisterClient: HandelsregisterClient,
 ) {
-
     suspend fun getMaatschappelijkeActiviteit(authentication: CommonGroundAuthentication): MaatschappelijkeActiviteit? {
         if (authentication is BedrijfAuthentication) {
             return handelsregisterClient.getMaatschappelijkeActiviteit(authentication.getKvkNummer())

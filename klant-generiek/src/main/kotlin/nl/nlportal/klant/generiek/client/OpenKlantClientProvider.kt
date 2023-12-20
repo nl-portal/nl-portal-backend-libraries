@@ -28,12 +28,13 @@ class OpenKlantClientProvider(
     private val idTokenGenerator: IdTokenGenerator,
 ) {
     fun webClient(authentication: CommonGroundAuthentication): WebClient {
-        val token = idTokenGenerator.generateToken(
-            openKlantClientConfig.secret,
-            openKlantClientConfig.clientId,
-            authentication.getUserId(),
-            authentication.getUserRepresentation(),
-        )
+        val token =
+            idTokenGenerator.generateToken(
+                openKlantClientConfig.secret,
+                openKlantClientConfig.clientId,
+                authentication.getUserId(),
+                authentication.getUserRepresentation(),
+            )
 
         return WebClient.builder()
             .clientConnector(

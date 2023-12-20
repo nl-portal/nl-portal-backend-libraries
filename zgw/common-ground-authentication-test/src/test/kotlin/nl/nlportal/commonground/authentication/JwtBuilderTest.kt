@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 internal class JwtBuilderTest {
-
     @Test
     fun getBurgerAuthentication() {
         val authentication = JwtBuilder().aanvragerBsn("1234").buildBurgerAuthentication()
@@ -30,10 +29,11 @@ internal class JwtBuilderTest {
 
     @Test
     fun getBurgerGemachtigdeAuthentication() {
-        val authentication = JwtBuilder()
-            .aanvragerBsn("1234")
-            .gemachtigdeBsn("5678")
-            .buildBurgerAuthentication()
+        val authentication =
+            JwtBuilder()
+                .aanvragerBsn("1234")
+                .gemachtigdeBsn("5678")
+                .buildBurgerAuthentication()
         assertEquals("1234", authentication.getBsn())
         assertEquals("5678", authentication.getGemachtigde()?.bsn)
         assertNull(authentication.getGemachtigde()?.kvk)
@@ -48,10 +48,11 @@ internal class JwtBuilderTest {
 
     @Test
     fun `getBurgerGemachtigdeJwt with gemachtigde bsn`() {
-        val jwt = JwtBuilder()
-            .aanvragerBsn("1234")
-            .gemachtigdeBsn("5678")
-            .buildJwt()
+        val jwt =
+            JwtBuilder()
+                .aanvragerBsn("1234")
+                .gemachtigdeBsn("5678")
+                .buildJwt()
 
         val aanvrager = jwt.getClaim<Map<String, Any>>(AANVRAGER_KEY)
         val gemachtigde = jwt.getClaim<Map<String, Any>>(GEMACHTIGDE_KEY)
@@ -107,11 +108,12 @@ internal class JwtBuilderTest {
 
     @Test
     fun `buildJwt return jwt with only latest gemachtigde entry`() {
-        val jwt = JwtBuilder()
-            .aanvragerBsn("123")
-            .gemachtigdeBsn("123")
-            .gemachtigdeKvk("123")
-            .buildJwt()
+        val jwt =
+            JwtBuilder()
+                .aanvragerBsn("123")
+                .gemachtigdeBsn("123")
+                .gemachtigdeKvk("123")
+                .buildJwt()
 
         val gemachtigde = jwt.getClaim<Map<String, Any>>(GEMACHTIGDE_KEY)
         assertNull(gemachtigde[BSN_KEY])

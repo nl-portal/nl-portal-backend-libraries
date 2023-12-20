@@ -17,7 +17,6 @@ import java.io.PipedOutputStream
 class ClamAVService(
     private val clamAVClient: ClamavClient,
 ) : VirusScanService {
-
     override fun scan(content: Flux<DataBuffer>): VirusScanResult {
         return getInputStreamFromFluxDataBuffer(content).use {
             when (val scanResult = clamAVClient.scan(it)) {

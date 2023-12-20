@@ -15,16 +15,13 @@ import xyz.capybara.clamav.ClamavClient
 @ConditionalOnProperty(prefix = "nl-portal.zgw.documentenapis.virusscan.clamav", name = ["enabled"], havingValue = "true")
 @EnableConfigurationProperties(ClamAVVirusScanConfig::class)
 class ClamAVConfiguration {
-
     @Bean
     fun clamAVVirusScanConfig(): ClamAVVirusScanConfig {
         return ClamAVVirusScanConfig()
     }
 
     @Bean
-    fun clamAVClient(
-        clamAVVirusScanConfig: ClamAVVirusScanConfig,
-    ): ClamavClient {
+    fun clamAVClient(clamAVVirusScanConfig: ClamAVVirusScanConfig): ClamavClient {
         logger.info("ClamAV virusscan is loaded with host: {} and port: {}", clamAVVirusScanConfig.hostName, clamAVVirusScanConfig.port)
         return ClamavClient(
             clamAVVirusScanConfig.hostName,
@@ -34,9 +31,7 @@ class ClamAVConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(VirusScanService::class)
-    fun virusScanService(
-        clamAVClient: ClamavClient,
-    ): VirusScanService {
+    fun virusScanService(clamAVClient: ClamavClient): VirusScanService {
         return ClamAVService(clamAVClient)
     }
 

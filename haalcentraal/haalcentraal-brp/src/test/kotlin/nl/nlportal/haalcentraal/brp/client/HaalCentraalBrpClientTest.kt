@@ -37,7 +37,6 @@ import org.mockito.Mockito.mock
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class HaalCentraalBrpClientTest {
-
     private lateinit var haalCentraalClientConfig: HaalCentraalClientConfig
     private lateinit var server: MockWebServer
     private val bsn = "0123456789"
@@ -75,41 +74,48 @@ internal class HaalCentraalBrpClientTest {
     @Test
     fun `should get person by with certificate`() {
         // Create the root for client and server to trust. We could also use different roots for each!
-        val rootCertificate: HeldCertificate = HeldCertificate.Builder()
-            .commonName("myRoot")
-            .certificateAuthority(0)
-            .build()
+        val rootCertificate: HeldCertificate =
+            HeldCertificate.Builder()
+                .commonName("myRoot")
+                .certificateAuthority(0)
+                .build()
 
         // Create a server certificate and a server that uses it.
-        val serverCertificate: HeldCertificate = HeldCertificate.Builder()
-            .commonName("myServer")
-            .addSubjectAlternativeName(server.hostName)
-            .signedBy(rootCertificate)
-            .build()
-        val serverCertificates: HandshakeCertificates = HandshakeCertificates.Builder()
-            .addTrustedCertificate(rootCertificate.certificate)
-            .heldCertificate(serverCertificate)
-            .build()
+        val serverCertificate: HeldCertificate =
+            HeldCertificate.Builder()
+                .commonName("myServer")
+                .addSubjectAlternativeName(server.hostName)
+                .signedBy(rootCertificate)
+                .build()
+        val serverCertificates: HandshakeCertificates =
+            HandshakeCertificates.Builder()
+                .addTrustedCertificate(rootCertificate.certificate)
+                .heldCertificate(serverCertificate)
+                .build()
         server.useHttps(serverCertificates.sslSocketFactory(), false)
         server.requireClientAuth()
 
         // Create a client certificate and a client that uses it.
-        val clientCertificate: HeldCertificate = HeldCertificate.Builder()
-            .commonName("myClient")
-            .organizationalUnit("myOrganisation")
-            .signedBy(rootCertificate)
-            .build()
+        val clientCertificate: HeldCertificate =
+            HeldCertificate.Builder()
+                .commonName("myClient")
+                .organizationalUnit("myOrganisation")
+                .signedBy(rootCertificate)
+                .build()
 
-        val haalCentraalClientConfig = haalCentraalClientConfig.copy(
-            url = server.url("/").toString(),
-            ssl = Ssl(
-                key = ClientKey(
-                    certChain = "${clientCertificate.certificatePem()}\n${rootCertificate.certificatePem()}",
-                    key = clientCertificate.privateKeyPkcs8Pem(),
-                ),
-                trustedCertificate = rootCertificate.certificatePem(),
-            ),
-        )
+        val haalCentraalClientConfig =
+            haalCentraalClientConfig.copy(
+                url = server.url("/").toString(),
+                ssl =
+                    Ssl(
+                        key =
+                            ClientKey(
+                                certChain = "${clientCertificate.certificatePem()}\n${rootCertificate.certificatePem()}",
+                                key = clientCertificate.privateKeyPkcs8Pem(),
+                            ),
+                        trustedCertificate = rootCertificate.certificatePem(),
+                    ),
+            )
 
         val provider = HaalCentraalClientProvider(haalCentraalClientConfig, StringClientSslContextResolver())
         val client = HaalCentraalBrpClient(provider)

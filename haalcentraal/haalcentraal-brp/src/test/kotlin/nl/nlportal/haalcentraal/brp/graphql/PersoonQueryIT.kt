@@ -60,7 +60,8 @@ internal class PersoonQueryIT(
     @Test
     @WithBurgerUser("999993847")
     fun getNaam() {
-        val query = """
+        val query =
+            """
             query {
                 getPersoon {
                     naam {
@@ -72,7 +73,7 @@ internal class PersoonQueryIT(
                     }
                 }
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val basePath = "$.data.getPersoon"
 
@@ -95,7 +96,8 @@ internal class PersoonQueryIT(
     @Test
     @WithBurgerUser("999993847")
     fun getContactGegevens() {
-        val query = """
+        val query =
+            """
             query {
                 getPersoon {
                     burgerservicenummer,
@@ -130,7 +132,7 @@ internal class PersoonQueryIT(
                     }
                 }
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val basePath = "$.data.getPersoon"
 
@@ -164,16 +166,18 @@ internal class PersoonQueryIT(
     }
 
     private fun setupMockServer() {
-        val dispatcher: Dispatcher = object : Dispatcher() {
-            @Throws(InterruptedException::class)
-            override fun dispatch(request: RecordedRequest): MockResponse {
-                val response = when (request.path?.substringBefore('?')) {
-                    "/brp/ingeschrevenpersonen/999993847" -> TestHelper.mockResponseFromFile("/data/get-ingeschreven-persoon.json")
-                    else -> MockResponse().setResponseCode(404)
+        val dispatcher: Dispatcher =
+            object : Dispatcher() {
+                @Throws(InterruptedException::class)
+                override fun dispatch(request: RecordedRequest): MockResponse {
+                    val response =
+                        when (request.path?.substringBefore('?')) {
+                            "/brp/ingeschrevenpersonen/999993847" -> TestHelper.mockResponseFromFile("/data/get-ingeschreven-persoon.json")
+                            else -> MockResponse().setResponseCode(404)
+                        }
+                    return response
                 }
-                return response
             }
-        }
         server.dispatcher = dispatcher
     }
 }

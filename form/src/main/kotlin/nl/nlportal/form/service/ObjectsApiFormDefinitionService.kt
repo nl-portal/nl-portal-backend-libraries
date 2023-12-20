@@ -26,6 +26,7 @@ class ObjectsApiFormDefinitionService(
     suspend fun findObjectsApiFormDefinitionById(objectId: String): ObjectsApiFormIoFormDefinition? {
         return objectenApiService.getObjectById<ObjectsApiFormIoFormDefinition>(objectId)?.record?.data
     }
+
     suspend fun findObjectsApiFormDefinitionByUrl(objectUrl: String): ObjectsApiFormIoFormDefinition? {
         return objectenApiService.getObjectByUrl<ObjectsApiFormIoFormDefinition>(objectUrl)?.record?.data
     }

@@ -24,7 +24,6 @@ import org.springframework.util.StreamUtils
 
 @Configuration
 class GraphQLTestConfiguration {
-
     @Value("classpath:graphql/getTakenQuery.graphql")
     private lateinit var getTakenFile: Resource
 

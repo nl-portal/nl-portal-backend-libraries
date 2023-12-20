@@ -40,15 +40,11 @@ class ObjectenApiService(
         )
     }
 
-    suspend inline fun <reified T> getObjectById(
-        objectId: String,
-    ): ObjectsApiObject<T>? {
+    suspend inline fun <reified T> getObjectById(objectId: String): ObjectsApiObject<T>? {
         return objectsApiClient.getObjectById(objectId)
     }
 
-    suspend inline fun <reified T> getObjectByUrl(
-        url: String,
-    ): ObjectsApiObject<T>? {
+    suspend inline fun <reified T> getObjectByUrl(url: String): ObjectsApiObject<T>? {
         val requestedObjectenApiHost = URI.create(url).host
         val configuredObjectenApiHost = objectsApiClientConfig.url.host
         if (!requestedObjectenApiHost.equals(configuredObjectenApiHost)) {

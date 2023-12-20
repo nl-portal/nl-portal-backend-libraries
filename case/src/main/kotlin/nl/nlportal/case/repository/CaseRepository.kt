@@ -20,8 +20,10 @@ import nl.nlportal.case.domain.CaseId
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface CaseRepository : JpaRepository<Case, CaseId> {
-
-    fun findCaseByCaseIdAndUserId(id: CaseId, userId: String): Case?
+    fun findCaseByCaseIdAndUserId(
+        id: CaseId,
+        userId: String,
+    ): Case?
 
     fun findCaseByExternalId(externalId: String): Case?
 

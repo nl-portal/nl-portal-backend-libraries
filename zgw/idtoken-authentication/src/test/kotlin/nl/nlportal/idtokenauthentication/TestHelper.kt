@@ -16,14 +16,14 @@
 package nl.nlportal.idtokenauthentication
 
 object TestHelper {
-
     const val TEST_CLIENT_ID = "test client id"
     const val TEST_ENCRYPTION_SECRET_VALID = "NYy.TAQYbHRRWC_b2rfoqs4oR9jXj38N"
     const val TEST_ENCRYPTION_SECRET_INVALID = "RRWC_b2rfXj38Noqs4o.R9j"
     const val TEST_USER_ID = "test user id"
-    val TEST_USER_REPRESENTATION = mapOf<String, Any>(
-        "name" to "User",
-        "age" to 18,
-        "human" to true,
-    )
+    val TEST_USER_REPRESENTATION =
+        mapOf<String, Any>(
+            "name" to "User",
+            "age" to 18,
+            "human" to true,
+        )
 }

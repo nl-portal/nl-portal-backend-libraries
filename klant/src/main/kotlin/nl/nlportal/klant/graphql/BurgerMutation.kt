@@ -28,9 +28,11 @@ class BurgerMutation(
     val burgerService: BurgerService,
     val graphQlValidator: GraphQlValidator,
 ) : Mutation {
-
     @GraphQLDescription("Updates the profile for the user")
-    suspend fun updateBurgerProfiel(klant: KlantUpdate, dfe: DataFetchingEnvironment): Klant? {
+    suspend fun updateBurgerProfiel(
+        klant: KlantUpdate,
+        dfe: DataFetchingEnvironment,
+    ): Klant? {
         graphQlValidator.validate(klant)
         return burgerService.updateBurgerProfiel(klant, dfe.graphQlContext.get(AUTHENTICATION_KEY))
     }

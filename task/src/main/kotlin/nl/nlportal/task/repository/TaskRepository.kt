@@ -20,12 +20,17 @@ import nl.nlportal.task.domain.TaskId
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface TaskRepository : JpaRepository<Task, TaskId> {
-
-    fun findTasksByExternalCaseIdAndUserId(externalCaseId: String, userId: String): List<Task>?
+    fun findTasksByExternalCaseIdAndUserId(
+        externalCaseId: String,
+        userId: String,
+    ): List<Task>?
 
     fun findByTaskId(taskId: TaskId): Task
 
-    fun findByTaskIdAndUserId(taskId: TaskId, userId: String): Task?
+    fun findByTaskIdAndUserId(
+        taskId: TaskId,
+        userId: String,
+    ): Task?
 
     fun findAllByUserId(userId: String): List<Task>
 

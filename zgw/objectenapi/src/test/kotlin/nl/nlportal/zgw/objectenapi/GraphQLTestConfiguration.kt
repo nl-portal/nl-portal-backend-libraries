@@ -24,7 +24,6 @@ import java.nio.charset.StandardCharsets
 
 @Configuration
 class GraphQLTestConfiguration {
-
     @Value("classpath:graphql/getTasksQuery.graphql")
     private lateinit var getTasksFile: Resource
 

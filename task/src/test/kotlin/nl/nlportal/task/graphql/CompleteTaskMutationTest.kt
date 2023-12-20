@@ -42,7 +42,6 @@ import java.util.UUID
 
 @Transactional
 class CompleteTaskMutationTest : BaseTest() {
-
     lateinit var completeTaskMutation: CompleteTaskMutation
 
     var environment = mock(DataFetchingEnvironment::class.java)

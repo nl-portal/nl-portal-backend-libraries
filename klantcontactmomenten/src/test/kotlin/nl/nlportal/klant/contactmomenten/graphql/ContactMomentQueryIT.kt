@@ -39,7 +39,6 @@ internal class ContactMomentQueryIT(
     @Autowired private val testClient: WebTestClient,
     @Autowired private val openKlantClientConfig: OpenKlantClientConfig,
 ) {
-
     lateinit var server: MockWebServer
 
     @BeforeEach
@@ -58,7 +57,8 @@ internal class ContactMomentQueryIT(
     @Test
     @WithBurgerUser("123")
     fun getKlantContactMomenten() {
-        val query = """
+        val query =
+            """
             query {
                 getKlantContactMomenten {
                     content {
@@ -68,19 +68,20 @@ internal class ContactMomentQueryIT(
                     }
                 }
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val basePath = "$.data.getKlantContactMomenten"
         val resultPath = "$basePath.content[0]"
 
-        val response = testClient.post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
-            .exchange()
-            .expectBody()
-            .consumeWith(System.out::println)
+        val response =
+            testClient.post()
+                .uri("/graphql")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType("application", "graphql"))
+                .bodyValue(query)
+                .exchange()
+                .expectBody()
+                .consumeWith(System.out::println)
 
         response
             .jsonPath(basePath).exists()
@@ -92,7 +93,8 @@ internal class ContactMomentQueryIT(
     @Test
     @WithBurgerUser("123")
     fun getObjectContactMomenten() {
-        val query = """
+        val query =
+            """
             query {
                 getObjectContactMomenten(objectUrl: "http://dummy.nl") {
                     content {
@@ -102,19 +104,20 @@ internal class ContactMomentQueryIT(
                     }
                 }
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val basePath = "$.data.getObjectContactMomenten"
         val resultPath = "$basePath.content[0]"
 
-        val response = testClient.post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
-            .exchange()
-            .expectBody()
-            .consumeWith(System.out::println)
+        val response =
+            testClient.post()
+                .uri("/graphql")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType("application", "graphql"))
+                .bodyValue(query)
+                .exchange()
+                .expectBody()
+                .consumeWith(System.out::println)
 
         response
             .jsonPath(basePath).exists()
@@ -124,17 +127,22 @@ internal class ContactMomentQueryIT(
     }
 
     fun setupMockOpenKlantServer() {
-        val dispatcher: Dispatcher = object : Dispatcher() {
-            @Throws(InterruptedException::class)
-            override fun dispatch(request: RecordedRequest): MockResponse {
-                val response = when (request.path?.substringBefore('?')) {
-                    "/contactmomenten/api/v1/contactmomenten" -> TestHelper.mockResponseFromFile("/data/get-contactmomenten-list-response.json")
-                    "/klanten/api/v1/klanten" -> TestHelper.mockResponseFromFile("/data/get-klant-list-response.json")
-                    else -> MockResponse().setResponseCode(404)
+        val dispatcher: Dispatcher =
+            object : Dispatcher() {
+                @Throws(InterruptedException::class)
+                override fun dispatch(request: RecordedRequest): MockResponse {
+                    val response =
+                        when (request.path?.substringBefore('?')) {
+                            "/contactmomenten/api/v1/contactmomenten" ->
+                                TestHelper.mockResponseFromFile(
+                                    "/data/get-contactmomenten-list-response.json",
+                                )
+                            "/klanten/api/v1/klanten" -> TestHelper.mockResponseFromFile("/data/get-klant-list-response.json")
+                            else -> MockResponse().setResponseCode(404)
+                        }
+                    return response
                 }
-                return response
             }
-        }
         server.dispatcher = dispatcher
     }
 }

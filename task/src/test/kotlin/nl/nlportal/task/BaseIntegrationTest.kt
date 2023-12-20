@@ -41,7 +41,6 @@ import java.util.UUID
 @ExtendWith(SpringExtension::class)
 @Tag("integration")
 abstract class BaseIntegrationTest {
-
     @Autowired
     lateinit var taskService: TaskService
 
@@ -55,16 +54,18 @@ abstract class BaseIntegrationTest {
 
     @BeforeEach
     fun setUp() {
-        case = Case(
-            caseId = CaseId.existingId(UUID.randomUUID()),
-            userId = "some-user-id",
-            externalId = "some-external-id",
-            status = Status("a"),
-            caseDefinitionId = CaseDefinitionId.existingId("person"),
-            submission = Submission(
-                Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java),
-            ),
-        )
+        case =
+            Case(
+                caseId = CaseId.existingId(UUID.randomUUID()),
+                userId = "some-user-id",
+                externalId = "some-external-id",
+                status = Status("a"),
+                caseDefinitionId = CaseDefinitionId.existingId("person"),
+                submission =
+                    Submission(
+                        Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java),
+                    ),
+            )
 
         `when`(caseService.getCase("some-external-id")).thenReturn(case)
     }

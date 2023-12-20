@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 
 class FormIoFormDefinitionServiceIntTest : BaseIntegrationTest() {
-
     @Autowired
     lateinit var formIoFormDefinitionService: FormIoFormDefinitionService
 
@@ -37,13 +36,14 @@ class FormIoFormDefinitionServiceIntTest : BaseIntegrationTest() {
     @Transactional
     @Test
     fun `should create form `() {
-        val createdEntity = formIoFormDefinitionService.createFormDefinition(
-            CreateFormDefinitionRequest(
-                "name",
-                Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java),
-                true,
-            ),
-        )
+        val createdEntity =
+            formIoFormDefinitionService.createFormDefinition(
+                CreateFormDefinitionRequest(
+                    "name",
+                    Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java),
+                    true,
+                ),
+            )
 
         assertThat(createdEntity.isNew).isTrue
     }

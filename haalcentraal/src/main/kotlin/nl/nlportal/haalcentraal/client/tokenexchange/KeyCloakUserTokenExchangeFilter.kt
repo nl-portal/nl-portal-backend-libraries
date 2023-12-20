@@ -36,17 +36,20 @@ class KeyCloakUserTokenExchangeFilter(
     private val webClient: WebClient,
     private val targetAudience: String,
 ) : UserTokenExchangeFilter {
-
-    override fun filter(request: ClientRequest, next: ExchangeFunction): Mono<ClientResponse> {
+    override fun filter(
+        request: ClientRequest,
+        next: ExchangeFunction,
+    ): Mono<ClientResponse> {
         if (request.headers()[HttpHeaders.AUTHORIZATION].isNullOrEmpty()) {
             getJwtAuthentication(request)?.let { authentication ->
                 return exchangeToken(authentication).flatMap {
                     val accessToken = it.accessToken
                     if (accessToken != null) {
                         logger.debug { "Setting accessToken from token exchange..." }
-                        val r = ClientRequest.from(request)
-                            .headers { headers -> headers.setBearerAuth(accessToken) }
-                            .build()
+                        val r =
+                            ClientRequest.from(request)
+                                .headers { headers -> headers.setBearerAuth(accessToken) }
+                                .build()
                         next.exchange(r)
                     } else {
                         logger.error { "Token exchange failed: access token was null!" }

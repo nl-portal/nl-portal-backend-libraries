@@ -17,13 +17,13 @@ package nl.nlportal.case.service
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.node.ObjectNode
+import mu.KotlinLogging
 import nl.nlportal.case.domain.CaseDefinition
 import nl.nlportal.case.domain.CaseDefinitionId
 import nl.nlportal.case.domain.Schema
 import nl.nlportal.case.domain.StatusDefinition
 import nl.nlportal.case.repository.CaseDefinitionRepository
 import nl.nlportal.core.util.Mapper
-import mu.KotlinLogging
 import org.apache.commons.lang3.StringUtils
 import org.springframework.core.io.Resource
 import org.springframework.core.io.ResourceLoader
@@ -37,20 +37,23 @@ class CaseDefinitionService(
     private val caseDefinitionRepository: CaseDefinitionRepository,
     private val resourceLoader: ResourceLoader,
 ) {
-
     fun findById(caseDefinitionId: CaseDefinitionId): CaseDefinition? {
         return caseDefinitionRepository.findByCaseDefinitionId(caseDefinitionId)
     }
 
-    fun deploy(caseSchema: ObjectNode, statuses: List<String>) {
+    fun deploy(
+        caseSchema: ObjectNode,
+        statuses: List<String>,
+    ) {
         val id = retrieveIdFrom(caseSchema)
         val existingCaseDefinition = caseDefinitionRepository.findByCaseDefinitionId(id)
         if (existingCaseDefinition == null) {
-            val caseDefinition = CaseDefinition(
-                caseDefinitionId = retrieveIdFrom(caseSchema),
-                schema = Schema(caseSchema),
-                statusDefinition = StatusDefinition(statuses),
-            )
+            val caseDefinition =
+                CaseDefinition(
+                    caseDefinitionId = retrieveIdFrom(caseSchema),
+                    schema = Schema(caseSchema),
+                    statusDefinition = StatusDefinition(statuses),
+                )
             caseDefinitionRepository.save(caseDefinition)
         } else if (existingCaseDefinition.schema.value != caseSchema) {
             existingCaseDefinition.modify(caseSchema)

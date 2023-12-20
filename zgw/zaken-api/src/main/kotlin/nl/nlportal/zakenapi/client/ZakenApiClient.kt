@@ -36,17 +36,24 @@ class ZakenApiClient(
     private val zakenApiConfig: ZakenApiConfig,
     private val idTokenGenerator: IdTokenGenerator,
 ) {
-    private fun WebClient.ResponseSpec.handleStatus() = this
-        .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
-        .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) })
-        .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, { throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) })
+    private fun WebClient.ResponseSpec.handleStatus() =
+        this
+            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
+            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) })
+            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, {
+                throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)
+            })
 
-    suspend fun getZaken(page: Int, bsn: String?): List<Zaak> {
+    suspend fun getZaken(
+        page: Int,
+        bsn: String?,
+    ): List<Zaak> {
         return webClient()
             .get()
             .uri {
-                val uriBuilder = it.path("/zaken/api/v1/zaken")
-                    .queryParam("page", page)
+                val uriBuilder =
+                    it.path("/zaken/api/v1/zaken")
+                        .queryParam("page", page)
                 bsn?.let { uriBuilder.queryParam("rol__betrokkeneIdentificatie__natuurlijkPersoon__inpBsn", it) }
                 uriBuilder.build()
             }
@@ -65,12 +72,18 @@ class ZakenApiClient(
             .awaitBody()
     }
 
-    suspend fun getZaakRollen(page: Int, bsn: String?, kvknummer: String?, zaakId: UUID?): ResultPage<ZaakRol> {
+    suspend fun getZaakRollen(
+        page: Int,
+        bsn: String?,
+        kvknummer: String?,
+        zaakId: UUID?,
+    ): ResultPage<ZaakRol> {
         return webClient()
             .get()
             .uri {
-                val uriBuilder = it.path("/zaken/api/v1/rollen")
-                    .queryParam("page", page)
+                val uriBuilder =
+                    it.path("/zaken/api/v1/rollen")
+                        .queryParam("page", page)
                 bsn?.let { uriBuilder.queryParam("betrokkeneIdentificatie__natuurlijkPersoon__inpBsn", it) }
                 kvknummer?.let { uriBuilder.queryParam("betrokkeneIdentificatie__nietNatuurlijkPersoon__annIdentificatie", it) }
                 zaakId?.let { uriBuilder.queryParam("zaak", "${zakenApiConfig.url}/zaken/api/v1/zaken/$zaakId") }
@@ -81,13 +94,17 @@ class ZakenApiClient(
             .awaitBody()
     }
 
-    suspend fun getZaakObjecten(page: Int, zaakId: UUID?): ResultPage<ZaakObject> {
+    suspend fun getZaakObjecten(
+        page: Int,
+        zaakId: UUID?,
+    ): ResultPage<ZaakObject> {
         return webClient()
             .get()
             .uri {
-                val uriBuilder = it.path("/zaken/api/v1/zaakobjecten")
-                    .queryParam("page", page)
-                    .queryParam("objectType", "overige")
+                val uriBuilder =
+                    it.path("/zaken/api/v1/zaakobjecten")
+                        .queryParam("page", page)
+                        .queryParam("objectType", "overige")
                 zaakId?.let { uriBuilder.queryParam("zaak", "${zakenApiConfig.url}/zaken/api/v1/zaken/$zaakId") }
                 uriBuilder.build()
             }
@@ -133,10 +150,11 @@ class ZakenApiClient(
     }
 
     private fun webClient(): WebClient {
-        val token = idTokenGenerator.generateToken(
-            zakenApiConfig.secret,
-            zakenApiConfig.clientId,
-        )
+        val token =
+            idTokenGenerator.generateToken(
+                zakenApiConfig.secret,
+                zakenApiConfig.clientId,
+            )
 
         return WebClient.builder()
             .clientConnector(

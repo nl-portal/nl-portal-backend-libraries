@@ -33,7 +33,6 @@ class CatalogiApiClient(
     private val catalogiApiConfig: CatalogiApiConfig,
     private val idTokenGenerator: IdTokenGenerator,
 ) {
-
     suspend fun getStatusTypes(zaakType: String): List<StatusType> {
         val params = LinkedMultiValueMap<String, String>()
         params.apply {
@@ -69,10 +68,11 @@ class CatalogiApiClient(
     }
 
     private fun webClient(): WebClient {
-        val token = idTokenGenerator.generateToken(
-            catalogiApiConfig.secret,
-            catalogiApiConfig.clientId,
-        )
+        val token =
+            idTokenGenerator.generateToken(
+                catalogiApiConfig.secret,
+                catalogiApiConfig.clientId,
+            )
 
         return WebClient.builder()
             .clientConnector(

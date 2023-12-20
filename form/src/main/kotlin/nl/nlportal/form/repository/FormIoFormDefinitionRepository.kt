@@ -20,6 +20,5 @@ import nl.nlportal.form.domain.FormIoFormDefinition
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface FormIoFormDefinitionRepository : JpaRepository<FormIoFormDefinition, FormDefinitionId> {
-
     fun findByName(name: String): FormIoFormDefinition?
 }

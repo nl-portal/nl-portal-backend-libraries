@@ -37,7 +37,6 @@ import org.springframework.core.io.ResourceLoader
 @EnableConfigurationProperties(DocumentApisConfig::class)
 @Import(ClamAVConfiguration::class)
 class DocumentenApiAutoConfiguration {
-
     @Bean
     @ConditionalOnMissingBean(ClientSslContextResolver::class)
     fun clientSslContextResolver(resourceLoader: ResourceLoader): ClientSslContextResolver {

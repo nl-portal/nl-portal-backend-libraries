@@ -20,7 +20,6 @@ import java.util.Optional
 import java.util.UUID
 
 class UuidFormatValidator : FormatValidator {
-
     override fun validate(subject: String): Optional<String> {
         return try {
             UUID.fromString(subject)

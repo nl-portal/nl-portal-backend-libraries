@@ -36,7 +36,6 @@ import org.springframework.security.core.Authentication
 
 @ExperimentalCoroutinesApi
 internal class GemachtigdeQueryTest {
-
     val haalCentraalBrpService = mock<HaalCentraalBrpService>()
     val handelsregisterService = mock<HandelsregisterService>()
     val query = GemachtigdeQuery(haalCentraalBrpService, handelsregisterService)
@@ -51,36 +50,37 @@ internal class GemachtigdeQueryTest {
     }
 
     @Test
-    fun `getGemachtigde should call service`() = runTest {
-        whenever(haalCentraalBrpService.getGemachtigde(authentication)).thenReturn(
-            PersoonNaam(
-                "test",
-                "test",
-                "test",
-                "test",
-                "test",
-            ),
-        )
-        whenever(handelsregisterService.getGemachtigde(authentication)).thenReturn(
-            MaatschappelijkeActiviteit(
-                naam = "Test bedrijf",
-                "90012768",
-                "test",
-                "20230101",
-                MaterieleRegistratie("20020202"),
-                1,
-                "Test bedrijf",
-                listOf(),
-                listOf(),
-                null,
-            ),
-        )
+    fun `getGemachtigde should call service`() =
+        runTest {
+            whenever(haalCentraalBrpService.getGemachtigde(authentication)).thenReturn(
+                PersoonNaam(
+                    "test",
+                    "test",
+                    "test",
+                    "test",
+                    "test",
+                ),
+            )
+            whenever(handelsregisterService.getGemachtigde(authentication)).thenReturn(
+                MaatschappelijkeActiviteit(
+                    naam = "Test bedrijf",
+                    "90012768",
+                    "test",
+                    "20230101",
+                    MaterieleRegistratie("20020202"),
+                    1,
+                    "Test bedrijf",
+                    listOf(),
+                    listOf(),
+                    null,
+                ),
+            )
 
-        val gemachtigde = query.getGemachtigde(environment)
-        verify(haalCentraalBrpService).getGemachtigde(authentication)
-        verify(handelsregisterService).getGemachtigde(authentication)
+            val gemachtigde = query.getGemachtigde(environment)
+            verify(haalCentraalBrpService).getGemachtigde(authentication)
+            verify(handelsregisterService).getGemachtigde(authentication)
 
-        assertEquals("test", gemachtigde.persoon?.aanhef)
-        assertEquals("Test bedrijf", gemachtigde.bedrijf?.naam)
-    }
+            assertEquals("test", gemachtigde.persoon?.aanhef)
+            assertEquals("Test bedrijf", gemachtigde.bedrijf?.naam)
+        }
 }
