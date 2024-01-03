@@ -11,7 +11,9 @@ on:
   workflow_dispatch:
 
   push:
-    branches: [ "*" ]
+    branches:  
+     - "**"
+     - "!release/**"
 
 permissions:
   contents: write
@@ -39,7 +41,5 @@ jobs:
           gradle-version: 8.5
           arguments: publish
       env:
-          #USER: ${{ secrets.GITHUB_TOKEN }}
-          #TOKEN: ${{ secrets.GITHUB_ACTOR }}
           USER: ${{ secrets.USER }}
           TOKEN: ${{ secrets.TOKEN }}
