@@ -43,8 +43,8 @@ jobs:
               env:
                   USER: ${{ secrets.USER }}
                   TOKEN: ${{ secrets.TOKEN }}
-                  MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-                  MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+                  OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+                  OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
             - name: Create a Release
               uses: elgohr/Github-Release-Action@20231116201936
               env:
