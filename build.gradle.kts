@@ -128,6 +128,14 @@ subprojects {
     configure<PublishingExtension> {
         repositories {
             maven {
+                name = "OSSRH"
+                url = uri("https://oss.sonatype.org/content/repositories/releases")
+                credentials {
+                    username = System.getenv("MAVEN_USERNAME")
+                    password = System.getenv("MAVEN_PASSWORD")
+                }
+            }
+            maven {
 
                 name = "GitHubPackages"
                 url = uri("https://maven.pkg.github.com/nl-portal/nl-portal-backend-libraries")
@@ -136,6 +144,7 @@ subprojects {
                     password = System.getenv("TOKEN")
                 }
             }
+
         }
 
         publications {
