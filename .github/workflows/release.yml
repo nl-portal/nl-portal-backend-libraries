@@ -5,13 +5,16 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
-name: Build release
+name: Deploy release
 
 
 on:
-    push:
-        tags:
-            - '*'
+  workflow_dispatch:
+
+  push:
+    branches:  
+     - "!**"
+     - "release/**"
 
 permissions:
     contents: read
@@ -23,25 +26,25 @@ jobs:
             contents: write
         steps:
             - uses: actions/checkout@v4
-            - name: Set up JDK 17
+            - name: Set up JDK 21
               uses: actions/setup-java@v4
               with:
-                  java-version: '17'
+                  java-version: '21'
                   distribution: 'temurin'
             - name: Build with Gradle
-              uses: gradle/gradle-build-action@0280eb7de5ad3fb0deb50017b8ce842980b4789a
+              uses: gradle/gradle-build-action@v2
               with:
                   arguments: build
             - name: Gradle publish
               uses: gradle/gradle-build-action@v2
               with:
-                  gradle-version: 8.4
+                  gradle-version: 8.5
                   arguments: publish
               env:
-                  #USER: ${{ secrets.GITHUB_TOKEN }}
-                  #TOKEN: ${{ secrets.GITHUB_ACTOR }}
                   USER: ${{ secrets.USER }}
                   TOKEN: ${{ secrets.TOKEN }}
+                  MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+                  MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
             - name: Create a Release
               uses: elgohr/Github-Release-Action@20231116201936
               env:
