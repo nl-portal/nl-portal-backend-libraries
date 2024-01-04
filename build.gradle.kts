@@ -135,24 +135,44 @@ subprojects {
                     password = System.getenv("MAVEN_PASSWORD")
                 }
             }
-            /*maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/nl-portal/nl-portal-backend-libraries")
+            maven {
+                name = "Sonatype"
                 credentials {
-                    username = System.getenv("USER")
-                    password = System.getenv("TOKEN")
+                    username = System.getenv("OSSRH_USERNAME")
+                    password = System.getenv("OSSRH_TOKEN")
                 }
-            }*/
+                var stagingRepoUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                var snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+
+                if(version.toString().endsWith("SNAPSHOT"))
+                    url = snapshotsRepoUrl
+                else
+                    url = stagingRepoUrl
+            }
         }
 
         publications {
-
             register<MavenPublication>("default") {
                 groupId = "nl.nl-portal"
+                pom {
+                    url = "https://github.com/nl-portal/nl-portal-backend-libraries"
+                    licenses {
+                        license {
+                            name = "Licensed under EUPL, Version 1.2 (the \"License\");"
+                            url = "https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12"
+                        }
+                    }
+                    scm {
+                        connection = "git@github.com:nl-portal/nl-portal-backend-libraries.git"
+                        developerConnection = "git@github.com:nl-portal/nl-portal-backend-libraries.git"
+                        url = "https://github.com/nl-portal/nl-portal-backend-libraries"
+                    }
+                }
                 from(components["java"])
             }
         }
     }
+
 }
 
 tasks.bootJar {
