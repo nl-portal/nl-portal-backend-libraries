@@ -135,14 +135,14 @@ subprojects {
                     password = System.getenv("MAVEN_PASSWORD")
                 }
             }
-            maven {
+            /*maven {
                 name = "GitHubPackages"
                 url = uri("https://maven.pkg.github.com/nl-portal/nl-portal-backend-libraries")
                 credentials {
                     username = System.getenv("USER")
                     password = System.getenv("TOKEN")
                 }
-            }
+            }*/
         }
 
         publications {
