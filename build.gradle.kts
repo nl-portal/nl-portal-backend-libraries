@@ -128,26 +128,22 @@ subprojects {
     configure<PublishingExtension> {
         repositories {
             maven {
-                name = "OSSRH"
-                url = uri("https://oss.sonatype.org/content/repositories/releases")
-                credentials {
-                    username = System.getenv("MAVEN_USERNAME")
-                    password = System.getenv("MAVEN_PASSWORD")
-                }
-            }
-            maven {
                 name = "Sonatype"
                 credentials {
                     username = System.getenv("OSSRH_USERNAME")
                     password = System.getenv("OSSRH_TOKEN")
                 }
+                System.out.println(credentials)
+
                 var stagingRepoUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
                 var snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
 
-                if(version.toString().endsWith("SNAPSHOT"))
+                if (version.toString().endsWith("SNAPSHOT")) {
                     url = snapshotsRepoUrl
-                else
+                }
+                else {
                     url = stagingRepoUrl
+                }
             }
         }
 
