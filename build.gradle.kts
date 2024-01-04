@@ -140,8 +140,7 @@ subprojects {
 
                 if (version.toString().endsWith("SNAPSHOT")) {
                     url = snapshotsRepoUrl
-                }
-                else {
+                } else {
                     url = stagingRepoUrl
                 }
             }
@@ -168,7 +167,6 @@ subprojects {
             }
         }
     }
-
 }
 
 tasks.bootJar {
