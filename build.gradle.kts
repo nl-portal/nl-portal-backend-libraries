@@ -1,4 +1,5 @@
 import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
+import org.eclipse.jgit.util.Base64
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.net.URI
 
@@ -180,7 +181,7 @@ subprojects {
         if (!System.getenv("SIGNING_KEY").isNullOrEmpty() &&
             !System.getenv("SIGNING_KEY_PASSWORD").isNullOrEmpty()
         ) {
-            var signingKey = System.getenv("SIGNING_KEY")
+            var signingKey = String(Base64.decode(System.getenv("SIGNING_KEY")))
             var signingPassword = System.getenv("SIGNING_KEY_PASSWORD")
 
             signing {
