@@ -46,6 +46,7 @@ jobs:
                   OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
                   OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
             - name: Create a Release
+              if: ${{ false }}  # disable for now
               uses: elgohr/Github-Release-Action@20231116201936
               env:
                   GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
