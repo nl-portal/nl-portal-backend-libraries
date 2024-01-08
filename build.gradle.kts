@@ -18,6 +18,8 @@ plugins {
     kotlin("plugin.jpa")
     kotlin("plugin.allopen")
 
+    signing
+
     // Allows to package executable jar or war archives, run Spring Boot applications,
     // and use the dependency management
     // https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html/
@@ -69,6 +71,8 @@ subprojects {
     apply(plugin = "java")
 
     apply(plugin = "maven-publish")
+
+    apply(plugin = "signing")
 
     if (project.properties.containsKey("isLib") || project.properties.containsKey("isApp")) {
         configure<com.diffplug.gradle.spotless.SpotlessExtension> {
@@ -171,6 +175,17 @@ subprojects {
                     }
                 }
                 from(components["java"])
+            }
+        }
+        if (!System.getenv("SIGNING_KEY").isNullOrEmpty() &&
+            !System.getenv("SIGNING_KEY_PASSWORD").isNullOrEmpty()
+        ) {
+            var signingKey = System.getenv("SIGNING_KEY")
+            var signingPassword = System.getenv("SIGNING_KEY_PASSWORD")
+
+            signing {
+                useInMemoryPgpKeys(signingKey, signingPassword)
+                sign(publications)
             }
         }
     }
