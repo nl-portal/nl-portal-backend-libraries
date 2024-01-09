@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Base64
 import java.util.UUID
 import kotlinx.coroutines.reactor.awaitSingleOrNull
+import nl.nlportal.core.util.CoreUtils.extractId
 import org.springframework.http.codec.multipart.FilePart
 import org.springframework.security.core.context.ReactiveSecurityContextHolder
 
@@ -62,11 +63,5 @@ class DocumentenApiService(
             file.content(),
             documentApi,
         )
-    }
-
-    companion object {
-        fun extractId(url: String): UUID {
-            return UUID.fromString(url.substringAfterLast("/"))
-        }
     }
 }

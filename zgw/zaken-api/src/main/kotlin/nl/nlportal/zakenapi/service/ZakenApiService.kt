@@ -18,6 +18,7 @@ package nl.nlportal.zakenapi.service
 import nl.nlportal.commonground.authentication.BedrijfAuthentication
 import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.core.util.CoreUtils.extractId
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.domain.DocumentStatus
 import nl.nlportal.documentenapi.service.DocumentenApiService
@@ -141,11 +142,5 @@ class ZakenApiService(
         return objectsApiClient.getObjectByUrl<ZaakDetailsObject>(
             url = objectUrl,
         )
-    }
-
-    companion object {
-        fun extractId(url: String): UUID {
-            return UUID.fromString(url.substringAfterLast("/"))
-        }
     }
 }
