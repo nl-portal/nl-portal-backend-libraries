@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
   push:
-    branches:  
+    branches:
      - "!**"
      - "release/**"
 
@@ -41,6 +41,8 @@ jobs:
                   TOKEN: ${{ secrets.TOKEN }}
                   OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
                   OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+                  SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+                  SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
             - name: Create a Release
               if: ${{ false }}  # disable for now
               uses: elgohr/Github-Release-Action@20231116201936
