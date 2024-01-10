@@ -17,6 +17,10 @@
 import com.github.jk1.license.render.*
 import com.github.jk1.license.filter.*
 
+plugins {
+    id 'maven-publish'
+}
+
 rootProject.configure(rootProject, {
     licenseReport {
         renderers = [new InventoryHtmlReportRenderer('index.html', null, new File(projectDir,"gradle/license-report/unknown-license-details.txt"))]
@@ -29,5 +33,8 @@ tasks.withType(PublishToMavenRepository) {
     enabled = false
 }
 tasks.withType(PublishToMavenLocal) {
-    enabled = false
+    enabled = true
 }
+
+project.tasks.findByName("publishDefaultPublicationToSonatypeRepository")?.enabled = false
+project.tasks.findByName("publishDefaultPublicationToMavenLocal")?.enabled = false

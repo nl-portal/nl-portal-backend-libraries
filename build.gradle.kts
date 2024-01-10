@@ -44,7 +44,7 @@ plugins {
     id("org.jetbrains.dokka")
 
     `maven-publish`
-    signing
+    `signing`
 }
 
 allprojects {
@@ -76,8 +76,8 @@ subprojects {
     apply(plugin = "maven-publish")
 
     var signingConfigSet = false
-    if(System.getenv("SIGNING_KEY") != null
-        && System.getenv("SIGNING_KEY_PASSWORD") != null
+    if (System.getenv("SIGNING_KEY") != null &&
+        System.getenv("SIGNING_KEY_PASSWORD") != null
     ) {
         signingConfigSet = true
         apply(plugin = "signing")
@@ -188,12 +188,12 @@ subprojects {
         }
     }
 
-    if(signingConfigSet) {
+    if (signingConfigSet) {
         signing {
-            val signingKeyBase64 : String? = System.getenv("SIGNING_KEY")
-            val signingKeyBytes : ByteArray = getSigningKey(signingKeyBase64!!)
-            val signingKey : String = signingKeyBytes.toString(Charsets.UTF_8)
-            val signingKeyPassword : String? = System.getenv("SIGNING_KEY_PASSWORD")
+            val signingKeyBase64: String? = System.getenv("SIGNING_KEY")
+            val signingKeyBytes: ByteArray = getSigningKey(signingKeyBase64!!)
+            val signingKey: String = signingKeyBytes.toString(Charsets.UTF_8)
+            val signingKeyPassword: String? = System.getenv("SIGNING_KEY_PASSWORD")
 
             useInMemoryPgpKeys(signingKey, signingKeyPassword)
             sign(publishing.publications["default"])
@@ -210,5 +210,12 @@ fun getSigningKey(signingKeyBase64: String): ByteArray {
     return decode(signingKeyBase64.subSequence(0, signingKeyBase64.length))
 }
 
-println("Apply deployment script")
-apply(from = "gradle/deployment.gradle")
+tasks.withType<PublishToMavenRepository> {
+    enabled = false
+}
+tasks.withType<PublishToMavenLocal> {
+    enabled = false
+}
+
+// println("Apply deployment script")
+// apply(from = "gradle/deployment.gradle")

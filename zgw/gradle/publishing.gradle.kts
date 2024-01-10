@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-pluginManager.withPlugin('maven-publish') {
-    publishing {
+pluginManager.withPlugin("maven-publish") {
+    configure<PublishingExtension> {
         publications {
-            maven(MavenPublication) {
+            withType(MavenPublication::class.java) {
                 pom {
-                    name = 'Documenten API module'
-                    description = 'This module facilitates working with a Documenten API compliant microservice'
+                    getName().set("Zaak Gericht Werken module")
+                    getDescription().set("The ZGW module contains common tools shared by different ZGW components.")
                     developers {
                         developer {
-                            id = "team-valtimo"
-                            name = "Team Valtimo"
-                            email = "team-valtimo@ritense.com"
+                            getId().set("team-nl-portal")
+                            getName().set("Team NL Portal")
+                            getEmail().set("team-nl-portal@ritense.com")
                         }
                     }
                 }
