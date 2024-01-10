@@ -1,6 +1,8 @@
 import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.net.URI
+import kotlin.io.encoding.Base64.Default.decode
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 plugins {
     java
@@ -40,6 +42,9 @@ plugins {
     id("com.github.jk1.dependency-license-report") version "2.5"
 
     id("org.jetbrains.dokka")
+
+    `maven-publish`
+    `signing`
 }
 
 allprojects {
@@ -69,6 +74,14 @@ subprojects {
     apply(plugin = "java")
 
     apply(plugin = "maven-publish")
+
+    var signingConfigSet = false
+    if (System.getenv("SIGNING_KEY") != null &&
+        System.getenv("SIGNING_KEY_PASSWORD") != null
+    ) {
+        signingConfigSet = true
+        apply(plugin = "signing")
+    }
 
     if (project.properties.containsKey("isLib") || project.properties.containsKey("isApp")) {
         configure<com.diffplug.gradle.spotless.SpotlessExtension> {
@@ -125,10 +138,9 @@ subprojects {
         useJUnitPlatform()
     }
 
-    configure<PublishingExtension> {
+    publishing {
         repositories {
             maven {
-
                 name = "GitHubPackages"
                 url = uri("https://maven.pkg.github.com/nl-portal/nl-portal-backend-libraries")
                 credentials {
@@ -136,14 +148,55 @@ subprojects {
                     password = System.getenv("TOKEN")
                 }
             }
+            maven {
+                name = "Sonatype"
+                credentials {
+                    username = System.getenv("OSSRH_USERNAME")
+                    password = System.getenv("OSSRH_TOKEN")
+                }
+
+                var stagingRepoUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                var snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+
+                if (version.toString().endsWith("SNAPSHOT")) {
+                    url = snapshotsRepoUrl
+                } else {
+                    url = stagingRepoUrl
+                }
+            }
         }
 
         publications {
-
             register<MavenPublication>("default") {
                 groupId = "nl.nl-portal"
+                pom {
+                    url = "https://github.com/nl-portal/nl-portal-backend-libraries"
+                    licenses {
+                        license {
+                            name = "Licensed under EUPL, Version 1.2 (the \"License\");"
+                            url = "https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12"
+                        }
+                    }
+                    scm {
+                        connection = "git@github.com:nl-portal/nl-portal-backend-libraries.git"
+                        developerConnection = "git@github.com:nl-portal/nl-portal-backend-libraries.git"
+                        url = "https://github.com/nl-portal/nl-portal-backend-libraries"
+                    }
+                }
                 from(components["java"])
             }
+        }
+    }
+
+    if (signingConfigSet) {
+        signing {
+            val signingKeyBase64: String? = System.getenv("SIGNING_KEY")
+            val signingKeyBytes: ByteArray = getSigningKey(signingKeyBase64!!)
+            val signingKey: String = signingKeyBytes.toString(Charsets.UTF_8)
+            val signingKeyPassword: String? = System.getenv("SIGNING_KEY_PASSWORD")
+
+            useInMemoryPgpKeys(signingKey, signingKeyPassword)
+            sign(publishing.publications["default"])
         }
     }
 }
@@ -152,5 +205,17 @@ tasks.bootJar {
     enabled = false
 }
 
-println("Apply deployment script")
-apply(from = "gradle/deployment.gradle")
+@OptIn(ExperimentalEncodingApi::class)
+fun getSigningKey(signingKeyBase64: String): ByteArray {
+    return decode(signingKeyBase64.subSequence(0, signingKeyBase64.length))
+}
+
+tasks.withType<PublishToMavenRepository> {
+    enabled = false
+}
+tasks.withType<PublishToMavenLocal> {
+    enabled = false
+}
+
+// println("Apply deployment script")
+// apply(from = "gradle/deployment.gradle")
