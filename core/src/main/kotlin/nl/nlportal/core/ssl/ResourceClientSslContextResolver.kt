@@ -17,17 +17,20 @@ package nl.nlportal.core.ssl
 
 import io.netty.handler.ssl.SslContext
 import io.netty.handler.ssl.SslContextBuilder
-import java.security.cert.CertificateFactory
-import java.security.cert.X509Certificate
 import org.springframework.core.io.DefaultResourceLoader
 import org.springframework.core.io.ResourceLoader
+import java.security.cert.CertificateFactory
+import java.security.cert.X509Certificate
 
 class ResourceClientSslContextResolver(
     private val resourceLoader: ResourceLoader = DefaultResourceLoader(),
 ) : ClientSslContextResolver {
     private val certificateFactory = CertificateFactory.getInstance("X509")
 
-    override fun resolve(keyData: ClientKey?, trustedCertificate: String?): SslContext {
+    override fun resolve(
+        keyData: ClientKey?,
+        trustedCertificate: String?,
+    ): SslContext {
         val contextBuilder = SslContextBuilder.forClient()
 
         keyData?.let { data ->

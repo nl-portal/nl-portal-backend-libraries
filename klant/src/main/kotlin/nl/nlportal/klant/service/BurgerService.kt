@@ -21,5 +21,9 @@ import nl.nlportal.klant.domain.klanten.KlantUpdate
 
 interface BurgerService {
     suspend fun getBurgerProfiel(authentication: CommonGroundAuthentication): Klant?
-    suspend fun updateBurgerProfiel(klant: KlantUpdate, authentication: CommonGroundAuthentication): Klant?
+
+    suspend fun updateBurgerProfiel(
+        klant: KlantUpdate,
+        authentication: CommonGroundAuthentication,
+    ): Klant?
 }

@@ -15,40 +15,49 @@
  */
 package nl.nlportal.haalcentraal.hr.autoconfiguration
 
+import nl.nlportal.core.ssl.ClientSslContextResolver
+import nl.nlportal.core.ssl.ResourceClientSslContextResolver
 import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrClientConfig
 import nl.nlportal.haalcentraal.hr.client.HandelsregisterClient
 import nl.nlportal.haalcentraal.hr.graphql.HandelsregisterQuery
 import nl.nlportal.haalcentraal.hr.service.HandelsregisterService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
+import org.springframework.core.io.ResourceLoader
 
 @AutoConfiguration
 @EnableConfigurationProperties(HaalCentraalHrClientConfig::class)
 class HandelsregisterAutoConfiguration {
+    @Bean
+    @ConditionalOnMissingBean(ClientSslContextResolver::class)
+    fun clientSslContextResolver(resourceLoader: ResourceLoader): ClientSslContextResolver {
+        return ResourceClientSslContextResolver(resourceLoader)
+    }
 
     @Bean
     @ConditionalOnMissingBean(HandelsregisterClient::class)
     fun handelsregisterClient(
         haalCentraalHrClientConfig: HaalCentraalHrClientConfig,
+        @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
     ): HandelsregisterClient {
-        return HandelsregisterClient(haalCentraalHrClientConfig)
+        return HandelsregisterClient(
+            haalCentraalHrClientConfig,
+            clientSslContextResolver,
+        )
     }
 
     @Bean
     @ConditionalOnMissingBean(HandelsregisterService::class)
-    fun handelsregisterService(
-        handelsregisterClient: HandelsregisterClient,
-    ): HandelsregisterService {
+    fun handelsregisterService(handelsregisterClient: HandelsregisterClient): HandelsregisterService {
         return HandelsregisterService(handelsregisterClient)
     }
 
     @Bean
     @ConditionalOnMissingBean(HandelsregisterQuery::class)
-    fun handelsregisterQuery(
-        handelsregisterService: HandelsregisterService,
-    ): HandelsregisterQuery {
+    fun handelsregisterQuery(handelsregisterService: HandelsregisterService): HandelsregisterQuery {
         return HandelsregisterQuery(handelsregisterService)
     }
 }

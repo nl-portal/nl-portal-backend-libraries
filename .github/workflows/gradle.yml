@@ -21,12 +21,12 @@ jobs:
 
         steps:
             - uses: actions/checkout@v4
-            - name: Set up JDK 17
+            - name: Set up JDK 21
               uses: actions/setup-java@v4
               with:
-                  java-version: '17'
+                  java-version: '21'
                   distribution: 'temurin'
             - name: Build with Gradle
-              uses: gradle/gradle-build-action@0280eb7de5ad3fb0deb50017b8ce842980b4789a
+              uses: gradle/gradle-build-action@v2
               with:
                   arguments: build

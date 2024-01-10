@@ -19,10 +19,10 @@ import org.everit.json.schema.ReadWriteContext
 import org.everit.json.schema.Validator
 
 object Validator {
-
-    private val validator: Validator = Validator.builder()
-        .readWriteContext(ReadWriteContext.WRITE)
-        .build()
+    private val validator: Validator =
+        Validator.builder()
+            .readWriteContext(ReadWriteContext.WRITE)
+            .build()
 
     fun get(): Validator {
         return validator

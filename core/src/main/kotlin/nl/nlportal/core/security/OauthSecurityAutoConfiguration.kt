@@ -16,6 +16,7 @@
 package nl.nlportal.core.security
 
 import nl.nlportal.core.security.config.HttpSecurityConfigurer
+import nl.nlportal.core.security.config.SecurityEndpointsConfig
 import nl.nlportal.core.security.config.SecurityHeadersConfig
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -23,26 +24,24 @@ import org.springframework.context.annotation.Bean
 import org.springframework.core.convert.converter.Converter
 import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AbstractAuthenticationToken
+import org.springframework.security.config.Customizer.withDefaults
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.web.server.SecurityWebFilterChain
+import org.springframework.security.web.server.header.ReferrerPolicyServerHttpHeadersWriter
+import org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter
 import org.springframework.web.cors.reactive.CorsWebFilter
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 import reactor.core.publisher.Mono
-
-import org.springframework.security.config.Customizer.withDefaults
-import org.springframework.security.web.server.header.ReferrerPolicyServerHttpHeadersWriter
-import org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter
 import java.time.Duration
 
 @AutoConfiguration
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
-@EnableConfigurationProperties(CorsPathConfiguration::class, SecurityHeadersConfig::class)
+@EnableConfigurationProperties(CorsPathConfiguration::class, SecurityHeadersConfig::class, SecurityEndpointsConfig::class)
 class OauthSecurityAutoConfiguration {
-
     @Bean
     fun springSecurityWebFilterChain(
         http: ServerHttpSecurity,
@@ -50,6 +49,7 @@ class OauthSecurityAutoConfiguration {
         corsPathConfiguration: CorsPathConfiguration,
         securityConfigurers: List<HttpSecurityConfigurer>,
         securityHeadersConfig: SecurityHeadersConfig,
+        securityEndpointsConfig: SecurityEndpointsConfig,
     ): SecurityWebFilterChain {
         securityConfigurers.forEach { it.configure(http) }
 
@@ -82,11 +82,16 @@ class OauthSecurityAutoConfiguration {
                 it.pathMatchers("/playground").permitAll()
                 it.pathMatchers("/graphql").permitAll()
                 it.pathMatchers("/actuator/**").permitAll()
+                    .apply {
+                        securityEndpointsConfig.unsecured.forEach { endpoint ->
+                            it.pathMatchers(endpoint).permitAll()
+                        }
+                    }
                 it.anyExchange().authenticated()
             }
             .oauth2ResourceServer {
-                it.jwt {
-                    it.jwtAuthenticationConverter(converter)
+                it.jwt { t ->
+                    t.jwtAuthenticationConverter(converter)
                 }
             }
             .build()

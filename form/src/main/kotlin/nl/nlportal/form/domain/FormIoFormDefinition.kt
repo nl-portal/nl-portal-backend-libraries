@@ -27,22 +27,16 @@ import org.springframework.data.domain.Persistable
 @Entity
 @Table(name = "form_io_form_definition")
 data class FormIoFormDefinition(
-
     @EmbeddedId
     val formDefinitionId: FormDefinitionId,
-
     @Column(name = "name", columnDefinition = "VARCHAR(255)")
     var name: String,
-
     @Column(name = "form_definition", columnDefinition = "json")
     @JdbcTypeCode(SqlTypes.JSON)
     var formDefinition: ObjectNode,
-
     @Column(name = "read_only", columnDefinition = "BOOLEAN")
     var readOnly: Boolean,
-
 ) : Persistable<FormDefinitionId> {
-
     override fun getId(): FormDefinitionId {
         return formDefinitionId
     }

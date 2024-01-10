@@ -25,20 +25,16 @@ import org.hibernate.annotations.UuidGenerator
 
 @Embeddable
 data class TaskId(
-
     @Column(name = "task_id", columnDefinition = "UUID")
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     @GeneratedValue
     val value: UUID,
-
 ) : AbstractId<TaskId>() {
-
     init {
         ObjectValidator.validate(this)
     }
 
     companion object {
-
         fun existingId(value: UUID): TaskId {
             return TaskId(value)
         }

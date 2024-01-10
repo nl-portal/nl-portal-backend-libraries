@@ -58,14 +58,15 @@ internal class FormQueryIT(
     @Test
     @WithBurgerUser("123")
     fun getFormList() {
-        val query = """
+        val query =
+            """
             query {
                 getFormList {
                     uuid,
                     name
                 }
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val basePath = "$.data.getFormList"
 
@@ -82,16 +83,18 @@ internal class FormQueryIT(
     }
 
     private fun setupMockServer() {
-        val dispatcher: Dispatcher = object : Dispatcher() {
-            @Throws(InterruptedException::class)
-            override fun dispatch(request: RecordedRequest): MockResponse {
-                val response = when (request.path?.substringBefore('?')) {
-                    "/api/v1/forms" -> TestHelper.mockResponseFromFile("/data/get-forms-response.json")
-                    else -> MockResponse().setResponseCode(404)
+        val dispatcher: Dispatcher =
+            object : Dispatcher() {
+                @Throws(InterruptedException::class)
+                override fun dispatch(request: RecordedRequest): MockResponse {
+                    val response =
+                        when (request.path?.substringBefore('?')) {
+                            "/api/v1/forms" -> TestHelper.mockResponseFromFile("/data/get-forms-response.json")
+                            else -> MockResponse().setResponseCode(404)
+                        }
+                    return response
                 }
-                return response
             }
-        }
         server.dispatcher = dispatcher
     }
 }

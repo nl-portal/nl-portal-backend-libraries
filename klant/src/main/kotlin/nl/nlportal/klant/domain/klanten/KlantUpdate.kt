@@ -19,10 +19,8 @@ import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.Pattern
 
 data class KlantUpdate(
-
     @field:Pattern(regexp = "[+ \\-()0-9]{0,20}", message = "Must be a valid phone number")
     val telefoonnummer: String?,
-
     @field:Email
     val emailadres: String?,
 )

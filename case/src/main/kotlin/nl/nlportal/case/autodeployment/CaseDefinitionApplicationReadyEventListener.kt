@@ -20,7 +20,6 @@ import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.event.EventListener
 
 class CaseDefinitionApplicationReadyEventListener(private val caseDefinitionService: CaseDefinitionService) {
-
     @EventListener(ApplicationReadyEvent::class)
     fun handle() {
         caseDefinitionService.deployAll()

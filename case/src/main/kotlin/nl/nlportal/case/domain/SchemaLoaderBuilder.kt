@@ -20,15 +20,15 @@ import org.everit.json.schema.loader.SchemaClient
 import org.everit.json.schema.loader.SchemaLoader
 
 object SchemaLoaderBuilder {
-
     private val DEFAULT_REFERENCE_PATH_LOCATION = "classpath://config/case/definition/reference/"
 
-    private val schemaLoaderBuilder = SchemaLoader.builder()
-        .schemaClient(SchemaClient.classPathAwareClient())
-        .resolutionScope(DEFAULT_REFERENCE_PATH_LOCATION)
-        .useDefaults(true)
-        .draftV7Support()
-        .addFormatValidator(UuidFormatValidator())
+    private val schemaLoaderBuilder =
+        SchemaLoader.builder()
+            .schemaClient(SchemaClient.classPathAwareClient())
+            .resolutionScope(DEFAULT_REFERENCE_PATH_LOCATION)
+            .useDefaults(true)
+            .draftV7Support()
+            .addFormatValidator(UuidFormatValidator())
 
     fun get(): SchemaLoader.SchemaLoaderBuilder {
         return schemaLoaderBuilder

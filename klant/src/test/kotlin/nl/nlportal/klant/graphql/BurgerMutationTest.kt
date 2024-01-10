@@ -39,7 +39,6 @@ import org.springframework.security.core.Authentication
 @ExtendWith(MockitoExtension::class)
 @ExperimentalCoroutinesApi
 internal class BurgerMutationTest {
-
     @Mock
     lateinit var burgerService: BurgerService
 
@@ -60,54 +59,62 @@ internal class BurgerMutationTest {
     }
 
     @Test
-    fun `can update klant with valid phone number and email`() = runTest {
-        Mockito.`when`(environment.graphQlContext).thenReturn(context)
-        Mockito.`when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
-        val klant = KlantUpdate(
-            telefoonnummer = "0611111111",
-            emailadres = "new@email.nl",
-        )
+    fun `can update klant with valid phone number and email`() =
+        runTest {
+            Mockito.`when`(environment.graphQlContext).thenReturn(context)
+            Mockito.`when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
+            val klant =
+                KlantUpdate(
+                    telefoonnummer = "0611111111",
+                    emailadres = "new@email.nl",
+                )
 
-        burgerMutation.updateBurgerProfiel(klant, environment)
+            burgerMutation.updateBurgerProfiel(klant, environment)
 
-        verify(burgerService).updateBurgerProfiel(klant, authentication)
-    }
+            verify(burgerService).updateBurgerProfiel(klant, authentication)
+        }
 
     @Test
-    fun `can update klant with empty phone number and email`() = runTest {
-        Mockito.`when`(environment.graphQlContext).thenReturn(context)
-        Mockito.`when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
-        val klant = KlantUpdate(
-            telefoonnummer = "",
-            emailadres = "",
-        )
+    fun `can update klant with empty phone number and email`() =
+        runTest {
+            Mockito.`when`(environment.graphQlContext).thenReturn(context)
+            Mockito.`when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
+            val klant =
+                KlantUpdate(
+                    telefoonnummer = "",
+                    emailadres = "",
+                )
 
-        burgerMutation.updateBurgerProfiel(klant, environment)
+            burgerMutation.updateBurgerProfiel(klant, environment)
 
-        verify(burgerService).updateBurgerProfiel(klant, authentication)
-    }
+            verify(burgerService).updateBurgerProfiel(klant, authentication)
+        }
 
     @Test
     fun `cant update klant with invalid phone number`() {
-        val klant = KlantUpdate(
-            telefoonnummer = "invalid-phone-number",
-            emailadres = "",
-        )
-        val exception = Assertions.assertThrows(ValidationException::class.java) {
-            runTest { burgerMutation.updateBurgerProfiel(klant, environment) }
-        }
+        val klant =
+            KlantUpdate(
+                telefoonnummer = "invalid-phone-number",
+                emailadres = "",
+            )
+        val exception =
+            Assertions.assertThrows(ValidationException::class.java) {
+                runTest { burgerMutation.updateBurgerProfiel(klant, environment) }
+            }
         assertThat(exception).hasMessage("Must be a valid phone number")
     }
 
     @Test
     fun `cant update klant with invalid email`() {
-        val klant = KlantUpdate(
-            telefoonnummer = "",
-            emailadres = "invalid-email",
-        )
-        val exception = Assertions.assertThrows(ValidationException::class.java) {
-            runTest { burgerMutation.updateBurgerProfiel(klant, environment) }
-        }
+        val klant =
+            KlantUpdate(
+                telefoonnummer = "",
+                emailadres = "invalid-email",
+            )
+        val exception =
+            Assertions.assertThrows(ValidationException::class.java) {
+                runTest { burgerMutation.updateBurgerProfiel(klant, environment) }
+            }
         assertThat(exception).hasMessage("must be a well-formed email address")
     }
 }

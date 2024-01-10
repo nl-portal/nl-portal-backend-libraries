@@ -30,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 class CaseServiceIntTest : BaseIntegrationTest() {
-
     @Autowired
     lateinit var caseService: CaseService
 
@@ -50,28 +49,34 @@ class CaseServiceIntTest : BaseIntegrationTest() {
     @Test
     fun `should not create case with empty submission`() {
         val submission = Mapper.get().readValue("{}", ObjectNode::class.java)
-        val illegalStateException = assertThrows(IllegalStateException::class.java) {
+        val illegalStateException =
+            assertThrows(IllegalStateException::class.java) {
+                caseService.create(
+                    "person",
+                    submission,
+                    authentication,
+                    initialStatus,
+                )
+            }
+        assertThat(illegalStateException).hasMessage("Empty case data")
+    }
+
+    @Test
+    fun `should create case with valid submission`() {
+        val submission =
+            Mapper.get().readValue(
+                "{\"firstName\" : \"myName\", \"extra-key-non-portal-property\": \"value\"}",
+                ObjectNode::class.java,
+            )
+        val extraProperty = Mapper.get().readValue("{\"extra-key-non-portal-property\": \"value\"}", ObjectNode::class.java)
+
+        val case =
             caseService.create(
                 "person",
                 submission,
                 authentication,
                 initialStatus,
             )
-        }
-        assertThat(illegalStateException).hasMessage("Empty case data")
-    }
-
-    @Test
-    fun `should create case with valid submission`() {
-        val submission = Mapper.get().readValue("{\"firstName\" : \"myName\", \"extra-key-non-portal-property\": \"value\"}", ObjectNode::class.java)
-        val extraProperty = Mapper.get().readValue("{\"extra-key-non-portal-property\": \"value\"}", ObjectNode::class.java)
-
-        val case = caseService.create(
-            "person",
-            submission,
-            authentication,
-            initialStatus,
-        )
 
         assertNotNull(case)
         assertThat(case.caseId).isNotNull

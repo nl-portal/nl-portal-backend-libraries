@@ -27,7 +27,6 @@ import org.mockito.MockitoAnnotations
 import org.springframework.core.io.ResourceLoader
 
 internal class FormDefinitionDeploymentServiceTest {
-
     @Mock
     lateinit var formDefinitionService: FormIoFormDefinitionService
 

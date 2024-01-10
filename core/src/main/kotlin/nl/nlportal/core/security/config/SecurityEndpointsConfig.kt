@@ -13,17 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.haalcentraal.hr
+package nl.nlportal.core.security.config
 
-import okhttp3.mockwebserver.MockResponse
+import org.springframework.boot.context.properties.ConfigurationProperties
 
-object TestHelper {
-    fun mockResponseFromFile(fileName: String): MockResponse {
-        return MockResponse()
-            .addHeader("Content-Type", "application/json; charset=utf-8")
-            .setResponseCode(200)
-            .setBody(readFileAsString(fileName))
-    }
-
-    private fun readFileAsString(fileName: String): String = this::class.java.getResource(fileName).readText(Charsets.UTF_8)
-}
+@ConfigurationProperties(prefix = "nl-portal.security.endpoints", ignoreUnknownFields = true)
+data class SecurityEndpointsConfig(
+    var unsecured: List<String> = emptyList(),
+)

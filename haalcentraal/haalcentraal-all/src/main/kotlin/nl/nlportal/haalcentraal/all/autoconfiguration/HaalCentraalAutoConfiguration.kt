@@ -27,7 +27,6 @@ import org.springframework.context.annotation.Bean
 @AutoConfiguration
 @EnableConfigurationProperties(HaalCentraalClientConfig::class)
 class HaalCentraalAutoConfiguration {
-
     @Bean
     @ConditionalOnMissingBean(GemachtigdeQuery::class)
     fun gemachtigdeQuery(

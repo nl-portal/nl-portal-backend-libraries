@@ -23,7 +23,6 @@ abstract class CommonGroundAuthentication(
     val jwt: Jwt,
     authorities: Collection<GrantedAuthority>?,
 ) : JwtAuthenticationToken(jwt, authorities) {
-
     /**
      * Gets gemachtigde identification property from the JWT
      *

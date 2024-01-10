@@ -46,14 +46,18 @@ class HaalCentraalClientProvider(
                         var result = client
                         if (clientSslContextResolver != null) {
                             haalCentraalClientConfig.ssl?.let {
-                                val sslContext = clientSslContextResolver.resolve(
-                                    it.key,
-                                    it.trustedCertificate,
-                                )
+                                val sslContext =
+                                    clientSslContextResolver.resolve(
+                                        it.key,
+                                        it.trustedCertificate,
+                                    )
 
                                 result = client.secure { builder -> builder.sslContext(sslContext) }
 
-                                logger.debug { "Client SSL context was set: private key=${it.key != null}, trusted certificate=${it.trustedCertificate != null}." }
+                                logger.debug {
+                                    "Client SSL context was set: private key=${it.key != null}, " +
+                                        "trusted certificate=${it.trustedCertificate != null}."
+                                }
                             }
                         }
                         result
@@ -69,7 +73,8 @@ class HaalCentraalClientProvider(
 
                 if (haalCentraalClientConfig.tokenExchange != null) {
                     requireNotNull(userTokenExchangeFilter) {
-                        "Token exchange was configured (${haalCentraalClientConfig.tokenExchange}), but userTokenExchangeFilter was null!"
+                        "Token exchange was configured (${haalCentraalClientConfig.tokenExchange}), " +
+                            "but userTokenExchangeFilter was null!"
                     }
 
                     it.filter(userTokenExchangeFilter)

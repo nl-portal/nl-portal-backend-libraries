@@ -28,7 +28,6 @@ import java.util.function.Consumer
 class AuthenticationIT(
     @Autowired private val testClient: WebTestClient,
 ) : BaseIntegrationTest() {
-
     val GRAPHQL_ENDPOINT = "/graphql"
     val GRAPHQL_MEDIA_TYPE = MediaType("application", "graphql")
     val DATA_JSON_PATH = "$.data"

@@ -33,7 +33,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 @EnableJpaRepositories(basePackages = ["nl.nlportal.form.repository"])
 @EntityScan("nl.nlportal.form.domain")
 class FormAutoConfiguration {
-
     @Bean
     @ConditionalOnMissingBean(FormApplicationReadyEventListener::class)
     fun formApplicationReadyEventListener(
@@ -44,17 +43,13 @@ class FormAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(FormIoFormDefinitionService::class)
-    fun formIoFormDefinitionService(
-        formIoFormDefinitionRepository: FormIoFormDefinitionRepository,
-    ): FormIoFormDefinitionService {
+    fun formIoFormDefinitionService(formIoFormDefinitionRepository: FormIoFormDefinitionRepository): FormIoFormDefinitionService {
         return FormIoFormDefinitionService(formIoFormDefinitionRepository)
     }
 
     @Bean
     @ConditionalOnMissingBean(ObjectsApiFormDefinitionService::class)
-    fun objectsApiFormDefinitionService(
-        objectenApiService: ObjectenApiService,
-    ): ObjectsApiFormDefinitionService {
+    fun objectsApiFormDefinitionService(objectenApiService: ObjectenApiService): ObjectsApiFormDefinitionService {
         return ObjectsApiFormDefinitionService(objectenApiService)
     }
 

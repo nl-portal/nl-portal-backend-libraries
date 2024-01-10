@@ -25,12 +25,9 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 @EnableConfigurationProperties(ObjectsApiClientConfig::class)
 class ObjectsApiAutoConfiguration {
-
     @Bean
     @ConditionalOnMissingBean(ObjectsApiClient::class)
-    fun objectsApiClient(
-        objectsApiClientConfig: ObjectsApiClientConfig,
-    ): ObjectsApiClient {
+    fun objectsApiClient(objectsApiClientConfig: ObjectsApiClientConfig): ObjectsApiClient {
         return ObjectsApiClient(objectsApiClientConfig)
     }
 

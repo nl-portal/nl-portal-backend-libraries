@@ -27,9 +27,12 @@ class TaakPage(
     results: List<Taak>,
     totalElements: Int,
 ) : Page<Taak>(number, size, content, results, totalElements) {
-
     companion object {
-        fun fromResultPage(pageNumber: Int, pageSize: Int, resultPage: ResultPage<ObjectsApiObject<TaakObject>>): TaakPage {
+        fun fromResultPage(
+            pageNumber: Int,
+            pageSize: Int,
+            resultPage: ResultPage<ObjectsApiObject<TaakObject>>,
+        ): TaakPage {
             val tasks = resultPage.results.map { Taak.fromObjectsApiTask(it) }
 
             return TaakPage(

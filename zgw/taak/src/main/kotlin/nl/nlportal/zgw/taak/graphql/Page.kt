@@ -18,7 +18,7 @@ package nl.nlportal.zgw.taak.graphql
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import kotlin.math.ceil
 
-open class Page<T> (
+open class Page<T>(
     @GraphQLDescription("The requested page number") val number: Int,
     @GraphQLDescription("The requested page size") val size: Int,
     @GraphQLDescription("The elements on this page")val content: List<T>,

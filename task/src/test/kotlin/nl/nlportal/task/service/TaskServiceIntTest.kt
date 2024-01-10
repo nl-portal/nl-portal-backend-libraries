@@ -29,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 internal class TaskServiceIntTest : BaseIntegrationTest() {
-
     @Test
     @Transactional
     fun `should create a new portal task`() {
@@ -44,13 +43,14 @@ internal class TaskServiceIntTest : BaseIntegrationTest() {
     @Test
     @Transactional
     fun `should create a new portal public task`() {
-        val createPortalTaskMessage = CreatePortalTaskMessage(
-            "some-task-id",
-            "some-external-id",
-            Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java),
-            "some-task-def-key",
-            true,
-        )
+        val createPortalTaskMessage =
+            CreatePortalTaskMessage(
+                "some-task-id",
+                "some-external-id",
+                Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java),
+                "some-task-def-key",
+                true,
+            )
 
         val newTask = taskService.createPortalTask(createPortalTaskMessage)
 
@@ -78,11 +78,12 @@ internal class TaskServiceIntTest : BaseIntegrationTest() {
     fun `should complete task`() {
         val dummyTask = taskService.createPortalTask(createPortalTaskMessage())
 
-        val completedTask = taskService.completeTask(
-            dummyTask.taskId.value,
-            Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java),
-            "some-user-id",
-        )
+        val completedTask =
+            taskService.completeTask(
+                dummyTask.taskId.value,
+                Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java),
+                "some-user-id",
+            )
         assertThat(completedTask.isCompleted()).isTrue
     }
 
@@ -105,10 +106,11 @@ internal class TaskServiceIntTest : BaseIntegrationTest() {
     fun `should complete public task`() {
         val dummyTask = taskService.createPortalTask(createPortalTaskMessage(true))
 
-        val completedTask = taskService.completePublicTask(
-            dummyTask.externalTaskId,
-            Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java),
-        )
+        val completedTask =
+            taskService.completePublicTask(
+                dummyTask.externalTaskId,
+                Mapper.get().readValue("{\"display\": \"form\"}", ObjectNode::class.java),
+            )
         assertThat(completedTask.isCompleted()).isTrue
     }
 
@@ -131,9 +133,10 @@ internal class TaskServiceIntTest : BaseIntegrationTest() {
         assertThat(task).isNotNull
         assertThat(task.externalTaskId).isNotNull
 
-        val deleteMessage = DeletePortalTaskMessage(
-            task.externalTaskId,
-        )
+        val deleteMessage =
+            DeletePortalTaskMessage(
+                task.externalTaskId,
+            )
         taskService.deletePortalTask(deleteMessage)
 
         // Verify the deletion
@@ -148,9 +151,10 @@ internal class TaskServiceIntTest : BaseIntegrationTest() {
         assertThat(task).isNotNull
         assertThat(task.externalTaskId).isNotNull
 
-        val deleteMessage = DeletePortalTaskMessage(
-            task.externalTaskId,
-        )
+        val deleteMessage =
+            DeletePortalTaskMessage(
+                task.externalTaskId,
+            )
         taskService.deletePortalTask(deleteMessage)
 
         // Verify the deletion

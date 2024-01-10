@@ -28,30 +28,32 @@ import org.mockito.Mockito.verifyNoInteractions
 
 @ExperimentalCoroutinesApi
 internal class ZaakTest {
-
     var zaakService = mock(ZakenApiService::class.java)
 
     @Test
-    fun status() = runTest {
-        val zaak = createTestZaak("test-status")
-        zaak.status(zaakService)
-        verify(zaakService).getZaakStatus("test-status")
-    }
+    fun status() =
+        runTest {
+            val zaak = createTestZaak("test-status")
+            zaak.status(zaakService)
+            verify(zaakService).getZaakStatus("test-status")
+        }
 
     @Test
-    fun `status null`() = runTest {
-        val zaak = createTestZaak(null)
-        val status = zaak.status(zaakService)
-        verifyNoInteractions(zaakService)
-        assertNull(status)
-    }
+    fun `status null`() =
+        runTest {
+            val zaak = createTestZaak(null)
+            val status = zaak.status(zaakService)
+            verifyNoInteractions(zaakService)
+            assertNull(status)
+        }
 
     @Test
-    fun statusGeschiedenis() = runTest {
-        val zaak = createTestZaak()
-        zaak.statusGeschiedenis(zaakService)
-        verify(zaakService).getZaakStatusHistory(zaak.uuid)
-    }
+    fun statusGeschiedenis() =
+        runTest {
+            val zaak = createTestZaak()
+            zaak.statusGeschiedenis(zaakService)
+            verify(zaakService).getZaakStatusHistory(zaak.uuid)
+        }
 
     fun createTestZaak(status: String? = "test-status"): Zaak {
         return Zaak(

@@ -15,12 +15,12 @@
  */
 package nl.nlportal.case.domain
 
-import nl.nlportal.core.util.ObjectValidator
-import org.hibernate.validator.constraints.Length
-import java.time.LocalDateTime
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 import jakarta.validation.constraints.NotBlank
+import nl.nlportal.core.util.ObjectValidator
+import org.hibernate.validator.constraints.Length
+import java.time.LocalDateTime
 
 @Embeddable
 data class Status(
@@ -28,11 +28,9 @@ data class Status(
     @field:Length(max = 1024)
     @field:NotBlank
     var name: String,
-
     @Column(name = "status_created_on", columnDefinition = "TIMESTAMPTZ", nullable = false)
     val createdOn: LocalDateTime = LocalDateTime.now(),
 ) {
-
     init {
         ObjectValidator.validate(this)
     }

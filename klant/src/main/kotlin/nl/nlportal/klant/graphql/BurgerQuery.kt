@@ -23,7 +23,6 @@ import nl.nlportal.klant.service.BurgerService
 import graphql.schema.DataFetchingEnvironment
 
 class BurgerQuery(val burgerService: BurgerService) : Query {
-
     @GraphQLDescription("Gets the profile for the user")
     suspend fun getBurgerProfiel(dfe: DataFetchingEnvironment): Klant? {
         return burgerService.getBurgerProfiel(dfe.graphQlContext.get(AUTHENTICATION_KEY))

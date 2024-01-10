@@ -21,7 +21,6 @@ import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 
 object Mapper {
-
     private val mapper = ObjectMapper()
 
     fun get(): ObjectMapper {

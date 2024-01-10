@@ -19,7 +19,6 @@ data class UpdateObjectsApiObjectRequest<T>(
     val type: String,
     val record: UpdateObjectsApiObjectRequestRecord<T>,
 ) {
-
     companion object {
         fun <T> fromObjectsApiObject(objectsApiObject: ObjectsApiObject<T>): UpdateObjectsApiObjectRequest<T> {
             return UpdateObjectsApiObjectRequest(
@@ -37,7 +36,6 @@ data class UpdateObjectsApiObjectRequestRecord<T>(
     var correctionFor: String? = null,
     var correctedBy: String? = null,
 ) {
-
     companion object {
         fun <T> fromObjectsApiObjectRecord(objectsApiObjectRecord: ObjectsApiObjectRecord<T>): UpdateObjectsApiObjectRequestRecord<T> {
             return UpdateObjectsApiObjectRequestRecord(

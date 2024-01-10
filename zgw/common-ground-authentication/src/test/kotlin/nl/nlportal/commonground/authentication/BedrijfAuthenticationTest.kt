@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 internal class BedrijfAuthenticationTest {
-
     @Test
     fun `getKvkNummer returns kvk nummer from JWT claims`() {
         val jwt = JwtBuilder().aanvragerKvk("1234").buildJwt()

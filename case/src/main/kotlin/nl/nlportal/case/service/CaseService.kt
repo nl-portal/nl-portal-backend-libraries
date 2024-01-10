@@ -17,6 +17,7 @@ package nl.nlportal.case.service
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
+import mu.KotlinLogging
 import nl.nlportal.case.domain.Case
 import nl.nlportal.case.domain.CaseDefinition
 import nl.nlportal.case.domain.CaseDefinitionId
@@ -30,7 +31,6 @@ import nl.nlportal.messaging.`in`.UpdateStatusPortalCaseMessage
 import nl.nlportal.messaging.out.CreateExternalCaseMessage
 import nl.nlportal.messaging.out.ExternalIdUpdatedConfirmationMessage
 import nl.nlportal.messaging.out.PortalMessage
-import mu.KotlinLogging
 import org.json.JSONObject
 import org.springframework.security.core.Authentication
 import org.springframework.transaction.annotation.Transactional
@@ -43,7 +43,6 @@ class CaseService(
     private val caseDefinitionService: CaseDefinitionService,
     private val sink: Sinks.Many<PortalMessage>,
 ) {
-
     fun create(
         caseDefinitionId: String,
         submission: ObjectNode,
@@ -53,19 +52,21 @@ class CaseService(
         val caseDefinition = caseDefinitionService.findById(CaseDefinitionId.existingId(caseDefinitionId))!!
         val messageData = submission.deepCopy()
         val caseData = validateSubmissionAgainstSchema(submission, caseDefinition)
-        val status: Status = if (initialStatus == null) {
-            Status(caseDefinition.statusDefinition.statuses.first())
-        } else {
-            caseDefinition.statusDefinition.validateStatus(initialStatus)
-            Status(initialStatus)
-        }
-        val case = Case(
-            caseId = CaseId.newId(UUID.randomUUID()),
-            userId = authentication.name,
-            status = status,
-            submission = Submission(caseData),
-            caseDefinitionId = caseDefinition.caseDefinitionId,
-        )
+        val status: Status =
+            if (initialStatus == null) {
+                Status(caseDefinition.statusDefinition.statuses.first())
+            } else {
+                caseDefinition.statusDefinition.validateStatus(initialStatus)
+                Status(initialStatus)
+            }
+        val case =
+            Case(
+                caseId = CaseId.newId(UUID.randomUUID()),
+                userId = authentication.name,
+                status = status,
+                submission = Submission(caseData),
+                caseDefinitionId = caseDefinition.caseDefinitionId,
+            )
         caseRepository.save(case)
         sink.tryEmitNext(
             CreateExternalCaseMessage(
@@ -81,7 +82,10 @@ class CaseService(
         return caseRepository.findAllByUserId(userId)
     }
 
-    fun getCase(id: CaseId, userId: String): Case? {
+    fun getCase(
+        id: CaseId,
+        userId: String,
+    ): Case? {
         return caseRepository.findCaseByCaseIdAndUserId(id, userId)
     }
 
@@ -91,8 +95,9 @@ class CaseService(
 
     fun updateExternalId(updateExternalIdPortalCaseMessage: UpdateExternalIdPortalCaseMessage): Case {
         logger.debug { "Received create case with external id: ${updateExternalIdPortalCaseMessage.externalId}" }
-        val case = caseRepository.findById(CaseId.existingId(updateExternalIdPortalCaseMessage.caseId))
-            .orElseThrow { NullPointerException() }
+        val case =
+            caseRepository.findById(CaseId.existingId(updateExternalIdPortalCaseMessage.caseId))
+                .orElseThrow { NullPointerException() }
         case.externalId = updateExternalIdPortalCaseMessage.externalId
         caseRepository.save(case)
         sendUpdateConfirmation(case.externalId!!)
@@ -134,7 +139,10 @@ class CaseService(
         return submission
     }
 
-    private fun getKeys(json: JsonNode, keys: MutableList<String>): List<String> {
+    private fun getKeys(
+        json: JsonNode,
+        keys: MutableList<String>,
+    ): List<String> {
         if (json.isObject) {
             json.fields().forEachRemaining { field ->
                 keys.add(field.key)

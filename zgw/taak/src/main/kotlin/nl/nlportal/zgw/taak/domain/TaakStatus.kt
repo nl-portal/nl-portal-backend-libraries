@@ -17,7 +17,9 @@ package nl.nlportal.zgw.taak.domain
 
 import com.fasterxml.jackson.annotation.JsonValue
 
-enum class TaakStatus(@JsonValue val value: String) {
+enum class TaakStatus(
+    @JsonValue val value: String,
+) {
     OPEN("open"),
     INGEDIEND("ingediend"),
     VERWERKT("verwerkt"),

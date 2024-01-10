@@ -8,8 +8,9 @@ import kotlin.test.assertEquals
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class DocumentApisTest(@Autowired val documentApisConfig: DocumentApisConfig) {
-
+class DocumentApisTest(
+    @Autowired val documentApisConfig: DocumentApisConfig,
+) {
     @Test
     fun `localhost documentapi should resolve to localhost config`() {
         assertEquals("https://localhost:8001/documenten/api/v1", documentApisConfig.getConfig("openzaak").url)
@@ -24,11 +25,19 @@ class DocumentApisTest(@Autowired val documentApisConfig: DocumentApisConfig) {
 
     @Test
     fun `openzaak url should resolve to openzaak`() {
-        assertEquals("openzaak", documentApisConfig.getConfigForDocumentUrl("https://localhost:8001/documenten/api/v1/enkelvoudiginformatieobjecten/5f1e2695-8b68-448a-a62d-531321c744ec"))
+        assertEquals(
+            "openzaak",
+            documentApisConfig.getConfigForDocumentUrl(
+                "https://localhost:8001/documenten/api/v1/enkelvoudiginformatieobjecten/5f1e2695-8b68-448a-a62d-531321c744ec",
+            ),
+        )
     }
 
     @Test
     fun `exampleorg url should resolve to example`() {
-        assertEquals("example", documentApisConfig.getConfigForDocumentUrl("https://example.org/documenten/api/v1/adsf/api/v1/werwer/5f1e2695-8b68-448q"))
+        assertEquals(
+            "example",
+            documentApisConfig.getConfigForDocumentUrl("https://example.org/documenten/api/v1/adsf/api/v1/werwer/5f1e2695-8b68-448q"),
+        )
     }
 }

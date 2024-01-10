@@ -28,7 +28,6 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 abstract class BaseTest {
-
     @Mock
     lateinit var caseService: CaseService
 
@@ -42,7 +41,12 @@ abstract class BaseTest {
         MockitoAnnotations.openMocks(this)
     }
 
-    fun task(taskId: UUID, isPublic: Boolean, createdOn: LocalDateTime, userId: String): Task {
+    fun task(
+        taskId: UUID,
+        isPublic: Boolean,
+        createdOn: LocalDateTime,
+        userId: String,
+    ): Task {
         return Task(
             taskId = TaskId.newId(taskId),
             externalCaseId = "externalCaseId",

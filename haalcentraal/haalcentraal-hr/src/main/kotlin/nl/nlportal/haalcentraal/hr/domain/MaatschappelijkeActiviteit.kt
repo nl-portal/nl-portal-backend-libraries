@@ -27,7 +27,6 @@ data class MaatschappelijkeActiviteit(
     val statutaireNaam: String?,
     val handelsnamen: List<HandelsNaam>?,
     val sbiActiviteiten: List<SbiActiviteit>?,
-
     @JsonProperty("_embedded")
     val embedded: Embedded?,
 )

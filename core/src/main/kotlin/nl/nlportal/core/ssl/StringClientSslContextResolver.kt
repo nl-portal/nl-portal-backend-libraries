@@ -23,7 +23,10 @@ import java.security.cert.X509Certificate
 class StringClientSslContextResolver : ClientSslContextResolver {
     private val certificateFactory = CertificateFactory.getInstance("X509")
 
-    override fun resolve(keyData: ClientKey?, trustedCertificate: String?): SslContext {
+    override fun resolve(
+        keyData: ClientKey?,
+        trustedCertificate: String?,
+    ): SslContext {
         val contextBuilder = SslContextBuilder.forClient()
         keyData?.let { data ->
             data.certChain.byteInputStream().use { certChainInputStream ->

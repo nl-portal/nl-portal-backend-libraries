@@ -18,7 +18,6 @@ package nl.nlportal.data.domain
 import java.io.Serializable
 
 abstract class AbstractId<SELF> : Identity, Serializable {
-
     @Transient
     private var isNew = false
 

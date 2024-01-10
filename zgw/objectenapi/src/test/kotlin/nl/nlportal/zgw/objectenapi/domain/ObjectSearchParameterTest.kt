@@ -21,21 +21,23 @@ import org.junit.jupiter.api.Test
 internal class ObjectSearchParameterTest {
     @Test
     fun `should create query parameter for multiple search parameter objects`() {
-        val queryParameter = ObjectSearchParameter.toQueryParameter(
-            listOf(
-                ObjectSearchParameter("bsn", Comparator.EQUAL_TO, "123456789"),
-                ObjectSearchParameter("bsn", Comparator.EQUAL_TO, "987654321"),
-            ),
-        )
+        val queryParameter =
+            ObjectSearchParameter.toQueryParameter(
+                listOf(
+                    ObjectSearchParameter("bsn", Comparator.EQUAL_TO, "123456789"),
+                    ObjectSearchParameter("bsn", Comparator.EQUAL_TO, "987654321"),
+                ),
+            )
 
         assertThat(queryParameter).isEqualTo("bsn__exact__123456789,bsn__exact__987654321")
     }
 
     @Test
     fun `should create empty query parameter for empty list`() {
-        val queryParameter = ObjectSearchParameter.toQueryParameter(
-            listOf(),
-        )
+        val queryParameter =
+            ObjectSearchParameter.toQueryParameter(
+                listOf(),
+            )
 
         assertThat(queryParameter).isEqualTo("")
     }

@@ -27,28 +27,39 @@ import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
 class GraphqlAutoConfiguration {
-
     @Bean
     @ConditionalOnMissingBean(TaskQuery::class)
-    fun taskQuery(taskService: TaskService, caseService: CaseService): TaskQuery {
+    fun taskQuery(
+        taskService: TaskService,
+        caseService: CaseService,
+    ): TaskQuery {
         return TaskQuery(taskService, caseService)
     }
 
     @Bean
     @ConditionalOnMissingBean(PublicTaskQuery::class)
-    fun publicTaskQuery(taskService: TaskService, caseService: CaseService): PublicTaskQuery {
+    fun publicTaskQuery(
+        taskService: TaskService,
+        caseService: CaseService,
+    ): PublicTaskQuery {
         return PublicTaskQuery(taskService)
     }
 
     @Bean
     @ConditionalOnMissingBean(CompleteTaskMutation::class)
-    fun completeTaskMutation(taskService: TaskService, caseService: CaseService): CompleteTaskMutation {
+    fun completeTaskMutation(
+        taskService: TaskService,
+        caseService: CaseService,
+    ): CompleteTaskMutation {
         return CompleteTaskMutation(taskService, caseService)
     }
 
     @Bean
     @ConditionalOnMissingBean(CompletePublicTaskMutation::class)
-    fun completePublicTaskMutation(taskService: TaskService, caseService: CaseService): CompletePublicTaskMutation {
+    fun completePublicTaskMutation(
+        taskService: TaskService,
+        caseService: CaseService,
+    ): CompletePublicTaskMutation {
         return CompletePublicTaskMutation(taskService, caseService)
     }
 }

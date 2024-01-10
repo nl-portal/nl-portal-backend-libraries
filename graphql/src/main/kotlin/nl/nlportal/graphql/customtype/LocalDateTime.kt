@@ -24,11 +24,12 @@ import graphql.schema.GraphQLScalarType
 import java.time.LocalDateTime
 
 object LocalDateTimeCoercing : Coercing<LocalDateTime, String> {
-    override fun parseValue(input: Any): LocalDateTime = runCatching {
-        LocalDateTime.parse(input as? String)
-    }.getOrElse {
-        throw CoercingParseValueException("Expected valid LocalDateTime but was $input")
-    }
+    override fun parseValue(input: Any): LocalDateTime =
+        runCatching {
+            LocalDateTime.parse(input as? String)
+        }.getOrElse {
+            throw CoercingParseValueException("Expected valid LocalDateTime but was $input")
+        }
 
     override fun parseLiteral(input: Any): LocalDateTime {
         val dateString = (input as? StringValue)?.value
@@ -39,15 +40,17 @@ object LocalDateTimeCoercing : Coercing<LocalDateTime, String> {
         }
     }
 
-    override fun serialize(dataFetcherResult: Any): String = runCatching {
-        dataFetcherResult.toString()
-    }.getOrElse {
-        throw CoercingSerializeException("Data fetcher result $dataFetcherResult cannot be serialized to a String")
-    }
+    override fun serialize(dataFetcherResult: Any): String =
+        runCatching {
+            dataFetcherResult.toString()
+        }.getOrElse {
+            throw CoercingSerializeException("Data fetcher result $dataFetcherResult cannot be serialized to a String")
+        }
 }
 
-internal val graphqlLocalDateTimeType = GraphQLScalarType.newScalar()
-    .name("LocalDateTime")
-    .description("A local date time")
-    .coercing(LocalDateTimeCoercing)
-    .build()
+internal val graphqlLocalDateTimeType =
+    GraphQLScalarType.newScalar()
+        .name("LocalDateTime")
+        .description("A local date time")
+        .coercing(LocalDateTimeCoercing)
+        .build()

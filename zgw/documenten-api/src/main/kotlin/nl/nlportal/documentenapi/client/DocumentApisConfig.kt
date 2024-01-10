@@ -23,7 +23,6 @@ data class DocumentApisConfig(
     var defaultDocumentApi: String,
     var configurations: Map<String, DocumentApiConfig> = mapOf(),
 ) {
-
     fun getConfig(documentApi: String): DocumentApiConfig {
         return configurations[documentApi]!!
     }

@@ -22,18 +22,18 @@ import org.json.JSONTokener
 import java.io.InputStream
 
 object MetaJsonSchemaV7Draft {
-
     private const val DRAFT_V7_RESOURCE_NAME = "meta-schema/draftv7.json"
     private val DRAFT_V7 = JSONObject(JSONTokener(getResourceAsStream(DRAFT_V7_RESOURCE_NAME)))
-    private var schema = SchemaLoader
-        .builder()
-        .schemaClient(SchemaClient.classPathAwareClient())
-        .useDefaults(true)
-        .draftV7Support()
-        .schemaJson(DRAFT_V7)
-        .build()
-        .load()
-        .build()
+    private var schema =
+        SchemaLoader
+            .builder()
+            .schemaClient(SchemaClient.classPathAwareClient())
+            .useDefaults(true)
+            .draftV7Support()
+            .schemaJson(DRAFT_V7)
+            .build()
+            .load()
+            .build()
 
     fun validate(subject: JSONObject) {
         if (subject.isEmpty) {

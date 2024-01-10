@@ -27,7 +27,6 @@ class KlantContactMomentenServiceImpl(
     val klantContactMomentenClient: KlantContactMomentenClient,
     val klantClient: OpenKlantClient,
 ) : KlantContactMomentenService {
-
     override suspend fun getKlantContactMomenten(
         authentication: CommonGroundAuthentication,
         page: Int,

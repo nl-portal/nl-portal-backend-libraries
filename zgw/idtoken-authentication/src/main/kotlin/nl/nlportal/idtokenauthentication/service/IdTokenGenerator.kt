@@ -22,8 +22,10 @@ import io.jsonwebtoken.security.Keys
 import java.util.Date
 
 class IdTokenGenerator {
-
-    fun generateToken(secretKey: String, clientId: String): String {
+    fun generateToken(
+        secretKey: String,
+        clientId: String,
+    ): String {
         require(secretKey.length >= 32) {
             "SecretKey needs to be at least 32 in length"
         }
@@ -40,7 +42,12 @@ class IdTokenGenerator {
             .compact()
     }
 
-    fun generateToken(secretKey: String, clientId: String, userId: String, userRepresentation: Any): String {
+    fun generateToken(
+        secretKey: String,
+        clientId: String,
+        userId: String,
+        userRepresentation: Any,
+    ): String {
         require(secretKey.length >= 32) {
             "SecretKey needs to be at least 32 in length"
         }
@@ -57,7 +64,10 @@ class IdTokenGenerator {
             .compact()
     }
 
-    private fun JwtBuilder.appendUserInfo(userId: String?, userRepresentation: Any?): JwtBuilder {
+    private fun JwtBuilder.appendUserInfo(
+        userId: String?,
+        userRepresentation: Any?,
+    ): JwtBuilder {
         return this
             .claim("user_id", userId ?: DEFAULT_USER_ID)
             .claim("user_representation", userRepresentation ?: DEFAULT_USER_REPRESENTATION)

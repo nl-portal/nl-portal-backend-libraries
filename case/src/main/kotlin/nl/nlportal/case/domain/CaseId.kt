@@ -15,30 +15,26 @@
  */
 package nl.nlportal.case.domain
 
-import nl.nlportal.core.util.ObjectValidator
-import nl.nlportal.data.domain.AbstractId
-import java.util.UUID
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 import jakarta.persistence.GeneratedValue
+import nl.nlportal.core.util.ObjectValidator
+import nl.nlportal.data.domain.AbstractId
 import org.hibernate.annotations.UuidGenerator
+import java.util.UUID
 
 @Embeddable
 data class CaseId(
-
     @Column(name = "case_id", columnDefinition = "UUID")
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     @GeneratedValue
     val value: UUID,
-
 ) : AbstractId<CaseId>() {
-
     init {
         ObjectValidator.validate(this)
     }
 
     companion object {
-
         fun existingId(value: UUID): CaseId {
             return CaseId(value)
         }

@@ -16,6 +16,5 @@
 package nl.nlportal.data.domain
 
 interface Identity {
-
     fun isNew(): Boolean
 }

@@ -59,7 +59,8 @@ internal class BurgerMutationIT(
     @Test
     @WithBurgerUser("111111111")
     fun `updateBurgerProfiel should update klant when klant exists`() {
-        val mutation = """
+        val mutation =
+            """
             mutation {
                 updateBurgerProfiel(
                     klant: { telefoonnummer: "0611111111", emailadres: "updated@email.nl" }
@@ -68,7 +69,7 @@ internal class BurgerMutationIT(
                     emailadres
                 }
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val basePath = "$.data.updateBurgerProfiel"
 
@@ -87,7 +88,8 @@ internal class BurgerMutationIT(
     @Test
     @WithBurgerUser("222222222")
     fun `updateBurgerProfiel should create klant when klant doesn't exist`() {
-        val mutation = """
+        val mutation =
+            """
             mutation {
                 updateBurgerProfiel(
                     klant: { telefoonnummer: "0622222222", emailadres: "created@email.nl" }
@@ -96,7 +98,7 @@ internal class BurgerMutationIT(
                     emailadres
                 }
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val basePath = "$.data.updateBurgerProfiel"
 
@@ -113,28 +115,33 @@ internal class BurgerMutationIT(
     }
 
     fun setupMockOpenKlantServer() {
-        val dispatcher: Dispatcher = object : Dispatcher() {
-            @Throws(InterruptedException::class)
-            override fun dispatch(request: RecordedRequest): MockResponse {
-                val response = when (request.path?.substringBefore('?')) {
-                    "/klanten/api/v1/klanten" -> when (request.method) {
-                        "GET" -> when (Regex("Bsn=([0-9]+)").find(request.path!!)!!.groupValues[1]) {
-                            "111111111" -> TestHelper.mockResponseFromFile("/data/get-klant-list-response.json")
-                            "222222222" -> TestHelper.mockResponseFromFile("/data/get-empty-klant-list-response.json")
+        val dispatcher: Dispatcher =
+            object : Dispatcher() {
+                @Throws(InterruptedException::class)
+                override fun dispatch(request: RecordedRequest): MockResponse {
+                    val response =
+                        when (request.path?.substringBefore('?')) {
+                            "/klanten/api/v1/klanten" ->
+                                when (request.method) {
+                                    "GET" ->
+                                        when (Regex("Bsn=([0-9]+)").find(request.path!!)!!.groupValues[1]) {
+                                            "111111111" -> TestHelper.mockResponseFromFile("/data/get-klant-list-response.json")
+                                            "222222222" -> TestHelper.mockResponseFromFile("/data/get-empty-klant-list-response.json")
+                                            else -> MockResponse().setResponseCode(404)
+                                        }
+                                    "POST" -> TestHelper.mockResponseFromFile("/data/post-klant-response.json")
+                                    else -> MockResponse().setResponseCode(404)
+                                }
+                            "/klanten/api/v1/klanten/5d479908-fbb7-49c2-98c9-9afecf8de79a" ->
+                                when (request.method) {
+                                    "PATCH" -> TestHelper.mockResponseFromFile("/data/put-klant-response.json")
+                                    else -> MockResponse().setResponseCode(404)
+                                }
                             else -> MockResponse().setResponseCode(404)
                         }
-                        "POST" -> TestHelper.mockResponseFromFile("/data/post-klant-response.json")
-                        else -> MockResponse().setResponseCode(404)
-                    }
-                    "/klanten/api/v1/klanten/5d479908-fbb7-49c2-98c9-9afecf8de79a" -> when (request.method) {
-                        "PATCH" -> TestHelper.mockResponseFromFile("/data/put-klant-response.json")
-                        else -> MockResponse().setResponseCode(404)
-                    }
-                    else -> MockResponse().setResponseCode(404)
+                    return response
                 }
-                return response
             }
-        }
         server.dispatcher = dispatcher
     }
 }

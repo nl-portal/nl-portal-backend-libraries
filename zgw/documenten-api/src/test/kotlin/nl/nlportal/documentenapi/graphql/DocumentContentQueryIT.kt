@@ -64,13 +64,14 @@ internal class DocumentContentQueryIT(
     @Test
     @WithMockUser("test")
     fun getDocumentContentServer1() {
-        val query = """
+        val query =
+            """
             query {
                 getDocumentContent(documentApi : "openzaak", id :"095be615-a8ad-4c33-8e9c-c7612fbf6c9f") {
                     content
                 }
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val basePath = "$.data.getDocumentContent"
 
@@ -90,13 +91,14 @@ internal class DocumentContentQueryIT(
     @Test
     @WithMockUser("test")
     fun getDocumentContentServer2() {
-        val query = """
+        val query =
+            """
             query {
                 getDocumentContent(documentApi : "example", id :"095be615-a8ad-4c33-8e9c-c7612fbf6c9f") {
                     content
                 }
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val basePath = "$.data.getDocumentContent"
 
@@ -115,19 +117,21 @@ internal class DocumentContentQueryIT(
 
     fun setupMockOpenZaakServer(resource: String): MockWebServer {
         val server = MockWebServer()
-        val dispatcher: Dispatcher = object : Dispatcher() {
-            @Throws(InterruptedException::class)
-            override fun dispatch(request: RecordedRequest): MockResponse {
-                val path = request.path?.substringBefore('?')
-                val response = when (path) {
-                    "/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f/download",
-                    -> handleDocumentRequest(resource)
+        val dispatcher: Dispatcher =
+            object : Dispatcher() {
+                @Throws(InterruptedException::class)
+                override fun dispatch(request: RecordedRequest): MockResponse {
+                    val path = request.path?.substringBefore('?')
+                    val response =
+                        when (path) {
+                            "/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f/download",
+                            -> handleDocumentRequest(resource)
 
-                    else -> MockResponse().setResponseCode(404)
+                            else -> MockResponse().setResponseCode(404)
+                        }
+                    return response
                 }
-                return response
             }
-        }
         server.dispatcher = dispatcher
         server.start()
         return server

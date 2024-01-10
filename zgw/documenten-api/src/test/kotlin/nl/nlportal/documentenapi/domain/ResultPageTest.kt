@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test
 import java.net.URI
 
 internal class ResultPageTest {
-
     @Test
     fun `getNextPageNumber returns page number from querystring param in next url`() {
         val page = ResultPage(3, URI("http://exmaple.com/some-path?page=2"), null, listOf("test 1", "test 2"))

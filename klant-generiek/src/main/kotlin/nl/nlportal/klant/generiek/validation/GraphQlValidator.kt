@@ -20,7 +20,6 @@ import jakarta.validation.ValidationException
 import jakarta.validation.Validator
 
 class GraphQlValidator {
-
     private var validator: Validator? = null
 
     fun <T> validate(payload: T?) {

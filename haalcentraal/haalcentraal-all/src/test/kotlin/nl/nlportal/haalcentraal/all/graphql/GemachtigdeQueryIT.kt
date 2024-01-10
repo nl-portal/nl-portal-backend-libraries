@@ -61,7 +61,8 @@ internal class GemachtigdeQueryIT(
     @Test
     @WithBurgerUser("318634776", gemachtigdeBsn = "999993847")
     fun `getGemachtigde with bsn`() {
-        val query = """
+        val query =
+            """
             query {
                 getGemachtigde {
                     persoon {
@@ -76,7 +77,7 @@ internal class GemachtigdeQueryIT(
                     }
                 }
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val basePath = "$.data.getGemachtigde"
 
@@ -100,7 +101,8 @@ internal class GemachtigdeQueryIT(
     @Test
     @WithBurgerUser("318634776", gemachtigdeKvk = "90012768")
     fun `getGemachtigde with kvk`() {
-        val query = """
+        val query =
+            """
             query {
                 getGemachtigde {
                     persoon {
@@ -115,7 +117,7 @@ internal class GemachtigdeQueryIT(
                     }
                 }
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val basePath = "$.data.getGemachtigde"
 
@@ -133,17 +135,19 @@ internal class GemachtigdeQueryIT(
     }
 
     private fun setupMockServer() {
-        val dispatcher: Dispatcher = object : Dispatcher() {
-            @Throws(InterruptedException::class)
-            override fun dispatch(request: RecordedRequest): MockResponse {
-                val response = when (request.path?.substringBefore('?')) {
-                    "/brp/ingeschrevenpersonen/999993847" -> TestHelper.mockResponseFromFile("/data/get-ingeschreven-persoon.json")
-                    "/basisprofielen/90012768" -> TestHelper.mockResponseFromFile("/data/get-maatschappelijke-activiteiten.json")
-                    else -> MockResponse().setResponseCode(404)
+        val dispatcher: Dispatcher =
+            object : Dispatcher() {
+                @Throws(InterruptedException::class)
+                override fun dispatch(request: RecordedRequest): MockResponse {
+                    val response =
+                        when (request.path?.substringBefore('?')) {
+                            "/brp/ingeschrevenpersonen/999993847" -> TestHelper.mockResponseFromFile("/data/get-ingeschreven-persoon.json")
+                            "/basisprofielen/90012768" -> TestHelper.mockResponseFromFile("/data/get-maatschappelijke-activiteiten.json")
+                            else -> MockResponse().setResponseCode(404)
+                        }
+                    return response
                 }
-                return response
             }
-        }
         server.dispatcher = dispatcher
     }
 }

@@ -24,14 +24,19 @@ import graphql.schema.DataFetchingEnvironment
 import java.util.UUID
 
 class ZaakQuery(val zakenApiService: ZakenApiService) : Query {
-
     @GraphQLDescription("Gets all zaken for the user")
-    suspend fun getZaken(dfe: DataFetchingEnvironment, page: Int? = 1): List<Zaak> {
+    suspend fun getZaken(
+        dfe: DataFetchingEnvironment,
+        page: Int? = 1,
+    ): List<Zaak> {
         return zakenApiService.getZaken(page!!, dfe.graphQlContext.get(AUTHENTICATION_KEY))
     }
 
     @GraphQLDescription("Gets a zaak by id")
-    suspend fun getZaak(id: UUID, dfe: DataFetchingEnvironment): Zaak {
+    suspend fun getZaak(
+        id: UUID,
+        dfe: DataFetchingEnvironment,
+    ): Zaak {
         return zakenApiService.getZaak(id, dfe.graphQlContext.get(AUTHENTICATION_KEY))
     }
 }

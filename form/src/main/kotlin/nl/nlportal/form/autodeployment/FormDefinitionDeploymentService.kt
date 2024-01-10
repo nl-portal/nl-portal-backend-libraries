@@ -32,34 +32,34 @@ class FormDefinitionDeploymentService(
     private val formIoFormDefinitionService: FormIoFormDefinitionService,
     private val resourceLoader: ResourceLoader,
 ) {
-
-    fun deployAllFromResourceFiles() = try {
-        val resources = loadResources()
-        for (resource in resources) {
-            if (resource.filename == null) {
-                continue
-            }
-            val name = getFormName(resource)
-            val rawFormDefinition = getJson(IOUtils.toString(resource.inputStream, StandardCharsets.UTF_8))
-            val form = formIoFormDefinitionService.findFormIoFormDefinitionByName(name)
-            if (form == null) {
-                formIoFormDefinitionService.createFormDefinition(
-                    CreateFormDefinitionRequest(
-                        name,
-                        rawFormDefinition,
-                        true,
-                    ),
-                )
-            } else {
-                if (form.formDefinition != rawFormDefinition) {
-                    form.modifyFormDefinition(rawFormDefinition)
-                    formIoFormDefinitionService.modify(form)
+    fun deployAllFromResourceFiles() =
+        try {
+            val resources = loadResources()
+            for (resource in resources) {
+                if (resource.filename == null) {
+                    continue
+                }
+                val name = getFormName(resource)
+                val rawFormDefinition = getJson(IOUtils.toString(resource.inputStream, StandardCharsets.UTF_8))
+                val form = formIoFormDefinitionService.findFormIoFormDefinitionByName(name)
+                if (form == null) {
+                    formIoFormDefinitionService.createFormDefinition(
+                        CreateFormDefinitionRequest(
+                            name,
+                            rawFormDefinition,
+                            true,
+                        ),
+                    )
+                } else {
+                    if (form.formDefinition != rawFormDefinition) {
+                        form.modifyFormDefinition(rawFormDefinition)
+                        formIoFormDefinitionService.modify(form)
+                    }
                 }
             }
+        } catch (e: IOException) {
+            logger.debug { "something went wrong while reading and saving the form definitions due to: ${e.message}" }
         }
-    } catch (e: IOException) {
-        logger.debug { "something went wrong while reading and saving the form definitions due to: ${e.message}" }
-    }
 
     @Throws(JsonProcessingException::class)
     private fun getJson(jsonString: String): ObjectNode {

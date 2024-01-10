@@ -24,7 +24,6 @@ import reactor.core.publisher.Mono
 
 @AutoConfiguration
 class AuthenticationConfiguration {
-
     @Bean
     fun commonGroundAuthenticationConverter(): Converter<Jwt, out Mono<out AbstractAuthenticationToken>> {
         return CommonGroundAuthenticationConverter()

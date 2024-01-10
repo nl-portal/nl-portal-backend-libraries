@@ -30,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 class CaseDefinitionServiceIntTest : BaseIntegrationTest() {
-
     @Autowired
     lateinit var caseDefinitionService: CaseDefinitionService
 
@@ -49,8 +48,16 @@ class CaseDefinitionServiceIntTest : BaseIntegrationTest() {
 
     @Test
     fun `should deploy case definition`() {
-        val caseSchema = Mapper.get().readValue(getResourceAsStream("config/case/definition/person/person.schema.json"), ObjectNode::class.java)
-        val statuses = Mapper.get().readValue(getResourceAsStream("config/case/definition/person/status.json"), object : TypeReference<List<String>>() {})
+        val caseSchema =
+            Mapper.get().readValue(
+                getResourceAsStream("config/case/definition/person/person.schema.json"),
+                ObjectNode::class.java,
+            )
+        val statuses =
+            Mapper.get().readValue(
+                getResourceAsStream("config/case/definition/person/status.json"),
+                object : TypeReference<List<String>>() {},
+            )
 
         caseDefinitionService.deploy(caseSchema, statuses)
 
@@ -69,8 +76,16 @@ class CaseDefinitionServiceIntTest : BaseIntegrationTest() {
         val allCaseDefinitions = caseDefinitionService.getAllCaseDefinitions()
         assertEquals(0, allCaseDefinitions.size)
 
-        val caseSchema = Mapper.get().readValue(getResourceAsStream("config/case/definition/person/person.schema.json"), ObjectNode::class.java)
-        val statuses = Mapper.get().readValue(getResourceAsStream("config/case/definition/person/status.json"), object : TypeReference<List<String>>() {})
+        val caseSchema =
+            Mapper.get().readValue(
+                getResourceAsStream("config/case/definition/person/person.schema.json"),
+                ObjectNode::class.java,
+            )
+        val statuses =
+            Mapper.get().readValue(
+                getResourceAsStream("config/case/definition/person/status.json"),
+                object : TypeReference<List<String>>() {},
+            )
 
         caseDefinitionService.deploy(caseSchema, statuses)
         val caseDefinitions = caseDefinitionService.getAllCaseDefinitions()

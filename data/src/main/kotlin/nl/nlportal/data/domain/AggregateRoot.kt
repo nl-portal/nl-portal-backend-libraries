@@ -23,7 +23,6 @@ import java.util.Collections
  * Aggregate Root base class based on the Spring Data one {@link org.springframework.data.domain.AbstractAggregateRoot}.
  */
 abstract class AggregateRoot<EventType> {
-
     @Transient
     private val domainEvents = ArrayList<EventType>()
 

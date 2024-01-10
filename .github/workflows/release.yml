@@ -12,7 +12,8 @@ on:
   workflow_dispatch:
 
   push:
-    branches:
+    branches:  
+
      - "!**"
      - "release/**"
 
@@ -31,11 +32,15 @@ jobs:
               with:
                   java-version: '21'
                   distribution: 'temurin'
+            - name: Build with Gradle
+              uses: gradle/gradle-build-action@v2
+              with:
+                  arguments: build
             - name: Gradle publish
               uses: gradle/gradle-build-action@v2
               with:
                   gradle-version: 8.5
-                  arguments: publishDefaultPublicationToSonatypeRepository
+                  arguments: publish
               env:
                   USER: ${{ secrets.USER }}
                   TOKEN: ${{ secrets.TOKEN }}
