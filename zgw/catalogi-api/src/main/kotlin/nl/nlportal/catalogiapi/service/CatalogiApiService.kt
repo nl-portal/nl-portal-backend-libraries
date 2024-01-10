@@ -19,7 +19,7 @@ import nl.nlportal.catalogiapi.client.CatalogiApiClient
 import nl.nlportal.catalogiapi.domain.StatusType
 import nl.nlportal.catalogiapi.domain.ZaakStatusType
 import nl.nlportal.catalogiapi.domain.ZaakType
-import java.util.UUID
+import nl.nlportal.core.util.CoreUtils.extractId
 
 class CatalogiApiService(
     val catalogiApiClient: CatalogiApiClient,
@@ -34,11 +34,5 @@ class CatalogiApiService(
 
     suspend fun getZaakType(zaakTypeUrl: String): ZaakType {
         return catalogiApiClient.getZaakType(extractId(zaakTypeUrl))
-    }
-
-    companion object {
-        fun extractId(url: String): UUID {
-            return UUID.fromString(url.substringAfterLast("/"))
-        }
     }
 }
