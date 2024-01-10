@@ -10,11 +10,6 @@ name: Deploy snapshots
 on:
   workflow_dispatch:
 
-  push:
-    branches:  
-     - "**"
-     - "!release/**"
-
 permissions:
   contents: write
 
