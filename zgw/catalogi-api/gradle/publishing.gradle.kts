@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-pluginManager.withPlugin('maven-publish') {
-    publishing {
+pluginManager.withPlugin("maven-publish") {
+    configure<PublishingExtension> {
         publications {
-            maven(MavenPublication) {
+            withType(MavenPublication::class.java) {
                 pom {
-                    name = 'Zaken API module'
-                    description = 'This module facilitates working with a Zaken API compliant microservice'
+                    getName().set("Catalogi API module")
+                    getDescription().set("This module facilitates working with a Catalogi API compliant microservice.")
                     developers {
                         developer {
-                            id = "team-valtimo"
-                            name = "Team Valtimo"
-                            email = "team-valtimo@ritense.com"
+                            getId().set("team-nl-portal")
+                            getName().set("Team NL Portal")
+                            getEmail().set("team-nl-portal@ritense.com")
                         }
                     }
                 }

@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-pluginManager.withPlugin('maven-publish') {
-    publishing {
+pluginManager.withPlugin("maven-publish") {
+    configure<PublishingExtension> {
         publications {
-            maven(MavenPublication) {
+            withType(MavenPublication::class.java) {
                 pom {
-                    name = 'ID Token Authentication module'
-                    description = 'This module provides tools for authenticating API requests with an ID Token'
+                    getName().set("Taak module")
+                    getDescription().set("The Taak module provides functionality related to a Portal task.")
                     developers {
                         developer {
-                            id = "team-valtimo"
-                            name = "Team Valtimo"
-                            email = "team-valtimo@ritense.com"
+                            getId().set("team-nl-portal")
+                            getName().set("Team NL Portal")
+                            getEmail().set("team-nl-portal@ritense.com")
                         }
                     }
                 }
