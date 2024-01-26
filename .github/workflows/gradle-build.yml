@@ -26,12 +26,12 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
     - name: Gradle build
-      uses: gradle/gradle-build-action@v2
+      uses: gradle/gradle-build-action@v3
       with:
           gradle-version: 8.5
           arguments: build
     - name: Gradle publish
-      uses: gradle/gradle-build-action@v2
+      uses: gradle/gradle-build-action@v3
       with:
           gradle-version: 8.5
           arguments: publish
