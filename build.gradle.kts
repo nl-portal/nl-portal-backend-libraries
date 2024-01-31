@@ -156,12 +156,21 @@ subprojects {
                 }
 
                 var stagingRepoUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                var snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
 
+                if (version.toString().matches("^(\\d+\\.)?(\\d+\\.)?(\\d+)\$".toRegex())) {
+                    url = stagingRepoUrl
+                }
+            }
+            maven {
+                name = "SonatypeSnapshot"
+                credentials {
+                    username = System.getenv("OSSRH_USERNAME")
+                    password = System.getenv("OSSRH_TOKEN")
+                }
+
+                var snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
                 if (version.toString().endsWith("SNAPSHOT")) {
                     url = snapshotsRepoUrl
-                } else {
-                    url = stagingRepoUrl
                 }
             }
         }
