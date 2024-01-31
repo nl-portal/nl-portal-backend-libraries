@@ -8,6 +8,7 @@
 name: Publish
 
 on:
+    
   push:
     branches:
      - "!**"
