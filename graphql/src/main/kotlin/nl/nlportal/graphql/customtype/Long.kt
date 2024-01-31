@@ -23,7 +23,6 @@ import graphql.schema.CoercingSerializeException
 import graphql.schema.GraphQLScalarType
 import java.math.BigDecimal
 
-
 object LongCoercing : Coercing<Long, String> {
     override fun parseValue(input: Any): Long =
         runCatching {
