@@ -5,15 +5,13 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
-name: Deploy release
-
+name: Publish
 
 on:
   workflow_dispatch:
 
   push:
     branches:
-
      - "!**"
      - "release/**"
      - "develop"
@@ -38,7 +36,7 @@ jobs:
               with:
                   arguments: build
             - name: Gradle publish Release toStaging
-              if: startsWith(github.ref_name, release/**')
+              if: startsWith(github.ref_name, 'release/')
               uses: gradle/gradle-build-action@v3
               with:
                   gradle-version: 8.5
