@@ -12,10 +12,11 @@ on:
   workflow_dispatch:
 
   push:
-    branches:  
+    branches:
 
      - "!**"
      - "release/**"
+     - "develop"
 
 permissions:
     contents: read
@@ -36,20 +37,40 @@ jobs:
               uses: gradle/gradle-build-action@v3
               with:
                   arguments: build
-            - name: Gradle publish
+            - name: Gradle publish Release toStaging
+              if: startsWith(github.ref_name, release/**')
               uses: gradle/gradle-build-action@v3
               with:
                   gradle-version: 8.5
-                  arguments: publish
+                  arguments: publishDefaultPublicationToSonatypeRepository
               env:
-                  USER: ${{ secrets.USER }}
-                  TOKEN: ${{ secrets.TOKEN }}
                   OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
                   OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
                   SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
                   SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+
+            -   name: Gradle publish Snapshot to OSS
+                if: github.ref_name == 'develop'
+                uses: gradle/gradle-build-action@v3
+                with:
+                    gradle-version: 8.5
+                    arguments: publishDefaultPublicationToSonatypeSnapshotRepository
+                env:
+                    OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+                    OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+                    SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+                    SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+            -   name: Gradle publish Snapshot to Github
+                if: github.ref_name == 'develop'
+                uses: gradle/gradle-build-action@v3
+                with:
+                    gradle-version: 8.5
+                    arguments: publishDefaultPublicationToGitHubPackagesRepository
+                env:
+                    USER: ${{ secrets.USER }}
+                    TOKEN: ${{ secrets.TOKEN }}
             - name: Create a Release
-              if: ${{ false }}  # disable for now
+              if: startsWith(github.ref_name, release/**')
               uses: elgohr/Github-Release-Action@20231116201936
               env:
                   GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
