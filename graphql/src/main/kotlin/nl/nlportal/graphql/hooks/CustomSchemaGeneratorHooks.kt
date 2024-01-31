@@ -24,10 +24,12 @@ import nl.nlportal.graphql.customtype.graphqlLocalDateType
 import nl.nlportal.graphql.customtype.graphqlUUIDType
 import graphql.schema.GraphQLType
 import nl.nlportal.graphql.customtype.graphqlBigDecimalType
+import nl.nlportal.graphql.customtype.graphqlBigIntegerType
 import nl.nlportal.graphql.customtype.graphqlLongType
 import org.springframework.beans.factory.BeanFactoryAware
 import reactor.core.publisher.Mono
 import java.math.BigDecimal
+import java.math.BigInteger
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
@@ -47,6 +49,7 @@ class CustomSchemaGeneratorHooks(override val wiringFactory: KotlinDirectiveWiri
             LocalDateTime::class -> graphqlLocalDateTimeType
             BigDecimal::class -> graphqlBigDecimalType
             Long::class -> graphqlLongType
+            BigInteger::class -> graphqlBigIntegerType
             else -> null
         }
 
