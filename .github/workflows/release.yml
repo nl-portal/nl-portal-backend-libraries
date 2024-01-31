@@ -7,12 +7,14 @@
 
 name: Publish
 
-
 on:
+  workflow_dispatch:
+
   push:
     branches:
+     - "!**"
      - "release/**"
-     - "develop"
+     - "development"
 
 permissions:
     contents: read
@@ -47,7 +49,7 @@ jobs:
                   SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
 
             -   name: Gradle publish Snapshot to OSS
-                if: github.ref_name == '/refs/head/develop'
+                if: github.ref_name == 'development'
                 uses: gradle/gradle-build-action@v3
                 with:
                     gradle-version: 8.5
@@ -58,7 +60,7 @@ jobs:
                     SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
                     SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
             -   name: Gradle publish Snapshot to Github
-                if: github.ref_name == '/refs/head/develop'
+                if: github.ref_name == 'development'
                 uses: gradle/gradle-build-action@v3
                 with:
                     gradle-version: 8.5
