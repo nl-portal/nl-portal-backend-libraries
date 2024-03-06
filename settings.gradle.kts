@@ -42,7 +42,6 @@ include(
     "klantcontactmomenten",
     "messaging",
     "product",
-    "task",
     "zgw:catalogi-api",
     "zgw:common-ground-authentication",
     "zgw:common-ground-authentication-test",

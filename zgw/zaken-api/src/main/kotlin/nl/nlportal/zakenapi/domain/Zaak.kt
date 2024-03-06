@@ -21,9 +21,9 @@ import nl.nlportal.catalogiapi.domain.ZaakType
 import nl.nlportal.catalogiapi.service.CatalogiApiService
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.zakenapi.service.ZakenApiService
-import java.time.LocalDate
-import java.util.UUID
 import org.springframework.beans.factory.annotation.Autowired
+import java.time.LocalDate
+import java.util.*
 
 data class Zaak(
     val uuid: UUID,
