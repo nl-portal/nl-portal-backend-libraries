@@ -58,6 +58,8 @@ spring:
 graphql:
     packages:
         - "nl.nlportal"
+    playground:
+        enabled: true
 
 logging:
     level:
