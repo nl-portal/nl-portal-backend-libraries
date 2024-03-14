@@ -47,7 +47,8 @@ class ZakenApiClient(
     suspend fun getZaken(
         page: Int,
         bsn: String?,
-    ): List<Zaak> {
+        kvk: String?,
+    ): ResultPage<Zaak> {
         return webClient()
             .get()
             .uri {
@@ -55,12 +56,12 @@ class ZakenApiClient(
                     it.path("/zaken/api/v1/zaken")
                         .queryParam("page", page)
                 bsn?.let { uriBuilder.queryParam("rol__betrokkeneIdentificatie__natuurlijkPersoon__inpBsn", it) }
+                kvk?.let { uriBuilder.queryParam("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__annIdentificatie", it) }
                 uriBuilder.build()
             }
             .retrieve()
             .handleStatus()
             .awaitBody<ResultPage<Zaak>>()
-            .results
     }
 
     suspend fun getZaak(zaakId: UUID): Zaak {

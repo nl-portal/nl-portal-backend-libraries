@@ -30,6 +30,7 @@ import nl.nlportal.zakenapi.domain.ZaakDocument
 import nl.nlportal.zakenapi.domain.ZaakObject
 import nl.nlportal.zakenapi.domain.ZaakRol
 import nl.nlportal.zakenapi.domain.ZaakStatus
+import nl.nlportal.zakenapi.graphql.ZaakPage
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import org.springframework.http.HttpStatus
@@ -44,14 +45,18 @@ class ZakenApiService(
     suspend fun getZaken(
         page: Int,
         authentication: CommonGroundAuthentication,
-    ): List<Zaak> {
-        return when (authentication) {
-            is BurgerAuthentication -> zakenApiClient.getZaken(page, authentication.getBsn())
-            // we will need to change this when a better filter becomes available for kvk nummer in zaak list endpoint
-            is BedrijfAuthentication ->
-                getZaakRollen(null, authentication.getKvkNummer(), null)
-                    .map { getZaakFromZaakApi(extractId(it.zaak)) }
-            else -> throw IllegalArgumentException("Cannot get zaken for this user")
+    ): ZaakPage {
+        val resultPage =
+            when (authentication) {
+                is BurgerAuthentication -> zakenApiClient.getZaken(page, authentication.getBsn(), null)
+                // we will need to change this when a better filter becomes available for kvk nummer in zaak list endpoint
+                is BedrijfAuthentication ->
+                    zakenApiClient.getZaken(page, null, authentication.getKvkNummer())
+                else -> throw IllegalArgumentException("Cannot get zaken for this user")
+            }
+
+        return resultPage.let {
+            ZaakPage.fromResultPage(page, it)
         }
     }
 
