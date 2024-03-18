@@ -63,6 +63,13 @@ logging:
     level:
         org.springframework.amqp: DEBUG
 
+keycloak:
+    realm: master
+    auth-server-url: https://localhost:8082/auth
+    resource: nl-portal-m2m-client
+    credentials:
+        secret: iWHqwZoO8ehydW9iAarRat8XM37s3GZi
+
 nl-portal:
     zgw:
         catalogiapi:
