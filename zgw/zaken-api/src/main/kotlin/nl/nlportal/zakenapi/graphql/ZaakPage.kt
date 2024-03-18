@@ -1,5 +1,6 @@
 package nl.nlportal.zakenapi.graphql
 
+import nl.nlportal.graphql.Page
 import nl.nlportal.zakenapi.domain.ResultPage
 import nl.nlportal.zakenapi.domain.Zaak
 

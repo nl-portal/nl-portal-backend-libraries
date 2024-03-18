@@ -15,14 +15,16 @@
  */
 package nl.nlportal.klant.contactmomenten.graphql
 
+import nl.nlportal.graphql.Page
 import nl.nlportal.klant.contactmomenten.domain.ContactMoment
 import nl.nlportal.klant.generiek.domain.ResultPage
 
 class ContactMomentPage(
     number: Int,
+    size: Int,
     content: List<ContactMoment>,
     totalElements: Int,
-) : Page<ContactMoment>(number, content, totalElements) {
+) : Page<ContactMoment>(number, size, content, totalElements) {
     companion object {
         fun fromResultPage(
             pageNumber: Int,
@@ -30,6 +32,7 @@ class ContactMomentPage(
         ): ContactMomentPage {
             return ContactMomentPage(
                 number = pageNumber,
+                size = 100,
                 content = resultPage.results,
                 totalElements = resultPage.count,
             )
