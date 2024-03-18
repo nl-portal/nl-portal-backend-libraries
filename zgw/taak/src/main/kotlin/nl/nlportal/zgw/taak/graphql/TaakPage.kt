@@ -15,6 +15,7 @@
  */
 package nl.nlportal.zgw.taak.graphql
 
+import nl.nlportal.graphql.Page
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
 import nl.nlportal.zgw.taak.domain.Taak
@@ -24,9 +25,8 @@ class TaakPage(
     number: Int,
     size: Int,
     content: List<Taak>,
-    results: List<Taak>,
     totalElements: Int,
-) : Page<Taak>(number, size, content, results, totalElements) {
+) : Page<Taak>(number, size, content, totalElements) {
     companion object {
         fun fromResultPage(
             pageNumber: Int,
@@ -39,7 +39,6 @@ class TaakPage(
                 number = pageNumber,
                 size = pageSize,
                 content = tasks,
-                results = tasks,
                 totalElements = resultPage.count,
             )
         }
