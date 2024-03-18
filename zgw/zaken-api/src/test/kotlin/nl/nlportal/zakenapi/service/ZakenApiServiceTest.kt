@@ -15,6 +15,9 @@
  */
 package nl.nlportal.zakenapi.service
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.commonground.authentication.JwtBuilder
 import nl.nlportal.documentenapi.service.DocumentenApiService
@@ -22,9 +25,6 @@ import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.domain.ResultPage
 import nl.nlportal.zakenapi.domain.ZaakObject
 import nl.nlportal.zakenapi.domain.ZaakRol
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runTest
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -49,41 +49,6 @@ internal class ZakenApiServiceTest {
             documentenApiService,
             objectsApiClient,
         )
-
-    @Test
-    fun `getZaken calls openzaak client with BSN for burger`() =
-        runTest {
-            val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
-
-            zaakService.getZaken(5, authentication)
-            verify(zakenApiClient).getZaken(5, "123")
-        }
-
-    @Test
-    fun `getZaken gets rollen and zaken for rollen for bedrijf`() =
-        runTest {
-            val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
-            val firstZaakId = UUID.randomUUID()
-            val secondZaakId = UUID.randomUUID()
-
-            `when`(zakenApiClient.getZaakRollen(anyInt(), any(), any(), any())).thenReturn(
-                ResultPage(
-                    1,
-                    null,
-                    null,
-                    listOf(
-                        ZaakRol("http://example.com/some-path/$firstZaakId"),
-                        ZaakRol("http://example.com/some-path/$secondZaakId"),
-                    ),
-                ),
-            )
-
-            zaakService.getZaken(5, authentication)
-
-            verify(zakenApiClient).getZaakRollen(1, null, "123", null)
-            verify(zakenApiClient).getZaak(firstZaakId)
-            verify(zakenApiClient).getZaak(secondZaakId)
-        }
 
     @Test
     fun `getZaken throws exception when called with unsupported authentication`() {

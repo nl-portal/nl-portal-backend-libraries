@@ -28,7 +28,7 @@ class ZaakQuery(val zakenApiService: ZakenApiService) : Query {
     suspend fun getZaken(
         dfe: DataFetchingEnvironment,
         page: Int? = 1,
-    ): List<Zaak> {
+    ): ZaakPage {
         return zakenApiService.getZaken(page!!, dfe.graphQlContext.get(AUTHENTICATION_KEY))
     }
 

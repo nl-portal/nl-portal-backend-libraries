@@ -13,17 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.task.graphql
+package nl.nlportal.zakenapi.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Query
-import nl.nlportal.graphql.security.directive.IsUnauthenticated
-import nl.nlportal.task.service.TaskService
+import kotlin.math.ceil
 
-class PublicTaskQuery(val taskService: TaskService) : Query {
-    @IsUnauthenticated
-    @GraphQLDescription("find public task with id")
-    fun findPublicTask(taskId: String): TaskInstance {
-        return TaskInstance.from(taskService.findPublicTask(taskId))
-    }
+open class Page<T>(
+    @GraphQLDescription("The requested page number") val number: Int,
+    @GraphQLDescription("The requested page size") val size: Int,
+    @GraphQLDescription("The elements on this page")val content: List<T>,
+    @GraphQLDescription("The total number of elements") val totalElements: Int,
+) {
+    @GraphQLDescription("The number of elements on this page")
+    val numberOfElements: Int
+        get() = content.size
+
+    @GraphQLDescription("The total number of available pages")
+    val totalPages: Int
+        get() = ceil(totalElements.toDouble() / size).toInt()
 }
