@@ -28,8 +28,9 @@ class ZaakQuery(val zakenApiService: ZakenApiService) : Query {
     suspend fun getZaken(
         dfe: DataFetchingEnvironment,
         page: Int? = 1,
+        zaakTypeUrl: String? = null,
     ): ZaakPage {
-        return zakenApiService.getZaken(page!!, dfe.graphQlContext.get(AUTHENTICATION_KEY))
+        return zakenApiService.getZaken(page!!, dfe.graphQlContext[AUTHENTICATION_KEY], zaakTypeUrl)
     }
 
     @GraphQLDescription("Gets a zaak by id")
@@ -37,6 +38,6 @@ class ZaakQuery(val zakenApiService: ZakenApiService) : Query {
         id: UUID,
         dfe: DataFetchingEnvironment,
     ): Zaak {
-        return zakenApiService.getZaak(id, dfe.graphQlContext.get(AUTHENTICATION_KEY))
+        return zakenApiService.getZaak(id, dfe.graphQlContext[AUTHENTICATION_KEY])
     }
 }

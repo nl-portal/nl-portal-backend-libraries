@@ -63,7 +63,7 @@ internal class ZakenApiServiceTest {
         val illegalArgumentException =
             Assertions.assertThrows(IllegalArgumentException::class.java) {
                 runTest {
-                    zaakService.getZaken(1, authentication)
+                    zaakService.getZaken(1, authentication, null)
                 }
             }
 

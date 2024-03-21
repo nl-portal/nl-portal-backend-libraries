@@ -48,6 +48,7 @@ class ZakenApiClient(
         page: Int,
         bsn: String?,
         kvk: String?,
+        zaakTypeUrl: String?,
     ): ResultPage<Zaak> {
         return webClient()
             .get()
@@ -57,6 +58,7 @@ class ZakenApiClient(
                         .queryParam("page", page)
                 bsn?.let { uriBuilder.queryParam("rol__betrokkeneIdentificatie__natuurlijkPersoon__inpBsn", it) }
                 kvk?.let { uriBuilder.queryParam("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__annIdentificatie", it) }
+                zaakTypeUrl?.let { uriBuilder.queryParam("zaaktype", it) }
                 uriBuilder.build()
             }
             .retrieve()
