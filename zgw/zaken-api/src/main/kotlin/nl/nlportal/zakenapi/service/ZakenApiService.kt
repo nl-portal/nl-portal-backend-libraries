@@ -45,13 +45,14 @@ class ZakenApiService(
     suspend fun getZaken(
         page: Int,
         authentication: CommonGroundAuthentication,
+        zaakTypeUrl: String?,
     ): ZaakPage {
         val resultPage =
             when (authentication) {
-                is BurgerAuthentication -> zakenApiClient.getZaken(page, authentication.getBsn(), null)
+                is BurgerAuthentication -> zakenApiClient.getZaken(page, authentication.getBsn(), null, zaakTypeUrl)
                 // we will need to change this when a better filter becomes available for kvk nummer in zaak list endpoint
                 is BedrijfAuthentication ->
-                    zakenApiClient.getZaken(page, null, authentication.getKvkNummer())
+                    zakenApiClient.getZaken(page, null, authentication.getKvkNummer(), zaakTypeUrl)
                 else -> throw IllegalArgumentException("Cannot get zaken for this user")
             }
 
