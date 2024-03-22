@@ -1,7 +1,8 @@
 # NL Portal Backend Libraries #
 
-![Kotlin 1.7.21](https://img.shields.io/badge/Kotlin-1.7.21-green)
-![Spring boot 2.7.12](https://img.shields.io/badge/Spring%20boot-2.7.12-green)
+![Java 21](https://img.shields.io/badge/Java-21-green)
+![Kotlin 1.9.23](https://img.shields.io/badge/Kotlin-1.9.23-green)
+![Spring boot 3.2.3](https://img.shields.io/badge/Spring%20boot-3.2.3-green)
 
 ## NL Portal
 
@@ -31,6 +32,18 @@ For more information check the following links.
 - Documentation: https://docs.nl-portal.nl
 
 ## Getting started
-* Clone `https://github.com/nl-portal/nl-portal-docker-compose` and run the following command: `docker compose up -d`.
+* Before starting this project you need to clone `https://github.com/nl-portal/nl-portal-docker-compose` and run the following command in that repository: `docker compose up -d`.
     * When supporting ZGW services are needed, like Open Zaak, Objects API and Objecttypes API, the following command should be used: `docker compose --profile zgw up -d`
-* Then run the Gradle `bootRun` task for your desired edition (for the GZAC edition this is `app/gzac/application/bootRun`)
+* Then run the Gradle `bootRun` task: `./gradlew app:bootRun` in the nl-portal-backend-libraries project
+
+
+## Known issues
+Intellij on MacOs has a known issue in which docker containers for testing fail to startup and subsequently those tests fail.
+``
+Cannot run program "docker" (in directory "/Users/user/Documents/nl-portal/nl-portal-backend-libraries/case"): error=2, 
+No such file or directory
+``
+This occurs when starting intellij from the JetBrains toolbox or using the MacOs UI and subsequently starting the build using the build in GradleWrapper 
+As a workaround start intellij from the terminal for example by using the command
+``open -a "IntelliJ IDEA Ultimate"``
+or run the gradle command from terminal
