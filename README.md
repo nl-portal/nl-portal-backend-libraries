@@ -2,7 +2,7 @@
 
 ![Java 21](https://img.shields.io/badge/Java-21-green)
 ![Kotlin 1.9.23](https://img.shields.io/badge/Kotlin-1.9.23-green)
-![Spring boot 3.2.3](https://img.shields.io/badge/Spring%20boot-3.2.3-green)
+![Spring boot 3.2.4](https://img.shields.io/badge/Spring%20boot-3.2.3-green)
 
 ## NL Portal
 
