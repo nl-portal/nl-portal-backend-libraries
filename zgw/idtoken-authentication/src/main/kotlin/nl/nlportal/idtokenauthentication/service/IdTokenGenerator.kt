@@ -64,6 +64,51 @@ class IdTokenGenerator {
             .compact()
     }
 
+    fun generateToken(
+        secretKey: String,
+        clientId: String,
+        claims: Map<String, Any>,
+    ): String {
+        require(secretKey.length >= 32) {
+            "SecretKey needs to be at least 32 in length"
+        }
+
+        val signingKey = Keys.hmacShaKeyFor(secretKey.encodeToByteArray())
+        val jwtBuilder = Jwts.builder()
+
+        return jwtBuilder
+            .setIssuer(clientId)
+            .setIssuedAt(Date())
+            .claim("client_id", clientId)
+            .addClaims(claims)
+            .appendUserInfo(null, null)
+            .signWith(signingKey, SignatureAlgorithm.HS256)
+            .compact()
+    }
+
+    fun generateToken(
+        secretKey: String,
+        clientId: String,
+        userId: String,
+        userRepresentation: Any,
+        claims: Map<String, Any>,
+    ): String {
+        require(secretKey.length >= 32) {
+            "SecretKey needs to be at least 32 in length"
+        }
+
+        val signingKey = Keys.hmacShaKeyFor(secretKey.encodeToByteArray())
+        val jwtBuilder = Jwts.builder()
+
+        return jwtBuilder
+            .setIssuer(clientId)
+            .setIssuedAt(Date())
+            .addClaims(claims)
+            .appendUserInfo(userId, userRepresentation)
+            .signWith(signingKey, SignatureAlgorithm.HS256)
+            .compact()
+    }
+
     private fun JwtBuilder.appendUserInfo(
         userId: String?,
         userRepresentation: Any?,
