@@ -17,6 +17,7 @@ package nl.nlportal.zgw.objectenapi.service
 
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
+import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequest
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
@@ -51,5 +52,11 @@ class ObjectenApiService(
             throw IllegalArgumentException("Configured Objects API hostname does not match the requested object")
         }
         return objectsApiClient.getObjectByUrl(url)
+    }
+
+    suspend inline fun <reified T> createObject(createObjectsApiObjectRequest: CreateObjectsApiObjectRequest<T>): ObjectsApiObject<T> {
+        return objectsApiClient.createObject(
+            createObjectsApiObjectRequest,
+        )
     }
 }
