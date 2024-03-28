@@ -134,5 +134,14 @@ nl-portal:
                   allowedHeaders: "*"
                   allowedOrigins: "*"
                   allowedMethods: "*"
-        #endpoints:
-            #unsecured: /playground, /actuator/**
+        endpoints:
+            unsecured: /api/payment/**
+    payment:
+        url: https://secure.ogone.com/ncol/test/orderstandard.asp
+        configurations:
+            belastingzaken:
+                pspId: TAX
+                title: Belastingzaken
+                shaInKey: de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00
+                failureUrl: http://localhost:3000
+                successUrl: http://localhost:3000
