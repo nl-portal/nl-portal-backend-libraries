@@ -15,35 +15,44 @@
  */
 package nl.nlportal.commonground.authentication
 
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonValue
 import nl.nlportal.commonground.authentication.exception.UserTypeUnsupportedException
 import mu.KotlinLogging
 import org.springframework.core.convert.converter.Converter
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter
+import org.springframework.util.LinkedMultiValueMap
+import org.springframework.web.reactive.function.BodyInserters
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.bodyToMono
 import reactor.core.publisher.Mono
+import java.net.URI
 
 class CommonGroundAuthenticationConverter : Converter<Jwt, Mono<CommonGroundAuthentication>> {
     private val jwtGrantedAuthoritiesConverter = JwtGrantedAuthoritiesConverter()
+    private val webClient = WebClient.create()
 
     // TODO: remove support for bsn and kvk keys directly in the root of the JWT
     override fun convert(jwt: Jwt): Mono<CommonGroundAuthentication> {
-        val aanvrager = jwt.claims[AANVRAGER_KEY]
+        val exchangedJwt = tokenExchange(jwt)
+        val aanvrager = exchangedJwt.claims[AANVRAGER_KEY]
         if (aanvrager is Map<*, *>) {
             if (aanvrager[BSN_KEY] != null) {
-                return Mono.just(BurgerAuthentication(jwt, jwtGrantedAuthoritiesConverter.convert(jwt)))
+                return Mono.just(BurgerAuthentication(exchangedJwt, jwtGrantedAuthoritiesConverter.convert(exchangedJwt)))
             } else if (aanvrager[KVK_NUMMER_KEY] != null) {
-                return Mono.just(BedrijfAuthentication(jwt, jwtGrantedAuthoritiesConverter.convert(jwt)))
+                return Mono.just(BedrijfAuthentication(exchangedJwt, jwtGrantedAuthoritiesConverter.convert(exchangedJwt)))
             }
         }
 
         // This block is for temporary backwards compatibility
         if (jwt.claims.get(BSN_KEY) != null) {
-            return Mono.just(BurgerAuthentication(jwt, jwtGrantedAuthoritiesConverter.convert(jwt)))
+            return Mono.just(BurgerAuthentication(exchangedJwt, jwtGrantedAuthoritiesConverter.convert(exchangedJwt)))
         } else if (jwt.claims.get(KVK_NUMMER_KEY) != null) {
-            return Mono.just(BedrijfAuthentication(jwt, jwtGrantedAuthoritiesConverter.convert(jwt)))
+            return Mono.just(BedrijfAuthentication(exchangedJwt, jwtGrantedAuthoritiesConverter.convert(exchangedJwt)))
         }
 
-        val subject = jwt.subject
+        val subject = exchangedJwt.subject
         if (subject == null) {
             logger.error { "User with unknown subject has no bsn or kvk nummer assigned" }
         } else {
@@ -51,6 +60,32 @@ class CommonGroundAuthenticationConverter : Converter<Jwt, Mono<CommonGroundAuth
         }
         throw UserTypeUnsupportedException("User type not supported")
     }
+
+    private fun tokenExchange(jwt: Jwt): Jwt {
+        val tokenResponse = webClient.post()
+            .uri(URI.create("${jwt.issuer.toString().trimEnd('/')}/protocol/openid-connect/token"))
+            .body(
+                BodyInserters.fromFormData(
+                    LinkedMultiValueMap<String, String>()
+                        .apply {
+                            add("client_id", "Nl-portal-m2m")
+                            add("grant_type", "client_credentials")
+                            add("client_secret", "EQ3mXUieZKTm4Tgl8GV4LU2lNfwMY4Ww")
+                        },
+                ),
+            )
+            .retrieve()
+            .bodyToMono<TokenResponse>()
+            .block()
+
+        return Jwt.withTokenValue(tokenResponse!!.accessToken).build()
+    }
+
+    data class TokenResponse(
+        @JsonValue
+        @JsonProperty("access_token")
+        val accessToken: String,
+    )
 
     companion object {
         val logger = KotlinLogging.logger {}
