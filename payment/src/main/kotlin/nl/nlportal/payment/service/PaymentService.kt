@@ -54,16 +54,16 @@ class PaymentService(
         paymentsParameters: Map<String, String?>,
         paymentProfile: PaymentProfile,
     ): String {
-        val stringBuilder = StringBuilder()
+        val parametersConcatenation = StringBuilder()
 
-        for ((key, value) in paymentsParameters) {
-            stringBuilder
+        paymentsParameters.forEach{ (key, value) ->
+            parametersConcatenation
                 .append(key.uppercase(Locale.getDefault()))
                 .append("=")
                 .append(value)
                 .append(paymentProfile.shaInKey)
         }
-        return hashSHA512(stringBuilder.toString())
+        return hashSHA512(parametersConcatenation.toString())
     }
 
     @Throws(NoSuchAlgorithmException::class)
