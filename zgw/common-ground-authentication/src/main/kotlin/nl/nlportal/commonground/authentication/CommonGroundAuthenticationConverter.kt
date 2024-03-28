@@ -68,9 +68,9 @@ class CommonGroundAuthenticationConverter : Converter<Jwt, Mono<CommonGroundAuth
                 BodyInserters.fromFormData(
                     LinkedMultiValueMap<String, String>()
                         .apply {
-                            add("client_id", "Nl-portal-m2m")
+                            add("client_id", "NL-portal-backend")
                             add("grant_type", "client_credentials")
-                            add("client_secret", "EQ3mXUieZKTm4Tgl8GV4LU2lNfwMY4Ww")
+                            add("client_secret", "wBdJo9ynONtEFIx9aXrYSHJ7b28W1MEs")
                         },
                 ),
             )

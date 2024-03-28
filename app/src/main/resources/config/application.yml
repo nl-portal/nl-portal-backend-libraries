@@ -58,9 +58,9 @@ spring:
 keycloak:
     auth-server-url: https://http://localhost:8082/auth
     realm: Master
-    resource: Nl-portal-m2m
+    resource: NL-portal-backend
     credentials:
-        secret: EQ3mXUieZKTm4Tgl8GV4LU2lNfwMY4Ww
+        secret: wBdJo9ynONtEFIx9aXrYSHJ7b28W1MEs
 
 graphql:
     packages:
