@@ -32,6 +32,8 @@ import nl.nlportal.zgw.taak.domain.Taak
 import nl.nlportal.zgw.taak.domain.TaakObject
 import nl.nlportal.zgw.taak.domain.TaakStatus
 import nl.nlportal.zgw.taak.graphql.TaakPage
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
 
 open class TaakService(
@@ -87,7 +89,12 @@ open class TaakService(
         authentication: CommonGroundAuthentication,
     ): Taak {
         val objectsApiTask = getObjectsApiTaak(id, authentication)
-        assert(objectsApiTask.record.data.status == TaakStatus.OPEN)
+        if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
+            throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                String.format("Status is niet open, taak [%s] kan niet afgerond worden", id),
+            )
+        }
         val submissionAsMap = Mapper.get().convertValue(submission, object : TypeReference<Map<String, Any>>() {})
 
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
