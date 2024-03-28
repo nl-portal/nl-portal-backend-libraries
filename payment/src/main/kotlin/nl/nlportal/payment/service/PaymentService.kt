@@ -56,7 +56,7 @@ class PaymentService(
     ): String {
         val parametersConcatenation = StringBuilder()
 
-        paymentsParameters.forEach{ (key, value) ->
+        paymentsParameters.forEach { (key, value) ->
             parametersConcatenation
                 .append(key.uppercase(Locale.getDefault()))
                 .append("=")
