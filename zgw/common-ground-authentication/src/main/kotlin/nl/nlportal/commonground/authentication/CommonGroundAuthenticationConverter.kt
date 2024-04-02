@@ -46,9 +46,9 @@ class CommonGroundAuthenticationConverter : Converter<Jwt, Mono<CommonGroundAuth
         }
 
         // This block is for temporary backwards compatibility
-        if (jwt.claims.get(BSN_KEY) != null) {
+        if (jwt.claims[BSN_KEY] != null) {
             return Mono.just(BurgerAuthentication(exchangedJwt, jwtGrantedAuthoritiesConverter.convert(exchangedJwt)))
-        } else if (jwt.claims.get(KVK_NUMMER_KEY) != null) {
+        } else if (jwt.claims[KVK_NUMMER_KEY] != null) {
             return Mono.just(BedrijfAuthentication(exchangedJwt, jwtGrantedAuthoritiesConverter.convert(exchangedJwt)))
         }
 
@@ -62,16 +62,23 @@ class CommonGroundAuthenticationConverter : Converter<Jwt, Mono<CommonGroundAuth
     }
 
     private fun tokenExchange(jwt: Jwt): Jwt {
+        // TODO: This is almost an exact copy of KeyCloakUserTokenExchangeFilter.exchangeToken(...) with the difference that the client id is configured and a secret is provided.
+        // Consider refactoring this into a more generic method.
+
         val tokenResponse = webClient.post()
             .uri(URI.create("${jwt.issuer.toString().trimEnd('/')}/protocol/openid-connect/token"))
             .body(
                 BodyInserters.fromFormData(
-                    LinkedMultiValueMap<String, String>()
-                        .apply {
-                            add("client_id", "NL-portal-backend")
-                            add("grant_type", "client_credentials")
-                            add("client_secret", "wBdJo9ynONtEFIx9aXrYSHJ7b28W1MEs")
-                        },
+                    LinkedMultiValueMap(
+                        mapOf(
+                            "client_id" to "gzac-portal-m2m",
+                            "client_secret" to "{{sample-m2m-token}}",
+                            "grant_type" to "urn:ietf:params:oauth:grant-type:token-exchange",
+                            "subject_token" to jwt.tokenValue,
+                            "requested_token_type" to "urn:ietf:params:oauth:token-type:access_token",
+                            "audience" to "gzac-portal-token-exchange",
+                        ).mapValues { listOf(it.value) },
+                    ),
                 ),
             )
             .retrieve()
