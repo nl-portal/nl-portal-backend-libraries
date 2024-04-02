@@ -32,7 +32,7 @@ import reactor.core.publisher.Mono
 import java.net.URI
 
 
-class CommonGroundAuthenticationConverter(val environment: Environment, val decoder: ReactiveJwtDecoder) : Converter<Jwt, Mono<CommonGroundAuthentication>> {
+class CommonGroundAuthenticationConverter(val environment: Environment, val decoder: ReactiveJwtDecoder, val keycloak: Keycloak) : Converter<Jwt, Mono<CommonGroundAuthentication>> {
     private val jwtGrantedAuthoritiesConverter = JwtGrantedAuthoritiesConverter()
     private val webClient = WebClient.create()
 
@@ -76,8 +76,8 @@ class CommonGroundAuthenticationConverter(val environment: Environment, val deco
                 BodyInserters.fromFormData(
                     LinkedMultiValueMap(
                         mapOf(
-                            "client_id" to environment.getProperty("keycloak.resource"),
-                            "client_secret" to environment.getProperty("keycloak.credentials.secret"),
+                            "client_id" to keycloak.resource,
+                            "client_secret" to keycloak.credentials.secret,
                             "grant_type" to "urn:ietf:params:oauth:grant-type:token-exchange",
                             "subject_token" to jwt.tokenValue,
                             "requested_token_type" to "urn:ietf:params:oauth:token-type:access_token",
