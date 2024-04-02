@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonValue
 import mu.KotlinLogging
 import nl.nlportal.commonground.authentication.exception.UserTypeUnsupportedException
 import org.springframework.core.convert.converter.Converter
-import org.springframework.core.env.Environment
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter
@@ -32,7 +31,7 @@ import reactor.core.publisher.Mono
 import java.net.URI
 
 
-class CommonGroundAuthenticationConverter(val environment: Environment, val decoder: ReactiveJwtDecoder, val keycloak: Keycloak) : Converter<Jwt, Mono<CommonGroundAuthentication>> {
+class CommonGroundAuthenticationConverter(val decoder: ReactiveJwtDecoder, val keycloak: Keycloak) : Converter<Jwt, Mono<CommonGroundAuthentication>> {
     private val jwtGrantedAuthoritiesConverter = JwtGrantedAuthoritiesConverter()
     private val webClient = WebClient.create()
 
