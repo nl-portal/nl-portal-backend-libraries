@@ -22,7 +22,7 @@ spring:
         oauth2:
             resourceserver:
                 jwt:
-                    issuer-uri: http://localhost:8082/auth/realms/master
+                    issuer-uri: http://localhost:8082/auth/realms/nlportal
     liquibase:
         enabled: false
     datasource:
@@ -57,10 +57,10 @@ spring:
 
 keycloak:
     auth-server-url: https://http://localhost:8082/auth
-    realm: Master
-    resource: NL-portal-backend
+    realm: nlportal
+    resource: gzac-portal-m2m
     credentials:
-        secret: wBdJo9ynONtEFIx9aXrYSHJ7b28W1MEs
+        secret: yoursecret
 
 graphql:
     packages:
