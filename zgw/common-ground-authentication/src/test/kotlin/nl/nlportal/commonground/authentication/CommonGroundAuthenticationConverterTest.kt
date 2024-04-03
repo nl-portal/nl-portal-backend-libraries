@@ -15,26 +15,16 @@
  */
 package nl.nlportal.commonground.authentication
 
-import nl.nlportal.commonground.authentication.exception.UserTypeUnsupportedException
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
-import org.mockito.kotlin.any
-import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.spy
-import org.mockito.kotlin.whenever
-import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoders
-import reactor.core.publisher.Mono
 
 internal class CommonGroundAuthenticationConverterTest {
     val decoder: ReactiveJwtDecoder = ReactiveJwtDecoders.fromIssuerLocation("http://localhost:8082/auth/realms/nlportal")
     val keycloak = Keycloak("bla", Credentials("Bla"))
     val converter = spy(CommonGroundAuthenticationConverter(decoder, keycloak))
 
-    //TODO temporary commented test so den haag can test new implementation
+    // TODO temporary commented test so den haag can test new implementation
 
 //    @Test
 //    fun `converter returns BurgerAuthentication when JWT has BSN`() {

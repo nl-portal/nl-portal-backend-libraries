@@ -30,7 +30,6 @@ import org.springframework.web.reactive.function.client.bodyToMono
 import reactor.core.publisher.Mono
 import java.net.URI
 
-
 class CommonGroundAuthenticationConverter(val decoder: ReactiveJwtDecoder, val keycloak: Keycloak) : Converter<Jwt, Mono<CommonGroundAuthentication>> {
     private val jwtGrantedAuthoritiesConverter = JwtGrantedAuthoritiesConverter()
     private val webClient = WebClient.create()
@@ -38,7 +37,7 @@ class CommonGroundAuthenticationConverter(val decoder: ReactiveJwtDecoder, val k
     // TODO: remove support for bsn and kvk keys directly in the root of the JWT
     override fun convert(jwt: Jwt): Mono<CommonGroundAuthentication> {
         return tokenExchange(jwt).flatMap {
-             decoder.decode(it.accessToken).map {exchangedJwt ->
+            decoder.decode(it.accessToken).map { exchangedJwt ->
                 val aanvrager = exchangedJwt.claims[AANVRAGER_KEY]
                 if (aanvrager is Map<*, *>) {
                     if (aanvrager[BSN_KEY] != null) {
@@ -61,11 +60,9 @@ class CommonGroundAuthenticationConverter(val decoder: ReactiveJwtDecoder, val k
                 } else {
                     logger.error { "User with subject $subject has no bsn or kvk nummer assigned" }
                 }
-                 throw UserTypeUnsupportedException("User type not supported")
+                throw UserTypeUnsupportedException("User type not supported")
             }
         }
-
-
     }
 
     fun tokenExchange(jwt: Jwt): Mono<TokenResponse> {

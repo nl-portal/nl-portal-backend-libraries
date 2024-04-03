@@ -30,9 +30,8 @@ class AuthenticationConfiguration {
     @Bean
     fun commonGroundAuthenticationConverter(
         reactiveJwtDecoder: ReactiveJwtDecoder,
-        keycloak: Keycloak
-    ):
-        Converter<Jwt, out Mono<out AbstractAuthenticationToken>> {
+        keycloak: Keycloak,
+    ): Converter<Jwt, out Mono<out AbstractAuthenticationToken>> {
         return CommonGroundAuthenticationConverter(reactiveJwtDecoder, keycloak)
     }
 }
