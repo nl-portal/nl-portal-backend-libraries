@@ -6,6 +6,13 @@ logging:
     level:
         reactor.netty.http.client.HttpClient: DEBUG
 
+spring:
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://localhost:8082/auth/realms/nlportal
+
 nl-portal:
     zgw:
         documentenapis:

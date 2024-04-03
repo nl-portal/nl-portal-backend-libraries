@@ -28,7 +28,11 @@ import reactor.core.publisher.Mono
 @AutoConfiguration
 class AuthenticationConfiguration {
     @Bean
-    fun commonGroundAuthenticationConverter(reactiveJwtDecoder: ReactiveJwtDecoder, keycloak: Keycloak): Converter<Jwt, out Mono<out AbstractAuthenticationToken>> {
+    fun commonGroundAuthenticationConverter(
+        reactiveJwtDecoder: ReactiveJwtDecoder,
+        keycloak: Keycloak
+    ):
+        Converter<Jwt, out Mono<out AbstractAuthenticationToken>> {
         return CommonGroundAuthenticationConverter(reactiveJwtDecoder, keycloak)
     }
 }
