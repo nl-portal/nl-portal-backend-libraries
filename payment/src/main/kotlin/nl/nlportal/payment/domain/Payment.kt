@@ -15,42 +15,44 @@
  */
 package nl.nlportal.payment.domain
 
+import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonIgnore
 import nl.nlportal.payment.autoconfiguration.PaymentProfile
 import java.math.BigDecimal
 
 data class Payment(
-    @JsonIgnore val pspId: String,
-    @JsonIgnore val amount: BigDecimal = BigDecimal.ZERO,
-    @JsonIgnore val title: String,
-    @JsonIgnore val reference: String,
-    @JsonIgnore var orderId: String,
-    @JsonIgnore val currency: String,
-    @JsonIgnore val language: String,
-    @JsonIgnore val acceptUrl: String,
-    @JsonIgnore val declineUrl: String,
-    @JsonIgnore val exceptionUrl: String,
-    @JsonIgnore val cancelUrl: String,
+    @GraphQLIgnore @JsonIgnore val pspId: String,
+    @GraphQLIgnore @JsonIgnore val amount: BigDecimal = BigDecimal.ZERO,
+    @GraphQLIgnore @JsonIgnore val title: String,
+    @GraphQLIgnore @JsonIgnore val reference: String,
+    @GraphQLIgnore @JsonIgnore var orderId: String,
+    @GraphQLIgnore @JsonIgnore val currency: String,
+    @GraphQLIgnore @JsonIgnore val language: String,
+    @GraphQLIgnore @JsonIgnore val acceptUrl: String,
+    @GraphQLIgnore @JsonIgnore val declineUrl: String,
+    @GraphQLIgnore @JsonIgnore val exceptionUrl: String,
+    @GraphQLIgnore @JsonIgnore val cancelUrl: String,
     val formAction: String,
-    var fields: MutableMap<String, String?> = mutableMapOf(),
+    var formFields: ArrayList<PaymentField>,
 ) {
     /**
      * amount is converted to cents to avoid decimals
      */
-    fun fillFields(): MutableMap<String, String?> {
-        return mutableMapOf(
-            PAYMENT_PROPERTY_ACCEPT_URL to acceptUrl,
-            PAYMENT_PROPERTY_CANCEL_URL to cancelUrl,
-            PAYMENT_PROPERTY_DECLINE_URL to declineUrl,
-            PAYMENT_PROPERTY_EXCEPTION_URL to exceptionUrl,
-            PAYMENT_PROPERTY_CURRENCY to currency,
-            PAYMENT_PROPERTY_LANGUAGE to language,
-            PAYMENT_PROPERTY_PSPID to pspId,
-            PAYMENT_ORDER_ID to orderId,
-            PAYMENT_COM to reference,
-            PAYMENT_AMOUNT to amount.movePointRight(2).toString(),
-            PAYMENT_TITLE to title,
-        )
+    @GraphQLIgnore
+    fun fillFields(): ArrayList<PaymentField> {
+        val fields = ArrayList<PaymentField>()
+        fields.add(PaymentField(PAYMENT_PROPERTY_ACCEPT_URL, acceptUrl))
+        fields.add(PaymentField(PAYMENT_PROPERTY_CANCEL_URL, cancelUrl))
+        fields.add(PaymentField(PAYMENT_PROPERTY_DECLINE_URL, declineUrl))
+        fields.add(PaymentField(PAYMENT_PROPERTY_EXCEPTION_URL, exceptionUrl))
+        fields.add(PaymentField(PAYMENT_PROPERTY_CURRENCY, currency))
+        fields.add(PaymentField(PAYMENT_PROPERTY_LANGUAGE, language))
+        fields.add(PaymentField(PAYMENT_PROPERTY_PSPID, pspId))
+        fields.add(PaymentField(PAYMENT_PROPERTY_ORDER_ID, orderId))
+        fields.add(PaymentField(PAYMENT_PROPERTY_COM, reference))
+        fields.add(PaymentField(PAYMENT_PROPERTY_AMOUNT, amount.movePointRight(2).toString()))
+        fields.add(PaymentField(PAYMENT_PROPERTY_TITLE, title))
+        return fields
     }
 
     companion object {
@@ -76,8 +78,9 @@ data class Payment(
                 cancelUrl = failureUrl,
                 formAction = paymentUrl,
                 reference = paymentRequest.reference,
-                amount = paymentRequest.amount,
+                amount = paymentRequest.amount.toBigDecimal(),
                 orderId = paymentRequest.orderId,
+                formFields = ArrayList(),
             )
         }
 
@@ -88,11 +91,16 @@ data class Payment(
         const val PAYMENT_PROPERTY_CURRENCY: String = "CURRENCY"
         const val PAYMENT_PROPERTY_LANGUAGE: String = "LANGUAGE"
         const val PAYMENT_PROPERTY_PSPID: String = "PSPID"
-        const val PAYMENT_ORDER_ID: String = "ORDERID"
-        const val PAYMENT_COM: String = "COM"
-        const val PAYMENT_AMOUNT: String = "AMOUNT"
-        const val PAYMENT_TITLE: String = "TITLE"
-        const val PAYMENT_SHASIGN: String = "SHASIGN"
+        const val PAYMENT_PROPERTY_ORDER_ID: String = "ORDERID"
+        const val PAYMENT_PROPERTY_COM: String = "COM"
+        const val PAYMENT_PROPERTY_AMOUNT: String = "AMOUNT"
+        const val PAYMENT_PROPERTY_TITLE: String = "TITLE"
+        const val PAYMENT_PROPERTY_SHASIGN: String = "SHASIGN"
         const val QUERYSTRING_ORDER_ID: String = "?orderId="
     }
 }
+
+data class PaymentField(
+    val name: String,
+    val value: String,
+)

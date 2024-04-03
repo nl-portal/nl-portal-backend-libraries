@@ -13,26 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.payment.autoconfiguration
+package nl.nlportal.payment.graphql
 
-import nl.nlportal.payment.graphql.PaymentMutation
+import com.expediagroup.graphql.generator.annotations.GraphQLDescription
+import com.expediagroup.graphql.server.operations.Mutation
+import nl.nlportal.payment.domain.Payment
+import nl.nlportal.payment.domain.PaymentRequest
 import nl.nlportal.payment.service.PaymentService
-import org.springframework.boot.autoconfigure.AutoConfiguration
-import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.context.annotation.Bean
 
-@AutoConfiguration
-@EnableConfigurationProperties(PaymentConfig::class)
-class PaymentAutoConfiguration {
-    @Bean
-    fun paymentService(paymentConfig: PaymentConfig): PaymentService {
-        return PaymentService(
-            paymentConfig,
+class PaymentMutation(
+    private val paymentService: PaymentService,
+) : Mutation {
+    @GraphQLDescription("Create payment with hash and fields")
+    fun generatePayment(
+        paymentProfileIdentifier: String,
+        paymentRequest: PaymentRequest,
+    ): Payment {
+        return paymentService.createPayment(
+            paymentProfileIdentifier = paymentProfileIdentifier,
+            paymentRequest = paymentRequest,
         )
-    }
-
-    @Bean
-    fun paymentMutation(paymentService: PaymentService): PaymentMutation {
-        return PaymentMutation(paymentService)
     }
 }

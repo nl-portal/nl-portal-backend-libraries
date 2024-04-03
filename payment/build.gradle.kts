@@ -20,6 +20,7 @@ plugins {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     api(project(":core"))
+    api(project(":graphql"))
 
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation("org.springframework.boot", "spring-boot-starter-test")

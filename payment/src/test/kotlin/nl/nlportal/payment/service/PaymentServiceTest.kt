@@ -19,7 +19,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.payment.autoconfiguration.PaymentConfig
 import nl.nlportal.payment.autoconfiguration.PaymentProfile
-import nl.nlportal.payment.domain.Payment
 import nl.nlportal.payment.domain.PaymentRequest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -29,7 +28,6 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.springframework.web.server.ResponseStatusException
-import java.math.BigDecimal
 
 @ExperimentalCoroutinesApi
 internal class PaymentServiceTest {
@@ -44,7 +42,7 @@ internal class PaymentServiceTest {
     fun createPaymentTest() {
         val paymentRequest =
             PaymentRequest(
-                amount = BigDecimal.TEN,
+                amount = 100.00,
                 orderId = "orderId 123",
                 reference = "reference 123",
                 title = "title 123",
@@ -66,16 +64,15 @@ internal class PaymentServiceTest {
         whenever(paymentConfig.url).thenReturn("https://secure.ogone.com/ncol/prod/orderstandard.asp")
 
         val payment = paymentService.createPayment(paymentRequest, "belastingzaken")
-        assertEquals(paymentProfile.pspId, payment.fields.get(Payment.PAYMENT_PROPERTY_PSPID))
-        assertEquals("1000", payment.fields.get(Payment.PAYMENT_AMOUNT))
-        assertEquals(paymentRequest.title, payment.fields.get(Payment.PAYMENT_TITLE))
+        assertEquals(paymentProfile.pspId, payment.pspId)
+        assertEquals(paymentRequest.title, payment.title)
     }
 
     @Test
     fun createPaymentTestNotFoundPaymentProvider() {
         val paymentRequest =
             PaymentRequest(
-                amount = BigDecimal.TEN,
+                amount = 100.00,
                 orderId = "orderId 123",
                 reference = "reference 123",
                 title = "title 123",

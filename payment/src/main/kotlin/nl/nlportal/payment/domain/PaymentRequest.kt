@@ -15,10 +15,8 @@
  */
 package nl.nlportal.payment.domain
 
-import java.math.BigDecimal
-
 data class PaymentRequest(
-    val amount: BigDecimal,
+    val amount: Double,
     val reference: String,
     val orderId: String,
     val title: String?,

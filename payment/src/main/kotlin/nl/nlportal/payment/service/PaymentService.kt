@@ -15,10 +15,12 @@
  */
 package nl.nlportal.payment.service
 
+import mu.KLogger
+import mu.KotlinLogging
 import nl.nlportal.payment.autoconfiguration.PaymentConfig
 import nl.nlportal.payment.autoconfiguration.PaymentProfile
 import nl.nlportal.payment.domain.Payment
-import nl.nlportal.payment.domain.Payment.Companion.PAYMENT_SHASIGN
+import nl.nlportal.payment.domain.PaymentField
 import nl.nlportal.payment.domain.PaymentRequest
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -45,22 +47,22 @@ class PaymentService(
                 paymentRequest,
             )
         val fields = payment.fillFields()
-        fields[PAYMENT_SHASIGN] = hashParameters(fields, paymentProfile)
-        payment.fields = fields
+        fields.add(PaymentField(Payment.PAYMENT_PROPERTY_SHASIGN, hashParameters(fields, paymentProfile)))
+        payment.formFields = fields
         return payment
     }
 
     private fun hashParameters(
-        paymentsParameters: Map<String, String?>,
+        paymentsParameters: List<PaymentField>,
         paymentProfile: PaymentProfile,
     ): String {
         val parametersConcatenation = StringBuilder()
 
-        paymentsParameters.forEach { (key, value) ->
+        paymentsParameters.forEach { field ->
             parametersConcatenation
-                .append(key.uppercase(Locale.getDefault()))
+                .append(field.name.uppercase(Locale.getDefault()))
                 .append("=")
-                .append(value)
+                .append(field.value)
                 .append(paymentProfile.shaInKey)
         }
         return hashSHA512(parametersConcatenation.toString())
@@ -72,5 +74,9 @@ class PaymentService(
         digest.reset()
         digest.update(input.toByteArray(StandardCharsets.UTF_8))
         return String.format("%0128x", BigInteger(1, digest.digest()))
+    }
+
+    companion object {
+        private val logger: KLogger = KotlinLogging.logger {}
     }
 }
