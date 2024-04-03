@@ -33,7 +33,6 @@ jobs:
                     TOKEN: ${{ secrets.TOKEN }}
 
             -   name: Gradle publish Snapshot to OSS
-                if: github.ref_name == 'development'
                 uses: gradle/gradle-build-action@v3
                 with:
                     gradle-version: 8.5
