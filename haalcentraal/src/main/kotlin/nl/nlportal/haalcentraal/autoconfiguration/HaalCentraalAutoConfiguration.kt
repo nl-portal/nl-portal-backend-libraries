@@ -15,6 +15,7 @@
  */
 package nl.nlportal.haalcentraal.autoconfiguration
 
+import nl.nlportal.commonground.authentication.KeycloakConfig
 import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.core.ssl.ResourceClientSslContextResolver
 import nl.nlportal.haalcentraal.client.HaalCentraalClientConfig
@@ -43,9 +44,12 @@ class HaalCentraalAutoConfiguration {
     @Bean
     @ConditionalOnProperty("nl-portal.haalcentraal.token-exchange.target-audience", matchIfMissing = false)
     @ConditionalOnMissingBean(UserTokenExchangeFilter::class)
-    fun userTokenExchangeFilterFactory(haalCentraalClientConfig: HaalCentraalClientConfig): UserTokenExchangeFilter {
-        requireNotNull(haalCentraalClientConfig.tokenExchange)
-        return KeyCloakUserTokenExchangeFilter(WebClient.create(), haalCentraalClientConfig.tokenExchange.targetAudience)
+    fun userTokenExchangeFilterFactory(
+        haalCentraalClientConfig: HaalCentraalClientConfig,
+        keycloakConfig: KeycloakConfig,
+    ): UserTokenExchangeFilter {
+        requireNotNull(keycloakConfig)
+        return KeyCloakUserTokenExchangeFilter(WebClient.create(), keycloakConfig)
     }
 
     @Bean

@@ -18,6 +18,8 @@ package nl.nlportal.haalcentraal.client
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import kotlinx.coroutines.runBlocking
+import nl.nlportal.commonground.authentication.Credentials
+import nl.nlportal.commonground.authentication.KeycloakConfig
 import nl.nlportal.haalcentraal.client.tokenexchange.KeyCloakUserTokenExchangeFilter
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -97,7 +99,7 @@ internal class KeyCloakUserTokenExchangeFilterTest {
                 .filter(
                     KeyCloakUserTokenExchangeFilter(
                         clientBuilder.clone().build(),
-                        "targetClient",
+                        KeycloakConfig("userClient", "target_Audience", Credentials("Bla")),
                     ),
                 )
                 .build()
@@ -116,7 +118,7 @@ internal class KeyCloakUserTokenExchangeFilterTest {
             val tokenRequestBody = tokenRequest.body.readUtf8()
             val map = decodeQuery(tokenRequestBody)
             assertThat(map).isNotNull
-            assertThat(map["audience"]).contains("targetClient")
+            assertThat(map["audience"]).contains("target_Audience")
             assertThat(map["grant_type"]).contains("urn:ietf:params:oauth:grant-type:token-exchange")
             assertThat(map["subject_token"]).contains("token")
             assertThat(map["client_id"]).contains("userClient")
