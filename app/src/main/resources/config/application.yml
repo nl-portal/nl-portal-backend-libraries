@@ -56,8 +56,6 @@ spring:
                     provider_disables_autocommit: true
 
 keycloak:
-    auth-server-url: https://http://localhost:8082/auth
-    realm: nlportal
     resource: gzac-portal-m2m
     credentials:
         secret: yoursecret
