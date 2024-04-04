@@ -24,14 +24,14 @@ import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import reactor.core.publisher.Mono
 
-@EnableConfigurationProperties(Keycloak::class)
+@EnableConfigurationProperties(KeycloakConfig::class)
 @AutoConfiguration
 class AuthenticationConfiguration {
     @Bean
     fun commonGroundAuthenticationConverter(
         reactiveJwtDecoder: ReactiveJwtDecoder,
-        keycloak: Keycloak,
+        keycloakConfig: KeycloakConfig,
     ): Converter<Jwt, out Mono<out AbstractAuthenticationToken>> {
-        return CommonGroundAuthenticationConverter(reactiveJwtDecoder, keycloak)
+        return CommonGroundAuthenticationConverter(reactiveJwtDecoder, keycloakConfig)
     }
 }

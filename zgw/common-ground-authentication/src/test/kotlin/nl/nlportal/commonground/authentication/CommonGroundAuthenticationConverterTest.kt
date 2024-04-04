@@ -36,7 +36,7 @@ import reactor.core.publisher.Mono
 internal class CommonGroundAuthenticationConverterTest {
     @Mock
     lateinit var decoder: ReactiveJwtDecoder
-    val keycloak = Keycloak("bla", Credentials("Bla"))
+    val keycloak = KeycloakConfig("bla", "bla_audience", Credentials("Bla"))
     lateinit var converter: CommonGroundAuthenticationConverter
 
     @BeforeEach

@@ -30,7 +30,10 @@ import org.springframework.web.reactive.function.client.bodyToMono
 import reactor.core.publisher.Mono
 import java.net.URI
 
-class CommonGroundAuthenticationConverter(val decoder: ReactiveJwtDecoder, val keycloak: Keycloak) : Converter<Jwt, Mono<CommonGroundAuthentication>> {
+class CommonGroundAuthenticationConverter(
+    val decoder: ReactiveJwtDecoder,
+    val keycloakConfig: KeycloakConfig,
+) : Converter<Jwt, Mono<CommonGroundAuthentication>> {
     private val jwtGrantedAuthoritiesConverter = JwtGrantedAuthoritiesConverter()
     private val webClient = WebClient.create()
 
@@ -72,12 +75,12 @@ class CommonGroundAuthenticationConverter(val decoder: ReactiveJwtDecoder, val k
                 BodyInserters.fromFormData(
                     LinkedMultiValueMap(
                         mapOf(
-                            "client_id" to keycloak.resource,
-                            "client_secret" to keycloak.credentials.secret,
+                            "client_id" to keycloakConfig.resource,
+                            "client_secret" to keycloakConfig.credentials.secret,
                             "grant_type" to "urn:ietf:params:oauth:grant-type:token-exchange",
                             "subject_token" to jwt.tokenValue,
                             "requested_token_type" to "urn:ietf:params:oauth:token-type:access_token",
-                            "audience" to "gzac-portal-token-exchange",
+                            "audience" to keycloakConfig.audience,
                         ).mapValues { listOf(it.value) },
                     ),
                 ),

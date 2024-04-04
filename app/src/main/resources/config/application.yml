@@ -57,6 +57,7 @@ spring:
 
 keycloak:
     resource: gzac-portal-m2m
+    audience: gzac-portal-token-exchange
     credentials:
         secret: yoursecret
 
