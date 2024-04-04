@@ -15,14 +15,12 @@
  */
 package nl.nlportal.commonground.authentication
 
-
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.Encoders
 import io.jsonwebtoken.security.Keys
 import org.springframework.security.oauth2.jwt.Jwt
 import java.util.*
-
 
 class JwtBuilder {
     private var aanvragerBsn: String? = null
@@ -103,8 +101,6 @@ class JwtBuilder {
             .setExpiration(Date(System.currentTimeMillis() + 20000))
             .signWith(SignatureAlgorithm.HS512, base64)
             .compact()
-
-
     }
 
     fun buildBurgerAuthentication(): BurgerAuthentication {

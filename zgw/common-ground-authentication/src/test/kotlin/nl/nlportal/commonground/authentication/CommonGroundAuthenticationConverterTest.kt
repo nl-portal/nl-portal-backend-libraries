@@ -87,7 +87,6 @@ internal class CommonGroundAuthenticationConverterTest {
         doReturn(Mono.just(jwt)).whenever(decoder).decode(tokenResponse.accessToken)
         doReturn(Mono.just(tokenResponse)).whenever(converter).tokenExchange(jwt)
 
-
         val exception =
             assertThrows(UserTypeUnsupportedException::class.java) {
                 converter.convert(jwt).block()
