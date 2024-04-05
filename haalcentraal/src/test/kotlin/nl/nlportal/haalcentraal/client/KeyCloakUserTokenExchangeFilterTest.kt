@@ -18,8 +18,6 @@ package nl.nlportal.haalcentraal.client
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import kotlinx.coroutines.runBlocking
-import nl.nlportal.commonground.authentication.Credentials
-import nl.nlportal.commonground.authentication.KeycloakConfig
 import nl.nlportal.haalcentraal.client.tokenexchange.KeyCloakUserTokenExchangeFilter
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -99,7 +97,7 @@ internal class KeyCloakUserTokenExchangeFilterTest {
                 .filter(
                     KeyCloakUserTokenExchangeFilter(
                         clientBuilder.clone().build(),
-                        KeycloakConfig("userClient", "target_Audience", Credentials("Bla")),
+                        HaalCentraalClientConfig("", null, null, HaalCentraalClientConfig.TokenExchange("userClient", "target_Audience")),
                     ),
                 )
                 .build()

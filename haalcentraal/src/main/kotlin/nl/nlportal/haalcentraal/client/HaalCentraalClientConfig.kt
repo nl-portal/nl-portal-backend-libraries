@@ -26,6 +26,7 @@ data class HaalCentraalClientConfig(
     val tokenExchange: TokenExchange? = null,
 ) {
     data class TokenExchange(
+        var resource: String = "",
         val targetAudience: String,
     )
 }

@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonValue
 import nl.nlportal.haalcentraal.client.HaalCentraalClientProvider
 import mu.KLogger
 import mu.KotlinLogging
-import nl.nlportal.commonground.authentication.KeycloakConfig
+import nl.nlportal.haalcentraal.client.HaalCentraalClientConfig
 import org.springframework.http.HttpHeaders
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import org.springframework.util.LinkedMultiValueMap
@@ -35,7 +35,7 @@ import java.net.URI
 
 class KeyCloakUserTokenExchangeFilter(
     private val webClient: WebClient,
-    val keycloakConfig: KeycloakConfig,
+    val haalCentraalClientConfig: HaalCentraalClientConfig,
 ) : UserTokenExchangeFilter {
     override fun filter(
         request: ClientRequest,
@@ -90,12 +90,11 @@ class KeyCloakUserTokenExchangeFilter(
                 BodyInserters.fromFormData(
                     LinkedMultiValueMap<String, String>()
                         .apply {
-                            add("client_id", keycloakConfig.resource)
-                            add("client_secret", keycloakConfig.credentials.secret)
+                            add("client_id", haalCentraalClientConfig.tokenExchange?.resource)
                             add("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange")
                             add("subject_token", currentToken.tokenValue)
                             add("requested_token_type", "urn:ietf:params:oauth:token-type:access_token")
-                            add("audience", keycloakConfig.audience)
+                            add("audience", haalCentraalClientConfig.tokenExchange?.targetAudience)
                         },
                 ),
             )
