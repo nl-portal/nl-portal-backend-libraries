@@ -84,6 +84,7 @@ class KeyCloakUserTokenExchangeFilter(
     private fun exchangeToken(authentication: JwtAuthenticationToken): Mono<TokenResponse> {
         val currentToken = authentication.token
         logger.debug { "Exchanging token for ${authentication.name}" }
+        logger.info { "Token exchange properties used: $tokenExchange" }
         return webClient.post()
             .uri(URI.create("${currentToken.issuer.toString().trimEnd('/')}/protocol/openid-connect/token"))
             .body(
