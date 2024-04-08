@@ -79,6 +79,5 @@ class HaalCentraalClientProvider(
 
     companion object {
         private val logger: KLogger = KotlinLogging.logger {}
-        const val AUTHENTICATION_ATTRIBUTE_NAME = "userAuthentication"
     }
 }

@@ -114,9 +114,7 @@ nl-portal:
     objectsapi:
         url: http://localhost:8010
         token: 182c13e2209161852c53cef53a879f7a2f923430
-    haalcentraal:
-        token-exchange:
-            target-audience: haalcentraal
+    #haalcentraal:
     #hr:
             #api-key: ${VALTIMO_HAALCENTRAAL_HR_APIKEY}
             #ssl:

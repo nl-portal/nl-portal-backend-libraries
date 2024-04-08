@@ -23,11 +23,4 @@ data class HaalCentraalClientConfig(
     var url: String = "",
     val apiKey: String? = null,
     val ssl: Ssl? = null,
-    val tokenExchange: TokenExchange? = null,
-) {
-    data class TokenExchange(
-        var resource: String = "",
-        var secret: String = "",
-        val targetAudience: String,
-    )
-}
+)
