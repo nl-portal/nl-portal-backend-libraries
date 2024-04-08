@@ -35,7 +35,7 @@ import java.net.URI
 
 class KeyCloakUserTokenExchangeFilter(
     private val webClient: WebClient,
-    val haalCentraalClientConfig: HaalCentraalClientConfig,
+    val tokenExchange: HaalCentraalClientConfig.TokenExchange?,
 ) : UserTokenExchangeFilter {
     override fun filter(
         request: ClientRequest,
@@ -90,11 +90,12 @@ class KeyCloakUserTokenExchangeFilter(
                 BodyInserters.fromFormData(
                     LinkedMultiValueMap<String, String>()
                         .apply {
-                            add("client_id", haalCentraalClientConfig.tokenExchange?.resource)
+                            add("client_id", tokenExchange?.resource)
+                            add("client_secret", tokenExchange?.secret)
                             add("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange")
                             add("subject_token", currentToken.tokenValue)
                             add("requested_token_type", "urn:ietf:params:oauth:token-type:access_token")
-                            add("audience", haalCentraalClientConfig.tokenExchange?.targetAudience)
+                            add("audience", tokenExchange?.targetAudience)
                         },
                 ),
             )

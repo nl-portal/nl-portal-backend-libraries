@@ -59,7 +59,7 @@ keycloak:
     resource: gzac-portal-m2m
     audience: gzac-portal-token-exchange
     credentials:
-        secret: yoursecret
+        secret: ookVRUAxmEWMcosfcGR5nxeoUC4Rgwbc
 
 graphql:
     packages:
@@ -115,7 +115,9 @@ nl-portal:
         url: http://localhost:8010
         token: 182c13e2209161852c53cef53a879f7a2f923430
     haalcentraal:
-        #hr:
+        token-exchange:
+            target-audience: haalcentraal
+    #hr:
             #api-key: ${VALTIMO_HAALCENTRAAL_HR_APIKEY}
             #ssl:
                 #trusted-certificate: ${VALTIMO_HAALCENTRAAL_HR_SSL_TRUSTED_CERTIFICATE}

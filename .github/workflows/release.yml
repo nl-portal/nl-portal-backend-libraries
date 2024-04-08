@@ -70,7 +70,7 @@ jobs:
                     TOKEN: ${{ secrets.TOKEN }}
             - name: Create a Release
               if: startsWith(github.ref_name, 'release/')
-              uses: elgohr/Github-Release-Action@20231116201936
+              uses: elgohr/Github-Release-Action@20240405193535
               env:
                   GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
               with:

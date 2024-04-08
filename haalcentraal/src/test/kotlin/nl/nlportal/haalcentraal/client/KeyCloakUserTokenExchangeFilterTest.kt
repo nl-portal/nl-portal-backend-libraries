@@ -97,7 +97,7 @@ internal class KeyCloakUserTokenExchangeFilterTest {
                 .filter(
                     KeyCloakUserTokenExchangeFilter(
                         clientBuilder.clone().build(),
-                        HaalCentraalClientConfig("", null, null, HaalCentraalClientConfig.TokenExchange("userClient", "target_Audience")),
+                        HaalCentraalClientConfig.TokenExchange("userClient", "secret", "target_Audience"),
                     ),
                 )
                 .build()
