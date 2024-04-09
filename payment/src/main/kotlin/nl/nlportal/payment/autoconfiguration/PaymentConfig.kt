@@ -20,6 +20,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties(prefix = "nl-portal.payment", ignoreUnknownFields = true)
 data class PaymentConfig(
     val url: String = "https://secure.ogone.com/ncol/prod/orderstandard.asp",
+    val taakTypeUrl: String,
     val configurations: Map<String, PaymentProfile> = mapOf(),
 ) {
     fun getPaymentProfile(pspId: String): PaymentProfile? {

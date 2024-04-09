@@ -19,9 +19,18 @@ import mu.KLogger
 import mu.KotlinLogging
 import nl.nlportal.payment.autoconfiguration.PaymentConfig
 import nl.nlportal.payment.autoconfiguration.PaymentProfile
+import nl.nlportal.payment.constants.OgoneState
 import nl.nlportal.payment.domain.Payment
 import nl.nlportal.payment.domain.PaymentField
 import nl.nlportal.payment.domain.PaymentRequest
+import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
+import nl.nlportal.zgw.objectenapi.domain.Comparator
+import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
+import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
+import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
+import nl.nlportal.zgw.taak.domain.TaakObject
+import nl.nlportal.zgw.taak.domain.TaakStatus
+import org.apache.commons.lang3.StringUtils
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.math.BigInteger
@@ -32,6 +41,7 @@ import java.util.*
 
 class PaymentService(
     private val paymentConfig: PaymentConfig,
+    private val objectsApiClient: ObjectsApiClient,
 ) {
     fun createPayment(
         paymentRequest: PaymentRequest,
@@ -50,6 +60,46 @@ class PaymentService(
         fields.add(PaymentField(Payment.PAYMENT_PROPERTY_SHASIGN, hashParameters(fields, paymentProfile)))
         payment.formFields = fields
         return payment
+    }
+
+    suspend fun handlePostSale(
+        orderId: String,
+        pspId: String?,
+        status: Int,
+    ): String {
+        // Check if request is from the Ogone server, if pspId is empty the request is from Ogone
+        val requestFromOgoneServer = StringUtils.isBlank(pspId)
+        if (!requestFromOgoneServer) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request is not from payment provider")
+        }
+
+        if (status != OgoneState.SUCCESS.status) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request has not the correct status")
+        }
+        val objectsApiTask = getObjectsApiTaak(UUID.fromString(orderId))
+        if (objectsApiTask.record.data.status == TaakStatus.INGEDIEND) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Task is already finished - orderId: $orderId")
+        }
+
+        val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
+        updateRequest.record.data.status = TaakStatus.INGEDIEND
+        objectsApiClient.updateObject(objectsApiTask.uuid, updateRequest)
+
+        return "Request Successful processed"
+    }
+
+    private suspend fun getObjectsApiTaak(taskId: UUID): ObjectsApiObject<TaakObject> {
+        val objectSearchParameters =
+            listOf(
+                ObjectSearchParameter("verwerker_taak_id", Comparator.EQUAL_TO, taskId.toString()),
+            )
+
+        return objectsApiClient.getObjects<TaakObject>(
+            objectSearchParameters = objectSearchParameters,
+            objectTypeUrl = paymentConfig.taakTypeUrl,
+            page = 1,
+            pageSize = 2,
+        ).results.single()
     }
 
     private fun hashParameters(

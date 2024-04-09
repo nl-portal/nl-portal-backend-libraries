@@ -20,6 +20,7 @@ import kotlinx.coroutines.test.runTest
 import nl.nlportal.payment.autoconfiguration.PaymentConfig
 import nl.nlportal.payment.autoconfiguration.PaymentProfile
 import nl.nlportal.payment.domain.PaymentRequest
+import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
@@ -32,7 +33,8 @@ import org.springframework.web.server.ResponseStatusException
 @ExperimentalCoroutinesApi
 internal class PaymentServiceTest {
     val paymentConfig: PaymentConfig = mock()
-    val paymentService = PaymentService(paymentConfig)
+    val objectsApiClient: ObjectsApiClient = mock()
+    val paymentService = PaymentService(paymentConfig, objectsApiClient)
 
     @BeforeEach
     fun setup() {

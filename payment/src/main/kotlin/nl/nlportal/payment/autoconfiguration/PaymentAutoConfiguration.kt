@@ -15,8 +15,10 @@
  */
 package nl.nlportal.payment.autoconfiguration
 
+import nl.nlportal.payment.api.PaymentController
 import nl.nlportal.payment.graphql.PaymentMutation
 import nl.nlportal.payment.service.PaymentService
+import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -25,14 +27,23 @@ import org.springframework.context.annotation.Bean
 @EnableConfigurationProperties(PaymentConfig::class)
 class PaymentAutoConfiguration {
     @Bean
-    fun paymentService(paymentConfig: PaymentConfig): PaymentService {
+    fun paymentService(
+        paymentConfig: PaymentConfig,
+        objectsApiClient: ObjectsApiClient,
+    ): PaymentService {
         return PaymentService(
             paymentConfig,
+            objectsApiClient,
         )
     }
 
     @Bean
     fun paymentMutation(paymentService: PaymentService): PaymentMutation {
         return PaymentMutation(paymentService)
+    }
+
+    @Bean
+    fun paymentController(paymentService: PaymentService): PaymentController {
+        return PaymentController(paymentService)
     }
 }

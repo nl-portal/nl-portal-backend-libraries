@@ -138,6 +138,7 @@ nl-portal:
             unsecured: /api/payment/**
     payment:
         url: https://secure.ogone.com/ncol/test/orderstandard.asp
+        taak-type-url: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
         configurations:
             belastingzaken:
                 pspId: TAX
@@ -145,3 +146,4 @@ nl-portal:
                 shaInKey: de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00
                 failureUrl: http://localhost:3000
                 successUrl: http://localhost:3000
+
