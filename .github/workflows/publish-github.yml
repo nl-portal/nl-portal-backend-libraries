@@ -1,4 +1,4 @@
-name: Publish to github packages
+name: Publish to github packages and oss
 
 on:
     workflow_dispatch:

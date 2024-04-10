@@ -14,7 +14,6 @@ on:
     branches:
      - "!**"
      - "release/**"
-     - "development"
 
 permissions:
     contents: read
@@ -49,7 +48,7 @@ jobs:
                   SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
 
             -   name: Gradle publish Snapshot to OSS
-                if: github.ref_name == 'development'
+                if: startsWith(github.ref_name, 'release/')
                 uses: gradle/gradle-build-action@v3
                 with:
                     gradle-version: 8.5
@@ -60,7 +59,7 @@ jobs:
                     SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
                     SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
             -   name: Gradle publish Snapshot to Github
-                if: github.ref_name == 'development'
+                if: startsWith(github.ref_name, 'release/')
                 uses: gradle/gradle-build-action@v3
                 with:
                     gradle-version: 8.5
@@ -68,10 +67,4 @@ jobs:
                 env:
                     USER: ${{ secrets.USER }}
                     TOKEN: ${{ secrets.TOKEN }}
-            - name: Create a Release
-              if: startsWith(github.ref_name, 'release/')
-              uses: elgohr/Github-Release-Action@20240405193535
-              env:
-                  GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-              with:
-                  title: PortalBackendLibrariesRelease
+
