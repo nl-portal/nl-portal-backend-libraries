@@ -23,7 +23,7 @@ internal object Versions {
 internal object TestVersions {
     const val hamcrest = "2.2"
     const val kotlinCoroutines = "1.7.3"
-    const val mockitoKotlin = "5.1.0"
+    const val mockitoKotlin = "5.3.1"
     const val okHttp3 = "4.12.0"
     const val postgresql = "42.7.0"
 }
