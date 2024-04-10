@@ -16,10 +16,11 @@
 package nl.nlportal.haalcentraal.client
 
 import nl.nlportal.core.ssl.ClientSslContextResolver
-import nl.nlportal.haalcentraal.client.tokenexchange.UserTokenExchangeFilter
 import io.netty.handler.logging.LogLevel
 import mu.KLogger
 import mu.KotlinLogging
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import org.springframework.http.HttpHeaders
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.security.core.Authentication
 import org.springframework.web.reactive.function.client.WebClient
@@ -29,12 +30,14 @@ import reactor.netty.transport.logging.AdvancedByteBufFormat
 class HaalCentraalClientProvider(
     private val haalCentraalClientConfig: HaalCentraalClientConfig,
     private val clientSslContextResolver: ClientSslContextResolver? = null,
-    private val userTokenExchangeFilter: UserTokenExchangeFilter? = null,
 ) {
     fun webClient(authentication: Authentication): WebClient {
         return WebClient.builder()
-            .defaultRequest { spec ->
-                spec.attribute(AUTHENTICATION_ATTRIBUTE_NAME, authentication)
+            .defaultHeaders {
+                // only set jwt from token exchange as bearer token if not available,
+                if (it[HttpHeaders.AUTHORIZATION].isNullOrEmpty()) {
+                    it.setBearerAuth((authentication as CommonGroundAuthentication).jwt.tokenValue)
+                }
             }
             .clientConnector(
                 ReactorClientHttpConnector(
@@ -70,21 +73,11 @@ class HaalCentraalClientProvider(
                     it.defaultHeader("X-API-KEY", haalCentraalClientConfig.apiKey)
                     logger.debug { "X-API-KEY was set for client" }
                 }
-
-                if (haalCentraalClientConfig.tokenExchange != null) {
-                    requireNotNull(userTokenExchangeFilter) {
-                        "Token exchange was configured (${haalCentraalClientConfig.tokenExchange}), " +
-                            "but userTokenExchangeFilter was null!"
-                    }
-
-                    it.filter(userTokenExchangeFilter)
-                }
             }
             .build()
     }
 
     companion object {
         private val logger: KLogger = KotlinLogging.logger {}
-        const val AUTHENTICATION_ATTRIBUTE_NAME = "userAuthentication"
     }
 }

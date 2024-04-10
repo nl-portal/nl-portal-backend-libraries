@@ -1,7 +1,7 @@
 name: Publish to github packages
 
 on:
-  workflow_dispatch:
+    workflow_dispatch:
 
 permissions:
     contents: read
@@ -32,3 +32,13 @@ jobs:
                     USER: ${{ secrets.USER }}
                     TOKEN: ${{ secrets.TOKEN }}
 
+            -   name: Gradle publish Snapshot to OSS
+                uses: gradle/gradle-build-action@v3
+                with:
+                    gradle-version: 8.5
+                    arguments: publishDefaultPublicationToSonatypeSnapshotRepository
+                env:
+                    OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+                    OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+                    SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+                    SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}

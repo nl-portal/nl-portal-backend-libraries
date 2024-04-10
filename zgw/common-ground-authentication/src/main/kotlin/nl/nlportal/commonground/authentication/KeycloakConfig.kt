@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2024 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.haalcentraal.client.tokenexchange
+package nl.nlportal.commonground.authentication
 
-import org.springframework.web.reactive.function.client.ExchangeFilterFunction
+import org.springframework.boot.context.properties.ConfigurationProperties
 
-interface UserTokenExchangeFilter : ExchangeFilterFunction
+@ConfigurationProperties(prefix = "keycloak")
+data class KeycloakConfig(
+    var resource: String = "",
+    var audience: String = "",
+    var credentials: Credentials = Credentials(""),
+)
+
+data class Credentials(
+    var secret: String = "",
+)

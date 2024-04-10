@@ -17,6 +17,7 @@ package nl.nlportal.haalcentraal.brp.client
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import kotlinx.coroutines.runBlocking
+import nl.nlportal.commonground.authentication.JwtBuilder
 import nl.nlportal.core.ssl.ClientKey
 import nl.nlportal.core.ssl.Ssl
 import nl.nlportal.core.ssl.StringClientSslContextResolver
@@ -33,7 +34,6 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.mockito.Mockito.mock
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class HaalCentraalBrpClientTest {
@@ -65,8 +65,9 @@ internal class HaalCentraalBrpClientTest {
     fun `should get person by without certificate`() {
         val provider = HaalCentraalClientProvider(haalCentraalClientConfig, null)
         val client = HaalCentraalBrpClient(provider)
+        val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
         runBlocking {
-            val persoon = client.getPersoon(bsn, mock())
+            val persoon = client.getPersoon(bsn, authentication)
             assertThat(persoon).isNotNull
         }
     }
@@ -119,8 +120,9 @@ internal class HaalCentraalBrpClientTest {
 
         val provider = HaalCentraalClientProvider(haalCentraalClientConfig, StringClientSslContextResolver())
         val client = HaalCentraalBrpClient(provider)
+        val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
         runBlocking {
-            val persoon = client.getPersoon(bsn, mock())
+            val persoon = client.getPersoon(bsn, authentication)
             assertThat(persoon).isNotNull
 
             val recordedRequest = server.takeRequest()

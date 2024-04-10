@@ -22,7 +22,7 @@ spring:
         oauth2:
             resourceserver:
                 jwt:
-                    issuer-uri: http://localhost:8082/auth/realms/master
+                    issuer-uri: http://localhost:8082/auth/realms/nlportal
     liquibase:
         enabled: false
     datasource:
@@ -54,6 +54,12 @@ spring:
                     time_zone: UTC
                 connection:
                     provider_disables_autocommit: true
+
+keycloak:
+    resource: gzac-portal-m2m
+    audience: gzac-portal-token-exchange
+    credentials:
+        secret: ookVRUAxmEWMcosfcGR5nxeoUC4Rgwbc
 
 graphql:
     packages:
@@ -108,8 +114,8 @@ nl-portal:
     objectsapi:
         url: http://localhost:8010
         token: 182c13e2209161852c53cef53a879f7a2f923430
-    haalcentraal:
-        #hr:
+    #haalcentraal:
+    #hr:
             #api-key: ${VALTIMO_HAALCENTRAAL_HR_APIKEY}
             #ssl:
                 #trusted-certificate: ${VALTIMO_HAALCENTRAAL_HR_SSL_TRUSTED_CERTIFICATE}
