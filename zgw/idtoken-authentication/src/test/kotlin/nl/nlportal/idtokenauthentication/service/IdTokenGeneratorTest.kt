@@ -6,6 +6,7 @@ import nl.nlportal.idtokenauthentication.TestHelper.TEST_ENCRYPTION_SECRET_VALID
 import nl.nlportal.idtokenauthentication.TestHelper.TEST_USER_ID
 import nl.nlportal.idtokenauthentication.TestHelper.TEST_USER_REPRESENTATION
 import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.security.Keys
 import kotlin.test.assertEquals
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -36,15 +37,15 @@ class IdTokenGeneratorTest {
             )
 
         val claims =
-            Jwts.parserBuilder()
-                .setSigningKey(testSecretKey.encodeToByteArray())
+            Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(testSecretKey.encodeToByteArray()))
                 .build()
-                .parseClaimsJws(generatedToken)
+                .parseSignedClaims(generatedToken)
 
-        Assertions.assertThat(claims.body.issuer).isEqualTo(testClientId)
-        Assertions.assertThat(claims.body.get("client_id")).isEqualTo(testClientId)
-        Assertions.assertThat(claims.body.get("user_id")).isEqualTo("Valtimo")
-        Assertions.assertThat(claims.body.get("user_representation")).isEqualTo("Valtimo")
+        Assertions.assertThat(claims.payload.issuer).isEqualTo(testClientId)
+        Assertions.assertThat(claims.payload.get("client_id")).isEqualTo(testClientId)
+        Assertions.assertThat(claims.payload.get("user_id")).isEqualTo("Valtimo")
+        Assertions.assertThat(claims.payload.get("user_representation")).isEqualTo("Valtimo")
     }
 
     @Test
@@ -60,15 +61,15 @@ class IdTokenGeneratorTest {
             )
 
         val claims =
-            Jwts.parserBuilder()
-                .setSigningKey(testSecretKey.encodeToByteArray())
+            Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(testSecretKey.encodeToByteArray()))
                 .build()
-                .parseClaimsJws(generatedToken)
+                .parseSignedClaims(generatedToken)
 
-        Assertions.assertThat(claims.body.issuer).isEqualTo(testClientId)
-        Assertions.assertThat(claims.body.get("client_id")).isEqualTo(testClientId)
-        Assertions.assertThat(claims.body.get("user_id")).isEqualTo(testUserId)
-        Assertions.assertThat(claims.body.get("user_representation")).isEqualTo(testUserRepresentation)
+        Assertions.assertThat(claims.payload.issuer).isEqualTo(testClientId)
+        Assertions.assertThat(claims.payload.get("client_id")).isEqualTo(testClientId)
+        Assertions.assertThat(claims.payload.get("user_id")).isEqualTo(testUserId)
+        Assertions.assertThat(claims.payload.get("user_representation")).isEqualTo(testUserRepresentation)
     }
 
     @Test
