@@ -16,16 +16,22 @@
 package nl.nlportal.commonground.authentication
 
 import org.springframework.boot.autoconfigure.AutoConfiguration
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.core.convert.converter.Converter
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.oauth2.jwt.Jwt
+import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import reactor.core.publisher.Mono
 
+@EnableConfigurationProperties(KeycloakConfig::class)
 @AutoConfiguration
 class AuthenticationConfiguration {
     @Bean
-    fun commonGroundAuthenticationConverter(): Converter<Jwt, out Mono<out AbstractAuthenticationToken>> {
-        return CommonGroundAuthenticationConverter()
+    fun commonGroundAuthenticationConverter(
+        reactiveJwtDecoder: ReactiveJwtDecoder,
+        keycloakConfig: KeycloakConfig,
+    ): Converter<Jwt, out Mono<out AbstractAuthenticationToken>> {
+        return CommonGroundAuthenticationConverter(reactiveJwtDecoder, keycloakConfig)
     }
 }

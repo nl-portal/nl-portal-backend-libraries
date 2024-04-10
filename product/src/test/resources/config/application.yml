@@ -6,3 +6,10 @@ nl-portal:
     openformulieren:
         url: #filled in test
         token: "some-test-token"
+
+spring:
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://localhost:8082/auth/realms/nlportal

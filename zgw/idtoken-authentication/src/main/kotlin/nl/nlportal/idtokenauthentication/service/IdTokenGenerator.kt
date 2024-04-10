@@ -17,9 +17,8 @@ package nl.nlportal.idtokenauthentication.service
 
 import io.jsonwebtoken.JwtBuilder
 import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
-import java.util.Date
+import java.util.*
 
 class IdTokenGenerator {
     fun generateToken(
@@ -34,11 +33,11 @@ class IdTokenGenerator {
         val jwtBuilder = Jwts.builder()
 
         return jwtBuilder
-            .setIssuer(clientId)
-            .setIssuedAt(Date())
+            .issuer(clientId)
+            .issuedAt(Date())
             .claim("client_id", clientId)
             .appendUserInfo(null, null)
-            .signWith(signingKey, SignatureAlgorithm.HS256)
+            .signWith(signingKey)
             .compact()
     }
 
@@ -56,11 +55,11 @@ class IdTokenGenerator {
         val jwtBuilder = Jwts.builder()
 
         return jwtBuilder
-            .setIssuer(clientId)
-            .setIssuedAt(Date())
+            .issuer(clientId)
+            .issuedAt(Date())
             .claim("client_id", clientId)
             .appendUserInfo(userId, userRepresentation)
-            .signWith(signingKey, SignatureAlgorithm.HS256)
+            .signWith(signingKey)
             .compact()
     }
 
@@ -77,12 +76,12 @@ class IdTokenGenerator {
         val jwtBuilder = Jwts.builder()
 
         return jwtBuilder
-            .setIssuer(clientId)
-            .setIssuedAt(Date())
+            .issuer(clientId)
+            .issuedAt(Date())
             .claim("client_id", clientId)
-            .addClaims(claims)
+            .claims(claims)
             .appendUserInfo(null, null)
-            .signWith(signingKey, SignatureAlgorithm.HS256)
+            .signWith(signingKey)
             .compact()
     }
 
@@ -101,11 +100,11 @@ class IdTokenGenerator {
         val jwtBuilder = Jwts.builder()
 
         return jwtBuilder
-            .setIssuer(clientId)
-            .setIssuedAt(Date())
-            .addClaims(claims)
+            .issuer(clientId)
+            .issuedAt(Date())
+            .claims(claims)
             .appendUserInfo(userId, userRepresentation)
-            .signWith(signingKey, SignatureAlgorithm.HS256)
+            .signWith(signingKey)
             .compact()
     }
 

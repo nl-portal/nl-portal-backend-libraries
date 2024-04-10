@@ -27,3 +27,10 @@ nl-portal:
             secret: e09b8bc5-5831-4618-ab28-41411304309d
     objectsapi:
         token: 0000000000000000000000000000000000000000
+
+spring:
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://localhost:8082/auth/realms/nlportal
