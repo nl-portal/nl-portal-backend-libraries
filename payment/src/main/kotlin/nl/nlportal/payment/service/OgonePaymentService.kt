@@ -76,7 +76,7 @@ class OgonePaymentService(
         val orderId = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_ORDER_ID]?.get(0)
         val objectsApiTask = getObjectsApiTaak(UUID.fromString(orderId))
         if (objectsApiTask.record.data.status == TaakStatus.INGEDIEND) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Task is already finished - orderId: $orderId")
+            throw ResponseStatusException(HttpStatus.OK)
         }
 
         // validate ogone request
