@@ -24,7 +24,7 @@ import nl.nlportal.payment.service.OgonePaymentService
 class OgonePaymentMutation(
     private val ogonePaymentService: OgonePaymentService,
 ) : Mutation {
-    @GraphQLDescription("Create payment with hash and fields")
+    @GraphQLDescription("Create Ogone payment with hash and fields")
     fun generateOgonePayment(paymentRequest: OgonePaymentRequest): OgonePayment {
         return ogonePaymentService.createPayment(
             paymentRequest = paymentRequest,
