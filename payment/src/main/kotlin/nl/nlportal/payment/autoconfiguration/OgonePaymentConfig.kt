@@ -17,23 +17,34 @@ package nl.nlportal.payment.autoconfiguration
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.payment", ignoreUnknownFields = true)
-data class PaymentConfig(
+@ConfigurationProperties(prefix = "nl-portal.payment.ogone", ignoreUnknownFields = true)
+data class OgonePaymentConfig(
     val url: String = "https://secure.ogone.com/ncol/prod/orderstandard.asp",
     val taakTypeUrl: String,
-    val configurations: Map<String, PaymentProfile> = mapOf(),
+    val shaOutParameters: List<String>,
+    val configurations: Map<String, OgonePaymentProfile> = mapOf(),
 ) {
-    fun getPaymentProfile(pspId: String): PaymentProfile? {
-        return configurations[pspId]
+    fun getPaymentProfile(profileIdentifier: String): OgonePaymentProfile? {
+        return configurations[profileIdentifier]
+    }
+
+    fun getPaymentProfileByPspPid(pspId: String?): OgonePaymentProfile? {
+        configurations.forEach {
+            if (it.value.pspId == pspId) {
+                return it.value
+            }
+        }
+        return null
     }
 }
 
-data class PaymentProfile(
+data class OgonePaymentProfile(
     val pspId: String = "",
     val language: String = "nl_NL",
     val currency: String = "EUR",
     val title: String = "",
     val shaInKey: String = "",
+    val shaOutKey: String = "",
     val failureUrl: String = "",
     val successUrl: String = "",
 )

@@ -17,20 +17,16 @@ package nl.nlportal.payment.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Mutation
-import nl.nlportal.payment.domain.Payment
-import nl.nlportal.payment.domain.PaymentRequest
-import nl.nlportal.payment.service.PaymentService
+import nl.nlportal.payment.domain.OgonePayment
+import nl.nlportal.payment.domain.OgonePaymentRequest
+import nl.nlportal.payment.service.OgonePaymentService
 
-class PaymentMutation(
-    private val paymentService: PaymentService,
+class OgonePaymentMutation(
+    private val ogonePaymentService: OgonePaymentService,
 ) : Mutation {
     @GraphQLDescription("Create payment with hash and fields")
-    fun generatePayment(
-        paymentProfileIdentifier: String,
-        paymentRequest: PaymentRequest,
-    ): Payment {
-        return paymentService.createPayment(
-            paymentProfileIdentifier = paymentProfileIdentifier,
+    fun generateOgonePayment(paymentRequest: OgonePaymentRequest): OgonePayment {
+        return ogonePaymentService.createPayment(
             paymentRequest = paymentRequest,
         )
     }

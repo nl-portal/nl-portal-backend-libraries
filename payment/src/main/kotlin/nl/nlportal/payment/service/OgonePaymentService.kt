@@ -17,12 +17,11 @@ package nl.nlportal.payment.service
 
 import mu.KLogger
 import mu.KotlinLogging
-import nl.nlportal.payment.autoconfiguration.PaymentConfig
-import nl.nlportal.payment.autoconfiguration.PaymentProfile
+import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig
 import nl.nlportal.payment.constants.OgoneState
-import nl.nlportal.payment.domain.Payment
+import nl.nlportal.payment.domain.OgonePayment
+import nl.nlportal.payment.domain.OgonePaymentRequest
 import nl.nlportal.payment.domain.PaymentField
-import nl.nlportal.payment.domain.PaymentRequest
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
@@ -32,6 +31,7 @@ import nl.nlportal.zgw.taak.domain.TaakObject
 import nl.nlportal.zgw.taak.domain.TaakStatus
 import org.apache.commons.lang3.StringUtils
 import org.springframework.http.HttpStatus
+import org.springframework.http.server.reactive.ServerHttpRequest
 import org.springframework.web.server.ResponseStatusException
 import java.math.BigInteger
 import java.nio.charset.StandardCharsets
@@ -39,46 +39,54 @@ import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.*
 
-class PaymentService(
-    private val paymentConfig: PaymentConfig,
+class OgonePaymentService(
+    private val paymentConfig: OgonePaymentConfig,
     private val objectsApiClient: ObjectsApiClient,
 ) {
-    fun createPayment(
-        paymentRequest: PaymentRequest,
-        paymentProfileIdentifier: String,
-    ): Payment {
+    fun createPayment(paymentRequest: OgonePaymentRequest): OgonePayment {
+        val pspId = paymentRequest.pspId
         val paymentProfile =
-            paymentConfig.getPaymentProfile(paymentProfileIdentifier)
-                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not found payment profile for the identifier $paymentProfileIdentifier")
+            paymentConfig.getPaymentProfileByPspPid(pspId)
+                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not found payment profile for the pspId $pspId")
         val payment =
-            Payment.create(
+            OgonePayment.create(
                 paymentConfig.url,
                 paymentProfile,
                 paymentRequest,
             )
         val fields = payment.fillFields()
-        fields.add(PaymentField(Payment.PAYMENT_PROPERTY_SHASIGN, hashParameters(fields, paymentProfile)))
+        fields.add(PaymentField(OgonePayment.PAYMENT_PROPERTY_SHASIGN, hashParameters(fields, paymentProfile.shaInKey)))
         payment.formFields = fields
         return payment
     }
 
-    suspend fun handlePostSale(
-        orderId: String,
-        pspId: String?,
-        status: Int,
-    ): String {
+    suspend fun handlePostSale(serverHttpRequest: ServerHttpRequest): String {
+        var pspId = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_PSPID]?.get(0)
         // Check if request is from the Ogone server, if pspId is empty the request is from Ogone
         val requestFromOgoneServer = StringUtils.isBlank(pspId)
         if (!requestFromOgoneServer) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request is not from payment provider")
         }
 
+        val status = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_STATUS]?.get(0)?.toInt()
         if (status != OgoneState.SUCCESS.status) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request has not the correct status")
         }
+
+        val orderId = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_ORDER_ID]?.get(0)
         val objectsApiTask = getObjectsApiTaak(UUID.fromString(orderId))
         if (objectsApiTask.record.data.status == TaakStatus.INGEDIEND) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Task is already finished - orderId: $orderId")
+        }
+
+        // validate ogone request
+        val pspIdFromTask = objectsApiTask.record.data.data[OgonePayment.PAYMENT_PROPERTY_PSPID.lowercase()]
+        if (pspIdFromTask == null) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Task does not have a pspId")
+        }
+
+        if (!isValidOgoneRequest(serverHttpRequest, pspIdFromTask as String)) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request is not valid")
         }
 
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
@@ -102,31 +110,51 @@ class PaymentService(
         ).results.single()
     }
 
-    private fun hashParameters(
-        paymentsParameters: List<PaymentField>,
-        paymentProfile: PaymentProfile,
-    ): String {
-        val parametersConcatenation = StringBuilder()
-
-        paymentsParameters.forEach { field ->
-            parametersConcatenation
-                .append(field.name.uppercase(Locale.getDefault()))
-                .append("=")
-                .append(field.value)
-                .append(paymentProfile.shaInKey)
+    private fun isValidOgoneRequest(
+        serverHttpRequest: ServerHttpRequest,
+        pspId: String,
+    ): Boolean {
+        val queryStringParameters = serverHttpRequest.queryParams
+        val fields = ArrayList<PaymentField>()
+        queryStringParameters.forEach {
+            // filter out only the accepted parameters
+            if (paymentConfig.shaOutParameters.contains(it.key)) {
+                fields.add(PaymentField(it.key, it.value[0]))
+            }
         }
-        return hashSHA512(parametersConcatenation.toString())
-    }
 
-    @Throws(NoSuchAlgorithmException::class)
-    private fun hashSHA512(input: String): String {
-        val digest = MessageDigest.getInstance("SHA-512")
-        digest.reset()
-        digest.update(input.toByteArray(StandardCharsets.UTF_8))
-        return String.format("%0128x", BigInteger(1, digest.digest()))
+        val paymentProfile = paymentConfig.getPaymentProfileByPspPid(pspId) ?: return false
+        val hashOutParameter = hashParameters(fields, paymentProfile.shaOutKey)
+        val shaOutKey = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_SHASIGN]?.get(0)
+
+        return hashOutParameter == shaOutKey
     }
 
     companion object {
         private val logger: KLogger = KotlinLogging.logger {}
+
+        fun hashParameters(
+            paymentsParameters: List<PaymentField>,
+            shaKey: String,
+        ): String {
+            val parametersConcatenation = StringBuilder()
+
+            paymentsParameters.forEach { field ->
+                parametersConcatenation
+                    .append(field.name.uppercase(Locale.getDefault()))
+                    .append("=")
+                    .append(field.value)
+                    .append(shaKey)
+            }
+            return hashSHA512(parametersConcatenation.toString())
+        }
+
+        @Throws(NoSuchAlgorithmException::class)
+        private fun hashSHA512(input: String): String {
+            val digest = MessageDigest.getInstance("SHA-512")
+            digest.reset()
+            digest.update(input.toByteArray(StandardCharsets.UTF_8))
+            return String.format("%0128x", BigInteger(1, digest.digest()))
+        }
     }
 }

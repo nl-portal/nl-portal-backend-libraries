@@ -15,35 +15,35 @@
  */
 package nl.nlportal.payment.autoconfiguration
 
-import nl.nlportal.payment.api.PaymentController
-import nl.nlportal.payment.graphql.PaymentMutation
-import nl.nlportal.payment.service.PaymentService
+import nl.nlportal.payment.api.OgonePaymentController
+import nl.nlportal.payment.graphql.OgonePaymentMutation
+import nl.nlportal.payment.service.OgonePaymentService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
-@EnableConfigurationProperties(PaymentConfig::class)
+@EnableConfigurationProperties(OgonePaymentConfig::class)
 class PaymentAutoConfiguration {
     @Bean
-    fun paymentService(
-        paymentConfig: PaymentConfig,
+    fun ogonePaymentService(
+        ogonePaymentConfig: OgonePaymentConfig,
         objectsApiClient: ObjectsApiClient,
-    ): PaymentService {
-        return PaymentService(
-            paymentConfig,
+    ): OgonePaymentService {
+        return OgonePaymentService(
+            ogonePaymentConfig,
             objectsApiClient,
         )
     }
 
     @Bean
-    fun paymentMutation(paymentService: PaymentService): PaymentMutation {
-        return PaymentMutation(paymentService)
+    fun ogonePaymentMutation(ogonePaymentService: OgonePaymentService): OgonePaymentMutation {
+        return OgonePaymentMutation(ogonePaymentService)
     }
 
     @Bean
-    fun paymentController(paymentService: PaymentService): PaymentController {
-        return PaymentController(paymentService)
+    fun ogonePaymentController(ogonePaymentService: OgonePaymentService): OgonePaymentController {
+        return OgonePaymentController(ogonePaymentService)
     }
 }

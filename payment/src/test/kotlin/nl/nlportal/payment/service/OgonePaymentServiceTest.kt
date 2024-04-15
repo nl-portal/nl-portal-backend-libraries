@@ -17,9 +17,9 @@ package nl.nlportal.payment.service
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import nl.nlportal.payment.autoconfiguration.PaymentConfig
-import nl.nlportal.payment.autoconfiguration.PaymentProfile
-import nl.nlportal.payment.domain.PaymentRequest
+import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig
+import nl.nlportal.payment.autoconfiguration.OgonePaymentProfile
+import nl.nlportal.payment.domain.OgonePaymentRequest
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -31,10 +31,10 @@ import org.mockito.kotlin.whenever
 import org.springframework.web.server.ResponseStatusException
 
 @ExperimentalCoroutinesApi
-internal class PaymentServiceTest {
-    val paymentConfig: PaymentConfig = mock()
+internal class OgonePaymentServiceTest {
+    val paymentConfig: OgonePaymentConfig = mock()
     val objectsApiClient: ObjectsApiClient = mock()
-    val paymentService = PaymentService(paymentConfig, objectsApiClient)
+    val ogonePaymentService = OgonePaymentService(paymentConfig, objectsApiClient)
 
     @BeforeEach
     fun setup() {
@@ -43,7 +43,7 @@ internal class PaymentServiceTest {
     @Test
     fun createPaymentTest() {
         val paymentRequest =
-            PaymentRequest(
+            OgonePaymentRequest(
                 amount = 100.00,
                 orderId = "orderId 123",
                 reference = "reference 123",
@@ -51,10 +51,11 @@ internal class PaymentServiceTest {
                 langId = "nl_NL",
                 successUrl = null,
                 failureUrl = null,
+                pspId = "TAX",
             )
 
         val paymentProfile =
-            PaymentProfile(
+            OgonePaymentProfile(
                 pspId = "TAX",
                 title = "Belastingzaken",
                 shaInKey = "de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00",
@@ -62,10 +63,10 @@ internal class PaymentServiceTest {
                 successUrl = "http://dummy.nl",
             )
 
-        whenever(paymentConfig.getPaymentProfile(anyString())).thenReturn(paymentProfile)
+        whenever(paymentConfig.getPaymentProfileByPspPid(anyString())).thenReturn(paymentProfile)
         whenever(paymentConfig.url).thenReturn("https://secure.ogone.com/ncol/prod/orderstandard.asp")
 
-        val payment = paymentService.createPayment(paymentRequest, "belastingzaken")
+        val payment = ogonePaymentService.createPayment(paymentRequest)
         assertEquals(paymentProfile.pspId, payment.pspId)
         assertEquals(paymentRequest.title, payment.title)
     }
@@ -73,7 +74,7 @@ internal class PaymentServiceTest {
     @Test
     fun createPaymentTestNotFoundPaymentProvider() {
         val paymentRequest =
-            PaymentRequest(
+            OgonePaymentRequest(
                 amount = 100.00,
                 orderId = "orderId 123",
                 reference = "reference 123",
@@ -81,15 +82,16 @@ internal class PaymentServiceTest {
                 langId = "nl_NL",
                 successUrl = null,
                 failureUrl = null,
+                pspId = "unknown",
             )
 
         val exception =
             assertThrows(ResponseStatusException::class.java) {
                 runTest {
-                    paymentService.createPayment(paymentRequest, "unkown")
+                    ogonePaymentService.createPayment(paymentRequest)
                 }
             }
 
-        assertEquals("Could not found payment profile for the identifier unkown", exception.reason)
+        assertEquals("Could not found payment profile for the pspId unknown", exception.reason)
     }
 }

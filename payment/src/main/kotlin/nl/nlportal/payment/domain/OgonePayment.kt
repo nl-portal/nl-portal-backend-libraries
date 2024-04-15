@@ -17,10 +17,10 @@ package nl.nlportal.payment.domain
 
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonIgnore
-import nl.nlportal.payment.autoconfiguration.PaymentProfile
+import nl.nlportal.payment.autoconfiguration.OgonePaymentProfile
 import java.math.BigDecimal
 
-data class Payment(
+data class OgonePayment(
     @GraphQLIgnore @JsonIgnore val pspId: String,
     @GraphQLIgnore @JsonIgnore val amount: BigDecimal = BigDecimal.ZERO,
     @GraphQLIgnore @JsonIgnore val title: String,
@@ -58,16 +58,16 @@ data class Payment(
     companion object {
         fun create(
             paymentUrl: String,
-            paymentProfile: PaymentProfile,
-            paymentRequest: PaymentRequest,
-        ): Payment {
+            paymentProfile: OgonePaymentProfile,
+            paymentRequest: OgonePaymentRequest,
+        ): OgonePayment {
             val successUrl =
                 paymentRequest.successUrl
                     ?: (paymentProfile.successUrl + QUERYSTRING_ORDER_ID + paymentRequest.orderId)
             val failureUrl =
                 paymentRequest.failureUrl
                     ?: (paymentProfile.failureUrl + QUERYSTRING_ORDER_ID + paymentRequest.orderId)
-            return Payment(
+            return OgonePayment(
                 pspId = paymentProfile.pspId,
                 currency = paymentProfile.currency,
                 language = paymentRequest.langId ?: paymentProfile.language,
@@ -96,6 +96,7 @@ data class Payment(
         const val PAYMENT_PROPERTY_AMOUNT: String = "AMOUNT"
         const val PAYMENT_PROPERTY_TITLE: String = "TITLE"
         const val PAYMENT_PROPERTY_SHASIGN: String = "SHASIGN"
+        const val PAYMENT_PROPERTY_STATUS: String = "STATUS"
         const val QUERYSTRING_ORDER_ID: String = "?orderId="
     }
 }

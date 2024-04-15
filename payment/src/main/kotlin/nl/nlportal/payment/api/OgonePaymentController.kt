@@ -15,27 +15,27 @@
  */
 package nl.nlportal.payment.api
 
-import nl.nlportal.payment.service.PaymentService
+import nl.nlportal.payment.service.OgonePaymentService
 import org.springframework.http.ResponseEntity
+import org.springframework.http.server.reactive.ServerHttpRequest
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping(value = ["/api"])
-class PaymentController(
-    private val paymentService: PaymentService,
+class OgonePaymentController(
+    private val ogonePaymentService: OgonePaymentService,
 ) {
-    @GetMapping(value = ["/payment/postsale"])
-    suspend fun postSale(
-        @RequestParam("PSPID", required = false) pspId: String,
-        @RequestParam("orderID") orderId: String,
-        @RequestParam("STATUS") status: Int,
-    ): ResponseEntity<Any> {
+    @GetMapping(value = ["/payment/ogone/postsale"])
+    suspend fun postSale(httpServletRequest: ServerHttpRequest): ResponseEntity<Any> {
         try {
-            return ResponseEntity.ok(paymentService.handlePostSale(orderId, pspId, status))
+            return ResponseEntity.ok(
+                ogonePaymentService.handlePostSale(
+                    httpServletRequest,
+                ),
+            )
         } catch (exception: ResponseStatusException) {
             return ResponseEntity(exception.message, exception.statusCode)
         }

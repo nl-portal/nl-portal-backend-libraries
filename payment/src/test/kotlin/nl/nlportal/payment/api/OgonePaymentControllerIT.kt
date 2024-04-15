@@ -16,6 +16,10 @@
 package nl.nlportal.payment.api
 
 import nl.nlportal.payment.TestHelper
+import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig
+import nl.nlportal.payment.domain.OgonePayment
+import nl.nlportal.payment.domain.PaymentField
+import nl.nlportal.payment.service.OgonePaymentService
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -35,9 +39,10 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class PaymentControllerIT(
+internal class OgonePaymentControllerIT(
     @Autowired private val webTestClient: WebTestClient,
     @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
+    @Autowired private val paymentConfig: OgonePaymentConfig,
 ) {
     lateinit var server: MockWebServer
 
@@ -59,8 +64,20 @@ class PaymentControllerIT(
 
     @Test
     fun postSaleTest() {
+        val parameterList =
+            listOf(
+                PaymentField(OgonePayment.PAYMENT_PROPERTY_ORDER_ID, "58fad5ab-dc2f-11ec-9075-f22a405ce707"),
+                PaymentField(OgonePayment.PAYMENT_PROPERTY_STATUS, "91"),
+            )
+
+        val shaSign =
+            OgonePaymentService.hashParameters(
+                parameterList,
+                paymentConfig.getPaymentProfile("belastingzaken")!!.shaOutKey,
+            )
+
         webTestClient.get()
-            .uri("/api/payment/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&STATUS=91")
+            .uri("/api/payment/ogone/postsale?ORDERID=58fad5ab-dc2f-11ec-9075-f22a405ce707&STATUS=91&SHASIGN=$shaSign")
             .exchange()
             .expectStatus().isOk
             .expectBody()
@@ -71,9 +88,34 @@ class PaymentControllerIT(
     }
 
     @Test
+    fun postSaleTestInvalid() {
+        val parameterList =
+            listOf(
+                PaymentField(OgonePayment.PAYMENT_PROPERTY_ORDER_ID, "58fad5ab-dc2f-11ec-9075-f22a405ce707"),
+                PaymentField(OgonePayment.PAYMENT_PROPERTY_STATUS, "91"),
+            )
+
+        val shaSign =
+            OgonePaymentService.hashParameters(
+                parameterList,
+                paymentConfig.getPaymentProfile("belastingzaken")!!.shaOutKey,
+            )
+
+        webTestClient.get()
+            .uri("/api/payment/ogone/postsale?ORDERID=58fad5ab-dc2f-11ec-9075-f22a405ce707&STATUS=91&AMOUNT=200&SHASIGN=$shaSign")
+            .exchange()
+            .expectStatus().isBadRequest
+            .expectBody()
+            .returnResult()
+            .responseBody
+            .contentToString()
+            .contentEquals("Request is not valid")
+    }
+
+    @Test
     fun postSaleTestNotFromPaymentProvider() {
         webTestClient.get()
-            .uri("/api/payment/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&PSPID=TAX&STATUS=91")
+            .uri("/api/payment/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&PSPID=TAX&STATUS=91")
             .exchange()
             .expectStatus().isBadRequest
             .expectBody()
@@ -86,7 +128,7 @@ class PaymentControllerIT(
     @Test
     fun postSaleTestIncorrectOgoneStatus() {
         webTestClient.get()
-            .uri("/api/payment/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&PSPID=TAX&STATUS=1")
+            .uri("/api/payment/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&PSPID=TAX&STATUS=1")
             .exchange()
             .expectStatus().isBadRequest
             .expectBody()

@@ -15,7 +15,8 @@
  */
 package nl.nlportal.payment.domain
 
-data class PaymentRequest(
+data class OgonePaymentRequest(
+    val pspId: String,
     val amount: Double,
     val reference: String,
     val orderId: String,
