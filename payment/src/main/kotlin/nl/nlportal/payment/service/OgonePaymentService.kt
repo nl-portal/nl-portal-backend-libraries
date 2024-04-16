@@ -150,8 +150,9 @@ class OgonePaymentService(
             shaVersion: String,
         ): String {
             val parametersConcatenation = StringBuilder()
-
-            paymentsParameters.forEach { field ->
+            paymentsParameters
+                .sortedBy { it.name }
+                .forEach { field ->
                 parametersConcatenation
                     .append(field.name.uppercase(Locale.getDefault()))
                     .append("=")
