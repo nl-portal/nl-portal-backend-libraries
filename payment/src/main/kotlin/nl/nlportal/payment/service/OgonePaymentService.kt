@@ -19,6 +19,7 @@ import mu.KLogger
 import mu.KotlinLogging
 import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig
 import nl.nlportal.payment.constants.OgoneState
+import nl.nlportal.payment.constants.ShaVersion
 import nl.nlportal.payment.domain.OgonePayment
 import nl.nlportal.payment.domain.OgonePaymentRequest
 import nl.nlportal.payment.domain.PaymentField
@@ -29,13 +30,11 @@ import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import nl.nlportal.zgw.taak.domain.TaakObject
 import nl.nlportal.zgw.taak.domain.TaakStatus
+import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.lang3.StringUtils
 import org.springframework.http.HttpStatus
 import org.springframework.http.server.reactive.ServerHttpRequest
 import org.springframework.web.server.ResponseStatusException
-import java.math.BigInteger
-import java.nio.charset.StandardCharsets
-import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.*
 
@@ -47,7 +46,10 @@ class OgonePaymentService(
         val pspId = paymentRequest.pspId
         val paymentProfile =
             paymentConfig.getPaymentProfileByPspPid(pspId)
-                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not found payment profile for the pspId $pspId")
+                ?: throw ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Could not found payment profile for the pspId $pspId",
+                )
         val payment =
             OgonePayment.create(
                 paymentConfig.url,
@@ -55,7 +57,16 @@ class OgonePaymentService(
                 paymentRequest,
             )
         val fields = payment.fillFields()
-        fields.add(PaymentField(OgonePayment.PAYMENT_PROPERTY_SHASIGN, hashParameters(fields, paymentProfile.shaInKey)))
+        fields.add(
+            PaymentField(
+                OgonePayment.PAYMENT_PROPERTY_SHASIGN,
+                hashParameters(
+                    fields,
+                    paymentProfile.shaInKey,
+                    paymentProfile.shaVersion,
+                ),
+            ),
+        )
         payment.formFields = fields
         return payment
     }
@@ -124,7 +135,7 @@ class OgonePaymentService(
         }
 
         val paymentProfile = paymentConfig.getPaymentProfileByPspPid(pspId) ?: return false
-        val hashOutParameter = hashParameters(fields, paymentProfile.shaOutKey)
+        val hashOutParameter = hashParameters(fields, paymentProfile.shaOutKey, paymentProfile.shaVersion)
         val shaOutKey = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_SHASIGN]?.get(0)
 
         return hashOutParameter == shaOutKey
@@ -136,6 +147,7 @@ class OgonePaymentService(
         fun hashParameters(
             paymentsParameters: List<PaymentField>,
             shaKey: String,
+            shaVersion: String,
         ): String {
             val parametersConcatenation = StringBuilder()
 
@@ -146,15 +158,25 @@ class OgonePaymentService(
                     .append(field.value)
                     .append(shaKey)
             }
-            return hashSHA512(parametersConcatenation.toString())
+            return createHash(parametersConcatenation.toString(), shaVersion)
         }
 
         @Throws(NoSuchAlgorithmException::class)
-        private fun hashSHA512(input: String): String {
-            val digest = MessageDigest.getInstance("SHA-512")
-            digest.reset()
-            digest.update(input.toByteArray(StandardCharsets.UTF_8))
-            return String.format("%0128x", BigInteger(1, digest.digest()))
+        private fun createHash(
+            input: String,
+            shaVersion: String,
+        ): String {
+            return when (shaVersion) {
+                ShaVersion.SHA256.version -> {
+                    DigestUtils.sha256Hex(input)
+                }
+                ShaVersion.SHA512.version -> {
+                    DigestUtils.sha512Hex(input)
+                }
+                else -> {
+                    DigestUtils.sha1Hex(input)
+                }
+            }
         }
     }
 }

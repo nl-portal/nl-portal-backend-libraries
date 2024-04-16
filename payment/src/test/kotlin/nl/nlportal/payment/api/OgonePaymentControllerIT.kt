@@ -74,6 +74,7 @@ internal class OgonePaymentControllerIT(
             OgonePaymentService.hashParameters(
                 parameterList,
                 paymentConfig.getPaymentProfile("belastingzaken")!!.shaOutKey,
+                paymentConfig.getPaymentProfile("belastingzaken")!!.shaVersion,
             )
 
         webTestClient.get()
@@ -99,6 +100,7 @@ internal class OgonePaymentControllerIT(
             OgonePaymentService.hashParameters(
                 parameterList,
                 paymentConfig.getPaymentProfile("belastingzaken")!!.shaOutKey,
+                paymentConfig.getPaymentProfile("belastingzaken")!!.shaVersion,
             )
 
         webTestClient.get()

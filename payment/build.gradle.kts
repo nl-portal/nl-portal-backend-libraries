@@ -23,7 +23,7 @@ dependencies {
     api(project(":graphql"))
     api(project(":zgw:taak"))
 
-// api("org.springframework.boot", "spring-boot-starter-web")
+    api("commons-codec", "commons-codec", "1.16.1")
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.assertj", "assertj-core")
