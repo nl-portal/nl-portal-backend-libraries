@@ -158,6 +158,7 @@ class OgonePaymentService(
                     .append(field.value)
                     .append(shaKey)
             }
+            logger.info("SHA version: {} - {}", shaVersion, parametersConcatenation.toString())
             return createHash(parametersConcatenation.toString(), shaVersion)
         }
 
@@ -168,7 +169,7 @@ class OgonePaymentService(
         ): String {
             return when (shaVersion) {
                 ShaVersion.SHA256.version -> {
-                    DigestUtils.sha256Hex(input)
+                    DigestUtils.sha512Hex(input)
                 }
                 ShaVersion.SHA512.version -> {
                     DigestUtils.sha512Hex(input)

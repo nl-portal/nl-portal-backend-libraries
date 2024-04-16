@@ -25,9 +25,7 @@ class OgonePaymentMutation(
     private val ogonePaymentService: OgonePaymentService,
 ) : Mutation {
     @GraphQLDescription("Create Ogone payment with hash and fields")
-    fun generateOgonePayment(
-        paymentRequest: OgonePaymentRequest
-    ): OgonePayment {
+    fun generateOgonePayment(paymentRequest: OgonePaymentRequest): OgonePayment {
         return ogonePaymentService.createPayment(
             paymentRequest = paymentRequest,
         )
