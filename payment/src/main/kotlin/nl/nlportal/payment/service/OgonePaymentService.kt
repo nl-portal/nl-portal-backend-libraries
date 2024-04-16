@@ -153,13 +153,13 @@ class OgonePaymentService(
             paymentsParameters
                 .sortedBy { it.name }
                 .forEach { field ->
-                parametersConcatenation
-                    .append(field.name.uppercase(Locale.getDefault()))
-                    .append("=")
-                    .append(field.value)
-                    .append(shaKey)
-            }
-            logger.info("SHA version: {} - {}", shaVersion, parametersConcatenation.toString())
+                    parametersConcatenation
+                        .append(field.name.uppercase(Locale.getDefault()))
+                        .append("=")
+                        .append(field.value)
+                        .append(shaKey)
+                }
+            logger.debug("SHA version: {} - {}", shaVersion, parametersConcatenation.toString())
             return createHash(parametersConcatenation.toString(), shaVersion)
         }
 
