@@ -19,6 +19,7 @@ enum class OgoneState(
     val status: Int,
     val statusText: String,
 ) {
-    PENDING(1, "PENDING"),
+    FAILED(1, "FAILED"),
+    PENDING(9, "PENDING"),
     SUCCESS(91, "SUCCESS"),
 }

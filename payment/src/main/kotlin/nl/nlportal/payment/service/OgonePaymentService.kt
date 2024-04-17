@@ -72,28 +72,26 @@ class OgonePaymentService(
     }
 
     suspend fun handlePostSale(serverHttpRequest: ServerHttpRequest): String {
-        var pspId = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_PSPID]?.get(0)
-        // Check if request is from the Ogone server, if pspId is empty the request is from Ogone
-        val requestFromOgoneServer = StringUtils.isBlank(pspId)
-        if (!requestFromOgoneServer) {
+        val pspId = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_PSPID]?.get(0)
+        if (!StringUtils.isBlank(pspId)) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request is not from payment provider")
         }
 
         val status = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_STATUS]?.get(0)?.toInt()
-        if (status != OgoneState.SUCCESS.status) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request has not the correct status")
+        if (status != OgoneState.SUCCESS.status && status != OgoneState.PENDING.status) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request has not the correct status: $status")
         }
 
         val orderId = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_ORDER_ID]?.get(0)
         val objectsApiTask = getObjectsApiTaak(UUID.fromString(orderId))
         if (objectsApiTask.record.data.status == TaakStatus.INGEDIEND) {
-            throw ResponseStatusException(HttpStatus.OK)
+            return "Task is already completed"
         }
 
         // validate ogone request
         val pspIdFromTask =
             objectsApiTask.record.data.data[OgonePayment.PAYMENT_PROPERTY_PSPID.lowercase()]
-                ?: throw ResponseStatusException(HttpStatus.OK, "Task does not have a pspId")
+                ?: return "Task does not have a pspId"
 
         if (!isValidOgoneRequest(serverHttpRequest, pspIdFromTask as String)) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request is not valid")
@@ -103,7 +101,7 @@ class OgonePaymentService(
         updateRequest.record.data.status = TaakStatus.INGEDIEND
         objectsApiClient.updateObject(objectsApiTask.uuid, updateRequest)
 
-        return "Request Successful processed"
+        return "Request successful processed"
     }
 
     private suspend fun getObjectsApiTaak(taskId: UUID): ObjectsApiObject<TaakObject> {
@@ -129,7 +127,7 @@ class OgonePaymentService(
         queryStringParameters.forEach {
             // filter out only the accepted parameters
             if (paymentConfig.shaOutParameters.contains(it.key)) {
-                fields.add(PaymentField(it.key, it.value[0]))
+                fields.add(PaymentField(it.key.uppercase(), it.value[0]))
             }
         }
 
