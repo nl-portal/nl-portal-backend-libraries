@@ -91,10 +91,9 @@ class OgonePaymentService(
         }
 
         // validate ogone request
-        val pspIdFromTask = objectsApiTask.record.data.data[OgonePayment.PAYMENT_PROPERTY_PSPID.lowercase()]
-        if (pspIdFromTask == null) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Task does not have a pspId")
-        }
+        val pspIdFromTask =
+            objectsApiTask.record.data.data[OgonePayment.PAYMENT_PROPERTY_PSPID.lowercase()]
+                ?: throw ResponseStatusException(HttpStatus.OK, "Task does not have a pspId")
 
         if (!isValidOgoneRequest(serverHttpRequest, pspIdFromTask as String)) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request is not valid")
