@@ -78,7 +78,11 @@ class OgonePaymentService(
         }
 
         val status = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_STATUS]?.get(0)?.toInt()
-        if (status != OgoneState.SUCCESS.status && status != OgoneState.PENDING.status) {
+        if (status != OgoneState.SUCCESS.status &&
+            status != OgoneState.PENDING.status &&
+            status != OgoneState.PENDING1.status &&
+            status != OgoneState.PENDING2.status
+        ) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request has not the correct status: $status")
         }
 

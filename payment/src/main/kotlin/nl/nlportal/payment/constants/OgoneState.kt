@@ -17,9 +17,10 @@ package nl.nlportal.payment.constants
 
 enum class OgoneState(
     val status: Int,
-    val statusText: String,
 ) {
-    FAILED(1, "FAILED"),
-    PENDING(9, "PENDING"),
-    SUCCESS(91, "SUCCESS"),
+    FAILED(1),
+    SUCCESS(9),
+    PENDING(91),
+    PENDING1(92),
+    PENDING2(93),
 }
