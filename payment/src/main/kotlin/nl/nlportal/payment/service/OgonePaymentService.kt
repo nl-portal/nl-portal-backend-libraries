@@ -99,6 +99,8 @@ class OgonePaymentService(
 
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
         updateRequest.record.data.status = TaakStatus.INGEDIEND
+        updateRequest.record.correctedBy = "Payment provider"
+        updateRequest.record.correctionFor = objectsApiTask.record.index.toString()
         objectsApiClient.updateObject(objectsApiTask.uuid, updateRequest)
 
         return "Request successful processed"
