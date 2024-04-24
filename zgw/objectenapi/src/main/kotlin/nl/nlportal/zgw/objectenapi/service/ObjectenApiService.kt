@@ -18,6 +18,7 @@ package nl.nlportal.zgw.objectenapi.service
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequest
+import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequestWithoutCorrection
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
@@ -57,6 +58,12 @@ class ObjectenApiService(
     suspend inline fun <reified T> createObject(createObjectsApiObjectRequest: CreateObjectsApiObjectRequest<T>): ObjectsApiObject<T> {
         return objectsApiClient.createObject(
             createObjectsApiObjectRequest,
+        )
+    }
+
+    suspend inline fun <reified T> createObjectWithoutCorrection(createObjectsApiObjectRequestWithoutCorrection: CreateObjectsApiObjectRequestWithoutCorrection<T>): ObjectsApiObject<T> {
+        return objectsApiClient.createObjectWithoutCorrection(
+            createObjectsApiObjectRequestWithoutCorrection,
         )
     }
 }
