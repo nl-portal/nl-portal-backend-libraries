@@ -24,11 +24,11 @@ import nl.nlportal.commonground.authentication.BedrijfAuthentication
 import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.commonground.authentication.exception.UserTypeUnsupportedException
-import nl.nlportal.form.domain.FormIoFormDefinition
 import nl.nlportal.form.service.FormIoFormDefinitionService
 import nl.nlportal.form.startform.autoconfigure.StartFormConfig
 import nl.nlportal.form.startform.domain.StartForm
 import nl.nlportal.form.startform.domain.AanvragerIdentificatie
+import nl.nlportal.form.startform.domain.StartFormDTO
 import nl.nlportal.form.startform.domain.StartFormObject
 import nl.nlportal.form.startform.repository.StartFormRepository
 import nl.nlportal.zgw.objectenapi.domain.*
@@ -102,10 +102,12 @@ class StartFormService(
         return startFormRepository.save(startForm)
     }
 
-    fun getAllFormsLinkedToStartForms(): List<FormIoFormDefinition> {
-        val startFormList = startFormRepository.findAll()
-        return startFormList.map {
-            formDefinitionService.findFormIoFormDefinitionByName(it.formName)
-        }.requireNoNulls()
+    fun getAllStartFormDTOs(): List<StartFormDTO> {
+        return startFormRepository.findAll().map {
+            StartFormDTO(
+                it.id,
+                it.formName
+            )
+        }
     }
 }

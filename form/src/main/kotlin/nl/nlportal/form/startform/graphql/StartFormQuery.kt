@@ -17,15 +17,14 @@ package nl.nlportal.form.startform.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Query
-import nl.nlportal.form.graphql.FormDefinition
+import nl.nlportal.form.startform.domain.StartFormDTO
 import nl.nlportal.form.startform.service.StartFormService
 
 class StartFormQuery(
     private val startFormService: StartFormService,
 ) : Query {
     @GraphQLDescription("find all form definitions for start forms")
-    suspend fun allStartForms(): List<FormDefinition> {
-        return startFormService.getAllFormsLinkedToStartForms()
-            .map { FormDefinition(it.formDefinition) }
+    suspend fun allStartForms(): List<StartFormDTO> {
+        return startFormService.getAllStartFormDTOs()
     }
 }
