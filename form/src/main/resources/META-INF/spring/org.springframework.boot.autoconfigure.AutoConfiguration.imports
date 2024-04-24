@@ -1,4 +1,2 @@
 nl.nlportal.form.autoconfigure.FormAutoConfiguration
 nl.nlportal.form.autoconfigure.GraphqlAutoConfiguration
-nl.nlportal.form.startform.autoconfigure.StartFormAutoConfiguration
-nl.nlportal.form.startform.autoconfigure.FormGraphqlAutoConfiguration

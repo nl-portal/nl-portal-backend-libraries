@@ -24,6 +24,7 @@ dependencies {
     implementation(project(":klantcontactmomenten"))
     implementation(project(":product"))
     implementation(project(":form"))
+    implementation(project(":startform"))
     implementation(project(":zgw:taak"))
     implementation(project(":zgw:zaken-api"))
     implementation(project(":zgw:catalogi-api"))
