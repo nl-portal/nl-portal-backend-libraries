@@ -40,27 +40,34 @@ class StartFormService(
     private val objectMapper: ObjectMapper,
     private val objectenApiService: ObjectenApiService,
     private val startFormConfig: StartFormConfig,
-    private val startFormRepository: StartFormRepository
+    private val startFormRepository: StartFormRepository,
 ) {
-    suspend fun saveFormToObjectsApi(formName: String, submissionData: ObjectNode, authentication: CommonGroundAuthentication): UUID {
+    suspend fun saveFormToObjectsApi(
+        formName: String,
+        submissionData: ObjectNode,
+        authentication: CommonGroundAuthentication,
+    ): UUID {
         val startForm = getStartFormByFormName(formName)
 
-        val startFormObject = StartFormObject(
-            aanvragerIdentificatie(authentication),
-            submissionData
-        )
+        val startFormObject =
+            StartFormObject(
+                aanvragerIdentificatie(authentication),
+                submissionData,
+            )
 
-        val startFormRecord = CreateObjectsApiObjectRequestRecordWithoutCorrection(
-            typeVersion = startForm.typeVersion,
-            data = objectMapper.valueToTree(startFormObject) as ObjectNode,
-            startAt = localDateTimeNowObejctsApiFormat(),
-        )
+        val startFormRecord =
+            CreateObjectsApiObjectRequestRecordWithoutCorrection(
+                typeVersion = startForm.typeVersion,
+                data = objectMapper.valueToTree(startFormObject) as ObjectNode,
+                startAt = localDateTimeNowObejctsApiFormat(),
+            )
 
-        val objectsApiObjectRequest = CreateObjectsApiObjectRequestWithoutCorrection(
-            uuid = UUID.randomUUID(),
-            type = "${startFormConfig.typeBaseUrl}/objecttypes/${startForm.typeUUID}",
-            record = startFormRecord,
-        )
+        val objectsApiObjectRequest =
+            CreateObjectsApiObjectRequestWithoutCorrection(
+                uuid = UUID.randomUUID(),
+                type = "${startFormConfig.typeBaseUrl}/objecttypes/${startForm.typeUUID}",
+                record = startFormRecord,
+            )
 
         val createdObject = objectenApiService.createObjectWithoutCorrection(objectsApiObjectRequest)
         return createdObject.uuid
@@ -104,7 +111,7 @@ class StartFormService(
         return startFormRepository.findAll().map {
             StartFormDTO(
                 it.id,
-                it.formName
+                it.formName,
             )
         }
     }

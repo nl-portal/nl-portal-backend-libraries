@@ -44,6 +44,13 @@
             "validate": {
                 "required": true
             }
+        },
+        {
+            "key": "submit",
+            "type": "button",
+            "input": false,
+            "label": "Aanvragen",
+            "disableOnInvalid": true
         }
     ]
 }

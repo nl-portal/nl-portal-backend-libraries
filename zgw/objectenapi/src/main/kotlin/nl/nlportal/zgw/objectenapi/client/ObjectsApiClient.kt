@@ -107,7 +107,9 @@ open class ObjectsApiClient(
             .awaitSingle()
     }
 
-    suspend inline fun <reified T> createObjectWithoutCorrection(objectsApiObject: CreateObjectsApiObjectRequestWithoutCorrection<T>): ObjectsApiObject<T> {
+    suspend inline fun <reified T> createObjectWithoutCorrection(
+        objectsApiObject: CreateObjectsApiObjectRequestWithoutCorrection<T>,
+    ): ObjectsApiObject<T> {
         return webClient()
             .post()
             .uri("/api/v2/objects")

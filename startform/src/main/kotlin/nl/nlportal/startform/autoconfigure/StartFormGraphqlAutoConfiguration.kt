@@ -24,16 +24,12 @@ import org.springframework.context.annotation.Bean
 @AutoConfiguration
 class StartFormGraphqlAutoConfiguration {
     @Bean
-    fun startFromQuery(
-        startFormService: StartFormService
-    ): StartFormQuery {
+    fun startFromQuery(startFormService: StartFormService): StartFormQuery {
         return StartFormQuery(startFormService)
     }
 
     @Bean
-    fun createStartFormMutation(
-        startFormService: StartFormService
-    ): CreateStartFormMutation {
+    fun createStartFormMutation(startFormService: StartFormService): CreateStartFormMutation {
         return CreateStartFormMutation(startFormService)
     }
 }

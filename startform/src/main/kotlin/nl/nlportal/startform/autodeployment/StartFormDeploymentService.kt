@@ -41,10 +41,11 @@ class StartFormDeploymentService(
                 val name = getStartFormName(resource)
                 val form = startFormService.findStartFormByFormName(name)
                 if (form == null) {
-                    val startForm = objectMapper.readValue(
-                        IOUtils.toString(resource.inputStream, StandardCharsets.UTF_8),
-                        StartForm::class.java,
-                    )
+                    val startForm =
+                        objectMapper.readValue(
+                            IOUtils.toString(resource.inputStream, StandardCharsets.UTF_8),
+                            StartForm::class.java,
+                        )
                     startFormService.createStartForm(startForm)
                 }
             }

@@ -26,13 +26,10 @@ import java.util.UUID
 class StartForm(
     @Id
     val id: UUID,
-
     @Column(name = "form_name")
     val formName: String,
-
     @Column(name = "type_uuid")
     val typeUUID: UUID,
-
     @Column(name = "type_version")
-    val typeVersion: Int
+    val typeVersion: Int,
 )

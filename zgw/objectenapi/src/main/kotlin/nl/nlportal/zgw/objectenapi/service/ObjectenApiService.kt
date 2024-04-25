@@ -61,7 +61,9 @@ class ObjectenApiService(
         )
     }
 
-    suspend inline fun <reified T> createObjectWithoutCorrection(createObjectsApiObjectRequestWithoutCorrection: CreateObjectsApiObjectRequestWithoutCorrection<T>): ObjectsApiObject<T> {
+    suspend inline fun <reified T> createObjectWithoutCorrection(
+        createObjectsApiObjectRequestWithoutCorrection: CreateObjectsApiObjectRequestWithoutCorrection<T>,
+    ): ObjectsApiObject<T> {
         return objectsApiClient.createObjectWithoutCorrection(
             createObjectsApiObjectRequestWithoutCorrection,
         )

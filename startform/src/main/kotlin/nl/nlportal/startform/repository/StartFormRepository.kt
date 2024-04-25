@@ -15,11 +15,10 @@
  */
 package nl.nlportal.startform.repository
 
-
 import nl.nlportal.startform.domain.StartForm
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.UUID
 
-interface StartFormRepository: JpaRepository<StartForm, UUID> {
+interface StartFormRepository : JpaRepository<StartForm, UUID> {
     fun findByFormName(formName: String): StartForm?
 }

@@ -35,14 +35,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 @EntityScan("nl.nlportal.startform.domain")
 @EnableConfigurationProperties(StartFormConfig::class)
 class StartFormAutoConfiguration {
-
     @Bean
     @ConditionalOnMissingBean(StartFormService::class)
     fun startFormService(
         startFormConfig: StartFormConfig,
         objectenApiService: ObjectenApiService,
         startFormRepository: StartFormRepository,
-        objectMapper: ObjectMapper
+        objectMapper: ObjectMapper,
     ): StartFormService {
         return StartFormService(objectMapper, objectenApiService, startFormConfig, startFormRepository)
     }
@@ -52,7 +51,7 @@ class StartFormAutoConfiguration {
     fun startFormDeploymentService(
         startFormService: StartFormService,
         resourceLoader: ResourceLoader,
-        objectMapper: ObjectMapper
+        objectMapper: ObjectMapper,
     ): StartFormDeploymentService {
         return StartFormDeploymentService(objectMapper, startFormService, resourceLoader)
     }
