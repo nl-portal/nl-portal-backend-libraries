@@ -16,7 +16,7 @@
             "value": "569312863"
           },
           "data": {
-            "pspid": "TAX",
+            "pspId": "TAX",
             "voornaam": "Peter"
           },
           "status": "open",

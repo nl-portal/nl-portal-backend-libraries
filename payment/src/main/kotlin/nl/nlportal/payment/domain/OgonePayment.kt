@@ -63,10 +63,10 @@ data class OgonePayment(
         ): OgonePayment {
             val successUrl =
                 paymentRequest.successUrl
-                    ?: (paymentProfile.successUrl + QUERYSTRING_ORDER_ID + paymentRequest.orderId)
+                    ?: (paymentProfile.successUrl)
             val failureUrl =
                 paymentRequest.failureUrl
-                    ?: (paymentProfile.failureUrl + QUERYSTRING_ORDER_ID + paymentRequest.orderId)
+                    ?: (paymentProfile.failureUrl)
             return OgonePayment(
                 pspId = paymentProfile.pspId,
                 currency = paymentProfile.currency,
@@ -97,7 +97,8 @@ data class OgonePayment(
         const val PAYMENT_PROPERTY_TITLE: String = "TITLE"
         const val PAYMENT_PROPERTY_SHASIGN: String = "SHASIGN"
         const val PAYMENT_PROPERTY_STATUS: String = "STATUS"
-        const val QUERYSTRING_ORDER_ID: String = "?orderId="
+        const val QUERYSTRING_ORDER_ID: String = "orderID"
+        const val TAAK_PSPID: String = "pspId"
     }
 }
 

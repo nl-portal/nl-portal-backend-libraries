@@ -86,7 +86,7 @@ class OgonePaymentService(
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request has not the correct status: $status")
         }
 
-        val orderId = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_ORDER_ID]?.get(0)
+        val orderId = serverHttpRequest.queryParams[OgonePayment.QUERYSTRING_ORDER_ID]?.get(0)
         val objectsApiTask = getObjectsApiTaak(UUID.fromString(orderId))
         if (objectsApiTask.record.data.status == TaakStatus.INGEDIEND) {
             return "Task is already completed"
@@ -94,7 +94,7 @@ class OgonePaymentService(
 
         // validate ogone request
         val pspIdFromTask =
-            objectsApiTask.record.data.data[OgonePayment.PAYMENT_PROPERTY_PSPID.lowercase()]
+            objectsApiTask.record.data.data[OgonePayment.TAAK_PSPID]
                 ?: return "Task does not have a pspId"
 
         if (!isValidOgoneRequest(serverHttpRequest, pspIdFromTask as String)) {
@@ -132,13 +132,14 @@ class OgonePaymentService(
         val fields = ArrayList<PaymentField>()
         queryStringParameters.forEach {
             // filter out only the accepted parameters
-            if (paymentConfig.shaOutParameters.contains(it.key)) {
-                fields.add(PaymentField(it.key.uppercase(), it.value[0]))
+            val uppercaseKey = it.key.uppercase()
+            if (paymentConfig.shaOutParameters.contains(uppercaseKey)) {
+                fields.add(PaymentField(uppercaseKey, it.value[0]))
             }
         }
 
         val paymentProfile = paymentConfig.getPaymentProfileByPspPid(pspId) ?: return false
-        val hashOutParameter = hashParameters(fields, paymentProfile.shaOutKey, paymentProfile.shaVersion)
+        val hashOutParameter = hashParameters(fields, paymentProfile.shaOutKey, paymentProfile.shaVersion).uppercase()
         val shaOutKey = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_SHASIGN]?.get(0)
 
         return hashOutParameter == shaOutKey
@@ -155,6 +156,7 @@ class OgonePaymentService(
             val parametersConcatenation = StringBuilder()
             paymentsParameters
                 .sortedBy { it.name }
+                .filterNot { field -> field.value.isEmpty() }
                 .forEach { field ->
                     parametersConcatenation
                         .append(field.name.uppercase(Locale.getDefault()))
@@ -162,7 +164,7 @@ class OgonePaymentService(
                         .append(field.value)
                         .append(shaKey)
                 }
-            logger.debug("SHA version: {} - {}", shaVersion, parametersConcatenation.toString())
+            logger.info("SHA version: {} - {}", shaVersion, parametersConcatenation.toString())
             return createHash(parametersConcatenation.toString(), shaVersion)
         }
 

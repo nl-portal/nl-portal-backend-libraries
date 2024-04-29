@@ -98,7 +98,7 @@ internal class OgonePaymentMutationIT(
             .expectBody()
             .consumeWith(Consumer { t -> logger.info { t } })
             .jsonPath(basePath).exists()
-            .jsonPath("$basePath.formFields[0].value").isEqualTo("http://localhost:3000?orderId=123456")
+            .jsonPath("$basePath.formFields[0].value").isEqualTo("http://localhost:3000")
             .jsonPath("$basePath.formFields[9].value").isEqualTo("10025")
             .jsonPath("$basePath.formFields[11].value").isEqualTo(shaSign)
     }
