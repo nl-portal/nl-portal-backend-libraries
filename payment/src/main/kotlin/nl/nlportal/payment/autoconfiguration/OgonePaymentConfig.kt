@@ -20,7 +20,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.payment.ogone", ignoreUnknownFields = true)
 data class OgonePaymentConfig(
-    val url: String = "https://secure.ogone.com/ncol/prod/orderstandard.asp",
+    val url: String,
     val shaOutParameters: List<String>,
     val configurations: Map<String, OgonePaymentProfile> = mapOf(),
 ) {
