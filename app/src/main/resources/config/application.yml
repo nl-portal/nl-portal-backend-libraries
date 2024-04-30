@@ -105,6 +105,7 @@ nl-portal:
                     secret: e09b8bc5-5831-4618-ab28-41411304309d
         startform:
             type-base-url: http://host.docker.internal:8011/api/v1
+            startFormLocations: classpath*:config/startform/*.json
     openklant:
         url: http://localhost:8006
         clientId: valtimo_client

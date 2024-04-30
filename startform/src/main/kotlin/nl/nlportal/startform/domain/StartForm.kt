@@ -32,4 +32,26 @@ class StartForm(
     val typeUUID: UUID,
     @Column(name = "type_version")
     val typeVersion: Int,
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as StartForm
+
+        if (id != other.id) return false
+        if (formName != other.formName) return false
+        if (typeUUID != other.typeUUID) return false
+        if (typeVersion != other.typeVersion) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + formName.hashCode()
+        result = 31 * result + typeUUID.hashCode()
+        result = 31 * result + typeVersion
+        return result
+    }
+}

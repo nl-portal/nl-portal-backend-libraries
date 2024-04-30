@@ -30,7 +30,8 @@ import nl.nlportal.startform.domain.AanvragerIdentificatie
 import nl.nlportal.startform.domain.StartFormDTO
 import nl.nlportal.startform.domain.StartFormObject
 import nl.nlportal.startform.repository.StartFormRepository
-import nl.nlportal.zgw.objectenapi.domain.*
+import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequestWithoutCorrection
+import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequestRecordWithoutCorrection
 import nl.nlportal.zgw.objectenapi.service.ObjectenApiService
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -59,7 +60,7 @@ class StartFormService(
             CreateObjectsApiObjectRequestRecordWithoutCorrection(
                 typeVersion = startForm.typeVersion,
                 data = objectMapper.valueToTree(startFormObject) as ObjectNode,
-                startAt = localDateTimeNowObejctsApiFormat(),
+                startAt = localDateTimeNowObjectsApiFormat(),
             )
 
         val objectsApiObjectRequest =
@@ -73,7 +74,7 @@ class StartFormService(
         return createdObject.uuid
     }
 
-    private fun localDateTimeNowObejctsApiFormat(): String {
+    private fun localDateTimeNowObjectsApiFormat(): String {
         val now = LocalDateTime.now()
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         return now.format(formatter)

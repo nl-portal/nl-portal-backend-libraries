@@ -20,4 +20,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties(prefix = "nl-portal.zgw.startform")
 class StartFormConfig(
     var typeBaseUrl: String = "",
+    var startFormLocations: String = "classpath*:config/startform/*.json",
 )

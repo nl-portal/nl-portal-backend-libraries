@@ -17,6 +17,7 @@ package nl.nlportal.startform.autodeployment
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import mu.KotlinLogging
+import nl.nlportal.startform.autoconfigure.StartFormConfig
 import nl.nlportal.startform.domain.StartForm
 import nl.nlportal.startform.service.StartFormService
 import org.apache.commons.io.IOUtils
@@ -30,6 +31,7 @@ class StartFormDeploymentService(
     private val objectMapper: ObjectMapper,
     private val startFormService: StartFormService,
     private val resourceLoader: ResourceLoader,
+    private val startFormConfig: StartFormConfig,
 ) {
     fun deployAllFromResourceFiles() =
         try {
@@ -41,12 +43,13 @@ class StartFormDeploymentService(
                 val name = getStartFormName(resource)
                 val form = startFormService.findStartFormByFormName(name)
                 if (form == null) {
-                    val startForm =
-                        objectMapper.readValue(
-                            IOUtils.toString(resource.inputStream, StandardCharsets.UTF_8),
-                            StartForm::class.java,
-                        )
+                    val startForm = startFormFromResource(resource)
                     startFormService.createStartForm(startForm)
+                } else {
+                    val startForm = startFormFromResource(resource)
+                    if (!form.equals(startForm)) {
+                        startFormService.createStartForm(form)
+                    }
                 }
             }
         } catch (e: IOException) {
@@ -61,15 +64,20 @@ class StartFormDeploymentService(
         return formName!!
     }
 
+    private fun startFormFromResource(resource: Resource) =
+        objectMapper.readValue(
+            IOUtils.toString(resource.inputStream, StandardCharsets.UTF_8),
+            StartForm::class.java,
+        )
+
     @Throws(IOException::class)
     private fun loadResources(): Array<Resource> {
         return ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources(
-            PATH,
+            startFormConfig.startFormLocations,
         )
     }
 
     companion object {
-        const val PATH = "classpath*:config/startform/*.json"
         private val logger = KotlinLogging.logger {}
     }
 }

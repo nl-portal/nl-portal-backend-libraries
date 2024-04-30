@@ -52,8 +52,9 @@ class StartFormAutoConfiguration {
         startFormService: StartFormService,
         resourceLoader: ResourceLoader,
         objectMapper: ObjectMapper,
+        startFormConfig: StartFormConfig,
     ): StartFormDeploymentService {
-        return StartFormDeploymentService(objectMapper, startFormService, resourceLoader)
+        return StartFormDeploymentService(objectMapper, startFormService, resourceLoader, startFormConfig)
     }
 
     @Bean
