@@ -37,7 +37,6 @@ class CommonGroundAuthenticationConverter(
     private val jwtGrantedAuthoritiesConverter = JwtGrantedAuthoritiesConverter()
     private val webClient = WebClient.create()
 
-    // TODO: remove support for bsn and kvk keys directly in the root of the JWT
     override fun convert(jwt: Jwt): Mono<CommonGroundAuthentication> {
         return tokenExchange(jwt).flatMap {
             decoder.decode(it.accessToken).map { exchangedJwt ->
