@@ -28,6 +28,7 @@ import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
+import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
 import nl.nlportal.zgw.taak.domain.TaakObject
 import nl.nlportal.zgw.taak.domain.TaakStatus
 import org.apache.commons.codec.digest.DigestUtils
@@ -40,6 +41,7 @@ import java.util.*
 
 class OgonePaymentService(
     private val paymentConfig: OgonePaymentConfig,
+    private val objectsApiTaskConfig: TaakObjectConfig,
     private val objectsApiClient: ObjectsApiClient,
 ) {
     fun createPayment(paymentRequest: OgonePaymentRequest): OgonePayment {
@@ -118,7 +120,7 @@ class OgonePaymentService(
 
         return objectsApiClient.getObjects<TaakObject>(
             objectSearchParameters = objectSearchParameters,
-            objectTypeUrl = paymentConfig.taakTypeUrl,
+            objectTypeUrl = objectsApiTaskConfig.typeUrl,
             page = 1,
             pageSize = 2,
         ).results.single()
