@@ -1,0 +1,34 @@
+{
+  "url": "http://localhost:8010/api/v2/objects/2d725c07-2f26-4705-8637-438a42b5ac2d",
+  "uuid": "7d9cd6c2-8147-46f2-9ae9-c67e8213c200",
+  "type": "http://localhost:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb35",
+  "record": {
+    "index": 1,
+    "typeVersion": 1,
+    "data": {
+      "id": "7d9cd6c2-8147-46f2-9ae9-c67e8213c200",
+      "naam": "erfpacht",
+      "CIMCode": "7d9cd6c2-8147-46f2-9ae9-c67e8213c116",
+      "statussen": {
+          "actief": "Actief",
+          "inaanvraag": "In aanvraag"
+      },
+      "zaakTypen": [
+        "7d9cd6c2-8147-46f2-9ae9-c67e8213c300"
+      ],
+      "eigenschappen": {
+        "contractnummer": "123456"
+      },
+      "omschrijving": "Dit is een voorbeeld van een product",
+      "beslistabellen": {
+          "regellinks": "https://www.example.com/mytable"
+      }
+    },
+    "geometry": null,
+    "startAt": "2022-05-25",
+    "endAt": null,
+    "registrationAt": "2022-05-25",
+    "correctionFor": null,
+    "correctedBy": null
+  }
+}

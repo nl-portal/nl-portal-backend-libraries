@@ -1,0 +1,11 @@
+query {
+    getProducten(productName: "erfpacht") {
+            number
+            size
+            totalElements
+            numberOfElements
+            content {
+                naam
+            }
+        }
+}

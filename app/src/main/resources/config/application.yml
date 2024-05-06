@@ -142,3 +142,8 @@ nl-portal:
                   allowedMethods: "*"
         #endpoints:
             #unsecured: /playground, /actuator/**
+    product:
+        product-type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34
+        product-instantie-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34
+        product-details-type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34pos
+        product-verbruiks-object-type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34pos

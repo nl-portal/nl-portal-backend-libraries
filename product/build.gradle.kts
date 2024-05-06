@@ -21,6 +21,8 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     api(project(":core"))
     api(project(":graphql"))
+    api(project(":zgw:zaken-api"))
+    api(project(":zgw:taak"))
 
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
