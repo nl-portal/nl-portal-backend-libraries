@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2021 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,17 @@
  */
 package nl.nlportal.commonground.authentication
 
-import nl.nlportal.portal.authentication.domain.AuthenticationGemachtigde
+import nl.nlportal.portal.authentication.domain.SUB_KEY
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.oauth2.jwt.Jwt
 
-class AuthenticationGemachtigde(
-    val bsn: String? = null,
-    val kvk: String? = null,
-    val uid: String? = null,
-) : AuthenticationGemachtigde()
+class KeycloakUserAuthentication(
+    jwt: Jwt,
+    authorities: Collection<GrantedAuthority>?,
+) : CommonGroundAuthentication(jwt, authorities) {
+    override fun getUserId(): String {
+        return jwt.claims[SUB_KEY].toString().substring(0, 13)
+    }
+
+    override fun getUserRepresentation() = "UID:${getUserId()}"
+}

@@ -13,12 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.commonground.authentication
+package nl.nlportal.portal.authentication.exception
 
-import nl.nlportal.portal.authentication.domain.AuthenticationGemachtigde
-
-class AuthenticationGemachtigde(
-    val bsn: String? = null,
-    val kvk: String? = null,
-    val uid: String? = null,
-) : AuthenticationGemachtigde()
+class UserTypeUnsupportedException(msg: String) : RuntimeException(msg)

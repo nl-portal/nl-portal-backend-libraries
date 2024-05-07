@@ -15,34 +15,36 @@
  */
 package nl.nlportal.commonground.authentication
 
+import nl.nlportal.portal.authentication.domain.PortalAuthentication
+import nl.nlportal.portal.authentication.domain.SUB_KEY
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.oauth2.jwt.Jwt
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 
 abstract class CommonGroundAuthentication(
-    val jwt: Jwt,
+    override val jwt: Jwt,
     authorities: Collection<GrantedAuthority>?,
-) : JwtAuthenticationToken(jwt, authorities) {
+) : PortalAuthentication(jwt, authorities) {
     /**
      * Gets gemachtigde identification property from the JWT
      *
      * @return Gemachtigde
      */
-    fun getGemachtigde(): AuthenticationGemachtigde? {
+    override fun getGemachtigde(): AuthenticationGemachtigde? {
         val gemachtigde = jwt.claims[GEMACHTIGDE_KEY]
         if (gemachtigde is Map<*, *>) {
             return AuthenticationGemachtigde(
                 gemachtigde[BSN_KEY]?.toString(),
                 gemachtigde[KVK_NUMMER_KEY]?.toString(),
+                gemachtigde[SUB_KEY]?.toString(),
             )
         }
 
         return null
     }
 
-    open fun getUserId() = "valtimo"
+    override fun getUserId() = "valtimo"
 
-    open fun getUserRepresentation() = "Valtimo"
+    override fun getUserRepresentation() = "Valtimo"
 }
 
 const val BSN_KEY = "bsn"

@@ -13,12 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.commonground.authentication
+package nl.nlportal.portal.authentication.domain
 
-import nl.nlportal.portal.authentication.domain.AuthenticationGemachtigde
-
-class AuthenticationGemachtigde(
-    val bsn: String? = null,
-    val kvk: String? = null,
-    val uid: String? = null,
-) : AuthenticationGemachtigde()
+open class AuthenticationGemachtigde(
+    val userUUID: String? = null,
+)

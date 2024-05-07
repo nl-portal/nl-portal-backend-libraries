@@ -13,12 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.commonground.authentication
+package nl.nlportal.portal.authentication
 
-import nl.nlportal.portal.authentication.domain.AuthenticationGemachtigde
+import nl.nlportal.portal.authentication.domain.SUB_KEY
+import org.springframework.security.oauth2.jwt.Jwt
+import java.util.UUID
 
-class AuthenticationGemachtigde(
-    val bsn: String? = null,
-    val kvk: String? = null,
-    val uid: String? = null,
-) : AuthenticationGemachtigde()
+class JwtBuilder {
+    private var jwtBuilder: Jwt.Builder =
+        Jwt
+            .withTokenValue("token")
+            .header("alg", "none")
+
+    fun buildJwt(): Jwt {
+        jwtBuilder.claim("claims", "claim")
+        return jwtBuilder.build()
+    }
+
+    fun addKeycloakUUIDToClaims(uuid: UUID): Jwt.Builder {
+        jwtBuilder.claim(SUB_KEY, uuid)
+        return jwtBuilder
+    }
+}

@@ -45,6 +45,7 @@ include(
     "klantcontactmomenten",
     "messaging",
     "product",
+    "portal-authentication",
     "payment",
     "zgw:catalogi-api",
     "zgw:common-ground-authentication",
@@ -55,4 +56,3 @@ include(
     "zgw:zaken-api",
     "zgw:objectenapi",
 )
-include("portal-authentication")
