@@ -1,6 +1,6 @@
 {
     "url": "http://localhost:8010/api/v2/objects/2d725c07-2f26-4705-8637-438a42b5ac2d",
-    "uuid": "2d725c07-2f26-4705-8637-438a42b5ac2d",
+    "uuid": "58fad5ab-dc2f-11ec-9075-f22a405ce708",
     "type": "http://localhost:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb35",
     "record": {
         "index": 1,
@@ -18,7 +18,7 @@
                 "type": "id",
                 "value": "check-loan-form"
             },
-            "verwerker_taak_id": "7d9cd6c2-8147-46f2-9ae9-c67e8213c201",
+            "verwerker_taak_id": "58fad5ab-dc2f-11ec-9075-f22a405ce708",
             "title": "Very important task"
         },
         "geometry": null,

@@ -50,6 +50,7 @@ internal class ProductQueryIT(
     @Autowired private val graphqlGetProduct: String,
     @Autowired private val graphqlGetProducten: String,
     @Autowired private val graphqlGetProductZaken: String,
+    @Autowired private val graphqlGetProductTaken: String,
     @Autowired private val graphqlGetProductZakenNotFound: String,
     @Autowired private val graphqlGetProductVerbruiksObjecten: String,
     @Autowired private val graphqlGetProductType: String,
@@ -197,6 +198,38 @@ internal class ProductQueryIT(
             .jsonPath("$basePath.naam").isEqualTo("erfpacht")
     }
 
+    @Test
+    @WithBurgerUser("569312863")
+    fun getProductTakenTestBurger() {
+        val basePath = "$.data.getProductTaken"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(graphqlGetProductTaken)
+            .exchange()
+            .verifyOnlyDataExists(basePath)
+            .jsonPath("$basePath.size()").isEqualTo(2)
+            .jsonPath("$basePath[0].id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
+            .jsonPath("$basePath[0].title").isEqualTo("Taak linked to Zaak")
+    }
+
+    @Test
+    @WithBurgerUser("569312864")
+    fun getProductTakenTestBurgerNoTaken() {
+        val basePath = "$.data.getProductTaken"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(graphqlGetProductTaken)
+            .exchange()
+            .verifyOnlyDataExists(basePath)
+            .jsonPath("$basePath.size()").isEqualTo(0)
+    }
+
     fun setupMockOpenZaakServer() {
         val dispatcher: Dispatcher =
             object : Dispatcher() {
@@ -207,8 +240,12 @@ internal class ProductQueryIT(
                     val response =
                         when (request.method + " " + path) {
                             "GET /api/v2/objects" -> {
-                                if (queryParams.any { it.contains("zaak__icontains__50f8cb8a-446b-428e-902b-714b8f03277a") }) {
+                                if (queryParams.any { it.contains("identificatie__value__exact__569312863") }
+                                ) {
                                     TestHelper.mockResponseFromFile("/product/data/get-taken.json")
+                                } else if (queryParams.any { it.contains("identificatie__value__exact__569312864") }
+                                ) {
+                                    TestHelper.mockResponseFromFile("/product/data/get-taken-empty.json")
                                 } else if (queryParams.any {
                                         it.contains(
                                             "productInstantie__exact__2d725c07-2f26-4705-8637-438a42b5ac2d",
@@ -250,7 +287,7 @@ internal class ProductQueryIT(
                             "GET /zaken/api/v1/zaken/7d9cd6c2-8147-46f2-9ae9-c67e8213c202" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-zaak.json")
                             }
-                            "GET /api/v2/objects/7d9cd6c2-8147-46f2-9ae9-c67e8213c201" -> {
+                            "GET /api/v2/objects/58fad5ab-dc2f-11ec-9075-f22a405ce708" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-taak.json")
                             }
                             else -> MockResponse().setResponseCode(404)

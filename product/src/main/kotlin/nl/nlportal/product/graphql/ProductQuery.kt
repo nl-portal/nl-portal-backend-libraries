@@ -25,12 +25,13 @@ import nl.nlportal.product.service.ProductService
 import nl.nlportal.graphql.security.SecurityConstants
 import nl.nlportal.product.graphql.ProductPage
 import nl.nlportal.zakenapi.domain.Zaak
+import nl.nlportal.zgw.taak.domain.Taak
 import java.util.*
 
 class ProductQuery(
     private val productService: ProductService,
 ) : Query {
-    @GraphQLDescription("Get list of products by productType Id")
+    @GraphQLDescription("Get list of products by product name")
     suspend fun getProducten(
         dfe: DataFetchingEnvironment,
         productName: String,
@@ -56,7 +57,7 @@ class ProductQuery(
         )
     }
 
-    @GraphQLDescription("Get list of zaken by productType Id ")
+    @GraphQLDescription("Get list of zaken by product name ")
     suspend fun getProductZaken(
         dfe: DataFetchingEnvironment,
         productName: String,
@@ -66,8 +67,21 @@ class ProductQuery(
             dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
             productName,
             pageNumber = 1,
+        ).take(pageSize ?: 20)
+    }
+
+    @GraphQLDescription("Get list of taken by product name ")
+    suspend fun getProductTaken(
+        dfe: DataFetchingEnvironment,
+        productName: String,
+        pageSize: Int? = 20,
+    ): List<Taak> {
+        return productService.getProductTaken(
+            dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+            productName,
+            pageNumber = 1,
             pageSize = pageSize ?: 20,
-        )
+        ).take(pageSize ?: 20)
     }
 
     @GraphQLDescription("Get list of verbruiksobjecten of product ")

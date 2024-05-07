@@ -16,8 +16,6 @@
 package nl.nlportal.product.service
 
 import com.fasterxml.jackson.databind.node.ObjectNode
-import mu.KLogger
-import mu.KotlinLogging
 import nl.nlportal.product.client.ProductConfig
 import nl.nlportal.product.domain.Product
 import nl.nlportal.product.domain.ProductDetails
@@ -27,6 +25,8 @@ import nl.nlportal.product.graphql.ProductPage
 import nl.nlportal.commonground.authentication.BedrijfAuthentication
 import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.commonground.authentication.exception.UserTypeUnsupportedException
+import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.client.ZakenApiConfig
 import nl.nlportal.zakenapi.domain.Zaak
@@ -37,6 +37,9 @@ import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
+import nl.nlportal.zgw.taak.domain.Taak
+import nl.nlportal.zgw.taak.domain.TaakObject
+import nl.nlportal.zgw.taak.graphql.TaakPage
 import java.util.*
 
 class ProductService(
@@ -45,6 +48,7 @@ class ProductService(
     val zakenApiClient: ZakenApiClient,
     val taakObjectConfig: TaakObjectConfig,
     val zakenApiConfig: ZakenApiConfig,
+    val objectsApiTaskConfig: TaakObjectConfig,
 ) {
     suspend fun getProduct(
         authentication: CommonGroundAuthentication,
@@ -104,7 +108,6 @@ class ProductService(
         authentication: CommonGroundAuthentication,
         productName: String,
         pageNumber: Int,
-        pageSize: Int,
     ): List<Zaak> {
         // first determine the bsn or kvkNumber
         val (bsnNummer, kvkNummer) = determineAuthenticationType(authentication)
@@ -114,16 +117,69 @@ class ProductService(
 
         // loop through the zakenTypes and get all the zaken
         productType.zaakTypen.forEach { zaakId ->
-            zakenApiClient.getZaken(
-                pageNumber,
-                bsnNummer,
-                kvkNummer,
-                "${zakenApiConfig.url}/catalogi/api/v1/zaaktypen/$zaakId",
-            ).results.forEach { zaak ->
-                zaken.add(zaak)
-            }
+            zaken.addAll(
+                zakenApiClient.getZaken(
+                    pageNumber,
+                    bsnNummer,
+                    kvkNummer,
+                    "${zakenApiConfig.url}/catalogi/api/v1/zaaktypen/$zaakId",
+                ).results,
+            )
         }
-        return zaken.take(pageSize)
+        return zaken
+            .sortedBy { it.startdatum }
+    }
+
+    suspend fun getProductTaken(
+        authentication: CommonGroundAuthentication,
+        productName: String,
+        pageNumber: Int,
+        pageSize: Int,
+    ): List<Taak> {
+        val objectSearchParameters = mutableListOf<ObjectSearchParameter>()
+
+        objectSearchParameters.addAll(getUserSearchParameters(authentication))
+        objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, "open"))
+
+        val taken =
+            getObjectsApiObjectResultPage<TaakObject>(
+                objectsApiTaskConfig.typeUrl,
+                objectSearchParameters,
+                pageNumber,
+                pageSize,
+            ).let { resultPage ->
+                TaakPage.fromResultPage(pageNumber, pageSize, resultPage)
+            }
+                .content
+
+        // when no tasks are found, just return immediately
+        if (taken.isEmpty()) {
+            return taken
+        }
+
+        val zaken =
+            getProductZaken(
+                authentication,
+                productName,
+                pageNumber,
+            )
+
+        val producten =
+            getProducten(
+                authentication,
+                productName,
+                pageNumber,
+                999,
+            )
+                .content
+
+        // filter out the taak which is not connected to a zaak or product
+        return taken
+            .filterNot { task ->
+                !zaken.any { it.uuid == task.zaak?.let { zaakId -> CoreUtils.extractId(zaakId) } } &&
+                    !producten.any { it.taken.contains(task.id) }
+            }
+            .sortedBy { it.verloopdatum }
     }
 
     suspend fun updateVerbruiksObject(
@@ -228,7 +284,27 @@ class ProductService(
         return bsnNummer to kvkNummer
     }
 
-    companion object {
-        val logger: KLogger = KotlinLogging.logger {}
+    private fun getUserSearchParameters(authentication: CommonGroundAuthentication): List<ObjectSearchParameter> {
+        return when (authentication) {
+            is BurgerAuthentication -> {
+                createIdentificatieSearchParameters("bsn", authentication.getBsn())
+            }
+
+            is BedrijfAuthentication -> {
+                createIdentificatieSearchParameters("kvk", authentication.getKvkNummer())
+            }
+
+            else -> throw UserTypeUnsupportedException("User type not supported")
+        }
+    }
+
+    private fun createIdentificatieSearchParameters(
+        type: String,
+        value: String,
+    ): List<ObjectSearchParameter> {
+        return listOf(
+            ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, type),
+            ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, value),
+        )
     }
 }

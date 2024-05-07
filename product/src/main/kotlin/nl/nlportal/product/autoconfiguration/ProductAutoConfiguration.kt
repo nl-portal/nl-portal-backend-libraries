@@ -63,6 +63,7 @@ class ProductAutoConfiguration {
         zakenApiClient: ZakenApiClient,
         taakObjectConfig: TaakObjectConfig,
         zakenApiConfig: ZakenApiConfig,
+        objectsApiTaskConfig: TaakObjectConfig,
     ): ProductService {
         return ProductService(
             productConfig,
@@ -70,6 +71,7 @@ class ProductAutoConfiguration {
             zakenApiClient,
             taakObjectConfig,
             zakenApiConfig,
+            objectsApiTaskConfig,
         )
     }
 
