@@ -31,7 +31,7 @@ data class UpdateObjectsApiObjectRequest<T>(
 
 data class UpdateObjectsApiObjectRequestRecord<T>(
     val typeVersion: Int,
-    val data: T,
+    var data: T,
     val startAt: String,
     var correctionFor: String? = null,
     var correctedBy: String? = null,
