@@ -16,8 +16,10 @@
 package nl.nlportal.product.domain
 
 import com.fasterxml.jackson.databind.node.ObjectNode
+import java.util.*
 
 data class ProductVerbruiksObject(
+    var id: UUID?,
     val type: String,
     val productInstantie: String,
     var data: ObjectNode?,

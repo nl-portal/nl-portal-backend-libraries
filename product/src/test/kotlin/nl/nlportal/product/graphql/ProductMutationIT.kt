@@ -99,7 +99,6 @@ internal class ProductMutationIT(
     @WithBurgerUser("569312863")
     fun updateVerbruikdObjectTestBurger() {
         val basePath = "$.data.updateProductVerbruiksObject"
-        val resultPath = "$basePath.content[0]"
 
         testClient.post()
             .uri("/graphql")
@@ -108,6 +107,7 @@ internal class ProductMutationIT(
             .bodyValue(graphqlUpdateProductVerbruiksObject)
             .exchange()
             .verifyOnlyDataExists(basePath)
+            .jsonPath("$basePath.id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5a800")
     }
 
     fun setupMockOpenZaakServer() {

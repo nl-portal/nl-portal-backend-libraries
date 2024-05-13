@@ -101,7 +101,11 @@ class ProductService(
             objectSearchParameters,
             pageNumber,
             pageSize,
-        ).results.map { it.record.data }
+        ).results.map {
+            val verbruiksObject = it.record.data
+            verbruiksObject.id = it.uuid
+            verbruiksObject
+        }
     }
 
     suspend fun getProductZaken(
@@ -204,7 +208,9 @@ class ProductService(
         updateRequest.record.correctionFor = objectsApiVerbruiksObject.record.index.toString()
 
         val updatedObjectsApiTask = objectsApiClient.updateObject(objectsApiVerbruiksObject.uuid, updateRequest)
-        return updatedObjectsApiTask.record.data
+        val verbruiksObject = updatedObjectsApiTask.record.data
+        verbruiksObject.id = updatedObjectsApiTask.uuid
+        return verbruiksObject
     }
 
     suspend fun getProductDetails(productInstantieId: UUID): ProductDetails? {

@@ -19,7 +19,6 @@ import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.node.ObjectNode
 import nl.nlportal.product.service.ProductService
-import nl.nlportal.core.util.Mapper
 import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.taak.domain.Taak
@@ -60,15 +59,17 @@ class Product(
         @GraphQLIgnore
         @Autowired
         productService: ProductService,
-    ): ObjectNode {
-        val verbruiksobjectMap = mutableMapOf<String, ProductVerbruiksObject?>()
+    ): List<ProductVerbruiksObject> {
+        val verbruiksobjects = mutableListOf<ProductVerbruiksObject>()
         verbruiksobjecten.mapNotNull {
-            val verbruiksObject = productService.getObjectsApiObjectById<ProductVerbruiksObject>(it.value)
-            if (verbruiksObject != null) {
-                verbruiksobjectMap[it.key] = verbruiksObject.record.data
+            val result = productService.getObjectsApiObjectById<ProductVerbruiksObject>(it.value)
+            if (result != null) {
+                val verbruiksobject = result.record.data
+                verbruiksobject.id = result.uuid
+                verbruiksobjects.add(verbruiksobject)
             }
         }
-        return Mapper.get().convertValue(verbruiksobjectMap, ObjectNode::class.java)
+        return verbruiksobjects
     }
 
     suspend fun productDetails(
