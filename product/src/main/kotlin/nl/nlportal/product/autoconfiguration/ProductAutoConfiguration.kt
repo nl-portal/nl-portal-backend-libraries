@@ -16,46 +16,20 @@
 package nl.nlportal.product.autoconfiguration
 
 import nl.nlportal.backend.product.graphql.ProductQuery
-import nl.nlportal.product.client.OpenFormulierenClient
-import nl.nlportal.product.client.OpenFormulierenClientConfig
 import nl.nlportal.product.client.ProductConfig
-import nl.nlportal.product.graphql.FormQuery
 import nl.nlportal.product.graphql.ProductMutation
-import nl.nlportal.product.service.FormService
 import nl.nlportal.product.service.ProductService
 import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.client.ZakenApiConfig
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
 import org.springframework.boot.autoconfigure.AutoConfiguration
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
-@EnableConfigurationProperties(OpenFormulierenClientConfig::class, ProductConfig::class)
+@EnableConfigurationProperties(ProductConfig::class)
 class ProductAutoConfiguration {
-    @Bean
-    fun openFormulierenClientConfig(): OpenFormulierenClientConfig {
-        return OpenFormulierenClientConfig()
-    }
-
-    @Bean
-    fun openFormulierenClient(openFormulierenClientConfig: OpenFormulierenClientConfig): OpenFormulierenClient {
-        return OpenFormulierenClient(openFormulierenClientConfig)
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(FormService::class)
-    fun formService(openFormulierenClient: OpenFormulierenClient): FormService {
-        return nl.nlportal.product.service.impl.FormService(openFormulierenClient)
-    }
-
-    @Bean
-    fun formQuery(formService: FormService): FormQuery {
-        return FormQuery(formService)
-    }
-
     @Bean
     fun productService(
         productConfig: ProductConfig,

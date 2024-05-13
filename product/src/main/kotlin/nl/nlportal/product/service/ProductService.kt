@@ -116,13 +116,13 @@ class ProductService(
         val productType = getProductType(productName)
 
         // loop through the zakenTypes and get all the zaken
-        productType.zaakTypen.forEach { zaakId ->
+        productType.zaakTypen.forEach { zaakTypeId ->
             zaken.addAll(
                 zakenApiClient.getZaken(
                     pageNumber,
                     bsnNummer,
                     kvkNummer,
-                    "${zakenApiConfig.url}/catalogi/api/v1/zaaktypen/$zaakId",
+                    "${zakenApiConfig.url}/catalogi/api/v1/zaaktypen/$zaakTypeId",
                 ).results,
             )
         }
@@ -228,10 +228,15 @@ class ProductService(
             listOf(
                 ObjectSearchParameter("naam", Comparator.EQUAL_TO, productName),
             )
-        return getObjectsApiObject<ProductType>(
-            productConfig.productTypeUrl,
-            objectSearchParameters,
-        ).record.data
+        val result =
+            getObjectsApiObject<ProductType>(
+                productConfig.productTypeUrl,
+                objectSearchParameters,
+            )
+
+        val productType = result.record.data
+        productType.id = result.uuid
+        return productType
     }
 
     suspend inline fun <reified T> getObjectsApiObjectById(id: String): ObjectsApiObject<T>? {

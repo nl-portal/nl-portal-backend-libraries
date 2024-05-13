@@ -29,7 +29,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 class Product(
-    val id: UUID,
+    var id: UUID?,
     @GraphQLIgnore
     @JsonProperty("PDCProductType")
     val productTypeId: String,
@@ -63,9 +63,9 @@ class Product(
     ): ObjectNode {
         val verbruiksobjectMap = mutableMapOf<String, ProductVerbruiksObject?>()
         verbruiksobjecten.mapNotNull {
-            val verbuiksObject = productService.getObjectsApiObjectById<ProductVerbruiksObject>(it.value)
-            if (verbuiksObject != null) {
-                verbruiksobjectMap[it.key] = verbuiksObject.record.data
+            val verbruiksObject = productService.getObjectsApiObjectById<ProductVerbruiksObject>(it.value)
+            if (verbruiksObject != null) {
+                verbruiksobjectMap[it.key] = verbruiksObject.record.data
             }
         }
         return Mapper.get().convertValue(verbruiksobjectMap, ObjectNode::class.java)
@@ -76,7 +76,7 @@ class Product(
         @Autowired
         productService: ProductService,
     ): ProductDetails? {
-        return productService.getProductDetails(id)
+        return id?.let { productService.getProductDetails(it) }
     }
 
     suspend fun zaken(
@@ -104,7 +104,9 @@ class Product(
 
     companion object {
         fun fromObjectsApiProduct(objectsApiTask: ObjectsApiObject<Product>): Product {
-            return objectsApiTask.record.data
+            val product = objectsApiTask.record.data
+            product.id = objectsApiTask.uuid
+            return product
         }
     }
 }

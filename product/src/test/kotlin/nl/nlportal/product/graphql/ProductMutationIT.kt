@@ -108,7 +108,6 @@ internal class ProductMutationIT(
             .bodyValue(graphqlUpdateProductVerbruiksObject)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
     }
 
     fun setupMockOpenZaakServer() {

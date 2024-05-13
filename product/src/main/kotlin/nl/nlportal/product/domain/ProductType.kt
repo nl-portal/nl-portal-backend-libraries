@@ -19,7 +19,7 @@ import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import java.util.*
 
 data class ProductType(
-    val id: UUID,
+    var id: UUID?,
     val naam: String,
     val omschrijving: String?,
     @GraphQLIgnore
