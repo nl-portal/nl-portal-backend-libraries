@@ -16,7 +16,7 @@
 package nl.nlportal.product.domain
 
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
-import java.util.*
+import java.util.UUID
 
 data class ProductType(
     var id: UUID?,

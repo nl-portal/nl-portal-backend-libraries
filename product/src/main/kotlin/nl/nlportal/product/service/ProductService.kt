@@ -16,6 +16,7 @@
 package nl.nlportal.product.service
 
 import com.fasterxml.jackson.databind.node.ObjectNode
+import mu.KotlinLogging
 import nl.nlportal.product.client.ProductConfig
 import nl.nlportal.product.domain.Product
 import nl.nlportal.product.domain.ProductDetails
@@ -56,13 +57,15 @@ class ProductService(
     ): Product {
         val objectSearchParameters =
             listOf(
-                ObjectSearchParameter("rollen__initiator__identificatie", Comparator.EQUAL_TO, authentication.getUserId()),
-                ObjectSearchParameter("id", Comparator.EQUAL_TO, id.toString()),
+                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.getUserId()),
+                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_ID, Comparator.EQUAL_TO, id.toString()),
             )
         return getObjectsApiObject<Product>(
             productConfig.productTypeUrl,
             objectSearchParameters,
-        ).record.data
+        ).apply {
+            this.record.data.id = this.uuid
+        }.record.data
     }
 
     suspend fun getProducten(
@@ -74,7 +77,7 @@ class ProductService(
         val productType = getProductType(productName)
         val objectSearchParametersProducten =
             listOf(
-                ObjectSearchParameter("rollen__initiator__identificatie", Comparator.EQUAL_TO, authentication.getUserId()),
+                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.getUserId()),
                 ObjectSearchParameter("PDCProductType", Comparator.EQUAL_TO, productType.id.toString()),
             )
         return getObjectsApiObjectResultPage<Product>(
@@ -93,8 +96,8 @@ class ProductService(
     ): List<ProductVerbruiksObject> {
         val objectSearchParameters =
             listOf(
-                ObjectSearchParameter("rollen__initiator__identificatie", Comparator.EQUAL_TO, authentication.getUserId()),
-                ObjectSearchParameter("productInstantie", Comparator.EQUAL_TO, productId.toString()),
+                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.getUserId()),
+                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_INSTANTIE, Comparator.EQUAL_TO, productId.toString()),
             )
         return getObjectsApiObjectResultPage<ProductVerbruiksObject>(
             productConfig.productVerbruiksObjectTypeUrl,
@@ -102,9 +105,8 @@ class ProductService(
             pageNumber,
             pageSize,
         ).results.map {
-            val verbruiksObject = it.record.data
-            verbruiksObject.id = it.uuid
-            verbruiksObject
+            it.record.data.id = it.uuid
+            it.record.data
         }
     }
 
@@ -193,8 +195,8 @@ class ProductService(
     ): ProductVerbruiksObject {
         val objectSearchParameters =
             listOf(
-                ObjectSearchParameter("rollen__initiator__identificatie", Comparator.EQUAL_TO, authentication.getUserId()),
-                ObjectSearchParameter("id", Comparator.EQUAL_TO, id.toString()),
+                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.getUserId()),
+                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_ID, Comparator.EQUAL_TO, id.toString()),
             )
         val objectsApiVerbruiksObject =
             getObjectsApiObject<ProductVerbruiksObject>(
@@ -217,13 +219,15 @@ class ProductService(
         return try {
             val objectSearchParameters =
                 listOf(
-                    ObjectSearchParameter("productInstantie", Comparator.EQUAL_TO, productInstantieId.toString()),
+                    ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_INSTANTIE, Comparator.EQUAL_TO, productInstantieId.toString()),
                 )
 
             getObjectsApiObject<ProductDetails>(
                 productConfig.productDetailsTypeUrl,
                 objectSearchParameters,
-            ).record.data
+            ).apply {
+                this.record.data.id = this.uuid
+            }.record.data
         } catch (ex: Exception) {
             null
         }
@@ -234,15 +238,12 @@ class ProductService(
             listOf(
                 ObjectSearchParameter("naam", Comparator.EQUAL_TO, productName),
             )
-        val result =
-            getObjectsApiObject<ProductType>(
-                productConfig.productTypeUrl,
-                objectSearchParameters,
-            )
-
-        val productType = result.record.data
-        productType.id = result.uuid
-        return productType
+        return getObjectsApiObject<ProductType>(
+            productConfig.productTypeUrl,
+            objectSearchParameters,
+        ).apply {
+            this.record.data.id = this.uuid
+        }.record.data
     }
 
     suspend inline fun <reified T> getObjectsApiObjectById(id: String): ObjectsApiObject<T>? {
@@ -317,5 +318,13 @@ class ProductService(
             ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, type),
             ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, value),
         )
+    }
+
+    companion object {
+        const val OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE = "rollen__initiator__identificatie"
+        const val OBJECT_SEARCH_PARAMETER_PRODUCT_INSTANTIE = "productInstantie"
+        const val OBJECT_SEARCH_PARAMETER_PRODUCT_ID = "id"
+
+        val logger = KotlinLogging.logger {}
     }
 }

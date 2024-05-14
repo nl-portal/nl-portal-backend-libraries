@@ -117,6 +117,7 @@ internal class ProductQueryIT(
             .bodyValue(graphqlGetProducten)
             .exchange()
             .verifyOnlyDataExists(basePath)
+            .jsonPath("$resultPath.id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
             .jsonPath("$resultPath.naam").isEqualTo("erfpacht")
     }
 
@@ -137,6 +138,7 @@ internal class ProductQueryIT(
             .jsonPath("$basePath.zaken[0].omschrijving").isEqualTo("Lopende zaak")
             .jsonPath("$basePath.taken[0].title").isEqualTo("Very important task")
             .jsonPath("$basePath.verbruiksobjecten[0].id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5a800")
+            .jsonPath("$basePath.productDetails.id").isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c500")
     }
 
     @Test
@@ -197,6 +199,7 @@ internal class ProductQueryIT(
             .bodyValue(graphqlGetProductType)
             .exchange()
             .verifyOnlyDataExists(basePath)
+            .jsonPath("$basePath.id").isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c200")
             .jsonPath("$basePath.naam").isEqualTo("erfpacht")
     }
 
@@ -263,6 +266,9 @@ internal class ProductQueryIT(
                                     TestHelper.mockResponseFromFile("/product/data/get-product-types.json")
                                 } else if (queryParams.any { it.contains("rollen__initiator__identificatie__exact__569312863") } &&
                                     queryParams.any { it.contains("productInstantie__exact__7d9cd6c2-8147-46f2-9ae9-c67e8213c500") }
+                                ) {
+                                    TestHelper.mockResponseFromFile("/product/data/get-product-verbruiks-objecten.json")
+                                } else if (queryParams.any { it.contains("productInstantie__exact__2d725c07-2f26-4705-8637-438a42b5ac2d") }
                                 ) {
                                     TestHelper.mockResponseFromFile("/product/data/get-product-verbruiks-objecten.json")
                                 } else if (queryParams.any { it.contains("rollen__initiator__identificatie__exact__569312863") } &&

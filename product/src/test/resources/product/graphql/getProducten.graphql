@@ -5,6 +5,7 @@ query {
             totalElements
             numberOfElements
             content {
+                id,
                 naam
             }
         }

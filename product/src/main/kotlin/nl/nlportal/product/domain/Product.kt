@@ -62,11 +62,10 @@ class Product(
     ): List<ProductVerbruiksObject> {
         val verbruiksobjects = mutableListOf<ProductVerbruiksObject>()
         verbruiksobjecten.mapNotNull {
-            val result = productService.getObjectsApiObjectById<ProductVerbruiksObject>(it.value)
-            if (result != null) {
-                val verbruiksobject = result.record.data
-                verbruiksobject.id = result.uuid
-                verbruiksobjects.add(verbruiksobject)
+            productService.getObjectsApiObjectById<ProductVerbruiksObject>(it.value)?.apply {
+                this.record.data.id = this.uuid
+            }?.let {
+                return mutableListOf(it.record.data)
             }
         }
         return verbruiksobjects
@@ -93,21 +92,17 @@ class Product(
         @Autowired
         productService: ProductService,
     ): List<Taak> {
-        val takenList = mutableListOf<Taak>()
-        taken.forEach {
-            val objectsApiTask = productService.getObjectsApiObjectById<TaakObject>(it.toString())
-            if (objectsApiTask != null) {
-                takenList.add(Taak.fromObjectsApiTask(objectsApiTask))
-            }
+        return taken.mapNotNull {
+            productService.getObjectsApiObjectById<TaakObject>(it.toString())
+        }.map {
+            Taak.fromObjectsApiTask(it)
         }
-        return takenList
     }
 
     companion object {
         fun fromObjectsApiProduct(objectsApiTask: ObjectsApiObject<Product>): Product {
-            val product = objectsApiTask.record.data
-            product.id = objectsApiTask.uuid
-            return product
+            objectsApiTask.record.data.id = objectsApiTask.uuid
+            return objectsApiTask.record.data
         }
     }
 }

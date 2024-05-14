@@ -1,10 +1,12 @@
 query {
     getProduct(id: "2d725c07-2f26-4705-8637-438a42b5ac2d") {
+            id,
             naam,
             verbruiksobjecten{
                 id
             },
             productDetails {
+                id,
                 data
             },
             zaken {

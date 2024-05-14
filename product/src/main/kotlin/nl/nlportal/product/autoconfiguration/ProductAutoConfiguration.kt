@@ -15,7 +15,7 @@
  */
 package nl.nlportal.product.autoconfiguration
 
-import nl.nlportal.backend.product.graphql.ProductQuery
+import nl.nlportal.product.graphql.ProductQuery
 import nl.nlportal.product.client.ProductConfig
 import nl.nlportal.product.graphql.ProductMutation
 import nl.nlportal.product.service.ProductService

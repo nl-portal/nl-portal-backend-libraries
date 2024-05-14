@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import java.util.*
 
 data class ProductDetails(
+    var id: UUID?,
     val productInstantie: UUID,
     val data: List<ObjectNode>,
 )
