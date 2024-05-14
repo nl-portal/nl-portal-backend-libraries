@@ -20,7 +20,7 @@ import java.util.UUID
 
 data class ProductVerbruiksObject(
     var id: UUID?,
-    val type: String,
+    var type: String?,
     val productInstantie: String,
     var data: ObjectNode?,
 )

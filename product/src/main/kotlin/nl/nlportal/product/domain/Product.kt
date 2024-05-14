@@ -64,6 +64,7 @@ class Product(
         verbruiksobjecten.mapNotNull {
             productService.getObjectsApiObjectById<ProductVerbruiksObject>(it.value)?.apply {
                 this.record.data.id = this.uuid
+                this.record.data.type = it.key
             }?.let {
                 return mutableListOf(it.record.data)
             }

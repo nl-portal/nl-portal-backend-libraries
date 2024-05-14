@@ -3,7 +3,8 @@ query {
             id,
             naam,
             verbruiksobjecten{
-                id
+                id,
+                type
             },
             productDetails {
                 id,
