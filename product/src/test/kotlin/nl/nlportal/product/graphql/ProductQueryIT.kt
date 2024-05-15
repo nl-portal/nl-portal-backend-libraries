@@ -54,6 +54,7 @@ internal class ProductQueryIT(
     @Autowired private val graphqlGetProductZakenNotFound: String,
     @Autowired private val graphqlGetProductVerbruiksObjecten: String,
     @Autowired private val graphqlGetProductType: String,
+    @Autowired private val graphqlGetProductTypes: String,
 ) {
     lateinit var server: MockWebServer
     lateinit var url: String
@@ -138,7 +139,7 @@ internal class ProductQueryIT(
             .jsonPath("$basePath.zaken[0].omschrijving").isEqualTo("Lopende zaak")
             .jsonPath("$basePath.taken[0].title").isEqualTo("Very important task")
             .jsonPath("$basePath.verbruiksobjecten[0].id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5a800")
-            .jsonPath("$basePath.verbruiksobjecten[0].category").isEqualTo("verhuur")
+            .jsonPath("$basePath.verbruiksobjecten[0].soort").isEqualTo("verhuur")
             .jsonPath("$basePath.productDetails.id").isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c500")
     }
 
@@ -185,7 +186,7 @@ internal class ProductQueryIT(
             .exchange()
             .verifyOnlyDataExists(basePath)
             .jsonPath("$basePath[0].id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5a800")
-            .jsonPath("$basePath[0].category").isEqualTo("test verbruiksobject")
+            .jsonPath("$basePath[0].soort").isEqualTo("test verbruiksobject")
     }
 
     @Test
@@ -202,6 +203,23 @@ internal class ProductQueryIT(
             .verifyOnlyDataExists(basePath)
             .jsonPath("$basePath.id").isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c200")
             .jsonPath("$basePath.naam").isEqualTo("erfpacht")
+    }
+
+    @Test
+    @WithBurgerUser("569312863")
+    fun getProductTypesTestBurger() {
+        val basePath = "$.data.getProductTypes"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(graphqlGetProductTypes)
+            .exchange()
+            .verifyOnlyDataExists(basePath)
+            .jsonPath("$basePath.size()").isEqualTo(1)
+            .jsonPath("$basePath[0].id").isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c200")
+            .jsonPath("$basePath[0].naam").isEqualTo("erfpacht")
     }
 
     @Test
@@ -265,6 +283,13 @@ internal class ProductQueryIT(
                                     TestHelper.mockResponseFromFile("/product/data/get-producten.json")
                                 } else if (queryParams.any { it.contains("naam__exact__erfpacht") }) {
                                     TestHelper.mockResponseFromFile("/product/data/get-product-types.json")
+                                } else if (queryParams.any {
+                                        it.contains(
+                                            "type=http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb35",
+                                        )
+                                    }
+                                ) {
+                                    TestHelper.mockResponseFromFile("/product/data/get-product-types-list.json")
                                 } else if (queryParams.any { it.contains("rollen__initiator__identificatie__exact__569312863") } &&
                                     queryParams.any { it.contains("productInstantie__exact__7d9cd6c2-8147-46f2-9ae9-c67e8213c500") }
                                 ) {

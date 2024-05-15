@@ -102,4 +102,11 @@ class ProductQuery(
             productName,
         )
     }
+
+    @GraphQLDescription("Get productTypes where the user has products")
+    suspend fun getProductTypes(dfe: DataFetchingEnvironment): List<ProductType> {
+        return productService.getProductTypes(
+            dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+        )
+    }
 }

@@ -1,0 +1,6 @@
+query {
+    getProductTypes {
+            id,
+            naam,
+        }
+}

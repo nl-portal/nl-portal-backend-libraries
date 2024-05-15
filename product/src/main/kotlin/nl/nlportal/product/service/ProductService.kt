@@ -61,7 +61,7 @@ class ProductService(
                 ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_ID, Comparator.EQUAL_TO, id.toString()),
             )
         return getObjectsApiObject<Product>(
-            productConfig.productTypeUrl,
+            productConfig.productInstantieUrl,
             objectSearchParameters,
         ).apply {
             this.record.data.id = this.uuid
@@ -79,6 +79,25 @@ class ProductService(
             listOf(
                 ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.getUserId()),
                 ObjectSearchParameter("PDCProductType", Comparator.EQUAL_TO, productType.id.toString()),
+            )
+        return getObjectsApiObjectResultPage<Product>(
+            productConfig.productInstantieUrl,
+            objectSearchParametersProducten,
+            pageNumber,
+            pageSize,
+        ).let { ProductPage.fromResultPage(pageNumber, pageSize, it) }
+    }
+
+    suspend fun getProductenByProductTypeId(
+        authentication: CommonGroundAuthentication,
+        productTypeId: UUID?,
+        pageNumber: Int,
+        pageSize: Int,
+    ): ProductPage {
+        val objectSearchParametersProducten =
+            listOf(
+                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.getUserId()),
+                ObjectSearchParameter("PDCProductType", Comparator.EQUAL_TO, productTypeId.toString()),
             )
         return getObjectsApiObjectResultPage<Product>(
             productConfig.productInstantieUrl,
@@ -244,6 +263,33 @@ class ProductService(
         ).apply {
             this.record.data.id = this.uuid
         }.record.data
+    }
+
+    suspend fun getProductTypes(authentication: CommonGroundAuthentication): List<ProductType> {
+        val productTypes =
+            getObjectsApiObjectResultPage<ProductType>(
+                productConfig.productTypeUrl,
+                listOf(),
+                1,
+                999,
+            ).results.map {
+                it.record.data.id = it.uuid
+                it.record.data
+            }
+
+        // remove if no products could be found for this productType
+        return productTypes.filterNot { productType ->
+            try {
+                getProductenByProductTypeId(
+                    authentication,
+                    productType.id,
+                    1,
+                    2,
+                ).content.isEmpty()
+            } catch (ex: Exception) {
+                true
+            }
+        }
     }
 
     suspend inline fun <reified T> getObjectsApiObjectById(id: String): ObjectsApiObject<T>? {
