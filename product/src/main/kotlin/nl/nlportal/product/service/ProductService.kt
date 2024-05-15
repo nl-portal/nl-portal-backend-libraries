@@ -122,7 +122,7 @@ class ProductService(
         val productType = getProductType(productName)
 
         // loop through the zakenTypes and get all the zaken
-        productType.zaakTypen.forEach { zaakTypeId ->
+        productType.zaaktypen.forEach { zaakTypeId ->
             zaken.addAll(
                 zakenApiClient.getZaken(
                     pageNumber,

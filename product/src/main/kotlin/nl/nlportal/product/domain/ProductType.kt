@@ -24,7 +24,7 @@ data class ProductType(
     val omschrijving: String?,
     @GraphQLIgnore
     val statussen: Map<String, String>,
-    val zaakTypen: List<UUID>,
+    val zaaktypen: List<UUID>,
     @GraphQLIgnore
     val beslistabellen: Map<String, String>,
 )

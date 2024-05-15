@@ -3,6 +3,6 @@ query {
             id,
             naam,
             omschrijving,
-            zaakTypen
+            zaaktypen
         }
 }
