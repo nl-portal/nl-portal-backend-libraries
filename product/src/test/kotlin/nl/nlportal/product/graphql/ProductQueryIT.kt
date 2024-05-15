@@ -138,7 +138,7 @@ internal class ProductQueryIT(
             .jsonPath("$basePath.zaken[0].omschrijving").isEqualTo("Lopende zaak")
             .jsonPath("$basePath.taken[0].title").isEqualTo("Very important task")
             .jsonPath("$basePath.verbruiksobjecten[0].id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5a800")
-            .jsonPath("$basePath.verbruiksobjecten[0].type").isEqualTo("verhuur")
+            .jsonPath("$basePath.verbruiksobjecten[0].category").isEqualTo("verhuur")
             .jsonPath("$basePath.productDetails.id").isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c500")
     }
 
@@ -185,7 +185,7 @@ internal class ProductQueryIT(
             .exchange()
             .verifyOnlyDataExists(basePath)
             .jsonPath("$basePath[0].id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5a800")
-            .jsonPath("$basePath[0].type").isEqualTo("test verbruiksobject")
+            .jsonPath("$basePath[0].category").isEqualTo("test verbruiksobject")
     }
 
     @Test

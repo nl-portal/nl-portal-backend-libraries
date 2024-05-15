@@ -4,7 +4,7 @@ query {
             naam,
             verbruiksobjecten{
                 id,
-                type
+                category
             },
             productDetails {
                 id,
