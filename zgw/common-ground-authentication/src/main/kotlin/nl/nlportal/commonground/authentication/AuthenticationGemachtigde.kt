@@ -15,10 +15,8 @@
  */
 package nl.nlportal.commonground.authentication
 
-import nl.nlportal.portal.authentication.domain.AuthenticationGemachtigde
-
 class AuthenticationGemachtigde(
     val bsn: String? = null,
     val kvk: String? = null,
     val uid: String? = null,
-) : AuthenticationGemachtigde()
+)

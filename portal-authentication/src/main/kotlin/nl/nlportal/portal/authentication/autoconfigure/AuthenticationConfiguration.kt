@@ -17,16 +17,16 @@ package nl.nlportal.portal.authentication.autoconfigure
 
 import nl.nlportal.portal.authentication.service.PortalAuthenticationConverter
 import org.springframework.boot.autoconfigure.AutoConfiguration
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
-import org.springframework.core.convert.converter.Converter
-import org.springframework.security.authentication.AbstractAuthenticationToken
-import org.springframework.security.oauth2.jwt.Jwt
-import reactor.core.publisher.Mono
+import org.springframework.core.annotation.Order
 
 @AutoConfiguration
 class AuthenticationConfiguration {
+    @Order
     @Bean
-    fun portalAuthenticationConverter(): Converter<Jwt, out Mono<out AbstractAuthenticationToken>> {
+    @ConditionalOnMissingBean(PortalAuthenticationConverter::class)
+    fun portalAuthenticationConverter(): PortalAuthenticationConverter {
         return PortalAuthenticationConverter()
     }
 }

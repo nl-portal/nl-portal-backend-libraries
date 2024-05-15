@@ -21,17 +21,20 @@ import org.springframework.security.oauth2.jwt.Jwt
 class BurgerAuthentication(
     jwt: Jwt,
     authorities: Collection<GrantedAuthority>?,
-) : CommonGroundAuthentication(jwt, authorities) {
-    fun getBsn(): String {
-        val aanvrager = jwt.claims[AANVRAGER_KEY]
-        if (aanvrager is Map<*, *>) {
-            return aanvrager[BSN_KEY].toString()
+) : CommonGroundAuthentication(jwt, authorities, BSN_KEY, getUserId(jwt)) {
+    init {
+        if (userType != BSN_KEY) {
+            throw IllegalArgumentException("Could not create BurgerAuthentication from this userType $userType")
         }
-
-        return jwt.claims[BSN_KEY].toString()
     }
 
-    override fun getUserId() = getBsn()
+    companion object {
+        private fun getUserId(jwt: Jwt): String {
+            return ((jwt.claims[AANVRAGER_KEY] as Map<*, *>?) ?: jwt.claims)[BSN_KEY].toString()
+        }
+    }
+
+    fun getBsn() = this.userId
 
     override fun getUserRepresentation() = "BSN:${getBsn()}"
 }

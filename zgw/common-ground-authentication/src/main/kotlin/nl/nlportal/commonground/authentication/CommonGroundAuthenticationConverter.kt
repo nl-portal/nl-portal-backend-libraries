@@ -43,18 +43,21 @@ class CommonGroundAuthenticationConverter(
         return tokenExchange(jwt).flatMap {
             decoder.decode(it.accessToken).map { exchangedJwt ->
                 val aanvrager = exchangedJwt.claims[AANVRAGER_KEY]
+
                 if (aanvrager is Map<*, *>) {
                     if (aanvrager[BSN_KEY] != null) {
                         return@map BurgerAuthentication(exchangedJwt, jwtGrantedAuthoritiesConverter.convert(exchangedJwt))
                     } else if (aanvrager[KVK_NUMMER_KEY] != null) {
                         return@map BedrijfAuthentication(exchangedJwt, jwtGrantedAuthoritiesConverter.convert(exchangedJwt))
+                    } else if (aanvrager[SUB_KEY] != null) {
+                        return@map KeycloakUserAuthentication(exchangedJwt, jwtGrantedAuthoritiesConverter.convert(exchangedJwt))
                     }
                 }
 
                 // This block is for temporary backwards compatibility
                 if (exchangedJwt.claims[BSN_KEY] != null) {
                     return@map BurgerAuthentication(exchangedJwt, jwtGrantedAuthoritiesConverter.convert(exchangedJwt))
-                } else if (jwt.claims[KVK_NUMMER_KEY] != null) {
+                } else if (exchangedJwt.claims[KVK_NUMMER_KEY] != null) {
                     return@map BedrijfAuthentication(exchangedJwt, jwtGrantedAuthoritiesConverter.convert(exchangedJwt))
                 } else if (jwt.claims[SUB_KEY] != null) {
                     return@map KeycloakUserAuthentication(jwt, jwtGrantedAuthoritiesConverter.convert(jwt))
@@ -66,6 +69,7 @@ class CommonGroundAuthenticationConverter(
                 } else {
                     logger.error { "User with subject $subject has no bsn or kvk nummer assigned" }
                 }
+
                 throw UserTypeUnsupportedException("User type not supported")
             }
         }

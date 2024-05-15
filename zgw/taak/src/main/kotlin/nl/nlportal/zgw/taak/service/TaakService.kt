@@ -17,11 +17,9 @@ package nl.nlportal.zgw.taak.service
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.node.ObjectNode
-import nl.nlportal.commonground.authentication.BedrijfAuthentication
-import nl.nlportal.commonground.authentication.BurgerAuthentication
-import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.commonground.authentication.exception.UserTypeUnsupportedException
+
 import nl.nlportal.core.util.Mapper
+import nl.nlportal.portal.authentication.domain.PortalAuthentication
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
@@ -43,7 +41,7 @@ open class TaakService(
     suspend fun getTaken(
         pageNumber: Int,
         pageSize: Int,
-        authentication: CommonGroundAuthentication,
+        authentication: PortalAuthentication,
         zaakUUID: UUID? = null,
     ): TaakPage {
         val objectSearchParameters = mutableListOf<ObjectSearchParameter>()
@@ -72,7 +70,7 @@ open class TaakService(
 
     suspend fun getTaakById(
         id: UUID,
-        authentication: CommonGroundAuthentication,
+        authentication: PortalAuthentication,
     ): Taak {
         val taak = Taak.fromObjectsApiTask(getObjectsApiTaak(id, authentication))
         // do validation if the user is authenticated for this task
@@ -86,7 +84,7 @@ open class TaakService(
     suspend fun submitTaak(
         id: UUID,
         submission: ObjectNode,
-        authentication: CommonGroundAuthentication,
+        authentication: PortalAuthentication,
     ): Taak {
         val objectsApiTask = getObjectsApiTaak(id, authentication)
         if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
@@ -109,7 +107,7 @@ open class TaakService(
 
     private suspend fun getObjectsApiTaak(
         taskId: UUID,
-        authentication: CommonGroundAuthentication,
+        authentication: PortalAuthentication,
     ): ObjectsApiObject<TaakObject> {
         val userSearchParameters = getUserSearchParameters(authentication)
         val taskIdSearchParameter = ObjectSearchParameter("verwerker_taak_id", Comparator.EQUAL_TO, taskId.toString())
@@ -122,18 +120,8 @@ open class TaakService(
         ).results.single()
     }
 
-    private fun getUserSearchParameters(authentication: CommonGroundAuthentication): List<ObjectSearchParameter> {
-        return when (authentication) {
-            is BurgerAuthentication -> {
-                createIdentificatieSearchParameters("bsn", authentication.getBsn())
-            }
-
-            is BedrijfAuthentication -> {
-                createIdentificatieSearchParameters("kvk", authentication.getKvkNummer())
-            }
-
-            else -> throw UserTypeUnsupportedException("User type not supported")
-        }
+    private fun getUserSearchParameters(authentication: PortalAuthentication): List<ObjectSearchParameter> {
+        return createIdentificatieSearchParameters(authentication.userType, authentication.userId)
     }
 
     private fun createIdentificatieSearchParameters(
@@ -147,19 +135,9 @@ open class TaakService(
     }
 
     private fun isAuthorizedForTaak(
-        authentication: CommonGroundAuthentication,
+        authentication: PortalAuthentication,
         taak: Taak,
     ): Boolean {
-        return when (authentication) {
-            is BurgerAuthentication -> {
-                taak.identificatie.type.lowercase() == "bsn" && taak.identificatie.value == authentication.getBsn()
-            }
-
-            is BedrijfAuthentication -> {
-                taak.identificatie.type.lowercase() == "kvk" && taak.identificatie.value == authentication.getKvkNummer()
-            }
-
-            else -> false
-        }
+        return taak.identificatie.type.lowercase() == authentication.userType && taak.identificatie.value == authentication.userId
     }
 }

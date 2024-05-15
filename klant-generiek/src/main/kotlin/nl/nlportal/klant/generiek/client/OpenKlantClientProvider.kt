@@ -32,7 +32,7 @@ class OpenKlantClientProvider(
             idTokenGenerator.generateToken(
                 openKlantClientConfig.secret,
                 openKlantClientConfig.clientId,
-                authentication.getUserId(),
+                authentication.userId,
                 authentication.getUserRepresentation(),
             )
 

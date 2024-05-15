@@ -22,10 +22,20 @@ import org.springframework.security.oauth2.jwt.Jwt
 class KeycloakUserAuthentication(
     jwt: Jwt,
     authorities: Collection<GrantedAuthority>?,
-) : CommonGroundAuthentication(jwt, authorities) {
-    override fun getUserId(): String {
-        return jwt.claims[SUB_KEY].toString().substring(0, 13)
+) : CommonGroundAuthentication(jwt, authorities, UID_KEY, getUserId(jwt)) {
+    init {
+        if (userType != "uid") {
+            throw IllegalArgumentException("Could not create KeycloakUserAuthentication from userType $userType")
+        }
     }
 
-    override fun getUserRepresentation() = "UID:${getUserId()}"
+    companion object {
+        private fun getUserId(jwt: Jwt): String {
+            return jwt.claims[SUB_KEY].toString()
+        }
+    }
+
+    override fun getUserRepresentation() = "UID:$userId"
 }
+
+const val UID_KEY = "uid"

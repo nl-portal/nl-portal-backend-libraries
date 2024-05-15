@@ -58,7 +58,7 @@ internal class ZakenApiServiceTest {
                 .header("alg", "none")
                 .claim("random", "1234")
                 .build()
-        val authentication = object : CommonGroundAuthentication(jwt, emptyList()) {}
+        val authentication = object : CommonGroundAuthentication(jwt, emptyList(), "kvk", "1234") {}
 
         val illegalArgumentException =
             Assertions.assertThrows(IllegalArgumentException::class.java) {
@@ -146,7 +146,7 @@ internal class ZakenApiServiceTest {
                     .header("alg", "none")
                     .claim("random", "1234")
                     .build()
-            val authentication = object : CommonGroundAuthentication(jwt, emptyList()) {}
+            val authentication = object : CommonGroundAuthentication(jwt, emptyList(), "kvk", "1234") {}
 
             val illegalArgumentException =
                 Assertions.assertThrows(IllegalArgumentException::class.java) {

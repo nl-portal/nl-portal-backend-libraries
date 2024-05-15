@@ -19,11 +19,13 @@ import nl.nlportal.portal.authentication.service.PortalAuthenticationConverter
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
+import org.springframework.core.annotation.Order
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 
 @EnableConfigurationProperties(KeycloakConfig::class)
 @AutoConfiguration
 class AuthenticationConfiguration {
+    @Order(value = 0)
     @Bean
     fun commonGroundAuthenticationConverter(
         reactiveJwtDecoder: ReactiveJwtDecoder,

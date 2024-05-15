@@ -20,17 +20,11 @@ import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 
 open class PortalAuthentication(
-    open val jwt: Jwt,
+    jwt: Jwt,
     authorities: Collection<GrantedAuthority>?,
+    val userType: String,
+    val userId: String,
 ) : JwtAuthenticationToken(jwt, authorities) {
-    open fun getGemachtigde(): AuthenticationGemachtigde? {
-        return AuthenticationGemachtigde(
-            jwt.claims[SUB_KEY]?.toString(),
-        )
-    }
-
-    open fun getUserId() = "Portal"
-
     open fun getUserRepresentation() = "Portal"
 }
 

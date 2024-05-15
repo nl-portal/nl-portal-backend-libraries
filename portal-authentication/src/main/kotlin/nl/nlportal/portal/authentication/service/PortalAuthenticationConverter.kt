@@ -15,11 +15,11 @@
  */
 package nl.nlportal.portal.authentication.service
 
-import nl.nlportal.portal.authentication.exception.UserTypeUnsupportedException
 import nl.nlportal.portal.authentication.domain.PortalAuthentication
 import nl.nlportal.portal.authentication.domain.SUB_KEY
-import org.springframework.security.oauth2.jwt.Jwt
+import nl.nlportal.portal.authentication.exception.UserTypeUnsupportedException
 import org.springframework.core.convert.converter.Converter
+import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter
 import reactor.core.publisher.Mono
 
@@ -27,10 +27,15 @@ open class PortalAuthenticationConverter : Converter<Jwt, Mono<PortalAuthenticat
     private val jwtGrantedAuthoritiesConverter = JwtGrantedAuthoritiesConverter()
 
     override fun convert(jwt: Jwt): Mono<PortalAuthentication> {
-        if (jwt.claims[SUB_KEY] != null) {
-            return Mono.just(PortalAuthentication(jwt, jwtGrantedAuthoritiesConverter.convert(jwt)))
-        } else {
-            throw UserTypeUnsupportedException("User type not supported")
-        }
+        return jwt.claims[SUB_KEY]?.let {
+            Mono.just(
+                PortalAuthentication(
+                    jwt,
+                    jwtGrantedAuthoritiesConverter.convert(jwt),
+                    SUB_KEY,
+                    jwt.claims[SUB_KEY].toString(),
+                ),
+            )
+        } ?: throw UserTypeUnsupportedException("User type not supported")
     }
 }

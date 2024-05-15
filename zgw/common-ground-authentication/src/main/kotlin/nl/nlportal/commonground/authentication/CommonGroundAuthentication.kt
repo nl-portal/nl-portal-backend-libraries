@@ -21,30 +21,31 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.oauth2.jwt.Jwt
 
 abstract class CommonGroundAuthentication(
-    override val jwt: Jwt,
+    jwt: Jwt,
     authorities: Collection<GrantedAuthority>?,
-) : PortalAuthentication(jwt, authorities) {
+    userId: String,
+    userType: String,
+) : PortalAuthentication(jwt, authorities, userId, userType) {
     /**
      * Gets gemachtigde identification property from the JWT
      *
      * @return Gemachtigde
      */
-    override fun getGemachtigde(): AuthenticationGemachtigde? {
-        val gemachtigde = jwt.claims[GEMACHTIGDE_KEY]
-        if (gemachtigde is Map<*, *>) {
-            return AuthenticationGemachtigde(
-                gemachtigde[BSN_KEY]?.toString(),
-                gemachtigde[KVK_NUMMER_KEY]?.toString(),
-                gemachtigde[SUB_KEY]?.toString(),
-            )
+    fun getGemachtigde(): AuthenticationGemachtigde? {
+        if (token.claims[GEMACHTIGDE_KEY] == null) {
+            return null
         }
 
-        return null
+        return (token.claims[GEMACHTIGDE_KEY] as Map<*, *>).let {
+            AuthenticationGemachtigde(
+                it[BSN_KEY]?.toString(),
+                it[KVK_NUMMER_KEY]?.toString(),
+                it[SUB_KEY]?.toString(),
+            )
+        }
     }
 
-    override fun getUserId() = "valtimo"
-
-    override fun getUserRepresentation() = "Valtimo"
+    override fun getUserRepresentation() = "${this.userType.uppercase()}:${this.userId}"
 }
 
 const val BSN_KEY = "bsn"

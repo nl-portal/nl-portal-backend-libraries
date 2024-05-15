@@ -59,7 +59,6 @@ allprojects {
 }
 
 subprojects {
-
     println("Enabling com.avast.gradle.docker-compose plugin in project ${project.name}...")
     apply(plugin = "com.avast.gradle.docker-compose")
 
