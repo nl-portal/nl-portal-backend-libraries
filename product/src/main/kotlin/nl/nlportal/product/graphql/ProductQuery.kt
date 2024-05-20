@@ -49,7 +49,7 @@ class ProductQuery(
     suspend fun getProduct(
         dfe: DataFetchingEnvironment,
         id: UUID,
-    ): Product {
+    ): Product? {
         return productService.getProduct(
             dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
             id,

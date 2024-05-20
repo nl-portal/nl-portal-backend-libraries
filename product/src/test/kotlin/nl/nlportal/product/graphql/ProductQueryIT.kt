@@ -324,6 +324,9 @@ internal class ProductQueryIT(
                             "GET /api/v2/objects/58fad5ab-dc2f-11ec-9075-f22a405ce708" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-taak.json")
                             }
+                            "GET /api/v2/objects/2d725c07-2f26-4705-8637-438a42b5ac2d" -> {
+                                TestHelper.mockResponseFromFile("/product/data/get-product.json")
+                            }
                             else -> MockResponse().setResponseCode(404)
                         }
                     return response

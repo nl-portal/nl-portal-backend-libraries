@@ -54,18 +54,10 @@ class ProductService(
     suspend fun getProduct(
         authentication: CommonGroundAuthentication,
         id: UUID,
-    ): Product {
-        val objectSearchParameters =
-            listOf(
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.getUserId()),
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_ID, Comparator.EQUAL_TO, id.toString()),
-            )
-        return getObjectsApiObject<Product>(
-            productConfig.productInstantieUrl,
-            objectSearchParameters,
-        ).apply {
+    ): Product? {
+        return getObjectsApiObjectById<Product>(id.toString())?.apply {
             this.record.data.id = this.uuid
-        }.record.data
+        }?.record?.data
     }
 
     suspend fun getProducten(
@@ -78,7 +70,7 @@ class ProductService(
         val objectSearchParametersProducten =
             listOf(
                 ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.getUserId()),
-                ObjectSearchParameter("PDCProductType", Comparator.EQUAL_TO, productType.id.toString()),
+                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE, Comparator.EQUAL_TO, productType.id.toString()),
             )
         return getObjectsApiObjectResultPage<Product>(
             productConfig.productInstantieUrl,
@@ -97,7 +89,7 @@ class ProductService(
         val objectSearchParametersProducten =
             listOf(
                 ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.getUserId()),
-                ObjectSearchParameter("PDCProductType", Comparator.EQUAL_TO, productTypeId.toString()),
+                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE, Comparator.EQUAL_TO, productTypeId.toString()),
             )
         return getObjectsApiObjectResultPage<Product>(
             productConfig.productInstantieUrl,
@@ -296,6 +288,7 @@ class ProductService(
         return try {
             objectsApiClient.getObjectById<T>(id = id)
         } catch (ex: Exception) {
+            logger.error(ex.message, ex)
             null
         }
     }
@@ -369,6 +362,7 @@ class ProductService(
     companion object {
         const val OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE = "rollen__initiator__identificatie"
         const val OBJECT_SEARCH_PARAMETER_PRODUCT_INSTANTIE = "productInstantie"
+        const val OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE = "PDCProductType"
         const val OBJECT_SEARCH_PARAMETER_PRODUCT_ID = "id"
 
         val logger = KotlinLogging.logger {}

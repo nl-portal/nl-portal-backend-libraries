@@ -34,7 +34,6 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
-import java.net.URI
 import java.util.*
 
 @SpringBootTest
@@ -56,7 +55,6 @@ internal class ProductMutationIT(
         setupMockOpenZaakServer()
         server.start()
         url = server.url("/").toString()
-        objectsApiClientConfig.url = URI(url)
         objectsApiClientConfig.url = server.url("/").toUri()
     }
 
