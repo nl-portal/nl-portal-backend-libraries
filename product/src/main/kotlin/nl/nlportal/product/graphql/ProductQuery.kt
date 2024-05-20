@@ -33,12 +33,14 @@ class ProductQuery(
     @GraphQLDescription("Get list of products by product name")
     suspend fun getProducten(
         dfe: DataFetchingEnvironment,
+        productTypeId: UUID? = null,
         productName: String,
         pageNumber: Int? = 1,
         pageSize: Int? = 20,
     ): ProductPage {
         return productService.getProducten(
             dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+            productTypeId,
             productName,
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
@@ -59,11 +61,13 @@ class ProductQuery(
     @GraphQLDescription("Get list of zaken by product name ")
     suspend fun getProductZaken(
         dfe: DataFetchingEnvironment,
+        productTypeId: UUID? = null,
         productName: String,
         pageSize: Int? = 20,
     ): List<Zaak> {
         return productService.getProductZaken(
             dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+            productTypeId,
             productName,
             pageNumber = 1,
         ).take(pageSize ?: 20)
@@ -72,11 +76,13 @@ class ProductQuery(
     @GraphQLDescription("Get list of taken by product name ")
     suspend fun getProductTaken(
         dfe: DataFetchingEnvironment,
+        productTypeId: UUID? = null,
         productName: String,
         pageSize: Int? = 20,
     ): List<Taak> {
         return productService.getProductTaken(
             dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+            productTypeId,
             productName,
             pageNumber = 1,
             pageSize = pageSize ?: 20,
@@ -97,8 +103,12 @@ class ProductQuery(
     }
 
     @GraphQLDescription("Get productType by name")
-    suspend fun getProductType(productName: String): ProductType {
+    suspend fun getProductType(
+        productTypeId: UUID? = null,
+        productName: String,
+    ): ProductType? {
         return productService.getProductType(
+            productTypeId,
             productName,
         )
     }

@@ -62,15 +62,16 @@ class ProductService(
 
     suspend fun getProducten(
         authentication: CommonGroundAuthentication,
+        productTypeId: UUID?,
         productName: String,
         pageNumber: Int,
         pageSize: Int,
     ): ProductPage {
-        val productType = getProductType(productName)
+        val productType = getProductType(productTypeId, productName)
         val objectSearchParametersProducten =
             listOf(
                 ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.getUserId()),
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE, Comparator.EQUAL_TO, productType.id.toString()),
+                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE, Comparator.EQUAL_TO, productType?.id.toString()),
             )
         return getObjectsApiObjectResultPage<Product>(
             productConfig.productInstantieUrl,
@@ -123,6 +124,7 @@ class ProductService(
 
     suspend fun getProductZaken(
         authentication: CommonGroundAuthentication,
+        productTypeId: UUID?,
         productName: String,
         pageNumber: Int,
     ): List<Zaak> {
@@ -130,10 +132,10 @@ class ProductService(
         val (bsnNummer, kvkNummer) = determineAuthenticationType(authentication)
         val zaken = mutableListOf<Zaak>()
 
-        val productType = getProductType(productName)
+        val productType = getProductType(productTypeId, productName)
 
         // loop through the zakenTypes and get all the zaken
-        productType.zaaktypen.forEach { zaakTypeId ->
+        productType?.zaaktypen?.forEach { zaakTypeId ->
             zaken.addAll(
                 zakenApiClient.getZaken(
                     pageNumber,
@@ -149,6 +151,7 @@ class ProductService(
 
     suspend fun getProductTaken(
         authentication: CommonGroundAuthentication,
+        productTypeId: UUID?,
         productName: String,
         pageNumber: Int,
         pageSize: Int,
@@ -177,6 +180,7 @@ class ProductService(
         val zaken =
             getProductZaken(
                 authentication,
+                productTypeId,
                 productName,
                 pageNumber,
             )
@@ -184,6 +188,7 @@ class ProductService(
         val producten =
             getProducten(
                 authentication,
+                productTypeId,
                 productName,
                 pageNumber,
                 999,
@@ -244,7 +249,15 @@ class ProductService(
         }
     }
 
-    suspend fun getProductType(productName: String): ProductType {
+    suspend fun getProductType(
+        productTypeId: UUID?,
+        productName: String,
+    ): ProductType? {
+        if (productTypeId != null) {
+            return getObjectsApiObjectById<ProductType>(productTypeId.toString())?.apply {
+                this.record.data.id = this.uuid
+            }?.record?.data
+        }
         val objectSearchParameters =
             listOf(
                 ObjectSearchParameter("naam", Comparator.EQUAL_TO, productName),
