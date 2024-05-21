@@ -23,9 +23,15 @@ import nl.nlportal.haalcentraal.brp.domain.persoon.PersoonNaam
 interface HaalCentraalBrpService {
     suspend fun getPersoon(authentication: CommonGroundAuthentication): Persoon?
 
-    suspend fun getBewoningen(authentication: CommonGroundAuthentication): Bewoning?
+    suspend fun getBewoningen(
+        authentication: CommonGroundAuthentication,
+        adresseerbaarObjectIdentificatie: String,
+    ): Bewoning?
 
-    suspend fun getBewonersAantal(authentication: CommonGroundAuthentication): Int?
+    suspend fun getBewonersAantal(
+        authentication: CommonGroundAuthentication,
+        adresseerbaarObjectIdentificatie: String,
+    ): Int?
 
     suspend fun getGemachtigde(authentication: CommonGroundAuthentication): PersoonNaam?
 }

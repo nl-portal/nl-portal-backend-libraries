@@ -16,5 +16,5 @@
 package nl.nlportal.haalcentraal.brp.domain.bewoning
 
 data class Bewoning(
-    val _embedded: Embedded,
+    val bewoningen: List<Bewoningen>?,
 )

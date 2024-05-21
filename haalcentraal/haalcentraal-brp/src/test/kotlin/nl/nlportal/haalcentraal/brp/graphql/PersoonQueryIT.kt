@@ -17,6 +17,7 @@ package nl.nlportal.haalcentraal.brp.graphql
 
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.haalcentraal.brp.TestHelper
+import nl.nlportal.haalcentraal.brp.TestHelper.verifyOnlyDataExists
 import nl.nlportal.haalcentraal.client.HaalCentraalClientConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -83,14 +84,43 @@ internal class PersoonQueryIT(
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
-            .expectStatus().isOk
-            .expectBody()
-            .jsonPath(basePath).exists()
+            .verifyOnlyDataExists(basePath)
             .jsonPath("$basePath.naam.aanhef").isEqualTo("Geachte mevrouw Kooyman")
             .jsonPath("$basePath.naam.voorletters").isEqualTo("M.")
             .jsonPath("$basePath.naam.voornamen").isEqualTo("Merel")
             .jsonPath("$basePath.naam.voorvoegsel").isEqualTo("de")
             .jsonPath("$basePath.naam.geslachtsnaam").isEqualTo("Kooyman")
+    }
+
+    @Test
+    @WithBurgerUser("999993847")
+    fun getPersoonWithBewonersAantal() {
+        val query =
+            """
+            query {
+                getPersoon {
+                    naam {
+                        aanhef,
+                        voorletters,
+                        voornamen,
+                        voorvoegsel,
+                        geslachtsnaam
+                    },
+                    bewonersAantal
+                }
+            }
+            """.trimIndent()
+
+        val basePath = "$.data.getPersoon"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(query)
+            .exchange()
+            .verifyOnlyDataExists(basePath)
+            .jsonPath("$basePath.bewonersAantal").isEqualTo(4)
     }
 
     @Test
@@ -173,6 +203,7 @@ internal class PersoonQueryIT(
                     val response =
                         when (request.path?.substringBefore('?')) {
                             "/brp/ingeschrevenpersonen/999993847" -> TestHelper.mockResponseFromFile("/data/get-ingeschreven-persoon.json")
+                            "/bewoning/bewoningen" -> TestHelper.mockResponseFromFile("/data/get-bewoningen.json")
                             else -> MockResponse().setResponseCode(404)
                         }
                     return response
