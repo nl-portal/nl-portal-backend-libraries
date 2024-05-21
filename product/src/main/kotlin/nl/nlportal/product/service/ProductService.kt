@@ -72,36 +72,18 @@ class ProductService(
 
     suspend fun getProducten(
         authentication: CommonGroundAuthentication,
-        productTypeId: UUID?,
         productName: String,
-        pageNumber: Int,
-        pageSize: Int,
-    ): ProductPage {
-        val productType = getProductType(productTypeId, productName)
-        val objectSearchParametersProducten =
-            listOf(
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.getUserId()),
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE, Comparator.EQUAL_TO, productType?.id.toString()),
-            )
-        return getObjectsApiObjectResultPage<Product>(
-            productConfig.productInstantieUrl,
-            objectSearchParametersProducten,
-            pageNumber,
-            pageSize,
-        ).let { ProductPage.fromResultPage(pageNumber, pageSize, it) }
-    }
-
-    suspend fun getProductenByProductTypeId(
-        authentication: CommonGroundAuthentication,
-        productTypeId: UUID?,
+        productSubType: String?,
         pageNumber: Int,
         pageSize: Int,
     ): ProductPage {
         val objectSearchParametersProducten =
             listOf(
                 ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.getUserId()),
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE, Comparator.EQUAL_TO, productTypeId.toString()),
-            )
+                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_NAME, Comparator.EQUAL_TO, productName),
+            ).apply {
+                productSubType?.let { ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_SUB_PRODUCT_TYPE, Comparator.EQUAL_TO, productSubType) }
+            }
         return getObjectsApiObjectResultPage<Product>(
             productConfig.productInstantieUrl,
             objectSearchParametersProducten,
@@ -163,6 +145,7 @@ class ProductService(
         authentication: CommonGroundAuthentication,
         productTypeId: UUID?,
         productName: String,
+        productSubType: String?,
         pageNumber: Int,
         pageSize: Int,
     ): List<Taak> {
@@ -198,8 +181,8 @@ class ProductService(
         val producten =
             getProducten(
                 authentication,
-                productTypeId,
                 productName,
+                productSubType,
                 pageNumber,
                 999,
             )
@@ -261,7 +244,7 @@ class ProductService(
         }
         val objectSearchParameters =
             listOf(
-                ObjectSearchParameter("naam", Comparator.EQUAL_TO, productName),
+                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_NAME, Comparator.EQUAL_TO, productName),
             )
         return getObjectsApiObject<ProductType>(
             productConfig.productTypeUrl,
@@ -286,9 +269,10 @@ class ProductService(
         // remove if no products could be found for this productType
         return productTypes.filterNot { productType ->
             try {
-                getProductenByProductTypeId(
+                getProducten(
                     authentication,
-                    productType.id,
+                    productType.naam,
+                    null,
                     1,
                     2,
                 ).content.isEmpty()
@@ -387,7 +371,9 @@ class ProductService(
     companion object {
         const val OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE = "rollen__initiator__identificatie"
         const val OBJECT_SEARCH_PARAMETER_PRODUCT_INSTANTIE = "productInstantie"
+        const val OBJECT_SEARCH_PARAMETER_PRODUCT_NAME = "naam"
         const val OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE = "PDCProductType"
+        const val OBJECT_SEARCH_PARAMETER_SUB_PRODUCT_TYPE = "subtype"
 
         val logger = KotlinLogging.logger {}
     }

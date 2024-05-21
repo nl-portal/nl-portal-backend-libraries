@@ -33,15 +33,15 @@ class ProductQuery(
     @GraphQLDescription("Get list of products by product name")
     suspend fun getProducten(
         dfe: DataFetchingEnvironment,
-        productTypeId: UUID? = null,
         productName: String,
+        subProductType: String? = null,
         pageNumber: Int? = 1,
         pageSize: Int? = 20,
     ): ProductPage {
         return productService.getProducten(
             dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
-            productTypeId,
             productName,
+            subProductType,
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
         )
@@ -78,12 +78,14 @@ class ProductQuery(
         dfe: DataFetchingEnvironment,
         productTypeId: UUID? = null,
         productName: String,
+        productSubType: String? = null,
         pageSize: Int? = 20,
     ): List<Taak> {
         return productService.getProductTaken(
             dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
             productTypeId,
             productName,
+            productSubType,
             pageNumber = 1,
             pageSize = pageSize ?: 20,
         ).take(pageSize ?: 20)

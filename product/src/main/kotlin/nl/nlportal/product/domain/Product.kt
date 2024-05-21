@@ -33,6 +33,8 @@ class Product(
     @JsonProperty("PDCProductType")
     val productTypeId: String,
     val naam: String,
+    @JsonProperty("subtype")
+    val productSubType: String?,
     val status: String,
     val geldigVan: LocalDate,
     val geldigTot: LocalDate?,
