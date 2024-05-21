@@ -28,6 +28,7 @@ import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.commonground.authentication.exception.UserTypeUnsupportedException
 import nl.nlportal.core.util.CoreUtils
+import nl.nlportal.product.domain.ProductRol
 import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.client.ZakenApiConfig
 import nl.nlportal.zakenapi.domain.Zaak
@@ -57,9 +58,16 @@ class ProductService(
         authentication: CommonGroundAuthentication,
         id: UUID,
     ): Product? {
-        return getObjectsApiObjectById<Product>(id.toString())?.apply {
-            this.record.data.id = this.uuid
-        }?.record?.data
+        val product =
+            getObjectsApiObjectById<Product>(id.toString())?.apply {
+                this.record.data.id = this.uuid
+            }?.record?.data
+
+        if (isAuthorized(authentication, product?.rollen)) {
+            return product
+        }
+
+        throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this product")
     }
 
     suspend fun getProducten(
@@ -335,7 +343,7 @@ class ProductService(
         when (authentication) {
             is BurgerAuthentication -> bsnNummer = authentication.getBsn()
             is BedrijfAuthentication -> kvkNummer = authentication.getKvkNummer()
-            else -> throw IllegalArgumentException("Cannot get zaken for this user")
+            else -> throw IllegalArgumentException("Cannot determine authentication type")
         }
         return bsnNummer to kvkNummer
     }
@@ -362,6 +370,18 @@ class ProductService(
             ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, type),
             ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, value),
         )
+    }
+
+    private fun isAuthorized(
+        authentication: CommonGroundAuthentication,
+        productRollen: Map<String, ProductRol>?,
+    ): Boolean {
+        productRollen?.forEach { (_, rol) ->
+            if (rol.identificatie == authentication.getUserId()) {
+                return true
+            }
+        }
+        return false
     }
 
     companion object {

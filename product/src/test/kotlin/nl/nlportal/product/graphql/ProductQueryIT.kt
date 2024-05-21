@@ -144,6 +144,21 @@ internal class ProductQueryIT(
     }
 
     @Test
+    @WithBurgerUser("569312864")
+    fun getProductTestBurgerUnauthorized() {
+        val basePath = "$.data.getProduct"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(graphqlGetProduct)
+            .exchange()
+            .expectBody()
+            .jsonPath(basePath)
+    }
+
+    @Test
     @WithBurgerUser("569312863")
     fun getProductZakenTestBurger() {
         val basePath = "$.data.getProductZaken"
