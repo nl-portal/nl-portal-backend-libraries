@@ -117,14 +117,8 @@ internal class ProductMutationIT(
                     val queryParams = request.path?.substringAfter('?')?.split('&') ?: emptyList()
                     val response =
                         when (request.method + " " + path) {
-                            "GET /api/v2/objects" -> {
-                                if (queryParams.any { it.contains("rollen__initiator__identificatie__exact__569312863") } &&
-                                    queryParams.any { it.contains("id__exact__2d725c07-2f26-4705-8637-438a42b5a800") }
-                                ) {
-                                    TestHelper.mockResponseFromFile("/product/data/get-product-verbruiks-objecten.json")
-                                } else {
-                                    MockResponse().setResponseCode(404)
-                                }
+                            "GET /api/v2/objects/2d725c07-2f26-4705-8637-438a42b5a800" -> {
+                                TestHelper.mockResponseFromFile("/product/data/get-product-verbruiks-object.json")
                             }
                             "PUT /api/v2/objects/2d725c07-2f26-4705-8637-438a42b5a800" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-product-verbruiks-object.json")

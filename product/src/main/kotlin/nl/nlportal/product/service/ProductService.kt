@@ -41,6 +41,8 @@ import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
 import nl.nlportal.zgw.taak.domain.Taak
 import nl.nlportal.zgw.taak.domain.TaakObject
 import nl.nlportal.zgw.taak.graphql.TaakPage
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
 class ProductService(
@@ -209,26 +211,17 @@ class ProductService(
         submission: ObjectNode,
         authentication: CommonGroundAuthentication,
     ): ProductVerbruiksObject {
-        val objectSearchParameters =
-            listOf(
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.getUserId()),
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_ID, Comparator.EQUAL_TO, id.toString()),
-            )
         val objectsApiVerbruiksObject =
-            getObjectsApiObject<ProductVerbruiksObject>(
-                productConfig.productVerbruiksObjectTypeUrl,
-                objectSearchParameters,
-            )
+            getObjectsApiObjectById<ProductVerbruiksObject>(id.toString()) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
 
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiVerbruiksObject)
         updateRequest.record.data.data = submission
         updateRequest.record.correctedBy = authentication.getUserRepresentation()
         updateRequest.record.correctionFor = objectsApiVerbruiksObject.record.index.toString()
 
-        val updatedObjectsApiTask = objectsApiClient.updateObject(objectsApiVerbruiksObject.uuid, updateRequest)
-        val verbruiksObject = updatedObjectsApiTask.record.data
-        verbruiksObject.id = updatedObjectsApiTask.uuid
-        return verbruiksObject
+        return objectsApiClient.updateObject(objectsApiVerbruiksObject.uuid, updateRequest).apply {
+            this.record.data.id = this.uuid
+        }.record.data
     }
 
     suspend fun getProductDetails(productInstantieId: UUID): ProductDetails? {
@@ -301,7 +294,6 @@ class ProductService(
         return try {
             objectsApiClient.getObjectById<T>(id = id)
         } catch (ex: Exception) {
-            logger.error(ex.message, ex)
             null
         }
     }
@@ -376,7 +368,6 @@ class ProductService(
         const val OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE = "rollen__initiator__identificatie"
         const val OBJECT_SEARCH_PARAMETER_PRODUCT_INSTANTIE = "productInstantie"
         const val OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE = "PDCProductType"
-        const val OBJECT_SEARCH_PARAMETER_PRODUCT_ID = "id"
 
         val logger = KotlinLogging.logger {}
     }

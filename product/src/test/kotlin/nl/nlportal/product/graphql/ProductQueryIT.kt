@@ -297,10 +297,6 @@ internal class ProductQueryIT(
                                 } else if (queryParams.any { it.contains("productInstantie__exact__2d725c07-2f26-4705-8637-438a42b5ac2d") }
                                 ) {
                                     TestHelper.mockResponseFromFile("/product/data/get-product-verbruiks-objecten.json")
-                                } else if (queryParams.any { it.contains("rollen__initiator__identificatie__exact__569312863") } &&
-                                    queryParams.any { it.contains("id__exact__2d725c07-2f26-4705-8637-438a42b5ac2d") }
-                                ) {
-                                    TestHelper.mockResponseFromFile("/product/data/get-producten.json")
                                 } else {
                                     MockResponse().setResponseCode(404)
                                 }
