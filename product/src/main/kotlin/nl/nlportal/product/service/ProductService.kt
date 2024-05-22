@@ -72,15 +72,17 @@ class ProductService(
 
     suspend fun getProducten(
         authentication: CommonGroundAuthentication,
+        productTypeId: UUID?,
         productName: String,
         productSubType: String?,
         pageNumber: Int,
         pageSize: Int,
     ): ProductPage {
+        val productType = getProductType(productTypeId, productName)
         val objectSearchParametersProducten =
             listOf(
                 ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.getUserId()),
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_NAME, Comparator.EQUAL_TO, productName),
+                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE, Comparator.EQUAL_TO, productType?.id.toString()),
             ).apply {
                 productSubType?.let { ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_SUB_PRODUCT_TYPE, Comparator.EQUAL_TO, productSubType) }
             }
@@ -181,6 +183,7 @@ class ProductService(
         val producten =
             getProducten(
                 authentication,
+                productTypeId,
                 productName,
                 productSubType,
                 pageNumber,
@@ -271,6 +274,7 @@ class ProductService(
             try {
                 getProducten(
                     authentication,
+                    productType.id,
                     productType.naam,
                     null,
                     1,

@@ -33,6 +33,7 @@ class ProductQuery(
     @GraphQLDescription("Get list of products by product name")
     suspend fun getProducten(
         dfe: DataFetchingEnvironment,
+        productTypeId: UUID? = null,
         productName: String,
         subProductType: String? = null,
         pageNumber: Int? = 1,
@@ -40,6 +41,7 @@ class ProductQuery(
     ): ProductPage {
         return productService.getProducten(
             dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+            productTypeId,
             productName,
             subProductType,
             pageNumber = pageNumber ?: 1,

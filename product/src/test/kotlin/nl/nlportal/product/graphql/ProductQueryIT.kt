@@ -293,7 +293,7 @@ internal class ProductQueryIT(
                                 ) {
                                     TestHelper.mockResponseFromFile("/product/data/get-product-details.json")
                                 } else if (queryParams.any { it.contains("rollen__initiator__identificatie__exact__569312863") } &&
-                                    queryParams.any { it.contains("naam__exact__erfpacht") }
+                                    queryParams.any { it.contains("PDCProductType__exact__7d9cd6c2-8147-46f2-9ae9-c67e8213c200") }
                                 ) {
                                     TestHelper.mockResponseFromFile("/product/data/get-producten.json")
                                 } else if (queryParams.any { it.contains("naam__exact__erfpacht") }) {
