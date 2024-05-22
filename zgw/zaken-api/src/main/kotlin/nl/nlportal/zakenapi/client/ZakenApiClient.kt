@@ -16,163 +16,91 @@
 package nl.nlportal.zakenapi.client
 
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
-import nl.nlportal.zakenapi.domain.ResultPage
-import nl.nlportal.zakenapi.domain.Zaak
-import nl.nlportal.zakenapi.domain.ZaakDocument
-import nl.nlportal.zakenapi.domain.ZaakObject
-import nl.nlportal.zakenapi.domain.ZaakRol
-import nl.nlportal.zakenapi.domain.ZaakStatus
-import io.netty.handler.logging.LogLevel
+import nl.nlportal.zakenapi.client.request.ZaakInformatieobjecten
+import nl.nlportal.zakenapi.client.request.ZaakObjecten
+import nl.nlportal.zakenapi.client.request.ZaakObjectenImpl
+import nl.nlportal.zakenapi.client.request.ZaakRollen
+import nl.nlportal.zakenapi.client.request.ZaakRollenImpl
+import nl.nlportal.zakenapi.client.request.ZaakStatussen
+import nl.nlportal.zakenapi.client.request.ZaakStatussenImpl
+import nl.nlportal.zakenapi.client.request.Zaken
+import nl.nlportal.zakenapi.client.request.ZakenImpl
+import nl.nlportal.zakenapi.client.request.ZakenInformatieobjectenImpl
 import org.springframework.http.HttpStatus
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
+import org.springframework.web.reactive.function.client.ClientRequest
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.server.ResponseStatusException
-import reactor.netty.http.client.HttpClient
-import reactor.netty.transport.logging.AdvancedByteBufFormat
-import java.util.UUID
+import reactor.core.publisher.Mono
 
 class ZakenApiClient(
     private val zakenApiConfig: ZakenApiConfig,
-    private val idTokenGenerator: IdTokenGenerator,
+    private val webClientBuilder: WebClient.Builder,
 ) {
-    private fun WebClient.ResponseSpec.handleStatus() =
-        this
-            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
-            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) })
-            .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, {
-                throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)
-            })
+    val webClient: WebClient
 
-    suspend fun getZaken(
-        page: Int,
-        bsn: String?,
-        kvk: String?,
-        zaakTypeUrl: String?,
-    ): ResultPage<Zaak> {
-        return webClient()
-            .get()
-            .uri {
-                val uriBuilder =
-                    it.path("/zaken/api/v1/zaken")
-                        .queryParam("page", page)
-                bsn?.let { uriBuilder.queryParam("rol__betrokkeneIdentificatie__natuurlijkPersoon__inpBsn", it) }
-                kvk?.let { uriBuilder.queryParam("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__annIdentificatie", it) }
-                zaakTypeUrl?.let { uriBuilder.queryParam("zaaktype", it) }
-                uriBuilder.build()
-            }
-            .retrieve()
-            .handleStatus()
-            .awaitBody<ResultPage<Zaak>>()
+    init {
+        this.webClient =
+            webClientBuilder
+                .clone()
+                .baseUrl(zakenApiConfig.url)
+                .filter(
+                    ExchangeFilterFunction.ofRequestProcessor {
+                        Mono.just(
+                            ClientRequest.from(it).header("Authorization", "Bearer ${getToken()}").build(),
+                        )
+                    },
+                )
+                .defaultHeader("Accept-Crs", "EPSG:4326")
+                .defaultHeader("Content-Crs", "EPSG:4326")
+                .build()
     }
 
-    suspend fun getZaak(zaakId: UUID): Zaak {
-        return webClient()
-            .get()
-            .uri("/zaken/api/v1/zaken/$zaakId")
-            .retrieve()
-            .handleStatus()
-            .awaitBody()
+    private fun getToken(): String {
+        return IdTokenGenerator().generateToken(
+            zakenApiConfig.secret,
+            zakenApiConfig.clientId,
+        )
     }
 
-    suspend fun getZaakRollen(
-        page: Int,
-        bsn: String?,
-        kvknummer: String?,
-        zaakId: UUID?,
-    ): ResultPage<ZaakRol> {
-        return webClient()
-            .get()
-            .uri {
-                val uriBuilder =
-                    it.path("/zaken/api/v1/rollen")
-                        .queryParam("page", page)
-                bsn?.let { uriBuilder.queryParam("betrokkeneIdentificatie__natuurlijkPersoon__inpBsn", it) }
-                kvknummer?.let { uriBuilder.queryParam("betrokkeneIdentificatie__nietNatuurlijkPersoon__annIdentificatie", it) }
-                zaakId?.let { uriBuilder.queryParam("zaak", "${zakenApiConfig.url}/zaken/api/v1/zaken/$zaakId") }
-                uriBuilder.build()
-            }
-            .retrieve()
-            .handleStatus()
-            .awaitBody()
+    fun getZaakUrl(zaakId: Any): String {
+        return "${zakenApiConfig.url}/zaken/api/v1/zaken/$zaakId"
     }
 
-    suspend fun getZaakObjecten(
-        page: Int,
-        zaakId: UUID?,
-    ): ResultPage<ZaakObject> {
-        return webClient()
-            .get()
-            .uri {
-                val uriBuilder =
-                    it.path("/zaken/api/v1/zaakobjecten")
-                        .queryParam("page", page)
-                        .queryParam("objectType", "overige")
-                zaakId?.let { uriBuilder.queryParam("zaak", "${zakenApiConfig.url}/zaken/api/v1/zaken/$zaakId") }
-                uriBuilder.build()
-            }
-            .retrieve()
-            .handleStatus()
-            .awaitBody()
+    fun zaken(): Zaken {
+        return ZakenImpl(this)
     }
 
-    suspend fun getStatus(statusId: UUID): ZaakStatus {
-        return webClient()
-            .get()
-            .uri("/zaken/api/v1/statussen/$statusId")
-            .retrieve()
-            .handleStatus()
-            .awaitBody()
+    fun zaakRollen(): ZaakRollen {
+        return ZaakRollenImpl(this)
     }
 
-    suspend fun getStatusHistory(zaakId: UUID): List<ZaakStatus> {
-        return webClient()
-            .get()
-            .uri {
-                it.path("/zaken/api/v1/statussen")
-                    .queryParam("zaak", "${zakenApiConfig.url}/zaken/api/v1/zaken/$zaakId")
-                    .build()
-            }
-            .retrieve()
-            .handleStatus()
-            .awaitBody<ResultPage<ZaakStatus>>()
-            .results
+    fun zaakObjecten(): ZaakObjecten {
+        return ZaakObjectenImpl(this)
     }
 
-    suspend fun getZaakDocumenten(zaakUrl: String): List<ZaakDocument> {
-        return webClient()
-            .get()
-            .uri {
-                it.path("/zaken/api/v1/zaakinformatieobjecten")
-                    .queryParam("zaak", zaakUrl)
-                    .build()
-            }
-            .retrieve()
-            .handleStatus()
-            .awaitBody()
+    fun zaakInformatieobjecten(): ZaakInformatieobjecten {
+        return ZakenInformatieobjectenImpl(this)
     }
 
-    private fun webClient(): WebClient {
-        val token =
-            idTokenGenerator.generateToken(
-                zakenApiConfig.secret,
-                zakenApiConfig.clientId,
-            )
-
-        return WebClient.builder()
-            .clientConnector(
-                ReactorClientHttpConnector(
-                    HttpClient.create().wiretap(
-                        "reactor.netty.http.client.HttpClient",
-                        LogLevel.DEBUG,
-                        AdvancedByteBufFormat.TEXTUAL,
-                    ),
-                ),
-            )
-            .baseUrl(zakenApiConfig.url)
-            .defaultHeader("Accept-Crs", "EPSG:4326")
-            .defaultHeader("Content-Crs", "EPSG:4326")
-            .defaultHeader("Authorization", "Bearer $token")
-            .build()
+    fun zaakStatussen(): ZaakStatussen {
+        return ZaakStatussenImpl(this)
     }
 }
+
+fun WebClient.ResponseSpec.handleStatus() =
+    this
+        .onStatus(
+            { httpStatus -> HttpStatus.NOT_FOUND == httpStatus },
+            { throw ResponseStatusException(HttpStatus.NOT_FOUND) },
+        )
+        .onStatus(
+            { httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus },
+            { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) },
+        )
+        .onStatus(
+            { httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus },
+            {
+                throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)
+            },
+        )

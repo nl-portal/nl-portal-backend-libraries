@@ -13,11 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.zakenapi.domain
+package nl.nlportal.commonground.authentication
 
-import java.util.UUID
+import org.springframework.security.test.context.support.WithSecurityContext
+import java.lang.annotation.Inherited
 
-data class ZaakRol(
-    val uuid: UUID,
-    val zaak: String,
+@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.RUNTIME)
+@Inherited
+@WithSecurityContext(factory = WithKeycloakUserSecurityContextFactory::class)
+annotation class WithKeycloakUser(
+    val uid: String,
+    val gemachtigdeBsn: String = "",
+    val gemachtigdeKvk: String = "",
 )

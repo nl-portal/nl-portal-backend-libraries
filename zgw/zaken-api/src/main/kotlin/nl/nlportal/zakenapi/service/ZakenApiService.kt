@@ -15,8 +15,6 @@
  */
 package nl.nlportal.zakenapi.service
 
-import nl.nlportal.commonground.authentication.BedrijfAuthentication
-import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils.extractId
 import nl.nlportal.documentenapi.domain.Document
@@ -27,7 +25,6 @@ import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zakenapi.domain.ZaakDetails
 import nl.nlportal.zakenapi.domain.ZaakDetailsObject
 import nl.nlportal.zakenapi.domain.ZaakDocument
-import nl.nlportal.zakenapi.domain.ZaakObject
 import nl.nlportal.zakenapi.domain.ZaakRol
 import nl.nlportal.zakenapi.domain.ZaakStatus
 import nl.nlportal.zakenapi.graphql.ZaakPage
@@ -35,7 +32,8 @@ import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
-import java.util.*
+import java.util.Locale
+import java.util.UUID
 
 class ZakenApiService(
     private val zakenApiClient: ZakenApiClient,
@@ -47,16 +45,14 @@ class ZakenApiService(
         authentication: CommonGroundAuthentication,
         zaakTypeUrl: String?,
     ): ZaakPage {
-        val resultPage =
-            when (authentication) {
-                is BurgerAuthentication -> zakenApiClient.getZaken(page, authentication.getBsn(), null, zaakTypeUrl)
-                // we will need to change this when a better filter becomes available for kvk nummer in zaak list endpoint
-                is BedrijfAuthentication ->
-                    zakenApiClient.getZaken(page, null, authentication.getKvkNummer(), zaakTypeUrl)
-                else -> throw IllegalArgumentException("Cannot get zaken for this user")
-            }
+        val request =
+            zakenApiClient.zaken()
+                .search()
+                .withAuthentication(authentication)
 
-        return resultPage.let {
+        zaakTypeUrl?.let { request.ofZaakType(it) }
+
+        return request.retrieve().let {
             ZaakPage.fromResultPage(page, it)
         }
     }
@@ -65,28 +61,28 @@ class ZakenApiService(
         id: UUID,
         authentication: CommonGroundAuthentication,
     ): Zaak {
-        // get rollen for zaak based on current user
+        // Get rollen of zaak to check if user has access
         val rollen: List<ZaakRol> =
-            when (authentication) {
-                is BurgerAuthentication -> getZaakRollen(authentication.getBsn(), null, id)
-                is BedrijfAuthentication -> getZaakRollen(null, authentication.getKvkNummer(), id)
-                else -> throw IllegalArgumentException("Authentication not (yet) supported")
-            }
+            zakenApiClient.zaakRollen()
+                .search()
+                .forZaak(id)
+                .withAuthentication(authentication)
+                .retrieveAll()
 
         // if no rol is found, the current user does not have access to this zaak
         if (rollen.isEmpty()) {
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this zaak")
         }
 
-        return getZaakFromZaakApi(id)
+        return zakenApiClient.zaken().get(id).retrieve()
     }
 
     suspend fun getZaakFromZaakApi(id: UUID): Zaak {
-        return zakenApiClient.getZaak(id)
+        return zakenApiClient.zaken().get(id).retrieve()
     }
 
     suspend fun getZaakStatus(statusUrl: String): ZaakStatus {
-        return zakenApiClient.getStatus(extractId(statusUrl))
+        return zakenApiClient.zaakStatussen().get(extractId(statusUrl)).retrieve()
     }
 
     suspend fun getDocumenten(zaakUrl: String): List<Document> {
@@ -96,52 +92,22 @@ class ZakenApiService(
     }
 
     suspend fun getZaakStatusHistory(zaakId: UUID): List<ZaakStatus> {
-        return zakenApiClient.getStatusHistory(zaakId)
+        return zakenApiClient.zaakStatussen().search().forZaak(zaakId).retrieveAll()
     }
 
     suspend fun getZaakDocumenten(zaakUrl: String): List<ZaakDocument> {
-        return zakenApiClient.getZaakDocumenten(zaakUrl)
+        return zakenApiClient.zaakInformatieobjecten().search().forZaak(zaakUrl).retrieveAll()
     }
 
     suspend fun getZaakDetails(zaakUrl: String): ZaakDetails {
         val zaakId = extractId(zaakUrl)
         val zaakDetailsObjects =
-            getZaakObjecten(zaakId)
+            zakenApiClient.zaakObjecten().search().forZaak(zaakId).retrieveAll()
                 .filter { it.objectTypeOverige.lowercase(Locale.getDefault()).contains("zaakdetails") }
                 .map { getObjectApiZaakDetails(it.objectUrl) }
                 .map { it?.record?.data?.data!! }
                 .flatten()
         return ZaakDetails(zaakUrl, zaakDetailsObjects)
-    }
-
-    suspend fun getZaakObjecten(zaakId: UUID?): List<ZaakObject> {
-        val zaakObjecten = arrayListOf<ZaakObject>()
-        var nextPageNumber: Int? = 1
-
-        while (nextPageNumber != null) {
-            val zaakObjectenPage = zakenApiClient.getZaakObjecten(nextPageNumber, zaakId)
-            zaakObjecten.addAll(zaakObjectenPage.results)
-            nextPageNumber = zaakObjectenPage.getNextPageNumber()
-        }
-
-        return zaakObjecten
-    }
-
-    private suspend fun getZaakRollen(
-        bsn: String?,
-        kvknummer: String?,
-        zaakId: UUID?,
-    ): List<ZaakRol> {
-        val rollen = arrayListOf<ZaakRol>()
-        var nextPageNumber: Int? = 1
-
-        while (nextPageNumber != null) {
-            val zaakRollenPage = zakenApiClient.getZaakRollen(nextPageNumber, bsn, kvknummer, zaakId)
-            rollen.addAll(zaakRollenPage.results)
-            nextPageNumber = zaakRollenPage.getNextPageNumber()
-        }
-
-        return rollen
     }
 
     private suspend fun getObjectApiZaakDetails(objectUrl: String): ObjectsApiObject<ZaakDetailsObject>? {
