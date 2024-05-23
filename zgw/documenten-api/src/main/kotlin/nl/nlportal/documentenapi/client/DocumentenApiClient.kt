@@ -31,6 +31,7 @@ import org.springframework.core.io.buffer.DataBufferUtils
 import org.springframework.http.MediaType
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.BodyInserters
+import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
 import reactor.core.publisher.Flux
@@ -157,6 +158,11 @@ class DocumentenApiClient(
                         result
                     },
                 ),
+            )
+            .exchangeStrategies(
+                ExchangeStrategies.builder()
+                    .codecs { configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024) }
+                    .build(),
             )
             .baseUrl(documentenApiConfig.url)
             .defaultHeader("Accept-Crs", "EPSG:4326")

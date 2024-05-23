@@ -154,10 +154,6 @@ class ZakenApiClient(
     }
 
     private fun webClient(): WebClient {
-        val strategies =
-            ExchangeStrategies.builder()
-                .codecs { configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024) }
-                .build()
         val token =
             idTokenGenerator.generateToken(
                 zakenApiConfig.secret,
@@ -174,7 +170,11 @@ class ZakenApiClient(
                     ),
                 ),
             )
-            .exchangeStrategies(strategies)
+            .exchangeStrategies(
+                ExchangeStrategies.builder()
+                    .codecs { configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024) }
+                    .build(),
+            )
             .baseUrl(zakenApiConfig.url)
             .defaultHeader("Accept-Crs", "EPSG:4326")
             .defaultHeader("Content-Crs", "EPSG:4326")
