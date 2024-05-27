@@ -13,26 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package nl.nlportal.payment.constants
 
-internal object Versions {
-    const val everitJsonSchema = "1.14.2"
-    const val jsonPath = "2.8.0"
-    const val jsonWebTokens = "0.12.5"
-}
-
-internal object TestVersions {
-    const val hamcrest = "2.2"
-    const val kotlinCoroutines = "1.7.3"
-    const val mockitoKotlin = "5.3.1"
-    const val okHttp3 = "4.12.0"
-    const val postgresql = "42.7.0"
-}
-
-object ApiVersions {
-    const val apacheCommons = "3.13.0"
-    const val commonsIo = "2.13.0"
-    const val graphqlJava ="21.0"
-    const val graphqlKotlin = "7.0.1"
-    const val kotlinLogging = "3.0.5"
-    const val springCloud = "4.0.4"
+enum class ShaVersion(
+    val version: String,
+) {
+    SHA1("SHA1"),
+    SHA256("SHA256"),
+    SHA512("SHA512"),
 }

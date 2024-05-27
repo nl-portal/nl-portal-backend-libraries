@@ -29,6 +29,7 @@ import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequestWithoutCo
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.MediaType
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
+import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
@@ -132,6 +133,11 @@ open class ObjectsApiClient(
                     ),
                 ),
             )
+            .exchangeStrategies(
+                ExchangeStrategies.builder()
+                    .codecs { configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024) }
+                    .build(),
+            )
             .baseUrl(objectsApiClientConfig.url.toString())
             .defaultHeader("Accept-Crs", "EPSG:4326")
             .defaultHeader("Content-Crs", "EPSG:4326")
@@ -149,6 +155,11 @@ open class ObjectsApiClient(
                         AdvancedByteBufFormat.TEXTUAL,
                     ),
                 ),
+            )
+            .exchangeStrategies(
+                ExchangeStrategies.builder()
+                    .codecs { configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024) }
+                    .build(),
             )
             .defaultHeader("Accept-Crs", "EPSG:4326")
             .defaultHeader("Content-Crs", "EPSG:4326")

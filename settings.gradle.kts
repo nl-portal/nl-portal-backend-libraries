@@ -42,6 +42,7 @@ include(
     "klantcontactmomenten",
     "messaging",
     "product",
+    "payment",
     "startform",
     "zgw:catalogi-api",
     "zgw:common-ground-authentication",

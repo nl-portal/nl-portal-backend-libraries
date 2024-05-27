@@ -29,6 +29,7 @@ dependencies {
     implementation(project(":zgw:zaken-api"))
     implementation(project(":zgw:catalogi-api"))
     implementation(project(":zgw:documenten-api"))
+    implementation(project(":payment"))
 
     implementation("org.springframework.boot", "spring-boot-starter-actuator")
     api("org.postgresql", "postgresql")

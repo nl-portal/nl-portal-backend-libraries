@@ -1,0 +1,18 @@
+graphql:
+    packages:
+        - "nl.nlportal"
+
+nl-portal:
+    payment:
+        ogone:
+            url: https://secure.ogone.com/ncol/test/orderstandard.asp
+            sha-out-parameters: AAVADDRESS,AAVCHECK,AAVMAIL,AAVNAME,AAVPHONE,AAVZIP,ACCEPTANCE,ALIAS,AMOUNT,BIC,BIN,BRAND,CARDNO,CCCTY,CN,COLLECTOR_BIC,COLLECTOR_IBAN,COMPLUS,CREATION_STATUS,CREDITDEBIT,CURRENCY,CVCCHECK,DCC_COMMPERCENTAGE,DCC_CONVAMOUNT,DCC_CONVCCY,DCC_EXCHRATE,DCC_EXCHRATESOURCE,DCC_EXCHRATETS,DCC_INDICATOR,DCC_MARGINPERCENTAGE,DCC_VALIDHOURS,DIGESTCARDNO,ECI,ED,EMAIL,ENCCARDNO,FXAMOUNT,FXCURRENCY,IP,IPCTY,MANDATEID,MOBILEMODE,NBREMAILUSAGE,NBRIPUSAGE,NBRIPUSAGE_ALLTX,NBRUSAGE,NCERROR,ORDERID,PAYID,PAYIDSUB,PAYMENT_REFERENCE,PM,SCO_CATEGORY,SCORING,SEQUENCETYPE,SIGNDATE,STATUS,SUBBRAND,SUBSCRIPTION_ID,TRXDATE,VC
+            configurations:
+                belastingzaken:
+                    pspId: TAX
+                    title: Belastingzaken
+                    language: "en_US"
+                    shaInKey: de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00
+                    shaOutKey: de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00
+                    failureUrl: http://localhost:3000
+                    successUrl: http://localhost:3000
