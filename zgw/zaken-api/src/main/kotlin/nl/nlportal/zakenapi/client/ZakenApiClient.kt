@@ -25,6 +25,7 @@ import nl.nlportal.zakenapi.domain.ZaakStatus
 import io.netty.handler.logging.LogLevel
 import org.springframework.http.HttpStatus
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
+import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.server.ResponseStatusException
@@ -168,6 +169,11 @@ class ZakenApiClient(
                         AdvancedByteBufFormat.TEXTUAL,
                     ),
                 ),
+            )
+            .exchangeStrategies(
+                ExchangeStrategies.builder()
+                    .codecs { configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024) }
+                    .build(),
             )
             .baseUrl(zakenApiConfig.url)
             .defaultHeader("Accept-Crs", "EPSG:4326")
