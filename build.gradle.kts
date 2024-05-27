@@ -1,5 +1,6 @@
 import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import java.net.URI
 import kotlin.io.encoding.Base64.Default.decode
 import kotlin.io.encoding.ExperimentalEncodingApi
@@ -114,13 +115,11 @@ subprojects {
     println("Enabling Kotlin All-open plugin in project ${project.name}...")
     apply(plugin = "org.jetbrains.kotlin.plugin.allopen")
 
-    tasks.withType<KotlinCompile> {
-        println("Configuring KotlinCompile $name in project ${project.name}...")
-        kotlinOptions {
-            languageVersion = "2.1"
-            apiVersion = "2.1"
-            jvmTarget = "21"
-            freeCompilerArgs = listOf("-Xjsr305=strict", "-Xemit-jvm-type-annotations")
+    tasks.withType<KotlinJvmCompile>().configureEach {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_21)
+            freeCompilerArgs.add("-Xjsr305=strict")
+            freeCompilerArgs.add("-Xemit-jvm-type-annotations")
         }
     }
 
