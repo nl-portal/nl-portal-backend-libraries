@@ -24,46 +24,69 @@ import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
-import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
+import org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.web.reactive.server.WebTestClient
 import java.util.function.Consumer
 
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
-@TestInstance(PER_CLASS)
+@TestInstance(PER_METHOD)
 internal class ZaakQueryIT(
     @Autowired private val testClient: WebTestClient,
     @Autowired private val zakenApiConfig: ZakenApiConfig,
     @Autowired private val catalogiApiConfig: CatalogiApiConfig,
     @Autowired private val documentApisConfig: DocumentApisConfig,
 ) {
-    lateinit var server: MockWebServer
-    lateinit var url: String
     private val logger = KotlinLogging.logger {}
+
+    companion object {
+        @JvmStatic
+        var server: MockWebServer? = null
+
+        @JvmStatic
+        var url: String = ""
+
+        @JvmStatic
+        @DynamicPropertySource
+        fun properties(propsRegistry: DynamicPropertyRegistry) {
+            propsRegistry.add("nl-portal.zgw.zakenapi.url") { url }
+        }
+
+        @JvmStatic
+        @BeforeAll
+        fun beforeAll() {
+            server = MockWebServer()
+            server?.start()
+            url = server?.url("/").toString()
+        }
+
+        @JvmStatic
+        @AfterAll
+        fun afterAll() {
+            server?.shutdown()
+        }
+    }
 
     @BeforeEach
     internal fun setUp() {
-        server = MockWebServer()
         setupMockOpenZaakServer()
-        server.start()
-        url = server.url("/").toString()
+        url = server?.url("/").toString()
+
         zakenApiConfig.url = url
         catalogiApiConfig.url = url
         documentApisConfig.getConfig("openzaak").url = url
-    }
-
-    @AfterEach
-    internal fun tearDown() {
-        server.shutdown()
     }
 
     @Test
@@ -365,7 +388,7 @@ internal class ZaakQueryIT(
                     return response
                 }
             }
-        server.dispatcher = dispatcher
+        server?.dispatcher = dispatcher
     }
 
     fun handleZaakListRequest(): MockResponse {
@@ -716,8 +739,8 @@ internal class ZaakQueryIT(
             """
             {
                "count": 3,
-               "next": "http://example.com",
-               "previous": "http://example.com",
+               "next": null,
+               "previous": null,
                "results": [
                  {
                    "url": "http://example.com",
@@ -740,6 +763,7 @@ internal class ZaakQueryIT(
     }
 
     fun mockResponse(body: String): MockResponse {
-        return MockResponse().addHeader("Content-Type", "application/json; charset=utf-8").setResponseCode(200).setBody(body)
+        return MockResponse().addHeader("Content-Type", "application/json; charset=utf-8").setResponseCode(200)
+            .setBody(body)
     }
 }

@@ -20,7 +20,7 @@ import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.Encoders
 import io.jsonwebtoken.security.Keys
 import org.springframework.security.oauth2.jwt.Jwt
-import java.util.*
+import java.util.Date
 
 class JwtBuilder {
     private var aanvragerBsn: String? = null
@@ -133,9 +133,9 @@ class JwtBuilder {
         return BedrijfAuthentication(jwt, emptyList())
     }
 
-    fun buildKeycloakUserAuthentication(): KeycloakUserAuthentication{
+    fun buildKeycloakUserAuthentication(): KeycloakUserAuthentication {
         val jwt = buildJwt()
-        if (this.aanvragerKvk!= null || this.aanvragerBsn != null) {
+        if (this.aanvragerKvk != null || this.aanvragerBsn != null) {
             throw IllegalStateException("cannot build KeycloakUserAuthentication with bsn or kvk")
         }
         return KeycloakUserAuthentication(jwt, emptyList())

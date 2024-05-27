@@ -32,11 +32,12 @@ class ZakenApiClientTest {
         host = "http://${mockServer.hostName}:${mockServer.port}"
         client = WebClient.builder().baseUrl(host).build()
 
-        zakenApiConfig = ZakenApiConfig(
-            host,
-            "gzac",
-            "12345678123456781234567812345678",
-        )
+        zakenApiConfig =
+            ZakenApiConfig(
+                host,
+                "gzac",
+                "12345678123456781234567812345678",
+            )
 
         zakenApiClient = ZakenApiClient(zakenApiConfig, WebClient.builder())
     }
@@ -84,7 +85,8 @@ class ZakenApiClientTest {
         mockServer.enqueue(emptyZakenResponse())
 
         return runTest {
-            val response = zakenApiClient.zaken()
+            zakenApiClient
+                .zaken()
                 .search()
                 .ofZaakType("https://localhost:1000/type")
                 .withBsn("BSN")
@@ -107,7 +109,6 @@ class ZakenApiClientTest {
             )
             assertEquals("https://localhost:1000/type", request.requestUrl?.queryParameter("zaaktype"))
         }
-
     }
 
     @Test
@@ -166,7 +167,6 @@ class ZakenApiClientTest {
             assertEquals(response[0].uuid, UUID.fromString("1941048a-7290-4a78-8c4e-14feaec137dc"))
             assertEquals(response[1].uuid, UUID.fromString("2941048a-7290-4a78-8c4e-14feaec137dc"))
         }
-
     }
 
     @Test
@@ -208,18 +208,26 @@ class ZakenApiClientTest {
 
     @Test
     fun `search zakeninformatieobjecten - filters`() {
-        pagedRetrieve(
-            listOf(
-                listOf(
-                    zaakInformatieobjecten(),
-                    zaakInformatieobjecten(),
-                ),
-            ),
-        ).forEach { mockServer.enqueue(it) }
+        mockServer.enqueue(
+            MockResponse()
+                .setResponseCode(200)
+                .setBody(
+                    listOf(
+                        zaakInformatieobjecten(),
+                        zaakInformatieobjecten(),
+                    ).joinToString(prefix = "[", postfix = "]"),
+                )
+                .addHeader("Content-Type", "application/json; charset=utf-8"),
+        )
 
         return runTest {
-            val response = zakenApiClient.zaakInformatieobjecten().search().forZaak("http://localhost:1000/zaak")
-                .ofInformatieobject("http://localhost:1000/informatieobject").retrieveAll()
+            val response =
+                zakenApiClient
+                    .zaakInformatieobjecten()
+                    .search()
+                    .forZaak("http://localhost:1000/zaak")
+                    .ofInformatieobject("http://localhost:1000/informatieobject")
+                    .retrieve()
 
             assertEquals(2, response.size)
             assertEquals("1941048a-7290-4a78-8c4e-14feaec137dc", response[0].uuid)
@@ -248,7 +256,7 @@ class ZakenApiClientTest {
             "beschrijving": "string",
             "registratiedatum": "2019-08-24T14:15:22Z"
             }
-        """.trimIndent()
+            """.trimIndent()
     }
 
     @Test
@@ -260,15 +268,17 @@ class ZakenApiClientTest {
                     zaakObjecten(),
                 ),
             ),
-        ).forEach { mockServer.enqueue(it) }
+        )
+            .forEach { mockServer.enqueue(it) }
 
         return runTest {
-            val response = zakenApiClient
-                .zaakObjecten()
-                .search()
-                .forZaak("http://localhost/zaak")
-                .ofObject("http://localhost/object").ofObjectType(ObjectType.WOZ_OBJECT)
-                .retrieveAll()
+            val response =
+                zakenApiClient
+                    .zaakObjecten()
+                    .search()
+                    .forZaak("http://localhost/zaak")
+                    .ofObject("http://localhost/object").ofObjectType(ObjectType.WOZ_OBJECT)
+                    .retrieveAll()
 
             assertEquals(2, response.size)
             assertEquals("095be615-a8ad-4c33-8e9c-c7612fbf6c9f", response[0].uuid)
@@ -281,7 +291,6 @@ class ZakenApiClientTest {
             assertEquals(3, request.requestUrl?.queryParameterNames?.size)
             assertEquals(true, request.path?.startsWith("/zaken/api/v1/zaakobjecten"))
         }
-
     }
 
     fun zaakObjecten(uuid: String = "095be615-a8ad-4c33-8e9c-c7612fbf6c9f"): String {
@@ -295,7 +304,7 @@ class ZakenApiClientTest {
             "objectTypeOverige": "string",
             "relatieomschrijving": "string"
             }
-        """.trimIndent()
+            """.trimIndent()
     }
 
     @Test
@@ -310,14 +319,15 @@ class ZakenApiClientTest {
         ).forEach { mockServer.enqueue(it) }
 
         return runTest {
-            val response = zakenApiClient
-                .zaakRollen()
-                .search()
-                .forZaak("http://localhost/zaak")
-                .withBsn("BSN")
-                .withKvk("KVK")
-                .withUid("UID")
-                .retrieveAll()
+            val response =
+                zakenApiClient
+                    .zaakRollen()
+                    .search()
+                    .forZaak("http://localhost/zaak")
+                    .withBsn("BSN")
+                    .withKvk("KVK")
+                    .withUid("UID")
+                    .retrieveAll()
 
             assertEquals(2, response.size)
             assertEquals(UUID.fromString("095be615-a8ad-4c33-8e9c-c7612fbf6c9f"), response[0].uuid)
@@ -340,7 +350,6 @@ class ZakenApiClientTest {
             assertEquals(4, request.requestUrl?.queryParameterNames?.size)
             assertEquals(true, request.path?.startsWith("/zaken/api/v1/rollen"))
         }
-
     }
 
     fun zaakRollen(uuid: String = "095be615-a8ad-4c33-8e9c-c7612fbf6c9f"): String {
@@ -358,7 +367,7 @@ class ZakenApiClientTest {
             "registratiedatum": "2019-08-24T14:15:22Z",
             "indicatieMachtiging": "gemachtigde"
             }
-        """.trimIndent()
+            """.trimIndent()
     }
 
     @Test
@@ -370,15 +379,18 @@ class ZakenApiClientTest {
                     zaakStatus(),
                 ),
             ),
-        ).forEach { mockServer.enqueue(it) }
+        ).forEach {
+            mockServer.enqueue(it)
+        }
 
         return runTest {
-            val response = zakenApiClient
-                .zaakStatussen()
-                .search()
-                .forZaak("http://localhost/zaak")
-                .forStatustype("status")
-                .retrieveAll()
+            val response =
+                zakenApiClient
+                    .zaakStatussen()
+                    .search()
+                    .forZaak("http://localhost/zaak")
+                    .forStatustype("status")
+                    .retrieveAll()
 
             assertEquals(2, response.size)
             assertEquals(UUID.fromString("095be615-a8ad-4c33-8e9c-c7612fbf6c9f"), response[0].uuid)
@@ -402,33 +414,34 @@ class ZakenApiClientTest {
             "datumStatusGezet": "2019-08-24T14:15:22Z",
             "statustoelichting": "string"
             }
-        """.trimIndent()
+            """.trimIndent()
     }
 
     fun pagedRetrieve(pages: List<List<String>>): List<MockResponse> {
         val count = pages.fold(0) { acc, n -> acc + n.size }
 
-        return pages.mapIndexed { index, results ->
-            val next = if (pages.size - 1 == index) {
-                "null"
-            } else {
-                "\"" + host + "?page=${index + 1}\""
-            }
+        return pages
+            .mapIndexed { index, results ->
+                val next =
+                    if (pages.size - 1 == index) {
+                        "null"
+                    } else {
+                        "\"" + host + "?page=${index + 1}\""
+                    }
 
-            """
-            {
-                "count": "${count}",
+                """
+                {
+                "count": "$count",
                 "next": $next,
                 "previous": null,
                 "results": [${results.joinToString()}]
+                }
+                """.trimIndent()
+            }.map {
+                MockResponse()
+                    .setResponseCode(200)
+                    .setBody(it)
+                    .addHeader("Content-Type", "application/json; charset=utf-8")
             }
-            """.trimIndent()
-        }.map {
-            MockResponse()
-                .setResponseCode(200)
-                .setBody(it)
-                .addHeader("Content-Type", "application/json; charset=utf-8")
-        }
     }
-
 }

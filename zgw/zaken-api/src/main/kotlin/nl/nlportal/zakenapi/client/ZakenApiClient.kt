@@ -35,7 +35,7 @@ import reactor.core.publisher.Mono
 
 class ZakenApiClient(
     private val zakenApiConfig: ZakenApiConfig,
-    private val webClientBuilder: WebClient.Builder,
+    webClientBuilder: WebClient.Builder,
 ) {
     val webClient: WebClient
 

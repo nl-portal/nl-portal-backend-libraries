@@ -2,7 +2,6 @@ package nl.nlportal.zakenapi.client.request
 
 import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.client.handleStatus
-import nl.nlportal.zakenapi.domain.ResultPage
 import nl.nlportal.zakenapi.domain.ZaakDocument
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
@@ -47,12 +46,7 @@ class SearchZaakInformatieobjectenImpl(val zakenApiClient: ZakenApiClient) : Sea
         return this
     }
 
-    override fun page(page: Int): SearchZaakInformatieobjecten {
-        queryParams.add("page", page.toString())
-        return this
-    }
-
-    override suspend fun retrieve(): ResultPage<ZaakDocument> {
+    override suspend fun retrieve(): List<ZaakDocument> {
         return this.zakenApiClient.webClient.get()
             .uri { it.path("/zaken/api/v1/zaakinformatieobjecten").queryParams(queryParams).build() }
             .retrieve()

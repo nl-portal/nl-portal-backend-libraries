@@ -96,7 +96,7 @@ class ZakenApiService(
     }
 
     suspend fun getZaakDocumenten(zaakUrl: String): List<ZaakDocument> {
-        return zakenApiClient.zaakInformatieobjecten().search().forZaak(zaakUrl).retrieveAll()
+        return zakenApiClient.zaakInformatieobjecten().search().forZaak(zaakUrl).retrieve()
     }
 
     suspend fun getZaakDetails(zaakUrl: String): ZaakDetails {

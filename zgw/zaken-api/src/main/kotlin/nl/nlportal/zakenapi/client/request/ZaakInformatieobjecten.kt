@@ -9,7 +9,7 @@ interface ZaakInformatieobjecten {
     fun get(id: UUID): GetZaakInformatieobject
 }
 
-interface SearchZaakInformatieobjecten : PagedRetrieve<SearchZaakInformatieobjecten, ZaakDocument> {
+interface SearchZaakInformatieobjecten : Retrieve<List<ZaakDocument>> {
     fun forZaak(zaakUri: String): SearchZaakInformatieobjecten
 
     fun forZaak(id: UUID): SearchZaakInformatieobjecten
