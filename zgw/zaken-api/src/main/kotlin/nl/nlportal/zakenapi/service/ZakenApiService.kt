@@ -107,7 +107,7 @@ class ZakenApiService(
         val zaakId = extractId(zaakUrl)
         val zaakDetailsObjects =
             getZaakObjecten(zaakId)
-                .filter { it.objectTypeOverige.lowercase(Locale.getDefault()).contains("zaakdetails") }
+                .filter { it.objectTypeOverige.lowercase(Locale.getDefault()) == "portaalzaakdetails" }
                 .map { getObjectApiZaakDetails(it.objectUrl) }
                 .map { it?.record?.data?.data!! }
                 .flatten()
