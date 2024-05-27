@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.haalcentraal.brp.domain.bewoning
+package nl.nlportal.haalcentraal.brp.domain
 
-data class Embedded(
-    val bewoningen: List<Bewoningen>?,
+data class BewoningenApiRequest(
+    val type: String,
+    val peildatum: String,
+    val adresseerbaarObjectIdentificatie: String,
 )
