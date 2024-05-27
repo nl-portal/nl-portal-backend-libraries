@@ -18,10 +18,13 @@ package nl.nlportal.haalcentraal.brp.service.impl
 import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.haalcentraal.brp.client.HaalCentraalBrpClient
+import nl.nlportal.haalcentraal.brp.domain.BewoningenApiRequest
 import nl.nlportal.haalcentraal.brp.domain.bewoning.Bewoning
 import nl.nlportal.haalcentraal.brp.domain.persoon.Persoon
 import nl.nlportal.haalcentraal.brp.domain.persoon.PersoonNaam
 import nl.nlportal.haalcentraal.brp.service.HaalCentraalBrpService
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class HaalCentraalBrpServiceImpl(
     val haalCentraalBrpClient: HaalCentraalBrpClient,
@@ -34,16 +37,32 @@ class HaalCentraalBrpServiceImpl(
         }
     }
 
-    override suspend fun getBewoningen(authentication: CommonGroundAuthentication): Bewoning? {
-        return if (authentication is BurgerAuthentication) {
-            haalCentraalBrpClient.getBewoningen(authentication.getBsn(), authentication)
-        } else {
+    override suspend fun getBewoningen(
+        authentication: CommonGroundAuthentication,
+        adresseerbaarObjectIdentificatie: String,
+    ): Bewoning? {
+        return try {
+            if (authentication is BurgerAuthentication) {
+                val bewoningenApiRequest =
+                    BewoningenApiRequest(
+                        type = "BewoningMetPeildatum",
+                        peildatum = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                        adresseerbaarObjectIdentificatie = adresseerbaarObjectIdentificatie,
+                    )
+                haalCentraalBrpClient.getBewoningen(bewoningenApiRequest, authentication)
+            } else {
+                null
+            }
+        } catch (ex: Exception) {
             null
         }
     }
 
-    override suspend fun getBewonersAantal(authentication: CommonGroundAuthentication): Int? {
-        getBewoningen(authentication)?._embedded?.bewoningen?.first {
+    override suspend fun getBewonersAantal(
+        authentication: CommonGroundAuthentication,
+        adresseerbaarObjectIdentificatie: String,
+    ): Int? {
+        getBewoningen(authentication, adresseerbaarObjectIdentificatie)?.bewoningen?.first {
             return it.bewoners.size
         }
 

@@ -15,13 +15,14 @@
  */
 package nl.nlportal.haalcentraal.brp.client
 
+import nl.nlportal.haalcentraal.brp.domain.BewoningenApiRequest
 import nl.nlportal.haalcentraal.brp.domain.bewoning.Bewoning
 import nl.nlportal.haalcentraal.brp.domain.persoon.Persoon
 import nl.nlportal.haalcentraal.brp.domain.persoon.PersoonNaam
 import nl.nlportal.haalcentraal.client.HaalCentraalClientProvider
+import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.web.reactive.function.client.awaitBody
-import java.time.LocalDate
 
 class HaalCentraalBrpClient(
     val haalCentraalClientProvider: HaalCentraalClientProvider,
@@ -66,19 +67,15 @@ class HaalCentraalBrpClient(
     }
 
     suspend fun getBewoningen(
-        bsn: String,
+        bewoningenApiRequest: BewoningenApiRequest,
         authentication: Authentication,
     ): Bewoning {
         return haalCentraalClientProvider.webClient(authentication)
-            .get()
-            .uri {
-                val uriBuilder =
-                    it.path("/bewoning/bewoningen")
-                        .queryParam("burgerservicenummer", bsn)
-                        .queryParam("peildatum", LocalDate.now())
-                        .queryParam("fields", "bewoners")
-                uriBuilder.build()
-            }
+            .post()
+            .uri("/bewoning/bewoningen")
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .bodyValue(bewoningenApiRequest)
             .retrieve()
             .awaitBody()
     }
