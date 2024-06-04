@@ -21,13 +21,14 @@ import java.util.UUID
 
 class TaakV2(
     val id: UUID,
-    val title: String,
+    val titel: String,
     var status: TaakStatus,
+    val soort: String,
     val verloopdatum: LocalDateTime?,
     val identificatie: TaakIdentificatie,
     val koppeling: TaakKoppeling,
     val url: TaakUrl?,
-    val formTaak: TaakForm?,
+    val formtaak: TaakForm?,
     val ogonebetaling: OgoneBetaling?,
 ) {
     companion object {
@@ -35,13 +36,14 @@ class TaakV2(
             val taakObject = objectsApiTask.record.data
             return TaakV2(
                 id = taakObject.verwerkerTaakId,
-                title = taakObject.title,
+                titel = taakObject.titel,
                 status = taakObject.status,
+                soort = taakObject.soort.value,
                 verloopdatum = taakObject.verloopdatum,
                 identificatie = taakObject.identificatie,
                 koppeling = taakObject.koppeling,
                 url = taakObject.url,
-                formTaak = taakObject.formTaak,
+                formtaak = taakObject.formtaak,
                 ogonebetaling = taakObject.ogonebetaling,
             )
         }

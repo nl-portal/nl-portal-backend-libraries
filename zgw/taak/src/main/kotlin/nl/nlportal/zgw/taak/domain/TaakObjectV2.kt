@@ -22,14 +22,14 @@ import java.util.UUID
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class TaakObjectV2(
-    val title: String,
+    val titel: String,
     var status: TaakStatus,
     val soort: TaakSoort,
     val verloopdatum: LocalDateTime?,
     val identificatie: TaakIdentificatie,
     val koppeling: TaakKoppeling,
     val url: TaakUrl?,
-    val formTaak: TaakForm?,
+    val formtaak: TaakForm?,
     val ogonebetaling: OgoneBetaling?,
     @JsonProperty("verwerker_taak_id") val verwerkerTaakId: UUID,
 )

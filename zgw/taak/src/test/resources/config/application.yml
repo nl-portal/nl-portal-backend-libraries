@@ -12,6 +12,7 @@ nl-portal:
         token: 0000000000000000000000000000000000000000
         taak:
             typeUrl: "http://localhost:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb35"
+            typeUrlV2: "http://localhost:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb36"
 
 spring:
     security:

@@ -11,6 +11,7 @@ data class TaakForm(
     val formulier: String,
     @GraphQLIgnore
     val data: Map<String, Any>,
+    @GraphQLIgnore
     @JsonProperty("verzonden_data")
     var verzondenData: Map<String, Any>? = null,
 ) {

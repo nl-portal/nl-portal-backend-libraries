@@ -1,0 +1,16 @@
+query {
+    getTaakByIdV2(id: "58fad5ab-dc2f-11ec-9075-f22a405ce708") {
+        id,
+        titel
+        status
+        verloopdatum
+        formtaak {
+            formulier
+            data
+        }
+        identificatie {
+            type
+            value
+        }
+    }
+}

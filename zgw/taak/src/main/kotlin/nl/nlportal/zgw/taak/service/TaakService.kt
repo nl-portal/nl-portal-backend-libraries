@@ -26,12 +26,17 @@ import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
+import nl.nlportal.zgw.objectenapi.domain.ResultPage
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
 import nl.nlportal.zgw.taak.domain.Taak
+import nl.nlportal.zgw.taak.domain.TaakIdentificatie
 import nl.nlportal.zgw.taak.domain.TaakObject
+import nl.nlportal.zgw.taak.domain.TaakObjectV2
 import nl.nlportal.zgw.taak.domain.TaakStatus
+import nl.nlportal.zgw.taak.domain.TaakV2
 import nl.nlportal.zgw.taak.graphql.TaakPage
+import nl.nlportal.zgw.taak.graphql.TaakPageV2
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
@@ -45,28 +50,30 @@ open class TaakService(
         pageSize: Int,
         authentication: CommonGroundAuthentication,
         zaakUUID: UUID? = null,
-    ): TaakPage =
-        getTakenPage(
+    ): TaakPage {
+        return getTakenResultPage<TaakObject>(
             pageNumber,
             pageSize,
             authentication,
             zaakUUID,
             objectsApiTaskConfig.typeUrl,
-        )
+        ).let { TaakPage.fromResultPage(pageNumber, pageSize, it) }
+    }
 
     suspend fun getTakenV2(
         pageNumber: Int,
         pageSize: Int,
         authentication: CommonGroundAuthentication,
         zaakUUID: UUID? = null,
-    ): TaakPage =
-        getTakenPage(
+    ): TaakPageV2 {
+        return getTakenResultPage<TaakObjectV2>(
             pageNumber,
             pageSize,
             authentication,
             zaakUUID,
             objectsApiTaskConfig.typeUrlV2 ?: "",
-        )
+        ).let { TaakPageV2.fromResultPage(pageNumber, pageSize, it) }
+    }
 
     suspend fun getTaakById(
         id: UUID,
@@ -74,14 +81,14 @@ open class TaakService(
     ): Taak {
         val taak =
             Taak.fromObjectsApiTask(
-                getObjectsApiTaak(
+                getObjectsApiTaak<TaakObject>(
                     id,
                     authentication,
                     objectsApiTaskConfig.typeUrl,
                 ),
             )
         // do validation if the user is authenticated for this task
-        val isAuthorized = isAuthorizedForTaak(authentication, taak)
+        val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
         if (isAuthorized) {
             return taak
         }
@@ -91,17 +98,17 @@ open class TaakService(
     suspend fun getTaakByIdV2(
         id: UUID,
         authentication: CommonGroundAuthentication,
-    ): Taak {
+    ): TaakV2 {
         val taak =
-            Taak.fromObjectsApiTask(
-                getObjectsApiTaak(
+            TaakV2.fromObjectsApi(
+                getObjectsApiTaak<TaakObjectV2>(
                     id,
                     authentication,
-                    objectsApiTaskConfig.typeUrlV2 ?: "",
+                    objectsApiTaskConfig.typeUrl,
                 ),
             )
         // do validation if the user is authenticated for this task
-        val isAuthorized = isAuthorizedForTaak(authentication, taak)
+        val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
         if (isAuthorized) {
             return taak
         }
@@ -114,7 +121,7 @@ open class TaakService(
         authentication: CommonGroundAuthentication,
     ): Taak {
         val objectsApiTask =
-            getObjectsApiTaak(
+            getObjectsApiTaak<TaakObject>(
                 id,
                 authentication,
                 objectsApiTaskConfig.typeUrl,
@@ -137,15 +144,44 @@ open class TaakService(
         return Taak.fromObjectsApiTask(updatedObjectsApiTask)
     }
 
-    private suspend fun getObjectsApiTaak(
+    suspend fun submitTaakV2(
+        id: UUID,
+        submission: ObjectNode,
+        authentication: CommonGroundAuthentication,
+    ): TaakV2 {
+        val objectsApiTask =
+            getObjectsApiTaak<TaakObjectV2>(
+                id,
+                authentication,
+                objectsApiTaskConfig.typeUrl,
+            )
+        if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
+            throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                String.format("Status is niet open, taak [%s] kan niet afgerond worden", id),
+            )
+        }
+        val submissionAsMap = Mapper.get().convertValue(submission, object : TypeReference<Map<String, Any>>() {})
+
+        val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
+        updateRequest.record.data.formtaak?.verzondenData = submissionAsMap
+        updateRequest.record.data.status = TaakStatus.AFGEROND
+        updateRequest.record.correctedBy = authentication.getUserRepresentation()
+        updateRequest.record.correctionFor = objectsApiTask.record.index.toString()
+
+        val updatedObjectsApiTask = objectsApiClient.updateObject(objectsApiTask.uuid, updateRequest)
+        return TaakV2.fromObjectsApi(updatedObjectsApiTask)
+    }
+
+    private suspend inline fun <reified T> getObjectsApiTaak(
         taskId: UUID,
         authentication: CommonGroundAuthentication,
         objectTypeUrl: String,
-    ): ObjectsApiObject<TaakObject> {
+    ): ObjectsApiObject<T> {
         val userSearchParameters = getUserSearchParameters(authentication)
         val taskIdSearchParameter = ObjectSearchParameter("verwerker_taak_id", Comparator.EQUAL_TO, taskId.toString())
 
-        return objectsApiClient.getObjects<TaakObject>(
+        return objectsApiClient.getObjects<T>(
             objectSearchParameters = userSearchParameters + taskIdSearchParameter,
             objectTypeUrl = objectTypeUrl,
             page = 1,
@@ -153,13 +189,13 @@ open class TaakService(
         ).results.single()
     }
 
-    private suspend fun getTakenPage(
+    private suspend inline fun <reified T> getTakenResultPage(
         pageNumber: Int,
         pageSize: Int,
         authentication: CommonGroundAuthentication,
         zaakUUID: UUID? = null,
         objectTypeUrl: String,
-    ): TaakPage {
+    ): ResultPage<ObjectsApiObject<T>> {
         val objectSearchParameters = mutableListOf<ObjectSearchParameter>()
 
         objectSearchParameters.addAll(getUserSearchParameters(authentication))
@@ -174,14 +210,13 @@ open class TaakService(
                 ),
             )
         }
-
-        return objectsApiClient.getObjects<TaakObject>(
+        return objectsApiClient.getObjects<T>(
             objectSearchParameters = objectSearchParameters,
             objectTypeUrl = objectTypeUrl,
             page = pageNumber,
             pageSize = pageSize,
             ordering = "-record__startAt",
-        ).let { TaakPage.fromResultPage(pageNumber, pageSize, it) }
+        )
     }
 
     private fun getUserSearchParameters(authentication: CommonGroundAuthentication): List<ObjectSearchParameter> {
@@ -210,15 +245,15 @@ open class TaakService(
 
     private fun isAuthorizedForTaak(
         authentication: CommonGroundAuthentication,
-        taak: Taak,
+        taakIdentificatie: TaakIdentificatie,
     ): Boolean {
         return when (authentication) {
             is BurgerAuthentication -> {
-                taak.identificatie.type.lowercase() == "bsn" && taak.identificatie.value == authentication.getBsn()
+                taakIdentificatie.type.lowercase() == "bsn" && taakIdentificatie.value == authentication.getBsn()
             }
 
             is BedrijfAuthentication -> {
-                taak.identificatie.type.lowercase() == "kvk" && taak.identificatie.value == authentication.getKvkNummer()
+                taakIdentificatie.type.lowercase() == "kvk" && taakIdentificatie.value == authentication.getKvkNummer()
             }
 
             else -> false
