@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDateTime
 import java.util.UUID
 
+@Deprecated("Use version 2")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class TaakObject(
     val identificatie: TaakIdentificatie,

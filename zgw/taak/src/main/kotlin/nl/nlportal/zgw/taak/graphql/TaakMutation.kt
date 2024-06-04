@@ -25,6 +25,7 @@ import nl.nlportal.zgw.taak.service.TaakService
 import graphql.schema.DataFetchingEnvironment
 import java.util.UUID
 
+@Deprecated("Use version 2")
 class TaakMutation(
     private val taskService: TaakService,
 ) : Mutation {

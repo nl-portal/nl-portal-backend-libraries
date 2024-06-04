@@ -45,6 +45,7 @@ open class TaakService(
     private val objectsApiClient: ObjectsApiClient,
     private val objectsApiTaskConfig: TaakObjectConfig,
 ) {
+    @Deprecated("Use version 2")
     suspend fun getTaken(
         pageNumber: Int,
         pageSize: Int,
@@ -75,6 +76,7 @@ open class TaakService(
         ).let { TaakPageV2.fromResultPage(pageNumber, pageSize, it) }
     }
 
+    @Deprecated("Use version 2")
     suspend fun getTaakById(
         id: UUID,
         authentication: CommonGroundAuthentication,
@@ -115,6 +117,7 @@ open class TaakService(
         throw IllegalStateException("Access denied to this taak")
     }
 
+    @Deprecated("Use version 2")
     suspend fun submitTaak(
         id: UUID,
         submission: ObjectNode,

@@ -4,6 +4,7 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
 
+@Deprecated("Use version 2")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class TaakFormulier(
     @Deprecated("Type will be removed when underlying systems has been changed. Currently available for backwards compatibility")

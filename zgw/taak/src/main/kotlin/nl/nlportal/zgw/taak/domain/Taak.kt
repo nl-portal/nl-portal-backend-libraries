@@ -21,6 +21,7 @@ import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import java.time.LocalDateTime
 import java.util.UUID
 
+@Deprecated("Use version 2")
 class Taak(
     val id: UUID,
     val title: String,

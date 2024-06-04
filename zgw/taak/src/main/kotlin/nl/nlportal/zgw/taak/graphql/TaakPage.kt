@@ -21,6 +21,7 @@ import nl.nlportal.zgw.objectenapi.domain.ResultPage
 import nl.nlportal.zgw.taak.domain.Taak
 import nl.nlportal.zgw.taak.domain.TaakObject
 
+@Deprecated("Use version 2")
 class TaakPage(
     number: Int,
     size: Int,

@@ -36,6 +36,7 @@ import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.reactive.server.WebTestClient
 
+@Deprecated("Use version 2")
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(PER_CLASS)
