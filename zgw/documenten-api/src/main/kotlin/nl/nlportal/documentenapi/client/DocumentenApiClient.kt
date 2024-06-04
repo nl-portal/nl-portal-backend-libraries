@@ -16,6 +16,7 @@
 package nl.nlportal.documentenapi.client
 
 import io.netty.handler.logging.LogLevel
+import kotlinx.coroutines.reactor.awaitSingleOrNull
 import mu.KLogger
 import mu.KotlinLogging
 import nl.nlportal.core.ssl.ClientSslContextResolver
@@ -85,7 +86,7 @@ class DocumentenApiClient(
     ): Document {
         request.inhoud = UUID.randomUUID().toString()
 
-        val fileData = DataBufferUtils.join(documentContent).block()?.asInputStream()?.readAllBytes()
+        val fileData = DataBufferUtils.join(documentContent).awaitSingleOrNull()?.asInputStream()?.readAllBytes()
 
         request.inhoud = Base64.getEncoder().encodeToString(fileData)
 
