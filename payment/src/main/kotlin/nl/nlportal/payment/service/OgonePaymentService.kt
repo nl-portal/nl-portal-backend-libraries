@@ -90,7 +90,7 @@ class OgonePaymentService(
 
         val orderId = serverHttpRequest.queryParams[OgonePayment.QUERYSTRING_ORDER_ID]?.get(0)
         val objectsApiTask = getObjectsApiTaak(UUID.fromString(orderId))
-        if (objectsApiTask.record.data.status == TaakStatus.INGEDIEND) {
+        if (objectsApiTask.record.data.status == TaakStatus.AFGEROND) {
             return "Task is already completed"
         }
 
@@ -104,7 +104,7 @@ class OgonePaymentService(
         }
 
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
-        updateRequest.record.data.status = TaakStatus.INGEDIEND
+        updateRequest.record.data.status = TaakStatus.AFGEROND
         updateRequest.record.correctedBy = "Payment provider"
         updateRequest.record.correctionFor = objectsApiTask.record.index.toString()
         objectsApiClient.updateObject(objectsApiTask.uuid, updateRequest)

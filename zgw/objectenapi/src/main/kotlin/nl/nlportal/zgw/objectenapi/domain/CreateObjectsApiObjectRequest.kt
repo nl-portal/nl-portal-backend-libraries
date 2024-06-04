@@ -27,6 +27,4 @@ data class CreateObjectsApiObjectRequestRecord<T>(
     val typeVersion: Int,
     val data: T,
     val startAt: String,
-    var correctionFor: String? = null,
-    var correctedBy: String? = null,
 )

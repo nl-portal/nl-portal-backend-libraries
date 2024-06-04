@@ -45,36 +45,61 @@ open class TaakService(
         pageSize: Int,
         authentication: CommonGroundAuthentication,
         zaakUUID: UUID? = null,
-    ): TaakPage {
-        val objectSearchParameters = mutableListOf<ObjectSearchParameter>()
+    ): TaakPage =
+        getTakenPage(
+            pageNumber,
+            pageSize,
+            authentication,
+            zaakUUID,
+            objectsApiTaskConfig.typeUrl,
+        )
 
-        objectSearchParameters.addAll(getUserSearchParameters(authentication))
-        objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, "open"))
-
-        zaakUUID?.let {
-            objectSearchParameters.add(
-                ObjectSearchParameter(
-                    "zaak",
-                    Comparator.STRING_CONTAINS,
-                    it.toString(),
-                ),
-            )
-        }
-
-        return objectsApiClient.getObjects<TaakObject>(
-            objectSearchParameters = objectSearchParameters,
-            objectTypeUrl = objectsApiTaskConfig.typeUrl,
-            page = pageNumber,
-            pageSize = pageSize,
-            ordering = "-record__startAt",
-        ).let { TaakPage.fromResultPage(pageNumber, pageSize, it) }
-    }
+    suspend fun getTakenV2(
+        pageNumber: Int,
+        pageSize: Int,
+        authentication: CommonGroundAuthentication,
+        zaakUUID: UUID? = null,
+    ): TaakPage =
+        getTakenPage(
+            pageNumber,
+            pageSize,
+            authentication,
+            zaakUUID,
+            objectsApiTaskConfig.typeUrlV2 ?: "",
+        )
 
     suspend fun getTaakById(
         id: UUID,
         authentication: CommonGroundAuthentication,
     ): Taak {
-        val taak = Taak.fromObjectsApiTask(getObjectsApiTaak(id, authentication))
+        val taak =
+            Taak.fromObjectsApiTask(
+                getObjectsApiTaak(
+                    id,
+                    authentication,
+                    objectsApiTaskConfig.typeUrl,
+                ),
+            )
+        // do validation if the user is authenticated for this task
+        val isAuthorized = isAuthorizedForTaak(authentication, taak)
+        if (isAuthorized) {
+            return taak
+        }
+        throw IllegalStateException("Access denied to this taak")
+    }
+
+    suspend fun getTaakByIdV2(
+        id: UUID,
+        authentication: CommonGroundAuthentication,
+    ): Taak {
+        val taak =
+            Taak.fromObjectsApiTask(
+                getObjectsApiTaak(
+                    id,
+                    authentication,
+                    objectsApiTaskConfig.typeUrlV2 ?: "",
+                ),
+            )
         // do validation if the user is authenticated for this task
         val isAuthorized = isAuthorizedForTaak(authentication, taak)
         if (isAuthorized) {
@@ -88,7 +113,12 @@ open class TaakService(
         submission: ObjectNode,
         authentication: CommonGroundAuthentication,
     ): Taak {
-        val objectsApiTask = getObjectsApiTaak(id, authentication)
+        val objectsApiTask =
+            getObjectsApiTaak(
+                id,
+                authentication,
+                objectsApiTaskConfig.typeUrl,
+            )
         if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
             throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
@@ -110,16 +140,48 @@ open class TaakService(
     private suspend fun getObjectsApiTaak(
         taskId: UUID,
         authentication: CommonGroundAuthentication,
+        objectTypeUrl: String,
     ): ObjectsApiObject<TaakObject> {
         val userSearchParameters = getUserSearchParameters(authentication)
         val taskIdSearchParameter = ObjectSearchParameter("verwerker_taak_id", Comparator.EQUAL_TO, taskId.toString())
 
         return objectsApiClient.getObjects<TaakObject>(
             objectSearchParameters = userSearchParameters + taskIdSearchParameter,
-            objectTypeUrl = objectsApiTaskConfig.typeUrl,
+            objectTypeUrl = objectTypeUrl,
             page = 1,
             pageSize = 2,
         ).results.single()
+    }
+
+    private suspend fun getTakenPage(
+        pageNumber: Int,
+        pageSize: Int,
+        authentication: CommonGroundAuthentication,
+        zaakUUID: UUID? = null,
+        objectTypeUrl: String,
+    ): TaakPage {
+        val objectSearchParameters = mutableListOf<ObjectSearchParameter>()
+
+        objectSearchParameters.addAll(getUserSearchParameters(authentication))
+        objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, "open"))
+
+        zaakUUID?.let {
+            objectSearchParameters.add(
+                ObjectSearchParameter(
+                    "zaak",
+                    Comparator.STRING_CONTAINS,
+                    it.toString(),
+                ),
+            )
+        }
+
+        return objectsApiClient.getObjects<TaakObject>(
+            objectSearchParameters = objectSearchParameters,
+            objectTypeUrl = objectTypeUrl,
+            page = pageNumber,
+            pageSize = pageSize,
+            ordering = "-record__startAt",
+        ).let { TaakPage.fromResultPage(pageNumber, pageSize, it) }
     }
 
     private fun getUserSearchParameters(authentication: CommonGroundAuthentication): List<ObjectSearchParameter> {

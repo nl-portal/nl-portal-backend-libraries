@@ -13,12 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.zgw.taak.autoconfigure
+package nl.nlportal.zgw.taak.domain
 
-import org.springframework.boot.context.properties.ConfigurationProperties
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonProperty
+import java.time.LocalDateTime
+import java.util.UUID
 
-@ConfigurationProperties(prefix = "nl-portal.zgw.taak.taakobject")
-class TaakObjectConfig(
-    var typeUrl: String = "",
-    var typeUrlV2: String? = "",
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class TaakObjectV2(
+    val title: String,
+    var status: TaakStatus,
+    val soort: TaakSoort,
+    val verloopdatum: LocalDateTime?,
+    val identificatie: TaakIdentificatie,
+    val koppeling: TaakKoppeling,
+    val url: TaakUrl?,
+    val formTaak: TaakForm?,
+    val ogonebetaling: OgoneBetaling?,
+    @JsonProperty("verwerker_taak_id") val verwerkerTaakId: UUID,
 )
