@@ -32,6 +32,7 @@ import nl.nlportal.product.domain.ProductRol
 import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.client.ZakenApiConfig
 import nl.nlportal.zakenapi.domain.Zaak
+import nl.nlportal.zakenapi.graphql.ZaakPage
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
@@ -51,7 +52,6 @@ class ProductService(
     val objectsApiClient: ObjectsApiClient,
     val zakenApiClient: ZakenApiClient,
     val taakObjectConfig: TaakObjectConfig,
-    val zakenApiConfig: ZakenApiConfig,
     val objectsApiTaskConfig: TaakObjectConfig,
 ) {
     suspend fun getProduct(
@@ -81,7 +81,7 @@ class ProductService(
         val productType = getProductType(productTypeId, productName)
         val objectSearchParametersProducten =
             listOf(
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.getUserId()),
+                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.userId),
                 ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE, Comparator.EQUAL_TO, productType?.id.toString()),
             ).apply {
                 productSubType?.let { ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_SUB_PRODUCT_TYPE, Comparator.EQUAL_TO, productSubType) }
@@ -102,7 +102,7 @@ class ProductService(
     ): List<ProductVerbruiksObject> {
         val objectSearchParameters =
             listOf(
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.getUserId()),
+                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.userId),
                 ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_INSTANTIE, Comparator.EQUAL_TO, productId.toString()),
             )
         return getObjectsApiObjectResultPage<ProductVerbruiksObject>(
@@ -122,24 +122,17 @@ class ProductService(
         productName: String,
         pageNumber: Int,
     ): List<Zaak> {
-        // first determine the bsn or kvkNumber
-        val (bsnNummer, kvkNummer) = determineAuthenticationType(authentication)
-        val zaken = mutableListOf<Zaak>()
-
         val productType = getProductType(productTypeId, productName)
-        // loop through the zakenTypes and get all the zaken
-        productType?.zaaktypen?.forEach { zaakTypeId ->
-            zaken.addAll(
-                zakenApiClient.getZaken(
-                    pageNumber,
-                    bsnNummer,
-                    kvkNummer,
-                    "${zakenApiConfig.url}/catalogi/api/v1/zaaktypen/$zaakTypeId",
-                ).results,
-            )
-        }
-        return zaken
+        val result = zakenApiClient.zoeken()
+            .search()
+            .page(pageNumber)
+            .withAuthentication(authentication)
+            .ofZaakTypes(productType?.zaaktypen?.map{it.toString()}!!)
+            .retrieve()
+            .results
             .sortedBy { it.startdatum }
+
+        return result
     }
 
     suspend fun getProductTaken(
@@ -325,18 +318,7 @@ class ProductService(
     }
 
     suspend fun getZaak(zaakUUID: UUID): Zaak {
-        return zakenApiClient.getZaak(zaakUUID)
-    }
-
-    private fun determineAuthenticationType(authentication: CommonGroundAuthentication): Pair<String?, String?> {
-        var bsnNummer: String? = null
-        var kvkNummer: String? = null
-        when (authentication) {
-            is BurgerAuthentication -> bsnNummer = authentication.getBsn()
-            is BedrijfAuthentication -> kvkNummer = authentication.getKvkNummer()
-            else -> throw IllegalArgumentException("Cannot determine authentication type")
-        }
-        return bsnNummer to kvkNummer
+        return zakenApiClient.zaken().get(zaakUUID).retrieve()
     }
 
     private fun getUserSearchParameters(authentication: CommonGroundAuthentication): List<ObjectSearchParameter> {
@@ -368,7 +350,7 @@ class ProductService(
         productRollen: Map<String, ProductRol>?,
     ): Boolean {
         productRollen?.forEach { (_, rol) ->
-            if (rol.identificatie == authentication.getUserId()) {
+            if (rol.identificatie == authentication.userId) {
                 return true
             }
         }

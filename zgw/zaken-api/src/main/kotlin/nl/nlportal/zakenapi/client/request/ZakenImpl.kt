@@ -53,6 +53,10 @@ class SearchZakenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
         return this
     }
 
+    override fun ofZaakTypes(zaakTypes: List<String>): SearchZaken {
+        return this
+    }
+
     override fun page(page: Int): SearchZaken {
         queryParams.add("page", page.toString())
         return this

@@ -26,7 +26,9 @@ import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -34,6 +36,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.web.reactive.server.WebTestClient
 import java.net.URI
 import java.util.*
@@ -56,23 +60,40 @@ internal class ProductQueryIT(
     @Autowired private val graphqlGetProductType: String,
     @Autowired private val graphqlGetProductTypes: String,
 ) {
-    lateinit var server: MockWebServer
-    lateinit var url: String
+    companion object {
+        @JvmStatic
+        var server: MockWebServer? = null
+
+        @JvmStatic
+        var url: String = ""
+
+        @JvmStatic
+        @DynamicPropertySource
+        fun properties(propsRegistry: DynamicPropertyRegistry) {
+            propsRegistry.add("nl-portal.zgw.zakenapi.url") { url }
+        }
+
+        @JvmStatic
+        @BeforeAll
+        fun beforeAll() {
+            server = MockWebServer()
+            server?.start()
+            url = server?.url("/").toString()
+        }
+
+        @JvmStatic
+        @AfterAll
+        fun afterAll() {
+            server?.shutdown()
+        }
+    }
 
     @BeforeEach
     internal fun setUp() {
-        server = MockWebServer()
-        setupMockOpenZaakServer()
-        server.start()
-        url = server.url("/").toString()
+        setupMockServer()
+        url = server?.url("/").toString()
         objectsApiClientConfig.url = URI(url)
-        objectsApiClientConfig.url = server.url("/").toUri()
         zakenApiConfig.url = url
-    }
-
-    @AfterEach
-    internal fun tearDown() {
-        server.shutdown()
     }
 
     @Test
@@ -269,7 +290,7 @@ internal class ProductQueryIT(
             .jsonPath("$basePath.size()").isEqualTo(0)
     }
 
-    fun setupMockOpenZaakServer() {
+    fun setupMockServer() {
         val dispatcher: Dispatcher =
             object : Dispatcher() {
                 @Throws(InterruptedException::class)
@@ -316,12 +337,8 @@ internal class ProductQueryIT(
                                     MockResponse().setResponseCode(404)
                                 }
                             }
-                            "GET /zaken/api/v1/zaken" -> {
-                                if (queryParams.any { it.contains("zaaktype") }) {
-                                    TestHelper.mockResponseFromFile("/product/data/get-zaken.json")
-                                } else {
-                                    MockResponse().setResponseCode(404)
-                                }
+                            "POST /zaken/api/v1/zaken/_zoek" -> {
+                                TestHelper.mockResponseFromFile("/product/data/get-zaken.json")
                             }
                             "GET /api/v2/objects/2d725c07-2f26-4705-8637-438a42b5a800" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-product-verbruiks-object.json")
@@ -343,6 +360,6 @@ internal class ProductQueryIT(
                     return response
                 }
             }
-        server.dispatcher = dispatcher
+        server?.dispatcher = dispatcher
     }
 }
