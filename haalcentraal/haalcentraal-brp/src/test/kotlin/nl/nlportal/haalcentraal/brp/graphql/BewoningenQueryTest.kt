@@ -25,7 +25,7 @@ internal class BewoningenQueryTest : QueryTestBase() {
     @Test
     fun `getBewonersAantal should call service`() =
         runTest {
-            query.getBewonersAantal(environment)
-            verify(haalCentraalBrpService).getBewonersAantal(authentication)
+            query.getBewonersAantal(environment, "0226010000038820")
+            verify(haalCentraalBrpService).getBewonersAantal(authentication, "0226010000038820")
         }
 }

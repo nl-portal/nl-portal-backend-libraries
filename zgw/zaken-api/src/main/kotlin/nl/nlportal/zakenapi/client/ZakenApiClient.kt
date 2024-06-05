@@ -85,6 +85,7 @@ class ZakenApiClient(
 
     fun zaakStatussen(): ZaakStatussen {
         return ZaakStatussenImpl(this)
+
     }
 }
 
