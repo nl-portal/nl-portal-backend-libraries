@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.haalcentraal.brp.domain.bewoning
+package nl.nlportal.portal.authentication.exception
 
-data class Embedded(
-    val bewoningen: List<Bewoningen>?,
-)
+class UserTypeUnsupportedException(msg: String) : RuntimeException(msg)

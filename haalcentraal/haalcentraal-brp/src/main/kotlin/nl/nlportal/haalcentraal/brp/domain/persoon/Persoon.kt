@@ -15,6 +15,12 @@
  */
 package nl.nlportal.haalcentraal.brp.domain.persoon
 
+import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
+import graphql.schema.DataFetchingEnvironment
+import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
+import nl.nlportal.haalcentraal.brp.service.HaalCentraalBrpService
+import org.springframework.beans.factory.annotation.Autowired
+
 data class Persoon(
     val burgerservicenummer: String? = null,
     val geslachtsaanduiding: String? = null,
@@ -22,4 +28,15 @@ data class Persoon(
     val geboorte: PersoonGeboorte? = null,
     val nationaliteiten: List<PersoonNationaliteiten>? = null,
     val verblijfplaats: PersoonVerblijfplaats? = null,
-)
+) {
+    suspend fun bewonersAantal(
+        @GraphQLIgnore
+        @Autowired
+        haalCentraalBrpService: HaalCentraalBrpService,
+        dfe: DataFetchingEnvironment,
+    ): Int? {
+        return verblijfplaats?.adresseerbaarObjectIdentificatie?.let {
+            haalCentraalBrpService.getBewonersAantal(dfe.graphQlContext[AUTHENTICATION_KEY], it)
+        }
+    }
+}

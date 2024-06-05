@@ -15,6 +15,9 @@
  */
 package nl.nlportal.zakenapi.domain
 
+import java.util.UUID
+
 data class ZaakRol(
+    val uuid: UUID,
     val zaak: String,
 )

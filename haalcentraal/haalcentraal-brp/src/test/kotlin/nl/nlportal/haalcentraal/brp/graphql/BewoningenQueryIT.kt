@@ -17,6 +17,7 @@ package nl.nlportal.haalcentraal.brp.graphql
 
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.haalcentraal.brp.TestHelper
+import nl.nlportal.haalcentraal.brp.TestHelper.verifyOnlyDataExists
 import nl.nlportal.haalcentraal.client.HaalCentraalClientConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -62,7 +63,7 @@ internal class BewoningenQueryIT(
         val query =
             """
             query {
-                getBewonersAantal
+                getBewonersAantal(adresseerbaarObjectIdentificatie: "0226010000038820")
             }
             """.trimIndent()
 
@@ -74,9 +75,7 @@ internal class BewoningenQueryIT(
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
-            .expectStatus().isOk
-            .expectBody()
-            .jsonPath(basePath).exists()
+            .verifyOnlyDataExists(basePath)
             .jsonPath(basePath).isEqualTo(4)
     }
 

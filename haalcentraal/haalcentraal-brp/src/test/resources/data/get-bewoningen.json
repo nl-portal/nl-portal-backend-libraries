@@ -1,85 +1,41 @@
 {
-    "_links": {
-        "self": {
-            "href": "https://www.haalcentraal.nl/haalcentraal/api/bewoning/bewoningen?burgerservicenummer=999993872"
-        }
-    },
-    "_embedded": {
-        "bewoningen": [
-            {
-                "_links": {
-                    "ingeschrevenPersonen": [
-                        {
-                            "href": "https://www.haalcentraal.nl/haalcentraal/api/brp/ingeschrevenpersonen/999992119"
-                        },
-                        {
-                            "href": "https://www.haalcentraal.nl/haalcentraal/api/brp/ingeschrevenpersonen/999991036"
-                        },
-                        {
-                            "href": "https://www.haalcentraal.nl/haalcentraal/api/brp/ingeschrevenpersonen/999993872"
-                        },
-                        {
-                            "href": "https://www.haalcentraal.nl/haalcentraal/api/brp/ingeschrevenpersonen/999995108"
-                        }
-                    ],
-                    "nummeraanduiding": {
-                        "href": "https://www.haalcentraal.nl/haalcentraal/api/bag/v1/adressen/0599200001012572"
-                    },
-                    "adresseerbaarObject": {
-                        "href": "https://www.haalcentraal.nl/haalcentraal/api/bag/v1/adresseerbareobjecten/0599010000228162"
-                    }
+    "bewoningen": [
+        {
+            "adresseerbaarObjectIdentificatie": "0226010000038820",
+            "periode": {
+                "datumVan": "2020-01-01",
+                "datumTot": "2021-01-01"
+            },
+            "bewoners": [
+                {
+                    "burgerservicenummer": "555555021",
+                    "geheimhoudingPersoonsgegevens": true,
+                    "inOnderzoek": true
                 },
-                "bewoners": [
-                    {
-                        "burgerservicenummer": "999992119",
-                        "datumAanvangAdreshouding": {
-                            "datum": "2010-02-25",
-                            "jaar": 2010,
-                            "maand": 2,
-                            "dag": 25
-                        },
-                        "functieadres": "woonadres"
-                    },
-                    {
-                        "burgerservicenummer": "999991036",
-                        "datumAanvangAdreshouding": {
-                            "datum": "1998-04-01",
-                            "jaar": 1998,
-                            "maand": 4,
-                            "dag": 1
-                        },
-                        "geheimhoudingPersoonsgegevens": true,
-                        "functieadres": "woonadres"
-                    },
-                    {
-                        "burgerservicenummer": "999993872",
-                        "datumAanvangAdreshouding": {
-                            "datum": "1998-04-01",
-                            "jaar": 1998,
-                            "maand": 4,
-                            "dag": 1
-                        },
-                        "geheimhoudingPersoonsgegevens": true,
-                        "functieadres": "woonadres"
-                    },
-                    {
-                        "burgerservicenummer": "999995108",
-                        "datumAanvangAdreshouding": {
-                            "datum": "1995-10-10",
-                            "jaar": 1995,
-                            "maand": 10,
-                            "dag": 10
-                        },
-                        "functieadres": "woonadres"
-                    }
-                ],
-                "huisnummer": 72,
-                "identificatiecodeNummeraanduiding": "0599200001012572",
-                "naamOpenbareRuimte": "Goudsesingel",
-                "postcode": "3011KD",
-                "identificatiecodeAdresseerbaarObject": "0599010000228162",
-                "woonplaatsnaam": "'s-Gravenhage"
-            }
-        ]
-    }
+                {
+                    "burgerservicenummer": "555555022",
+                    "geheimhoudingPersoonsgegevens": true,
+                    "inOnderzoek": true
+                },
+                {
+                    "burgerservicenummer": "555555023",
+                    "geheimhoudingPersoonsgegevens": true,
+                    "inOnderzoek": true
+                },
+                {
+                    "burgerservicenummer": "555555024",
+                    "geheimhoudingPersoonsgegevens": true,
+                    "inOnderzoek": true
+                }
+            ],
+            "mogelijkeBewoners": [
+                {
+                    "burgerservicenummer": "555555021",
+                    "geheimhoudingPersoonsgegevens": true,
+                    "inOnderzoek": true
+                }
+            ],
+            "indicatieVeelBewoners": true
+        }
+    ]
 }

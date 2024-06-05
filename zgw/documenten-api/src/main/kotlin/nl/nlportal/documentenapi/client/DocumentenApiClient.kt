@@ -16,16 +16,13 @@
 package nl.nlportal.documentenapi.client
 
 import io.netty.handler.logging.LogLevel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.reactor.awaitSingleOrNull
 import mu.KLogger
 import mu.KotlinLogging
 import nl.nlportal.core.ssl.ClientSslContextResolver
-import nl.nlportal.core.util.Mapper
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.domain.PostEnkelvoudiginformatieobjectRequest
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
-import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.core.io.buffer.DataBufferUtils
 import org.springframework.http.MediaType
@@ -36,12 +33,8 @@ import org.springframework.web.reactive.function.client.awaitBody
 import reactor.core.publisher.Flux
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
-import java.nio.file.Files
-import java.nio.file.StandardOpenOption
 import java.util.Base64
 import java.util.UUID
-import kotlin.io.path.deleteIfExists
-import kotlin.io.path.outputStream
 
 class DocumentenApiClient(
     private val documentenApiConfigs: DocumentApisConfig,
@@ -92,25 +85,10 @@ class DocumentenApiClient(
         documentApi: String,
     ): Document {
         request.inhoud = UUID.randomUUID().toString()
-        val (requestPrefix, requestPostfix) = Mapper.get().writeValueAsString(request).split(request.inhoud!!)
 
-        val file =
-            withContext(Dispatchers.IO) {
-                Files.createTempFile("tempDocumentUploadRequest", ".json")
-            }
+        val fileData = DataBufferUtils.join(documentContent).awaitSingleOrNull()?.asInputStream()?.readAllBytes()
 
-        file.outputStream().use { fileOutput ->
-            requestPrefix.byteInputStream().copyTo(fileOutput)
-            Base64.getEncoder().wrap(file.outputStream(StandardOpenOption.APPEND)).use { base64Output ->
-                DataBufferUtils
-                    .write(
-                        documentContent,
-                        Base64.getEncoder().wrap(fileOutput),
-                    )
-                    .subscribe()
-            }
-            requestPostfix.byteInputStream().copyTo(fileOutput)
-        }
+        request.inhoud = Base64.getEncoder().encodeToString(fileData)
 
         val response =
             webClient(documentApi)
@@ -120,12 +98,11 @@ class DocumentenApiClient(
                 .accept(MediaType.APPLICATION_JSON)
                 .body(
                     BodyInserters
-                        .fromResource(FileSystemResource(file)),
+                        .fromValue(request),
                 )
                 .retrieve()
                 .awaitBody<Document>()
 
-        file.deleteIfExists()
         return response
     }
 
@@ -164,7 +141,8 @@ class DocumentenApiClient(
             .apply {
                 if (!documentenApiConfig.secret.isNullOrBlank() && !documentenApiConfig.clientId.isNullOrBlank()) {
                     // only add an authorization header if there is a secret and clientId
-                    val token = idTokenGenerator.generateToken(documentenApiConfig.secret!!, documentenApiConfig.clientId!!)
+                    val token =
+                        idTokenGenerator.generateToken(documentenApiConfig.secret!!, documentenApiConfig.clientId!!)
                     it.defaultHeader("Authorization", "Bearer $token")
                 }
             }

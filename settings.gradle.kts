@@ -25,6 +25,9 @@ pluginManagement {
         id("org.jetbrains.dokka") version dokkaVersion apply false
     }
 }
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
+}
 
 include(
     "app",
@@ -42,6 +45,7 @@ include(
     "klantcontactmomenten",
     "messaging",
     "product",
+    "portal-authentication",
     "payment",
     "zgw:catalogi-api",
     "zgw:common-ground-authentication",

@@ -1,7 +1,6 @@
 package nl.nlportal.documentenapi.service
 
 import nl.nlportal.documentenapi.client.DocumentenApiClient
-import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.documentenapi.client.DocumentApisConfig
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.domain.DocumentContent
@@ -13,6 +12,7 @@ import java.util.Base64
 import java.util.UUID
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import nl.nlportal.core.util.CoreUtils.extractId
+import nl.nlportal.portal.authentication.domain.PortalAuthentication
 import org.springframework.http.codec.multipart.FilePart
 import org.springframework.security.core.context.ReactiveSecurityContextHolder
 
@@ -45,7 +45,7 @@ class DocumentenApiService(
     ): Document {
         val auteur =
             ReactiveSecurityContextHolder.getContext()
-                .map { (it.authentication as CommonGroundAuthentication).getUserId() }
+                .map { (it.authentication as PortalAuthentication).userId }
                 .awaitSingleOrNull() ?: "valtimo"
 
         return documentenApiClient.postDocument(

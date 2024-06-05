@@ -36,7 +36,7 @@ class HaalCentraalClientProvider(
             .defaultHeaders {
                 // only set jwt from token exchange as bearer token if not available,
                 if (it[HttpHeaders.AUTHORIZATION].isNullOrEmpty()) {
-                    it.setBearerAuth((authentication as CommonGroundAuthentication).jwt.tokenValue)
+                    it.setBearerAuth((authentication as CommonGroundAuthentication).token.tokenValue)
                 }
             }
             .clientConnector(

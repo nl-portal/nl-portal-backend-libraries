@@ -24,6 +24,7 @@ import io.netty.handler.logging.LogLevel
 import java.util.UUID
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.util.LinkedMultiValueMap
+import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
 import reactor.netty.http.client.HttpClient
@@ -83,6 +84,11 @@ class CatalogiApiClient(
                         AdvancedByteBufFormat.TEXTUAL,
                     ),
                 ),
+            )
+            .exchangeStrategies(
+                ExchangeStrategies.builder()
+                    .codecs { configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024) }
+                    .build(),
             )
             .baseUrl(catalogiApiConfig.url)
             .defaultHeader("Accept-Crs", "EPSG:4326")

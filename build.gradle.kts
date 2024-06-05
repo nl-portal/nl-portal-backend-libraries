@@ -1,5 +1,6 @@
 import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import java.net.URI
 import kotlin.io.encoding.Base64.Default.decode
 import kotlin.io.encoding.ExperimentalEncodingApi
@@ -39,7 +40,7 @@ plugins {
     // Docker-compose plugin
     id("com.avast.gradle.docker-compose")
 
-    id("com.github.jk1.dependency-license-report") version "2.7"
+    id("com.github.jk1.dependency-license-report") version "2.8"
 
     id("org.jetbrains.dokka")
 
@@ -59,7 +60,6 @@ allprojects {
 }
 
 subprojects {
-
     println("Enabling com.avast.gradle.docker-compose plugin in project ${project.name}...")
     apply(plugin = "com.avast.gradle.docker-compose")
 
@@ -114,13 +114,11 @@ subprojects {
     println("Enabling Kotlin All-open plugin in project ${project.name}...")
     apply(plugin = "org.jetbrains.kotlin.plugin.allopen")
 
-    tasks.withType<KotlinCompile> {
-        println("Configuring KotlinCompile $name in project ${project.name}...")
-        kotlinOptions {
-            languageVersion = "2.1"
-            apiVersion = "2.1"
-            jvmTarget = "21"
-            freeCompilerArgs = listOf("-Xjsr305=strict", "-Xemit-jvm-type-annotations")
+    tasks.withType<KotlinJvmCompile>().configureEach {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_21)
+            freeCompilerArgs.add("-Xjsr305=strict")
+            freeCompilerArgs.add("-Xemit-jvm-type-annotations")
         }
     }
 

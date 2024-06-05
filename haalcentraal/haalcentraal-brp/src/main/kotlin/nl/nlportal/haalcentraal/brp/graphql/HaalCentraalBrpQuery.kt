@@ -25,11 +25,17 @@ import graphql.schema.DataFetchingEnvironment
 class HaalCentraalBrpQuery(val haalCentraalBrpService: HaalCentraalBrpService) : Query {
     @GraphQLDescription("Gets the persoon data")
     suspend fun getPersoon(dfe: DataFetchingEnvironment): Persoon? {
-        return haalCentraalBrpService.getPersoon(dfe.graphQlContext.get(AUTHENTICATION_KEY))
+        return haalCentraalBrpService.getPersoon(dfe.graphQlContext[AUTHENTICATION_KEY])
     }
 
-    @GraphQLDescription("Gets the number of people living in the same house as the person that makes the requests")
-    suspend fun getBewonersAantal(dfe: DataFetchingEnvironment): Int? {
-        return haalCentraalBrpService.getBewonersAantal(dfe.graphQlContext.get(AUTHENTICATION_KEY))
+    @GraphQLDescription("Gets the number of people living in the same house of the adresseerbaarObjectIdentificatie")
+    suspend fun getBewonersAantal(
+        dfe: DataFetchingEnvironment,
+        adresseerbaarObjectIdentificatie: String,
+    ): Int? {
+        return haalCentraalBrpService.getBewonersAantal(
+            dfe.graphQlContext[AUTHENTICATION_KEY],
+            adresseerbaarObjectIdentificatie,
+        )
     }
 }

@@ -23,7 +23,6 @@ val isLib = true
 dependencies {
 
     api(project(":graphql"))
-    api(project(":zgw:common-ground-authentication"))
     api(project(":zgw:idtoken-authentication"))
 
     implementation("org.springframework.boot:spring-boot-starter")
@@ -33,7 +32,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
 
-    testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.kotlinCoroutines)
     testImplementation(TestDependencies.mockitoKotlin)
     testImplementation(TestDependencies.okHttpMockWebserver)

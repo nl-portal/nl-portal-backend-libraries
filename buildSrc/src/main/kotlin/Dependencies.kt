@@ -20,4 +20,5 @@ object Dependencies {
     val jsonWebTokensApi by lazy { "io.jsonwebtoken:jjwt-api:${Versions.jsonWebTokens}" }
     val jsonWebTokensImpl by lazy { "io.jsonwebtoken:jjwt-impl:${Versions.jsonWebTokens}" }
     val jsonWebTokensJackson by lazy { "io.jsonwebtoken:jjwt-jackson:${Versions.jsonWebTokens}" }
+    val kotlinxCoroutinesReactor by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${Versions.kotlinxCoroutinesReactor}" }
 }
