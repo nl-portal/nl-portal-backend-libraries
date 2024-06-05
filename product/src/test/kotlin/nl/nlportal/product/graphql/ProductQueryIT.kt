@@ -44,7 +44,7 @@ import java.util.*
 
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 internal class ProductQueryIT(
     @Autowired private val testClient: WebTestClient,
     @Autowired private val productApiConfig: ProductConfig,
