@@ -1,0 +1,56 @@
+{
+    "display": "form",
+    "components": [
+        {
+            "label": "Naam",
+            "placeholder": "Voer uw naam in",
+            "tooltip": "Volledige naam",
+            "type": "textfield",
+            "key": "naam",
+            "input": true,
+            "validate": {
+                "required": true
+            }
+        },
+        {
+            "label": "Kenteken",
+            "placeholder": "Voer uw kenteken in",
+            "tooltip": "Kenteken van het voertuig",
+            "type": "textfield",
+            "key": "kenteken",
+            "input": true,
+            "validate": {
+                "required": true
+            }
+        },
+        {
+            "label": "Straat",
+            "placeholder": "Voer uw straatnaam in",
+            "tooltip": "Straatnaam van uw adres",
+            "type": "textfield",
+            "key": "straat",
+            "input": true,
+            "validate": {
+                "required": false
+            }
+        },
+        {
+            "label": "Postcode",
+            "placeholder": "Voer uw postcode in",
+            "tooltip": "Postcode van het adres",
+            "type": "textfield",
+            "key": "postcode",
+            "input": true,
+            "validate": {
+                "required": true
+            }
+        },
+        {
+            "key": "submit",
+            "type": "button",
+            "input": false,
+            "label": "Aanvragen",
+            "disableOnInvalid": true
+        }
+    ]
+}

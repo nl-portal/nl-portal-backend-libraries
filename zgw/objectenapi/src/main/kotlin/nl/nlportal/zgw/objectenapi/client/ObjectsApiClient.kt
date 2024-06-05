@@ -25,6 +25,7 @@ import java.util.UUID
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequest
+import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequestWithoutCorrection
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.MediaType
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
@@ -96,6 +97,20 @@ open class ObjectsApiClient(
     }
 
     suspend inline fun <reified T> createObject(objectsApiObject: CreateObjectsApiObjectRequest<T>): ObjectsApiObject<T> {
+        return webClient()
+            .post()
+            .uri("/api/v2/objects")
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .bodyValue(objectsApiObject)
+            .retrieve()
+            .bodyToMono(object : ParameterizedTypeReference<ObjectsApiObject<T>>() {})
+            .awaitSingle()
+    }
+
+    suspend inline fun <reified T> createObjectWithoutCorrection(
+        objectsApiObject: CreateObjectsApiObjectRequestWithoutCorrection<T>,
+    ): ObjectsApiObject<T> {
         return webClient()
             .post()
             .uri("/api/v2/objects")

@@ -30,3 +30,15 @@ data class CreateObjectsApiObjectRequestRecord<T>(
     var correctionFor: String? = null,
     var correctedBy: String? = null,
 )
+
+data class CreateObjectsApiObjectRequestWithoutCorrection<T>(
+    val uuid: UUID,
+    val type: String,
+    val record: CreateObjectsApiObjectRequestRecordWithoutCorrection<T>,
+)
+
+data class CreateObjectsApiObjectRequestRecordWithoutCorrection<T>(
+    val typeVersion: Int,
+    val data: T,
+    val startAt: String,
+)
