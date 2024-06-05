@@ -127,7 +127,6 @@ class ProductService(
         val zaken = mutableListOf<Zaak>()
 
         val productType = getProductType(productTypeId, productName)
-
         // loop through the zakenTypes and get all the zaken
         productType?.zaaktypen?.forEach { zaakTypeId ->
             zaken.addAll(
@@ -240,21 +239,25 @@ class ProductService(
         productTypeId: UUID?,
         productName: String,
     ): ProductType? {
-        if (productTypeId != null) {
-            return getObjectsApiObjectById<ProductType>(productTypeId.toString())?.apply {
+        try {
+            if (productTypeId != null) {
+                return getObjectsApiObjectById<ProductType>(productTypeId.toString())?.apply {
+                    this.record.data.id = this.uuid
+                }?.record?.data
+            }
+            val objectSearchParameters =
+                listOf(
+                    ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_NAME, Comparator.EQUAL_TO, productName),
+                )
+            return getObjectsApiObject<ProductType>(
+                productConfig.productTypeUrl,
+                objectSearchParameters,
+            ).apply {
                 this.record.data.id = this.uuid
-            }?.record?.data
+            }.record.data
+        } catch (ex: Exception) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "ProductType could not be found")
         }
-        val objectSearchParameters =
-            listOf(
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_NAME, Comparator.EQUAL_TO, productName),
-            )
-        return getObjectsApiObject<ProductType>(
-            productConfig.productTypeUrl,
-            objectSearchParameters,
-        ).apply {
-            this.record.data.id = this.uuid
-        }.record.data
     }
 
     suspend fun getProductTypes(authentication: CommonGroundAuthentication): List<ProductType> {

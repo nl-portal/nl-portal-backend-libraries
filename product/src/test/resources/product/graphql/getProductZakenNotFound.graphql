@@ -1,5 +1,5 @@
 query {
-    getProductZaken(productName: "erfpacht111") {
+    getProductZaken(productName: "verhuur") {
             uuid,
             omschrijving
         }
