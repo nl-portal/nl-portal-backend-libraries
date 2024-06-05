@@ -21,6 +21,8 @@ val isLib = true
 
 dependencies {
     api(project(":klant-generiek"))
+    api(project(":portal-authentication"))
+    api(project(":zgw:common-ground-authentication"))
 
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation("org.springframework.boot", "spring-boot-starter-test")

@@ -20,6 +20,7 @@ plugins {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     api(project(":core"))
+    api(project(":portal-authentication"))
 
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.springframework.security", "spring-security-test")

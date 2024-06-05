@@ -18,11 +18,11 @@ package nl.nlportal.zgw.taak.graphql
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Mutation
 import com.fasterxml.jackson.databind.node.ObjectNode
-import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.zgw.taak.domain.Taak
 import nl.nlportal.zgw.taak.service.TaakService
 import graphql.schema.DataFetchingEnvironment
+import nl.nlportal.portal.authentication.domain.PortalAuthentication
 import java.util.UUID
 
 class TaakMutation(
@@ -34,7 +34,7 @@ class TaakMutation(
         id: UUID,
         submission: ObjectNode,
     ): Taak {
-        val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
+        val authentication: PortalAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
 
         return taskService.submitTaak(id, submission, authentication)
     }

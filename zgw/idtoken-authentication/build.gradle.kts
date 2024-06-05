@@ -21,7 +21,6 @@ plugins {
 val isLib = true
 
 dependencies {
-
     implementation(Dependencies.jsonWebTokensApi)
     implementation(Dependencies.jsonWebTokensImpl)
     implementation(Dependencies.jsonWebTokensJackson)
