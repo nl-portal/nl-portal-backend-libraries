@@ -20,7 +20,6 @@ import nl.nlportal.product.client.ProductConfig
 import nl.nlportal.product.graphql.ProductMutation
 import nl.nlportal.product.service.ProductService
 import nl.nlportal.zakenapi.client.ZakenApiClient
-import nl.nlportal.zakenapi.client.ZakenApiConfig
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
 import org.springframework.boot.autoconfigure.AutoConfiguration

@@ -30,9 +30,7 @@ import nl.nlportal.commonground.authentication.exception.UserTypeUnsupportedExce
 import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.product.domain.ProductRol
 import nl.nlportal.zakenapi.client.ZakenApiClient
-import nl.nlportal.zakenapi.client.ZakenApiConfig
 import nl.nlportal.zakenapi.domain.Zaak
-import nl.nlportal.zakenapi.graphql.ZaakPage
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
@@ -123,14 +121,15 @@ class ProductService(
         pageNumber: Int,
     ): List<Zaak> {
         val productType = getProductType(productTypeId, productName)
-        val result = zakenApiClient.zoeken()
-            .search()
-            .page(pageNumber)
-            .withAuthentication(authentication)
-            .ofZaakTypes(productType?.zaaktypen?.map{it.toString()}!!)
-            .retrieve()
-            .results
-            .sortedBy { it.startdatum }
+        val result =
+            zakenApiClient.zoeken()
+                .search()
+                .page(pageNumber)
+                .withAuthentication(authentication)
+                .ofZaakTypes(productType?.zaaktypen?.map { it.toString() }!!)
+                .retrieve()
+                .results
+                .sortedBy { it.startdatum }
 
         return result
     }
