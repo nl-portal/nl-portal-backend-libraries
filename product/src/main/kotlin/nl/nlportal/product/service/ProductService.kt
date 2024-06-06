@@ -223,6 +223,7 @@ class ProductService(
                 this.record.data.id = this.uuid
             }.record.data
         } catch (ex: Exception) {
+            logger.error { "Something went wrong with get ProductDetails by productInstantieId $productInstantieId with error: ${ex.message}" }
             null
         }
     }
@@ -241,13 +242,16 @@ class ProductService(
                 listOf(
                     ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_NAME, Comparator.EQUAL_TO, productName),
                 )
-            return getObjectsApiObject<ProductType>(
-                productConfig.productTypeUrl,
-                objectSearchParameters,
-            ).apply {
-                this.record.data.id = this.uuid
-            }.record.data
+            val result =
+                getObjectsApiObject<ProductType>(
+                    productConfig.productTypeUrl,
+                    objectSearchParameters,
+                ).apply {
+                    this.record.data.id = this.uuid
+                }.record.data
+            return result
         } catch (ex: Exception) {
+            logger.error { "Something went wrong with get ProductType by name $productName or id $productTypeId with error: ${ex.message}" }
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "ProductType could not be found")
         }
     }
@@ -285,6 +289,7 @@ class ProductService(
         return try {
             objectsApiClient.getObjectById<T>(id = id)
         } catch (ex: Exception) {
+            logger.warn { "Something went wrong with getObjectsApiObjectById by id $id with error: ${ex.message}" }
             null
         }
     }
