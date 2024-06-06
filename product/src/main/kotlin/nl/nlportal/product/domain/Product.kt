@@ -42,8 +42,6 @@ class Product(
     val rollen: Map<String, ProductRol>,
     val eigenschappen: ObjectNode,
     @GraphQLIgnore
-    val verbruiksobjecten: Map<String, String>,
-    @GraphQLIgnore
     val taken: List<UUID>,
     @GraphQLIgnore
     val zaken: List<UUID>,
@@ -55,23 +53,6 @@ class Product(
         productService: ProductService,
     ): ProductType? {
         return productService.getObjectsApiObjectById<ProductType>(productTypeId)?.record?.data
-    }
-
-    suspend fun verbruiksobjecten(
-        @GraphQLIgnore
-        @Autowired
-        productService: ProductService,
-    ): List<ProductVerbruiksObject> {
-        val verbruiksobjects = mutableListOf<ProductVerbruiksObject>()
-        verbruiksobjecten.mapNotNull {
-            productService.getObjectsApiObjectById<ProductVerbruiksObject>(it.value)?.apply {
-                this.record.data.id = this.uuid
-                this.record.data.soort = it.key
-            }?.let {
-                return mutableListOf(it.record.data)
-            }
-        }
-        return verbruiksobjects
     }
 
     suspend fun productDetails(

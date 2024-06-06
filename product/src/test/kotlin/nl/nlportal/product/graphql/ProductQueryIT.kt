@@ -158,8 +158,6 @@ internal class ProductQueryIT(
             .jsonPath("$basePath.zaken[0].uuid").isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c202")
             .jsonPath("$basePath.zaken[0].omschrijving").isEqualTo("Lopende zaak")
             .jsonPath("$basePath.taken[0].title").isEqualTo("Very important task")
-            .jsonPath("$basePath.verbruiksobjecten[0].id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5a800")
-            .jsonPath("$basePath.verbruiksobjecten[0].soort").isEqualTo("verhuur")
             .jsonPath("$basePath.productDetails.id").isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c500")
     }
 

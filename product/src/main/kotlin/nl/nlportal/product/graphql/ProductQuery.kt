@@ -93,7 +93,7 @@ class ProductQuery(
         ).take(pageSize ?: 20)
     }
 
-    @GraphQLDescription("Get list of verbruiksobjecten of product ")
+    @GraphQLDescription("Get list of verbruiksobjecten of product")
     suspend fun getProductVerbruiksObjecten(
         dfe: DataFetchingEnvironment,
         productId: UUID,
