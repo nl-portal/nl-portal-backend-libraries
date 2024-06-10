@@ -39,6 +39,7 @@ import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.web.reactive.server.WebTestClient
 import java.net.URI
+import java.time.LocalDateTime
 import java.util.*
 
 @SpringBootTest
@@ -145,6 +146,8 @@ internal class ProductQueryIT(
     @Test
     @WithBurgerUser("569312863")
     fun getProductTestBurger() {
+        var now = LocalDateTime.now().toString()
+
         val basePath = "$.data.getProduct"
 
         testClient.post()

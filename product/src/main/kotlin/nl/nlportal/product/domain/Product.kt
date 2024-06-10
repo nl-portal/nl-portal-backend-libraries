@@ -24,7 +24,7 @@ import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.taak.domain.Taak
 import nl.nlportal.zgw.taak.domain.TaakObject
 import org.springframework.beans.factory.annotation.Autowired
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
 
 class Product(
@@ -36,8 +36,8 @@ class Product(
     @JsonProperty("subtype")
     val productSubType: String?,
     val status: String,
-    val geldigVan: LocalDate,
-    val geldigTot: LocalDate?,
+    val geldigVan: LocalDateTime,
+    val geldigTot: LocalDateTime?,
     @GraphQLIgnore
     val rollen: Map<String, ProductRol>,
     val eigenschappen: ObjectNode,

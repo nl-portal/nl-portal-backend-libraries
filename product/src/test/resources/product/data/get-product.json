@@ -20,8 +20,8 @@
         }
       },
       "status": "actief",
-      "geldigTot": "2025-05-25",
-      "geldigVan": "2022-05-25",
+      "geldigTot": "2024-12-20T00:00:00.00",
+      "geldigVan": "2024-12-31T00:00:00.00",
       "documenten": [
         "https://openzaak.mijngemeente.nl/documenten/api/v1/enkelvoudiginformatieobjecten/7d9cd6c2-8147-46f2-9ae9-c67e8213c116"
       ],
