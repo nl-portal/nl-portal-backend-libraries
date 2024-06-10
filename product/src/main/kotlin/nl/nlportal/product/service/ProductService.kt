@@ -94,14 +94,15 @@ class ProductService(
 
     suspend fun getProductVerbruiksObjecten(
         authentication: CommonGroundAuthentication,
-        productId: UUID,
+        productId: String,
         pageNumber: Int,
         pageSize: Int,
     ): List<ProductVerbruiksObject> {
+        logger.info("ProductId = {}", productId)
         val objectSearchParameters =
             listOf(
                 ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.userId),
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_INSTANTIE, Comparator.EQUAL_TO, productId.toString()),
+                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_INSTANTIE, Comparator.EQUAL_TO, productId),
             )
         return getObjectsApiObjectResultPage<ProductVerbruiksObject>(
             productConfig.productVerbruiksObjectTypeUrl,

@@ -100,7 +100,7 @@ class ProductQuery(
     ): List<ProductVerbruiksObject> {
         return productService.getProductVerbruiksObjecten(
             dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
-            productId,
+            productId.toString(),
             pageNumber = 1,
             pageSize = 100,
         )

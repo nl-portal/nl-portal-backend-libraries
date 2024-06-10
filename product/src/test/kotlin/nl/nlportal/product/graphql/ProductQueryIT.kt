@@ -306,13 +306,6 @@ internal class ProductQueryIT(
                                 } else if (queryParams.any { it.contains("identificatie__value__exact__569312864") }
                                 ) {
                                     TestHelper.mockResponseFromFile("/product/data/get-taken-empty.json")
-                                } else if (queryParams.any {
-                                        it.contains(
-                                            "productInstantie__exact__2d725c07-2f26-4705-8637-438a42b5ac2d",
-                                        )
-                                    }
-                                ) {
-                                    TestHelper.mockResponseFromFile("/product/data/get-product-details.json")
                                 } else if (queryParams.any { it.contains("rollen__initiator__identificatie__exact__569312863") } &&
                                     queryParams.any { it.contains("PDCProductType__exact__7d9cd6c2-8147-46f2-9ae9-c67e8213c200") }
                                 ) {
@@ -330,9 +323,17 @@ internal class ProductQueryIT(
                                     queryParams.any { it.contains("productInstantie__exact__7d9cd6c2-8147-46f2-9ae9-c67e8213c500") }
                                 ) {
                                     TestHelper.mockResponseFromFile("/product/data/get-product-verbruiks-objecten.json")
-                                } else if (queryParams.any { it.contains("productInstantie__exact__2d725c07-2f26-4705-8637-438a42b5ac2d") }
+                                } else if (queryParams.any { it.contains("rollen__initiator__identificatie__exact__569312863") } &&
+                                    queryParams.any { it.contains("productInstantie__exact__2d725c07-2f26-4705-8637-438a42b5ac2d") }
                                 ) {
                                     TestHelper.mockResponseFromFile("/product/data/get-product-verbruiks-objecten.json")
+                                } else if (queryParams.any {
+                                        it.contains(
+                                            "productInstantie__exact__2d725c07-2f26-4705-8637-438a42b5ac2d",
+                                        )
+                                    }
+                                ) {
+                                    TestHelper.mockResponseFromFile("/product/data/get-product-details.json")
                                 } else {
                                     MockResponse().setResponseCode(404)
                                 }
