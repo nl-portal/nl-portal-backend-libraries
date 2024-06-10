@@ -17,11 +17,11 @@ package nl.nlportal.zgw.taak.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Query
-import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.zgw.taak.domain.Taak
 import nl.nlportal.zgw.taak.service.TaakService
 import graphql.schema.DataFetchingEnvironment
+import nl.nlportal.portal.authentication.domain.PortalAuthentication
 import java.util.UUID
 
 @Deprecated("Use version 2")
@@ -45,7 +45,7 @@ class TaakQuery(
         pageSize: Int? = 20,
         zaakUUID: UUID? = null,
     ): TaakPage {
-        val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
+        val authentication: PortalAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
 
         return taskService.getTaken(
             pageNumber = pageNumber ?: 1,
@@ -60,7 +60,7 @@ class TaakQuery(
         id: UUID,
         dfe: DataFetchingEnvironment,
     ): Taak {
-        val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
+        val authentication: PortalAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
         return taskService.getTaakById(id, authentication)
     }
 }

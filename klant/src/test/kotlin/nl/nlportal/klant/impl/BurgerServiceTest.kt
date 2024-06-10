@@ -71,7 +71,7 @@ internal class BurgerServiceTest {
                 .header("alg", "none")
                 .claim("random", "1234")
                 .build()
-        val authentication = object : CommonGroundAuthentication(jwt, emptyList()) {}
+        val authentication = object : CommonGroundAuthentication(jwt, emptyList(), "kvk", "1") {}
 
         val illegalArgumentException =
             Assertions.assertThrows(IllegalArgumentException::class.java) {

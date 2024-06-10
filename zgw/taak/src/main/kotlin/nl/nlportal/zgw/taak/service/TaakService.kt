@@ -17,26 +17,19 @@ package nl.nlportal.zgw.taak.service
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.node.ObjectNode
-import nl.nlportal.commonground.authentication.BedrijfAuthentication
-import nl.nlportal.commonground.authentication.BurgerAuthentication
-import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.commonground.authentication.exception.UserTypeUnsupportedException
+
 import nl.nlportal.core.util.Mapper
+import nl.nlportal.portal.authentication.domain.PortalAuthentication
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
-import nl.nlportal.zgw.objectenapi.domain.ResultPage
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
 import nl.nlportal.zgw.taak.domain.Taak
-import nl.nlportal.zgw.taak.domain.TaakIdentificatie
 import nl.nlportal.zgw.taak.domain.TaakObject
-import nl.nlportal.zgw.taak.domain.TaakObjectV2
 import nl.nlportal.zgw.taak.domain.TaakStatus
-import nl.nlportal.zgw.taak.domain.TaakV2
 import nl.nlportal.zgw.taak.graphql.TaakPage
-import nl.nlportal.zgw.taak.graphql.TaakPageV2
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
@@ -49,7 +42,7 @@ open class TaakService(
     suspend fun getTaken(
         pageNumber: Int,
         pageSize: Int,
-        authentication: CommonGroundAuthentication,
+        authentication: PortalAuthentication,
         zaakUUID: UUID? = null,
     ): TaakPage {
         return getTakenResultPage<TaakObject>(
@@ -79,7 +72,7 @@ open class TaakService(
     @Deprecated("Use version 2")
     suspend fun getTaakById(
         id: UUID,
-        authentication: CommonGroundAuthentication,
+        authentication: PortalAuthentication,
     ): Taak {
         val taak =
             Taak.fromObjectsApiTask(
@@ -121,7 +114,7 @@ open class TaakService(
     suspend fun submitTaak(
         id: UUID,
         submission: ObjectNode,
-        authentication: CommonGroundAuthentication,
+        authentication: PortalAuthentication,
     ): Taak {
         val objectsApiTask =
             getObjectsApiTaak<TaakObject>(
@@ -178,6 +171,8 @@ open class TaakService(
 
     private suspend inline fun <reified T> getObjectsApiTaak(
         taskId: UUID,
+        authentication: PortalAuthentication,
+    ): ObjectsApiObject<TaakObject> {
         authentication: CommonGroundAuthentication,
         objectTypeUrl: String,
     ): ObjectsApiObject<T> {

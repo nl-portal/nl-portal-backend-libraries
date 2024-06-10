@@ -19,7 +19,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
 import mu.KotlinLogging
 import nl.nlportal.commonground.authentication.exception.UserTypeUnsupportedException
-import org.springframework.core.convert.converter.Converter
+import nl.nlportal.portal.authentication.domain.PortalAuthentication
+import nl.nlportal.portal.authentication.domain.SUB_KEY
+import nl.nlportal.portal.authentication.service.PortalAuthenticationConverter
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter
@@ -33,28 +35,32 @@ import java.net.URI
 class CommonGroundAuthenticationConverter(
     val decoder: ReactiveJwtDecoder,
     val keycloakConfig: KeycloakConfig,
-) : Converter<Jwt, Mono<CommonGroundAuthentication>> {
+) : PortalAuthenticationConverter() {
     private val jwtGrantedAuthoritiesConverter = JwtGrantedAuthoritiesConverter()
     private val webClient = WebClient.create()
 
-    // TODO: remove support for bsn and kvk keys directly in the root of the JWT
-    override fun convert(jwt: Jwt): Mono<CommonGroundAuthentication> {
+    override fun convert(jwt: Jwt): Mono<PortalAuthentication> {
         return tokenExchange(jwt).flatMap {
             decoder.decode(it.accessToken).map { exchangedJwt ->
                 val aanvrager = exchangedJwt.claims[AANVRAGER_KEY]
+
                 if (aanvrager is Map<*, *>) {
                     if (aanvrager[BSN_KEY] != null) {
                         return@map BurgerAuthentication(exchangedJwt, jwtGrantedAuthoritiesConverter.convert(exchangedJwt))
                     } else if (aanvrager[KVK_NUMMER_KEY] != null) {
                         return@map BedrijfAuthentication(exchangedJwt, jwtGrantedAuthoritiesConverter.convert(exchangedJwt))
+                    } else if (aanvrager[SUB_KEY] != null) {
+                        return@map KeycloakUserAuthentication(exchangedJwt, jwtGrantedAuthoritiesConverter.convert(exchangedJwt))
                     }
                 }
 
                 // This block is for temporary backwards compatibility
                 if (exchangedJwt.claims[BSN_KEY] != null) {
                     return@map BurgerAuthentication(exchangedJwt, jwtGrantedAuthoritiesConverter.convert(exchangedJwt))
-                } else if (jwt.claims[KVK_NUMMER_KEY] != null) {
+                } else if (exchangedJwt.claims[KVK_NUMMER_KEY] != null) {
                     return@map BedrijfAuthentication(exchangedJwt, jwtGrantedAuthoritiesConverter.convert(exchangedJwt))
+                } else if (jwt.claims[SUB_KEY] != null) {
+                    return@map KeycloakUserAuthentication(jwt, jwtGrantedAuthoritiesConverter.convert(jwt))
                 }
 
                 val subject = exchangedJwt.subject
@@ -63,6 +69,7 @@ class CommonGroundAuthenticationConverter(
                 } else {
                     logger.error { "User with subject $subject has no bsn or kvk nummer assigned" }
                 }
+
                 throw UserTypeUnsupportedException("User type not supported")
             }
         }

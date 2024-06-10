@@ -17,7 +17,6 @@ package nl.nlportal.zakenapi.autoconfigure
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import nl.nlportal.documentenapi.service.DocumentenApiService
-import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.client.ZakenApiConfig
 import nl.nlportal.zakenapi.graphql.ZaakQuery
@@ -27,6 +26,7 @@ import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
+import org.springframework.web.reactive.function.client.WebClient
 
 @AutoConfiguration
 @EnableConfigurationProperties(ZakenApiConfig::class)
@@ -54,9 +54,9 @@ class ZakenApiAutoConfiguration {
     @Bean
     fun zakenApiClient(
         zakenApiConfig: ZakenApiConfig,
-        idTokenGenerator: IdTokenGenerator,
+        webClientBuilder: WebClient.Builder,
     ): ZakenApiClient {
-        return ZakenApiClient(zakenApiConfig, idTokenGenerator)
+        return ZakenApiClient(zakenApiConfig, webClientBuilder)
     }
 
     @Bean
