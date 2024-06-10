@@ -17,11 +17,7 @@ package nl.nlportal.zgw.taak.service
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.node.ObjectNode
-import nl.nlportal.commonground.authentication.BedrijfAuthentication
-import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.commonground.authentication.exception.UserTypeUnsupportedException
-
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.Comparator
@@ -224,26 +220,9 @@ open class TaakService(
     }
 
     private fun getUserSearchParameters(authentication: CommonGroundAuthentication): List<ObjectSearchParameter> {
-        return when (authentication) {
-            is BurgerAuthentication -> {
-                createIdentificatieSearchParameters("bsn", authentication.getBsn())
-            }
-
-            is BedrijfAuthentication -> {
-                createIdentificatieSearchParameters("kvk", authentication.getKvkNummer())
-            }
-
-            else -> throw UserTypeUnsupportedException("User type not supported")
-        }
-    }
-
-    private fun createIdentificatieSearchParameters(
-        type: String,
-        value: String,
-    ): List<ObjectSearchParameter> {
         return listOf(
-            ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, type),
-            ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, value),
+            ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, authentication.userType),
+            ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, authentication.userId),
         )
     }
 
@@ -251,16 +230,6 @@ open class TaakService(
         authentication: CommonGroundAuthentication,
         taakIdentificatie: TaakIdentificatie,
     ): Boolean {
-        return when (authentication) {
-            is BurgerAuthentication -> {
-                taakIdentificatie.type.lowercase() == "bsn" && taakIdentificatie.value == authentication.getBsn()
-            }
-
-            is BedrijfAuthentication -> {
-                taakIdentificatie.type.lowercase() == "kvk" && taakIdentificatie.value == authentication.getKvkNummer()
-            }
-
-            else -> false
-        }
+        return taakIdentificatie.type.lowercase() == authentication.userType && taakIdentificatie.value == authentication.userId
     }
 }
