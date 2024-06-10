@@ -24,7 +24,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
 
     api(project(":graphql"))
-    api(project(":portal-authentication"))
+    api(project(":zgw:common-ground-authentication"))
     api(project(":zgw:objectenapi"))
 
     testImplementation("org.springframework.boot", "spring-boot-starter-test")

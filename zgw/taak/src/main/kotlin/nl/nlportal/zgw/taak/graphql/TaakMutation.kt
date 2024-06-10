@@ -22,7 +22,6 @@ import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.zgw.taak.domain.Taak
 import nl.nlportal.zgw.taak.service.TaakService
 import graphql.schema.DataFetchingEnvironment
-import nl.nlportal.portal.authentication.domain.PortalAuthentication
 import java.util.UUID
 
 @Deprecated("Use version 2")
@@ -35,9 +34,7 @@ class TaakMutation(
         id: UUID,
         submission: ObjectNode,
     ): Taak {
-        val authentication: PortalAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
-
-        return taskService.submitTaak(id, submission, authentication)
+        return taskService.submitTaak(id, submission, dfe.graphQlContext[AUTHENTICATION_KEY])
     }
 
     @GraphQLDescription("Submit a task")

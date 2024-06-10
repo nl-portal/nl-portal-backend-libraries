@@ -19,7 +19,6 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Mutation
 import com.fasterxml.jackson.databind.node.ObjectNode
 import graphql.schema.DataFetchingEnvironment
-import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.zgw.taak.domain.TaakV2
 import nl.nlportal.zgw.taak.service.TaakService
@@ -34,8 +33,6 @@ class TaakMutationV2(
         id: UUID,
         submission: ObjectNode,
     ): TaakV2 {
-        val authentication: CommonGroundAuthentication = dfe.graphQlContext[AUTHENTICATION_KEY]
-
-        return taskService.submitTaakV2(id, submission, authentication)
+        return taskService.submitTaakV2(id, submission, dfe.graphQlContext[AUTHENTICATION_KEY])
     }
 }
