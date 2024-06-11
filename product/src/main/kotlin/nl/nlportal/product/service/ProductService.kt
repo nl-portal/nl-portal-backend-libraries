@@ -112,7 +112,7 @@ class ProductService(
                 it.record.data
             }
         } catch (ex: Exception) {
-            logger.error { "Something went wrong with get Verbruiksobjecten by productId $productId with error: ${ex.message}" }
+            logger.error { "Something went wrong with get Verbruiksobjecten by productInstantieId $productId with error: ${ex.message}" }
             listOf()
         }
     }
