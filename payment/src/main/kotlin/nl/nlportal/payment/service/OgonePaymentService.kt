@@ -29,7 +29,7 @@ import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
-import nl.nlportal.zgw.taak.domain.TaakObject
+import nl.nlportal.zgw.taak.domain.TaakObjectV2
 import nl.nlportal.zgw.taak.domain.TaakStatus
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.lang3.StringUtils
@@ -90,21 +90,21 @@ class OgonePaymentService(
 
         val orderId = serverHttpRequest.queryParams[OgonePayment.QUERYSTRING_ORDER_ID]?.get(0)
         val objectsApiTask = getObjectsApiTaak(UUID.fromString(orderId))
-        if (objectsApiTask.record.data.status == TaakStatus.INGEDIEND) {
+        if (objectsApiTask.record.data.status == TaakStatus.AFGEROND) {
             return "Task is already completed"
         }
 
         // validate ogone request
         val pspIdFromTask =
-            objectsApiTask.record.data.data[OgonePayment.TAAK_PSPID]
+            objectsApiTask.record.data.ogonebetaling?.pspid
                 ?: return "Task does not have a pspId"
 
-        if (!isValidOgoneRequest(serverHttpRequest, pspIdFromTask as String)) {
+        if (!isValidOgoneRequest(serverHttpRequest, pspIdFromTask)) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request is not valid")
         }
 
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
-        updateRequest.record.data.status = TaakStatus.INGEDIEND
+        updateRequest.record.data.status = TaakStatus.AFGEROND
         updateRequest.record.correctedBy = "Payment provider"
         updateRequest.record.correctionFor = objectsApiTask.record.index.toString()
         objectsApiClient.updateObject(objectsApiTask.uuid, updateRequest)
@@ -112,15 +112,15 @@ class OgonePaymentService(
         return "Request successful processed"
     }
 
-    private suspend fun getObjectsApiTaak(taskId: UUID): ObjectsApiObject<TaakObject> {
+    private suspend fun getObjectsApiTaak(taskId: UUID): ObjectsApiObject<TaakObjectV2> {
         val objectSearchParameters =
             listOf(
                 ObjectSearchParameter("verwerker_taak_id", Comparator.EQUAL_TO, taskId.toString()),
             )
 
-        return objectsApiClient.getObjects<TaakObject>(
+        return objectsApiClient.getObjects<TaakObjectV2>(
             objectSearchParameters = objectSearchParameters,
-            objectTypeUrl = objectsApiTaskConfig.typeUrl,
+            objectTypeUrl = objectsApiTaskConfig.typeUrlV2,
             page = 1,
             pageSize = 2,
         ).results.single()

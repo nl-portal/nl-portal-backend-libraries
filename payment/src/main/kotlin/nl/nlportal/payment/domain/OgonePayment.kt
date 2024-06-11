@@ -98,7 +98,7 @@ data class OgonePayment(
         const val PAYMENT_PROPERTY_SHASIGN: String = "SHASIGN"
         const val PAYMENT_PROPERTY_STATUS: String = "STATUS"
         const val QUERYSTRING_ORDER_ID: String = "orderID"
-        const val TAAK_PSPID: String = "pspId"
+        const val TAAK_PSPID: String = "pspid"
     }
 }
 

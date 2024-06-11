@@ -15,42 +15,36 @@
  */
 package nl.nlportal.zgw.taak.domain
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.node.ObjectNode
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import java.time.LocalDateTime
 import java.util.UUID
 
-@Deprecated("Use version 2")
-class Taak(
+class TaakV2(
     val id: UUID,
-    val title: String,
-    val objectId: UUID,
-    val identificatie: TaakIdentificatie,
-    val formulier: TaakFormulier,
-    @Deprecated("Use formulier type/value")
-    val formId: String,
-    val status: TaakStatus,
-    val date: String,
-    var data: ObjectNode,
-    val zaak: String?,
+    val titel: String,
+    var status: TaakStatus,
+    val soort: String,
     val verloopdatum: LocalDateTime?,
+    val identificatie: TaakIdentificatie,
+    val koppeling: TaakKoppeling,
+    val url: TaakUrl?,
+    val formtaak: TaakForm?,
+    val ogonebetaling: OgoneBetaling?,
 ) {
     companion object {
-        fun fromObjectsApiTask(objectsApiTask: ObjectsApiObject<TaakObject>): Taak {
+        fun fromObjectsApi(objectsApiTask: ObjectsApiObject<TaakObjectV2>): TaakV2 {
             val taakObject = objectsApiTask.record.data
-            return Taak(
+            return TaakV2(
                 id = taakObject.verwerkerTaakId,
-                title = taakObject.title,
-                objectId = objectsApiTask.uuid,
-                formulier = taakObject.formulier,
+                titel = taakObject.titel,
                 status = taakObject.status,
-                date = objectsApiTask.record.startAt,
-                data = ObjectMapper().valueToTree(objectsApiTask.record.data.data),
-                identificatie = taakObject.identificatie,
-                formId = taakObject.formulier.value,
-                zaak = taakObject.zaak,
+                soort = taakObject.soort.value,
                 verloopdatum = taakObject.verloopdatum,
+                identificatie = taakObject.identificatie,
+                koppeling = taakObject.koppeling,
+                url = taakObject.url,
+                formtaak = taakObject.formtaak,
+                ogonebetaling = taakObject.ogonebetaling,
             )
         }
     }

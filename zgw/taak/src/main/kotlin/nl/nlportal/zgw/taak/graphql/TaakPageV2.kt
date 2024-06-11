@@ -18,25 +18,24 @@ package nl.nlportal.zgw.taak.graphql
 import nl.nlportal.graphql.Page
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
-import nl.nlportal.zgw.taak.domain.Taak
-import nl.nlportal.zgw.taak.domain.TaakObject
+import nl.nlportal.zgw.taak.domain.TaakObjectV2
+import nl.nlportal.zgw.taak.domain.TaakV2
 
-@Deprecated("Use version 2")
-class TaakPage(
+class TaakPageV2(
     number: Int,
     size: Int,
-    content: List<Taak>,
+    content: List<TaakV2>,
     totalElements: Int,
-) : Page<Taak>(number, size, content, totalElements) {
+) : Page<TaakV2>(number, size, content, totalElements) {
     companion object {
         fun fromResultPage(
             pageNumber: Int,
             pageSize: Int,
-            resultPage: ResultPage<ObjectsApiObject<TaakObject>>,
-        ): TaakPage {
-            val tasks = resultPage.results.map { Taak.fromObjectsApiTask(it) }
+            resultPage: ResultPage<ObjectsApiObject<TaakObjectV2>>,
+        ): TaakPageV2 {
+            val tasks = resultPage.results.map { TaakV2.fromObjectsApi(it) }
 
-            return TaakPage(
+            return TaakPageV2(
                 number = pageNumber,
                 size = pageSize,
                 content = tasks,

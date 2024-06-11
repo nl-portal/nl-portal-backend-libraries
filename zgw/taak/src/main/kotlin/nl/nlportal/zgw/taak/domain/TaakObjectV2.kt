@@ -20,16 +20,16 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDateTime
 import java.util.UUID
 
-@Deprecated("Use version 2")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-data class TaakObject(
-    val identificatie: TaakIdentificatie,
-    val title: String,
-    val data: Map<String, Any>,
-    @JsonProperty("verzonden_data") var verzondenData: Map<String, Any>? = null,
+data class TaakObjectV2(
+    val titel: String,
     var status: TaakStatus,
-    val formulier: TaakFormulier,
-    @JsonProperty("verwerker_taak_id") val verwerkerTaakId: UUID,
-    val zaak: String?,
+    val soort: TaakSoort,
     val verloopdatum: LocalDateTime?,
+    val identificatie: TaakIdentificatie,
+    val koppeling: TaakKoppeling,
+    val url: TaakUrl?,
+    val formtaak: TaakForm?,
+    val ogonebetaling: OgoneBetaling?,
+    @JsonProperty("verwerker_taak_id") val verwerkerTaakId: UUID,
 )

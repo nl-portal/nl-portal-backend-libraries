@@ -19,6 +19,8 @@ import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import nl.nlportal.zgw.taak.TestHelper
+import nl.nlportal.zgw.taak.TestHelper.verifyOnlyDataExists
+import nl.nlportal.zgw.taak.domain.TaakSoort
 import nl.nlportal.zgw.taak.domain.TaakStatus
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -36,21 +38,20 @@ import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.reactive.server.WebTestClient
 
-@Deprecated("Use version 2")
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(PER_CLASS)
-internal class TaakQueryIT(
+internal class TaakQueryV2IT(
     @Autowired private val testClient: WebTestClient,
     @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
 ) {
     lateinit var server: MockWebServer
 
     @Autowired
-    private lateinit var getTakenPayload: String
+    private lateinit var getTakenPayloadV2: String
 
     @Autowired
-    private lateinit var getTaakByIdPayload: String
+    private lateinit var getTaakByIdPayloadV2: String
 
     @BeforeEach
     internal fun setUp() {
@@ -68,24 +69,24 @@ internal class TaakQueryIT(
     @Test
     @WithBurgerUser("569312863")
     fun `should get list of tasks for burger`() {
-        val basePath = "$.data.getTaken"
+        val basePath = "$.data.getTakenV2"
         val resultPath = "$basePath.content[0]"
 
         testClient.post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
-            .bodyValue(getTakenPayload)
+            .bodyValue(getTakenPayloadV2)
             .exchange()
-            .expectBody()
-            .jsonPath(basePath).exists()
-            .jsonPath("$resultPath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
-            .jsonPath("$resultPath.objectId").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
-            .jsonPath("$resultPath.formulier.formuliertype").isEqualTo("portalid")
-            .jsonPath("$resultPath.formulier.value").isEqualTo("check-loan-form")
+            .verifyOnlyDataExists(basePath)
+            .jsonPath("$resultPath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce708")
             .jsonPath("$resultPath.status").isEqualTo(TaakStatus.OPEN.toString())
-            .jsonPath("$resultPath.date").isEqualTo("2022-05-25")
-            .jsonPath("$resultPath.data.voornaam").isEqualTo("Peter")
+            .jsonPath("$resultPath.soort").isEqualTo(TaakSoort.FORMTAAK.value)
+            .jsonPath("$resultPath.verloopdatum").isEqualTo("2023-09-20T18:25:43.524")
+            .jsonPath(
+                "$resultPath.formtaak.formulier",
+            ).isEqualTo("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4")
+            .jsonPath("$resultPath.formtaak.data.voornaam").isEqualTo("Jan")
             .jsonPath("$basePath.number").isEqualTo(1)
             .jsonPath("$basePath.size").isEqualTo(1)
             .jsonPath("$basePath.totalPages").isEqualTo(2)
@@ -96,24 +97,23 @@ internal class TaakQueryIT(
     @Test
     @WithBedrijfUser("14127293")
     fun `should get list of tasks for bedrijf`() {
-        val basePath = "$.data.getTaken"
+        val basePath = "$.data.getTakenV2"
         val resultPath = "$basePath.content[0]"
 
         testClient.post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
-            .bodyValue(getTakenPayload)
+            .bodyValue(getTakenPayloadV2)
             .exchange()
-            .expectBody()
-            .jsonPath(resultPath).exists()
-            .jsonPath("$resultPath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
-            .jsonPath("$resultPath.objectId").isEqualTo("2d94fedb-3d99-43c4-b333-f04e0ccfe78a")
-            .jsonPath("$resultPath.formulier.formuliertype").isEqualTo("portalid")
-            .jsonPath("$resultPath.formulier.value").isEqualTo("check-loan-form")
+            .verifyOnlyDataExists(basePath)
+            .jsonPath("$resultPath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce708")
             .jsonPath("$resultPath.status").isEqualTo(TaakStatus.OPEN.toString())
-            .jsonPath("$resultPath.date").isEqualTo("2022-05-30")
-            .jsonPath("$resultPath.data.voornaam").isEqualTo("Peter")
+            .jsonPath("$resultPath.verloopdatum").isEqualTo("2023-09-20T18:25:43.524")
+            .jsonPath(
+                "$resultPath.formtaak.formulier",
+            ).isEqualTo("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4")
+            .jsonPath("$resultPath.formtaak.data.voornaam").isEqualTo("Jan")
             .jsonPath("$basePath.number").isEqualTo(1)
             .jsonPath("$basePath.size").isEqualTo(1)
             .jsonPath("$basePath.totalPages").isEqualTo(2)
@@ -124,53 +124,51 @@ internal class TaakQueryIT(
     @Test
     @WithBurgerUser("569312863")
     fun `should get task by id for burger`() {
-        val basePath = "$.data.getTaakById"
+        val basePath = "$.data.getTaakByIdV2"
 
         testClient.post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
-            .bodyValue(getTaakByIdPayload)
+            .bodyValue(getTaakByIdPayloadV2)
             .exchange()
-            .expectBody()
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
-            .jsonPath("$basePath.formulier.formuliertype").isEqualTo("portalid")
-            .jsonPath("$basePath.formulier.value").isEqualTo("check-loan-form")
+            .verifyOnlyDataExists(basePath)
+            .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce708")
+            .jsonPath("$basePath.formtaak.formulier").isEqualTo("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4")
+            .jsonPath("$basePath.formtaak.data.voornaam").isEqualTo("Jan")
             .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
-            .jsonPath("$basePath.date").isEqualTo("2022-05-25")
+            .jsonPath("$basePath.verloopdatum").isEqualTo("2023-09-20T18:25:43.524")
     }
 
     @Test
     @WithBedrijfUser("14127293")
     fun `should get task by id for bedrijf`() {
-        val basePath = "$.data.getTaakById"
+        val basePath = "$.data.getTaakByIdV2"
 
         testClient.post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
-            .bodyValue(getTaakByIdPayload)
+            .bodyValue(getTaakByIdPayloadV2)
             .exchange()
-            .expectBody()
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
-            .jsonPath("$basePath.formulier.formuliertype").isEqualTo("portalid")
-            .jsonPath("$basePath.formulier.value").isEqualTo("check-loan-form")
+            .verifyOnlyDataExists(basePath)
+            .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce708")
+            .jsonPath("$basePath.formtaak.formulier").isEqualTo("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4")
+            .jsonPath("$basePath.formtaak.data.voornaam").isEqualTo("Jan")
             .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
-            .jsonPath("$basePath.date").isEqualTo("2022-05-30")
+            .jsonPath("$basePath.verloopdatum").isEqualTo("2023-09-20T18:25:43.524")
     }
 
     @Test
     @WithBurgerUser("569312864")
     fun `should unauthorized get task by id for burger`() {
-        val basePath = "$.data.getTaakById"
+        val basePath = "$.data.getTaakByIdV2"
 
         testClient.post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
-            .bodyValue(getTaakByIdPayload)
+            .bodyValue(getTaakByIdPayloadV2)
             .exchange()
             .expectBody()
             .jsonPath(basePath)
@@ -187,11 +185,11 @@ internal class TaakQueryIT(
                         when (request.method + " " + path) {
                             "GET /api/v2/objects" -> {
                                 if (queryParams.any { it.contains("identificatie__value__exact__569312863") }) {
-                                    TestHelper.mockResponseFromFile("/data/get-bsn-task-list.json")
+                                    TestHelper.mockResponseFromFile("/data/get-bsn-task-list-v2.json")
                                 } else if (queryParams.any { it.contains("identificatie__value__exact__569312863") }) {
-                                    TestHelper.mockResponseFromFile("/data/get-bsn-task-list-unauthorized.json")
+                                    TestHelper.mockResponseFromFile("/data/get-bsn-task-list-unauthorized-v2.json")
                                 } else if (queryParams.any { it.contains("identificatie__value__exact__14127293") }) {
-                                    TestHelper.mockResponseFromFile("/data/get-kvk-task-list.json")
+                                    TestHelper.mockResponseFromFile("/data/get-kvk-task-list-v2.json")
                                 } else {
                                     MockResponse().setResponseCode(404)
                                 }

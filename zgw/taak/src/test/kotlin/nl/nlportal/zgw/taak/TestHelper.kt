@@ -15,9 +15,16 @@
  */
 package nl.nlportal.zgw.taak
 
+import mu.KotlinLogging
 import okhttp3.mockwebserver.MockResponse
+import org.springframework.test.web.reactive.server.WebTestClient
+import java.util.function.Consumer
 
 object TestHelper {
+    val ERRORS_JSON_PATH = "$.errors"
+    val EXTENSIONS_JSON_PATH = "$.extensions"
+    private val logger = KotlinLogging.logger {}
+
     fun mockResponseFromFile(fileName: String): MockResponse {
         return MockResponse()
             .addHeader("Content-Type", "application/json; charset=utf-8")
@@ -26,4 +33,12 @@ object TestHelper {
     }
 
     private fun readFileAsString(fileName: String): String = this::class.java.getResource(fileName)!!.readText(Charsets.UTF_8)
+
+    fun WebTestClient.ResponseSpec.verifyOnlyDataExists(basePath: String): WebTestClient.BodyContentSpec {
+        return this.expectBody()
+            .consumeWith(Consumer { t -> logger.info { t } })
+            .jsonPath(basePath).exists()
+            .jsonPath(ERRORS_JSON_PATH).doesNotExist()
+            .jsonPath(EXTENSIONS_JSON_PATH).doesNotExist()
+    }
 }
