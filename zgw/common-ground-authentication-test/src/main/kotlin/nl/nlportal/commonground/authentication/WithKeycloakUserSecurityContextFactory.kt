@@ -18,12 +18,13 @@ package nl.nlportal.commonground.authentication
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.test.context.support.WithSecurityContextFactory
+import java.util.UUID
 
 class WithKeycloakUserSecurityContextFactory : WithSecurityContextFactory<WithKeycloakUser> {
     override fun createSecurityContext(bedrijf: WithKeycloakUser): SecurityContext {
         val context: SecurityContext = SecurityContextHolder.createEmptyContext()
 
-        val builder = JwtBuilder().aanvragerUid(bedrijf.uid)
+        val builder = JwtBuilder().aanvragerUid(UUID.fromString(bedrijf.uuid))
         if (!bedrijf.gemachtigdeBsn.isEmpty()) {
             builder.gemachtigdeBsn(bedrijf.gemachtigdeBsn)
         }
