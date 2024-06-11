@@ -94,12 +94,8 @@ class ProductQuery(
     }
 
     @GraphQLDescription("Get list of verbruiksobjecten of product")
-    suspend fun getProductVerbruiksObjecten(
-        dfe: DataFetchingEnvironment,
-        productId: UUID,
-    ): List<ProductVerbruiksObject> {
+    suspend fun getProductVerbruiksObjecten(productId: UUID): List<ProductVerbruiksObject> {
         return productService.getProductVerbruiksObjecten(
-            dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
             productId.toString(),
             pageNumber = 1,
             pageSize = 100,

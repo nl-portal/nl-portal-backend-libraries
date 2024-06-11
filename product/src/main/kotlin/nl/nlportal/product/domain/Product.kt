@@ -18,8 +18,6 @@ package nl.nlportal.product.domain
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.node.ObjectNode
-import graphql.schema.DataFetchingEnvironment
-import nl.nlportal.graphql.security.SecurityConstants
 import nl.nlportal.product.service.ProductService
 import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
@@ -89,10 +87,8 @@ class Product(
         @GraphQLIgnore
         @Autowired
         productService: ProductService,
-        dfe: DataFetchingEnvironment,
     ): List<ProductVerbruiksObject> {
         return productService.getProductVerbruiksObjecten(
-            authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
             productId = id.toString(),
             pageNumber = 1,
             pageSize = 100,

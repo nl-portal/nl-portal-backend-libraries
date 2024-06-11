@@ -319,15 +319,28 @@ internal class ProductQueryIT(
                                     }
                                 ) {
                                     TestHelper.mockResponseFromFile("/product/data/get-product-types-list.json")
-                                } else if (queryParams.any { it.contains("rollen__initiator__identificatie__exact__569312863") } &&
+                                } else if (queryParams.any {
+                                        it.contains(
+                                            "type=http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb37",
+                                        )
+                                    } &&
                                     queryParams.any { it.contains("productInstantie__exact__7d9cd6c2-8147-46f2-9ae9-c67e8213c500") }
                                 ) {
                                     TestHelper.mockResponseFromFile("/product/data/get-product-verbruiks-objecten.json")
-                                } else if (queryParams.any { it.contains("rollen__initiator__identificatie__exact__569312863") } &&
+                                } else if (queryParams.any {
+                                        it.contains(
+                                            "type=http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb37",
+                                        )
+                                    } &&
                                     queryParams.any { it.contains("productInstantie__exact__2d725c07-2f26-4705-8637-438a42b5ac2d") }
                                 ) {
                                     TestHelper.mockResponseFromFile("/product/data/get-product-verbruiks-objecten.json")
                                 } else if (queryParams.any {
+                                        it.contains(
+                                            "type=http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb36",
+                                        )
+                                    } &&
+                                    queryParams.any {
                                         it.contains(
                                             "productInstantie__exact__2d725c07-2f26-4705-8637-438a42b5ac2d",
                                         )

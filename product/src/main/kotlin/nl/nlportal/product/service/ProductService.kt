@@ -93,25 +93,27 @@ class ProductService(
     }
 
     suspend fun getProductVerbruiksObjecten(
-        authentication: CommonGroundAuthentication,
         productId: String,
         pageNumber: Int,
         pageSize: Int,
     ): List<ProductVerbruiksObject> {
-        logger.info("ProductId = {}", productId)
-        val objectSearchParameters =
-            listOf(
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.userId),
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_INSTANTIE, Comparator.EQUAL_TO, productId),
-            )
-        return getObjectsApiObjectResultPage<ProductVerbruiksObject>(
-            productConfig.productVerbruiksObjectTypeUrl,
-            objectSearchParameters,
-            pageNumber,
-            pageSize,
-        ).results.map {
-            it.record.data.id = it.uuid
-            it.record.data
+        return try {
+            val objectSearchParameters =
+                listOf(
+                    ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_INSTANTIE, Comparator.EQUAL_TO, productId),
+                )
+            return getObjectsApiObjectResultPage<ProductVerbruiksObject>(
+                productConfig.productVerbruiksObjectTypeUrl,
+                objectSearchParameters,
+                pageNumber,
+                pageSize,
+            ).results.map {
+                it.record.data.id = it.uuid
+                it.record.data
+            }
+        } catch (ex: Exception) {
+            logger.error { "Something went wrong with get Verbruiksobjecten by productId $productId with error: ${ex.message}" }
+            listOf()
         }
     }
 
