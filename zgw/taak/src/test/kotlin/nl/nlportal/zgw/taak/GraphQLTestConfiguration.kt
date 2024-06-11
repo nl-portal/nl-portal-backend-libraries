@@ -30,6 +30,15 @@ class GraphQLTestConfiguration {
     @Value("classpath:graphql/getTaakByIdQuery.graphql")
     private lateinit var getTaakByIdFile: Resource
 
+    @Value("classpath:graphql/getTakenQueryV2.graphql")
+    private lateinit var getTakenFileV2: Resource
+
+    @Value("classpath:graphql/getTaakByIdQueryV2.graphql")
+    private lateinit var getTaakByIdFileV2: Resource
+
+    @Value("classpath:graphql/updateTaakV2.graphql")
+    private lateinit var updateTaakV2: Resource
+
     @Bean
     fun getTakenPayload(): String {
         return StreamUtils.copyToString(
@@ -42,6 +51,30 @@ class GraphQLTestConfiguration {
     fun getTaakByIdPayload(): String {
         return StreamUtils.copyToString(
             getTaakByIdFile.inputStream,
+            StandardCharsets.UTF_8,
+        )
+    }
+
+    @Bean
+    fun getTakenPayloadV2(): String {
+        return StreamUtils.copyToString(
+            getTakenFileV2.inputStream,
+            StandardCharsets.UTF_8,
+        )
+    }
+
+    @Bean
+    fun getTaakByIdPayloadV2(): String {
+        return StreamUtils.copyToString(
+            getTaakByIdFileV2.inputStream,
+            StandardCharsets.UTF_8,
+        )
+    }
+
+    @Bean
+    fun updateTaakPayloadV2(): String {
+        return StreamUtils.copyToString(
+            updateTaakV2.inputStream,
             StandardCharsets.UTF_8,
         )
     }

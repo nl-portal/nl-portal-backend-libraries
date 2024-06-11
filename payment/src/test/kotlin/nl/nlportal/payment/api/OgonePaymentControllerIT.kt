@@ -104,7 +104,7 @@ internal class OgonePaymentControllerIT(
             ).uppercase()
 
         webTestClient.get()
-            .uri("/api/payment/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&STATUS=9&AMOUNT=200&SHASIGN=$shaSign")
+            .uri("/api/payment/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&STATUS=1&AMOUNT=200&SHASIGN=$shaSign")
             .exchange()
             .expectStatus().isBadRequest
             .expectBody()

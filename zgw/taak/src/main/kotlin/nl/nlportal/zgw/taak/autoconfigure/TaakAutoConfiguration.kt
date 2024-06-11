@@ -17,7 +17,9 @@ package nl.nlportal.zgw.taak.autoconfigure
 
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.taak.graphql.TaakMutation
+import nl.nlportal.zgw.taak.graphql.TaakMutationV2
 import nl.nlportal.zgw.taak.graphql.TaakQuery
+import nl.nlportal.zgw.taak.graphql.TaakQueryV2
 import nl.nlportal.zgw.taak.service.TaakService
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -46,5 +48,17 @@ class TaakAutoConfiguration {
     @ConditionalOnMissingBean(TaakMutation::class)
     fun taskMutation(taskService: TaakService): TaakMutation {
         return TaakMutation(taskService)
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(TaakQueryV2::class)
+    fun taskQueryV2(taskService: TaakService): TaakQueryV2 {
+        return TaakQueryV2(taskService)
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(TaakMutationV2::class)
+    fun taskMutationV2(taskService: TaakService): TaakMutationV2 {
+        return TaakMutationV2(taskService)
     }
 }
