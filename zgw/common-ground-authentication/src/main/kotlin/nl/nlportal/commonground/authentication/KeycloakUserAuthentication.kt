@@ -35,6 +35,8 @@ class KeycloakUserAuthentication(
         }
     }
 
+    fun getUid() = this.userId
+
     override fun getUserRepresentation() = "UID:$userId"
 }
 

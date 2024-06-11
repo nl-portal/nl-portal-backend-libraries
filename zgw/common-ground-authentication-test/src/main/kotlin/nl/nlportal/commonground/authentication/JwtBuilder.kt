@@ -19,8 +19,10 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.Encoders
 import io.jsonwebtoken.security.Keys
+import nl.nlportal.portal.authentication.domain.SUB_KEY
 import org.springframework.security.oauth2.jwt.Jwt
 import java.util.Date
+import java.util.UUID
 
 class JwtBuilder {
     private var aanvragerBsn: String? = null
@@ -58,15 +60,11 @@ class JwtBuilder {
         return this
     }
 
-    fun aanvragerUid(uid: String): JwtBuilder {
+    fun aanvragerUid(uuid: UUID): JwtBuilder {
         assert(aanvragerBsn == null && aanvragerKvk == null, { "cannot set uid for jwt that already has kvk or bsn" })
 
-        val aanvrager =
-            mapOf<String, Any>(
-                UID_KEY to uid,
-            )
-        jwtBuilder.claim(AANVRAGER_KEY, aanvrager)
-        this.aanvragerUid = uid
+        jwtBuilder.claim(SUB_KEY, uuid.toString())
+        this.aanvragerUid = uuid.toString()
 
         return this
     }
