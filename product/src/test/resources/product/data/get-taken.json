@@ -11,22 +11,34 @@
                 "index": 1,
                 "typeVersion": 1,
                 "data": {
+                    "titel": "Taak linked to Zaak",
                     "identificatie": {
                         "type": "bsn",
                         "value": "569312863"
                     },
-                    "data": {
-                        "voornaam": "Peter"
-                    },
                     "status": "open",
-                    "formulier": {
-                        "type": "id",
-                        "value": "check-loan-form"
-                    },
+                    "soort": "formtaak",
                     "verwerker_taak_id": "58fad5ab-dc2f-11ec-9075-f22a405ce707",
-                    "title": "Taak linked to Zaak",
-                    "zaak":"/zaken/api/v1/zaken/7d9cd6c2-8147-46f2-9ae9-c67e8213c202",
-                    "verloopdatum": "2024-01-01T01:00:00"
+                    "verloopdatum": "2024-01-01T01:00:00",
+                    "koppeling": {
+                        "registratie": "zaak",
+                        "uuid": "7d9cd6c2-8147-46f2-9ae9-c67e8213c202"
+                    },
+                    "formtaak": {
+                        "formulier": "http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4",
+                        "data": {
+                            "voornaam": "Jan",
+                            "achternaam": "Smit",
+                            "toestemming": true,
+                            "geboortedatum": "01-01-1970"
+                        },
+                        "verzonden_data": {
+                            "voornaam": "Jan",
+                            "achternaam": "Smit",
+                            "toestemming": false,
+                            "geboortedatum": "01-01-1971"
+                        }
+                    }
                 },
                 "geometry": null,
                 "startAt": "2022-05-25",
@@ -44,22 +56,34 @@
                 "index": 1,
                 "typeVersion": 1,
                 "data": {
+                    "titel": "Taak linked to Product",
                     "identificatie": {
                         "type": "bsn",
                         "value": "569312863"
                     },
-                    "data": {
-                        "voornaam": "Peter"
-                    },
                     "status": "open",
-                    "formulier": {
-                        "type": "id",
-                        "value": "check-loan-form"
-                    },
+                    "soort": "formtaak",
                     "verwerker_taak_id": "58fad5ab-dc2f-11ec-9075-f22a405ce708",
-                    "title": "Taak linked to Product",
-                    "zaak":"/zaken/api/v1/zaken/7d9cd6c2-8147-46f2-9ae9-c67e8213c203",
-                    "verloopdatum": "2024-02-01T01:00:00"
+                    "verloopdatum": "2024-02-01T01:00:00",
+                    "koppeling": {
+                        "registratie": "zaak",
+                        "uuid": "7d9cd6c2-8147-46f2-9ae9-c67e8213c203"
+                    },
+                    "formtaak": {
+                        "formulier": "http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4",
+                        "data": {
+                            "voornaam": "Jan",
+                            "achternaam": "Smit",
+                            "toestemming": true,
+                            "geboortedatum": "01-01-1970"
+                        },
+                        "verzonden_data": {
+                            "voornaam": "Jan",
+                            "achternaam": "Smit",
+                            "toestemming": false,
+                            "geboortedatum": "01-01-1971"
+                        }
+                    }
                 },
                 "geometry": null,
                 "startAt": "2022-05-25",
@@ -77,22 +101,34 @@
                 "index": 1,
                 "typeVersion": 1,
                 "data": {
+                    "titel": "Taak not linked",
                     "identificatie": {
                         "type": "bsn",
                         "value": "569312863"
                     },
-                    "data": {
-                        "voornaam": "Peter"
-                    },
                     "status": "open",
-                    "formulier": {
-                        "type": "id",
-                        "value": "check-loan-form"
-                    },
+                    "soort": "formtaak",
                     "verwerker_taak_id": "58fad5ab-dc2f-11ec-9075-f22a405ce709",
-                    "title": "Taak not linked",
-                    "zaak":"/zaken/api/v1/zaken/7d9cd6c2-8147-46f2-9ae9-c67e8213c204",
-                    "verloopdatum": "2024-03-01T01:00:00"
+                    "verloopdatum": "2024-03-01T01:00:00",
+                    "koppeling": {
+                        "registratie": "zaak",
+                        "uuid": "7d9cd6c2-8147-46f2-9ae9-c67e8213c204"
+                    },
+                    "formtaak": {
+                        "formulier": "http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4",
+                        "data": {
+                            "voornaam": "Jan",
+                            "achternaam": "Smit",
+                            "toestemming": true,
+                            "geboortedatum": "01-01-1970"
+                        },
+                        "verzonden_data": {
+                            "voornaam": "Jan",
+                            "achternaam": "Smit",
+                            "toestemming": false,
+                            "geboortedatum": "01-01-1971"
+                        }
+                    }
                 },
                 "geometry": null,
                 "startAt": "2022-05-25",
