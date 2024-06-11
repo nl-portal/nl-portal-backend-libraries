@@ -17,46 +17,35 @@ package nl.nlportal.zgw.taak.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Query
-import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
-import nl.nlportal.zgw.taak.domain.Taak
 import nl.nlportal.zgw.taak.service.TaakService
+import graphql.schema.DataFetchingEnvironment
+import nl.nlportal.zgw.taak.domain.TaakV2
 import java.util.UUID
 
-@Deprecated("Use version 2")
-class TaakQuery(
+class TaakQueryV2(
     private val taskService: TaakService,
 ) : Query {
-    @GraphQLDescription("Get a list of tasks")
-    @Deprecated("Replaced by getTaken")
-    suspend fun getTasks(
-        dfe: DataFetchingEnvironment,
-        pageNumber: Int? = 1,
-        pageSize: Int? = 20,
-    ): TaakPage {
-        return getTaken(dfe, pageNumber, pageSize)
-    }
-
-    @GraphQLDescription("Get a list of tasks. Optional filter for zaak")
-    suspend fun getTaken(
+    @GraphQLDescription("Get a list of tasks. Optional filter for zaak V2")
+    suspend fun getTakenV2(
         dfe: DataFetchingEnvironment,
         pageNumber: Int? = 1,
         pageSize: Int? = 20,
         zaakUUID: UUID? = null,
-    ): TaakPage {
-        return taskService.getTaken(
+    ): TaakPageV2 {
+        return taskService.getTakenV2(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
-            authentication = dfe.graphQlContext.get(AUTHENTICATION_KEY),
+            authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
             zaakUUID = zaakUUID,
         )
     }
 
-    @GraphQLDescription("Get task by id")
-    suspend fun getTaakById(
+    @GraphQLDescription("Get task by id V2")
+    suspend fun getTaakByIdV2(
         id: UUID,
         dfe: DataFetchingEnvironment,
-    ): Taak {
-        return taskService.getTaakById(id, dfe.graphQlContext.get(AUTHENTICATION_KEY))
+    ): TaakV2 {
+        return taskService.getTaakByIdV2(id, dfe.graphQlContext[AUTHENTICATION_KEY])
     }
 }

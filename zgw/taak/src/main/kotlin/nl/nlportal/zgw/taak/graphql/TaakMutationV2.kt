@@ -18,31 +18,21 @@ package nl.nlportal.zgw.taak.graphql
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Mutation
 import com.fasterxml.jackson.databind.node.ObjectNode
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
-import nl.nlportal.zgw.taak.domain.Taak
-import nl.nlportal.zgw.taak.service.TaakService
 import graphql.schema.DataFetchingEnvironment
+import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
+import nl.nlportal.zgw.taak.domain.TaakV2
+import nl.nlportal.zgw.taak.service.TaakService
 import java.util.UUID
 
-@Deprecated("Use version 2")
-class TaakMutation(
+class TaakMutationV2(
     private val taskService: TaakService,
 ) : Mutation {
     @GraphQLDescription("Submit a task")
-    suspend fun submitTaak(
+    suspend fun submitTaakV2(
         dfe: DataFetchingEnvironment,
         id: UUID,
         submission: ObjectNode,
-    ): Taak {
-        return taskService.submitTaak(id, submission, dfe.graphQlContext[AUTHENTICATION_KEY])
-    }
-
-    @GraphQLDescription("Submit a task")
-    suspend fun submitTask(
-        dfe: DataFetchingEnvironment,
-        id: UUID,
-        submission: ObjectNode,
-    ): Taak {
-        return submitTaak(dfe, id, submission)
+    ): TaakV2 {
+        return taskService.submitTaakV2(id, submission, dfe.graphQlContext[AUTHENTICATION_KEY])
     }
 }

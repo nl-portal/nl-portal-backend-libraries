@@ -1,0 +1,24 @@
+query {
+    getTakenV2(pageSize:1) {
+        number
+        size
+        totalPages
+        totalElements
+        numberOfElements
+        content {
+            id,
+            titel
+            status
+            soort,
+            verloopdatum
+            formtaak {
+                formulier
+                data
+            }
+            identificatie {
+                type
+                value
+            }
+        }
+    }
+}

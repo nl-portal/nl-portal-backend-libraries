@@ -11,21 +11,24 @@
         "index": 1,
         "typeVersion": 1,
         "data": {
+          "titel": "Een betaal taak",
+          "status": "open",
+          "soort": "ogonebetaling",
+          "verloopdatum": "2023-09-20T18:25:43.524Z",
           "identificatie": {
             "type": "bsn",
             "value": "569312863"
           },
-          "data": {
-            "pspId": "TAX",
-            "voornaam": "Peter"
+          "koppeling": {
+            "registratie": "zaak",
+            "uuid": "5551a7c5-4e92-43e6-8d23-80359b7e22b7"
           },
-          "status": "open",
-          "formulier": {
-            "type": "id",
-            "value": "check-loan-form"
+          "ogonebetaling": {
+            "bedrag": 147.43,
+            "betaalkenmerk": "abcdef1234",
+            "pspid": "TAX"
           },
-          "verwerker_taak_id": "58fad5ab-dc2f-11ec-9075-f22a405ce707",
-          "title": "Very important task"
+          "verwerker_taak_id": "58fad5ab-dc2f-11ec-9075-f22a405ce707"
         },
         "geometry": null,
         "startAt": "2022-05-25",
