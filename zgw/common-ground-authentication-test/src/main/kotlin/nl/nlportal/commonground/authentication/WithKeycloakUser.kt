@@ -23,7 +23,7 @@ import java.lang.annotation.Inherited
 @Inherited
 @WithSecurityContext(factory = WithKeycloakUserSecurityContextFactory::class)
 annotation class WithKeycloakUser(
-    val uid: String,
+    val uuid: String,
     val gemachtigdeBsn: String = "",
     val gemachtigdeKvk: String = "",
 )
