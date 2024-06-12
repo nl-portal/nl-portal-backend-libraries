@@ -24,13 +24,26 @@ import graphql.schema.DataFetchingEnvironment
 import java.util.UUID
 
 class ZaakQuery(val zakenApiService: ZakenApiService) : Query {
-    @GraphQLDescription("Gets all zaken for the user")
+    @GraphQLDescription(
+        """
+        Gets all zaken for the user
+        isOpen is optional, when not available, all zaken will be returned
+        isOpen is true, only zaken without enddate will be returned
+        isOpen is false, only zaken with an enddate will be returned
+    """,
+    )
     suspend fun getZaken(
         dfe: DataFetchingEnvironment,
         page: Int? = 1,
         zaakTypeUrl: String? = null,
+        isOpen: Boolean? = false,
     ): ZaakPage {
-        return zakenApiService.getZaken(page!!, dfe.graphQlContext[AUTHENTICATION_KEY], zaakTypeUrl)
+        return zakenApiService.getZaken(
+            page = page!!,
+            authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
+            zaakTypeUrl = zaakTypeUrl,
+            isOpen = isOpen == true,
+        )
     }
 
     @GraphQLDescription("Gets a zaak by id")

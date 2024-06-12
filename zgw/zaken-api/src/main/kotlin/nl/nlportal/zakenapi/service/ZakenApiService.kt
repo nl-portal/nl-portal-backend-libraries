@@ -44,6 +44,7 @@ class ZakenApiService(
         page: Int,
         authentication: CommonGroundAuthentication,
         zaakTypeUrl: String?,
+        isOpen: Boolean,
     ): ZaakPage {
         val request =
             zakenApiClient.zaken()
@@ -51,6 +52,9 @@ class ZakenApiService(
                 .withAuthentication(authentication)
 
         zaakTypeUrl?.let { request.ofZaakType(it) }
+        if (isOpen) {
+            request.isOpen(isOpen)
+        }
 
         return request.retrieve().let {
             ZaakPage.fromResultPage(page, it)

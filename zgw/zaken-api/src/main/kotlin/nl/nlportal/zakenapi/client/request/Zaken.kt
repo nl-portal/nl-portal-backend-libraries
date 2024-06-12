@@ -11,6 +11,10 @@ interface Zaken {
 
 interface SearchZaken : PagedRetrieve<SearchZaken, Zaak>, AuthenticationFilter<SearchZaken> {
     fun ofZaakType(zaakType: String): SearchZaken
+
+    fun ofZaakTypes(zaakType: List<String>): SearchZaken
+
+    fun isOpen(open: Boolean): SearchZaken
 }
 
 interface GetZaak : Retrieve<Zaak>
