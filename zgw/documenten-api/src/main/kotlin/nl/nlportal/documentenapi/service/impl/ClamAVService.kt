@@ -1,5 +1,6 @@
 package nl.nlportal.documentenapi.service.impl
 
+import nl.nlportal.documentenapi.client.ClamAVVirusScanConfig
 import nl.nlportal.documentenapi.domain.VirusScanResult
 import nl.nlportal.documentenapi.domain.VirusScanStatus
 import nl.nlportal.documentenapi.service.VirusScanService
@@ -15,9 +16,14 @@ import java.io.PipedInputStream
 import java.io.PipedOutputStream
 
 class ClamAVService(
-    private val clamAVClient: ClamavClient,
+    private val clamAVVirusScanConfig: ClamAVVirusScanConfig,
 ) : VirusScanService {
     override fun scan(content: Flux<DataBuffer>): VirusScanResult {
+        val clamAVClient =
+            ClamavClient(
+                clamAVVirusScanConfig.hostName,
+                clamAVVirusScanConfig.port,
+            )
         return getInputStreamFromFluxDataBuffer(content).use {
             when (val scanResult = clamAVClient.scan(it)) {
                 is ScanResult.OK -> {
