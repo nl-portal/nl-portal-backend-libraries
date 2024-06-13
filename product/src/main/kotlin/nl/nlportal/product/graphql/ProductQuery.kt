@@ -30,7 +30,12 @@ import java.util.*
 class ProductQuery(
     private val productService: ProductService,
 ) : Query {
-    @GraphQLDescription("Get list of products by product name")
+    @GraphQLDescription(
+        """
+        Get list of products by product name or productTypeId
+        subProductType, is optional. It search for the subProductType in the products
+        """,
+    )
     suspend fun getProducten(
         dfe: DataFetchingEnvironment,
         productTypeId: UUID? = null,

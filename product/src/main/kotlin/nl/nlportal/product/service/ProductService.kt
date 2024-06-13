@@ -78,12 +78,16 @@ class ProductService(
     ): ProductPage {
         val productType = getProductType(productTypeId, productName)
         val objectSearchParametersProducten =
-            listOf(
+            mutableListOf(
                 ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.userId),
                 ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE, Comparator.EQUAL_TO, productType?.id.toString()),
-            ).apply {
-                productSubType?.let { ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_SUB_PRODUCT_TYPE, Comparator.EQUAL_TO, productSubType) }
-            }
+            )
+
+        productSubType?.let {
+            objectSearchParametersProducten.add(
+                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_SUB_PRODUCT_TYPE, Comparator.EQUAL_TO, productSubType),
+            )
+        }
         return getObjectsApiObjectResultPage<Product>(
             productConfig.productInstantieUrl,
             objectSearchParametersProducten,
