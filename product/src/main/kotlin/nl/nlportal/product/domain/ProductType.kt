@@ -30,4 +30,8 @@ data class ProductType(
     val zaaktypen: List<UUID>,
     @GraphQLIgnore
     val beslistabellen: Map<String, String>?,
-)
+) {
+    fun beslistabellen(): List<String>? {
+        return beslistabellen?.map { it.key }
+    }
+}
