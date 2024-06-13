@@ -22,7 +22,6 @@ enum class TaakStatus(
 ) {
     OPEN("open"),
     INGEDIEND("ingediend"),
-    AFGEROND("afgerond"),
     VERWERKT("verwerkt"),
     GESLOTEN("gesloten"),
 }

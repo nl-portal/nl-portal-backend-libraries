@@ -159,6 +159,75 @@ internal class ZaakQueryIT(
     }
 
     @Test
+    @WithBurgerUser("123")
+    fun getZakenOnlyOpen() {
+        val query =
+            """
+            query {
+                getZaken(page: 1, isOpen: true) {
+                number
+                size
+                totalPages
+                totalElements
+                numberOfElements
+                content {
+                        uuid,
+                        identificatie,
+                        omschrijving,
+                        zaaktype {
+                            identificatie,
+                            omschrijving
+                        },
+                        startdatum,
+                        status {
+                            datumStatusGezet,
+                            statustype {
+                                omschrijving,
+                                isEindstatus
+                            }
+                        },
+                        statusGeschiedenis {
+                            datumStatusGezet,
+                            statustype {
+                                omschrijving,
+                                isEindstatus
+                            }
+                        }
+                    }
+                }
+            }
+            """.trimIndent()
+
+        val basePath = "$.data.getZaken"
+        val resultPath = "$basePath.content[0]"
+
+        val response =
+            testClient.post()
+                .uri("/graphql")
+                .accept(APPLICATION_JSON)
+                .contentType(MediaType("application", "graphql"))
+                .bodyValue(query)
+                .exchange()
+                .expectBody()
+                .consumeWith(Consumer { t -> logger.info { t } })
+
+        response
+            .jsonPath(basePath).exists()
+            .jsonPath("$resultPath.uuid").isEqualTo("5d479908-fbb7-49c2-98c9-9afecf8de79a")
+            .jsonPath("$resultPath.identificatie").isEqualTo("ZAAK-2021-0000000003")
+            .jsonPath("$resultPath.omschrijving").isEqualTo("Voorbeeld afgesloten zaak 1")
+            .jsonPath("$resultPath.startdatum").isEqualTo("2021-09-16")
+            .jsonPath("$resultPath.zaaktype.identificatie").isEqualTo("bezwaar-behandelen")
+            .jsonPath("$resultPath.zaaktype.omschrijving").isEqualTo("Bezwaar behandelen")
+            .jsonPath("$resultPath.status.datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
+            .jsonPath("$resultPath.status.statustype.omschrijving").isEqualTo("Zaak afgerond")
+            .jsonPath("$resultPath.status.statustype.isEindstatus").isEqualTo(true)
+            .jsonPath("$resultPath.statusGeschiedenis[0].datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
+            .jsonPath("$resultPath.statusGeschiedenis[0].statustype.omschrijving").isEqualTo("Zaak afgerond")
+            .jsonPath("$resultPath.statusGeschiedenis[0].statustype.isEindstatus").isEqualTo(true)
+    }
+
+    @Test
     @WithBurgerUser("")
     fun getZakenNotFound() {
         // Make the GraphQL request

@@ -48,9 +48,18 @@ class SearchZakenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
         return this
     }
 
+    override fun isOpen(open: Boolean): SearchZaken {
+        queryParams.add("einddatum__isnull", open.toString())
+        return this
+    }
+
     override fun ofZaakType(zaakType: String): SearchZaken {
         queryParams.add("zaaktype", zaakType)
         return this
+    }
+
+    override fun ofZaakTypes(zaakTypes: List<String>): SearchZaken {
+        throw NotImplementedError("List of zaak types are not supported")
     }
 
     override fun page(page: Int): SearchZaken {
