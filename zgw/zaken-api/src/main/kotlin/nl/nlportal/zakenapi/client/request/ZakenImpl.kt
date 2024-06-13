@@ -59,7 +59,7 @@ class SearchZakenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
     }
 
     override fun ofZaakTypes(zaakTypes: List<String>): SearchZaken {
-        return this
+        throw NotImplementedError("List of zaak types are not supported")
     }
 
     override fun page(page: Int): SearchZaken {

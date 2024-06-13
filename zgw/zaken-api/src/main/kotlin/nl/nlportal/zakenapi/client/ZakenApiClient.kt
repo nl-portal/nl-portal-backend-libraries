@@ -15,6 +15,7 @@
  */
 package nl.nlportal.zakenapi.client
 
+import nl.nlportal.catalogiapi.client.CatalogiApiConfig
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import nl.nlportal.zakenapi.client.request.ZaakInformatieobjecten
 import nl.nlportal.zakenapi.client.request.ZaakObjecten
@@ -36,6 +37,7 @@ import reactor.core.publisher.Mono
 
 class ZakenApiClient(
     private val zakenApiConfig: ZakenApiConfig,
+    private val catalogiApiConfig: CatalogiApiConfig,
     webClientBuilder: WebClient.Builder,
 ) {
     val webClient: WebClient
@@ -69,7 +71,7 @@ class ZakenApiClient(
     }
 
     fun getZaakTypeUrl(zaakTypeId: Any): String {
-        return "${zakenApiConfig.url}/zaken/api/v1/zaken/$zaakTypeId"
+        return "${catalogiApiConfig.url}/catalogi/api/v1/zaaktypen/$zaakTypeId"
     }
 
     fun zaken(): Zaken {
