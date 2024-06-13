@@ -165,7 +165,7 @@ open class TaakService(
 
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
         updateRequest.record.data.formtaak?.verzondenData = submissionAsMap
-        updateRequest.record.data.status = TaakStatus.AFGEROND
+        updateRequest.record.data.status = TaakStatus.INGEDIEND
         updateRequest.record.correctedBy = authentication.getUserRepresentation()
         updateRequest.record.correctionFor = objectsApiTask.record.index.toString()
 

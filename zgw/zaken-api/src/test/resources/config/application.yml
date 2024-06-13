@@ -4,7 +4,7 @@ graphql:
 
 logging:
     level:
-        reactor.netty.http.client.HttpClient: DEBUG
+        reactor.netty.http.client.HttpClient: TRACE
 
 nl-portal:
     zgw:

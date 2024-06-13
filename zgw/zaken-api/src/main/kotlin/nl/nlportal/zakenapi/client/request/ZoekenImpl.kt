@@ -38,6 +38,11 @@ class SearchZoekenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
         return this
     }
 
+    override fun isOpen(open: Boolean): SearchZaken {
+        bodyValue.add("einddatum__isnull", open)
+        return this
+    }
+
     override fun ofZaakType(zaakType: String): SearchZaken {
         bodyValue.add("zaaktype", zaakType)
         return this
