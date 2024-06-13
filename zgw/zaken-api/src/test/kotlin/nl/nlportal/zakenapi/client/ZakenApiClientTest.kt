@@ -2,6 +2,7 @@ package nl.nlportal.zakenapi.client
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import nl.nlportal.catalogiapi.client.CatalogiApiConfig
 import nl.nlportal.commonground.authentication.JwtBuilder
 import nl.nlportal.zakenapi.client.request.ObjectType
 import okhttp3.mockwebserver.MockResponse
@@ -19,6 +20,7 @@ import kotlin.test.assertFailsWith
 @ExperimentalCoroutinesApi
 class ZakenApiClientTest {
     lateinit var zakenApiConfig: ZakenApiConfig
+    lateinit var catalogiApiConfig: CatalogiApiConfig
     lateinit var host: String
     lateinit var client: WebClient
     lateinit var mockServer: MockWebServer
@@ -39,7 +41,14 @@ class ZakenApiClientTest {
                 "12345678123456781234567812345678",
             )
 
-        zakenApiClient = ZakenApiClient(zakenApiConfig, WebClient.builder())
+        catalogiApiConfig =
+            CatalogiApiConfig(
+                host,
+                "gzac",
+                "12345678123456781234567812345678",
+            )
+
+        zakenApiClient = ZakenApiClient(zakenApiConfig, catalogiApiConfig, WebClient.builder())
     }
 
     @AfterEach

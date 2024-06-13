@@ -15,6 +15,7 @@
  */
 package nl.nlportal.zakenapi.client
 
+import nl.nlportal.catalogiapi.client.CatalogiApiConfig
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import nl.nlportal.zakenapi.client.request.ZaakInformatieobjecten
 import nl.nlportal.zakenapi.client.request.ZaakObjecten
@@ -26,6 +27,7 @@ import nl.nlportal.zakenapi.client.request.ZaakStatussenImpl
 import nl.nlportal.zakenapi.client.request.Zaken
 import nl.nlportal.zakenapi.client.request.ZakenImpl
 import nl.nlportal.zakenapi.client.request.ZakenInformatieobjectenImpl
+import nl.nlportal.zakenapi.client.request.ZoekenImpl
 import org.springframework.http.HttpStatus
 import org.springframework.web.reactive.function.client.ClientRequest
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
@@ -35,6 +37,7 @@ import reactor.core.publisher.Mono
 
 class ZakenApiClient(
     private val zakenApiConfig: ZakenApiConfig,
+    private val catalogiApiConfig: CatalogiApiConfig,
     webClientBuilder: WebClient.Builder,
 ) {
     val webClient: WebClient
@@ -67,8 +70,16 @@ class ZakenApiClient(
         return "${zakenApiConfig.url}/zaken/api/v1/zaken/$zaakId"
     }
 
+    fun getZaakTypeUrl(zaakTypeId: Any): String {
+        return "${catalogiApiConfig.url}/catalogi/api/v1/zaaktypen/$zaakTypeId"
+    }
+
     fun zaken(): Zaken {
         return ZakenImpl(this)
+    }
+
+    fun zoeken(): Zaken {
+        return ZoekenImpl(this)
     }
 
     fun zaakRollen(): ZaakRollen {

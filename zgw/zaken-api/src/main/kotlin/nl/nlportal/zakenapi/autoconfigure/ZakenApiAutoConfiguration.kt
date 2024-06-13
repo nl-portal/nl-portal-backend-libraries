@@ -16,6 +16,7 @@
 package nl.nlportal.zakenapi.autoconfigure
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import nl.nlportal.catalogiapi.client.CatalogiApiConfig
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.client.ZakenApiConfig
@@ -54,9 +55,10 @@ class ZakenApiAutoConfiguration {
     @Bean
     fun zakenApiClient(
         zakenApiConfig: ZakenApiConfig,
+        catalogiApiConfig: CatalogiApiConfig,
         webClientBuilder: WebClient.Builder,
     ): ZakenApiClient {
-        return ZakenApiClient(zakenApiConfig, webClientBuilder)
+        return ZakenApiClient(zakenApiConfig, catalogiApiConfig, webClientBuilder)
     }
 
     @Bean
