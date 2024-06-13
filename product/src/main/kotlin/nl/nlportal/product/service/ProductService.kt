@@ -122,19 +122,23 @@ class ProductService(
         productTypeId: UUID?,
         productName: String,
         pageNumber: Int,
+        isOpen: Boolean? = null,
     ): List<Zaak> {
         val productType = getProductType(productTypeId, productName)
-        val result =
+        val request =
             zakenApiClient.zoeken()
                 .search()
                 .page(pageNumber)
                 .withAuthentication(authentication)
                 .ofZaakTypes(productType?.zaaktypen?.map { it.toString() }!!)
-                .retrieve()
-                .results
-                .sortedBy { it.startdatum }
 
-        return result
+        isOpen?.let {
+            request.isOpen(isOpen)
+        }
+        return request
+            .retrieve()
+            .results
+            .sortedBy { it.startdatum }
     }
 
     suspend fun getProductTaken(

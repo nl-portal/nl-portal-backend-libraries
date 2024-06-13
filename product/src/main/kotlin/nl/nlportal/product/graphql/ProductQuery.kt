@@ -60,18 +60,27 @@ class ProductQuery(
         )
     }
 
-    @GraphQLDescription("Get list of zaken by product name ")
+    @GraphQLDescription(
+        """
+        Get list of zaken by product name or productTypeId
+        isOpen is optional, when not available, all zaken will be returned
+        isOpen is true, only zaken without enddate will be returned
+        isOpen is false, only zaken with an enddate will be returned
+        """,
+    )
     suspend fun getProductZaken(
         dfe: DataFetchingEnvironment,
         productTypeId: UUID? = null,
         productName: String,
         pageSize: Int? = 20,
+        isOpen: Boolean? = null,
     ): List<Zaak> {
         return productService.getProductZaken(
-            dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
-            productTypeId,
-            productName,
+            authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+            productTypeId = productTypeId,
+            productName = productName,
             pageNumber = 1,
+            isOpen = isOpen,
         ).take(pageSize ?: 20)
     }
 
