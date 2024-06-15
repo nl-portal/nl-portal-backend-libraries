@@ -23,11 +23,7 @@ import nl.nlportal.product.domain.ProductDetails
 import nl.nlportal.product.domain.ProductType
 import nl.nlportal.product.domain.ProductVerbruiksObject
 import nl.nlportal.product.graphql.ProductPage
-import nl.nlportal.commonground.authentication.BedrijfAuthentication
-import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.commonground.authentication.exception.UserTypeUnsupportedException
-import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.product.domain.ProductRol
 import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.domain.Zaak
@@ -38,9 +34,9 @@ import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
-import nl.nlportal.zgw.taak.domain.Taak
-import nl.nlportal.zgw.taak.domain.TaakObject
-import nl.nlportal.zgw.taak.graphql.TaakPage
+import nl.nlportal.zgw.taak.domain.TaakObjectV2
+import nl.nlportal.zgw.taak.domain.TaakV2
+import nl.nlportal.zgw.taak.graphql.TaakPageV2
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
@@ -152,20 +148,22 @@ class ProductService(
         productSubType: String?,
         pageNumber: Int,
         pageSize: Int,
-    ): List<Taak> {
-        val objectSearchParameters = mutableListOf<ObjectSearchParameter>()
-
-        objectSearchParameters.addAll(getUserSearchParameters(authentication))
-        objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, "open"))
+    ): List<TaakV2> {
+        val objectSearchParameters =
+            listOf(
+                ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, authentication.userType),
+                ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, authentication.userId),
+                ObjectSearchParameter("status", Comparator.EQUAL_TO, "open"),
+            )
 
         val taken =
-            getObjectsApiObjectResultPage<TaakObject>(
-                objectsApiTaskConfig.typeUrl,
+            getObjectsApiObjectResultPage<TaakObjectV2>(
+                objectsApiTaskConfig.typeUrlV2 ?: "",
                 objectSearchParameters,
                 pageNumber,
                 pageSize,
             ).let { resultPage ->
-                TaakPage.fromResultPage(pageNumber, pageSize, resultPage)
+                TaakPageV2.fromResultPage(pageNumber, pageSize, resultPage)
             }
                 .content
 
@@ -196,7 +194,7 @@ class ProductService(
         // filter out the taak which is not connected to a zaak or product
         return taken
             .filterNot { task ->
-                !zaken.any { it.uuid == task.zaak?.let { zaakId -> CoreUtils.extractId(zaakId) } } &&
+                !zaken.any { it.uuid == task.koppeling.uuid } &&
                     !producten.any { it.taken.contains(task.id) }
             }
             .sortedBy { it.verloopdatum }
@@ -337,26 +335,9 @@ class ProductService(
     }
 
     private fun getUserSearchParameters(authentication: CommonGroundAuthentication): List<ObjectSearchParameter> {
-        return when (authentication) {
-            is BurgerAuthentication -> {
-                createIdentificatieSearchParameters("bsn", authentication.getBsn())
-            }
-
-            is BedrijfAuthentication -> {
-                createIdentificatieSearchParameters("kvk", authentication.getKvkNummer())
-            }
-
-            else -> throw UserTypeUnsupportedException("User type not supported")
-        }
-    }
-
-    private fun createIdentificatieSearchParameters(
-        type: String,
-        value: String,
-    ): List<ObjectSearchParameter> {
         return listOf(
-            ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, type),
-            ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, value),
+            ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, authentication.userType),
+            ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, authentication.userId),
         )
     }
 

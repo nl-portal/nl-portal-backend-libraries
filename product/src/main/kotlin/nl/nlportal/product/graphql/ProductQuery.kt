@@ -24,7 +24,7 @@ import nl.nlportal.product.domain.ProductVerbruiksObject
 import nl.nlportal.product.service.ProductService
 import nl.nlportal.graphql.security.SecurityConstants
 import nl.nlportal.zakenapi.domain.Zaak
-import nl.nlportal.zgw.taak.domain.Taak
+import nl.nlportal.zgw.taak.domain.TaakV2
 import java.util.*
 
 class ProductQuery(
@@ -96,7 +96,7 @@ class ProductQuery(
         productName: String,
         productSubType: String? = null,
         pageSize: Int? = 20,
-    ): List<Taak> {
+    ): List<TaakV2> {
         return productService.getProductTaken(
             dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
             productTypeId,

@@ -21,8 +21,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import nl.nlportal.product.service.ProductService
 import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
-import nl.nlportal.zgw.taak.domain.Taak
-import nl.nlportal.zgw.taak.domain.TaakObject
+import nl.nlportal.zgw.taak.domain.TaakObjectV2
+import nl.nlportal.zgw.taak.domain.TaakV2
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDateTime
 import java.util.UUID
@@ -75,11 +75,11 @@ class Product(
         @GraphQLIgnore
         @Autowired
         productService: ProductService,
-    ): List<Taak> {
+    ): List<TaakV2> {
         return taken.mapNotNull {
-            productService.getObjectsApiObjectById<TaakObject>(it.toString())
+            productService.getObjectsApiObjectById<TaakObjectV2>(it.toString())
         }.map {
-            Taak.fromObjectsApiTask(it)
+            TaakV2.fromObjectsApi(it)
         }
     }
 
