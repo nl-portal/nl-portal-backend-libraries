@@ -66,8 +66,8 @@
                     "verwerker_taak_id": "58fad5ab-dc2f-11ec-9075-f22a405ce708",
                     "verloopdatum": "2024-02-01T01:00:00",
                     "koppeling": {
-                        "registratie": "zaak",
-                        "uuid": "7d9cd6c2-8147-46f2-9ae9-c67e8213c203"
+                        "registratie": "product",
+                        "uuid": "2d725c07-2f26-4705-8637-438a42b5ac2d"
                     },
                     "formtaak": {
                         "formulier": "http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4",

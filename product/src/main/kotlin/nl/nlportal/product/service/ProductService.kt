@@ -195,7 +195,7 @@ class ProductService(
         return taken
             .filterNot { task ->
                 !zaken.any { it.uuid == task.koppeling.uuid } &&
-                    !producten.any { it.taken.contains(task.id) }
+                    !producten.any { it.id == task.koppeling.uuid }
             }
             .sortedBy { it.verloopdatum }
     }
