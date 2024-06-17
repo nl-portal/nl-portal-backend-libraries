@@ -1,6 +1,6 @@
 query {
     getProductTaken(productName: "erfpacht") {
             id,
-            titel
+            title
         }
 }

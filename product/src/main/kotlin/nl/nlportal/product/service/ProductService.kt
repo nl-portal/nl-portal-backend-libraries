@@ -24,6 +24,7 @@ import nl.nlportal.product.domain.ProductType
 import nl.nlportal.product.domain.ProductVerbruiksObject
 import nl.nlportal.product.graphql.ProductPage
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.product.domain.ProductRol
 import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.domain.Zaak
@@ -34,9 +35,9 @@ import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
-import nl.nlportal.zgw.taak.domain.TaakObjectV2
-import nl.nlportal.zgw.taak.domain.TaakV2
-import nl.nlportal.zgw.taak.graphql.TaakPageV2
+import nl.nlportal.zgw.taak.domain.Taak
+import nl.nlportal.zgw.taak.domain.TaakObject
+import nl.nlportal.zgw.taak.graphql.TaakPage
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
@@ -148,7 +149,7 @@ class ProductService(
         productSubType: String?,
         pageNumber: Int,
         pageSize: Int,
-    ): List<TaakV2> {
+    ): List<Taak> {
         val objectSearchParameters =
             listOf(
                 ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, authentication.userType),
@@ -157,13 +158,13 @@ class ProductService(
             )
 
         val taken =
-            getObjectsApiObjectResultPage<TaakObjectV2>(
+            getObjectsApiObjectResultPage<TaakObject>(
                 objectsApiTaskConfig.typeUrlV2 ?: "",
                 objectSearchParameters,
                 pageNumber,
                 pageSize,
             ).let { resultPage ->
-                TaakPageV2.fromResultPage(pageNumber, pageSize, resultPage)
+                TaakPage.fromResultPage(pageNumber, pageSize, resultPage)
             }
                 .content
 
@@ -194,8 +195,8 @@ class ProductService(
         // filter out the taak which is not connected to a zaak or product
         return taken
             .filterNot { task ->
-                !zaken.any { it.uuid == task.koppeling.uuid } &&
-                    !producten.any { it.id == task.koppeling.uuid }
+                !zaken.any { it.uuid == task.zaak?.let { zaakId -> CoreUtils.extractId(zaakId) } } &&
+                    !producten.any { it.taken.contains(task.id) }
             }
             .sortedBy { it.verloopdatum }
     }
