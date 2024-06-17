@@ -70,6 +70,10 @@ graphql:
 logging:
     level:
         org.springframework.amqp: DEBUG
+        .reactor:
+            netty:
+                http:
+                    client: TRACE
 
 nl-portal:
     zgw:
