@@ -23,6 +23,7 @@ import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import nl.nlportal.product.domain.DmnRequest
 import nl.nlportal.product.domain.DmnResponse
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
@@ -81,6 +82,8 @@ class DmnClient(
         return webClient
             .post()
             .uri("/decision-definition/key/${dmnRequest.key}/evaluate")
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
             .body(
                 BodyInserters.fromValue(dmnRequest.variables),
             )
