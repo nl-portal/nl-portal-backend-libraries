@@ -16,16 +16,18 @@
 package nl.nlportal.product.service
 
 import com.fasterxml.jackson.databind.node.ObjectNode
+import com.github.wnameless.json.unflattener.JsonUnflattener
+import com.jayway.jsonpath.JsonPath
 import mu.KotlinLogging
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.product.client.ProductConfig
 import nl.nlportal.product.domain.Product
 import nl.nlportal.product.domain.ProductDetails
+import nl.nlportal.product.domain.ProductRol
 import nl.nlportal.product.domain.ProductType
 import nl.nlportal.product.domain.ProductVerbruiksObject
 import nl.nlportal.product.graphql.ProductPage
-import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.core.util.CoreUtils
-import nl.nlportal.product.domain.ProductRol
 import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
@@ -335,13 +337,6 @@ class ProductService(
         return zakenApiClient.zaken().get(zaakUUID).retrieve()
     }
 
-    private fun getUserSearchParameters(authentication: CommonGroundAuthentication): List<ObjectSearchParameter> {
-        return listOf(
-            ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, authentication.userType),
-            ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, authentication.userId),
-        )
-    }
-
     private fun isAuthorized(
         authentication: CommonGroundAuthentication,
         productRollen: Map<String, ProductRol>?,
@@ -352,6 +347,19 @@ class ProductService(
             }
         }
         return false
+    }
+
+    private fun constructJsonForPrefill(
+        paramaters: Map<String, String>,
+        source: String,
+    ): String {
+        val inputJsonPath = JsonPath.parse(source)
+        val mapped = mutableMapOf<String, Any>()
+        paramaters.forEach { (k, v) ->
+            val value = inputJsonPath.read<Any>(v)
+            mapped.put(k, value)
+        }
+        return JsonUnflattener.unflatten(mapped)
     }
 
     companion object {

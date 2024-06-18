@@ -24,6 +24,9 @@ dependencies {
     api(project(":zgw:zaken-api"))
     api(project(":zgw:taak"))
 
+    implementation(Dependencies.jsonPath)
+    api("com.github.wnameless.json", "json-flattener", "0.16.6")
+
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.assertj", "assertj-core")

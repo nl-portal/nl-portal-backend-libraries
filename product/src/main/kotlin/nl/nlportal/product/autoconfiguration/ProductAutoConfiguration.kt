@@ -15,6 +15,9 @@
  */
 package nl.nlportal.product.autoconfiguration
 
+import nl.nlportal.core.ssl.ClientSslContextResolver
+import nl.nlportal.product.client.DmnClient
+import nl.nlportal.product.client.DmnConfig
 import nl.nlportal.product.graphql.ProductQuery
 import nl.nlportal.product.client.ProductConfig
 import nl.nlportal.product.graphql.ProductMutation
@@ -22,12 +25,14 @@ import nl.nlportal.product.service.ProductService
 import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
+import org.springframework.web.reactive.function.client.WebClient
 
 @AutoConfiguration
-@EnableConfigurationProperties(ProductConfig::class)
+@EnableConfigurationProperties(ProductConfig::class, DmnConfig::class)
 class ProductAutoConfiguration {
     @Bean
     fun productService(
@@ -54,5 +59,18 @@ class ProductAutoConfiguration {
     @Bean
     fun productMutation(productService: ProductService): ProductMutation {
         return ProductMutation(productService)
+    }
+
+    @Bean
+    fun dmnClient(
+        dmnConfig: DmnConfig,
+        @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
+        webClientBuilder: WebClient.Builder,
+    ): DmnClient {
+        return DmnClient(
+            dmnConfig,
+            clientSslContextResolver,
+            webClientBuilder,
+        )
     }
 }

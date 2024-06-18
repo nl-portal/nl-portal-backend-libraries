@@ -20,7 +20,7 @@
             },
             "soort": "formtaak",
             "verwerker_taak_id": "58fad5ab-dc2f-11ec-9075-f22a405ce708",
-            "title": "Very important task"
+            "title": "Very important task",
             "koppeling": {
                 "registratie": "zaak",
                 "uuid": "7d9cd6c2-8147-46f2-9ae9-c67e8213c202"

@@ -16,7 +16,7 @@ query {
                 omschrijving
             },
             taken {
-                titel
+                title
             },
         }
 }
