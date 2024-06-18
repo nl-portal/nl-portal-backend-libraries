@@ -15,8 +15,14 @@
  */
 package nl.nlportal.product.domain
 
-data class DmnRequest(
+import com.fasterxml.jackson.annotation.JsonValue
+
+data class DmnRequestMapping(
     val key: String,
+    val mapping: DmnRequest,
+)
+
+data class DmnRequest(
     val variables: Map<String, DmnVariable>,
 )
 
@@ -24,3 +30,12 @@ data class DmnVariable(
     val value: String,
     val type: String,
 )
+
+enum class DmnVariableType(
+    @JsonValue val value: String,
+) {
+    JSON("Json"),
+    STRING("String"),
+    INTEGER("Integer"),
+    DOUBLE("Double"),
+}
