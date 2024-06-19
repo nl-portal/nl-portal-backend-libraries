@@ -32,7 +32,13 @@ class TaakMutationV2(
         dfe: DataFetchingEnvironment,
         id: UUID,
         submission: ObjectNode,
+        version: String,
     ): TaakV2 {
-        return taskService.submitTaakV2(id, submission, dfe.graphQlContext[AUTHENTICATION_KEY])
+        return taskService.submitTaak(
+            id,
+            submission,
+            dfe.graphQlContext[AUTHENTICATION_KEY],
+            version,
+        )
     }
 }
