@@ -27,7 +27,7 @@ data class DmnRequest(
 )
 
 data class DmnVariable(
-    val value: String,
+    val value: Any,
     val type: String,
 )
 

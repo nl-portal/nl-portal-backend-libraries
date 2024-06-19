@@ -19,6 +19,7 @@ import nl.nlportal.product.TestHelper
 import nl.nlportal.product.TestHelper.verifyOnlyDataExists
 import nl.nlportal.product.client.ProductConfig
 import nl.nlportal.commonground.authentication.WithBurgerUser
+import nl.nlportal.product.client.DmnConfig
 import nl.nlportal.zakenapi.client.ZakenApiConfig
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
@@ -49,6 +50,7 @@ internal class ProductQueryIT(
     @Autowired private val testClient: WebTestClient,
     @Autowired private val productApiConfig: ProductConfig,
     @Autowired private val taakObjectConfig: TaakObjectConfig,
+    @Autowired private val dmnConfig: DmnConfig,
     @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
     @Autowired private val zakenApiConfig: ZakenApiConfig,
     @Autowired private val graphqlGetProduct: String,
@@ -59,6 +61,7 @@ internal class ProductQueryIT(
     @Autowired private val graphqlGetProductVerbruiksObjecten: String,
     @Autowired private val graphqlGetProductType: String,
     @Autowired private val graphqlGetProductTypes: String,
+    @Autowired private val graphqlGetProductDecision: String,
 ) {
     companion object {
         @JvmStatic
@@ -71,6 +74,7 @@ internal class ProductQueryIT(
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
             propsRegistry.add("nl-portal.zgw.zakenapi.url") { url }
+            propsRegistry.add("nl-portal.dmn.url") { url }
         }
 
         @JvmStatic
@@ -290,6 +294,21 @@ internal class ProductQueryIT(
             .jsonPath("$basePath.size()").isEqualTo(0)
     }
 
+    @Test
+    @WithBurgerUser("569312864")
+    fun getProductDescisionTest() {
+        val basePath = "$.data.getProductDecision"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(graphqlGetProductDecision)
+            .exchange()
+            .verifyOnlyDataExists(basePath)
+            .jsonPath("$basePath[0].result.value").isEqualTo("http://localhost:3000/")
+    }
+
     fun setupMockServer() {
         val dispatcher: Dispatcher =
             object : Dispatcher() {
@@ -368,6 +387,9 @@ internal class ProductQueryIT(
                             }
                             "GET /api/v2/objects/2d725c07-2f26-4705-8637-438a42b5ac2d" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-product.json")
+                            }
+                            "POST /decision-definition/key/watkanikregelen/evaluate" -> {
+                                TestHelper.mockResponseFromFile("/product/data/get-dmn-decision.json")
                             }
                             else -> MockResponse().setResponseCode(404)
                         }

@@ -2,6 +2,12 @@ graphql:
     packages:
         - "nl.nlportal"
 
+logging:
+    level:
+        reactor:
+            netty:
+                http:
+                    client: DEBUG
 nl-portal:
     zgw:
         catalogiapi:

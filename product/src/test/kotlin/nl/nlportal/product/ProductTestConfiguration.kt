@@ -54,6 +54,9 @@ class ProductTestConfiguration {
     @Value("classpath:product/graphql/prefill.graphql")
     private lateinit var prefill: Resource
 
+    @Value("classpath:product/graphql/getProductDecision.graphql")
+    private lateinit var getProductDecision: Resource
+
     @Bean
     fun graphqlGetProducten(): String {
         return StreamUtils.copyToString(
@@ -130,6 +133,14 @@ class ProductTestConfiguration {
     fun graphqlPrefill(): String {
         return StreamUtils.copyToString(
             prefill.inputStream,
+            StandardCharsets.UTF_8,
+        )
+    }
+
+    @Bean
+    fun graphqlGetProductDecision(): String {
+        return StreamUtils.copyToString(
+            getProductDecision.inputStream,
             StandardCharsets.UTF_8,
         )
     }

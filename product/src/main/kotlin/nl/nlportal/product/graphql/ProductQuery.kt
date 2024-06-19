@@ -23,6 +23,7 @@ import nl.nlportal.product.domain.ProductType
 import nl.nlportal.product.domain.ProductVerbruiksObject
 import nl.nlportal.product.service.ProductService
 import nl.nlportal.graphql.security.SecurityConstants
+import nl.nlportal.product.domain.DmnResponse
 import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zgw.taak.domain.Taak
 import java.util.*
@@ -131,6 +132,21 @@ class ProductQuery(
     suspend fun getProductTypes(dfe: DataFetchingEnvironment): List<ProductType> {
         return productService.getProductTypes(
             dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+        )
+    }
+
+    @GraphQLDescription("Get Product Decision by key")
+    suspend fun getProductDecision(
+        key: String,
+        productTypeId: UUID? = null,
+        productName: String,
+        productId: UUID,
+    ): List<DmnResponse> {
+        return productService.getProductDecision(
+            key,
+            productTypeId,
+            productName,
+            productId,
         )
     }
 }

@@ -22,7 +22,13 @@ import mu.KotlinLogging
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.core.util.Mapper
+import nl.nlportal.product.client.DmnClient
 import nl.nlportal.product.client.ProductConfig
+import nl.nlportal.product.domain.DmnRequest
+import nl.nlportal.product.domain.DmnRequestMapping
+import nl.nlportal.product.domain.DmnResponse
+import nl.nlportal.product.domain.DmnVariable
+import nl.nlportal.product.domain.DmnVariableType
 import nl.nlportal.product.domain.PrefillResponse
 import nl.nlportal.product.domain.Product
 import nl.nlportal.product.domain.ProductDetails
@@ -56,6 +62,7 @@ class ProductService(
     val zakenApiClient: ZakenApiClient,
     val taakObjectConfig: TaakObjectConfig,
     val objectsApiTaskConfig: TaakObjectConfig,
+    val dmnClient: DmnClient,
 ) {
     suspend fun getProduct(
         authentication: CommonGroundAuthentication,
@@ -326,15 +333,15 @@ class ProductService(
         parameters.forEach {
             var jsonOfObject: String? = null
             when (it.key) {
-                "product" ->
+                KEY_PRODUCT ->
                     getObjectsApiObjectById<Product>(it.value.toString())?.let {
                         jsonOfObject = Mapper.get().writeValueAsString(it.record.data)
                     }
-                "productdetails" ->
+                KEY_PRODUCT_DETAILS ->
                     getObjectsApiObjectById<ProductDetails>(it.value.toString())?.let {
                         jsonOfObject = Mapper.get().writeValueAsString(it.record.data)
                     }
-                "productverbruiksobject" ->
+                KEY_PRODUCT_VERBUIKSOBJECT ->
                     getObjectsApiObjectById<ProductVerbruiksObject>(it.value.toString())?.let {
                         jsonOfObject = Mapper.get().writeValueAsString(it.record.data)
                     }
@@ -350,16 +357,13 @@ class ProductService(
 
         val json = JsonUnflattener.unflatten(prefillData)
         val hash = CoreUtils.createHash(json, productConfig.prefillShaVersion)
-        val objectData = Mapper.get().readValue(json, ObjectNode::class.java)
-        logger.info(json)
-
         val createRequest =
             CreateObjectsApiObjectRequest(
                 UUID.randomUUID(),
                 productConfig.prefillTypeUrl,
                 CreateObjectsApiObjectRequestRecord(
                     typeVersion = 1,
-                    data = objectData,
+                    data = Mapper.get().readValue(json, ObjectNode::class.java),
                     startAt = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                 ),
             )
@@ -370,6 +374,65 @@ class ProductService(
             hash,
             prefillConfiguration.formulierUrl,
         )
+    }
+
+    suspend fun getProductDecision(
+        key: String,
+        productTypeId: UUID? = null,
+        productName: String,
+        productId: UUID,
+    ): List<DmnResponse> {
+        val productType = getProductType(productTypeId, productName)
+        val variablesMapping = mutableMapOf<String, DmnVariable>()
+
+        val beslisTabelVariables = productType?.beslistabellen?.get(key)
+        if (beslisTabelVariables == null) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find a beslisTabelVariables for $key")
+        }
+
+        val productObject = getObjectsApiObjectById<Product>(productId.toString())
+        if (productObject == null) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find a product for $productId")
+        }
+        val source = Mapper.get().writeValueAsString(productObject.record.data)
+
+        beslisTabelVariables.forEach {
+            if (it.classType == DmnVariableType.JSON.value) {
+                // just put the whole
+                variablesMapping.put(
+                    it.name,
+                    DmnVariable(
+                        source,
+                        it.classType,
+                    ),
+                )
+            } else if (it.value != null) {
+                variablesMapping.put(
+                    it.name,
+                    DmnVariable(
+                        it.value,
+                        it.classType,
+                    ),
+                )
+            } else if (it.regex != null) {
+                variablesMapping.put(
+                    it.name,
+                    DmnVariable(
+                        findVariableInJson(it.regex, source),
+                        it.classType,
+                    ),
+                )
+            }
+        }
+        val dmnRequestMapping =
+            DmnRequestMapping(
+                key = key,
+                mapping =
+                    DmnRequest(
+                        variables = variablesMapping,
+                    ),
+            )
+        return dmnClient.getDecision(dmnRequestMapping)
     }
 
     suspend inline fun <reified T> getObjectsApiObjectById(id: String): ObjectsApiObject<T>? {
@@ -439,7 +502,19 @@ class ProductService(
         }
 
         return mapped
-        // return JsonUnflattener.unflatten(mapped)
+    }
+
+    private fun findVariableInJson(
+        regex: String,
+        source: String,
+    ): Any {
+        val inputJsonPath = JsonPath.parse(source)
+        try {
+            return inputJsonPath.read<Any>(regex)
+        } catch (ex: Exception) {
+            logger.warn("Problem with parsing variable: {}", ex.message)
+        }
+        return ""
     }
 
     companion object {
@@ -448,6 +523,10 @@ class ProductService(
         const val OBJECT_SEARCH_PARAMETER_PRODUCT_NAME = "naam"
         const val OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE = "PDCProductType"
         const val OBJECT_SEARCH_PARAMETER_SUB_PRODUCT_TYPE = "subtype"
+
+        const val KEY_PRODUCT = "product"
+        const val KEY_PRODUCT_VERBUIKSOBJECT = "productverbruiksobject"
+        const val KEY_PRODUCT_DETAILS = "productdetails"
 
         val logger = KotlinLogging.logger {}
     }

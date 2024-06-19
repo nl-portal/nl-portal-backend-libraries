@@ -15,25 +15,9 @@
  */
 package nl.nlportal.product.domain
 
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
-import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.*
-
-data class ProductType(
-    var id: UUID?,
-    val naam: String,
-    @JsonProperty("subtype")
-    val productSubType: String?,
-    val omschrijving: String?,
-    @GraphQLIgnore
-    val statussen: Map<String, String>,
-    val zaaktypen: List<UUID>,
-    @GraphQLIgnore
-    val beslistabellen: Map<String, List<BeslisTabelVariable>>?,
-    @GraphQLIgnore
-    val prefill: Map<String, Prefill>?,
-) {
-    fun beslistabellen(): List<String>? {
-        return beslistabellen?.map { it.key }
-    }
-}
+data class BeslisTabelVariable(
+    val name: String,
+    val classType: String,
+    val regex: String?,
+    val value: String?,
+)

@@ -34,6 +34,19 @@ import org.springframework.web.reactive.function.client.WebClient
 @AutoConfiguration
 @EnableConfigurationProperties(ProductConfig::class, DmnConfig::class)
 class ProductAutoConfiguration {
+    @Bean("dmnClient")
+    fun dmnClient(
+        dmnConfig: DmnConfig,
+        @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
+        webClientBuilder: WebClient.Builder,
+    ): DmnClient {
+        return DmnClient(
+            dmnConfig,
+            clientSslContextResolver,
+            webClientBuilder,
+        )
+    }
+
     @Bean
     fun productService(
         productConfig: ProductConfig,
@@ -41,6 +54,7 @@ class ProductAutoConfiguration {
         zakenApiClient: ZakenApiClient,
         taakObjectConfig: TaakObjectConfig,
         objectsApiTaskConfig: TaakObjectConfig,
+        dmnClient: DmnClient,
     ): ProductService {
         return ProductService(
             productConfig,
@@ -48,6 +62,7 @@ class ProductAutoConfiguration {
             zakenApiClient,
             taakObjectConfig,
             objectsApiTaskConfig,
+            dmnClient,
         )
     }
 
@@ -59,18 +74,5 @@ class ProductAutoConfiguration {
     @Bean
     fun productMutation(productService: ProductService): ProductMutation {
         return ProductMutation(productService)
-    }
-
-    @Bean
-    fun dmnClient(
-        dmnConfig: DmnConfig,
-        @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
-        webClientBuilder: WebClient.Builder,
-    ): DmnClient {
-        return DmnClient(
-            dmnConfig,
-            clientSslContextResolver,
-            webClientBuilder,
-        )
     }
 }
