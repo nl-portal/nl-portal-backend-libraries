@@ -36,6 +36,8 @@ dependencies {
     api("com.fasterxml.jackson.module", "jackson-module-kotlin")
     api("com.fasterxml.jackson.datatype", "jackson-datatype-jsr310")
 
+    api(ApiDependencies.commonsCodec)
+
     // Liquibase
     api("org.liquibase", "liquibase-core")
 

@@ -21,7 +21,9 @@ import com.jayway.jsonpath.JsonPath
 import mu.KotlinLogging
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils
+import nl.nlportal.core.util.Mapper
 import nl.nlportal.product.client.ProductConfig
+import nl.nlportal.product.domain.PrefillResponse
 import nl.nlportal.product.domain.Product
 import nl.nlportal.product.domain.ProductDetails
 import nl.nlportal.product.domain.ProductRol
@@ -32,6 +34,8 @@ import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.Comparator
+import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequest
+import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequestRecord
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
@@ -42,6 +46,8 @@ import nl.nlportal.zgw.taak.domain.TaakObject
 import nl.nlportal.zgw.taak.graphql.TaakPage
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class ProductService(
@@ -297,6 +303,75 @@ class ProductService(
         }
     }
 
+    suspend fun prefill(
+        parameters: Map<String, UUID>,
+        staticData: Map<String, Any>?,
+        productTypeId: UUID? = null,
+        productName: String,
+        formulier: String,
+    ): PrefillResponse {
+        // get ProductType to get the prefill data
+        val productType = getProductType(productTypeId, productName)
+
+        // find prefill configuration
+        val prefillConfiguration = productType?.prefill?.get(formulier)
+        if (prefillConfiguration == null) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find a prefill configuration for $formulier")
+        }
+
+        val prefillData = mutableMapOf<String, Any>()
+        staticData?.map {
+            prefillData.put(it.key.replace("_", "."), it.value)
+        }
+        parameters.forEach {
+            var jsonOfObject: String? = null
+            when (it.key) {
+                "product" ->
+                    getObjectsApiObjectById<Product>(it.value.toString())?.let {
+                        jsonOfObject = Mapper.get().writeValueAsString(it.record.data)
+                    }
+                "productdetails" ->
+                    getObjectsApiObjectById<ProductDetails>(it.value.toString())?.let {
+                        jsonOfObject = Mapper.get().writeValueAsString(it.record.data)
+                    }
+                "productverbruiksobject" ->
+                    getObjectsApiObjectById<ProductVerbruiksObject>(it.value.toString())?.let {
+                        jsonOfObject = Mapper.get().writeValueAsString(it.record.data)
+                    }
+                else -> null
+            }
+
+            if (jsonOfObject == null) {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find objects or where not provided")
+            }
+
+            prefillData.putAll(mapPrefillVariables(prefillConfiguration.variabelen[it.key]!!, jsonOfObject!!))
+        }
+
+        val json = JsonUnflattener.unflatten(prefillData)
+        val hash = CoreUtils.createHash(json, productConfig.prefillShaVersion)
+        val objectData = Mapper.get().readValue(json, ObjectNode::class.java)
+        logger.info(json)
+
+        val createRequest =
+            CreateObjectsApiObjectRequest(
+                UUID.randomUUID(),
+                productConfig.prefillTypeUrl,
+                CreateObjectsApiObjectRequestRecord(
+                    typeVersion = 1,
+                    data = objectData,
+                    startAt = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                ),
+            )
+
+        val prefillObject = objectsApiClient.createObject(createRequest)
+        return PrefillResponse(
+            prefillObject.uuid,
+            hash,
+            prefillConfiguration.formulierUrl,
+        )
+    }
+
     suspend inline fun <reified T> getObjectsApiObjectById(id: String): ObjectsApiObject<T>? {
         return try {
             objectsApiClient.getObjectById<T>(id = id)
@@ -349,17 +424,22 @@ class ProductService(
         return false
     }
 
-    private fun constructJsonForPrefill(
-        paramaters: Map<String, String>,
+    private fun mapPrefillVariables(
+        variables: Map<String, String>,
         source: String,
-    ): String {
+    ): Map<String, Any> {
         val inputJsonPath = JsonPath.parse(source)
         val mapped = mutableMapOf<String, Any>()
-        paramaters.forEach { (k, v) ->
-            val value = inputJsonPath.read<Any>(v)
-            mapped.put(k, value)
+        variables.forEach { (k, v) ->
+            try {
+                mapped.put(k, inputJsonPath.read<Any>(v))
+            } catch (ex: Exception) {
+                logger.warn("Problem with parsing variables: {}", ex.message)
+            }
         }
-        return JsonUnflattener.unflatten(mapped)
+
+        return mapped
+        // return JsonUnflattener.unflatten(mapped)
     }
 
     companion object {

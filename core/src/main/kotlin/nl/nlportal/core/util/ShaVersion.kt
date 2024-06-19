@@ -13,17 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.product.client
+package nl.nlportal.core.util
 
-import nl.nlportal.core.util.ShaVersion
-import org.springframework.boot.context.properties.ConfigurationProperties
-
-@ConfigurationProperties(prefix = "nl-portal.product", ignoreUnknownFields = true)
-class ProductConfig(
-    val productTypeUrl: String,
-    val productInstantieUrl: String,
-    val productVerbruiksObjectTypeUrl: String,
-    val productDetailsTypeUrl: String,
-    val prefillTypeUrl: String,
-    val prefillShaVersion: String = ShaVersion.SHA1.version,
-)
+enum class ShaVersion(
+    val version: String,
+) {
+    SHA1("SHA1"),
+    SHA256("SHA256"),
+    SHA512("SHA512"),
+}

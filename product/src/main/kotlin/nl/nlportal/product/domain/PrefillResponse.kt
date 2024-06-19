@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.payment.constants
+package nl.nlportal.product.domain
 
-enum class ShaVersion(
-    val version: String,
-) {
-    SHA1("SHA1"),
-    SHA256("SHA256"),
-    SHA512("SHA512"),
-}
+import java.util.UUID
+
+data class PrefillResponse(
+    val objectId: UUID,
+    val hash: String,
+    val formulierUrl: String,
+)

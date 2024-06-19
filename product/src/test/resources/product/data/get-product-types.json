@@ -26,6 +26,37 @@
           "omschrijving": "Dit is een voorbeeld van een product",
           "beslistabellen": {
             "regellinks": "https://www.example.com/mytable"
+          },
+          "prefill": {
+            "watkanikregelen":{
+              "formulierUrl":"http://localhost:8080/formuliernaam",
+              "variabelen":{
+                "product":{
+                  "persoonsgegevens.naam":"$.naam",
+                  "eigenschappen.contractnummer":"$.eigenschappen.contractnummer"
+                },
+                "productverbruiksobject":{
+                  "verbruik.data":"$.data",
+                  "verbruik.soort":"$.soort"
+                },
+                "productDetails":{
+                  "detail.data":"$.record.data.data"
+                }
+              }
+            },
+            "klachten":{
+              "formulierUrl":"http://localhost:8080/klachten",
+              "variabelen":{
+                "product":{
+                  "persoonsgegevens.naam":"$.naam",
+                  "eigenschap.test":"$.eigenschap.test"
+                },
+                "productverbruiksobject":{
+                  "verbruik.data":"$.data",
+                  "verbruik.soort":"$.soort"
+                }
+              }
+            }
           }
         },
         "geometry": null,

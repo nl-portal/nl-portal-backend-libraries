@@ -17,11 +17,14 @@ package nl.nlportal.product.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Mutation
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.node.ObjectNode
 import graphql.schema.DataFetchingEnvironment
+import nl.nlportal.core.util.Mapper
 import nl.nlportal.product.domain.ProductVerbruiksObject
 import nl.nlportal.product.service.ProductService
 import nl.nlportal.graphql.security.SecurityConstants
+import nl.nlportal.product.domain.PrefillResponse
 import java.util.UUID
 
 class ProductMutation(
@@ -37,6 +40,23 @@ class ProductMutation(
             id,
             submission,
             dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+        )
+    }
+
+    @GraphQLDescription("Prefill data to start a form")
+    suspend fun prefill(
+        parameters: ObjectNode,
+        staticData: ObjectNode? = null,
+        productTypeId: UUID? = null,
+        productName: String,
+        formulier: String,
+    ): PrefillResponse {
+        return productService.prefill(
+            parameters = Mapper.get().convertValue(parameters, object : TypeReference<Map<String, UUID>>() {}),
+            staticData = staticData?.let { Mapper.get().convertValue(it, object : TypeReference<Map<String, Any>>() {}) },
+            productTypeId = productTypeId,
+            productName = productName,
+            formulier = formulier,
         )
     }
 }

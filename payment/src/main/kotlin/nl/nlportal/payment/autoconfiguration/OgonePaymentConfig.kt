@@ -15,7 +15,7 @@
  */
 package nl.nlportal.payment.autoconfiguration
 
-import nl.nlportal.payment.constants.ShaVersion
+import nl.nlportal.core.util.ShaVersion
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.payment.ogone", ignoreUnknownFields = true)
