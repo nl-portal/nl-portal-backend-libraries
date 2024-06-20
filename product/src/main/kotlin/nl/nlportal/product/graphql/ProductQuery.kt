@@ -138,14 +138,10 @@ class ProductQuery(
     @GraphQLDescription("Get Product Decision by key")
     suspend fun getProductDecision(
         key: String,
-        productTypeId: UUID? = null,
-        productName: String,
         productId: UUID,
     ): List<DmnResponse> {
         return productService.getProductDecision(
             key,
-            productTypeId,
-            productName,
             productId,
         )
     }

@@ -378,27 +378,25 @@ class ProductService(
 
     suspend fun getProductDecision(
         key: String,
-        productTypeId: UUID? = null,
-        productName: String,
         productId: UUID,
     ): List<DmnResponse> {
-        val productType = getProductType(productTypeId, productName)
-        val variablesMapping = mutableMapOf<String, DmnVariable>()
+        val productObject = getObjectsApiObjectById<Product>(productId.toString())
+        if (productObject == null) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find a product for $productId")
+        }
+
+        val productType = getObjectsApiObjectById<ProductType>(productObject.record.data.productTypeId)?.record?.data
 
         val beslisTabelVariables = productType?.beslistabellen?.get(key)
         if (beslisTabelVariables == null) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find a beslisTabelVariables for $key")
         }
 
-        val productObject = getObjectsApiObjectById<Product>(productId.toString())
-        if (productObject == null) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find a product for $productId")
-        }
         val source = Mapper.get().writeValueAsString(productObject.record.data)
-
+        val variablesMapping = mutableMapOf<String, DmnVariable>()
         beslisTabelVariables.forEach {
             if (it.classType == DmnVariableType.JSON.value) {
-                // just put the whole
+                // just put the whole source as variable
                 variablesMapping.put(
                     it.name,
                     DmnVariable(
