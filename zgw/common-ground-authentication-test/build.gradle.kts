@@ -21,7 +21,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     api(project(":zgw:common-ground-authentication"))
     implementation("io.jsonwebtoken", "jjwt-api", "0.12.5")
-    implementation("io.jsonwebtoken", "jjwt-impl", "0.12.5")
+    implementation("io.jsonwebtoken", "jjwt-impl", "0.12.6")
     implementation("io.jsonwebtoken", "jjwt-jackson", "0.12.5")
 
     implementation("org.springframework.security", "spring-security-test")
