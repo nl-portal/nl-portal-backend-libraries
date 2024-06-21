@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration= \
+  nl.nlportal.zakenapi.autoconfigure.ZakenApiAutoConfiguration, \
+  nl.nlportal.zakenapi.client.ZaakDocumentenConfig
