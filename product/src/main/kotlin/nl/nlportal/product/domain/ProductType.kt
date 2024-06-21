@@ -36,4 +36,8 @@ data class ProductType(
     fun beslistabellen(): List<String>? {
         return beslistabellen?.map { it.key }
     }
+
+    fun prefillFormulieren(): List<String>? {
+        return prefill?.map { it.key }
+    }
 }
