@@ -23,6 +23,7 @@ import java.net.URI
 import java.util.UUID
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.OPENBAAR
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
@@ -83,6 +84,7 @@ internal class DocumentenApiServiceTest(
             "bestandsnaam.txt",
             123,
             status,
+            OPENBAAR
         )
     }
 
