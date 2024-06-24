@@ -15,6 +15,9 @@
  */
 package nl.nlportal.zgw.taak.domain
 
+import com.fasterxml.jackson.core.type.TypeReference
+import nl.nlportal.core.util.CoreUtils
+import nl.nlportal.core.util.Mapper
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import java.time.LocalDateTime
 import java.util.UUID
@@ -30,6 +33,7 @@ class TaakV2(
     val url: TaakUrl?,
     val formtaak: TaakForm?,
     val ogonebetaling: OgoneBetaling?,
+    val version: String?,
 ) {
     companion object {
         fun fromObjectsApi(objectsApiTask: ObjectsApiObject<TaakObjectV2>): TaakV2 {
@@ -45,6 +49,56 @@ class TaakV2(
                 url = taakObject.url,
                 formtaak = taakObject.formtaak,
                 ogonebetaling = taakObject.ogonebetaling,
+                version = TaakVersion.V2.name,
+            )
+        }
+
+        fun migrate(taakV1: Taak): TaakV2 {
+            return TaakV2(
+                id = taakV1.id,
+                titel = taakV1.title,
+                status = taakV1.status,
+                soort = "formtaak",
+                verloopdatum = taakV1.verloopdatum,
+                identificatie = taakV1.identificatie,
+                koppeling =
+                    TaakKoppeling(
+                        registratie = TaakKoppelingRegistratie.ZAAK,
+                        uuid = CoreUtils.extractId(taakV1.zaak!!),
+                    ),
+                url = null,
+                formtaak =
+                    TaakForm(
+                        formulier = taakV1.formulier.value,
+                        data = Mapper.get().convertValue(taakV1.data, object : TypeReference<Map<String, Any>>() {}),
+                    ),
+                ogonebetaling = null,
+                version = TaakVersion.V1.name,
+            )
+        }
+
+        fun migrateObjectsApiTask(objectsApiTask: ObjectsApiObject<TaakObject>): TaakV2 {
+            val taakObject = objectsApiTask.record.data
+            return TaakV2(
+                id = taakObject.verwerkerTaakId,
+                titel = taakObject.title,
+                status = taakObject.status,
+                soort = "formtaak",
+                verloopdatum = taakObject.verloopdatum,
+                identificatie = taakObject.identificatie,
+                koppeling =
+                    TaakKoppeling(
+                        registratie = TaakKoppelingRegistratie.ZAAK,
+                        uuid = CoreUtils.extractId(taakObject.zaak!!),
+                    ),
+                url = null,
+                formtaak =
+                    TaakForm(
+                        formulier = taakObject.formulier.value,
+                        data = taakObject.data,
+                    ),
+                ogonebetaling = null,
+                version = TaakVersion.V1.name,
             )
         }
     }
