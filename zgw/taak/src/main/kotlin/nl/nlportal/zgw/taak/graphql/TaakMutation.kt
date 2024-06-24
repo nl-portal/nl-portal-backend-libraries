@@ -34,7 +34,7 @@ class TaakMutation(
         id: UUID,
         submission: ObjectNode,
     ): Taak {
-        return taskService.submitTaak(id, submission, dfe.graphQlContext[AUTHENTICATION_KEY])
+        return taskService.submitTaakV1(id, submission, dfe.graphQlContext[AUTHENTICATION_KEY])
     }
 
     @GraphQLDescription("Submit a task")

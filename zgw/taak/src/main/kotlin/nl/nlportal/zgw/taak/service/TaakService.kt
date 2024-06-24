@@ -32,6 +32,7 @@ import nl.nlportal.zgw.taak.domain.TaakObject
 import nl.nlportal.zgw.taak.domain.TaakObjectV2
 import nl.nlportal.zgw.taak.domain.TaakStatus
 import nl.nlportal.zgw.taak.domain.TaakV2
+import nl.nlportal.zgw.taak.domain.TaakVersion
 import nl.nlportal.zgw.taak.graphql.TaakPage
 import nl.nlportal.zgw.taak.graphql.TaakPageV2
 import org.springframework.http.HttpStatus
@@ -42,8 +43,43 @@ open class TaakService(
     private val objectsApiClient: ObjectsApiClient,
     private val objectsApiTaskConfig: TaakObjectConfig,
 ) {
-    @Deprecated("Use version 2")
+    @Deprecated("Use version 2, for migration only")
     suspend fun getTaken(
+        pageNumber: Int,
+        pageSize: Int,
+        authentication: CommonGroundAuthentication,
+        zaakUUID: UUID? = null,
+    ): TaakPageV2 {
+        val migratedList =
+            getTakenV1(
+                pageNumber,
+                pageSize,
+                authentication,
+                zaakUUID,
+            ).let {
+                it.content.map {
+                    TaakV2.migrate(it)
+                }
+            }
+
+        val taakListV2 =
+            getTakenV2(
+                pageNumber,
+                pageSize,
+                authentication,
+                zaakUUID,
+            ).content + migratedList
+
+        return TaakPageV2(
+            pageNumber,
+            pageSize,
+            taakListV2,
+            taakListV2.size,
+        )
+    }
+
+    @Deprecated("Use version 2")
+    suspend fun getTakenV1(
         pageNumber: Int,
         pageSize: Int,
         authentication: CommonGroundAuthentication,
@@ -69,12 +105,45 @@ open class TaakService(
             pageSize,
             authentication,
             zaakUUID,
-            objectsApiTaskConfig.typeUrlV2 ?: "",
+            objectsApiTaskConfig.typeUrlV2,
         ).let { TaakPageV2.fromResultPage(pageNumber, pageSize, it) }
     }
 
     @Deprecated("Use version 2")
     suspend fun getTaakById(
+        id: UUID,
+        authentication: CommonGroundAuthentication,
+    ): TaakV2 {
+        var taak =
+            try {
+                TaakV2.migrateObjectsApiTask(
+                    getObjectsApiTaak<TaakObject>(
+                        id,
+                        authentication,
+                        objectsApiTaskConfig.typeUrl,
+                    ),
+                )
+            } catch (ex: Exception) {
+                // Taak could not be found, try V2
+                TaakV2.fromObjectsApi(
+                    getObjectsApiTaak<TaakObjectV2>(
+                        id,
+                        authentication,
+                        objectsApiTaskConfig.typeUrlV2,
+                    ),
+                )
+            }
+
+        // do validation if the user is authenticated for this task
+        val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
+        if (isAuthorized) {
+            return taak
+        }
+        throw IllegalStateException("Access denied to this taak")
+    }
+
+    @Deprecated("Use version 2")
+    suspend fun getTaakByIdV1(
         id: UUID,
         authentication: CommonGroundAuthentication,
     ): Taak {
@@ -103,7 +172,7 @@ open class TaakService(
                 getObjectsApiTaak<TaakObjectV2>(
                     id,
                     authentication,
-                    objectsApiTaskConfig.typeUrl,
+                    objectsApiTaskConfig.typeUrlV2,
                 ),
             )
         // do validation if the user is authenticated for this task
@@ -114,8 +183,35 @@ open class TaakService(
         throw IllegalStateException("Access denied to this taak")
     }
 
-    @Deprecated("Use version 2")
     suspend fun submitTaak(
+        id: UUID,
+        submission: ObjectNode,
+        authentication: CommonGroundAuthentication,
+        version: String,
+    ): TaakV2 {
+        val submittedTask =
+            when (version) {
+                TaakVersion.V1.name ->
+                    TaakV2.migrate(
+                        submitTaakV1(
+                            id,
+                            submission,
+                            authentication,
+                        ),
+                    )
+                else ->
+                    submitTaakV2(
+                        id,
+                        submission,
+                        authentication,
+                    )
+            }
+
+        return submittedTask
+    }
+
+    @Deprecated("Use version 2")
+    suspend fun submitTaakV1(
         id: UUID,
         submission: ObjectNode,
         authentication: CommonGroundAuthentication,
@@ -153,7 +249,7 @@ open class TaakService(
             getObjectsApiTaak<TaakObjectV2>(
                 id,
                 authentication,
-                objectsApiTaskConfig.typeUrl,
+                objectsApiTaskConfig.typeUrlV2,
             )
         if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
             throw ResponseStatusException(

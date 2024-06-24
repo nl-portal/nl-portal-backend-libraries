@@ -44,7 +44,7 @@ class TaakQuery(
         pageSize: Int? = 20,
         zaakUUID: UUID? = null,
     ): TaakPage {
-        return taskService.getTaken(
+        return taskService.getTakenV1(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             authentication = dfe.graphQlContext.get(AUTHENTICATION_KEY),
@@ -57,6 +57,6 @@ class TaakQuery(
         id: UUID,
         dfe: DataFetchingEnvironment,
     ): Taak {
-        return taskService.getTaakById(id, dfe.graphQlContext.get(AUTHENTICATION_KEY))
+        return taskService.getTaakByIdV1(id, dfe.graphQlContext.get(AUTHENTICATION_KEY))
     }
 }
