@@ -215,7 +215,6 @@ internal class PersoonQueryIT(
             .jsonPath("$basePath.geheimhoudingPersoonsgegevens").isEqualTo(false)
             .jsonPath("$basePath.nationaliteiten").isArray()
             .jsonPath("$basePath.nationaliteiten[0].nationaliteit.omschrijving", contains("Nederlandse", "Franse"))
-
     }
 
     private fun setupMockServer() {
