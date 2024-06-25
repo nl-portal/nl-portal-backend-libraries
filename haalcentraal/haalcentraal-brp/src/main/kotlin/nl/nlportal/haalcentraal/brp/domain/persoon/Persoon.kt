@@ -33,7 +33,7 @@ data class Persoon(
     val reisdocumentnummers: List<String>? = null,
     val kinderen: List<PersoonKind>? = null,
     val ouders: List<PersoonOuder>? = null,
-    val pertners: List<PersoonPartner>? = null,
+    val partners: List<PersoonPartner>? = null,
 ) {
     suspend fun bewonersAantal(
         @GraphQLIgnore
