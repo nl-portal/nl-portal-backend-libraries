@@ -24,10 +24,16 @@ import org.springframework.beans.factory.annotation.Autowired
 data class Persoon(
     val burgerservicenummer: String? = null,
     val geslachtsaanduiding: String? = null,
+    val geheimhoudingPersoonsgegevens: Boolean? = false,
     val naam: PersoonNaam? = null,
-    val geboorte: PersoonGeboorte? = null,
+    val geboorte: PersoonDatumLandPlaats? = null,
     val nationaliteiten: List<PersoonNationaliteiten>? = null,
     val verblijfplaats: PersoonVerblijfplaats? = null,
+    val opschortingBijhouding: PersoonOpschortingBijhouding? = null,
+    val reisdocumentnummers: List<String>? = null,
+    val kinderen: List<PersoonKind>? = null,
+    val ouders: List<PersoonOuder>? = null,
+    val pertners: List<PersoonPartner>? = null,
 ) {
     suspend fun bewonersAantal(
         @GraphQLIgnore
