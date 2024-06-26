@@ -15,6 +15,7 @@
  */
 package nl.nlportal.product.domain
 
+import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.*
@@ -33,10 +34,12 @@ data class ProductType(
     @GraphQLIgnore
     val prefill: Map<String, Prefill>?,
 ) {
+    @GraphQLDescription("Get list of available beslistabellen")
     fun beslistabellen(): List<String>? {
         return beslistabellen?.map { it.key }
     }
 
+    @GraphQLDescription("Get list of available forms to prefill")
     fun prefillFormulieren(): List<String>? {
         return prefill?.map { it.key }
     }

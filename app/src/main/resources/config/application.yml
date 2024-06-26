@@ -120,6 +120,10 @@ nl-portal:
         url: http://localhost:8010
         token: 182c13e2209161852c53cef53a879f7a2f923430
     #haalcentraal:
+        #url: http://localhost:8080
+        #hr:
+            #url: http://localhost:8080
+    #haalcentraal:
     #hr:
             #api-key: ${VALTIMO_HAALCENTRAAL_HR_APIKEY}
             #ssl:
