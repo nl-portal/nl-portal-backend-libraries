@@ -36,10 +36,6 @@ class HaalCentraalBrpClient(
             .uri {
                 val uriBuilder =
                     it.path("/brp/ingeschrevenpersonen/$bsn")
-                        .queryParam(
-                            "fields",
-                            "naam,nationaliteiten,geslachtsaanduiding,geboorte,burgerservicenummer,verblijfplaats",
-                        )
                 uriBuilder.build()
             }
             .retrieve()
