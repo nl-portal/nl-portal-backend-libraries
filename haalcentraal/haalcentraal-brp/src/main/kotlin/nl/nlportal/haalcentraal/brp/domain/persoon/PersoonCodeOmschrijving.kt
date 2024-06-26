@@ -15,16 +15,7 @@
  */
 package nl.nlportal.haalcentraal.brp.domain.persoon
 
-data class PersoonVerblijfplaats(
-    val straat: String? = null,
-    val huisnummer: String? = null,
-    val huisletter: String? = null,
-    val huisnummertoevoeging: String? = null,
-    val postcode: String? = null,
-    val woonplaats: String? = null,
-    val adresseerbaarObjectIdentificatie: String?,
-    val datumAanvangAdreshouding: PersoonDatum? = null,
-    val datumIngangGeldigheid: PersoonDatum? = null,
-    val datumInschrijvingInGemeente: PersoonDatum? = null,
-    val datumVestigingInNederland: PersoonDatum? = null,
+data class PersoonCodeOmschrijving(
+    val code: String? = null,
+    val omschrijving: String? = null,
 )
