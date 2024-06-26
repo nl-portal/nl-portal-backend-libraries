@@ -62,6 +62,7 @@ class ZakenApiAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(ZaakQuery::class)
     fun zaakListQuery2(zaakService: ZakenApiService): ZaakQuery {
         return ZaakQuery(zaakService)
     }
