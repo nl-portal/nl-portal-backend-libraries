@@ -16,20 +16,11 @@
 package nl.nlportal.product.service
 
 import com.fasterxml.jackson.databind.node.ObjectNode
-import com.github.wnameless.json.unflattener.JsonUnflattener
-import com.jayway.jsonpath.JsonPath
 import mu.KotlinLogging
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils
-import nl.nlportal.core.util.Mapper
 import nl.nlportal.product.client.DmnClient
 import nl.nlportal.product.client.ProductConfig
-import nl.nlportal.product.domain.DmnRequest
-import nl.nlportal.product.domain.DmnRequestMapping
-import nl.nlportal.product.domain.DmnResponse
-import nl.nlportal.product.domain.DmnVariable
-import nl.nlportal.product.domain.DmnVariableType
-import nl.nlportal.product.domain.PrefillResponse
 import nl.nlportal.product.domain.Product
 import nl.nlportal.product.domain.ProductDetails
 import nl.nlportal.product.domain.ProductRol
@@ -40,8 +31,6 @@ import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.Comparator
-import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequest
-import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequestRecord
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
@@ -52,8 +41,6 @@ import nl.nlportal.zgw.taak.domain.TaakObject
 import nl.nlportal.zgw.taak.graphql.TaakPage
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class ProductService(
@@ -310,133 +297,6 @@ class ProductService(
         }
     }
 
-    suspend fun prefill(
-        parameters: Map<String, UUID>,
-        staticData: Map<String, Any>?,
-        productTypeId: UUID? = null,
-        productName: String,
-        formulier: String,
-    ): PrefillResponse {
-        // get ProductType to get the prefill data
-        val productType = getProductType(productTypeId, productName)
-
-        // find prefill configuration
-        val prefillConfiguration = productType?.prefill?.get(formulier)
-        if (prefillConfiguration == null) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find a prefill configuration for $formulier")
-        }
-
-        val prefillData = mutableMapOf<String, Any>()
-        staticData?.map {
-            prefillData.put(it.key.replace("_", "."), it.value)
-        }
-
-        parameters.forEach {
-            val jsonOfObject =
-                when (it.key) {
-                    PREFILL_KEY_PRODUCT ->
-                        getObjectsApiObjectById<Product>(it.value.toString())?.let {
-                            Mapper.get().writeValueAsString(it.record.data)
-                        }
-                    PREFILL_KEY_PRODUCT_DETAILS ->
-                        getObjectsApiObjectById<ProductDetails>(it.value.toString())?.let {
-                            Mapper.get().writeValueAsString(it.record.data)
-                        }
-                    PREFILL_KEY_PRODUCT_VERBUIKSOBJECT ->
-                        getObjectsApiObjectById<ProductVerbruiksObject>(it.value.toString())?.let {
-                            Mapper.get().writeValueAsString(it.record.data)
-                        }
-                    else -> null
-                }
-
-            if (jsonOfObject == null) {
-                logger.warn("Could not find objects for key {} with uuid {}", it.key, it.value)
-            }
-
-            prefillData.putAll(mapPrefillVariables(prefillConfiguration.variabelen[it.key]!!, jsonOfObject!!))
-        }
-
-        val json = JsonUnflattener.unflatten(prefillData)
-        val hash = CoreUtils.createHash(json, productConfig.prefillShaVersion)
-        val createRequest =
-            CreateObjectsApiObjectRequest(
-                UUID.randomUUID(),
-                productConfig.prefillTypeUrl,
-                CreateObjectsApiObjectRequestRecord(
-                    typeVersion = 1,
-                    data = Mapper.get().readValue(json, ObjectNode::class.java),
-                    startAt = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                ),
-            )
-
-        val prefillObject = objectsApiClient.createObject(createRequest)
-        return PrefillResponse(
-            objectId = prefillObject.uuid,
-            hash = hash,
-            formulierUrl = prefillConfiguration.formulierUrl,
-        )
-    }
-
-    suspend fun getProductDecision(
-        key: String,
-        productId: UUID,
-    ): List<DmnResponse> {
-        val productObject = getObjectsApiObjectById<Product>(productId.toString())
-        if (productObject == null) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find a product for $productId")
-        }
-
-        val productType = getObjectsApiObjectById<ProductType>(productObject.record.data.productTypeId)?.record?.data
-
-        val beslisTabelVariables = productType?.beslistabellen?.get(key)
-        if (beslisTabelVariables == null) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find a beslisTabelVariables for $key")
-        }
-
-        val source = Mapper.get().writeValueAsString(productObject.record.data)
-        val variablesMapping = mutableMapOf<String, DmnVariable>()
-        beslisTabelVariables.forEach {
-            if (it.classType != DmnVariableType.JSON.value) {
-                if (it.value != null) {
-                    variablesMapping.put(
-                        it.name,
-                        DmnVariable(
-                            it.value,
-                            it.classType,
-                        ),
-                    )
-                } else if (it.regex != null) {
-                    variablesMapping.put(
-                        it.name,
-                        DmnVariable(
-                            findVariableInJson(it.regex, source),
-                            it.classType,
-                        ),
-                    )
-                }
-            } else {
-                // just put the whole source as variable
-                variablesMapping.put(
-                    it.name,
-                    DmnVariable(
-                        source,
-                        it.classType,
-                    ),
-                )
-            }
-        }
-
-        val dmnRequestMapping =
-            DmnRequestMapping(
-                key = key,
-                mapping =
-                    DmnRequest(
-                        variables = variablesMapping,
-                    ),
-            )
-        return dmnClient.getDecision(dmnRequestMapping)
-    }
-
     suspend inline fun <reified T> getObjectsApiObjectById(id: String): ObjectsApiObject<T>? {
         return try {
             objectsApiClient.getObjectById<T>(id = id)
@@ -489,46 +349,12 @@ class ProductService(
         return false
     }
 
-    private fun mapPrefillVariables(
-        variables: Map<String, String>,
-        source: String,
-    ): Map<String, Any> {
-        val inputJsonPath = JsonPath.parse(source)
-        val mapped = mutableMapOf<String, Any>()
-        variables.forEach { (k, v) ->
-            try {
-                mapped.put(k, inputJsonPath.read<Any>(v))
-            } catch (ex: Exception) {
-                logger.warn("Problem with parsing variables: {}", ex.message)
-            }
-        }
-
-        return mapped
-    }
-
-    private fun findVariableInJson(
-        regex: String,
-        source: String,
-    ): Any {
-        val inputJsonPath = JsonPath.parse(source)
-        try {
-            return inputJsonPath.read<Any>(regex)
-        } catch (ex: Exception) {
-            logger.warn("Problem with parsing variable: {}", ex.message)
-        }
-        return ""
-    }
-
     companion object {
         const val OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE = "rollen__initiator__identificatie"
         const val OBJECT_SEARCH_PARAMETER_PRODUCT_INSTANTIE = "productInstantie"
         const val OBJECT_SEARCH_PARAMETER_PRODUCT_NAME = "naam"
         const val OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE = "PDCProductType"
         const val OBJECT_SEARCH_PARAMETER_SUB_PRODUCT_TYPE = "subtype"
-
-        const val PREFILL_KEY_PRODUCT = "product"
-        const val PREFILL_KEY_PRODUCT_VERBUIKSOBJECT = "productverbruiksobject"
-        const val PREFILL_KEY_PRODUCT_DETAILS = "productdetails"
 
         val logger = KotlinLogging.logger {}
     }

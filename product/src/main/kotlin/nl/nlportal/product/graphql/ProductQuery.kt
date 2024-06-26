@@ -24,12 +24,14 @@ import nl.nlportal.product.domain.ProductVerbruiksObject
 import nl.nlportal.product.service.ProductService
 import nl.nlportal.graphql.security.SecurityConstants
 import nl.nlportal.product.domain.DmnResponse
+import nl.nlportal.product.service.DmnService
 import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zgw.taak.domain.Taak
 import java.util.*
 
 class ProductQuery(
     private val productService: ProductService,
+    private val dmnService: DmnService,
 ) : Query {
     @GraphQLDescription(
         """
@@ -140,7 +142,7 @@ class ProductQuery(
         key: String,
         productId: UUID,
     ): List<DmnResponse> {
-        return productService.getProductDecision(
+        return dmnService.getProductDecision(
             key,
             productId,
         )

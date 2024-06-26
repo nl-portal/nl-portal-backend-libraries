@@ -18,9 +18,12 @@ package nl.nlportal.product.autoconfiguration
 import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.product.client.DmnClient
 import nl.nlportal.product.client.DmnConfig
+import nl.nlportal.product.client.PrefillConfig
 import nl.nlportal.product.graphql.ProductQuery
 import nl.nlportal.product.client.ProductConfig
 import nl.nlportal.product.graphql.ProductMutation
+import nl.nlportal.product.service.DmnService
+import nl.nlportal.product.service.PrefillService
 import nl.nlportal.product.service.ProductService
 import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
@@ -32,7 +35,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.web.reactive.function.client.WebClient
 
 @AutoConfiguration
-@EnableConfigurationProperties(ProductConfig::class, DmnConfig::class)
+@EnableConfigurationProperties(ProductConfig::class, DmnConfig::class, PrefillConfig::class)
 class ProductAutoConfiguration {
     @Bean("dmnClient")
     fun dmnClient(
@@ -66,13 +69,43 @@ class ProductAutoConfiguration {
         )
     }
 
-    @Bean
-    fun productQuery(productService: ProductService): ProductQuery {
-        return ProductQuery(productService)
+    @Bean("dmnService")
+    fun dmnService(
+        objectsApiClient: ObjectsApiClient,
+        dmnClient: DmnClient,
+    ): DmnService {
+        return DmnService(
+            objectsApiClient,
+            dmnClient,
+        )
+    }
+
+    @Bean("prefillService")
+    fun prefillService(
+        prefillConfig: PrefillConfig,
+        objectsApiClient: ObjectsApiClient,
+        productService: ProductService,
+    ): PrefillService {
+        return PrefillService(
+            prefillConfig,
+            objectsApiClient,
+            productService,
+        )
     }
 
     @Bean
-    fun productMutation(productService: ProductService): ProductMutation {
-        return ProductMutation(productService)
+    fun productQuery(
+        productService: ProductService,
+        dmnService: DmnService,
+    ): ProductQuery {
+        return ProductQuery(productService, dmnService)
+    }
+
+    @Bean
+    fun productMutation(
+        productService: ProductService,
+        prefillService: PrefillService,
+    ): ProductMutation {
+        return ProductMutation(productService, prefillService)
     }
 }

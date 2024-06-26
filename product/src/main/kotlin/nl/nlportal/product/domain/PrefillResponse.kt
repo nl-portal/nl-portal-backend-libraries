@@ -20,5 +20,5 @@ import java.util.UUID
 data class PrefillResponse(
     val objectId: UUID,
     val hash: String,
-    val formulierUrl: String,
+    val formulierUrl: String?,
 )

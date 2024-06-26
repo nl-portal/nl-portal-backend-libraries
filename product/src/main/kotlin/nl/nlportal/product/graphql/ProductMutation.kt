@@ -25,10 +25,12 @@ import nl.nlportal.product.domain.ProductVerbruiksObject
 import nl.nlportal.product.service.ProductService
 import nl.nlportal.graphql.security.SecurityConstants
 import nl.nlportal.product.domain.PrefillResponse
+import nl.nlportal.product.service.PrefillService
 import java.util.UUID
 
 class ProductMutation(
     private val productService: ProductService,
+    private val prefillService: PrefillService,
 ) : Mutation {
     @GraphQLDescription("Update product verbruiks object")
     suspend fun updateProductVerbruiksObject(
@@ -51,7 +53,7 @@ class ProductMutation(
         productName: String,
         formulier: String,
     ): PrefillResponse {
-        return productService.prefill(
+        return prefillService.prefill(
             parameters = Mapper.get().convertValue(parameters, object : TypeReference<Map<String, UUID>>() {}),
             staticData = staticData?.let { Mapper.get().convertValue(it, object : TypeReference<Map<String, Any>>() {}) },
             productTypeId = productTypeId,
