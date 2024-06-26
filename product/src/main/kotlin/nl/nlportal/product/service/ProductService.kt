@@ -330,26 +330,27 @@ class ProductService(
         staticData?.map {
             prefillData.put(it.key.replace("_", "."), it.value)
         }
+
         parameters.forEach {
-            var jsonOfObject: String? = null
-            when (it.key) {
-                KEY_PRODUCT ->
-                    getObjectsApiObjectById<Product>(it.value.toString())?.let {
-                        jsonOfObject = Mapper.get().writeValueAsString(it.record.data)
-                    }
-                KEY_PRODUCT_DETAILS ->
-                    getObjectsApiObjectById<ProductDetails>(it.value.toString())?.let {
-                        jsonOfObject = Mapper.get().writeValueAsString(it.record.data)
-                    }
-                KEY_PRODUCT_VERBUIKSOBJECT ->
-                    getObjectsApiObjectById<ProductVerbruiksObject>(it.value.toString())?.let {
-                        jsonOfObject = Mapper.get().writeValueAsString(it.record.data)
-                    }
-                else -> null
-            }
+            val jsonOfObject =
+                when (it.key) {
+                    PREFILL_KEY_PRODUCT ->
+                        getObjectsApiObjectById<Product>(it.value.toString())?.let {
+                            Mapper.get().writeValueAsString(it.record.data)
+                        }
+                    PREFILL_KEY_PRODUCT_DETAILS ->
+                        getObjectsApiObjectById<ProductDetails>(it.value.toString())?.let {
+                            Mapper.get().writeValueAsString(it.record.data)
+                        }
+                    PREFILL_KEY_PRODUCT_VERBUIKSOBJECT ->
+                        getObjectsApiObjectById<ProductVerbruiksObject>(it.value.toString())?.let {
+                            Mapper.get().writeValueAsString(it.record.data)
+                        }
+                    else -> null
+                }
 
             if (jsonOfObject == null) {
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find objects or where not provided")
+                logger.warn("Could not find objects for key {} with uuid {}", it.key, it.value)
             }
 
             prefillData.putAll(mapPrefillVariables(prefillConfiguration.variabelen[it.key]!!, jsonOfObject!!))
@@ -370,9 +371,9 @@ class ProductService(
 
         val prefillObject = objectsApiClient.createObject(createRequest)
         return PrefillResponse(
-            prefillObject.uuid,
-            hash,
-            prefillConfiguration.formulierUrl,
+            objectId = prefillObject.uuid,
+            hash = hash,
+            formulierUrl = prefillConfiguration.formulierUrl,
         )
     }
 
@@ -395,7 +396,25 @@ class ProductService(
         val source = Mapper.get().writeValueAsString(productObject.record.data)
         val variablesMapping = mutableMapOf<String, DmnVariable>()
         beslisTabelVariables.forEach {
-            if (it.classType == DmnVariableType.JSON.value) {
+            if (it.classType != DmnVariableType.JSON.value) {
+                if (it.value != null) {
+                    variablesMapping.put(
+                        it.name,
+                        DmnVariable(
+                            it.value,
+                            it.classType,
+                        ),
+                    )
+                } else if (it.regex != null) {
+                    variablesMapping.put(
+                        it.name,
+                        DmnVariable(
+                            findVariableInJson(it.regex, source),
+                            it.classType,
+                        ),
+                    )
+                }
+            } else {
                 // just put the whole source as variable
                 variablesMapping.put(
                     it.name,
@@ -404,24 +423,9 @@ class ProductService(
                         it.classType,
                     ),
                 )
-            } else if (it.value != null) {
-                variablesMapping.put(
-                    it.name,
-                    DmnVariable(
-                        it.value,
-                        it.classType,
-                    ),
-                )
-            } else if (it.regex != null) {
-                variablesMapping.put(
-                    it.name,
-                    DmnVariable(
-                        findVariableInJson(it.regex, source),
-                        it.classType,
-                    ),
-                )
             }
         }
+
         val dmnRequestMapping =
             DmnRequestMapping(
                 key = key,
@@ -522,9 +526,9 @@ class ProductService(
         const val OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE = "PDCProductType"
         const val OBJECT_SEARCH_PARAMETER_SUB_PRODUCT_TYPE = "subtype"
 
-        const val KEY_PRODUCT = "product"
-        const val KEY_PRODUCT_VERBUIKSOBJECT = "productverbruiksobject"
-        const val KEY_PRODUCT_DETAILS = "productdetails"
+        const val PREFILL_KEY_PRODUCT = "product"
+        const val PREFILL_KEY_PRODUCT_VERBUIKSOBJECT = "productverbruiksobject"
+        const val PREFILL_KEY_PRODUCT_DETAILS = "productdetails"
 
         val logger = KotlinLogging.logger {}
     }
