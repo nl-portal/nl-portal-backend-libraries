@@ -23,7 +23,7 @@ import nl.nlportal.zakenapi.service.ZakenApiService
 import graphql.schema.DataFetchingEnvironment
 import java.util.UUID
 
-class ZaakQuery(val zakenApiService: ZakenApiService) : Query {
+open class ZaakQuery(val zakenApiService: ZakenApiService) : Query {
     @GraphQLDescription(
         """
         Gets all zaken for the user
@@ -32,7 +32,7 @@ class ZaakQuery(val zakenApiService: ZakenApiService) : Query {
         isOpen is false, only zaken with an enddate will be returned
     """,
     )
-    suspend fun getZaken(
+    open suspend fun getZaken(
         dfe: DataFetchingEnvironment,
         page: Int? = 1,
         zaakTypeUrl: String? = null,
@@ -47,7 +47,7 @@ class ZaakQuery(val zakenApiService: ZakenApiService) : Query {
     }
 
     @GraphQLDescription("Gets a zaak by id")
-    suspend fun getZaak(
+    open suspend fun getZaak(
         id: UUID,
         dfe: DataFetchingEnvironment,
     ): Zaak {
