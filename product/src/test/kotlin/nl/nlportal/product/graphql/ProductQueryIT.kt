@@ -15,11 +15,11 @@
  */
 package nl.nlportal.product.graphql
 
+import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.product.TestHelper
 import nl.nlportal.product.TestHelper.verifyOnlyDataExists
-import nl.nlportal.product.client.ProductConfig
-import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.product.client.DmnConfig
+import nl.nlportal.product.client.ProductConfig
 import nl.nlportal.zakenapi.client.ZakenApiConfig
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
@@ -41,7 +41,6 @@ import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.web.reactive.server.WebTestClient
 import java.net.URI
 import java.time.LocalDateTime
-import java.util.*
 
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")

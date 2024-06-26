@@ -3,6 +3,7 @@ query {
             id,
             naam,
             omschrijving,
-            zaaktypen
+            zaaktypen,
+            prefillFormulieren
         }
 }

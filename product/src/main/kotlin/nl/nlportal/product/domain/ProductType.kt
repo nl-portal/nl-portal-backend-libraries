@@ -18,6 +18,9 @@ package nl.nlportal.product.domain
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.node.ObjectNode
+import nl.nlportal.core.util.Mapper
 import java.util.*
 
 data class ProductType(
@@ -39,8 +42,13 @@ data class ProductType(
         return beslistabellen?.map { it.key }
     }
 
-    @GraphQLDescription("Get list of available forms to prefill")
-    fun prefillFormulieren(): List<String>? {
-        return prefill?.map { it.key }
+    @GraphQLDescription("Get list of available forms to prefill, with their object configurations")
+    fun prefillFormulieren(): ObjectNode? {
+        val prefillMap = mutableMapOf<String, Set<String>>()
+        prefill?.forEach {
+            prefillMap.put(it.key, it.value.variabelen.keys)
+        }
+
+        return Mapper.get().convertValue(prefillMap, object : TypeReference<ObjectNode>() {})
     }
 }
