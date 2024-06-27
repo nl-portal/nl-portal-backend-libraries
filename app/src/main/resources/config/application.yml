@@ -174,3 +174,5 @@ nl-portal:
         prefill-type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34pos
     dmn:
         url: http://localhost:8080 #moet nog veranderen als er een docker container is
+    prefill:
+        type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb37
