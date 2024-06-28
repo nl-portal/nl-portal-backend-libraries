@@ -28,17 +28,21 @@ import org.mockito.kotlin.wheneverBlocking
 import kotlin.test.assertEquals
 
 class ZakenApiServiceTest {
-
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private lateinit var zakenApiClient: ZakenApiClient
+
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private lateinit var zakenApiService: ZakenApiService
+
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private lateinit var objectsApiClient: ObjectsApiClient
+
     @Mock
     private lateinit var searchZaakInformatieobjectenImpl: SearchZaakInformatieobjectenImpl
+
     @Mock
     private lateinit var zakenInformatieobjectenImpl: ZakenInformatieobjectenImpl
+
     @Mock
     private lateinit var documentenApiService: DocumentenApiService
     private lateinit var zaakDocumentenConfig: ZaakDocumentenConfig
@@ -47,52 +51,55 @@ class ZakenApiServiceTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
 
-        zaakDocumentenConfig = ZaakDocumentenConfig(
-            vertrouwelijkheidsaanduidingWhitelist = listOf(
-                OPENBAAR,
-                ZAAKVERTROUWELIJK,
+        zaakDocumentenConfig =
+            ZaakDocumentenConfig(
+                vertrouwelijkheidsaanduidingWhitelist =
+                    listOf(
+                        OPENBAAR,
+                        ZAAKVERTROUWELIJK,
+                    ),
             )
-        )
 
         zakenApiService = ZakenApiService(zakenApiClient, zaakDocumentenConfig, documentenApiService, objectsApiClient)
     }
 
     @Test
-    fun `should only return documents with allowed confidentiality`() = runTest {
+    fun `should only return documents with allowed confidentiality`() =
+        runTest {
+            val informatieObjecten: Array<Document> =
+                arrayOf(
+                    testDocument.copy(
+                        status = GEARCHIVEERD,
+                        vertrouwelijkheidaanduiding = ZAAKVERTROUWELIJK,
+                    ),
+                    testDocument.copy(
+                        status = DEFINITIEF,
+                        vertrouwelijkheidaanduiding = GEHEIM,
+                    ),
+                    testDocument.copy(
+                        status = DEFINITIEF,
+                        vertrouwelijkheidaanduiding = OPENBAAR,
+                    ),
+                )
+            val zaakDocumenten: List<ZaakDocument> =
+                listOf(
+                    testZaakDocument,
+                    testZaakDocument,
+                    testZaakDocument,
+                    testZaakDocument,
+                )
 
-        val informatieObjecten: Array<Document> = arrayOf(
-            testDocument.copy(
-                status = GEARCHIVEERD,
-                vertrouwelijkheidaanduiding = ZAAKVERTROUWELIJK
-            ),
-            testDocument.copy(
-                status = DEFINITIEF,
-                vertrouwelijkheidaanduiding = GEHEIM
-            ),
-            testDocument.copy(
-                status = DEFINITIEF,
-                vertrouwelijkheidaanduiding = OPENBAAR
-            ),
-        )
-        val zaakDocumenten: List<ZaakDocument> = listOf(
-            testZaakDocument,
-            testZaakDocument,
-            testZaakDocument,
-            testZaakDocument,
-        )
+            // given
+            doReturn(zakenInformatieobjectenImpl).whenever(zakenApiClient).zaakInformatieobjecten()
+            doReturn(searchZaakInformatieobjectenImpl).whenever(zakenInformatieobjectenImpl).search()
+            doReturn(searchZaakInformatieobjectenImpl).whenever(searchZaakInformatieobjectenImpl).forZaak(any<String>())
+            doReturn(zaakDocumenten).wheneverBlocking(searchZaakInformatieobjectenImpl) { retrieve() }
+            doReturn(testDocument, *informatieObjecten).wheneverBlocking(documentenApiService) { getDocument(any()) }
 
-        // given
-        doReturn(zakenInformatieobjectenImpl).whenever(zakenApiClient).zaakInformatieobjecten()
-        doReturn(searchZaakInformatieobjectenImpl).whenever(zakenInformatieobjectenImpl).search()
-        doReturn(searchZaakInformatieobjectenImpl).whenever(searchZaakInformatieobjectenImpl).forZaak(any<String>())
-        doReturn(zaakDocumenten).wheneverBlocking(searchZaakInformatieobjectenImpl) { retrieve() }
-        doReturn(testDocument, *informatieObjecten).wheneverBlocking(documentenApiService) { getDocument(any()) }
+            // when
+            val filteredDocuments =
+                zakenApiService.getDocumenten("example.com")
 
-        // when
-        val filteredDocuments =
-            zakenApiService.getDocumenten("example.com")
-
-
-        assertEquals(2, filteredDocuments.size)
-    }
+            assertEquals(2, filteredDocuments.size)
+        }
 }
