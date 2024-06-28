@@ -84,7 +84,7 @@ internal class DocumentenApiServiceTest(
             "bestandsnaam.txt",
             123,
             status,
-            OPENBAAR
+            OPENBAAR,
         )
     }
 
