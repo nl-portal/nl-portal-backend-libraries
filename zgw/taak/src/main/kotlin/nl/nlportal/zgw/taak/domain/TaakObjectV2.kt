@@ -32,4 +32,5 @@ data class TaakObjectV2(
     val formtaak: TaakForm?,
     val ogonebetaling: OgoneBetaling?,
     @JsonProperty("verwerker_taak_id") val verwerkerTaakId: UUID,
+    val eigenaar: String,
 )
