@@ -88,7 +88,7 @@ class ProductService(
             )
         }
         return getObjectsApiObjectResultPage<Product>(
-            productConfig.productInstantieUrl,
+            productConfig.productInstantieTypeUrl,
             objectSearchParametersProducten,
             pageNumber,
             pageSize,

@@ -20,7 +20,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties(prefix = "nl-portal.product", ignoreUnknownFields = true)
 class ProductConfig(
     val productTypeUrl: String,
-    val productInstantieUrl: String,
+    val productInstantieTypeUrl: String,
     val productVerbruiksObjectTypeUrl: String,
     val productDetailsTypeUrl: String,
 )
