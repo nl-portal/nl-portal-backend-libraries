@@ -6,27 +6,24 @@
         "index": 1,
         "typeVersion": 1,
         "data": {
+            "titel": "Very important task",
             "identificatie": {
                 "type": "bsn",
                 "value": "569312863"
             },
-            "data": {
-                "voornaam": "Peter"
-            },
             "status": "open",
-            "formulier": {
-                "type": "id",
-                "value": "check-loan-form"
-            },
             "soort": "formtaak",
             "verwerker_taak_id": "58fad5ab-dc2f-11ec-9075-f22a405ce708",
-            "title": "Very important task",
+            "eigenaar": "erfpacht",
             "koppeling": {
                 "registratie": "zaak",
                 "uuid": "7d9cd6c2-8147-46f2-9ae9-c67e8213c202"
             },
             "formtaak": {
-                "formulier": "http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4",
+                "formulier": {
+                    "soort": "url",
+                    "value": "http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4"
+                },
                 "data": {
                     "voornaam": "Jan",
                     "achternaam": "Smit",

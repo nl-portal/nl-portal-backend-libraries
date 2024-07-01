@@ -32,6 +32,8 @@ data class ProductType(
     @GraphQLIgnore
     val statussen: Map<String, String>,
     val zaaktypen: List<UUID>,
+    val eigenschappen: ObjectNode?,
+    val parameters: ObjectNode?,
     @GraphQLIgnore
     val beslistabellen: Map<String, List<BeslisTabelVariable>>?,
     @GraphQLIgnore

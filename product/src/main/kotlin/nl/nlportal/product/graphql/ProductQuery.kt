@@ -18,15 +18,15 @@ package nl.nlportal.product.graphql
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Query
 import graphql.schema.DataFetchingEnvironment
+import nl.nlportal.graphql.security.SecurityConstants
+import nl.nlportal.product.domain.DmnResponse
 import nl.nlportal.product.domain.Product
 import nl.nlportal.product.domain.ProductType
 import nl.nlportal.product.domain.ProductVerbruiksObject
-import nl.nlportal.product.service.ProductService
-import nl.nlportal.graphql.security.SecurityConstants
-import nl.nlportal.product.domain.DmnResponse
 import nl.nlportal.product.service.DmnService
+import nl.nlportal.product.service.ProductService
 import nl.nlportal.zakenapi.domain.Zaak
-import nl.nlportal.zgw.taak.domain.Taak
+import nl.nlportal.zgw.taak.domain.TaakV2
 import java.util.*
 
 class ProductQuery(
@@ -99,7 +99,7 @@ class ProductQuery(
         productName: String,
         productSubType: String? = null,
         pageSize: Int? = 20,
-    ): List<Taak> {
+    ): List<TaakV2> {
         return productService.getProductTaken(
             dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
             productTypeId,

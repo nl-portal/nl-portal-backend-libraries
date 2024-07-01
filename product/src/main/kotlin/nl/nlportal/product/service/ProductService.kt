@@ -18,7 +18,6 @@ package nl.nlportal.product.service
 import com.fasterxml.jackson.databind.node.ObjectNode
 import mu.KotlinLogging
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.product.client.DmnClient
 import nl.nlportal.product.client.ProductConfig
 import nl.nlportal.product.domain.Product
@@ -36,9 +35,9 @@ import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
-import nl.nlportal.zgw.taak.domain.Taak
-import nl.nlportal.zgw.taak.domain.TaakObject
-import nl.nlportal.zgw.taak.graphql.TaakPage
+import nl.nlportal.zgw.taak.domain.TaakObjectV2
+import nl.nlportal.zgw.taak.domain.TaakV2
+import nl.nlportal.zgw.taak.graphql.TaakPageV2
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
@@ -151,7 +150,7 @@ class ProductService(
         productSubType: String?,
         pageNumber: Int,
         pageSize: Int,
-    ): List<Taak> {
+    ): List<TaakV2> {
         val objectSearchParameters =
             listOf(
                 ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, authentication.userType),
@@ -160,13 +159,13 @@ class ProductService(
             )
 
         val taken =
-            getObjectsApiObjectResultPage<TaakObject>(
-                objectsApiTaskConfig.typeUrlV2 ?: "",
+            getObjectsApiObjectResultPage<TaakObjectV2>(
+                objectsApiTaskConfig.typeUrlV2,
                 objectSearchParameters,
                 pageNumber,
                 pageSize,
             ).let { resultPage ->
-                TaakPage.fromResultPage(pageNumber, pageSize, resultPage)
+                TaakPageV2.fromResultPage(pageNumber, pageSize, resultPage)
             }
                 .content
 
@@ -197,8 +196,8 @@ class ProductService(
         // filter out the taak which is not connected to a zaak or product
         return taken
             .filterNot { task ->
-                !zaken.any { it.uuid == task.zaak?.let { zaakId -> CoreUtils.extractId(zaakId) } } &&
-                    !producten.any { it.taken.contains(task.id) }
+                !zaken.any { it.uuid == task.koppeling.uuid } &&
+                    !producten.any { it.id == task.koppeling.uuid }
             }
             .sortedBy { it.verloopdatum }
     }
