@@ -34,6 +34,7 @@ class TaakV2(
     val formtaak: TaakForm?,
     val ogonebetaling: OgoneBetaling?,
     val version: String?,
+    val eigenaar: String,
 ) {
     companion object {
         fun fromObjectsApi(objectsApiTask: ObjectsApiObject<TaakObjectV2>): TaakV2 {
@@ -50,6 +51,7 @@ class TaakV2(
                 formtaak = taakObject.formtaak,
                 ogonebetaling = taakObject.ogonebetaling,
                 version = TaakVersion.V2.name,
+                eigenaar = "gzac",
             )
         }
 
@@ -69,11 +71,12 @@ class TaakV2(
                 url = null,
                 formtaak =
                     TaakForm(
-                        formulier = taakV1.formulier.value,
+                        formulier = createTaakFormulierV2(taakV1.formulier.value),
                         data = Mapper.get().convertValue(taakV1.data, object : TypeReference<Map<String, Any>>() {}),
                     ),
                 ogonebetaling = null,
                 version = TaakVersion.V1.name,
+                eigenaar = "gzac",
             )
         }
 
@@ -94,12 +97,20 @@ class TaakV2(
                 url = null,
                 formtaak =
                     TaakForm(
-                        formulier = taakObject.formulier.value,
+                        formulier = createTaakFormulierV2(taakObject.formulier.value),
                         data = taakObject.data,
                     ),
                 ogonebetaling = null,
                 version = TaakVersion.V1.name,
+                eigenaar = "gzac",
             )
+        }
+
+        private fun createTaakFormulierV2(value: String): TaakFormulierV2 {
+            if (value.startsWith("http")) {
+                TaakFormulierV2("url", value)
+            }
+            return TaakFormulierV2("id", value)
         }
     }
 }

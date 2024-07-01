@@ -15,6 +15,7 @@
                     "status": "open",
                     "soort": "formtaak",
                     "verloopdatum": "2023-09-20T18:25:43.524Z",
+                    "eigenaar": "gzac",
                     "identificatie": {
                         "type": "bsn",
                         "value": "569312863"
@@ -24,7 +25,10 @@
                         "uuid": "5551a7c5-4e92-43e6-8d23-80359b7e22b7"
                     },
                     "formtaak": {
-                        "formulier": "http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4",
+                        "formulier": {
+                            "soort": "url",
+                            "value": "http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4"
+                        },
                         "data": {
                             "voornaam": "Jan",
                             "achternaam": "Smit",
