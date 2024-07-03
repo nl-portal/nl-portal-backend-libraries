@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.zgw.taak.domain.TaakV2
+import nl.nlportal.zgw.taak.domain.TaakVersion
 import nl.nlportal.zgw.taak.service.TaakService
 import java.util.UUID
 
@@ -32,7 +33,7 @@ class TaakMutationV2(
         dfe: DataFetchingEnvironment,
         id: UUID,
         submission: ObjectNode,
-        version: String,
+        version: TaakVersion,
     ): TaakV2 {
         return taskService.submitTaak(
             id,

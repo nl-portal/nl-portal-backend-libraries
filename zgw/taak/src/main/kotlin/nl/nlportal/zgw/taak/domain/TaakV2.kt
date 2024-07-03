@@ -26,31 +26,31 @@ class TaakV2(
     val id: UUID,
     val titel: String,
     var status: TaakStatus,
-    val soort: String,
+    val soort: TaakSoort,
     val verloopdatum: LocalDateTime?,
     val identificatie: TaakIdentificatie,
     val koppeling: TaakKoppeling,
     val url: TaakUrl?,
     val formtaak: TaakForm?,
     val ogonebetaling: OgoneBetaling?,
-    val version: String?,
+    val version: TaakVersion?,
     val eigenaar: String,
 ) {
     companion object {
         fun fromObjectsApi(objectsApiTask: ObjectsApiObject<TaakObjectV2>): TaakV2 {
-            val taakObject = objectsApiTask.record.data
+            val taakObjectV2 = objectsApiTask.record.data
             return TaakV2(
-                id = taakObject.verwerkerTaakId,
-                titel = taakObject.titel,
-                status = taakObject.status,
-                soort = taakObject.soort.value,
-                verloopdatum = taakObject.verloopdatum,
-                identificatie = taakObject.identificatie,
-                koppeling = taakObject.koppeling,
-                url = taakObject.url,
-                formtaak = taakObject.formtaak,
-                ogonebetaling = taakObject.ogonebetaling,
-                version = TaakVersion.V2.name,
+                id = taakObjectV2.verwerkerTaakId,
+                titel = taakObjectV2.titel,
+                status = taakObjectV2.status,
+                soort = taakObjectV2.soort,
+                verloopdatum = taakObjectV2.verloopdatum,
+                identificatie = taakObjectV2.identificatie,
+                koppeling = taakObjectV2.koppeling,
+                url = taakObjectV2.url,
+                formtaak = taakObjectV2.formtaak,
+                ogonebetaling = taakObjectV2.ogonebetaling,
+                version = TaakVersion.V2,
                 eigenaar = "gzac",
             )
         }
@@ -60,7 +60,7 @@ class TaakV2(
                 id = taakV1.id,
                 titel = taakV1.title,
                 status = taakV1.status,
-                soort = "formtaak",
+                soort = TaakSoort.FORMTAAK,
                 verloopdatum = taakV1.verloopdatum,
                 identificatie = taakV1.identificatie,
                 koppeling =
@@ -71,11 +71,11 @@ class TaakV2(
                 url = null,
                 formtaak =
                     TaakForm(
-                        formulier = createTaakFormulierV2(taakV1.formulier.value),
+                        formulier = TaakFormulierV2.migrate(taakV1.formulier),
                         data = Mapper.get().convertValue(taakV1.data, object : TypeReference<Map<String, Any>>() {}),
                     ),
                 ogonebetaling = null,
-                version = TaakVersion.V1.name,
+                version = TaakVersion.V1,
                 eigenaar = "gzac",
             )
         }
@@ -86,7 +86,7 @@ class TaakV2(
                 id = taakObject.verwerkerTaakId,
                 titel = taakObject.title,
                 status = taakObject.status,
-                soort = "formtaak",
+                soort = TaakSoort.FORMTAAK,
                 verloopdatum = taakObject.verloopdatum,
                 identificatie = taakObject.identificatie,
                 koppeling =
@@ -97,20 +97,13 @@ class TaakV2(
                 url = null,
                 formtaak =
                     TaakForm(
-                        formulier = createTaakFormulierV2(taakObject.formulier.value),
+                        formulier = TaakFormulierV2.migrate(taakObject.formulier),
                         data = taakObject.data,
                     ),
                 ogonebetaling = null,
-                version = TaakVersion.V1.name,
+                version = TaakVersion.V1,
                 eigenaar = "gzac",
             )
-        }
-
-        private fun createTaakFormulierV2(value: String): TaakFormulierV2 {
-            if (value.startsWith("http")) {
-                TaakFormulierV2("url", value)
-            }
-            return TaakFormulierV2("id", value)
         }
     }
 }
