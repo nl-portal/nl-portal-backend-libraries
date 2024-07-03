@@ -187,11 +187,11 @@ open class TaakService(
         id: UUID,
         submission: ObjectNode,
         authentication: CommonGroundAuthentication,
-        version: String,
+        version: TaakVersion,
     ): TaakV2 {
         val submittedTask =
             when (version) {
-                TaakVersion.V1.name ->
+                TaakVersion.V1 ->
                     TaakV2.migrate(
                         submitTaakV1(
                             id,
