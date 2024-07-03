@@ -16,7 +16,6 @@
 package nl.nlportal.zgw.taak.domain
 
 import com.fasterxml.jackson.core.type.TypeReference
-import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import java.time.LocalDateTime
@@ -63,11 +62,7 @@ class TaakV2(
                 soort = TaakSoort.FORMTAAK,
                 verloopdatum = taakV1.verloopdatum,
                 identificatie = taakV1.identificatie,
-                koppeling =
-                    TaakKoppeling(
-                        registratie = TaakKoppelingRegistratie.ZAAK,
-                        uuid = CoreUtils.extractId(taakV1.zaak!!),
-                    ),
+                koppeling = TaakKoppeling.migrate(taakV1.zaak),
                 url = null,
                 formtaak =
                     TaakForm(
@@ -90,10 +85,7 @@ class TaakV2(
                 verloopdatum = taakObject.verloopdatum,
                 identificatie = taakObject.identificatie,
                 koppeling =
-                    TaakKoppeling(
-                        registratie = TaakKoppelingRegistratie.ZAAK,
-                        uuid = CoreUtils.extractId(taakObject.zaak!!),
-                    ),
+                    TaakKoppeling.migrate(taakObject.zaak),
                 url = null,
                 formtaak =
                     TaakForm(
