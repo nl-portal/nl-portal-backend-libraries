@@ -113,7 +113,7 @@ open class ObjectsApiClient(
                 ReactorClientHttpConnector(
                     HttpClient.create().wiretap(
                         "reactor.netty.http.client.HttpClient",
-                        LogLevel.DEBUG,
+                        LogLevel.TRACE,
                         AdvancedByteBufFormat.TEXTUAL,
                     ),
                 ),
