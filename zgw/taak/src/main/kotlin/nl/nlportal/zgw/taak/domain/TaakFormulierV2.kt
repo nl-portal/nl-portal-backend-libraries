@@ -8,7 +8,7 @@ data class TaakFormulierV2(
         fun migrate(taakFormulier: TaakFormulier): TaakFormulierV2 {
             val value = taakFormulier.value
             if (value.startsWith("http")) {
-                TaakFormulierV2("url", value)
+                return TaakFormulierV2("url", value)
             }
             return TaakFormulierV2("id", value)
         }
