@@ -15,6 +15,9 @@
  */
 package nl.nlportal.zakenapi.client
 
+import nl.nlportal.documentenapi.domain.DocumentStatus
+import nl.nlportal.documentenapi.domain.DocumentStatus.DEFINITIEF
+import nl.nlportal.documentenapi.domain.DocumentStatus.GEARCHIVEERD
 import nl.nlportal.documentenapi.domain.Vertrouwelijkheid
 import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.BEPERKT_OPENBAAR
 import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.INTERN
@@ -30,5 +33,10 @@ data class ZaakDocumentenConfig(
             BEPERKT_OPENBAAR,
             INTERN,
             ZAAKVERTROUWELIJK,
+        ),
+    var statusWhitelist: List<DocumentStatus> =
+        listOf(
+            DEFINITIEF,
+            GEARCHIVEERD,
         ),
 )

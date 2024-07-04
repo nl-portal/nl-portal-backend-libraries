@@ -2,8 +2,10 @@ package nl.nlportal.zakenapi.service
 
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.documentenapi.domain.Document
+import nl.nlportal.documentenapi.domain.DocumentStatus
 import nl.nlportal.documentenapi.domain.DocumentStatus.DEFINITIEF
 import nl.nlportal.documentenapi.domain.DocumentStatus.GEARCHIVEERD
+import nl.nlportal.documentenapi.domain.DocumentStatus.IN_BEWERKING
 import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.GEHEIM
 import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.OPENBAAR
 import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.ZAAKVERTROUWELIJK
@@ -26,6 +28,7 @@ import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.whenever
 import org.mockito.kotlin.wheneverBlocking
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class ZakenApiServiceTest {
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
@@ -64,12 +67,12 @@ class ZakenApiServiceTest {
     }
 
     @Test
-    fun `should only return documents with allowed confidentiality`() =
+    fun `should only return documents with whitelisted status and confidentiality`() =
         runTest {
             val informatieObjecten: Array<Document> =
                 arrayOf(
                     testDocument.copy(
-                        status = GEARCHIVEERD,
+                        status = IN_BEWERKING,
                         vertrouwelijkheidaanduiding = ZAAKVERTROUWELIJK,
                     ),
                     testDocument.copy(
@@ -100,6 +103,19 @@ class ZakenApiServiceTest {
             val filteredDocuments =
                 zakenApiService.getDocumenten("example.com")
 
-            assertEquals(2, filteredDocuments.size)
+            assertEquals(1, filteredDocuments.size)
+            assertTrue { filteredDocuments.first().status in zaakDocumentenConfig.statusWhitelist }
+            assertTrue { filteredDocuments.first().vertrouwelijkheidaanduiding in zaakDocumentenConfig.vertrouwelijkheidsaanduidingWhitelist }
         }
+
+    @Test
+    fun `should apply default whitelist to zaakdocumenten filter`() {
+        val expectedStatuses: List<DocumentStatus> =
+            listOf(
+                DEFINITIEF,
+                GEARCHIVEERD,
+            )
+
+        assertEquals(expectedStatuses, zaakDocumentenConfig.statusWhitelist)
+    }
 }
