@@ -50,6 +50,13 @@ open class TaakService(
         authentication: CommonGroundAuthentication,
         zaakUUID: UUID? = null,
     ): TaakPageV2 {
+        val result =
+            getTakenV1(
+                pageNumber,
+                pageSize,
+                authentication,
+                zaakUUID,
+            )
         val migratedList =
             getTakenV1(
                 pageNumber,
@@ -85,13 +92,22 @@ open class TaakService(
         authentication: CommonGroundAuthentication,
         zaakUUID: UUID? = null,
     ): TaakPage {
-        return getTakenResultPage<TaakObject>(
-            pageNumber,
-            pageSize,
-            authentication,
-            zaakUUID,
-            objectsApiTaskConfig.typeUrl,
-        ).let { TaakPage.fromResultPage(pageNumber, pageSize, it) }
+        try {
+            return getTakenResultPage<TaakObject>(
+                pageNumber,
+                pageSize,
+                authentication,
+                zaakUUID,
+                objectsApiTaskConfig.typeUrl,
+            ).let { TaakPage.fromResultPage(pageNumber, pageSize, it) }
+        } catch (ex: Exception) {
+            return return TaakPage(
+                number = pageNumber,
+                size = pageSize,
+                content = listOf(),
+                totalElements = 0,
+            )
+        }
     }
 
     suspend fun getTakenV2(
@@ -100,13 +116,22 @@ open class TaakService(
         authentication: CommonGroundAuthentication,
         zaakUUID: UUID? = null,
     ): TaakPageV2 {
-        return getTakenResultPage<TaakObjectV2>(
-            pageNumber,
-            pageSize,
-            authentication,
-            zaakUUID,
-            objectsApiTaskConfig.typeUrlV2,
-        ).let { TaakPageV2.fromResultPage(pageNumber, pageSize, it) }
+        try {
+            return getTakenResultPage<TaakObjectV2>(
+                pageNumber,
+                pageSize,
+                authentication,
+                zaakUUID,
+                objectsApiTaskConfig.typeUrlV2,
+            ).let { TaakPageV2.fromResultPage(pageNumber, pageSize, it) }
+        } catch (ex: Exception) {
+            return return TaakPageV2(
+                number = pageNumber,
+                size = pageSize,
+                content = listOf(),
+                totalElements = 0,
+            )
+        }
     }
 
     @Deprecated("Use version 2")
@@ -187,11 +212,11 @@ open class TaakService(
         id: UUID,
         submission: ObjectNode,
         authentication: CommonGroundAuthentication,
-        version: String,
+        version: TaakVersion,
     ): TaakV2 {
         val submittedTask =
             when (version) {
-                TaakVersion.V1.name ->
+                TaakVersion.V1 ->
                     TaakV2.migrate(
                         submitTaakV1(
                             id,
