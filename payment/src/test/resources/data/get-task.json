@@ -15,6 +15,7 @@
           "status": "open",
           "soort": "ogonebetaling",
           "verloopdatum": "2023-09-20T18:25:43.524Z",
+          "eigenaar": "erfpacht",
           "identificatie": {
             "type": "bsn",
             "value": "569312863"

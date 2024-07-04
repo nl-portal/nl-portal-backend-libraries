@@ -8,7 +8,7 @@ import nl.nlportal.core.util.Mapper
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class TaakForm(
-    val formulier: String,
+    val formulier: TaakFormulierV2,
     @GraphQLIgnore
     val data: Map<String, Any>,
     @GraphQLIgnore
