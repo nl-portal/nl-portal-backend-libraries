@@ -18,8 +18,8 @@ package nl.nlportal.zakenapi.service
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils.extractId
 import nl.nlportal.documentenapi.domain.Document
-import nl.nlportal.documentenapi.domain.DocumentStatus
 import nl.nlportal.documentenapi.service.DocumentenApiService
+import nl.nlportal.zakenapi.client.ZaakDocumentenConfig
 import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zakenapi.domain.ZaakDetails
@@ -37,6 +37,7 @@ import java.util.UUID
 
 class ZakenApiService(
     private val zakenApiClient: ZakenApiClient,
+    private val zaakDocumentenConfig: ZaakDocumentenConfig,
     private val documentenApiService: DocumentenApiService,
     private val objectsApiClient: ObjectsApiClient,
 ) {
@@ -92,7 +93,10 @@ class ZakenApiService(
     suspend fun getDocumenten(zaakUrl: String): List<Document> {
         return getZaakDocumenten(zaakUrl)
             .map { documentenApiService.getDocument(it.informatieobject!!) }
-            .filter { it.status in listOf(DocumentStatus.DEFINITIEF, DocumentStatus.GEARCHIVEERD) }
+            .filter { document ->
+                document.status in zaakDocumentenConfig.statusWhitelist &&
+                    document.vertrouwelijkheidaanduiding in zaakDocumentenConfig.vertrouwelijkheidsaanduidingWhitelist
+            }
     }
 
     suspend fun getZaakStatusHistory(zaakId: UUID): List<ZaakStatus> {

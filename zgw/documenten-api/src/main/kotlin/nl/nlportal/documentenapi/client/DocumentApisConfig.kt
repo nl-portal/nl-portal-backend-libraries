@@ -24,22 +24,18 @@ data class DocumentApisConfig(
     var configurations: Map<String, DocumentApiConfig> = mapOf(),
 ) {
     fun getConfig(documentApi: String): DocumentApiConfig {
-        return configurations[documentApi]!!
+        return configurations[documentApi]
+            ?: throw NullPointerException("No documentapi configuration with key $documentApi")
     }
 
     fun getConfigForDocumentUrl(documentUrl: String): String {
         return configurations
-            .filterValues {
-                    documentApiConfig ->
-                documentUrl
-                    .contains(documentApiConfig.url)
+            .filterValues { documentenApiConfig ->
+                documentUrl.contains(documentenApiConfig.url)
             }
             .keys
-            .stream()
-            .findFirst()
-            .orElseThrow(
-                { NullPointerException("No documentapi configuration found for zaakdocument with url " + documentUrl) },
-            )
+            .firstOrNull()
+            ?: throw NullPointerException("No documentapi configuration found for zaakdocument with url $documentUrl")
     }
 }
 
