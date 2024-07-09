@@ -15,6 +15,7 @@
  */
 package nl.nlportal.haalcentraal.brp.service.impl
 
+import mu.KotlinLogging
 import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.haalcentraal.brp.client.HaalCentraalBrpClient
@@ -54,6 +55,7 @@ class HaalCentraalBrpServiceImpl(
                 null
             }
         } catch (ex: Exception) {
+            logger.error("Something went wrong with 'getBewoningen' - error: {}", ex.message, ex)
             null
         }
     }
@@ -75,5 +77,9 @@ class HaalCentraalBrpServiceImpl(
         return authenticationGemachtigde?.bsn?.let {
             haalCentraalBrpClient.getPersoonNaam(it, authentication)
         }
+    }
+
+    companion object {
+        val logger = KotlinLogging.logger {}
     }
 }
