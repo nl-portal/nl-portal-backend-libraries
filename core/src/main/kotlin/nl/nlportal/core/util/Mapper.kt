@@ -15,28 +15,44 @@
  */
 package nl.nlportal.core.util
 
-import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
+import java.time.format.DateTimeFormatter
 
 object Mapper {
-    private val mapper = ObjectMapper()
+    private var mapper: ObjectMapper
+    private const val DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+    private val jacksonBuilderCustomizer =
+        Jackson2ObjectMapperBuilderCustomizer { builder ->
+            builder.simpleDateFormat(DATE_TIME_FORMAT)
+            builder.serializers(LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)))
+        }
+    private val jacksonConfigurationModule =
+        KotlinModule.Builder()
+            .withReflectionCacheSize(512)
+            .configure(KotlinFeature.NullToEmptyCollection, false)
+            .configure(KotlinFeature.NullToEmptyMap, false)
+            .configure(KotlinFeature.NullIsSameAsDefault, false)
+            .configure(KotlinFeature.SingletonSupport, false)
+            .configure(KotlinFeature.StrictNullChecks, false)
+            .build()
 
     fun get(): ObjectMapper {
         return mapper
     }
 
     init {
-        mapper.registerModule(
-            KotlinModule.Builder()
-                .withReflectionCacheSize(512)
-                .configure(KotlinFeature.NullToEmptyCollection, false)
-                .configure(KotlinFeature.NullToEmptyMap, false)
-                .configure(KotlinFeature.NullIsSameAsDefault, false)
-                .configure(KotlinFeature.SingletonSupport, false)
-                .configure(KotlinFeature.StrictNullChecks, false)
-                .build(),
-        ).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        val builder = Jackson2ObjectMapperBuilder()
+        jacksonBuilderCustomizer.customize(builder)
+
+        mapper =
+            builder.build<ObjectMapper>()
+                .apply {
+                    registerModule(jacksonConfigurationModule)
+                }
     }
 }

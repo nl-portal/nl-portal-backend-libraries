@@ -26,12 +26,14 @@ import graphql.schema.GraphQLType
 import nl.nlportal.graphql.customtype.graphqlBigDecimalType
 import nl.nlportal.graphql.customtype.graphqlBigIntegerType
 import nl.nlportal.graphql.customtype.graphqlLongType
+import nl.nlportal.graphql.customtype.graphqlZonedDateTimeType
 import org.springframework.beans.factory.BeanFactoryAware
 import reactor.core.publisher.Mono
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import java.util.UUID
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -47,6 +49,7 @@ class CustomSchemaGeneratorHooks(override val wiringFactory: KotlinDirectiveWiri
             ObjectNode::class -> graphqlJSONType
             LocalDate::class -> graphqlLocalDateType
             LocalDateTime::class -> graphqlLocalDateTimeType
+            ZonedDateTime::class -> graphqlZonedDateTimeType
             BigDecimal::class -> graphqlBigDecimalType
             Long::class -> graphqlLongType
             BigInteger::class -> graphqlBigIntegerType
