@@ -52,6 +52,7 @@ class HaalCentraalBrpServiceImpl(
                     )
                 haalCentraalBrpClient.getBewoningen(bewoningenApiRequest, authentication)
             } else {
+                logger.warn("Authentication is not supported")
                 null
             }
         } catch (ex: Exception) {
