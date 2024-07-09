@@ -4,7 +4,7 @@ graphql:
 
 logging:
     level:
-        reactor.netty.http.client.HttpClient: DEBUG
+        reactor.netty.http.client.HttpClient: TRACE
 
 nl-portal:
     objectsapi:
@@ -22,3 +22,7 @@ spring:
             resourceserver:
                 jwt:
                     issuer-uri: http://localhost:8082/auth/realms/nlportal
+    jackson:
+        serialization:
+            write-dates-as-timestamps: false
+        date-format: yyyy-MM-dd'T'HH:mm:ss.SSSZ
