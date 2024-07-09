@@ -74,10 +74,6 @@ graphql:
 logging:
     level:
         org.springframework.amqp: DEBUG
-        .reactor:
-            netty:
-                http:
-                    client: TRACE
 
 nl-portal:
     zgw:
@@ -139,10 +135,6 @@ nl-portal:
         url: http://localhost:8010
         token: 182c13e2209161852c53cef53a879f7a2f923430
     #haalcentraal:
-        #url: http://localhost:8080
-        #hr:
-            #url: http://localhost:8080
-    #haalcentraal:
     #hr:
             #api-key: ${VALTIMO_HAALCENTRAAL_HR_APIKEY}
             #ssl:
@@ -182,16 +174,3 @@ nl-portal:
                     shaOutKey: de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00
                     failureUrl: http://localhost:3000
                     successUrl: http://localhost:3000
-
-        #endpoints:
-            #unsecured: /playground, /actuator/**
-    product:
-        product-type-url: http://host.docker.internal:8011/api/v1/objecttypes/972558e0-b63a-4299-bc8c-59670b4fa11c
-        product-instantie-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34
-        product-details-type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34pos
-        product-verbruiks-object-type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34pos
-        prefill-type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34pos
-    dmn:
-        url: http://localhost:8080 #moet nog veranderen als er een docker container is
-    prefill:
-        type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb37
