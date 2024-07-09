@@ -25,7 +25,7 @@ dependencies {
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.springframework.security", "spring-security-test")
     testImplementation("org.jetbrains.kotlin", "kotlin-test")
-    testImplementation("org.mockito.kotlin", "mockito-kotlin", "5.3.1")
+    testImplementation("org.mockito.kotlin", "mockito-kotlin", "5.4.0")
     testImplementation(project(":zgw:common-ground-authentication-test"))
 }
 
