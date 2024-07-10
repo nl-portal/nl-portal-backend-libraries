@@ -15,23 +15,26 @@
  */
 package nl.nlportal.zgw.objectenapi.client
 
+import io.netty.handler.logging.LogLevel.TRACE
+import kotlinx.coroutines.reactor.awaitSingle
+import kotlinx.coroutines.reactor.awaitSingleOrNull
+import nl.nlportal.core.util.Mapper
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
+import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequest
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
-import io.netty.handler.logging.LogLevel
-import java.util.UUID
-import kotlinx.coroutines.reactor.awaitSingle
-import kotlinx.coroutines.reactor.awaitSingleOrNull
-import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequest
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.MediaType
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
+import org.springframework.http.codec.json.Jackson2JsonDecoder
+import org.springframework.http.codec.json.Jackson2JsonEncoder
 import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.netty.http.client.HttpClient
-import reactor.netty.transport.logging.AdvancedByteBufFormat
+import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
+import java.util.UUID
 
 open class ObjectsApiClient(
     private val objectsApiClientConfig: ObjectsApiClientConfig,
@@ -108,21 +111,7 @@ open class ObjectsApiClient(
     }
 
     fun webClient(): WebClient {
-        return WebClient.builder()
-            .clientConnector(
-                ReactorClientHttpConnector(
-                    HttpClient.create().wiretap(
-                        "reactor.netty.http.client.HttpClient",
-                        LogLevel.TRACE,
-                        AdvancedByteBufFormat.TEXTUAL,
-                    ),
-                ),
-            )
-            .exchangeStrategies(
-                ExchangeStrategies.builder()
-                    .codecs { configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024) }
-                    .build(),
-            )
+        return webclientBuilder
             .baseUrl(objectsApiClientConfig.url.toString())
             .defaultHeader("Accept-Crs", "EPSG:4326")
             .defaultHeader("Content-Crs", "EPSG:4326")
@@ -131,24 +120,37 @@ open class ObjectsApiClient(
     }
 
     fun webClientWithoutBaseUrl(): WebClient {
-        return WebClient.builder()
-            .clientConnector(
-                ReactorClientHttpConnector(
-                    HttpClient.create().wiretap(
-                        "reactor.netty.http.client.HttpClient",
-                        LogLevel.DEBUG,
-                        AdvancedByteBufFormat.TEXTUAL,
-                    ),
-                ),
-            )
-            .exchangeStrategies(
-                ExchangeStrategies.builder()
-                    .codecs { configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024) }
-                    .build(),
-            )
+        return webclientBuilder
             .defaultHeader("Accept-Crs", "EPSG:4326")
             .defaultHeader("Content-Crs", "EPSG:4326")
             .defaultHeader("Authorization", "Token ${objectsApiClientConfig.token}")
             .build()
     }
+
+    private val webclientBuilder =
+        WebClient.builder()
+            .clientConnector(
+                ReactorClientHttpConnector(
+                    HttpClient.create().wiretap(
+                        "reactor.netty.http.client.HttpClient",
+                        TRACE,
+                        TEXTUAL,
+                    ),
+                ),
+            )
+            .exchangeStrategies(
+                ExchangeStrategies.builder()
+                    .codecs { configurer ->
+                        with(configurer.defaultCodecs()) {
+                            maxInMemorySize(16 * 1024 * 1024)
+                            jackson2JsonEncoder(
+                                Jackson2JsonEncoder(Mapper.get()),
+                            )
+                            jackson2JsonDecoder(
+                                Jackson2JsonDecoder(Mapper.get()),
+                            )
+                        }
+                    }
+                    .build(),
+            )
 }

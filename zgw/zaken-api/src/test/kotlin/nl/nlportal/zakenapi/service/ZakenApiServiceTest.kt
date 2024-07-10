@@ -14,8 +14,6 @@ import nl.nlportal.zakenapi.TestHelper.testDocument
 import nl.nlportal.zakenapi.TestHelper.testZaakDocument
 import nl.nlportal.zakenapi.client.ZaakDocumentenConfig
 import nl.nlportal.zakenapi.client.ZakenApiClient
-import nl.nlportal.zakenapi.client.request.SearchZaakInformatieobjectenImpl
-import nl.nlportal.zakenapi.client.request.ZakenInformatieobjectenImpl
 import nl.nlportal.zakenapi.domain.ZaakDocument
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import org.junit.jupiter.api.BeforeEach
@@ -39,12 +37,6 @@ class ZakenApiServiceTest {
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private lateinit var objectsApiClient: ObjectsApiClient
-
-    @Mock
-    private lateinit var searchZaakInformatieobjectenImpl: SearchZaakInformatieobjectenImpl
-
-    @Mock
-    private lateinit var zakenInformatieobjectenImpl: ZakenInformatieobjectenImpl
 
     @Mock
     private lateinit var documentenApiService: DocumentenApiService
@@ -93,10 +85,8 @@ class ZakenApiServiceTest {
                 )
 
             // given
-            doReturn(zakenInformatieobjectenImpl).whenever(zakenApiClient).zaakInformatieobjecten()
-            doReturn(searchZaakInformatieobjectenImpl).whenever(zakenInformatieobjectenImpl).search()
-            doReturn(searchZaakInformatieobjectenImpl).whenever(searchZaakInformatieobjectenImpl).forZaak(any<String>())
-            doReturn(zaakDocumenten).wheneverBlocking(searchZaakInformatieobjectenImpl) { retrieve() }
+            whenever(zakenApiClient.zaakInformatieobjecten().search().forZaak(any<String>()).retrieve())
+                .thenReturn(zaakDocumenten)
             doReturn(testDocument, *informatieObjecten).wheneverBlocking(documentenApiService) { getDocument(any()) }
 
             // when

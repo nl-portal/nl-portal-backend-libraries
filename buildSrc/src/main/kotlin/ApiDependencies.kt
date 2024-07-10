@@ -22,6 +22,7 @@ object ApiDependencies {
     val graphqlJavaExtendedScalars by lazy { "com.graphql-java:graphql-java-extended-scalars:${ApiVersions.graphqlJava}"}
     val graphqlKotlinHooksProvider by lazy { "com.expediagroup:graphql-kotlin-hooks-provider:${ApiVersions.graphqlKotlin}"}
     val graphqlKotlinSpringServer by lazy { "com.expediagroup:graphql-kotlin-spring-server:${ApiVersions.graphqlKotlin}"}
+    val jacksonBom by lazy { "com.fasterxml.jackson:jackson-bom:${ApiVersions.jacksonBom}" }
     val kotlinLogging by lazy { "io.github.microutils:kotlin-logging:${ApiVersions.kotlinLogging}"}
     val springCloudStream by lazy { "org.springframework.cloud:spring-cloud-stream:${ApiVersions.springCloud}" }
     val springCloudStreamBinderRabbit by lazy { "org.springframework.cloud:spring-cloud-stream-binder-rabbit:${ApiVersions.springCloud}" }

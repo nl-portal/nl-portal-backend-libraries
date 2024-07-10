@@ -18,10 +18,6 @@ spring:
         default: dev
     application:
         name: nl-portal-backend-libraries
-    jackson:
-        serialization:
-            write-dates-as-timestamps: false
-        date-format: yyyy-MM-dd'T'HH:mm:ss.SSSZ
     security:
         oauth2:
             resourceserver:
