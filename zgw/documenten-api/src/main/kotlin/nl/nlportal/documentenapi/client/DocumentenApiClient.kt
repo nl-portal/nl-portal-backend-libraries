@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2024 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,9 @@
 package nl.nlportal.documentenapi.client
 
 import io.netty.handler.logging.LogLevel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.reactor.awaitSingleOrNull
+import kotlinx.coroutines.withContext
 import mu.KLogger
 import mu.KotlinLogging
 import nl.nlportal.core.ssl.ClientSslContextResolver
@@ -29,6 +31,7 @@ import org.springframework.http.MediaType
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.WebClientResponseException
 import org.springframework.web.reactive.function.client.awaitBody
 import reactor.core.publisher.Flux
 import reactor.netty.http.client.HttpClient
@@ -45,12 +48,17 @@ class DocumentenApiClient(
         id: UUID,
         documentApi: String,
     ): Document {
-        var document: Document =
-            webClient(documentApi)
-                .get()
-                .uri("/enkelvoudiginformatieobjecten/$id")
-                .retrieve()
-                .awaitBody()
+        val document: Document =
+            try {
+                webClient(documentApi)
+                    .get()
+                    .uri("/enkelvoudiginformatieobjecten/$id")
+                    .retrieve()
+                    .awaitBody()
+            } catch (e: WebClientResponseException) {
+                logger.error("Could not retrieve document: ${e.responseBodyAsString}", e)
+                throw RuntimeException("Could not retrieve document: ${e.responseBodyAsString}", e)
+            }
         document.documentapi = documentApi
         return document
     }
@@ -86,9 +94,15 @@ class DocumentenApiClient(
     ): Document {
         request.inhoud = UUID.randomUUID().toString()
 
-        val fileData = DataBufferUtils.join(documentContent).awaitSingleOrNull()?.asInputStream()?.readAllBytes()
+        val documentContentStream = DataBufferUtils.join(documentContent).awaitSingleOrNull()?.asInputStream()
 
-        request.inhoud = Base64.getEncoder().encodeToString(fileData)
+        request.inhoud =
+            withContext(Dispatchers.IO) {
+                Base64.getEncoder()
+                    .encodeToString(
+                        documentContentStream?.readAllBytes(),
+                    )
+            }
 
         val response =
             webClient(documentApi)
@@ -107,7 +121,7 @@ class DocumentenApiClient(
     }
 
     private fun webClient(documentApi: String): WebClient {
-        var documentenApiConfig = documentenApiConfigs.getConfig(documentApi)
+        val documentenApiConfig = documentenApiConfigs.getConfig(documentApi)
 
         return WebClient.builder()
             .clientConnector(
