@@ -19,7 +19,9 @@ import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.domain.DocumentStatus.IN_BEWERKING
 import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.OPENBAAR
 import nl.nlportal.zakenapi.domain.ZaakDocument
+import nl.nlportal.zakenapi.domain.ZaakRol
 import okhttp3.mockwebserver.MockResponse
+import java.util.UUID
 
 object TestHelper {
     fun mockResponseFromFile(fileName: String): MockResponse {
@@ -49,6 +51,12 @@ object TestHelper {
         ZaakDocument(
             uuid = "6c4138a3-48c3-4308-a61e-9e89f6eef7a3",
             informatieobject = "https://example.com",
+            zaak = "https://example.com",
+        )
+
+    val testZaakRol =
+        ZaakRol(
+            uuid = UUID.fromString("ed39597f-e326-4dd3-bca1-f15a33b7fcb6"),
             zaak = "https://example.com",
         )
 }
