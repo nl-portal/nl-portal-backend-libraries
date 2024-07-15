@@ -31,6 +31,7 @@ dependencies {
     api(project(":zgw:objectenapi"))
 
     implementation("org.springframework.boot:spring-boot-starter")
+    implementation(Dependencies.kotlinCoroutines)
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.junit.jupiter:junit-jupiter")

@@ -15,27 +15,27 @@
  */
 package nl.nlportal.documentenapi.web.rest
 
-import nl.nlportal.documentenapi.client.DocumentenApiClient
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runTest
 import nl.nlportal.documentenapi.client.DocumentApisConfig
+import nl.nlportal.documentenapi.client.DocumentenApiClient
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.documentenapi.service.VirusScanService
-import java.nio.ByteBuffer
-import java.nio.charset.Charset
-import java.nio.charset.StandardCharsets
-import java.util.UUID
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.doReturn
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.whenever
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.core.io.buffer.DefaultDataBufferFactory
-import reactor.core.publisher.Flux
+import java.nio.ByteBuffer
+import java.nio.charset.Charset
+import java.util.UUID
 
 @ExperimentalCoroutinesApi
 class DocumentContentResourceTest {
@@ -43,38 +43,41 @@ class DocumentContentResourceTest {
     private val documentenApiService: DocumentenApiService = mock()
     private val virusScanService: VirusScanService = mock()
     private val documentApisConfig: DocumentApisConfig = mock()
-    private val downloadResource = DocumentContentResource(documentenApiClient, documentenApiService, virusScanService, documentApisConfig)
+    private val downloadResource =
+        DocumentContentResource(documentenApiClient, documentenApiService, virusScanService, documentApisConfig)
     val document: Document = mock()
 
     @Test
     fun `should fill http servlet response`() =
         runTest {
             val uuid = UUID.randomUUID()
-            val testString = "This is a test string for the DataBuffer, it should end up in the result"
-            val fluxDataBuffer = getFluxDataBufferFromString(testString)
+            val fluxDataBuffer = getFlowDataBufferFromString(TEST_STRING)
 
-            doReturn(fluxDataBuffer).`when`(documentenApiClient).getDocumentContentStream(uuid, "localhost")
+            doReturn(fluxDataBuffer).whenever(documentenApiService).getDocumentContentStreaming(uuid, "localhost")
             whenever(documentenApiService.getDocument(uuid, "localhost")).thenReturn(document)
             whenever(document.bestandsnaam).thenReturn("bestandsnaam.png")
 
             val result = downloadResource.downloadStreaming(uuid, "localhost")
+            val responseBody = StringBuilder()
 
-            val bodyByteArray = result.body.let { it?.blockLast()?.asByteBuffer()?.array() }
-            assertNotNull(bodyByteArray)
-            val resultString = String(bodyByteArray!!, StandardCharsets.UTF_8)
+            result.body?.collect { responseBody.append(it.toString(Charset.defaultCharset())) }
 
-            verify(documentenApiClient).getDocumentContentStream(uuid, "localhost")
-            assertEquals(testString, resultString)
+            verify(documentenApiService).getDocumentContentStreaming(uuid, "localhost")
+            assertNotNull(result.body)
+            assertEquals(TEST_STRING, responseBody.toString())
         }
 
-    fun getFluxDataBufferFromString(value: String): Flux<DataBuffer> {
-        val dataBuffer =
+    private fun getFlowDataBufferFromString(value: String): Flow<DataBuffer> {
+        return flowOf(
             DefaultDataBufferFactory()
                 .wrap(
                     ByteBuffer
                         .wrap(value.toByteArray(Charset.defaultCharset())),
-                )
+                ),
+        )
+    }
 
-        return Flux.just(dataBuffer) as Flux<DataBuffer>
+    companion object {
+        private const val TEST_STRING = "This is a test string for the DataBuffer, it should end up in the result"
     }
 }

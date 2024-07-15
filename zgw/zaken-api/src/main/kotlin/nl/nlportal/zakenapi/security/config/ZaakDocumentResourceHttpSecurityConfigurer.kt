@@ -13,26 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-plugins {
-    kotlin("jvm")
+package nl.nlportal.zakenapi.security.config
+
+import nl.nlportal.core.security.config.HttpSecurityConfigurer
+import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod.GET
+import org.springframework.security.config.web.server.ServerHttpSecurity
+
+@Configuration
+class ZaakDocumentResourceHttpSecurityConfigurer : HttpSecurityConfigurer {
+    override fun configure(http: ServerHttpSecurity) {
+        http.authorizeExchange { authorize ->
+            authorize.pathMatchers(GET, "/zakenapi/zaakdocument/{zaakDocumentId}/content").authenticated()
+        }
+    }
 }
-
-val isLib = true
-
-dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    api(project(":core"))
-
-    implementation(Dependencies.kotlinCoroutines)
-
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
-    testImplementation(TestDependencies.okHttpMockWebserver)
-    testImplementation(TestDependencies.okHttp)
-}
-
-val jar: Jar by tasks
-val bootJar: org.springframework.boot.gradle.tasks.bundling.BootJar by tasks
-bootJar.enabled = false
-jar.enabled = true
-
-apply(from = "gradle/publishing.gradle.kts")

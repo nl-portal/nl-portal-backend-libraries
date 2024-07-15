@@ -49,5 +49,6 @@ object TestHelper {
         ZaakDocument(
             uuid = "6c4138a3-48c3-4308-a61e-9e89f6eef7a3",
             informatieobject = "https://example.com",
+            zaak = "https://example.com",
         )
 }

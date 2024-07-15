@@ -15,6 +15,7 @@
  */
 package nl.nlportal.zakenapi.service
 
+import kotlinx.coroutines.flow.Flow
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils.extractId
 import nl.nlportal.documentenapi.domain.Document
@@ -30,6 +31,7 @@ import nl.nlportal.zakenapi.domain.ZaakStatus
 import nl.nlportal.zakenapi.graphql.ZaakPage
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
+import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.util.Locale
@@ -92,7 +94,11 @@ class ZakenApiService(
 
     suspend fun getDocumenten(zaakUrl: String): List<Document> {
         return getZaakDocumenten(zaakUrl)
-            .map { documentenApiService.getDocument(it.informatieobject!!) }
+            .map { zaakDocument ->
+                documentenApiService
+                    .getDocument(zaakDocument.informatieobject)
+                    .copy(identificatie = zaakDocument.uuid)
+            }
             .filter { document ->
                 document.status in zaakDocumentenConfig.statusWhitelist &&
                     document.vertrouwelijkheidaanduiding in zaakDocumentenConfig.vertrouwelijkheidsaanduidingWhitelist
@@ -122,5 +128,31 @@ class ZakenApiService(
         return objectsApiClient.getObjectByUrl<ZaakDetailsObject>(
             url = objectUrl,
         )
+    }
+
+    suspend fun getZaakDocumentContent(
+        zaakDocumentId: String,
+        commonGroundAuthentication: CommonGroundAuthentication,
+    ): Pair<Document?, Flow<DataBuffer>?> {
+        val zaakDocument =
+            zakenApiClient
+                .zaakInformatieobjecten()
+                .get(UUID.fromString(zaakDocumentId))
+                .retrieve()
+
+        val zaakRollen =
+            zakenApiClient
+                .zaakRollen()
+                .search()
+                .forZaak(zaakDocument.zaak)
+                .withAuthentication(commonGroundAuthentication)
+                .retrieveAll()
+
+        val document = documentenApiService.getDocument(zaakDocument.informatieobject)
+
+        return when (zaakRollen.isNotEmpty()) {
+            true -> document to documentenApiService.getDocumentContentStreaming(zaakDocument.informatieobject)
+            else -> null to null
+        }
     }
 }
