@@ -148,10 +148,14 @@ class ZakenApiService(
                 .withAuthentication(commonGroundAuthentication)
                 .retrieveAll()
 
-        val document = documentenApiService.getDocument(zaakDocument.informatieobject)
-
         return when (zaakRollen.isNotEmpty()) {
-            true -> document to documentenApiService.getDocumentContentStreaming(zaakDocument.informatieobject)
+            true -> {
+                documentenApiService
+                    .getDocument(zaakDocument.informatieobject) to
+                    documentenApiService
+                        .getDocumentContentStreaming(zaakDocument.informatieobject)
+            }
+
             else -> null to null
         }
     }

@@ -207,7 +207,7 @@ class ZakenApiServiceTest {
     }
 
     companion object {
-        private const val TEST_TEXT_FILE = "src/test/resources/config/example-text-file.txt"
+        private const val TEST_TEXT_FILE = "src/test/resources/config/data/example-text-file.txt"
         private const val TEST_TEXT_FILE_CONTENT = "Test file content"
     }
 }
