@@ -59,22 +59,9 @@ class ZaakDocumentResourceIT(
                     }
                     """.trimIndent(),
                 )
-        val documentResponse =
-            MockResponse()
-                .setResponseCode(200)
-                .addHeader("Content-Type", "application/json")
-                .setBody(Mapper.get().writeValueAsString(TestHelper.testDocument))
-        val documentContentResponse =
-            MockResponse()
-                .setResponseCode(200)
-                .addHeader("Content-Type", "application/json")
-                .setBody(getResourceContentByName("/config/data/example-text-file.txt")!!)
-
         with(mockZakenApi) {
             enqueue(zaakDocumentResponse)
             enqueue(zaakRolResponse)
-            enqueue(documentResponse)
-            enqueue(documentContentResponse)
         }
 
         // when
