@@ -51,9 +51,9 @@ class DocumentContentResourceTest {
     fun `should fill http servlet response`() =
         runTest {
             val uuid = UUID.randomUUID()
-            val fluxDataBuffer = getFlowDataBufferFromString(TEST_STRING)
+            val dataBufferFlow = getFlowDataBufferFromString(TEST_STRING)
 
-            doReturn(fluxDataBuffer).whenever(documentenApiService).getDocumentContentStreaming(uuid, "localhost")
+            doReturn(dataBufferFlow).whenever(documentenApiService).getDocumentContentStreaming(uuid, "localhost")
             whenever(documentenApiService.getDocument(uuid, "localhost")).thenReturn(document)
             whenever(document.bestandsnaam).thenReturn("bestandsnaam.png")
 

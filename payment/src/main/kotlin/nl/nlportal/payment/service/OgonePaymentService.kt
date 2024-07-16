@@ -123,7 +123,7 @@ class OgonePaymentService(
             objectTypeUrl = objectsApiTaskConfig.typeUrlV2,
             page = 1,
             pageSize = 2,
-        ).results.single()
+        ).results.first()
     }
 
     private fun isValidOgoneRequest(
