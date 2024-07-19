@@ -20,6 +20,11 @@ plugins {
 val isLib = true
 
 dependencies {
+    api(project(":core"))
+
+    implementation(kotlin("stdlib-jdk8"))
+    implementation("org.springframework.boot:spring-boot-starter")
+
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.springframework.security", "spring-security-test")
