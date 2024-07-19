@@ -17,6 +17,7 @@ package nl.nlportal.documentenapi.client
 
 import io.netty.handler.logging.LogLevel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import kotlinx.coroutines.withContext
 import mu.KLogger
@@ -33,6 +34,7 @@ import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import org.springframework.web.reactive.function.client.awaitBody
+import org.springframework.web.reactive.function.client.bodyToFlow
 import reactor.core.publisher.Flux
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
@@ -78,13 +80,13 @@ class DocumentenApiClient(
     fun getDocumentContentStream(
         id: UUID,
         documentApi: String,
-    ): Flux<DataBuffer> {
+    ): Flow<DataBuffer> {
         return webClient(documentApi)
             .get()
             .uri("/enkelvoudiginformatieobjecten/$id/download")
             .accept(MediaType.APPLICATION_OCTET_STREAM)
             .retrieve()
-            .bodyToFlux(DataBuffer::class.java)
+            .bodyToFlow()
     }
 
     suspend fun postDocument(
