@@ -20,13 +20,14 @@ import java.time.LocalDate
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class Bericht(
+    val berichtTekst: String,
     val berichtType: BerichtType,
-    val berichttekst: String,
-    val einddatumAfhandelingstermijn: LocalDate,
-    val geadresseerde: Geadresseerde,
-    val handelingsperspectief: String,
-    val isGeopend: Boolean,
+    val bijlages: List<String>,
+    val einddatumHandelingstermijn: LocalDate,
+    val geopend: Boolean,
+    val handelingsperspectief: BerichtHandelingsperspectief,
+    val identificatie: BerichtIdentificatie,
     val onderwerp: String,
     val publicatiedatum: LocalDate,
-    val referentie: String? = null,
+    val referentie: String,
 )

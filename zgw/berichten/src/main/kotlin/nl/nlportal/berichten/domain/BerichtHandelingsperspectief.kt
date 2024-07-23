@@ -15,7 +15,12 @@
  */
 package nl.nlportal.berichten.domain
 
-data class Geadresseerde(
-    val type: GeadresseerdeType,
-    val value: String,
-)
+import com.fasterxml.jackson.annotation.JsonValue
+
+enum class BerichtHandelingsperspectief(
+    @JsonValue val value: String,
+) {
+    BETALEN("betalen"),
+    INFORMATIE_VERSTREKKEN("informatie verstrekken"),
+    INFORMATIE_ONTVANGEN("informatie ontvangen"),
+}

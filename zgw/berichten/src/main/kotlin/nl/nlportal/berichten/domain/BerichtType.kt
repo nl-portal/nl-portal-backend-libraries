@@ -20,5 +20,8 @@ import com.fasterxml.jackson.annotation.JsonValue
 enum class BerichtType(
     @JsonValue val value: String,
 ) {
-    TODO("add"),
+    NOTIFICATIE("notificatie"),
+    BETAALVERZOEK("betaalverzoek"),
+    UITNODIGING("uitnodiging"),
+    VERZOEK("verzoek"),
 }
