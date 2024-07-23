@@ -1,0 +1,9 @@
+query {
+    getProductType(productName: "erfpacht") {
+            id,
+            naam,
+            omschrijving,
+            zaaktypen,
+            prefillFormulieren
+        }
+}

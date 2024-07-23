@@ -15,11 +15,32 @@
  */
 package nl.nlportal.core.util
 
-import java.util.*
+import java.security.NoSuchAlgorithmException
+import java.util.UUID
+import org.apache.commons.codec.digest.DigestUtils
 
 object CoreUtils {
     @JvmStatic
     fun extractId(url: String): UUID {
         return UUID.fromString(url.substringAfterLast("/"))
+    }
+
+    @JvmStatic
+    @Throws(NoSuchAlgorithmException::class)
+    fun createHash(
+        input: String,
+        shaVersion: String,
+    ): String {
+        return when (shaVersion) {
+            ShaVersion.SHA256.version -> {
+                DigestUtils.sha512Hex(input)
+            }
+            ShaVersion.SHA512.version -> {
+                DigestUtils.sha512Hex(input)
+            }
+            else -> {
+                DigestUtils.sha1Hex(input)
+            }
+        }
     }
 }

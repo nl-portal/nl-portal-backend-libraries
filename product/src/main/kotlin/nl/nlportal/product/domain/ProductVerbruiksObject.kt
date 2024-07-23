@@ -13,23 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.product.service.impl
+package nl.nlportal.product.domain
 
-import nl.nlportal.product.client.OpenFormulierenClient
-import nl.nlportal.product.domain.Form
-import nl.nlportal.product.service.FormService
-import java.util.stream.Collectors.toList
+import com.fasterxml.jackson.databind.node.ObjectNode
+import java.util.UUID
 
-class FormService(
-    val openFormulierenClient: OpenFormulierenClient,
-) : FormService {
-    override suspend fun getForms(): List<Form> {
-        return openFormulierenClient
-            .getForms()
-            .stream()
-            .filter {
-                it.active && it.loginRequired
-            }
-            .collect(toList())
-    }
-}
+data class ProductVerbruiksObject(
+    var id: UUID?,
+    var soort: String?,
+    val productInstantie: String,
+    var data: ObjectNode?,
+)

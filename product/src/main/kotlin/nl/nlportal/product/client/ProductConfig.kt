@@ -13,24 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.product.graphql
+package nl.nlportal.product.client
 
-import nl.nlportal.product.service.FormService
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Test
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
+import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ExperimentalCoroutinesApi
-internal class FormQueryTest {
-    val formService = mock<FormService>()
-    val query = FormQuery(formService)
-
-    @Test
-    fun `getFormList calls service`() =
-        runTest {
-            query.getFormList()
-            verify(formService).getForms()
-        }
-}
+@ConfigurationProperties(prefix = "nl-portal.product", ignoreUnknownFields = true)
+class ProductConfig(
+    val productTypeUrl: String,
+    val productInstantieTypeUrl: String,
+    val productVerbruiksObjectTypeUrl: String,
+    val productDetailsTypeUrl: String,
+)

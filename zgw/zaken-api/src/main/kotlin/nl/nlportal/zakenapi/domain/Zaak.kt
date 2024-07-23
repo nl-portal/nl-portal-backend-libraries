@@ -33,6 +33,7 @@ data class Zaak(
     @GraphQLIgnore
     val zaaktype: String,
     val startdatum: LocalDate,
+    val einddatum: LocalDate?,
     @GraphQLIgnore
     val status: String?,
 ) {

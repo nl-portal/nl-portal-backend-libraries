@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.product.service
+package nl.nlportal.product.domain
 
-import nl.nlportal.product.domain.Form
-
-interface FormService {
-    suspend fun getForms(): List<Form>
-}
+data class ProductRol(
+    val betrokkeneType: String,
+    val identificatie: String,
+)

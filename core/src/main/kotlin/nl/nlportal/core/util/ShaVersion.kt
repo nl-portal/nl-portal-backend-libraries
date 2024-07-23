@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.payment.constants
+package nl.nlportal.core.util
 
 enum class ShaVersion(
     val version: String,

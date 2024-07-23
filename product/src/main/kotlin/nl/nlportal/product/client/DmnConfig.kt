@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.product.graphql
+package nl.nlportal.product.client
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Query
-import nl.nlportal.product.domain.Form
-import nl.nlportal.product.service.FormService
+import nl.nlportal.core.ssl.Ssl
+import org.springframework.boot.context.properties.ConfigurationProperties
 
-class FormQuery(val formService: FormService) : Query {
-    @GraphQLDescription("Gets the forms available to the user")
-    suspend fun getFormList(): List<Form> {
-        return formService.getForms()
-    }
-}
+@ConfigurationProperties(prefix = "nl-portal.dmn", ignoreUnknownFields = true)
+data class DmnConfig(
+    val url: String,
+    val clientId: String? = null,
+    val secret: String? = null,
+    val ssl: Ssl? = null,
+)

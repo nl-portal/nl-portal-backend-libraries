@@ -15,14 +15,11 @@
  */
 package nl.nlportal.product.domain
 
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
-import java.util.UUID
+import com.fasterxml.jackson.databind.node.ObjectNode
+import java.util.*
 
-class Form(
-    val uuid: UUID,
-    val name: String,
-    @GraphQLIgnore
-    val active: Boolean,
-    @GraphQLIgnore
-    val loginRequired: Boolean,
+data class ProductDetails(
+    var id: UUID?,
+    val productInstantie: UUID,
+    val data: List<ObjectNode>,
 )

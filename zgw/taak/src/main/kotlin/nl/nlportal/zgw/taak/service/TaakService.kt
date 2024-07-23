@@ -117,7 +117,7 @@ open class TaakService(
         zaakUUID: UUID? = null,
     ): TaakPageV2 {
         try {
-            return getTakenResultPage<TaakObjectV2>(
+            return getTakenResultPageV2<TaakObjectV2>(
                 pageNumber,
                 pageSize,
                 authentication,
@@ -330,6 +330,31 @@ open class TaakService(
                     it.toString(),
                 ),
             )
+        }
+        return objectsApiClient.getObjects<T>(
+            objectSearchParameters = objectSearchParameters,
+            objectTypeUrl = objectTypeUrl,
+            page = pageNumber,
+            pageSize = pageSize,
+            ordering = "-record__startAt",
+        )
+    }
+
+    private suspend inline fun <reified T> getTakenResultPageV2(
+        pageNumber: Int,
+        pageSize: Int,
+        authentication: CommonGroundAuthentication,
+        zaakUUID: UUID? = null,
+        objectTypeUrl: String,
+    ): ResultPage<ObjectsApiObject<T>> {
+        val objectSearchParameters = mutableListOf<ObjectSearchParameter>()
+
+        objectSearchParameters.addAll(getUserSearchParameters(authentication))
+        objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, "open"))
+
+        zaakUUID?.let {
+            objectSearchParameters.add(ObjectSearchParameter("koppeling__registratie", Comparator.EQUAL_TO, "zaak"))
+            objectSearchParameters.add(ObjectSearchParameter("koppeling__uuid", Comparator.STRING_CONTAINS, it.toString()))
         }
         return objectsApiClient.getObjects<T>(
             objectSearchParameters = objectSearchParameters,
