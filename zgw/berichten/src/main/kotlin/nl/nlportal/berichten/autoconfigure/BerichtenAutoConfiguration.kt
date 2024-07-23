@@ -15,11 +15,30 @@
  */
 package nl.nlportal.berichten.autoconfigure
 
+import nl.nlportal.berichten.graphql.BerichtenQuery
+import nl.nlportal.berichten.service.BerichtenService
+import nl.nlportal.zgw.objectenapi.service.ObjectenApiService
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
 @EnableConfigurationProperties(
     BerichtenConfigurationProperties::class,
 )
-class BerichtenAutoConfiguration
+class BerichtenAutoConfiguration {
+    @Bean
+    fun berichtenService(
+        objectenApiService: ObjectenApiService,
+        berichtenConfigurationProperties: BerichtenConfigurationProperties,
+    ): BerichtenService {
+        return BerichtenService(objectenApiService, berichtenConfigurationProperties)
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(BerichtenQuery::class)
+    fun berichtenQuery(berichtenService: BerichtenService): BerichtenQuery {
+        return BerichtenQuery(berichtenService)
+    }
+}
