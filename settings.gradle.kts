@@ -36,6 +36,7 @@ include(
     "data",
     "form",
     "form-flow",
+    "gradle:cve-report",
     "gradle:license-report",
     "graphql",
     "gzac",
