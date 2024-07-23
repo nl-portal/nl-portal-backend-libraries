@@ -40,6 +40,8 @@ plugins {
     id("com.github.jk1.dependency-license-report") version "2.1"
 
     id("org.jetbrains.dokka")
+
+    id("org.owasp.dependencycheck") version "8.4.0"
 }
 
 allprojects {
