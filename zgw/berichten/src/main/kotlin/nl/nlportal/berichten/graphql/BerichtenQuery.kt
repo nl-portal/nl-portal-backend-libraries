@@ -27,8 +27,8 @@ class BerichtenQuery(
     @GraphQLDescription("Returns a paginated list of all Berichten")
     suspend fun getBerichten(
         dfe: DataFetchingEnvironment,
-        pageNumber: Int?,
-        pageSize: Int?,
+        pageNumber: Int? = 1,
+        pageSize: Int? = 20,
     ): BerichtenPage {
         return berichtenService.getBerichtenPage(
             authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
@@ -43,6 +43,6 @@ class BerichtenQuery(
         pageNumber: Int? = 1,
         pageSize: Int? = 1,
     ): Long {
-        TODO("Impelemnt")
+        TODO("Implement")
     }
 }

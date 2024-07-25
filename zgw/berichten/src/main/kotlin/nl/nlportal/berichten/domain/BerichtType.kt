@@ -24,4 +24,9 @@ enum class BerichtType(
     BETAALVERZOEK("betaalverzoek"),
     UITNODIGING("uitnodiging"),
     VERZOEK("verzoek"),
+    ;
+
+    override fun toString(): String {
+        return this.value
+    }
 }

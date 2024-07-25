@@ -120,7 +120,7 @@ nl-portal:
                     clientId: docdoc
                     secret: e09b8bc5-5831-4618-ab28-41411304309d
         berichten:
-            bericht-object-type-url: http://localhost:8011/api/v2/objecttypes/78731088-430f-49fd-9a4c-80ddd42ded28
+            bericht-object-type-url: http://host.docker.internal:8011/api/v1/objecttypes/78731088-430f-49fd-9a4c-80ddd42ded28
     openklant:
         url: http://localhost:8006
         clientId: valtimo_client

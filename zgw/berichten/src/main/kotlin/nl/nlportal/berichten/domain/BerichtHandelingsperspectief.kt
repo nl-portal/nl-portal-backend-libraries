@@ -23,4 +23,9 @@ enum class BerichtHandelingsperspectief(
     BETALEN("betalen"),
     INFORMATIE_VERSTREKKEN("informatie verstrekken"),
     INFORMATIE_ONTVANGEN("informatie ontvangen"),
+    ;
+
+    override fun toString(): String {
+        return this.value
+    }
 }
