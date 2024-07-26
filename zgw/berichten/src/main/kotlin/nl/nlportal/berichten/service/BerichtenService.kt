@@ -24,11 +24,22 @@ import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
 import nl.nlportal.zgw.objectenapi.service.ObjectenApiService
+import java.util.UUID
 
 class BerichtenService(
     private val objectenApiService: ObjectenApiService,
     private val berichtenConfigurationProperties: BerichtenConfigurationProperties,
 ) {
+    suspend fun getBericht(
+        authentication: CommonGroundAuthentication,
+        id: UUID,
+    ): Bericht? {
+        // TODO: implement user check
+        val berichtObject = objectenApiService.getObjectById<Bericht>(id.toString())
+
+        return berichtObject?.record?.data?.copy(id = id)
+    }
+
     suspend fun getBerichtenPage(
         authentication: CommonGroundAuthentication,
         pageNumber: Int,
@@ -55,7 +66,7 @@ class BerichtenService(
         pageNumber: Int = 1,
         pageSize: Int = 20,
     ): BerichtenPage {
-        val berichten = results.map { it.record.data }
+        val berichten = results.map { it.record.data.copy(id = it.uuid) }
 
         return BerichtenPage(
             number = pageNumber,

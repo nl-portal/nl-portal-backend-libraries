@@ -18,12 +18,25 @@ package nl.nlportal.berichten.graphql
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Query
 import graphql.schema.DataFetchingEnvironment
+import nl.nlportal.berichten.domain.Bericht
 import nl.nlportal.berichten.service.BerichtenService
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
+import java.util.UUID
 
 class BerichtenQuery(
     private val berichtenService: BerichtenService,
 ) : Query {
+    @GraphQLDescription("Query a single Bericht by Id")
+    suspend fun getBericht(
+        dfe: DataFetchingEnvironment,
+        id: UUID,
+    ): Bericht? {
+        return berichtenService.getBericht(
+            authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
+            id = id,
+        )
+    }
+
     @GraphQLDescription("Returns a paginated list of all Berichten")
     suspend fun getBerichten(
         dfe: DataFetchingEnvironment,
@@ -37,7 +50,7 @@ class BerichtenQuery(
         )
     }
 
-    @GraphQLDescription("Returns a amount of Berichten")
+    @GraphQLDescription("Returns an amount of Berichten")
     suspend fun getBerichtenCount(
         dfe: DataFetchingEnvironment,
         pageNumber: Int? = 1,
