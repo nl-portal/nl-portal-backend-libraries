@@ -118,6 +118,89 @@ class BerichtenQueryIT(
             assertEquals(mapper.readTree(TestHelper.testBerichtenResponse), mapper.readTree(response))
         }
 
+    @WithBurgerUser("999990755")
+    @Test
+    fun `should return bericht`() =
+        runTest {
+            // given
+            val objectenResponse =
+                MockResponse()
+                    .setResponseCode(200)
+                    .addHeader("Content-Type", "application/json")
+                    .setBody(TestHelper.testBerichtenResponse)
+
+            with(mockObjectenApi) {
+                enqueue(objectenResponse)
+            }
+
+            // when
+            val response =
+                webTestClient
+                    .post()
+                    .uri { builder ->
+                        builder
+                            .path("/graphql")
+                            .build()
+                    }
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    .body(BodyInserters.fromValue(TestHelper.invalidBerichtRequest))
+                    .exchange()
+                    .expectStatus().isOk
+                    .expectBody()
+                    .returnResult()
+                    .responseBodyContent
+                    ?.toString(Charset.defaultCharset())
+
+            val objectenRequest = mockObjectenApi.takeRequest()
+
+            // then
+            assertEquals(
+                "9e021130-8cbd-4c6f-846a-677448e21ce6",
+                objectenRequest.requestUrl!!.pathSegments.last(),
+            )
+            TODO("Implement more assertions")
+        }
+
+    @WithBurgerUser("999990755")
+    @Test
+    fun `should return null instead of exception for invalid bericht request`() =
+        runTest {
+            // given
+            val objectenResponse =
+                MockResponse()
+                    .setResponseCode(404)
+                    .addHeader("Content-Type", "application/json")
+                    .setBody("Object doesn't exist")
+
+            with(mockObjectenApi) {
+                enqueue(objectenResponse)
+            }
+
+            // when
+            val response =
+                webTestClient
+                    .post()
+                    .uri { builder ->
+                        builder
+                            .path("/graphql")
+                            .build()
+                    }
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    .body(BodyInserters.fromValue(TestHelper.invalidBerichtRequest))
+                    .exchange()
+                    .expectStatus().isOk
+                    .expectBody()
+                    .returnResult()
+                    .responseBodyContent
+                    ?.toString(Charset.defaultCharset())
+
+            // then
+            assertEquals(
+                """{"data":{"getBericht":null}}""".trimIndent(),
+                response,
+            )
+        }
+
     companion object {
         private val mapper = Mapper.get()
     }

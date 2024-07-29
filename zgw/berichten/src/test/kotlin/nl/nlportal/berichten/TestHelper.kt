@@ -55,6 +55,79 @@ object TestHelper {
         }
         """.trimIndent()
 
+    val validBerichtRequest =
+        """
+        query {
+            getBericht(id: "9e021130-8cbd-4c6f-846a-677448e21ce8") {
+                berichtTekst
+                berichtType
+                bijlages
+                einddatumHandelingstermijn
+                geopend
+                handelingsperspectief
+                identificatie {
+                    type
+                    value
+                    __typename
+                }
+                onderwerp
+                publicatiedatum
+                referentie
+                __typename
+            }
+        }
+        """.trimIndent()
+
+    val invalidBerichtRequest =
+        """
+        query {
+            getBericht(id: "9e021130-8cbd-4c6f-846a-677448e21ce6") {
+                berichtTekst
+                berichtType
+                bijlages
+                einddatumHandelingstermijn
+                geopend
+                handelingsperspectief
+                identificatie {
+                    type
+                    value
+                    __typename
+                }
+                onderwerp
+                publicatiedatum
+                referentie
+                __typename
+            }
+        }
+        """.trimIndent()
+
+    val testBerichtResponse =
+        """
+        {
+            "data": {
+                "getBericht": {
+                    "berichtTekst": "Er zijn werkzaamheden komende week in uw buurt. U kunt meer over dit lezen op de volgende website: https://example.com",
+                    "berichtType": "NOTIFICATIE",
+                    "bijlages": [
+                        "https://example.com/documenten/api/v1/enkelvoudiginformatieobjecten/1"
+                    ],
+                    "einddatumHandelingstermijn": "2024-10-31",
+                    "geopend": false,
+                    "handelingsperspectief": "INFORMATIE_ONTVANGEN",
+                    "identificatie": {
+                        "type": "bsn",
+                        "value": "999990755",
+                        "__typename": "BerichtIdentificatie"
+                    },
+                    "onderwerp": "Bericht over uw buurt.",
+                    "publicatiedatum": "2024-07-18",
+                    "referentie": "ZAAK-2024-0000000001",
+                    "__typename": "Bericht"
+                }
+            }
+        }
+        """.trimIndent()
+
     val testBerichtenResponse =
         """
         {

@@ -49,7 +49,7 @@ open class ObjectsApiClient(
             .onStatus(HttpStatusCode::isError) { response ->
                 throw ResponseStatusException(
                     response.statusCode(),
-                    "Failed to ${response.request().method.name()} ${T::class.java.simpleName}"
+                    "Failed to ${response.request().method.name()} ${T::class.java.simpleName}",
                 )
             }
             .awaitBodyOrNull()
