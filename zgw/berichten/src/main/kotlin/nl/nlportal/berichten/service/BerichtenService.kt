@@ -15,6 +15,7 @@
  */
 package nl.nlportal.berichten.service
 
+import mu.KotlinLogging
 import nl.nlportal.berichten.autoconfigure.BerichtenConfigurationProperties
 import nl.nlportal.berichten.domain.Bericht
 import nl.nlportal.berichten.graphql.BerichtenPage
@@ -35,15 +36,22 @@ class BerichtenService(
         authentication: CommonGroundAuthentication,
         id: UUID,
     ): Bericht? {
-        val bericht =
-            objectenApiService
-                .getObjectById<Bericht>(id.toString())
-                ?.record
-                ?.data
-                ?.copy(id = id)
+        val berichtQuery =
+            runCatching {
+                objectenApiService
+                    .getObjectById<Bericht>(id.toString())
+                    ?.record
+                    ?.data
+                    ?.copy(id = id)
+            }
 
-        return when (bericht?.identificatie?.value == authentication.userId) {
-            true -> bericht
+        if (berichtQuery.isFailure) {
+            logger.debug("Error getting Bericht", berichtQuery.exceptionOrNull())
+            return null
+        }
+
+        return when (berichtQuery.getOrNull()?.identificatie?.value == authentication.userId) {
+            true -> berichtQuery.getOrNull()
             else -> null
         }
     }
@@ -59,7 +67,7 @@ class BerichtenService(
                 ObjectSearchParameter("identificatie__type", EQUAL_TO, authentication.userType),
                 ObjectSearchParameter("identificatie__value", EQUAL_TO, authentication.userId),
             )
-        val results = getBerichten(authentication, pageNumber, pageSize, searchParameters)
+        val results = getBerichten(pageNumber, pageSize, searchParameters)
 
         return results.count
     }
@@ -74,13 +82,12 @@ class BerichtenService(
                 ObjectSearchParameter("identificatie__type", EQUAL_TO, authentication.userType),
                 ObjectSearchParameter("identificatie__value", EQUAL_TO, authentication.userId),
             )
-        val results = getBerichten(authentication, pageNumber, pageSize, searchParameters)
+        val results = getBerichten(pageNumber, pageSize, searchParameters)
 
         return results.toBerichtenPage()
     }
 
     private suspend fun getBerichten(
-        authentication: CommonGroundAuthentication,
         pageNumber: Int,
         pageSize: Int,
         searchParameters: List<ObjectSearchParameter> = emptyList(),
@@ -104,5 +111,9 @@ class BerichtenService(
             content = berichten,
             totalElements = count,
         )
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger {}
     }
 }
