@@ -19,7 +19,8 @@ import nl.nlportal.berichten.autoconfigure.BerichtenConfigurationProperties
 import nl.nlportal.berichten.domain.Bericht
 import nl.nlportal.berichten.graphql.BerichtenPage
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.zgw.objectenapi.domain.Comparator
+import nl.nlportal.zgw.objectenapi.domain.Comparator.EQUAL_TO
+import nl.nlportal.zgw.objectenapi.domain.Comparator.STRING_CONTAINS
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
@@ -34,10 +35,33 @@ class BerichtenService(
         authentication: CommonGroundAuthentication,
         id: UUID,
     ): Bericht? {
-        // TODO: implement user check
-        val berichtObject = objectenApiService.getObjectById<Bericht>(id.toString())
+        val bericht =
+            objectenApiService
+                .getObjectById<Bericht>(id.toString())
+                ?.record
+                ?.data
+                ?.copy(id = id)
 
-        return berichtObject?.record?.data?.copy(id = id)
+        return when (bericht?.identificatie?.value == authentication.userId) {
+            true -> bericht
+            else -> null
+        }
+    }
+
+    suspend fun getUnopenedBerichtenCount(
+        authentication: CommonGroundAuthentication,
+        pageNumber: Int,
+        pageSize: Int,
+    ): Int {
+        val searchParameters =
+            listOf(
+                ObjectSearchParameter("geopened", STRING_CONTAINS, "false"),
+                ObjectSearchParameter("identificatie__type", EQUAL_TO, authentication.userType),
+                ObjectSearchParameter("identificatie__value", EQUAL_TO, authentication.userId),
+            )
+        val results = getBerichten(authentication, pageNumber, pageSize, searchParameters)
+
+        return results.count
     }
 
     suspend fun getBerichtenPage(
@@ -45,22 +69,28 @@ class BerichtenService(
         pageNumber: Int,
         pageSize: Int,
     ): BerichtenPage {
-        val results =
-            objectenApiService
-                .getObjects<Bericht>(
-                    objectSearchParameters =
-                        listOf(
-                            ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, authentication.userType),
-                            ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, authentication.userId),
-                        ),
-                    objectTypeUrl =
-                        berichtenConfigurationProperties.berichtObjectTypeUrl,
-                    pageNumber = pageNumber,
-                    pageSize = pageSize,
-                )
+        val searchParameters =
+            listOf(
+                ObjectSearchParameter("identificatie__type", EQUAL_TO, authentication.userType),
+                ObjectSearchParameter("identificatie__value", EQUAL_TO, authentication.userId),
+            )
+        val results = getBerichten(authentication, pageNumber, pageSize, searchParameters)
 
         return results.toBerichtenPage()
     }
+
+    private suspend fun getBerichten(
+        authentication: CommonGroundAuthentication,
+        pageNumber: Int,
+        pageSize: Int,
+        searchParameters: List<ObjectSearchParameter> = emptyList(),
+    ) = objectenApiService
+        .getObjects<Bericht>(
+            objectSearchParameters = searchParameters,
+            objectTypeUrl = berichtenConfigurationProperties.berichtObjectTypeUrl,
+            pageNumber = pageNumber,
+            pageSize = pageSize,
+        )
 
     private fun ResultPage<ObjectsApiObject<Bericht>>.toBerichtenPage(
         pageNumber: Int = 1,

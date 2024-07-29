@@ -26,7 +26,7 @@ import java.util.UUID
 class BerichtenQuery(
     private val berichtenService: BerichtenService,
 ) : Query {
-    @GraphQLDescription("Query a single Bericht by Id")
+    @GraphQLDescription("Gets a single Bericht by Id")
     suspend fun getBericht(
         dfe: DataFetchingEnvironment,
         id: UUID,
@@ -50,12 +50,13 @@ class BerichtenQuery(
         )
     }
 
-    @GraphQLDescription("Returns an amount of Berichten")
-    suspend fun getBerichtenCount(
-        dfe: DataFetchingEnvironment,
-        pageNumber: Int? = 1,
-        pageSize: Int? = 1,
-    ): Long {
-        TODO("Implement")
+    @GraphQLDescription("Returns the total amount of unopened Berichten")
+    suspend fun getBerichtenCount(dfe: DataFetchingEnvironment): Int {
+        return berichtenService
+            .getUnopenedBerichtenCount(
+                authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
+                pageNumber = 1,
+                pageSize = 1,
+            )
     }
 }
