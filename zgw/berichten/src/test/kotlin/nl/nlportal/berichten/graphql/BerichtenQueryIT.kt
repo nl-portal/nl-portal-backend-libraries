@@ -127,7 +127,7 @@ class BerichtenQueryIT(
                 MockResponse()
                     .setResponseCode(200)
                     .addHeader("Content-Type", "application/json")
-                    .setBody(TestHelper.testBerichtenResponse)
+                    .setBody(TestHelper.testBerichtResponse)
 
             with(mockObjectenApi) {
                 enqueue(objectenResponse)
@@ -143,7 +143,7 @@ class BerichtenQueryIT(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromValue(TestHelper.invalidBerichtRequest))
+                    .body(BodyInserters.fromValue(TestHelper.validBerichtRequest))
                     .exchange()
                     .expectStatus().isOk
                     .expectBody()
@@ -155,10 +155,56 @@ class BerichtenQueryIT(
 
             // then
             assertEquals(
-                "9e021130-8cbd-4c6f-846a-677448e21ce6",
+                "9e021130-8cbd-4c6f-846a-677448e21ce8",
                 objectenRequest.requestUrl!!.pathSegments.last(),
             )
             TODO("Implement more assertions")
+        }
+
+    @WithBurgerUser("111111110")
+    @Test
+    fun `should return null for bericht request that doesn't belong to user`() =
+        runTest {
+            // given
+            val objectenResponse =
+                MockResponse()
+                    .setResponseCode(200)
+                    .addHeader("Content-Type", "application/json")
+                    .setBody(TestHelper.testBerichtResponse)
+
+            with(mockObjectenApi) {
+                enqueue(objectenResponse)
+            }
+
+            // when
+            val response =
+                webTestClient
+                    .post()
+                    .uri { builder ->
+                        builder
+                            .path("/graphql")
+                            .build()
+                    }
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    .body(BodyInserters.fromValue(TestHelper.validBerichtRequest))
+                    .exchange()
+                    .expectStatus().isOk
+                    .expectBody()
+                    .returnResult()
+                    .responseBodyContent
+                    ?.toString(Charset.defaultCharset())
+
+            val objectenRequest = mockObjectenApi.takeRequest()
+
+            // then
+            assertEquals(
+                "9e021130-8cbd-4c6f-846a-677448e21ce8",
+                objectenRequest.requestUrl!!.pathSegments.last(),
+            )
+            assertEquals(
+                """{"data":{"getBericht":null}}""".trimIndent(),
+                response,
+            )
         }
 
     @WithBurgerUser("999990755")
