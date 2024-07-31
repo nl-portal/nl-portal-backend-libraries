@@ -34,3 +34,16 @@ jobs:
               with:
                   gradle-version: 8.5
                   arguments: build
+
+            - name: Gradle CheckLicense
+              run: ./gradlew checkLicense
+
+            - uses: shallwefootball/s3-upload-action@master
+              name: Upload S3
+              id: S3
+              with:
+                aws_key_id: ${{ secrets.AWS_KEY_ID }}
+                aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+                aws_bucket: ${{ secrets.AWS_LICENSE_BUCKET }}
+                source_dir: 'build/reports/dependency-license/index.html'
+                destination_dir: 'licenses/'
