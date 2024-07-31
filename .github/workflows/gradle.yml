@@ -38,13 +38,10 @@ jobs:
             -   name: Gradle CheckLicense
                 run: ./gradlew checkLicense
 
-            -   uses: shallwefootball/s3-upload-action@master
-                name: Upload S3
-                id: S3
-                with:
-                    aws_key_id: ${{ secrets.AWS_KEY_ID }}
-                    aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                    aws_bucket: ${{ secrets.AWS_LICENSE_BUCKET }}
-                    source_dir: 'build/reports/dependency-license'
-                    destination_dir: 'licenses/'
-
+            -   name: Upload to S3
+                run: |
+                    aws s3 sync ./build/reports/dependency-license/index.html s3://nl-portal-licenses/licenses/
+                env:
+                    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
+                    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                    AWS_DEFAULT_REGION: 'eu-central-1'
