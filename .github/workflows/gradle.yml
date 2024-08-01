@@ -40,9 +40,9 @@ jobs:
 
             -   name: Upload to S3
                 run: |
-                    mkdir ./build/reports/${{ github.event.release.tag_name }}
-                    cp ./build/reports/dependency-license/index.html ./build/reports/${{ github.event.release.tag_name }}/licence-report.html
-                    aws s3 cp ./build/reports/${{ github.event.release.tag_name }} s3://nl-portal-licenses/licenses/ --recursive
+                    mkdir ./build/reports/test-release
+                    cp ./build/reports/dependency-license/index.html ./build/reports/test-release/licence-report.html
+                    aws s3 cp ./build/reports/test-release s3://nl-portal-licenses/licenses/ --recursive
                 env:
                     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
                     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
