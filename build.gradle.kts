@@ -215,7 +215,6 @@ tasks.register<HtmlDependencyReportTask>("htmlDependencyReport")
 tasks.named<HtmlDependencyReportTask>("htmlDependencyReport") {
     projects = project.allprojects
     reports.html.outputLocation = file("build/reports/project/dependencies")
-
 }
 
 tasks.bootJar {
