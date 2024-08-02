@@ -210,6 +210,14 @@ subprojects {
     }
 }
 
+tasks.register<HtmlDependencyReportTask>("htmlDependencyReport")
+
+tasks.named<HtmlDependencyReportTask>("htmlDependencyReport") {
+    projects = project.allprojects
+    reports.html.outputLocation = file("build/reports/project/dependencies")
+
+}
+
 tasks.bootJar {
     enabled = false
 }
@@ -225,6 +233,5 @@ tasks.withType<PublishToMavenRepository> {
 tasks.withType<PublishToMavenLocal> {
     enabled = false
 }
-
 // println("Apply deployment script")
 // apply(from = "gradle/deployment.gradle")
