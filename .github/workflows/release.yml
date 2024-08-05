@@ -36,6 +36,16 @@ jobs:
               with:
                   gradle-version: 8.5
                   arguments: build
+
+            -   name: set env
+                run: echo "VERSION=$(grep "version" gradle.properties | sed 's/^.*=//')" >> $GITHUB_ENV
+
+            -   name: Gradle CheckLicense
+                run: ./gradlew checkLicense
+
+            -   name: Gradle htmlDependencyReport
+                run: ./gradlew htmlDependencyReport
+
             - name: Gradle publish Release toStaging
               if: startsWith(github.ref_name, 'release/')
               uses: gradle/gradle-build-action@v3
@@ -69,4 +79,23 @@ jobs:
                     USER: ${{ secrets.USER }}
                     TOKEN: ${{ secrets.TOKEN }}
 
+            -   name: Upload licence report to S3
+                run: |
+                    mkdir ./build/reports/dependency-license/${VERSION}
+                    cp ./build/reports/dependency-license/index.html ./build/reports/dependency-license/${VERSION}/index.html
+                    aws s3 cp ./build/reports/dependency-license/${VERSION} s3://nl-portal-licenses/licenses/${VERSION} --recursive
+                env:
+                    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
+                    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                    AWS_DEFAULT_REGION: 'eu-central-1'
+
+            -   name: Upload dependencies report to S3
+                run: |
+                    aws s3 cp --recursive build/reports/project/dependencies s3://nl-portal-dependency-reports/reports/${VERSION}
+                    aws s3 rm --recursive s3://nl-portal-dependency-reports/reports/latest
+                    aws s3 cp --recursive s3://nl-portal-dependency-reports/reports/${VERSION} s3://nl-portal-dependency-reports/reports/latest
+                env:
+                    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
+                    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                    AWS_DEFAULT_REGION: 'eu-central-1'
 
