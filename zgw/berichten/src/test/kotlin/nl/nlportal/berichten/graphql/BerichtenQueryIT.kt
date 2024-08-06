@@ -24,9 +24,9 @@ import nl.nlportal.core.util.Mapper
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
@@ -57,14 +57,14 @@ class BerichtenQueryIT(
 
     lateinit var mockObjectenApi: MockWebServer
 
-    @BeforeAll
+    @BeforeEach
     fun setUp() {
         mockObjectenApi = MockWebServer()
         mockObjectenApi.start()
         objectsApiClientConfig.url = mockObjectenApi.url("/").toUri()
     }
 
-    @AfterAll
+    @AfterEach
     internal fun tearDown() {
         mockObjectenApi.shutdown()
     }
@@ -78,7 +78,7 @@ class BerichtenQueryIT(
                 MockResponse()
                     .setResponseCode(200)
                     .addHeader("Content-Type", "application/json")
-                    .setBody(TestHelper.testObjectenResponse)
+                    .setBody(TestHelper.objectenApiBerichtenPageResponse)
 
             with(mockObjectenApi) {
                 enqueue(objectenResponse)
@@ -94,7 +94,7 @@ class BerichtenQueryIT(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromValue(TestHelper.testBerichtenRequest))
+                    .body(BodyInserters.fromValue(TestHelper.graphqlBerichtenPageRequest))
                     .exchange()
                     .expectStatus().isOk
                     .expectBody()
@@ -115,7 +115,7 @@ class BerichtenQueryIT(
             )
 
             verify(berichtenService, times(1)).getBerichtenPage(any(), any(), any())
-            assertEquals(mapper.readTree(TestHelper.testBerichtenResponse), mapper.readTree(response))
+            assertEquals(mapper.readTree(TestHelper.graphqlBerichtenPageResponse), mapper.readTree(response))
         }
 
     @WithBurgerUser("999990755")
@@ -127,7 +127,7 @@ class BerichtenQueryIT(
                 MockResponse()
                     .setResponseCode(200)
                     .addHeader("Content-Type", "application/json")
-                    .setBody(TestHelper.testBerichtResponse)
+                    .setBody(TestHelper.objectenApiBerichtObjectResponse)
 
             with(mockObjectenApi) {
                 enqueue(objectenResponse)
@@ -143,7 +143,7 @@ class BerichtenQueryIT(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromValue(TestHelper.validBerichtRequest))
+                    .body(BodyInserters.fromValue(TestHelper.graphqlValidBerichtRequest))
                     .exchange()
                     .expectStatus().isOk
                     .expectBody()
@@ -158,7 +158,7 @@ class BerichtenQueryIT(
                 "9e021130-8cbd-4c6f-846a-677448e21ce8",
                 objectenRequest.requestUrl!!.pathSegments.last(),
             )
-            TODO("Implement more assertions")
+            assertEquals(mapper.readTree(TestHelper.graphqlBerichtResponse), mapper.readTree(response))
         }
 
     @WithBurgerUser("111111110")
@@ -170,7 +170,7 @@ class BerichtenQueryIT(
                 MockResponse()
                     .setResponseCode(200)
                     .addHeader("Content-Type", "application/json")
-                    .setBody(TestHelper.testBerichtResponse)
+                    .setBody(TestHelper.graphqlBerichtResponse)
 
             with(mockObjectenApi) {
                 enqueue(objectenResponse)
@@ -186,7 +186,7 @@ class BerichtenQueryIT(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromValue(TestHelper.validBerichtRequest))
+                    .body(BodyInserters.fromValue(TestHelper.graphqlValidBerichtRequest))
                     .exchange()
                     .expectStatus().isOk
                     .expectBody()
@@ -232,7 +232,7 @@ class BerichtenQueryIT(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromValue(TestHelper.invalidBerichtRequest))
+                    .body(BodyInserters.fromValue(TestHelper.graphqlInvalidBerichtRequest))
                     .exchange()
                     .expectStatus().isOk
                     .expectBody()
