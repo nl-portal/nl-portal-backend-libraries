@@ -8,6 +8,11 @@
 name: Validate Build
 
 on:
+    push:
+        branches:
+          - "development"
+          - "version/**"
+          - "feature/**"
     pull_request:
         branches:
         - "development"
