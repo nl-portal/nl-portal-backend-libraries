@@ -1,3 +1,18 @@
+/**
+ * Copyright 2018 Evgeny Naumenko <jk.vc@mail.ru>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 {
     "bundles" : [
         { "bundleName" : "Apache-1.0", "licenseName" : "Apache Software License, Version 1.1", "licenseUrl" : "https://www.apache.org/licenses/LICENSE-1.1" },
@@ -48,7 +63,7 @@
         { "bundleName" : "CDDL-1.1-GPLv2-CE", "licenseNamePattern" : "CDDL[ |\\/]?\\+? ?GPLv2(\\+CE| with classpath exception)" },
         { "bundleName" : "BSD-3-Clause", "licenseNamePattern" : ".*BSD[ |-]3-clause.*" },
         { "bundleName" : "BSD-3-Clause", "licenseUrlPattern" : ".*(www\\.)?opensource\\.org/licenses/BSD-3-Clause" },
-        { "bundleName" : "BSD-3-Clause", "licenseNamePattern" : ".*?(The )?(New )?BSD License.*" },
+        { "bundleName" : "BSD-3-Clause", "licenseNamePattern" : ".*?(The )New BSD License.*" },
         { "bundleName" : "BSD-3-Clause", "licenseNamePattern" : ".*?Modified BSD License.*" },
         { "bundleName" : "BSD-2-Clause", "licenseNamePattern" : "BSD[ |-]2-clause.*" },
         { "bundleName" : "BSD-2-Clause", "licenseUrlPattern" : ".*(www\\.)?opensource\\.org/licenses/BSD-2-Clause" },
@@ -83,8 +98,6 @@
         { "bundleName" : "MIT", "licenseNamePattern" : "(The\\s)?MIT(\\slicen[c|s]e)?(\\s\\(MIT\\))?" },
         { "bundleName" : "MIT", "licenseUrlPattern" : ".*(www\\.)?opensource\\.org/licenses/MIT(\\.php)?" },
         { "bundleName" : "MPL-1.1", "licenseNamePattern" : "MPL 1\\.1" },
-        { "bundleName" : "MPL-2.0", "licenseNamePattern" : "MPL 2\\.0"},
-        { "bundleName" : "MPL-2.0", "licenseNamePattern" : "Mozilla Public License, Version 2\\.0"},
         { "bundleName" : "MPL-2.0", "licenseUrlPattern" : ".*(www\\.).opensource\\.org/licenses/MPL-2\\.0" },
         { "bundleName" : "Public-Domain", "licenseNamePattern" : "((public)\\s(domain)).*", "transformUrl" : false },
         { "bundleName" : "Public-Domain", "licenseFileContentPattern" : ".*(Creative)\\s(Commons).*", "transformUrl" : false },

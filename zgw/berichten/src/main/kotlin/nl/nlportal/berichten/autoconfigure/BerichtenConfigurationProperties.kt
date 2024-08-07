@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2024 Ritense BV, the Netherlands.
+ * Copyright (c) 2024 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.core.autoconfiguration
+package nl.nlportal.berichten.autoconfigure
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import nl.nlportal.core.util.Mapper
-import org.springframework.boot.autoconfigure.AutoConfiguration
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
-import org.springframework.context.annotation.Bean
+import org.springframework.boot.context.properties.ConfigurationProperties
 
-@AutoConfiguration
-class CoreAutoConfiguration {
-    @Bean
-    @ConditionalOnMissingBean(name = ["objectMapper"])
-    fun objectMapper(): ObjectMapper {
-        return Mapper.get()
-    }
-}
+@ConfigurationProperties(prefix = "nl-portal.zgw.berichten")
+data class BerichtenConfigurationProperties(
+    var berichtObjectTypeUrl: String,
+)
