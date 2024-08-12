@@ -36,6 +36,9 @@ class ProductTestConfiguration {
     @Value("classpath:product/graphql/getProductZaken.graphql")
     private lateinit var getProductZaken: Resource
 
+    @Value("classpath:product/graphql/getProductZakenNoZaakTypes.graphql")
+    private lateinit var getProductZakenNoZaakTypes: Resource
+
     @Value("classpath:product/graphql/getProductTaken.graphql")
     private lateinit var getProductTaken: Resource
 
@@ -85,6 +88,14 @@ class ProductTestConfiguration {
     fun graphqlGetProductZaken(): String {
         return StreamUtils.copyToString(
             getProductZaken.inputStream,
+            StandardCharsets.UTF_8,
+        )
+    }
+
+    @Bean
+    fun graphqlGetProductZakenNoZaakTypes(): String {
+        return StreamUtils.copyToString(
+            getProductZakenNoZaakTypes.inputStream,
             StandardCharsets.UTF_8,
         )
     }

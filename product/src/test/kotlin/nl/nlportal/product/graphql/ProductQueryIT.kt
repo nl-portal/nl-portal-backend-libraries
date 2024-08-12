@@ -54,6 +54,7 @@ internal class ProductQueryIT(
     @Autowired private val graphqlGetProduct: String,
     @Autowired private val graphqlGetProducten: String,
     @Autowired private val graphqlGetProductZaken: String,
+    @Autowired private val graphqlGetProductZakenNoZaakTypes: String,
     @Autowired private val graphqlGetProductTaken: String,
     @Autowired private val graphqlGetProductZakenNotFound: String,
     @Autowired private val graphqlGetProductVerbruiksObjecten: String,
@@ -196,6 +197,21 @@ internal class ProductQueryIT(
 
     @Test
     @WithBurgerUser("569312863")
+    fun getProductZakenTestBurgerNoZaakTypes() {
+        val basePath = "$.data.getProductZaken"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(graphqlGetProductZakenNoZaakTypes)
+            .exchange()
+            .expectBody()
+            .jsonPath(basePath)
+    }
+
+    @Test
+    @WithBurgerUser("569312863")
     fun getProductZakenTestBurgerNotFound() {
         val basePath = "$.data.getProductZaken"
 
@@ -327,6 +343,8 @@ internal class ProductQueryIT(
                                     TestHelper.mockResponseFromFile("/product/data/get-producten.json")
                                 } else if (queryParams.any { it.contains("naam__exact__erfpacht") }) {
                                     TestHelper.mockResponseFromFile("/product/data/get-product-types.json")
+                                } else if (queryParams.any { it.contains("naam__exact__noZaakTypes") }) {
+                                    TestHelper.mockResponseFromFile("/product/data/get-product-types-no-zaaktypes.json")
                                 } else if (queryParams.any {
                                         it.contains(
                                             "type=http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb35",

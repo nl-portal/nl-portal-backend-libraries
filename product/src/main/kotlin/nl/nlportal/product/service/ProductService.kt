@@ -127,12 +127,17 @@ class ProductService(
         isOpen: Boolean? = null,
     ): List<Zaak> {
         val productType = getProductType(productTypeId, productName)
+
+        if (productType?.zaaktypen == null || productType.zaaktypen.isEmpty()) {
+            return emptyList()
+        }
+
         val request =
             zakenApiClient.zoeken()
                 .search()
                 .page(pageNumber)
                 .withAuthentication(authentication)
-                .ofZaakTypes(productType?.zaaktypen?.map { it.toString() }!!)
+                .ofZaakTypes(productType.zaaktypen.map { it.toString() })
 
         isOpen?.let {
             request.isOpen(isOpen)

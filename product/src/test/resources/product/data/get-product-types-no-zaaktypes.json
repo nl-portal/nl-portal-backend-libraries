@@ -1,0 +1,89 @@
+{
+  "count": 2,
+  "next": "http://localhost:8010/api/v2/objects?page=2",
+  "previous": null,
+  "results": [
+    {
+      "url": "http://localhost:8010/api/v2/objects/2d725c07-2f26-4705-8637-438a42b5ac2d",
+      "uuid": "7d9cd6c2-8147-46f2-9ae9-c67e8213c200",
+      "type": "http://localhost:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb35",
+      "record": {
+        "index": 1,
+        "typeVersion": 1,
+        "data": {
+          "naam": "noZaakTypes",
+          "CIMCode": "7d9cd6c2-8147-46f2-9ae9-c67e8213c116",
+          "statussen": {
+            "actief": "Actief",
+            "inaanvraag": "In aanvraag"
+          },
+          "zaaktypen": [],
+          "eigenschappen": {
+            "contractnummer": "123456"
+          },
+          "omschrijving": "Dit is een voorbeeld van een product",
+          "beslistabellen": {
+            "watkanikregelen":[
+              {
+                "name":"status",
+                "classType":"String",
+                "regex":"$.status"
+              },
+              {
+                "name":"identificatie",
+                "classType":"String",
+                "regex":"$.rollen.initiator.identificatie"
+              },
+              {
+                "name":"test",
+                "classType":"Integer",
+                "value":10
+              },
+              {
+                "name":"product",
+                "classType":"Json"
+              }
+            ]
+          },
+          "prefill": {
+            "watkanikregelen":{
+              "formulierUrl":"http://localhost:8080/formuliernaam",
+              "variabelen":{
+                "product":{
+                  "persoonsgegevens.naam":"$.naam",
+                  "eigenschappen.contractnummer":"$.eigenschappen.contractnummer"
+                },
+                "productverbruiksobject":{
+                  "verbruik.data":"$.data",
+                  "verbruik.soort":"$.soort"
+                },
+                "productDetails":{
+                  "detail.data":"$.record.data.data"
+                }
+              }
+            },
+            "klachten":{
+              "formulierUrl":"http://localhost:8080/klachten",
+              "variabelen":{
+                "product":{
+                  "persoonsgegevens.naam":"$.naam",
+                  "eigenschap.test":"$.eigenschap.test"
+                },
+                "productverbruiksobject":{
+                  "verbruik.data":"$.data",
+                  "verbruik.soort":"$.soort"
+                }
+              }
+            }
+          }
+        },
+        "geometry": null,
+        "startAt": "2022-05-25",
+        "endAt": null,
+        "registrationAt": "2022-05-25",
+        "correctionFor": null,
+        "correctedBy": null
+      }
+    }
+  ]
+}
