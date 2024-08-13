@@ -49,7 +49,12 @@ class SearchZoekenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
     }
 
     override fun ofZaakTypes(zaakTypeIds: List<String>): SearchZaken {
-        bodyValue.add("zaaktype__in", zaakTypeIds.map { zakenApiClient.getZaakTypeUrl(it) })
+        bodyValue.add(
+            "zaaktype__in",
+            zaakTypeIds.map {
+                zakenApiClient.getZaakTypeUrl(it)
+            }.joinToString(),
+        )
         return this
     }
 
