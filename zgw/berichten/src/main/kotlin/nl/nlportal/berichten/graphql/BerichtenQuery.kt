@@ -51,12 +51,10 @@ class BerichtenQuery(
     }
 
     @GraphQLDescription("Returns the total amount of unopened Berichten")
-    suspend fun getBerichtenCount(dfe: DataFetchingEnvironment): Int {
+    suspend fun getUnopenedBerichtenCount(dfe: DataFetchingEnvironment): Int {
         return berichtenService
             .getUnopenedBerichtenCount(
                 authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
-                pageNumber = 1,
-                pageSize = 1,
             )
     }
 }

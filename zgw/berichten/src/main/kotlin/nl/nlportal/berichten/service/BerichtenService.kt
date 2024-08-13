@@ -56,18 +56,14 @@ class BerichtenService(
         }
     }
 
-    suspend fun getUnopenedBerichtenCount(
-        authentication: CommonGroundAuthentication,
-        pageNumber: Int,
-        pageSize: Int,
-    ): Int {
+    suspend fun getUnopenedBerichtenCount(authentication: CommonGroundAuthentication): Int {
         val searchParameters =
             listOf(
-                ObjectSearchParameter("geopened", STRING_CONTAINS, "false"),
+                ObjectSearchParameter("geopend", STRING_CONTAINS, "false"),
                 ObjectSearchParameter("identificatie__type", EQUAL_TO, authentication.userType),
                 ObjectSearchParameter("identificatie__value", EQUAL_TO, authentication.userId),
             )
-        val results = getBerichten(pageNumber, pageSize, searchParameters)
+        val results = getBerichten(1, 1, searchParameters)
 
         return results.count
     }
