@@ -56,4 +56,5 @@ include(
     "zgw:taak",
     "zgw:zaken-api",
     "zgw:objectenapi",
+    "zgw:besluiten",
 )

@@ -1,0 +1,9 @@
+query {
+    getBesluitDocumenten(
+        besluit: "58fad5ab-dc2f-11ec-9075-f22a405ce707"
+    ) {
+        url,
+        informatieobject,
+        besluit
+    }
+}

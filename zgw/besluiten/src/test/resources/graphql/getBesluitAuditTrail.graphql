@@ -1,0 +1,14 @@
+query {
+    getBesluitAuditTrail(
+        besluitId: "58fad5ab-dc2f-11ec-9075-f22a405ce707",
+        auditTrail: "095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
+    ) {
+        uuid,
+        bron,
+        actie,
+        wijzigingen {
+            oud,
+            nieuw
+        }
+    }
+}

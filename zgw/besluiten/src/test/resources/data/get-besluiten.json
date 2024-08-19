@@ -1,0 +1,24 @@
+{
+  "count": 2,
+  "next": "http://localhost:8001/besluiten/api/v1/besluiten?page=2",
+  "previous": null,
+  "results": [
+    {
+      "url": "http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z",
+      "identificatie": "klantportaal",
+      "verantwoordelijkeOrganisatie": "klantportaal",
+      "besluittype": "http://localhost:8000/catalogi/api/v1/besluittypen/496f51fd-ccdb-406e-805a-e7602ae78a2b",
+      "zaak": "http://localhost:8001/zaken/api/v1/zaken/496f51fd-ccdb-406e-805a-e7602ae78a2x",
+      "datum": "2019-08-24",
+      "toelichting": "toelichting",
+      "bestuursorgaan": "klant",
+      "ingangsdatum": "2019-08-24",
+      "vervaldatum": "2019-08-24",
+      "vervalreden": "tijdelijk",
+      "vervalredenWeergave": "string",
+      "publicatiedatum": "2019-08-24",
+      "verzenddatum": "2019-08-24",
+      "uiterlijkeReactiedatum": "2019-08-24"
+    }
+  ]
+}
