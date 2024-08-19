@@ -21,6 +21,7 @@ import nl.nlportal.catalogiapi.domain.ZaakStatusType
 import nl.nlportal.catalogiapi.domain.ZaakType
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import io.netty.handler.logging.LogLevel
+import nl.nlportal.catalogiapi.domain.BesluitType
 import java.util.UUID
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.util.LinkedMultiValueMap
@@ -64,6 +65,32 @@ class CatalogiApiClient(
         return webClient()
             .get()
             .uri("/catalogi/api/v1/zaaktypen/$zaakTypeId")
+            .retrieve()
+            .awaitBody()
+    }
+
+    suspend fun getBesluitTypes(zaakType: String): List<BesluitType> {
+        val params = LinkedMultiValueMap<String, String>()
+        params.apply {
+            add("zaaktype", zaakType)
+        }
+
+        return webClient()
+            .get()
+            .uri {
+                it.path("/catalogi/api/v1/besluittypen")
+                    .queryParams(params)
+                    .build()
+            }
+            .retrieve()
+            .awaitBody<ResultPage<BesluitType>>()
+            .results
+    }
+
+    suspend fun getBesluitType(besluitTypeId: UUID): BesluitType {
+        return webClient()
+            .get()
+            .uri("/catalogi/api/v1/besluittypen/$besluitTypeId")
             .retrieve()
             .awaitBody()
     }
