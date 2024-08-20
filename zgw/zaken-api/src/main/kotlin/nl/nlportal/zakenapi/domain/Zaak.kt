@@ -16,6 +16,8 @@
 package nl.nlportal.zakenapi.domain
 
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
+import nl.nlportal.besluiten.domain.Besluit
+import nl.nlportal.besluiten.service.BesluitenService
 import nl.nlportal.catalogiapi.domain.StatusType
 import nl.nlportal.catalogiapi.domain.ZaakType
 import nl.nlportal.catalogiapi.service.CatalogiApiService
@@ -82,5 +84,15 @@ data class Zaak(
         zakenApiService: ZakenApiService,
     ): ZaakDetails {
         return zakenApiService.getZaakDetails(url)
+    }
+
+    suspend fun besluiten(
+        @GraphQLIgnore
+        @Autowired
+        besluitenService: BesluitenService,
+    ): List<Besluit> {
+        return return besluitenService.getBesluiten(
+            zaak = url,
+        )
     }
 }
