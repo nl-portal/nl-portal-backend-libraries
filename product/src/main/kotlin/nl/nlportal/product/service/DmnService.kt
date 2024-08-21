@@ -42,11 +42,14 @@ class DmnService(
         source: String,
         beslisTabelVariables: List<BeslisTabelVariable>,
     ): List<DmnResponse> {
-        return mapVariablesAndGetDecision(
-            key,
-            source,
-            beslisTabelVariables,
-        )
+        val dmnRequestMapping =
+            createDmnRequestMapping(
+                key,
+                source,
+                beslisTabelVariables,
+            )
+
+        return dmnClient.getDecision(dmnRequestMapping)
     }
 
     suspend fun getProductDecision(
@@ -66,19 +69,21 @@ class DmnService(
         }
 
         val source = Mapper.get().writeValueAsString(productObject.record.data)
+        val dmnRequestMapping =
+            createDmnRequestMapping(
+                key,
+                source,
+                beslisTabelVariables,
+            )
 
-        return mapVariablesAndGetDecision(
-            key,
-            source,
-            beslisTabelVariables,
-        )
+        return dmnClient.getDecision(dmnRequestMapping)
     }
 
-    private suspend fun mapVariablesAndGetDecision(
+    private fun createDmnRequestMapping(
         key: String,
         source: String,
         beslisTabelVariables: List<BeslisTabelVariable>,
-    ): List<DmnResponse> {
+    ): DmnRequestMapping {
         val variablesMapping = mutableMapOf<String, DmnVariable>()
         beslisTabelVariables.forEach {
             if (it.classType != DmnVariableType.JSON.value) {
@@ -111,15 +116,13 @@ class DmnService(
             }
         }
 
-        val dmnRequestMapping =
-            DmnRequestMapping(
-                key = key,
-                mapping =
-                    DmnRequest(
-                        variables = variablesMapping,
-                    ),
-            )
-        return dmnClient.getDecision(dmnRequestMapping)
+        return DmnRequestMapping(
+            key = key,
+            mapping =
+                DmnRequest(
+                    variables = variablesMapping,
+                ),
+        )
     }
 
     private fun findVariableInJson(
