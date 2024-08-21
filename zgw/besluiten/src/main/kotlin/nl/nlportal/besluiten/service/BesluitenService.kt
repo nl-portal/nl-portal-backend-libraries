@@ -30,7 +30,7 @@ class BesluitenService(
     }
 
     suspend fun getBesluitAuditTrails(besluitId: UUID): List<BesluitAuditTrail> {
-        return besluitenApiClient.getBesluitAuditTrails(besluitId)
+        return besluitenApiClient.getBesluitAuditTrails(besluitId).sortedBy { it.aanmaakdatum }
     }
 
     suspend fun getBesluitAuditTrail(
