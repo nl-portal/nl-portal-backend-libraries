@@ -52,6 +52,9 @@ internal class TaakQueryIT(
     @Autowired
     private lateinit var getTaakByIdPayload: String
 
+    @Autowired
+    private lateinit var getTaakByIdPayloadBedrijf: String
+
     @BeforeEach
     internal fun setUp() {
         server = MockWebServer()
@@ -79,7 +82,7 @@ internal class TaakQueryIT(
             .exchange()
             .expectBody()
             .jsonPath(basePath).exists()
-            .jsonPath("$resultPath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
+            .jsonPath("$resultPath.id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
             .jsonPath("$resultPath.objectId").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
             .jsonPath("$resultPath.formulier.formuliertype").isEqualTo("portalid")
             .jsonPath("$resultPath.formulier.value").isEqualTo("check-loan-form")
@@ -107,7 +110,7 @@ internal class TaakQueryIT(
             .exchange()
             .expectBody()
             .jsonPath(resultPath).exists()
-            .jsonPath("$resultPath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
+            .jsonPath("$resultPath.id").isEqualTo("2d94fedb-3d99-43c4-b333-f04e0ccfe78a")
             .jsonPath("$resultPath.objectId").isEqualTo("2d94fedb-3d99-43c4-b333-f04e0ccfe78a")
             .jsonPath("$resultPath.formulier.formuliertype").isEqualTo("portalid")
             .jsonPath("$resultPath.formulier.value").isEqualTo("check-loan-form")
@@ -124,7 +127,7 @@ internal class TaakQueryIT(
     @Test
     @WithBurgerUser("569312863")
     fun `should get task by id for burger`() {
-        val basePath = "$.data.getTaakById"
+        val basePath = "$.data.getTaakByIdV2"
 
         testClient.post()
             .uri("/graphql")
@@ -134,31 +137,29 @@ internal class TaakQueryIT(
             .exchange()
             .expectBody()
             .jsonPath(basePath).exists()
-            .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
-            .jsonPath("$basePath.formulier.formuliertype").isEqualTo("portalid")
-            .jsonPath("$basePath.formulier.value").isEqualTo("check-loan-form")
+            .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce708")
+            .jsonPath("$basePath.formtaak.formulier.soort").isEqualTo("id")
+            .jsonPath("$basePath.formtaak.formulier.value").isEqualTo("check-loan-form")
             .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
-            .jsonPath("$basePath.date").isEqualTo("2022-05-25")
     }
 
     @Test
     @WithBedrijfUser("14127293")
     fun `should get task by id for bedrijf`() {
-        val basePath = "$.data.getTaakById"
+        val basePath = "$.data.getTaakByIdV2"
 
         testClient.post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
-            .bodyValue(getTaakByIdPayload)
+            .bodyValue(getTaakByIdPayloadBedrijf)
             .exchange()
             .expectBody()
             .jsonPath(basePath).exists()
-            .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
-            .jsonPath("$basePath.formulier.formuliertype").isEqualTo("portalid")
-            .jsonPath("$basePath.formulier.value").isEqualTo("check-loan-form")
+            .jsonPath("$basePath.id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
+            .jsonPath("$basePath.formtaak.formulier.soort").isEqualTo("id")
+            .jsonPath("$basePath.formtaak.formulier.value").isEqualTo("check-loan-form")
             .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
-            .jsonPath("$basePath.date").isEqualTo("2022-05-30")
     }
 
     @Test
@@ -195,6 +196,13 @@ internal class TaakQueryIT(
                                 } else {
                                     MockResponse().setResponseCode(404)
                                 }
+                            }
+
+                            "GET /api/v2/objects/58fad5ab-dc2f-11ec-9075-f22a405ce707" -> {
+                                TestHelper.mockResponseFromFile("/data/get-task.json")
+                            }
+                            "GET /api/v2/objects/2d725c07-2f26-4705-8637-438a42b5ac2d" -> {
+                                TestHelper.mockResponseFromFile("/data/get-task-bedrijf.json")
                             }
 
                             else -> MockResponse().setResponseCode(404)

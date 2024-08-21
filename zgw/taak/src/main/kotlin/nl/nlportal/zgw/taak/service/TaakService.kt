@@ -50,13 +50,6 @@ open class TaakService(
         authentication: CommonGroundAuthentication,
         zaakUUID: UUID? = null,
     ): TaakPageV2 {
-        val result =
-            getTakenV1(
-                pageNumber,
-                pageSize,
-                authentication,
-                zaakUUID,
-            )
         val migratedList =
             getTakenV1(
                 pageNumber,
@@ -138,29 +131,29 @@ open class TaakService(
     suspend fun getTaakById(
         id: UUID,
         authentication: CommonGroundAuthentication,
-    ): TaakV2 {
+    ): TaakV2? {
         var taak =
             try {
-                TaakV2.migrateObjectsApiTask(
-                    getObjectsApiTaak<TaakObject>(
-                        id,
-                        authentication,
-                        objectsApiTaskConfig.typeUrl,
-                    ),
-                )
+                val taakObjectV1 = objectsApiClient.getObjectById<TaakObject>(id.toString())
+                if (taakObjectV1 != null) {
+                    TaakV2.migrateObjectsApiTask(
+                        taakObjectV1,
+                    )
+                } else {
+                    throw IllegalStateException("Taak not found")
+                }
             } catch (ex: Exception) {
-                // Taak could not be found, try V2
-                TaakV2.fromObjectsApi(
-                    getObjectsApiTaak<TaakObjectV2>(
-                        id,
-                        authentication,
-                        objectsApiTaskConfig.typeUrlV2,
-                    ),
-                )
+                val taakObjectV2 = objectsApiClient.getObjectById<TaakObjectV2>(id.toString())
+                if (taakObjectV2 != null) {
+                    TaakV2.fromObjectsApi(
+                        taakObjectV2,
+                    )
+                } else {
+                    null
+                }
             }
-
         // do validation if the user is authenticated for this task
-        val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
+        val isAuthorized = isAuthorizedForTaak(authentication, taak!!.identificatie)
         if (isAuthorized) {
             return taak
         }
@@ -224,6 +217,7 @@ open class TaakService(
                             authentication,
                         ),
                     )
+
                 else ->
                     submitTaakV2(
                         id,
@@ -354,7 +348,13 @@ open class TaakService(
 
         zaakUUID?.let {
             objectSearchParameters.add(ObjectSearchParameter("koppeling__registratie", Comparator.EQUAL_TO, "zaak"))
-            objectSearchParameters.add(ObjectSearchParameter("koppeling__uuid", Comparator.STRING_CONTAINS, it.toString()))
+            objectSearchParameters.add(
+                ObjectSearchParameter(
+                    "koppeling__uuid",
+                    Comparator.STRING_CONTAINS,
+                    it.toString(),
+                ),
+            )
         }
         return objectsApiClient.getObjects<T>(
             objectSearchParameters = objectSearchParameters,
