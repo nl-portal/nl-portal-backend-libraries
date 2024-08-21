@@ -127,7 +127,7 @@ internal class TaakQueryIT(
     @Test
     @WithBurgerUser("569312863")
     fun `should get task by id for burger`() {
-        val basePath = "$.data.getTaakByIdV2"
+        val basePath = "$.data.getTaakById"
 
         testClient.post()
             .uri("/graphql")
@@ -138,15 +138,16 @@ internal class TaakQueryIT(
             .expectBody()
             .jsonPath(basePath).exists()
             .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce708")
-            .jsonPath("$basePath.formtaak.formulier.soort").isEqualTo("id")
-            .jsonPath("$basePath.formtaak.formulier.value").isEqualTo("check-loan-form")
+            .jsonPath("$basePath.formulier.formuliertype").isEqualTo("portalid")
+            .jsonPath("$basePath.formulier.value").isEqualTo("check-loan-form")
             .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
+            .jsonPath("$basePath.date").isEqualTo("2022-06-01")
     }
 
     @Test
     @WithBedrijfUser("14127293")
     fun `should get task by id for bedrijf`() {
-        val basePath = "$.data.getTaakByIdV2"
+        val basePath = "$.data.getTaakById"
 
         testClient.post()
             .uri("/graphql")
@@ -157,9 +158,10 @@ internal class TaakQueryIT(
             .expectBody()
             .jsonPath(basePath).exists()
             .jsonPath("$basePath.id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
-            .jsonPath("$basePath.formtaak.formulier.soort").isEqualTo("id")
-            .jsonPath("$basePath.formtaak.formulier.value").isEqualTo("check-loan-form")
+            .jsonPath("$basePath.formulier.formuliertype").isEqualTo("portalid")
+            .jsonPath("$basePath.formulier.value").isEqualTo("check-loan-form")
             .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
+            .jsonPath("$basePath.date").isEqualTo("2022-06-01")
     }
 
     @Test

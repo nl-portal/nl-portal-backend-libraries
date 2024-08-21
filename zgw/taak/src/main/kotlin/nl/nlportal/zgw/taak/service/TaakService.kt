@@ -131,33 +131,20 @@ open class TaakService(
     suspend fun getTaakById(
         id: UUID,
         authentication: CommonGroundAuthentication,
-    ): TaakV2? {
-        var taak =
-            try {
-                val taakObjectV1 = getObjectsApiTaak<TaakObject>(id)
-                if (taakObjectV1 != null) {
-                    TaakV2.migrateObjectsApiTask(
-                        taakObjectV1,
-                    )
-                } else {
-                    throw IllegalStateException("Taak not found")
-                }
-            } catch (ex: Exception) {
-                val taakObjectV2 = getObjectsApiTaak<TaakObjectV2>(id)
-                if (taakObjectV2 != null) {
-                    TaakV2.fromObjectsApi(
-                        taakObjectV2,
-                    )
-                } else {
-                    null
-                }
-            }
-        // do validation if the user is authenticated for this task
-        val isAuthorized = isAuthorizedForTaak(authentication, taak!!.identificatie)
-        if (isAuthorized) {
-            return taak
+    ): TaakV2 {
+        return try {
+            val taakV1 =
+                getTaakByIdV1(
+                    id,
+                    authentication,
+                )
+            TaakV2.migrate(taakV1)
+        } catch (ex: Exception) {
+            getTaakByIdV2(
+                id,
+                authentication,
+            )
         }
-        throw IllegalStateException("Access denied to this taak")
     }
 
     @Deprecated("Use version 2")
@@ -166,17 +153,13 @@ open class TaakService(
         authentication: CommonGroundAuthentication,
     ): Taak {
         val taakObjectV1 = getObjectsApiTaak<TaakObject>(id)
-        if (taakObjectV1 != null) {
-            val taak =
-                Taak.fromObjectsApiTask(
-                    taakObjectV1,
-                )
-            val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
-            if (isAuthorized) {
-                return taak
-            }
-        } else {
-            error("Access denied to this taak")
+        val taak =
+            Taak.fromObjectsApiTask(
+                taakObjectV1,
+            )
+        val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
+        if (isAuthorized) {
+            return taak
         }
         throw IllegalStateException("Access denied to this taak")
     }
@@ -186,18 +169,15 @@ open class TaakService(
         authentication: CommonGroundAuthentication,
     ): TaakV2 {
         val taakObject = getObjectsApiTaak<TaakObjectV2>(id)
-        if (taakObject != null) {
-            val taak =
-                TaakV2.fromObjectsApi(
-                    taakObject,
-                )
-            val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
-            if (isAuthorized) {
-                return taak
-            }
-        } else {
-            error("Access denied to this taak")
+        val taak =
+            TaakV2.fromObjectsApi(
+                taakObject,
+            )
+        val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
+        if (isAuthorized) {
+            return taak
         }
+
         throw IllegalStateException("Access denied to this taak")
     }
 
@@ -237,12 +217,6 @@ open class TaakService(
     ): Taak {
         val objectsApiTask =
             getObjectsApiTaak<TaakObject>(id)
-        if (objectsApiTask == null) {
-            throw ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                String.format("Taak kan niet gevonden worden", id),
-            )
-        }
         if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
             throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
@@ -268,12 +242,6 @@ open class TaakService(
     ): TaakV2 {
         val objectsApiTask =
             getObjectsApiTaak<TaakObjectV2>(id)
-        if (objectsApiTask == null) {
-            throw ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                String.format("Taak kan niet gevonden worden", id),
-            )
-        }
         if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
             throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
@@ -292,8 +260,15 @@ open class TaakService(
         return TaakV2.fromObjectsApi(updatedObjectsApiTask)
     }
 
-    private suspend inline fun <reified T> getObjectsApiTaak(taskId: UUID): ObjectsApiObject<T>? {
-        return objectsApiClient.getObjectById<T>(taskId.toString())
+    private suspend inline fun <reified T> getObjectsApiTaak(taskId: UUID): ObjectsApiObject<T> {
+        val objectsApiTask = objectsApiClient.getObjectById<T>(taskId.toString())
+        if (objectsApiTask == null) {
+            throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                String.format("Taak kan niet gevonden worden", taskId),
+            )
+        }
+        return objectsApiTask
     }
 
     private suspend inline fun <reified T> getTakenResultPage(
