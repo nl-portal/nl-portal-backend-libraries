@@ -133,12 +133,12 @@ open class TaakService(
         authentication: CommonGroundAuthentication,
     ): TaakV2 {
         return try {
-            val taakV1 =
+            TaakV2.migrate(
                 getTaakByIdV1(
                     id,
                     authentication,
-                )
-            TaakV2.migrate(taakV1)
+                ),
+            )
         } catch (ex: Exception) {
             getTaakByIdV2(
                 id,
@@ -152,10 +152,9 @@ open class TaakService(
         id: UUID,
         authentication: CommonGroundAuthentication,
     ): Taak {
-        val taakObjectV1 = getObjectsApiTaak<TaakObject>(id)
         val taak =
             Taak.fromObjectsApiTask(
-                taakObjectV1,
+                getObjectsApiTaak<TaakObject>(id),
             )
         val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
         if (isAuthorized) {
@@ -168,10 +167,9 @@ open class TaakService(
         id: UUID,
         authentication: CommonGroundAuthentication,
     ): TaakV2 {
-        val taakObject = getObjectsApiTaak<TaakObjectV2>(id)
         val taak =
             TaakV2.fromObjectsApi(
-                taakObject,
+                getObjectsApiTaak<TaakObjectV2>(id),
             )
         val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
         if (isAuthorized) {
