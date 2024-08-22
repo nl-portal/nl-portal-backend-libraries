@@ -40,7 +40,7 @@ class Taak(
         fun fromObjectsApiTask(objectsApiTask: ObjectsApiObject<TaakObject>): Taak {
             val taakObject = objectsApiTask.record.data
             return Taak(
-                id = taakObject.verwerkerTaakId,
+                id = objectsApiTask.uuid,
                 title = taakObject.title,
                 objectId = objectsApiTask.uuid,
                 formulier = taakObject.formulier,
