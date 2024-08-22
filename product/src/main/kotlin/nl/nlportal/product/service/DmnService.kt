@@ -43,7 +43,7 @@ class DmnService(
         beslisTabelVariables: List<BeslisTabelVariable>,
     ): List<DmnResponse> {
         val dmnRequestMapping =
-            createDmnRequestMapping(
+            createDmnRequest(
                 key,
                 source,
                 beslisTabelVariables,
@@ -69,21 +69,21 @@ class DmnService(
         }
 
         val source = Mapper.get().writeValueAsString(productObject.record.data)
-        val dmnRequestMapping =
-            createDmnRequestMapping(
+        val dmnRequest =
+            createDmnRequest(
                 key,
                 source,
                 beslisTabelVariables,
             )
 
-        return dmnClient.getDecision(dmnRequestMapping)
+        return dmnClient.getDecision(dmnRequest)
     }
 
-    private fun createDmnRequestMapping(
+    private fun createDmnRequest(
         key: String,
         source: String,
         beslisTabelVariables: List<BeslisTabelVariable>,
-    ): DmnRequestMapping {
+    ): DmnRequest {
         val variablesMapping = mutableMapOf<String, DmnVariable>()
         beslisTabelVariables.forEach {
             if (it.classType != DmnVariableType.JSON.value) {
@@ -116,10 +116,10 @@ class DmnService(
             }
         }
 
-        return DmnRequestMapping(
+        return DmnRequest(
             key = key,
             mapping =
-                DmnRequest(
+                DmnRequestMapping(
                     variables = variablesMapping,
                 ),
         )

@@ -17,12 +17,12 @@ package nl.nlportal.product.domain
 
 import com.fasterxml.jackson.annotation.JsonValue
 
-data class DmnRequestMapping(
+data class DmnRequest(
     val key: String,
-    val mapping: DmnRequest,
+    val mapping: DmnRequestMapping,
 )
 
-data class DmnRequest(
+data class DmnRequestMapping(
     val variables: Map<String, DmnVariable>,
 )
 

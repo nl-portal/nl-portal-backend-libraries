@@ -20,7 +20,7 @@ import mu.KLogger
 import mu.KotlinLogging
 import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
-import nl.nlportal.product.domain.DmnRequestMapping
+import nl.nlportal.product.domain.DmnRequest
 import nl.nlportal.product.domain.DmnResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -78,14 +78,14 @@ class DmnClient(
                 .build()
     }
 
-    suspend fun getDecision(dmnRequestMapping: DmnRequestMapping): List<DmnResponse> {
+    suspend fun getDecision(dmnRequest: DmnRequest): List<DmnResponse> {
         return webClient
             .post()
-            .uri("/decision-definition/key/${dmnRequestMapping.key}/evaluate")
+            .uri("/decision-definition/key/${dmnRequest.key}/evaluate")
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
             .body(
-                BodyInserters.fromValue(dmnRequestMapping.mapping),
+                BodyInserters.fromValue(dmnRequest.mapping),
             )
             .retrieve()
             .handleStatus()
