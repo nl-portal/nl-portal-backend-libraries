@@ -18,8 +18,11 @@ package nl.nlportal.zakenapi
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.domain.DocumentStatus.IN_BEWERKING
 import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.OPENBAAR
+import nl.nlportal.zakenapi.domain.ResultPage
 import nl.nlportal.zakenapi.domain.ZaakDocument
+import nl.nlportal.zakenapi.domain.ZaakRol
 import okhttp3.mockwebserver.MockResponse
+import java.util.UUID
 
 object TestHelper {
     fun mockResponseFromFile(fileName: String): MockResponse {
@@ -33,7 +36,7 @@ object TestHelper {
 
     val testDocument =
         Document(
-            url = "http=//example.com",
+            url = "http://localhost:8001/informatieobject/fc82c842-89a5-4465-8462-233d0656cf40",
             identificatie = "string",
             creatiedatum = "2019-08-24",
             titel = "Passport",
@@ -48,6 +51,22 @@ object TestHelper {
     val testZaakDocument =
         ZaakDocument(
             uuid = "6c4138a3-48c3-4308-a61e-9e89f6eef7a3",
-            informatieobject = "https://example.com",
+            informatieobject = "http://localhost:8001/informatieobject/fc82c842-89a5-4465-8462-233d0656cf40",
+            zaak = "http://localhost:8001/zaak/94b25964-b210-4cf8-93f1-cb0839d27ffd",
+        )
+
+    val testZaakRol =
+        ZaakRol(
+            uuid = UUID.fromString("ed39597f-e326-4dd3-bca1-f15a33b7fcb6"),
+            zaak = "http://localhost:8001/zaak/94b25964-b210-4cf8-93f1-cb0839d27ffd",
+        )
+
+    val testZaakRolPaged =
+        ResultPage(
+            count = 1,
+            results =
+                listOf(
+                    testZaakRol,
+                ),
         )
 }

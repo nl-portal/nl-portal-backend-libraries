@@ -39,7 +39,7 @@ class TaakV2(
         fun fromObjectsApi(objectsApiTask: ObjectsApiObject<TaakObjectV2>): TaakV2 {
             val taakObjectV2 = objectsApiTask.record.data
             return TaakV2(
-                id = taakObjectV2.verwerkerTaakId,
+                id = objectsApiTask.uuid,
                 titel = taakObjectV2.titel,
                 status = taakObjectV2.status,
                 soort = taakObjectV2.soort,
@@ -78,7 +78,7 @@ class TaakV2(
         fun migrateObjectsApiTask(objectsApiTask: ObjectsApiObject<TaakObject>): TaakV2 {
             val taakObject = objectsApiTask.record.data
             return TaakV2(
-                id = taakObject.verwerkerTaakId,
+                id = objectsApiTask.uuid,
                 titel = taakObject.title,
                 status = taakObject.status,
                 soort = TaakSoort.FORMTAAK,

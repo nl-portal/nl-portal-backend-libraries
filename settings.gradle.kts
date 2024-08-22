@@ -35,6 +35,7 @@ include(
     "core",
     "data",
     "form",
+    "gradle:cve-report",
     "gradle:license-report",
     "graphql",
     "haalcentraal:haalcentraal-all",

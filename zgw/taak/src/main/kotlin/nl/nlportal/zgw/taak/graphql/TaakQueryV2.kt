@@ -45,7 +45,7 @@ class TaakQueryV2(
     suspend fun getTaakByIdV2(
         id: UUID,
         dfe: DataFetchingEnvironment,
-    ): TaakV2 {
+    ): TaakV2? {
         return taskService.getTaakById(id, dfe.graphQlContext[AUTHENTICATION_KEY])
     }
 }
