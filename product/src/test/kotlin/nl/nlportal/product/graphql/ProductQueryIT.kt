@@ -287,7 +287,7 @@ internal class ProductQueryIT(
             .exchange()
             .verifyOnlyDataExists(basePath)
             .jsonPath("$basePath.size()").isEqualTo(2)
-            .jsonPath("$basePath[0].id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
+            .jsonPath("$basePath[0].id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
             .jsonPath("$basePath[0].titel").isEqualTo("Taak linked to Zaak")
     }
 

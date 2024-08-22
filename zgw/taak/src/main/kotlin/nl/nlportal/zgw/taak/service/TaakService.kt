@@ -145,7 +145,6 @@ open class TaakService(
                 authentication,
             )
         }
-        throw IllegalStateException("Access denied to this taak")
     }
 
     @Deprecated("Use version 2")
