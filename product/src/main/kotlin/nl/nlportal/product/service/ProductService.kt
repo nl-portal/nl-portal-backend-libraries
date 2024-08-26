@@ -74,11 +74,14 @@ class ProductService(
         pageNumber: Int,
         pageSize: Int,
     ): ProductPage {
-        val productType = getProductType(productTypeId, productName)
+        var productTypeUUID = productTypeId
+        if (productTypeUUID == null) {
+            productTypeUUID = getProductType(null, productName)?.id
+        }
         val objectSearchParametersProducten =
             mutableListOf(
                 ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.userId),
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE, Comparator.EQUAL_TO, productType?.id.toString()),
+                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE, Comparator.EQUAL_TO, productTypeUUID.toString()),
             )
 
         productSubType?.let {
