@@ -66,6 +66,23 @@ class ProductService(
         throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this product")
     }
 
+    suspend fun getProductenForProductType(
+        authentication: CommonGroundAuthentication,
+        productTypeId: UUID?,
+    ): ProductPage {
+        val objectSearchParametersProducten =
+            mutableListOf(
+                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.userId),
+                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE, Comparator.EQUAL_TO, productTypeId.toString()),
+            )
+        return getObjectsApiObjectResultPage<Product>(
+            productConfig.productInstantieTypeUrl,
+            objectSearchParametersProducten,
+            1,
+            2,
+        ).let { ProductPage.fromResultPage(1, 2, it) }
+    }
+
     suspend fun getProducten(
         authentication: CommonGroundAuthentication,
         productTypeId: UUID?,
@@ -290,13 +307,9 @@ class ProductService(
         // remove if no products could be found for this productType
         return productTypes.filterNot { productType ->
             try {
-                getProducten(
+                getProductenForProductType(
                     authentication,
                     productType.id,
-                    productType.naam,
-                    null,
-                    1,
-                    2,
                 ).content.isEmpty()
             } catch (ex: Exception) {
                 true

@@ -18,7 +18,8 @@
             "inaanvraag": "In aanvraag"
           },
           "zaaktypen": [
-            "7d9cd6c2-8147-46f2-9ae9-c67e8213c300"
+            "7d9cd6c2-8147-46f2-9ae9-c67e8213c300",
+            "7d9cd6c2-8147-46f2-9ae9-c67e8213c301"
           ],
           "eigenschappen": {
             "contractnummer": "123456"
