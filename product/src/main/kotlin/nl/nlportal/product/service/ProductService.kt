@@ -157,7 +157,7 @@ class ProductService(
                 .search()
                 .page(pageNumber)
                 .withAuthentication(authentication)
-                .ofZaakTypes(productType.zaaktypen.map { it.toString() })
+                .ofZaakTypes(productType.zaaktypen.map { it })
 
         isOpen?.let {
             request.isOpen(isOpen)
