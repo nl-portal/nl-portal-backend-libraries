@@ -34,6 +34,7 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Mono
+import java.util.UUID
 
 class ZakenApiClient(
     private val zakenApiConfig: ZakenApiConfig,
@@ -70,7 +71,7 @@ class ZakenApiClient(
         return "${zakenApiConfig.url}/zaken/api/v1/zaken/$zaakId"
     }
 
-    fun getZaakTypeUrl(zaakTypeId: Any): String {
+    fun getZaakTypeUrl(zaakTypeId: UUID): String {
         return "${catalogiApiConfig.url}/catalogi/api/v1/zaaktypen/$zaakTypeId"
     }
 
