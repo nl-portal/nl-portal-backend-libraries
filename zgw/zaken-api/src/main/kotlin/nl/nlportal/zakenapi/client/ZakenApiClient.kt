@@ -38,6 +38,7 @@ import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Mono
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
+import java.util.UUID
 
 class ZakenApiClient(
     private val zakenApiConfig: ZakenApiConfig,
@@ -82,7 +83,7 @@ class ZakenApiClient(
         return "${zakenApiConfig.url}/zaken/api/v1/zaken/$zaakId"
     }
 
-    fun getZaakTypeUrl(zaakTypeId: Any): String {
+    fun getZaakTypeUrl(zaakTypeId: UUID): String {
         return "${catalogiApiConfig.url}/catalogi/api/v1/zaaktypen/$zaakTypeId"
     }
 
