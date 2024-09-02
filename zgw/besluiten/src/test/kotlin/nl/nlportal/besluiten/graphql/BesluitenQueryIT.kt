@@ -121,6 +121,7 @@ class BesluitenQueryIT(
             .jsonPath("$basePath[0].uuid").isEqualTo("095be615-a8ad-4c33-8e9c-c7612fbf6c9f")
             .jsonPath("$basePath[0].bron").isEqualTo("ac")
             .jsonPath("$basePath[0].actie").isEqualTo("list")
+            .jsonPath("$basePath[0].aanmaakdatum").isEqualTo("2019-08-24T14:15:22")
     }
 
     @Test

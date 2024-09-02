@@ -35,9 +35,9 @@ class BesluitenService(
 
     suspend fun getBesluitAuditTrail(
         besluitId: UUID,
-        auditTrail: UUID,
+        auditTrailId: UUID,
     ): BesluitAuditTrail {
-        return besluitenApiClient.getBesluitAuditTrail(besluitId, auditTrail)
+        return besluitenApiClient.getBesluitAuditTrail(besluitId, auditTrailId)
     }
 
     suspend fun getBesluitDocumenten(

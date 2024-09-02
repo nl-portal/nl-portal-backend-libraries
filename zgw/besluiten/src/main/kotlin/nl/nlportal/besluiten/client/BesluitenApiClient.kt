@@ -97,11 +97,11 @@ class BesluitenApiClient(
 
     suspend fun getBesluitAuditTrail(
         besluitId: UUID,
-        auditTrail: UUID,
+        auditTrailId: UUID,
     ): BesluitAuditTrail {
         return webClient
             .get()
-            .uri("/besluiten/api/v1/besluiten/$besluitId/audittrail/$auditTrail")
+            .uri("/besluiten/api/v1/besluiten/$besluitId/audittrail/$auditTrailId")
             .retrieve()
             .handleStatus()
             .awaitBody<BesluitAuditTrail>()

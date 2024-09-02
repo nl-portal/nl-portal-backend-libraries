@@ -5,6 +5,7 @@ query {
         uuid,
         bron,
         actie,
+        aanmaakdatum,
         wijzigingen {
             oud,
             nieuw

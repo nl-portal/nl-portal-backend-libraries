@@ -44,9 +44,9 @@ class BesluitenQuery(
     @GraphQLDescription("Get all besluit audit trails by id")
     suspend fun getBesluitAuditTrail(
         besluitId: UUID,
-        auditTrail: UUID,
+        auditTrailId: UUID,
     ): BesluitAuditTrail {
-        return besluitenService.getBesluitAuditTrail(besluitId, auditTrail)
+        return besluitenService.getBesluitAuditTrail(besluitId, auditTrailId)
     }
 
     @GraphQLDescription("Get all besluit documents")

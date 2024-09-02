@@ -1,7 +1,7 @@
 package nl.nlportal.besluiten.domain
 
 import com.fasterxml.jackson.databind.node.ObjectNode
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
 
 data class BesluitAuditTrail(
@@ -19,7 +19,7 @@ data class BesluitAuditTrail(
     val resourceUrl: String,
     val toelichting: String?,
     val resourceWeergave: String,
-    val aanmaakdatum: LocalDate?,
+    val aanmaakdatum: LocalDateTime?,
     val wijzigingen: BesluitAuditTrailWijzigingen,
 )
 
