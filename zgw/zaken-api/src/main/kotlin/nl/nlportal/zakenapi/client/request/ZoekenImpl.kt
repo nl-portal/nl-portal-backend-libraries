@@ -58,6 +58,11 @@ class SearchZoekenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
         return this
     }
 
+    override fun ofIdentificatie(identificatie: String): SearchZaken {
+        bodyValue.add("identificatie", identificatie)
+        return this
+    }
+
     override fun page(page: Int): SearchZaken {
         bodyValue.add("page", page.toString())
         return this
