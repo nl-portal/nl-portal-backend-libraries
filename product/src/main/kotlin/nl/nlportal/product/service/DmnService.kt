@@ -69,14 +69,11 @@ class DmnService(
         }
 
         val source = Mapper.get().writeValueAsString(productObject.record.data)
-        val dmnRequest =
-            createDmnRequest(
-                key,
-                source,
-                beslisTabelVariables,
-            )
-
-        return dmnClient.getDecision(dmnRequest)
+        return getDecision(
+            key,
+            source,
+            beslisTabelVariables,
+        )
     }
 
     private fun createDmnRequest(
