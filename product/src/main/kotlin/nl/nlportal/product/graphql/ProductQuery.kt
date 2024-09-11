@@ -17,9 +17,13 @@ package nl.nlportal.product.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Query
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.node.ObjectNode
 import graphql.schema.DataFetchingEnvironment
+import nl.nlportal.core.util.Mapper
 import nl.nlportal.graphql.security.SecurityConstants
 import nl.nlportal.product.domain.DmnResponse
+import nl.nlportal.product.domain.DmnVariable
 import nl.nlportal.product.domain.Product
 import nl.nlportal.product.domain.ProductType
 import nl.nlportal.product.domain.ProductVerbruiksObject
@@ -140,11 +144,16 @@ class ProductQuery(
     @GraphQLDescription("Get Product Decision by key")
     suspend fun getProductDecision(
         key: String,
-        productId: UUID,
+        productId: UUID? = null,
+        productTypeId: UUID,
+        dmnVariables: ObjectNode? = null,
     ): List<DmnResponse> {
-        return dmnService.getProductDecision(
-            key,
-            productId,
-        )
+        val variables =
+            return dmnService.getProductDecision(
+                key,
+                productId,
+                productTypeId,
+                Mapper.get().convertValue(dmnVariables, object : TypeReference<Map<String, DmnVariable>>() {}),
+            )
     }
 }

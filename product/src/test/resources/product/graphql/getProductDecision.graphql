@@ -1,7 +1,9 @@
 query {
     getProductDecision(
         key: "watkanikregelen",
-        productId: "2d725c07-2f26-4705-8637-438a42b5ac2d"
+        productId: "2d725c07-2f26-4705-8637-438a42b5ac2d",
+        productTypeId: "7d9cd6c2-8147-46f2-9ae9-c67e8213c200",
+        dmnVariables: {testVariable: { value: "testje", type: "String"}}
     ) {
             result{
                 value,

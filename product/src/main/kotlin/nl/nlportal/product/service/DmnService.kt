@@ -41,12 +41,14 @@ class DmnService(
         key: String,
         source: String,
         beslisTabelVariables: List<BeslisTabelVariable>,
+        dmnVariables: Map<String, DmnVariable>? = null,
     ): List<DmnResponse> {
         val dmnRequestMapping =
             createDmnRequest(
                 key,
                 source,
                 beslisTabelVariables,
+                dmnVariables,
             )
 
         return dmnClient.getDecision(dmnRequestMapping)
@@ -54,36 +56,74 @@ class DmnService(
 
     suspend fun getProductDecision(
         key: String,
-        productId: UUID,
+        productId: UUID? = null,
+        productTypeId: UUID,
+        dmnVariables: Map<String, DmnVariable>? = null,
     ): List<DmnResponse> {
-        val productObject = getObjectsApiObjectById<Product>(productId.toString())
-        if (productObject == null) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find a product for $productId")
-        }
+        val productObject = getObjectsApiObjectById<Product>(productId.toString())?.record?.data
 
-        val productType = getObjectsApiObjectById<ProductType>(productObject.record.data.productTypeId)?.record?.data
+        val productType = getObjectsApiObjectById<ProductType>(productTypeId.toString())?.record?.data
 
         val beslisTabelVariables = productType?.beslistabellen?.get(key)
         if (beslisTabelVariables == null) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find a beslisTabelVariables for $key")
         }
 
-        val source = Mapper.get().writeValueAsString(productObject.record.data)
-        return getDecision(
-            key,
-            source,
-            beslisTabelVariables,
-        )
+        val sourceProduct = Mapper.get().writeValueAsString(productObject)
+        val dmnRequest =
+            createDmnRequest(
+                key,
+                sourceProduct,
+                beslisTabelVariables,
+                dmnVariables,
+            )
+
+        return dmnClient.getDecision(dmnRequest)
     }
 
     private fun createDmnRequest(
         key: String,
-        source: String,
+        sourceProduct: String? = "",
         beslisTabelVariables: List<BeslisTabelVariable>,
+        dmnVariables: Map<String, DmnVariable>? = null,
     ): DmnRequest {
         val variablesMapping = mutableMapOf<String, DmnVariable>()
+        // add dmnVariables
+        dmnVariables?.forEach {
+            variablesMapping.put(
+                it.key,
+                DmnVariable(
+                    it.value.value,
+                    it.value.type,
+                ),
+            )
+        }
+        // map beslistabel variables with product source
+        if (sourceProduct != null) {
+            variablesMapping.putAll(
+                mapBeslisTabelVariablesWithSource(
+                    beslisTabelVariables,
+                    sourceProduct,
+                ),
+            )
+        }
+
+        return DmnRequest(
+            key = key,
+            mapping =
+                DmnRequestMapping(
+                    variables = variablesMapping,
+                ),
+        )
+    }
+
+    private fun mapBeslisTabelVariablesWithSource(
+        beslisTabelVariables: List<BeslisTabelVariable>,
+        source: String,
+    ): Map<String, DmnVariable> {
+        val variablesMapping = mutableMapOf<String, DmnVariable>()
         beslisTabelVariables.forEach {
-            if (it.classType != DmnVariableType.JSON.value) {
+            if (it.classType != DmnVariableType.JSON) {
                 if (it.value != null) {
                     variablesMapping.put(
                         it.name,
@@ -113,21 +153,15 @@ class DmnService(
             }
         }
 
-        return DmnRequest(
-            key = key,
-            mapping =
-                DmnRequestMapping(
-                    variables = variablesMapping,
-                ),
-        )
+        return variablesMapping
     }
 
     private fun findVariableInJson(
         regex: String,
         source: String,
     ): Any {
-        val inputJsonPath = JsonPath.parse(source)
         try {
+            val inputJsonPath = JsonPath.parse(source)
             return inputJsonPath.read<Any>(regex)
         } catch (ex: Exception) {
             logger.warn("Problem with parsing variable: {}", ex.message)

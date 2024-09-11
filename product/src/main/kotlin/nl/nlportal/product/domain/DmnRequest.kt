@@ -28,7 +28,7 @@ data class DmnRequestMapping(
 
 data class DmnVariable(
     val value: Any,
-    val type: String,
+    val type: DmnVariableType,
 )
 
 enum class DmnVariableType(
@@ -38,4 +38,7 @@ enum class DmnVariableType(
     STRING("String"),
     INTEGER("Integer"),
     DOUBLE("Double"),
+    BOOLEAN("Boolean"),
+    DATE("Date"),
+    LONG("Long"),
 }
