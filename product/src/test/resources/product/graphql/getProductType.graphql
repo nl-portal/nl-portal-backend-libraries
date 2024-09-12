@@ -4,6 +4,7 @@ query {
             naam,
             omschrijving,
             zaaktypen,
-            prefillFormulieren
+            prefillFormulieren,
+            beslistabellen
         }
 }

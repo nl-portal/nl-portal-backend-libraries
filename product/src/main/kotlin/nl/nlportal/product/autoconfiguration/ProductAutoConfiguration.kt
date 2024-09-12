@@ -73,10 +73,12 @@ class ProductAutoConfiguration {
     fun dmnService(
         objectsApiClient: ObjectsApiClient,
         dmnClient: DmnClient,
+        productService: ProductService,
     ): DmnService {
         return DmnService(
             objectsApiClient,
             dmnClient,
+            productService,
         )
     }
 

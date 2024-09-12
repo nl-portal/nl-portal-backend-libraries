@@ -23,9 +23,6 @@ import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.product.client.PrefillConfig
 import nl.nlportal.product.domain.PrefillResponse
-import nl.nlportal.product.domain.Product
-import nl.nlportal.product.domain.ProductDetails
-import nl.nlportal.product.domain.ProductVerbruiksObject
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequest
 import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequestRecord
@@ -55,7 +52,7 @@ class PrefillService(
     This method is called from the ProductQuery, is part of the PDC
      */
     suspend fun prefill(
-        parameters: Map<String, UUID>,
+        sources: Map<String, UUID>,
         staticData: Map<String, Any>?,
         productTypeId: UUID? = null,
         productName: String,
@@ -75,29 +72,18 @@ class PrefillService(
             prefillData.put(it.key.replace("_", "."), it.value)
         }
 
-        parameters.forEach {
-            val jsonOfObject =
-                when (it.key) {
-                    PREFILL_KEY_PRODUCT ->
-                        getObjectsApiObjectById<Product>(it.value.toString())?.let {
-                            Mapper.get().writeValueAsString(it.record.data)
-                        }
-                    PREFILL_KEY_PRODUCT_DETAILS ->
-                        getObjectsApiObjectById<ProductDetails>(it.value.toString())?.let {
-                            Mapper.get().writeValueAsString(it.record.data)
-                        }
-                    PREFILL_KEY_PRODUCT_VERBUIKSOBJECT ->
-                        getObjectsApiObjectById<ProductVerbruiksObject>(it.value.toString())?.let {
-                            Mapper.get().writeValueAsString(it.record.data)
-                        }
-                    else -> null
-                }
+        sources.forEach {
+            val source = productService.getSourceAsJson(it.key, it.value)
 
-            if (jsonOfObject == null) {
+            if (source == null) {
                 logger.warn("Could not find objects for key {} with uuid {}", it.key, it.value)
+            } else {
+                if (prefillConfiguration.variabelen.containsKey(it.key)) {
+                    prefillData.putAll(mapPrefillVariables(prefillConfiguration.variabelen[it.key]!!, source))
+                } else {
+                    logger.warn("Could not find prefill configuration variables for key {}", it.key)
+                }
             }
-
-            prefillData.putAll(mapPrefillVariables(prefillConfiguration.variabelen[it.key]!!, jsonOfObject!!))
         }
 
         val json = JsonUnflattener.unflatten(prefillData)
@@ -150,10 +136,6 @@ class PrefillService(
     }
 
     companion object {
-        const val PREFILL_KEY_PRODUCT = "product"
-        const val PREFILL_KEY_PRODUCT_VERBUIKSOBJECT = "productverbruiksobject"
-        const val PREFILL_KEY_PRODUCT_DETAILS = "productdetails"
-
         val logger = KotlinLogging.logger {}
     }
 }

@@ -23,27 +23,31 @@
           },
           "omschrijving": "Dit is een voorbeeld van een product",
           "beslistabellen": {
-            "watkanikregelen":[
-              {
-                "name":"status",
-                "classType":"String",
-                "regex":"$.status"
-              },
-              {
-                "name":"identificatie",
-                "classType":"String",
-                "regex":"$.rollen.initiator.identificatie"
-              },
-              {
-                "name":"test",
-                "classType":"Integer",
-                "value":10
-              },
-              {
-                "name":"product",
-                "classType":"Json"
-              }
-            ]
+            "watkanikregelen": {
+              "product": [
+                {
+                  "name":"status",
+                  "classType":"String",
+                  "regex":"$.status"
+                },
+                {
+                  "name":"identificatie",
+                  "classType":"String",
+                  "regex":"$.rollen.initiator.identificatie"
+                },
+                {
+                  "name":"product",
+                  "classType":"Json"
+                }
+              ],
+              "producttype": [
+                {
+                  "name":"contractnummer",
+                  "classType":"String",
+                  "regex":"$.eigenschappen.contractnummer"
+                }
+              ]
+            }
           },
           "prefill": {
             "watkanikregelen":{

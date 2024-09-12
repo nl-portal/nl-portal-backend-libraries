@@ -19,5 +19,4 @@ data class BeslisTabelVariable(
     val name: String,
     val classType: DmnVariableType,
     val regex: String?,
-    val value: String?,
 )

@@ -18,6 +18,7 @@ package nl.nlportal.product.service
 import com.fasterxml.jackson.databind.node.ObjectNode
 import mu.KotlinLogging
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.core.util.Mapper
 import nl.nlportal.product.client.DmnClient
 import nl.nlportal.product.client.ProductConfig
 import nl.nlportal.product.domain.Product
@@ -367,6 +368,27 @@ class ProductService(
             }
         }
         return false
+    }
+
+    suspend fun getSourceAsJson(
+        key: String,
+        value: UUID,
+    ): String? {
+        return when (key) {
+            "product" ->
+                getObjectsApiObjectById<Product>(value.toString())?.let {
+                    Mapper.get().writeValueAsString(it.record.data)
+                }
+            "productverbruiksobject" ->
+                getObjectsApiObjectById<ProductDetails>(value.toString())?.let {
+                    Mapper.get().writeValueAsString(it.record.data)
+                }
+            "productdetails" ->
+                getObjectsApiObjectById<ProductVerbruiksObject>(value.toString())?.let {
+                    Mapper.get().writeValueAsString(it.record.data)
+                }
+            else -> null
+        }
     }
 
     companion object {

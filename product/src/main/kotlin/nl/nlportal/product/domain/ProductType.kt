@@ -35,11 +35,11 @@ data class ProductType(
     val eigenschappen: ObjectNode?,
     val parameters: ObjectNode?,
     @GraphQLIgnore
-    val beslistabellen: Map<String, List<BeslisTabelVariable>>?,
+    val beslistabellen: Map<String, Map<String, List<BeslisTabelVariable>>>?,
     @GraphQLIgnore
     val prefill: Map<String, Prefill>?,
 ) {
-    @GraphQLDescription("Get list of available beslistabellen")
+    @GraphQLDescription("Get list of available beslistabellen, with their object configurations")
     fun beslistabellen(): List<String>? {
         return beslistabellen?.map { it.key }
     }
