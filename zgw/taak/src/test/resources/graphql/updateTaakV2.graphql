@@ -6,7 +6,7 @@ mutation {
         soort,
         version,
         verloopdatum
-        formtaak {
+        portaalformulier {
             formulier{
                 soort,
                 value
