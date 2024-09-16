@@ -47,14 +47,16 @@ class ProductMutation(
 
     @GraphQLDescription("Prefill data to start a form")
     suspend fun prefill(
-        sources: ObjectNode,
+        sources: ObjectNode? = null,
         staticData: ObjectNode? = null,
         productTypeId: UUID? = null,
         productName: String,
         formulier: String,
     ): PrefillResponse {
+        var sourceMap: Map<String, UUID>? = null
+        sources?.let { sourceMap = Mapper.get().convertValue(it, object : TypeReference<Map<String, UUID>>() {}) }
         return prefillService.prefill(
-            sources = Mapper.get().convertValue(sources, object : TypeReference<Map<String, UUID>>() {}),
+            sources = sourceMap,
             staticData = staticData?.let { Mapper.get().convertValue(it, object : TypeReference<Map<String, Any>>() {}) },
             productTypeId = productTypeId,
             productName = productName,

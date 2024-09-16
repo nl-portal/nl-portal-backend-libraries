@@ -143,14 +143,16 @@ class ProductQuery(
 
     @GraphQLDescription("Get Product Decision by key")
     suspend fun getProductDecision(
-        sources: ObjectNode,
+        sources: ObjectNode? = null,
         key: String,
         productTypeId: UUID? = null,
         productName: String,
         dmnVariables: ObjectNode? = null,
     ): List<DmnResponse> {
+        var sourceMap: Map<String, UUID>? = null
+        sources?.let { sourceMap = Mapper.get().convertValue(it, object : TypeReference<Map<String, UUID>>() {}) }
         return dmnService.getProductDecision(
-            sources = Mapper.get().convertValue(sources, object : TypeReference<Map<String, UUID>>() {}),
+            sources = sourceMap,
             key = key,
             productTypeId = productTypeId,
             productName = productName,

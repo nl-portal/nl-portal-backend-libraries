@@ -52,7 +52,7 @@ class PrefillService(
     This method is called from the ProductQuery, is part of the PDC
      */
     suspend fun prefill(
-        sources: Map<String, UUID>,
+        sources: Map<String, UUID>?,
         staticData: Map<String, Any>?,
         productTypeId: UUID? = null,
         productName: String,
@@ -72,7 +72,7 @@ class PrefillService(
             prefillData.put(it.key.replace("_", "."), it.value)
         }
 
-        sources.forEach {
+        sources?.forEach {
             val source = productService.getSourceAsJson(it.key, it.value)
 
             if (source == null) {

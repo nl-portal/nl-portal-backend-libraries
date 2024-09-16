@@ -69,7 +69,7 @@ class DmnService(
     }
 
     suspend fun getProductDecision(
-        sources: Map<String, UUID>,
+        sources: Map<String, UUID>?,
         key: String,
         productTypeId: UUID? = null,
         productName: String,
@@ -94,7 +94,7 @@ class DmnService(
         }
 
         // loop through the sources and get the Object as Json and map with the variables
-        sources.forEach {
+        sources?.forEach {
             val source = productService.getSourceAsJson(it.key, it.value)
 
             if (source == null) {
