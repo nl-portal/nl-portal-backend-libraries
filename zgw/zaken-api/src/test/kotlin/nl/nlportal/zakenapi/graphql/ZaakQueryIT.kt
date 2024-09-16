@@ -232,6 +232,49 @@ internal class ZaakQueryIT(
     }
 
     @Test
+    @WithBurgerUser("123")
+    fun getZakenFilterOfIdentificatie() {
+        val query =
+            """
+            query {
+                getZaken(page: 1, identificatie: "ZAAK-2024-0000000001") {
+                number
+                size
+                totalPages
+                totalElements
+                numberOfElements
+                content {
+                        uuid,
+                        identificatie,
+                        omschrijving,
+                        startdatum
+                    }
+                }
+            }
+            """.trimIndent()
+
+        val basePath = "$.data.getZaken"
+        val resultPath = "$basePath.content[0]"
+
+        val response =
+            testClient.post()
+                .uri("/graphql")
+                .accept(APPLICATION_JSON)
+                .contentType(MediaType("application", "graphql"))
+                .bodyValue(query)
+                .exchange()
+                .expectBody()
+                .consumeWith(Consumer { t -> logger.info { t } })
+
+        response
+            .jsonPath(basePath).exists()
+            .jsonPath("$resultPath.uuid").isEqualTo("5d479908-fbb7-49c2-98c9-9afecf8de79a")
+            .jsonPath("$resultPath.identificatie").isEqualTo("ZAAK-2024-0000000001")
+            .jsonPath("$resultPath.omschrijving").isEqualTo("Voorbeeld afgesloten zaak 1")
+            .jsonPath("$resultPath.startdatum").isEqualTo("2021-09-16")
+    }
+
+    @Test
     @WithBurgerUser("")
     fun getZakenNotFound() {
         // Make the GraphQL request
@@ -452,9 +495,16 @@ internal class ZaakQueryIT(
                 @Throws(InterruptedException::class)
                 override fun dispatch(request: RecordedRequest): MockResponse {
                     val path = request.path?.substringBefore('?')
+                    val queryParams = request.path?.substringAfter('?')?.split('&') ?: emptyList()
                     val response =
                         when (path) {
-                            "/zaken/api/v1/zaken" -> handleZaakListRequest()
+                            "/zaken/api/v1/zaken" -> {
+                                if (queryParams.any { it.contains("ZAAK-2024-0000000001") }) {
+                                    handleZaakListRequestOfIdentificatie()
+                                } else {
+                                    handleZaakListRequest()
+                                }
+                            }
                             "/zaken/api/v1/statussen/0c019c8a-2274-4a7b-b381-2f35908500a6" -> handleStatusRequest()
                             "/zaken/api/v1/statussen" -> handleStatusListRequest()
                             "/catalogi/api/v1/zaaktypen/496f51fd-ccdb-406e-805a-e7602ae78a2b" -> handleZaakTypeRequest()
@@ -485,6 +535,63 @@ internal class ZaakQueryIT(
                         "url": "$url/zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a",
                         "uuid": "5d479908-fbb7-49c2-98c9-9afecf8de79a",
                         "identificatie": "ZAAK-2021-0000000003",
+                        "bronorganisatie": "051845623",
+                        "omschrijving": "Voorbeeld afgesloten zaak 1",
+                        "toelichting": "",
+                        "zaaktype": "http://localhost:8000/catalogi/api/v1/zaaktypen/496f51fd-ccdb-406e-805a-e7602ae78a2b",
+                        "registratiedatum": "2021-09-16",
+                        "verantwoordelijkeOrganisatie": "051845623",
+                        "startdatum": "2021-09-16",
+                        "einddatum": null,
+                        "einddatumGepland": null,
+                        "uiterlijkeEinddatumAfdoening": null,
+                        "publicatiedatum": null,
+                        "communicatiekanaal": "",
+                        "productenOfDiensten": [],
+                        "vertrouwelijkheidaanduiding": "zaakvertrouwelijk",
+                        "betalingsindicatie": "",
+                        "betalingsindicatieWeergave": "",
+                        "laatsteBetaaldatum": null,
+                        "zaakgeometrie": null,
+                        "verlenging": {
+                            "reden": "",
+                            "duur": null
+                        },
+                        "opschorting": {
+                            "indicatie": false,
+                            "reden": ""
+                        },
+                        "selectielijstklasse": "",
+                        "hoofdzaak": null,
+                        "deelzaken": [],
+                        "relevanteAndereZaken": [],
+                        "eigenschappen": [],
+                        "status": "http://localhost:8000/zaken/api/v1/statussen/0c019c8a-2274-4a7b-b381-2f35908500a6",
+                        "kenmerken": [],
+                        "archiefnominatie": null,
+                        "archiefstatus": "nog_te_archiveren",
+                        "archiefactiedatum": null,
+                        "resultaat": null
+                    }
+                ]
+            }
+            """.trimIndent()
+
+        return mockResponse(body)
+    }
+
+    fun handleZaakListRequestOfIdentificatie(): MockResponse {
+        val body =
+            """
+            {
+                "count": 1,
+                "next": null,
+                "previous": null,
+                "results": [
+                    {
+                        "url": "$url/zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a",
+                        "uuid": "5d479908-fbb7-49c2-98c9-9afecf8de79a",
+                        "identificatie": "ZAAK-2024-0000000001",
                         "bronorganisatie": "051845623",
                         "omschrijving": "Voorbeeld afgesloten zaak 1",
                         "toelichting": "",

@@ -15,6 +15,8 @@ interface SearchZaken : PagedRetrieve<SearchZaken, Zaak>, AuthenticationFilter<S
     fun ofZaakTypes(zaakType: List<UUID>): SearchZaken
 
     fun isOpen(open: Boolean): SearchZaken
+
+    fun ofIdentificatie(identificatie: String): SearchZaken
 }
 
 interface GetZaak : Retrieve<Zaak>

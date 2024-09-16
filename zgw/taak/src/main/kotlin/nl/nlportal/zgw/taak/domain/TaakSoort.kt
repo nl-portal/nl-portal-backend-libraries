@@ -6,6 +6,6 @@ enum class TaakSoort(
     @JsonValue val value: String,
 ) {
     URL("url"),
-    FORMTAAK("formtaak"),
+    PORTAALFORMULIER("portaalformulier"),
     OGONEBETALING("ogonebetaling"),
 }
