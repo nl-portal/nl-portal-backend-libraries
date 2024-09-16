@@ -8,7 +8,7 @@
         "data": {
             "titel": "Very important task",
             "status": "open",
-            "soort": "formtaak",
+            "soort": "portaalformulier",
             "verloopdatum": "2023-09-20T18:25:43.524Z",
             "eigenaar": "gzac",
             "identificatie": {
@@ -19,7 +19,7 @@
                 "registratie": "zaak",
                 "uuid": "5551a7c5-4e92-43e6-8d23-80359b7e22b7"
             },
-            "formtaak": {
+            "portaalformulier": {
                 "formulier": {
                     "soort": "url",
                     "value": "http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4"

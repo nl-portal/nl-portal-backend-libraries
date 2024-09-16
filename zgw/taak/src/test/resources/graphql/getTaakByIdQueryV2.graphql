@@ -5,7 +5,7 @@ query {
         status,
         soort,
         verloopdatum
-        formtaak {
+        portaalformulier {
             formulier{
                 soort,
                 value
