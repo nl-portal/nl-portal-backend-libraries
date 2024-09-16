@@ -177,23 +177,12 @@ class ProductService(
         pageNumber: Int,
         pageSize: Int,
     ): List<TaakV2> {
-        val objectSearchParameters =
-            listOf(
-                ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, authentication.userType),
-                ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, authentication.userId),
-                ObjectSearchParameter("status", Comparator.EQUAL_TO, "open"),
-            )
-
         val taken =
-            getObjectsApiObjectResultPage<TaakObjectV2>(
-                objectsApiTaskConfig.typeUrlV2,
-                objectSearchParameters,
+            findTakenByIdentification(
+                authentication,
                 pageNumber,
                 pageSize,
-            ).let { resultPage ->
-                TaakPageV2.fromResultPage(pageNumber, pageSize, resultPage)
-            }
-                .content
+            )
 
         // when no tasks are found, just return immediately
         if (taken.isEmpty()) {
@@ -318,6 +307,27 @@ class ProductService(
         }
     }
 
+    suspend fun getTaken(
+        authentication: CommonGroundAuthentication,
+        productId: UUID,
+        zaakIds: List<UUID>,
+    ): List<TaakV2> {
+        val taken =
+            findTakenByIdentification(
+                authentication,
+                1,
+                999,
+            )
+
+        // filter zaakIds and productId from list
+        return taken
+            .filterNot { task ->
+                !zaakIds.any { it == task.koppeling.uuid } &&
+                    (productId != task.koppeling.uuid)
+            }
+            .sortedBy { it.verloopdatum }
+    }
+
     suspend inline fun <reified T> getObjectsApiObjectById(id: String): ObjectsApiObject<T>? {
         return try {
             objectsApiClient.getObjectById<T>(id = id)
@@ -325,6 +335,29 @@ class ProductService(
             logger.warn { "Something went wrong with getObjectsApiObjectById by id $id with error: ${ex.message}" }
             null
         }
+    }
+
+    private suspend fun findTakenByIdentification(
+        authentication: CommonGroundAuthentication,
+        pageNumber: Int,
+        pageSize: Int,
+    ): List<TaakV2> {
+        val objectSearchParameters =
+            listOf(
+                ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, authentication.userType),
+                ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, authentication.userId),
+                ObjectSearchParameter("status", Comparator.EQUAL_TO, "open"),
+            )
+
+        return getObjectsApiObjectResultPage<TaakObjectV2>(
+            objectsApiTaskConfig.typeUrlV2,
+            objectSearchParameters,
+            pageNumber,
+            pageSize,
+        ).let { resultPage ->
+            TaakPageV2.fromResultPage(pageNumber, pageSize, resultPage)
+        }
+            .content
     }
 
     private suspend inline fun <reified T> getObjectsApiObject(

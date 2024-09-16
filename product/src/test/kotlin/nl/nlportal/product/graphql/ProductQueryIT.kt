@@ -161,7 +161,7 @@ internal class ProductQueryIT(
             .jsonPath("$basePath.naam").isEqualTo("erfpacht")
             .jsonPath("$basePath.zaken[0].uuid").isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c202")
             .jsonPath("$basePath.zaken[0].omschrijving").isEqualTo("Lopende zaak")
-            .jsonPath("$basePath.taken[0].titel").isEqualTo("Very important task")
+            .jsonPath("$basePath.taken[0].titel").isEqualTo("Taak linked to Zaak")
             .jsonPath("$basePath.productDetails.id").isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c500")
     }
 

@@ -18,10 +18,11 @@ package nl.nlportal.product.domain
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.node.ObjectNode
+import graphql.schema.DataFetchingEnvironment
+import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.product.service.ProductService
 import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
-import nl.nlportal.zgw.taak.domain.TaakObjectV2
 import nl.nlportal.zgw.taak.domain.TaakV2
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDateTime
@@ -76,12 +77,13 @@ class Product(
         @GraphQLIgnore
         @Autowired
         productService: ProductService,
+        dfe: DataFetchingEnvironment,
     ): List<TaakV2> {
-        return taken.mapNotNull {
-            productService.getObjectsApiObjectById<TaakObjectV2>(it.toString())
-        }.map {
-            TaakV2.fromObjectsApi(it)
-        }
+        return productService.getTaken(
+            dfe.graphQlContext[AUTHENTICATION_KEY],
+            id!!,
+            zaken,
+        )
     }
 
     suspend fun verbruiksobjecten(
