@@ -263,7 +263,7 @@ open class TaakService(
         val submissionAsMap = Mapper.get().convertValue(submission, object : TypeReference<Map<String, Any>>() {})
 
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
-        updateRequest.record.data.formtaak?.verzondenData = submissionAsMap
+        updateRequest.record.data.portaalformulier?.verzondenData = submissionAsMap
         updateRequest.record.data.status = TaakStatus.AFGEROND
         updateRequest.record.correctedBy = authentication.getUserRepresentation()
         updateRequest.record.correctionFor = objectsApiTask.record.index.toString()
