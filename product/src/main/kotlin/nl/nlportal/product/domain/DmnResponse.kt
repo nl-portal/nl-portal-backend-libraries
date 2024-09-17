@@ -16,11 +16,7 @@
 package nl.nlportal.product.domain
 
 data class DmnResponse(
-    val result: DmnResult,
-)
-
-data class DmnResult(
+    var name: String? = null,
     val value: String,
     val type: String,
-    val valueInfo: String?,
 )

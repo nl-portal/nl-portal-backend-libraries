@@ -318,7 +318,7 @@ internal class ProductQueryIT(
             .bodyValue(graphqlGetProductDecision)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath[0].result.value").isEqualTo("http://localhost:3000/")
+            .jsonPath("$basePath[0].value").isEqualTo("ok")
     }
 
     fun setupMockServer() {
