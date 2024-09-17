@@ -56,6 +56,35 @@ data class Partij(
     }
 }
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class CreatePartij(
+    val nummer: String? = null,
+    val interneNotitie: String? = null,
+    val digitaleAdressen: List<ForeignKey>,
+    val voorkeursDigitaalAdres: ForeignKey,
+    val rekeningnummers: List<Rekeningnummer>,
+    val voorkeursRekeningnummer: Rekeningnummer,
+    val soortPartij: SoortPartij,
+    val indicatieGeheimhouding: Boolean,
+    val voorkeurstaal: String? = null,
+    val indicatieActief: Boolean,
+    val bezoekadres: Adres? = null,
+    val correspondentieadres: Adres? = null,
+) {
+    init {
+        require(voorkeurstaal == null || voorkeurstaal in Locale.getAvailableLocales().map { it.isO3Language }) {
+            "Voorkeurstaal must be a valid Language in the ISO 639-2/B format"
+        }
+        require(interneNotitie == null || interneNotitie.length <= 1000) {
+            "Interne notitie can't be longer than 1000 characters."
+        }
+        require(nummer == null || nummer.length <= 10) {
+            "Nummer can't be longer than 10 characters."
+        }
+    }
+}
+
 data class PartijenFilterOptions(
     val page: Int = 1,
     val naam: String? = null,

@@ -27,6 +27,6 @@ class OpenKlant2Service(
     suspend fun getPartij(authentication: CommonGroundAuthentication): Partij? {
         if (!enabled) return null
 
-        return openKlant2Client.getPartij(authentication)
+        return openKlant2Client.findPartij(authentication)
     }
 }
