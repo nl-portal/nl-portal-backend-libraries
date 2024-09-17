@@ -64,23 +64,18 @@ class DmnService(
                 key,
                 variablesMapping,
             )
-
-        return dmnClient.getDecision(dmnRequest)
+        return handleDmnResponse(
+            dmnClient.getDecision(dmnRequest),
+        )
     }
 
     suspend fun getProductDecision(
         sources: Map<String, UUID>?,
         key: String,
         productTypeId: UUID? = null,
-        productName: String,
+        productName: String? = null,
         dmnVariables: Map<String, DmnVariable>? = null,
     ): List<DmnResponse> {
-        val productType = productService.getProductType(productTypeId, productName)
-        val beslisTabelVariables = productType?.beslistabellen?.get(key)
-        if (beslisTabelVariables == null) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find a beslisTabelVariables for $key")
-        }
-
         val variablesMapping = mutableMapOf<String, DmnVariable>()
         // add dmnVariables
         dmnVariables?.forEach {
@@ -92,44 +87,62 @@ class DmnService(
                 ),
             )
         }
+        // if no sources available we don't need the configuration from ProductType
+        if (sources != null) {
+            val productType = productService.getProductType(productTypeId, productName!!)
+            val beslisTabelVariables = productType?.beslistabellen?.get(key)
+            if (beslisTabelVariables == null) {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find a beslisTabelVariables for $key")
+            }
 
-        // loop through the sources and get the Object as Json and map with the variables
-        sources?.forEach {
-            val source = productService.getSourceAsJson(it.key, it.value)
+            // loop through the sources and get the Object as Json and map with the variables
+            sources.forEach {
+                val source = productService.getSourceAsJson(it.key, it.value)
 
-            if (source == null) {
-                logger.warn("Could not find objects for key {} with uuid {}", it.key, it.value)
-            } else {
-                if (beslisTabelVariables.containsKey(it.key)) {
-                    variablesMapping.putAll(
-                        mapBeslisTabelVariablesWithSource(
-                            beslisTabelVariables[it.key]!!,
-                            source,
-                        ),
-                    )
+                if (source == null) {
+                    logger.warn("Could not find objects for key {} with uuid {}", it.key, it.value)
                 } else {
-                    logger.warn("Could not find beslisTabel variables for key {}", it.key)
+                    if (beslisTabelVariables.containsKey(it.key)) {
+                        variablesMapping.putAll(
+                            mapBeslisTabelVariablesWithSource(
+                                beslisTabelVariables[it.key]!!,
+                                source,
+                            ),
+                        )
+                    } else {
+                        logger.warn("Could not find beslisTabel variables for key {}", it.key)
+                    }
                 }
             }
-        }
 
-        // check if the beslisTabelVariables contains a producttype configuration,
-        // if yes map the variables with the json of the productType
-        if (beslisTabelVariables.containsKey("producttype")) {
-            variablesMapping.putAll(
-                mapBeslisTabelVariablesWithSource(
-                    beslisTabelVariables["producttype"]!!,
-                    Mapper.get().writeValueAsString(productType),
-                ),
-            )
+            // check if the beslisTabelVariables contains a producttype configuration,
+            // if yes map the variables with the json of the productType
+            if (beslisTabelVariables.containsKey("producttype")) {
+                variablesMapping.putAll(
+                    mapBeslisTabelVariablesWithSource(
+                        beslisTabelVariables["producttype"]!!,
+                        Mapper.get().writeValueAsString(productType),
+                    ),
+                )
+            }
         }
         val dmnRequest =
             createDmnRequest(
                 key,
                 variablesMapping,
             )
+        return handleDmnResponse(dmnClient.getDecision(dmnRequest))
+    }
 
-        return dmnClient.getDecision(dmnRequest)
+    private fun handleDmnResponse(response: List<Map<String, DmnResponse>>): List<DmnResponse> {
+        val resulList = mutableListOf<DmnResponse>()
+        response.forEach {
+            it.entries.forEach {
+                it.value.name = it.key
+                resulList.add(it.value)
+            }
+        }
+        return resulList
     }
 
     private fun createDmnRequest(

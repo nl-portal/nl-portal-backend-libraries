@@ -78,7 +78,7 @@ class DmnClient(
                 .build()
     }
 
-    suspend fun getDecision(dmnRequest: DmnRequest): List<DmnResponse> {
+    suspend fun getDecision(dmnRequest: DmnRequest): List<Map<String, DmnResponse>> {
         return webClient
             .post()
             .uri("/decision-definition/key/${dmnRequest.key}/evaluate")
@@ -89,7 +89,7 @@ class DmnClient(
             )
             .retrieve()
             .handleStatus()
-            .awaitBody<List<DmnResponse>>()
+            .awaitBody<List<Map<String, DmnResponse>>>()
     }
 
     private fun getToken(): String? {

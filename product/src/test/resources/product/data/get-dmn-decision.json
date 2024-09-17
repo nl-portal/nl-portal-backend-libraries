@@ -1,16 +1,14 @@
 [
   {
     "result": {
-      "value": "http://localhost:3000/",
       "type": "String",
-      "valueInfo": null
-    }
-  },
-  {
-    "result": {
-      "value": "2000",
-      "type": "Integer",
-      "valueInfo": null
+      "value": "ok",
+      "valueInfo": {}
+    },
+    "reason": {
+      "type": "String",
+      "value": "you get anything you want",
+      "valueInfo": {}
     }
   }
 ]

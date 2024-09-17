@@ -141,12 +141,17 @@ class ProductQuery(
         )
     }
 
-    @GraphQLDescription("Get Product Decision by key")
+    @GraphQLDescription(
+        """
+        Get Product Decision by key. Don't use it till it is configured in ProductType
+        If source are provided, productTypeId or productName must be provided
+        """,
+    )
     suspend fun getProductDecision(
         sources: ObjectNode? = null,
         key: String,
         productTypeId: UUID? = null,
-        productName: String,
+        productName: String? = null,
         dmnVariables: ObjectNode? = null,
     ): List<DmnResponse> {
         var sourceMap: Map<String, UUID>? = null
