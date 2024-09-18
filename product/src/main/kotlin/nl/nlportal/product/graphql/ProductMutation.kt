@@ -55,8 +55,8 @@ class ProductMutation(
         sources: ObjectNode? = null,
         staticData: ObjectNode? = null,
         productTypeId: UUID? = null,
-        productName: String? = null,
-        formulier: String? = null,
+        productName: String,
+        formulier: String,
     ): PrefillResponse {
         var sourceMap: Map<String, UUID>? = null
         sources?.let { sourceMap = Mapper.get().convertValue(it, object : TypeReference<Map<String, UUID>>() {}) }

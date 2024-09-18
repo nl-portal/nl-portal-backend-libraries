@@ -55,48 +55,44 @@ class PrefillService(
         sources: Map<String, UUID>?,
         staticData: Map<String, Any>?,
         productTypeId: UUID? = null,
-        productName: String? = null,
-        formulier: String? = null,
+        productName: String,
+        formulier: String,
     ): PrefillResponse {
         val prefillData = mutableMapOf<String, Any>()
-        var formulierUrl: String? = null
         // add staticData if available
         staticData?.map {
             prefillData.put(it.key.replace("_", "."), it.value)
         }
 
-        if (sources != null) {
-            // get ProductType to get the prefill data
-            val productType = productService.getProductType(productTypeId, productName!!)
+        // get ProductType to get the prefill data
+        val productType = productService.getProductType(productTypeId, productName!!)
 
-            // find prefill configuration
-            val prefillConfiguration = productType?.prefill?.get(formulier)
+        // find prefill configuration
+        val prefillConfiguration = productType?.prefill?.get(formulier)
 
-            if (prefillConfiguration == null) {
-                throw ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Could not find a prefill configuration for $formulier",
-                )
-            }
-            formulierUrl = prefillConfiguration.formulierUrl
+        if (prefillConfiguration == null) {
+            throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Could not find a prefill configuration for $formulier",
+            )
+        }
 
-            sources.forEach {
-                val source = productService.getSourceAsJson(it.key, it.value)
+        sources?.forEach {
+            val source = productService.getSourceAsJson(it.key, it.value)
 
-                if (source == null) {
-                    logger.warn("Could not find objects for key {} with uuid {}", it.key, it.value)
+            if (source == null) {
+                logger.warn("Could not find objects for key {} with uuid {}", it.key, it.value)
+            } else {
+                if (prefillConfiguration.variabelen.containsKey(it.key)) {
+                    prefillData.putAll(mapPrefillVariables(prefillConfiguration.variabelen[it.key]!!, source))
                 } else {
-                    if (prefillConfiguration.variabelen.containsKey(it.key)) {
-                        prefillData.putAll(mapPrefillVariables(prefillConfiguration.variabelen[it.key]!!, source))
-                    } else {
-                        logger.warn("Could not find prefill configuration variables for key {}", it.key)
-                    }
+                    logger.warn("Could not find prefill configuration variables for key {}", it.key)
                 }
             }
         }
 
         val json = JsonUnflattener.unflatten(prefillData)
-        return hashAndCreatObject(json, formulierUrl)
+        return hashAndCreatObject(json, prefillConfiguration.formulierUrl)
     }
 
     private suspend fun hashAndCreatObject(
