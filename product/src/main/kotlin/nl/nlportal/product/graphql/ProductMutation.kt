@@ -48,7 +48,6 @@ class ProductMutation(
     @GraphQLDescription(
         """
         Prefill data to start a form.
-        If sources are provided, productTypeId or productName and formulier must be provided
         """,
     )
     suspend fun prefill(
