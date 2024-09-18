@@ -144,7 +144,7 @@ class ProductQuery(
     @GraphQLDescription(
         """
         Get Product Decision by key. Don't use it till it is configured in ProductType
-        If source are provided, productTypeId or productName must be provided
+        If sources are provided, productTypeId or productName must be provided
         """,
     )
     suspend fun getProductDecision(
