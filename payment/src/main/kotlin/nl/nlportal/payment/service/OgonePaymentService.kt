@@ -24,8 +24,6 @@ import nl.nlportal.payment.domain.OgonePayment
 import nl.nlportal.payment.domain.OgonePaymentRequest
 import nl.nlportal.payment.domain.PaymentField
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
-import nl.nlportal.zgw.objectenapi.domain.Comparator
-import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
@@ -111,17 +109,14 @@ class OgonePaymentService(
     }
 
     private suspend fun getObjectsApiTaak(taskId: UUID): ObjectsApiObject<TaakObjectV2> {
-        val objectSearchParameters =
-            listOf(
-                ObjectSearchParameter("verwerker_taak_id", Comparator.EQUAL_TO, taskId.toString()),
+        val objectsApiTask = objectsApiClient.getObjectById<TaakObjectV2>(taskId.toString())
+        if (objectsApiTask == null) {
+            throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                String.format("Taak kan niet gevonden worden", taskId),
             )
-
-        return objectsApiClient.getObjects<TaakObjectV2>(
-            objectSearchParameters = objectSearchParameters,
-            objectTypeUrl = objectsApiTaskConfig.typeUrlV2,
-            page = 1,
-            pageSize = 2,
-        ).results.single()
+        }
+        return objectsApiTask
     }
 
     private fun isValidOgoneRequest(
