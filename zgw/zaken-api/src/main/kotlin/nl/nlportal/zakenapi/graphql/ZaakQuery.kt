@@ -37,12 +37,14 @@ open class ZaakQuery(val zakenApiService: ZakenApiService) : Query {
         page: Int? = 1,
         zaakTypeUrl: String? = null,
         isOpen: Boolean? = null,
+        identificatie: String? = null,
     ): ZaakPage {
         return zakenApiService.getZaken(
             page = page!!,
             authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
             zaakTypeUrl = zaakTypeUrl,
             isOpen = isOpen,
+            identificatie = identificatie,
         )
     }
 
