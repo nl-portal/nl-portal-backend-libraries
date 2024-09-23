@@ -63,6 +63,32 @@ class PrefillService(
     }
 
     /*
+    This method is called from elsewhere,
+    load reource via resource Url
+    find formulier mapping with formulierId
+    find source mapping with sourceId
+     */
+    suspend fun prefill(
+        source: String,
+        resourceUrl: String,
+        formulierId: String,
+        sourceId: String,
+    ): PrefillResponse {
+        val prefill =
+            loadJsonPrefillResource(resourceUrl) ?: throw IllegalArgumentException("Resource not found: $resourceUrl")
+
+        val prefillConfiguration =
+            prefill[formulierId] ?: throw IllegalArgumentException("prefill configuration not found for formulier: $formulierId")
+
+        val prefillVariabelen =
+            prefillConfiguration.variabelen[sourceId] ?: throw IllegalArgumentException("Prefill variabelen not found for source: $sourceId")
+
+        val prefillData = mapPrefillVariables(prefillVariabelen, source)
+        val json = JsonUnflattener.unflatten(prefillData)
+        return hashAndCreatObject(json, prefillConfiguration.formulierUrl)
+    }
+
+    /*
     This method is called from the ProductQuery, is part of the PDC
      */
     suspend fun prefill(
@@ -109,7 +135,7 @@ class PrefillService(
         return hashAndCreatObject(json, prefillConfiguration.formulierUrl)
     }
 
-    fun loadJsonPrefillMapping(resourceUrl: String): Map<String, Prefill>? {
+    fun loadJsonPrefillResource(resourceUrl: String): Map<String, Prefill>? {
         val prefillJson = this::class.java.getResource(resourceUrl)!!.readText(Charsets.UTF_8)
         return Mapper.get().readValue(prefillJson, object : TypeReference<Map<String, Prefill>>() {})
     }
