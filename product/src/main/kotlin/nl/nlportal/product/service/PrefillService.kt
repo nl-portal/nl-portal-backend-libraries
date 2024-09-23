@@ -38,12 +38,25 @@ class PrefillService(
     val productService: ProductService,
 ) {
     /*
-    This method is called from elsewhere
+    This method is called from elsewhere, with source json to store in ObjectsAPI
      */
     suspend fun prefill(
         json: String,
         formulierUrl: String?,
     ): PrefillResponse {
+        return hashAndCreatObject(json, formulierUrl)
+    }
+
+    /*
+    This method is called from elsewhere, and map variabelen and store in ObjectsAPI
+     */
+    suspend fun prefill(
+        source: String,
+        formulierUrl: String?,
+        variables: Map<String, String>,
+    ): PrefillResponse {
+        val prefillData = mapPrefillVariables(variables, source)
+        val json = JsonUnflattener.unflatten(prefillData)
         return hashAndCreatObject(json, formulierUrl)
     }
 
@@ -94,7 +107,7 @@ class PrefillService(
         return hashAndCreatObject(json, prefillConfiguration.formulierUrl)
     }
 
-    suspend fun hashAndCreatObject(
+    private suspend fun hashAndCreatObject(
         json: String,
         formulierUrl: String?,
     ): PrefillResponse {
@@ -118,7 +131,7 @@ class PrefillService(
         )
     }
 
-    fun mapPrefillVariables(
+    private fun mapPrefillVariables(
         variables: Map<String, String>,
         source: String,
     ): Map<String, Any> {
