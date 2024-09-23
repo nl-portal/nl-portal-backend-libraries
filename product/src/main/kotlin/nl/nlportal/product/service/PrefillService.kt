@@ -15,6 +15,7 @@
  */
 package nl.nlportal.product.service
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.github.wnameless.json.unflattener.JsonUnflattener
 import com.jayway.jsonpath.JsonPath
@@ -22,6 +23,7 @@ import mu.KotlinLogging
 import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.product.client.PrefillConfig
+import nl.nlportal.product.domain.Prefill
 import nl.nlportal.product.domain.PrefillResponse
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequest
@@ -105,6 +107,11 @@ class PrefillService(
 
         val json = JsonUnflattener.unflatten(prefillData)
         return hashAndCreatObject(json, prefillConfiguration.formulierUrl)
+    }
+
+    fun loadJsonPrefillMapping(resourceUrl: String): Map<String, Prefill>? {
+        val prefillJson = this::class.java.getResource(resourceUrl)!!.readText(Charsets.UTF_8)
+        return Mapper.get().readValue(prefillJson, object : TypeReference<Map<String, Prefill>>() {})
     }
 
     private suspend fun hashAndCreatObject(
