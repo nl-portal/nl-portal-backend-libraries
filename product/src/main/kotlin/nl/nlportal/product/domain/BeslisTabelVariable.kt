@@ -20,3 +20,8 @@ data class BeslisTabelVariable(
     val classType: DmnVariableType,
     val regex: String?,
 )
+
+data class BeslisTabelConfiguration(
+    val key: String,
+    val variabelen: Map<String, List<BeslisTabelVariable>>,
+)

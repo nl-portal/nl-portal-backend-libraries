@@ -27,29 +27,32 @@
           "omschrijving": "Dit is een voorbeeld van een product",
           "beslistabellen": {
             "watkanikregelen": {
-              "product": [
-                {
-                  "name":"status",
-                  "classType":"String",
-                  "regex":"$.status"
-                },
-                {
-                  "name":"identificatie",
-                  "classType":"String",
-                  "regex":"$.rollen.initiator.identificatie"
-                },
-                {
-                  "name":"product",
-                  "classType":"Json"
-                }
-              ],
-              "producttype": [
-                {
-                  "name":"contractnummer",
-                  "classType":"String",
-                  "regex":"$.eigenschappen.contractnummer"
-                }
-              ]
+              "key": "watkanikregelenDmn",
+              "variabelen": {
+                "product": [
+                  {
+                    "name":"status",
+                    "classType":"String",
+                    "regex":"$.status"
+                  },
+                  {
+                    "name":"identificatie",
+                    "classType":"String",
+                    "regex":"$.rollen.initiator.identificatie"
+                  },
+                  {
+                    "name":"product",
+                    "classType":"Json"
+                  }
+                ],
+                "producttype": [
+                  {
+                    "name":"contractnummer",
+                    "classType":"String",
+                    "regex":"$.eigenschappen.contractnummer"
+                  }
+                ]
+              }
             }
           },
           "prefill": {
