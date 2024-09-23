@@ -79,7 +79,7 @@ class PrefillService(
         }
 
         // get ProductType to get the prefill data
-        val productType = productService.getProductType(productTypeId, productName!!)
+        val productType = productService.getProductType(productTypeId, productName)
 
         // find prefill configuration
         val prefillConfiguration = productType?.prefill?.get(formulier)
