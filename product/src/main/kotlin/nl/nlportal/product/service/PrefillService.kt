@@ -26,7 +26,6 @@ import nl.nlportal.product.domain.PrefillResponse
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequest
 import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequestRecord
-import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
@@ -95,7 +94,7 @@ class PrefillService(
         return hashAndCreatObject(json, prefillConfiguration.formulierUrl)
     }
 
-    private suspend fun hashAndCreatObject(
+    suspend fun hashAndCreatObject(
         json: String,
         formulierUrl: String?,
     ): PrefillResponse {
@@ -119,11 +118,7 @@ class PrefillService(
         )
     }
 
-    suspend inline fun <reified T> getObjectsApiObjectById(id: String): ObjectsApiObject<T>? {
-        return objectsApiClient.getObjectById<T>(id = id)
-    }
-
-    private fun mapPrefillVariables(
+    fun mapPrefillVariables(
         variables: Map<String, String>,
         source: String,
     ): Map<String, Any> {
