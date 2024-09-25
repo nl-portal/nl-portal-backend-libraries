@@ -23,6 +23,7 @@ import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.product.client.PrefillConfig
+import nl.nlportal.product.domain.PrefillConfiguration
 import nl.nlportal.product.domain.PrefillObject
 import nl.nlportal.product.domain.PrefillResponse
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
@@ -70,6 +71,44 @@ class PrefillService(
     }
 
     /*
+     This method is called from elsewhere,
+     - sources is map with sourceId and json collected from custom API
+     - get prefill configuration from productType
+     - map variables and store it in the Objects API
+     */
+    suspend fun prefill(
+        sources: Map<String, String>?,
+        formulier: String,
+        authentication: CommonGroundAuthentication,
+        productTypeId: UUID? = null,
+        productName: String,
+        staticData: Map<String, Any>?,
+    ): PrefillResponse {
+        val prefillData = mutableMapOf<String, Any>()
+        // add staticData if available
+        staticData?.map {
+            prefillData.put(it.key.replace("_", "."), it.value)
+        }
+
+        // find prefill configuration
+        val prefillConfiguration =
+            findPrefillConfiguration(
+                formulier,
+                productTypeId,
+                productName,
+            )
+        sources?.forEach {
+            if (prefillConfiguration.variabelen.containsKey(it.key)) {
+                prefillData.putAll(mapPrefillVariables(prefillConfiguration.variabelen[it.key]!!, it.value))
+            } else {
+                logger.warn("Could not find prefill configuration variables for source {}", it.key)
+            }
+        }
+        val json = JsonUnflattener.unflatten(prefillData)
+        return hashAndCreatObject(json, formulier, prefillConfiguration.formulierUrl, authentication.userId)
+    }
+
+    /*
     This method is called from the ProductQuery, is part of the PDC
      */
     suspend fun prefill(
@@ -86,19 +125,13 @@ class PrefillService(
             prefillData.put(it.key.replace("_", "."), it.value)
         }
 
-        // get ProductType to get the prefill data
-        val productType = productService.getProductType(productTypeId, productName)
-
         // find prefill configuration
-        val prefillConfiguration = productType?.prefill?.get(formulier)
-
-        if (prefillConfiguration == null) {
-            throw ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                "Could not find a prefill configuration for $formulier",
+        val prefillConfiguration =
+            findPrefillConfiguration(
+                formulier,
+                productTypeId,
+                productName,
             )
-        }
-
         sources?.forEach {
             val source = productService.getSourceAsJson(it.key, it.value)
 
@@ -119,6 +152,21 @@ class PrefillService(
             formulier,
             prefillConfiguration.formulierUrl,
             authentication.userId,
+        )
+    }
+
+    private suspend fun findPrefillConfiguration(
+        formulier: String,
+        productTypeId: UUID? = null,
+        productName: String,
+    ): PrefillConfiguration {
+        // get ProductType to get the prefill data
+        val productType = productService.getProductType(productTypeId, productName)
+
+        // find prefill configuration
+        return productType?.prefill?.get(formulier) ?: throw ResponseStatusException(
+            HttpStatus.BAD_REQUEST,
+            "Could not find a prefill configuration for $formulier",
         )
     }
 

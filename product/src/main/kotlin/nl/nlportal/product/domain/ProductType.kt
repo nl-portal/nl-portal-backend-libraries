@@ -37,7 +37,7 @@ data class ProductType(
     @GraphQLIgnore
     val beslistabellen: Map<String, BeslisTabelConfiguration>?,
     @GraphQLIgnore
-    val prefill: Map<String, Prefill>?,
+    val prefill: Map<String, PrefillConfiguration>?,
 ) {
     @GraphQLDescription("Get list of available beslistabellen, with their object configurations")
     fun beslistabellen(): List<String>? {

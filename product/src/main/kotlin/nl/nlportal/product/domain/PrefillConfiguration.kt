@@ -15,7 +15,7 @@
  */
 package nl.nlportal.product.domain
 
-data class Prefill(
+data class PrefillConfiguration(
     val formulierUrl: String,
     val variabelen: Map<String, Map<String, String>>,
 )
