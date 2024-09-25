@@ -6,7 +6,9 @@
     "index": 1,
     "typeVersion": 1,
     "data": {
-      "eigenschappen":{"test":"TEST","contractnummer":"123456"},"persoonsgegevens":{"naam":"erfpacht"},"verbruik":{"data":{"test":"test"},"soort":"test"}
+      "data": {
+        "eigenschappen":{"test":"TEST","contractnummer":"123456"},"persoonsgegevens":{"naam":"erfpacht"},"verbruik":{"data":{"test":"test"},"soort":"test"}
+      }
     },
     "geometry": null,
     "startAt": "2022-05-25",

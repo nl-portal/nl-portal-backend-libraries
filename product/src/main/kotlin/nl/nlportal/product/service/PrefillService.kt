@@ -24,6 +24,7 @@ import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.product.client.PrefillConfig
 import nl.nlportal.product.domain.Prefill
+import nl.nlportal.product.domain.PrefillObject
 import nl.nlportal.product.domain.PrefillResponse
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequest
@@ -152,13 +153,17 @@ class PrefillService(
         formulierUrl: String?,
     ): PrefillResponse {
         val hash = CoreUtils.createHash(json, prefillConfig.prefillShaVersion)
+        val prefill =
+            PrefillObject(
+                data = Mapper.get().readValue(json, ObjectNode::class.java),
+            )
         val createRequest =
             CreateObjectsApiObjectRequest(
                 UUID.randomUUID(),
                 prefillConfig.typeUrl,
                 CreateObjectsApiObjectRequestRecord(
                     typeVersion = 1,
-                    data = Mapper.get().readValue(json, ObjectNode::class.java),
+                    data = prefill,
                     startAt = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                 ),
             )
