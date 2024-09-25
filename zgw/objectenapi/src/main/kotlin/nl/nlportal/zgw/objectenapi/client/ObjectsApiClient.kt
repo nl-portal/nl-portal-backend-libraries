@@ -104,6 +104,13 @@ open class ObjectsApiClient(
             .awaitBody()
     }
 
+    fun deleteObjectById(id: UUID) {
+        webClient()
+            .delete()
+            .uri("/api/v2/objects/$id")
+            .accept(MediaType.APPLICATION_JSON)
+    }
+
     fun webClient(): WebClient {
         return webclientBuilder
             .baseUrl(objectsApiClientConfig.url.toString())
