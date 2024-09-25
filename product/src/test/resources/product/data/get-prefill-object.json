@@ -6,6 +6,8 @@
     "index": 1,
     "typeVersion": 1,
     "data": {
+      "identificatie":"12345678",
+      "formulier":"klacht",
       "data": {
         "eigenschappen":{"test":"TEST","contractnummer":"123456"},"persoonsgegevens":{"naam":"erfpacht"},"verbruik":{"data":{"test":"test"},"soort":"test"}
       }

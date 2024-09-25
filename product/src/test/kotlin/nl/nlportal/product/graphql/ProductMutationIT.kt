@@ -137,6 +137,10 @@ internal class ProductMutationIT(
                             "GET /api/v2/objects" -> {
                                 if (queryParams.any { it.contains("naam__exact__erfpacht") }) {
                                     TestHelper.mockResponseFromFile("/product/data/get-product-types.json")
+                                } else if (queryParams.any { it.contains("identificatie__exact__569312863") } &&
+                                    queryParams.any { it.contains("formulier__exact__watkanikregelen") }
+                                ) {
+                                    TestHelper.mockResponseFromFile("/product/data/get-prefill-objecten.json")
                                 } else {
                                     MockResponse().setResponseCode(404)
                                 }

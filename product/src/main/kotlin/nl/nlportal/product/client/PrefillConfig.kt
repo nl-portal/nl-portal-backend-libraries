@@ -22,4 +22,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 data class PrefillConfig(
     val typeUrl: String,
     val prefillShaVersion: String = ShaVersion.SHA1.version,
+    val removeObjects: Boolean = false,
 )

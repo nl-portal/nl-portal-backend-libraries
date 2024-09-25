@@ -15,21 +15,21 @@
  */
 package nl.nlportal.product.service
 
-import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.github.wnameless.json.unflattener.JsonUnflattener
 import com.jayway.jsonpath.JsonPath
 import mu.KotlinLogging
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.product.client.PrefillConfig
-import nl.nlportal.product.domain.Prefill
 import nl.nlportal.product.domain.PrefillObject
 import nl.nlportal.product.domain.PrefillResponse
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
+import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequest
 import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequestRecord
-import org.springframework.core.io.ResourceLoader
+import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
@@ -40,7 +40,6 @@ class PrefillService(
     val prefillConfig: PrefillConfig,
     val objectsApiClient: ObjectsApiClient,
     val productService: ProductService,
-    val resourceLoader: ResourceLoader,
 ) {
     /*
     This method is called from elsewhere, with source json to store in ObjectsAPI
@@ -48,47 +47,26 @@ class PrefillService(
     suspend fun prefill(
         json: String,
         formulierUrl: String?,
+        formulier: String,
+        identification: String,
     ): PrefillResponse {
-        return hashAndCreatObject(json, formulierUrl)
+        return hashAndCreatObject(json, formulier, formulierUrl, identification)
     }
 
     /*
-    This method is called from elsewhere, and map variabelen and store in ObjectsAPI
+     This method is called from elsewhere,
+     and map variabelen and store in ObjectsAPI
      */
     suspend fun prefill(
         source: String,
         formulierUrl: String?,
         variables: Map<String, String>,
+        formulier: String,
+        identification: String,
     ): PrefillResponse {
         val prefillData = mapPrefillVariables(variables, source)
         val json = JsonUnflattener.unflatten(prefillData)
-        return hashAndCreatObject(json, formulierUrl)
-    }
-
-    /*
-    This method is called from elsewhere,
-    load reource via resource Url
-    find formulier mapping with formulierId
-    find source mapping with sourceId
-     */
-    suspend fun prefill(
-        source: String,
-        resourceUrl: String,
-        formulierId: String,
-        sourceId: String,
-    ): PrefillResponse {
-        val prefill =
-            loadJsonPrefillResource(resourceUrl) ?: throw IllegalArgumentException("Resource not found: $resourceUrl")
-
-        val prefillConfiguration =
-            prefill[formulierId] ?: throw IllegalArgumentException("prefill configuration not found for formulier: $formulierId")
-
-        val prefillVariabelen =
-            prefillConfiguration.variabelen[sourceId] ?: throw IllegalArgumentException("Prefill variabelen not found for source: $sourceId")
-
-        val prefillData = mapPrefillVariables(prefillVariabelen, source)
-        val json = JsonUnflattener.unflatten(prefillData)
-        return hashAndCreatObject(json, prefillConfiguration.formulierUrl)
+        return hashAndCreatObject(json, formulier, formulierUrl, identification)
     }
 
     /*
@@ -100,6 +78,7 @@ class PrefillService(
         productTypeId: UUID? = null,
         productName: String,
         formulier: String,
+        authentication: CommonGroundAuthentication,
     ): PrefillResponse {
         val prefillData = mutableMapOf<String, Any>()
         // add staticData if available
@@ -135,26 +114,32 @@ class PrefillService(
         }
 
         val json = JsonUnflattener.unflatten(prefillData)
-        return hashAndCreatObject(json, prefillConfiguration.formulierUrl)
-    }
-
-    fun loadJsonPrefillResource(resourceUrl: String): Map<String, Prefill>? {
-        try {
-            val json = resourceLoader.getResource(resourceUrl).getContentAsString(Charsets.UTF_8)
-            return Mapper.get().readValue(json, object : TypeReference<Map<String, Prefill>>() {})
-        } catch (ex: Exception) {
-            logger.warn("Could not load prefill json from {}", resourceUrl)
-        }
-        return null
+        return hashAndCreatObject(
+            json,
+            formulier,
+            prefillConfiguration.formulierUrl,
+            authentication.userId,
+        )
     }
 
     private suspend fun hashAndCreatObject(
         json: String,
+        formulier: String,
         formulierUrl: String?,
+        identification: String,
     ): PrefillResponse {
+        // if in prefill config property removeObjects is TRUE, delete the objects
+        if (prefillConfig.removeObjects) {
+            removeObjects(
+                identification,
+                formulier,
+            )
+        }
         val hash = CoreUtils.createHash(json, prefillConfig.prefillShaVersion)
         val prefill =
             PrefillObject(
+                identificatie = identification,
+                formulier = formulier,
                 data = Mapper.get().readValue(json, ObjectNode::class.java),
             )
         val createRequest =
@@ -191,6 +176,38 @@ class PrefillService(
         }
 
         return mapped
+    }
+
+    private suspend fun removeObjects(
+        identification: String,
+        formulier: String,
+    ) {
+        val searchParameters =
+            mutableListOf(
+                ObjectSearchParameter(
+                    "identificatie",
+                    Comparator.EQUAL_TO,
+                    identification,
+                ),
+                ObjectSearchParameter(
+                    "formulier",
+                    Comparator.EQUAL_TO,
+                    formulier,
+                ),
+            )
+        val prefillObjects =
+            objectsApiClient.getObjects<PrefillObject>(
+                objectSearchParameters = searchParameters,
+                objectTypeUrl = prefillConfig.typeUrl,
+                page = 1,
+                pageSize = 99,
+                ordering = "-record__startAt",
+            ).results
+
+        // delete all objects found in the query
+        prefillObjects.forEach {
+            objectsApiClient.deleteObjectById(it.uuid)
+        }
     }
 
     companion object {

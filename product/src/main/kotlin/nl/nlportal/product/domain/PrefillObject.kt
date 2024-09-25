@@ -18,5 +18,7 @@ package nl.nlportal.product.domain
 import com.fasterxml.jackson.databind.node.ObjectNode
 
 data class PrefillObject(
+    val identificatie: String,
+    val formulier: String,
     val data: ObjectNode,
 )

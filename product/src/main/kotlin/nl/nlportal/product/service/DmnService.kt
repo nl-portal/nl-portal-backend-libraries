@@ -15,12 +15,10 @@
  */
 package nl.nlportal.product.service
 
-import com.fasterxml.jackson.core.type.TypeReference
 import com.jayway.jsonpath.JsonPath
 import mu.KotlinLogging
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.product.client.DmnClient
-import nl.nlportal.product.domain.BeslisTabelConfiguration
 import nl.nlportal.product.domain.BeslisTabelVariable
 import nl.nlportal.product.domain.DmnRequest
 import nl.nlportal.product.domain.DmnRequestMapping
@@ -29,7 +27,6 @@ import nl.nlportal.product.domain.DmnVariable
 import nl.nlportal.product.domain.DmnVariableType
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
-import org.springframework.core.io.ResourceLoader
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
@@ -38,7 +35,6 @@ class DmnService(
     val objectsApiClient: ObjectsApiClient,
     val dmnClient: DmnClient,
     val productService: ProductService,
-    val resourceLoader: ResourceLoader,
 ) {
     suspend fun getDecision(
         key: String,
@@ -66,55 +62,6 @@ class DmnService(
         val dmnRequest =
             createDmnRequest(
                 key,
-                variablesMapping,
-            )
-        return handleDmnResponse(
-            dmnClient.getDecision(dmnRequest),
-        )
-    }
-
-    /*
-    This method is called from elsewhere,
-    load reource via resource Url
-    find configuration with key
-    find source mapping with sourceId
-     */
-    suspend fun getDecision(
-        source: String,
-        resourceUrl: String,
-        key: String,
-        sourceId: String,
-        dmnVariables: Map<String, DmnVariable>? = null,
-    ): List<DmnResponse> {
-        val variablesMapping = mutableMapOf<String, DmnVariable>()
-        // add dmnVariables
-        dmnVariables?.forEach {
-            variablesMapping.put(
-                it.key,
-                DmnVariable(
-                    it.value.value,
-                    it.value.type,
-                ),
-            )
-        }
-        val dmnResource =
-            loadJsonBeslisTabelResource(resourceUrl) ?: throw IllegalArgumentException("Resource not found: $resourceUrl")
-
-        val beslisTabelVariableConfiguration =
-            dmnResource[key] ?: throw IllegalArgumentException("Dmn configuration not found for formulier: $key")
-
-        val beslisTabelVariables =
-            beslisTabelVariableConfiguration.variabelen[sourceId] ?: throw IllegalArgumentException("Dmn tabel variabelen not found for source: $sourceId")
-
-        variablesMapping.putAll(
-            mapBeslisTabelVariablesWithSource(
-                beslisTabelVariables,
-                source,
-            ),
-        )
-        val dmnRequest =
-            createDmnRequest(
-                beslisTabelVariableConfiguration.key,
                 variablesMapping,
             )
         return handleDmnResponse(
@@ -184,16 +131,6 @@ class DmnService(
                 variablesMapping,
             )
         return handleDmnResponse(dmnClient.getDecision(dmnRequest))
-    }
-
-    fun loadJsonBeslisTabelResource(resourceUrl: String): Map<String, BeslisTabelConfiguration>? {
-        try {
-            val json = resourceLoader.getResource(resourceUrl).getContentAsString(Charsets.UTF_8)
-            return Mapper.get().readValue(json, object : TypeReference<Map<String, BeslisTabelConfiguration>>() {})
-        } catch (ex: Exception) {
-            PrefillService.Companion.logger.warn("Could not load beslistabel json from {}", resourceUrl)
-        }
-        return null
     }
 
     private fun handleDmnResponse(response: List<Map<String, DmnResponse>>): List<DmnResponse> {

@@ -56,6 +56,7 @@ class ProductMutation(
         productTypeId: UUID? = null,
         productName: String,
         formulier: String,
+        dfe: DataFetchingEnvironment,
     ): PrefillResponse {
         var sourceMap: Map<String, UUID>? = null
         sources?.let { sourceMap = Mapper.get().convertValue(it, object : TypeReference<Map<String, UUID>>() {}) }
@@ -65,6 +66,7 @@ class ProductMutation(
             productTypeId = productTypeId,
             productName = productName,
             formulier = formulier,
+            dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
         )
     }
 }
