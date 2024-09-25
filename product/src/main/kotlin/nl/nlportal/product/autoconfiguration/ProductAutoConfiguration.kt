@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
+import org.springframework.core.io.ResourceLoader
 import org.springframework.web.reactive.function.client.WebClient
 
 @AutoConfiguration
@@ -74,11 +75,13 @@ class ProductAutoConfiguration {
         objectsApiClient: ObjectsApiClient,
         dmnClient: DmnClient,
         productService: ProductService,
+        resourceLoader: ResourceLoader,
     ): DmnService {
         return DmnService(
             objectsApiClient,
             dmnClient,
             productService,
+            resourceLoader,
         )
     }
 
@@ -87,11 +90,13 @@ class ProductAutoConfiguration {
         prefillConfig: PrefillConfig,
         objectsApiClient: ObjectsApiClient,
         productService: ProductService,
+        resourceLoader: ResourceLoader,
     ): PrefillService {
         return PrefillService(
             prefillConfig,
             objectsApiClient,
             productService,
+            resourceLoader,
         )
     }
 

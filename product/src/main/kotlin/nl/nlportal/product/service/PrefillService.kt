@@ -28,6 +28,7 @@ import nl.nlportal.product.domain.PrefillResponse
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequest
 import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequestRecord
+import org.springframework.core.io.ResourceLoader
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
@@ -38,6 +39,7 @@ class PrefillService(
     val prefillConfig: PrefillConfig,
     val objectsApiClient: ObjectsApiClient,
     val productService: ProductService,
+    val resourceLoader: ResourceLoader,
 ) {
     /*
     This method is called from elsewhere, with source json to store in ObjectsAPI
@@ -136,8 +138,13 @@ class PrefillService(
     }
 
     fun loadJsonPrefillResource(resourceUrl: String): Map<String, Prefill>? {
-        val prefillJson = this::class.java.getResource(resourceUrl)!!.readText(Charsets.UTF_8)
-        return Mapper.get().readValue(prefillJson, object : TypeReference<Map<String, Prefill>>() {})
+        try {
+            val json = resourceLoader.getResource(resourceUrl).getContentAsString(Charsets.UTF_8)
+            return Mapper.get().readValue(json, object : TypeReference<Map<String, Prefill>>() {})
+        } catch (ex: Exception) {
+            logger.warn("Could not load prefill json from {}", resourceUrl)
+        }
+        return null
     }
 
     private suspend fun hashAndCreatObject(

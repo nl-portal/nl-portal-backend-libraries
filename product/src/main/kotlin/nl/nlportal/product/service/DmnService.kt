@@ -29,6 +29,7 @@ import nl.nlportal.product.domain.DmnVariable
 import nl.nlportal.product.domain.DmnVariableType
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
+import org.springframework.core.io.ResourceLoader
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
@@ -37,6 +38,7 @@ class DmnService(
     val objectsApiClient: ObjectsApiClient,
     val dmnClient: DmnClient,
     val productService: ProductService,
+    val resourceLoader: ResourceLoader,
 ) {
     suspend fun getDecision(
         key: String,
@@ -185,8 +187,13 @@ class DmnService(
     }
 
     fun loadJsonBeslisTabelResource(resourceUrl: String): Map<String, BeslisTabelConfiguration>? {
-        val prefillJson = this::class.java.getResource(resourceUrl)!!.readText(Charsets.UTF_8)
-        return Mapper.get().readValue(prefillJson, object : TypeReference<Map<String, BeslisTabelConfiguration>>() {})
+        try {
+            val json = resourceLoader.getResource(resourceUrl).getContentAsString(Charsets.UTF_8)
+            return Mapper.get().readValue(json, object : TypeReference<Map<String, BeslisTabelConfiguration>>() {})
+        } catch (ex: Exception) {
+            PrefillService.Companion.logger.warn("Could not load beslistabel json from {}", resourceUrl)
+        }
+        return null
     }
 
     private fun handleDmnResponse(response: List<Map<String, DmnResponse>>): List<DmnResponse> {
