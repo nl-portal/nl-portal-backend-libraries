@@ -186,13 +186,10 @@ class DmnService(
         formulier: String,
         productType: ProductType?,
     ): BeslisTabelConfiguration {
-        val beslisTabelConfiguration =
-            productType?.beslistabellen?.get(formulier) ?: throw ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                "Could not find a beslisTabelVariable configuration for $formulier",
-            )
-
-        return beslisTabelConfiguration
+        return productType?.beslistabellen?.get(formulier) ?: throw ResponseStatusException(
+            HttpStatus.BAD_REQUEST,
+            "Could not find a beslisTabelVariable configuration for $formulier",
+        )
     }
 
     private fun handleDmnResponse(response: List<Map<String, DmnResponse>>): List<DmnResponse> {
