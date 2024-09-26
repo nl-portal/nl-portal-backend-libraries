@@ -61,7 +61,7 @@ internal class ProductQueryIT(
     @Autowired private val graphqlGetProductType: String,
     @Autowired private val graphqlGetProductTypes: String,
     @Autowired private val graphqlGetProductDecision: String,
-    @Autowired private val graphqlPrefill: String,
+    @Autowired private val graphqlProductPrefill: String,
 ) {
     companion object {
         @JvmStatic
@@ -324,14 +324,14 @@ internal class ProductQueryIT(
 
     @Test
     @WithBurgerUser("569312863")
-    fun prefillTestBurger() {
-        val basePath = "$.data.prefill"
+    fun productPrefillTestBurger() {
+        val basePath = "$.data.productPrefill"
 
         testClient.post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlPrefill)
+            .bodyValue(graphqlProductPrefill)
             .exchange()
             .verifyOnlyDataExists(basePath)
             .jsonPath("$basePath.objectId").isEqualTo("f9d7f166-bcea-4448-a984-4e717e558458")

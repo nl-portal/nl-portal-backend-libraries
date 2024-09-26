@@ -172,7 +172,7 @@ class ProductQuery(
         Prefill data to start a form.
         """,
     )
-    suspend fun prefill(
+    suspend fun productPrefill(
         sources: ObjectNode? = null,
         staticData: ObjectNode? = null,
         productTypeId: UUID? = null,
