@@ -182,7 +182,7 @@ class DmnService(
         return handleDmnResponse(dmnClient.getDecision(dmnRequest))
     }
 
-    private suspend fun findBeslisTabelConfiguration(
+    private fun findBeslisTabelConfiguration(
         formulier: String,
         productType: ProductType?,
     ): BeslisTabelConfiguration {
