@@ -19,12 +19,14 @@ import com.jayway.jsonpath.JsonPath
 import mu.KotlinLogging
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.product.client.DmnClient
+import nl.nlportal.product.domain.BeslisTabelConfiguration
 import nl.nlportal.product.domain.BeslisTabelVariable
 import nl.nlportal.product.domain.DmnRequest
 import nl.nlportal.product.domain.DmnRequestMapping
 import nl.nlportal.product.domain.DmnResponse
 import nl.nlportal.product.domain.DmnVariable
 import nl.nlportal.product.domain.DmnVariableType
+import nl.nlportal.product.domain.ProductType
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import org.springframework.http.HttpStatus
@@ -69,9 +71,9 @@ class DmnService(
         )
     }
 
-    suspend fun getProductDecision(
-        sources: Map<String, UUID>?,
-        key: String,
+    suspend fun getDecision(
+        sources: Map<String, String>?,
+        formulier: String,
         productTypeId: UUID? = null,
         productName: String,
         dmnVariables: Map<String, DmnVariable>? = null,
@@ -88,12 +90,59 @@ class DmnService(
             )
         }
         val productType = productService.getProductType(productTypeId, productName)
-        val beslisTabelVariableConfiguration = productType?.beslistabellen?.get(key)
-        if (beslisTabelVariableConfiguration == null) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find a beslisTabelVariable configuration for $key")
+        val beslisTabelConfiguration =
+            findBeslisTabelConfiguration(
+                formulier,
+                productType,
+            )
+
+        sources?.forEach {
+            if (beslisTabelConfiguration.variabelen.containsKey(it.key)) {
+                variablesMapping.putAll(
+                    mapBeslisTabelVariablesWithSource(
+                        beslisTabelConfiguration.variabelen[it.key]!!,
+                        it.value,
+                    ),
+                )
+            } else {
+                logger.warn("Could not find beslisTabel variables for key {}", it.key)
+            }
         }
 
-        val beslisTabelVariables = beslisTabelVariableConfiguration.variabelen
+        val dmnRequest =
+            createDmnRequest(
+                beslisTabelConfiguration.key,
+                variablesMapping,
+            )
+        return handleDmnResponse(dmnClient.getDecision(dmnRequest))
+    }
+
+    suspend fun getProductDecision(
+        sources: Map<String, UUID>?,
+        formulier: String,
+        productTypeId: UUID? = null,
+        productName: String,
+        dmnVariables: Map<String, DmnVariable>? = null,
+    ): List<DmnResponse> {
+        val variablesMapping = mutableMapOf<String, DmnVariable>()
+        // add dmnVariables
+        dmnVariables?.forEach {
+            variablesMapping.put(
+                it.key,
+                DmnVariable(
+                    it.value.value,
+                    it.value.type,
+                ),
+            )
+        }
+        val productType = productService.getProductType(productTypeId, productName)
+        val beslisTabelConfiguration =
+            findBeslisTabelConfiguration(
+                formulier,
+                productType,
+            )
+
+        val beslisTabelVariables = beslisTabelConfiguration.variabelen
 
         // loop through the sources and get the Object as Json and map with the variables
         sources?.forEach {
@@ -127,10 +176,23 @@ class DmnService(
         }
         val dmnRequest =
             createDmnRequest(
-                beslisTabelVariableConfiguration.key,
+                beslisTabelConfiguration.key,
                 variablesMapping,
             )
         return handleDmnResponse(dmnClient.getDecision(dmnRequest))
+    }
+
+    private suspend fun findBeslisTabelConfiguration(
+        formulier: String,
+        productType: ProductType?,
+    ): BeslisTabelConfiguration {
+        val beslisTabelConfiguration =
+            productType?.beslistabellen?.get(formulier) ?: throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Could not find a beslisTabelVariable configuration for $formulier",
+            )
+
+        return beslisTabelConfiguration
     }
 
     private fun handleDmnResponse(response: List<Map<String, DmnResponse>>): List<DmnResponse> {

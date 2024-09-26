@@ -148,7 +148,7 @@ class ProductQuery(
     )
     suspend fun getProductDecision(
         sources: ObjectNode? = null,
-        key: String,
+        formulier: String,
         productTypeId: UUID? = null,
         productName: String,
         dmnVariables: ObjectNode? = null,
@@ -157,7 +157,7 @@ class ProductQuery(
         sources?.let { sourceMap = Mapper.get().convertValue(it, object : TypeReference<Map<String, UUID>>() {}) }
         return dmnService.getProductDecision(
             sources = sourceMap,
-            key = key,
+            formulier = formulier,
             productTypeId = productTypeId,
             productName = productName,
             dmnVariables = Mapper.get().convertValue(dmnVariables, object : TypeReference<Map<String, DmnVariable>>() {}),
