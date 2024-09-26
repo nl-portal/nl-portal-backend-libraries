@@ -47,7 +47,7 @@ class PrefillService(
      */
     suspend fun prefill(
         json: String,
-        formulierUrl: String?,
+        formulierUrl: String? = null,
         formulier: String,
         identification: String,
     ): PrefillResponse {
@@ -60,7 +60,7 @@ class PrefillService(
      */
     suspend fun prefill(
         source: String,
-        formulierUrl: String?,
+        formulierUrl: String? = null,
         variables: Map<String, String>,
         formulier: String,
         identification: String,
@@ -77,12 +77,12 @@ class PrefillService(
      - map variables and store it in the Objects API
      */
     suspend fun prefill(
-        sources: Map<String, String>?,
+        sources: Map<String, String>? = null,
         formulier: String,
         authentication: CommonGroundAuthentication,
         productTypeId: UUID? = null,
         productName: String,
-        staticData: Map<String, Any>?,
+        staticData: Map<String, Any>? = null,
     ): PrefillResponse {
         val prefillData = mutableMapOf<String, Any>()
         // add staticData if available
@@ -112,8 +112,8 @@ class PrefillService(
     This method is called from the ProductQuery, is part of the PDC
      */
     suspend fun prefill(
-        sources: Map<String, UUID>?,
-        staticData: Map<String, Any>?,
+        sources: Map<String, UUID>? = null,
+        staticData: Map<String, Any>? = null,
         productTypeId: UUID? = null,
         productName: String,
         formulier: String,

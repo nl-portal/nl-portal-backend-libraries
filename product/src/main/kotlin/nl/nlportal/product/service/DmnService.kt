@@ -72,7 +72,7 @@ class DmnService(
     }
 
     suspend fun getDecision(
-        sources: Map<String, String>?,
+        sources: Map<String, String>? = null,
         formulier: String,
         productTypeId: UUID? = null,
         productName: String,
@@ -118,7 +118,7 @@ class DmnService(
     }
 
     suspend fun getProductDecision(
-        sources: Map<String, UUID>?,
+        sources: Map<String, UUID>? = null,
         formulier: String,
         productTypeId: UUID? = null,
         productName: String,

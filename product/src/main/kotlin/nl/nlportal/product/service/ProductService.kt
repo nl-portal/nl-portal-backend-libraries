@@ -268,14 +268,12 @@ class ProductService(
                 listOf(
                     ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_NAME, Comparator.EQUAL_TO, productName),
                 )
-            val result =
-                getObjectsApiObject<ProductType>(
-                    productConfig.productTypeUrl,
-                    objectSearchParameters,
-                ).apply {
-                    this.record.data.id = this.uuid
-                }.record.data
-            return result
+            return getObjectsApiObject<ProductType>(
+                productConfig.productTypeUrl,
+                objectSearchParameters,
+            ).apply {
+                this.record.data.id = this.uuid
+            }.record.data
         } catch (ex: Exception) {
             logger.error { "Something went wrong with get ProductType by name $productName or id $productTypeId with error: ${ex.message}" }
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "ProductType could not be found")
