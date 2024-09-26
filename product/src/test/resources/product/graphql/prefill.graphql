@@ -1,4 +1,4 @@
-mutation {
+query {
     prefill(
         sources: {
             product:"2d725c07-2f26-4705-8637-438a42b5ac2d",

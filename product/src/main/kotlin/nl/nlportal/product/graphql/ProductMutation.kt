@@ -17,20 +17,15 @@ package nl.nlportal.product.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Mutation
-import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.node.ObjectNode
 import graphql.schema.DataFetchingEnvironment
-import nl.nlportal.core.util.Mapper
+import nl.nlportal.graphql.security.SecurityConstants
 import nl.nlportal.product.domain.ProductVerbruiksObject
 import nl.nlportal.product.service.ProductService
-import nl.nlportal.graphql.security.SecurityConstants
-import nl.nlportal.product.domain.PrefillResponse
-import nl.nlportal.product.service.PrefillService
 import java.util.UUID
 
 class ProductMutation(
     private val productService: ProductService,
-    private val prefillService: PrefillService,
 ) : Mutation {
     @GraphQLDescription("Update product verbruiks object")
     suspend fun updateProductVerbruiksObject(
@@ -41,31 +36,6 @@ class ProductMutation(
         return productService.updateVerbruiksObject(
             id,
             submission,
-            dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
-        )
-    }
-
-    @GraphQLDescription(
-        """
-        Prefill data to start a form.
-        """,
-    )
-    suspend fun prefill(
-        sources: ObjectNode? = null,
-        staticData: ObjectNode? = null,
-        productTypeId: UUID? = null,
-        productName: String,
-        formulier: String,
-        dfe: DataFetchingEnvironment,
-    ): PrefillResponse {
-        var sourceMap: Map<String, UUID>? = null
-        sources?.let { sourceMap = Mapper.get().convertValue(it, object : TypeReference<Map<String, UUID>>() {}) }
-        return prefillService.prefill(
-            sources = sourceMap,
-            staticData = staticData?.let { Mapper.get().convertValue(it, object : TypeReference<Map<String, Any>>() {}) },
-            productTypeId = productTypeId,
-            productName = productName,
-            formulier = formulier,
             dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
         )
     }

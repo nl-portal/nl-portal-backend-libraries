@@ -61,6 +61,7 @@ internal class ProductQueryIT(
     @Autowired private val graphqlGetProductType: String,
     @Autowired private val graphqlGetProductTypes: String,
     @Autowired private val graphqlGetProductDecision: String,
+    @Autowired private val graphqlPrefill: String,
 ) {
     companion object {
         @JvmStatic
@@ -321,6 +322,22 @@ internal class ProductQueryIT(
             .jsonPath("$basePath[0].value").isEqualTo("ok")
     }
 
+    @Test
+    @WithBurgerUser("569312863")
+    fun prefillTestBurger() {
+        val basePath = "$.data.prefill"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(graphqlPrefill)
+            .exchange()
+            .verifyOnlyDataExists(basePath)
+            .jsonPath("$basePath.objectId").isEqualTo("f9d7f166-bcea-4448-a984-4e717e558458")
+            .jsonPath("$basePath.formulierUrl").isEqualTo("http://localhost:8080/formuliernaam")
+    }
+
     fun setupMockServer() {
         val dispatcher: Dispatcher =
             object : Dispatcher() {
@@ -380,12 +397,19 @@ internal class ProductQueryIT(
                                     }
                                 ) {
                                     TestHelper.mockResponseFromFile("/product/data/get-product-details.json")
+                                } else if (queryParams.any { it.contains("identificatie__exact__569312863") } &&
+                                    queryParams.any { it.contains("formulier__exact__watkanikregelen") }
+                                ) {
+                                    TestHelper.mockResponseFromFile("/product/data/get-prefill-objecten.json")
                                 } else {
                                     MockResponse().setResponseCode(404)
                                 }
                             }
                             "POST /zaken/api/v1/zaken/_zoek" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-zaken.json")
+                            }
+                            "POST /api/v2/objects" -> {
+                                TestHelper.mockResponseFromFile("/product/data/get-prefill-object.json")
                             }
                             "GET /api/v2/objects/2d725c07-2f26-4705-8637-438a42b5a800" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-product-verbruiks-object.json")

@@ -99,15 +99,13 @@ class ProductAutoConfiguration {
     fun productQuery(
         productService: ProductService,
         dmnService: DmnService,
+        prefillService: PrefillService,
     ): ProductQuery {
-        return ProductQuery(productService, dmnService)
+        return ProductQuery(productService, dmnService, prefillService)
     }
 
     @Bean
-    fun productMutation(
-        productService: ProductService,
-        prefillService: PrefillService,
-    ): ProductMutation {
-        return ProductMutation(productService, prefillService)
+    fun productMutation(productService: ProductService): ProductMutation {
+        return ProductMutation(productService)
     }
 }

@@ -45,7 +45,6 @@ internal class ProductMutationIT(
     @Autowired private val taakObjectConfig: TaakObjectConfig,
     @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
     @Autowired private val graphqlUpdateProductVerbruiksObject: String,
-    @Autowired private val graphqlPrefill: String,
 ) {
     lateinit var server: MockWebServer
     lateinit var url: String
@@ -109,22 +108,6 @@ internal class ProductMutationIT(
             .jsonPath("$basePath.id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5a800")
     }
 
-    @Test
-    @WithBurgerUser("569312863")
-    fun prefillTestBurger() {
-        val basePath = "$.data.prefill"
-
-        testClient.post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlPrefill)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.objectId").isEqualTo("f9d7f166-bcea-4448-a984-4e717e558458")
-            .jsonPath("$basePath.formulierUrl").isEqualTo("http://localhost:8080/formuliernaam")
-    }
-
     fun setupMockOpenZaakServer() {
         val dispatcher: Dispatcher =
             object : Dispatcher() {
@@ -137,16 +120,9 @@ internal class ProductMutationIT(
                             "GET /api/v2/objects" -> {
                                 if (queryParams.any { it.contains("naam__exact__erfpacht") }) {
                                     TestHelper.mockResponseFromFile("/product/data/get-product-types.json")
-                                } else if (queryParams.any { it.contains("identificatie__exact__569312863") } &&
-                                    queryParams.any { it.contains("formulier__exact__watkanikregelen") }
-                                ) {
-                                    TestHelper.mockResponseFromFile("/product/data/get-prefill-objecten.json")
                                 } else {
                                     MockResponse().setResponseCode(404)
                                 }
-                            }
-                            "POST /api/v2/objects" -> {
-                                TestHelper.mockResponseFromFile("/product/data/get-prefill-object.json")
                             }
                             "GET /api/v2/objects/2d725c07-2f26-4705-8637-438a42b5a800" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-product-verbruiks-object.json")

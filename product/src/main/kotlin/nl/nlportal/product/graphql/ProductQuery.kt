@@ -24,10 +24,12 @@ import nl.nlportal.core.util.Mapper
 import nl.nlportal.graphql.security.SecurityConstants
 import nl.nlportal.product.domain.DmnResponse
 import nl.nlportal.product.domain.DmnVariable
+import nl.nlportal.product.domain.PrefillResponse
 import nl.nlportal.product.domain.Product
 import nl.nlportal.product.domain.ProductType
 import nl.nlportal.product.domain.ProductVerbruiksObject
 import nl.nlportal.product.service.DmnService
+import nl.nlportal.product.service.PrefillService
 import nl.nlportal.product.service.ProductService
 import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zgw.taak.domain.TaakV2
@@ -36,6 +38,7 @@ import java.util.*
 class ProductQuery(
     private val productService: ProductService,
     private val dmnService: DmnService,
+    private val prefillService: PrefillService,
 ) : Query {
     @GraphQLDescription(
         """
@@ -161,6 +164,31 @@ class ProductQuery(
             productTypeId = productTypeId,
             productName = productName,
             dmnVariables = Mapper.get().convertValue(dmnVariables, object : TypeReference<Map<String, DmnVariable>>() {}),
+        )
+    }
+
+    @GraphQLDescription(
+        """
+        Prefill data to start a form.
+        """,
+    )
+    suspend fun prefill(
+        sources: ObjectNode? = null,
+        staticData: ObjectNode? = null,
+        productTypeId: UUID? = null,
+        productName: String,
+        formulier: String,
+        dfe: DataFetchingEnvironment,
+    ): PrefillResponse {
+        var sourceMap: Map<String, UUID>? = null
+        sources?.let { sourceMap = Mapper.get().convertValue(it, object : TypeReference<Map<String, UUID>>() {}) }
+        return prefillService.prefill(
+            sources = sourceMap,
+            staticData = staticData?.let { Mapper.get().convertValue(it, object : TypeReference<Map<String, Any>>() {}) },
+            productTypeId = productTypeId,
+            productName = productName,
+            formulier = formulier,
+            dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
         )
     }
 }
