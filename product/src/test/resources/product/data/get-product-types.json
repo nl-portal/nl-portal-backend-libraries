@@ -49,7 +49,7 @@
                   {
                     "name":"contractnummer",
                     "classType":"String",
-                    "regex":"$.eigenschappen.contractnummer"
+                    "regex":"$.parameters.contractnummer"
                   }
                 ]
               }
@@ -61,7 +61,7 @@
               "variabelen":{
                 "product":{
                   "persoonsgegevens.naam":"$.naam",
-                  "eigenschappen.contractnummer":"$.eigenschappen.contractnummer"
+                  "parameters.contractnummer":"$.parameters.contractnummer"
                 },
                 "productverbruiksobject":{
                   "verbruik.data":"$.data",
