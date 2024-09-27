@@ -49,20 +49,17 @@ open class TaakService(
         pageSize: Int,
         authentication: CommonGroundAuthentication,
         zaakUUID: UUID? = null,
+        status: TaakStatus? = null,
+        title: String? = null,
     ): TaakPageV2 {
-        val result =
-            getTakenV1(
-                pageNumber,
-                pageSize,
-                authentication,
-                zaakUUID,
-            )
         val migratedList =
             getTakenV1(
                 pageNumber,
                 pageSize,
                 authentication,
                 zaakUUID,
+                status,
+                title,
             ).let {
                 it.content.map {
                     TaakV2.migrate(it)
@@ -75,6 +72,8 @@ open class TaakService(
                 pageSize,
                 authentication,
                 zaakUUID,
+                status,
+                title,
             ).content + migratedList
 
         return TaakPageV2(
@@ -91,6 +90,8 @@ open class TaakService(
         pageSize: Int,
         authentication: CommonGroundAuthentication,
         zaakUUID: UUID? = null,
+        status: TaakStatus? = null,
+        title: String? = null,
     ): TaakPage {
         try {
             return getTakenResultPage<TaakObject>(
@@ -99,6 +100,8 @@ open class TaakService(
                 authentication,
                 zaakUUID,
                 objectsApiTaskConfig.typeUrl,
+                status,
+                title,
             ).let { TaakPage.fromResultPage(pageNumber, pageSize, it) }
         } catch (ex: Exception) {
             return return TaakPage(
@@ -115,6 +118,8 @@ open class TaakService(
         pageSize: Int,
         authentication: CommonGroundAuthentication,
         zaakUUID: UUID? = null,
+        status: TaakStatus? = null,
+        title: String? = null,
     ): TaakPageV2 {
         try {
             return getTakenResultPageV2<TaakObjectV2>(
@@ -123,6 +128,8 @@ open class TaakService(
                 authentication,
                 zaakUUID,
                 objectsApiTaskConfig.typeUrlV2,
+                status,
+                title,
             ).let { TaakPageV2.fromResultPage(pageNumber, pageSize, it) }
         } catch (ex: Exception) {
             return return TaakPageV2(
@@ -139,32 +146,19 @@ open class TaakService(
         id: UUID,
         authentication: CommonGroundAuthentication,
     ): TaakV2 {
-        var taak =
-            try {
-                TaakV2.migrateObjectsApiTask(
-                    getObjectsApiTaak<TaakObject>(
-                        id,
-                        authentication,
-                        objectsApiTaskConfig.typeUrl,
-                    ),
-                )
-            } catch (ex: Exception) {
-                // Taak could not be found, try V2
-                TaakV2.fromObjectsApi(
-                    getObjectsApiTaak<TaakObjectV2>(
-                        id,
-                        authentication,
-                        objectsApiTaskConfig.typeUrlV2,
-                    ),
-                )
-            }
-
-        // do validation if the user is authenticated for this task
-        val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
-        if (isAuthorized) {
-            return taak
+        return try {
+            TaakV2.migrate(
+                getTaakByIdV1(
+                    id,
+                    authentication,
+                ),
+            )
+        } catch (ex: Exception) {
+            getTaakByIdV2(
+                id,
+                authentication,
+            )
         }
-        throw IllegalStateException("Access denied to this taak")
     }
 
     @Deprecated("Use version 2")
@@ -174,13 +168,8 @@ open class TaakService(
     ): Taak {
         val taak =
             Taak.fromObjectsApiTask(
-                getObjectsApiTaak<TaakObject>(
-                    id,
-                    authentication,
-                    objectsApiTaskConfig.typeUrl,
-                ),
+                getObjectsApiTaak<TaakObject>(id),
             )
-        // do validation if the user is authenticated for this task
         val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
         if (isAuthorized) {
             return taak
@@ -194,17 +183,13 @@ open class TaakService(
     ): TaakV2 {
         val taak =
             TaakV2.fromObjectsApi(
-                getObjectsApiTaak<TaakObjectV2>(
-                    id,
-                    authentication,
-                    objectsApiTaskConfig.typeUrlV2,
-                ),
+                getObjectsApiTaak<TaakObjectV2>(id),
             )
-        // do validation if the user is authenticated for this task
         val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
         if (isAuthorized) {
             return taak
         }
+
         throw IllegalStateException("Access denied to this taak")
     }
 
@@ -224,6 +209,7 @@ open class TaakService(
                             authentication,
                         ),
                     )
+
                 else ->
                     submitTaakV2(
                         id,
@@ -242,11 +228,7 @@ open class TaakService(
         authentication: CommonGroundAuthentication,
     ): Taak {
         val objectsApiTask =
-            getObjectsApiTaak<TaakObject>(
-                id,
-                authentication,
-                objectsApiTaskConfig.typeUrl,
-            )
+            getObjectsApiTaak<TaakObject>(id)
         if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
             throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
@@ -271,11 +253,7 @@ open class TaakService(
         authentication: CommonGroundAuthentication,
     ): TaakV2 {
         val objectsApiTask =
-            getObjectsApiTaak<TaakObjectV2>(
-                id,
-                authentication,
-                objectsApiTaskConfig.typeUrlV2,
-            )
+            getObjectsApiTaak<TaakObjectV2>(id)
         if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
             throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
@@ -285,7 +263,7 @@ open class TaakService(
         val submissionAsMap = Mapper.get().convertValue(submission, object : TypeReference<Map<String, Any>>() {})
 
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
-        updateRequest.record.data.formtaak?.verzondenData = submissionAsMap
+        updateRequest.record.data.portaalformulier?.verzondenData = submissionAsMap
         updateRequest.record.data.status = TaakStatus.AFGEROND
         updateRequest.record.correctedBy = authentication.getUserRepresentation()
         updateRequest.record.correctionFor = objectsApiTask.record.index.toString()
@@ -294,20 +272,15 @@ open class TaakService(
         return TaakV2.fromObjectsApi(updatedObjectsApiTask)
     }
 
-    private suspend inline fun <reified T> getObjectsApiTaak(
-        taskId: UUID,
-        authentication: CommonGroundAuthentication,
-        objectTypeUrl: String,
-    ): ObjectsApiObject<T> {
-        val userSearchParameters = getUserSearchParameters(authentication)
-        val taskIdSearchParameter = ObjectSearchParameter("verwerker_taak_id", Comparator.EQUAL_TO, taskId.toString())
-
-        return objectsApiClient.getObjects<T>(
-            objectSearchParameters = userSearchParameters + taskIdSearchParameter,
-            objectTypeUrl = objectTypeUrl,
-            page = 1,
-            pageSize = 2,
-        ).results.single()
+    private suspend inline fun <reified T> getObjectsApiTaak(taskId: UUID): ObjectsApiObject<T> {
+        val objectsApiTask = objectsApiClient.getObjectById<T>(taskId.toString())
+        if (objectsApiTask == null) {
+            throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                String.format("Taak kan niet gevonden worden", taskId),
+            )
+        }
+        return objectsApiTask
     }
 
     private suspend inline fun <reified T> getTakenResultPage(
@@ -316,16 +289,33 @@ open class TaakService(
         authentication: CommonGroundAuthentication,
         zaakUUID: UUID? = null,
         objectTypeUrl: String,
+        status: TaakStatus?,
+        title: String?,
     ): ResultPage<ObjectsApiObject<T>> {
         val objectSearchParameters = mutableListOf<ObjectSearchParameter>()
 
         objectSearchParameters.addAll(getUserSearchParameters(authentication))
-        objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, "open"))
-
+        when {
+            status != null -> {
+                objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, status.value))
+            }
+            else -> {
+                objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, TaakStatus.OPEN.value))
+            }
+        }
         zaakUUID?.let {
             objectSearchParameters.add(
                 ObjectSearchParameter(
                     "zaak",
+                    Comparator.STRING_CONTAINS,
+                    it.toString(),
+                ),
+            )
+        }
+        title?.let {
+            objectSearchParameters.add(
+                ObjectSearchParameter(
+                    "title",
                     Comparator.STRING_CONTAINS,
                     it.toString(),
                 ),
@@ -346,15 +336,40 @@ open class TaakService(
         authentication: CommonGroundAuthentication,
         zaakUUID: UUID? = null,
         objectTypeUrl: String,
+        status: TaakStatus?,
+        title: String?,
     ): ResultPage<ObjectsApiObject<T>> {
         val objectSearchParameters = mutableListOf<ObjectSearchParameter>()
 
         objectSearchParameters.addAll(getUserSearchParameters(authentication))
-        objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, "open"))
+        when {
+            status != null -> {
+                objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, status.value))
+            }
+            else -> {
+                objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, TaakStatus.OPEN.value))
+            }
+        }
 
         zaakUUID?.let {
             objectSearchParameters.add(ObjectSearchParameter("koppeling__registratie", Comparator.EQUAL_TO, "zaak"))
-            objectSearchParameters.add(ObjectSearchParameter("koppeling__uuid", Comparator.STRING_CONTAINS, it.toString()))
+            objectSearchParameters.add(
+                ObjectSearchParameter(
+                    "koppeling__uuid",
+                    Comparator.STRING_CONTAINS,
+                    it.toString(),
+                ),
+            )
+        }
+
+        title?.let {
+            objectSearchParameters.add(
+                ObjectSearchParameter(
+                    "titel",
+                    Comparator.STRING_CONTAINS,
+                    it.toString(),
+                ),
+            )
         }
         return objectsApiClient.getObjects<T>(
             objectSearchParameters = objectSearchParameters,

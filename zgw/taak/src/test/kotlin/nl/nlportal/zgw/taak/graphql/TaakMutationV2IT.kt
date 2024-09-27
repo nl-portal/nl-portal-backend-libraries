@@ -75,9 +75,9 @@ internal class TaakMutationV2IT(
             .verifyOnlyDataExists(basePath)
             .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce708")
             .jsonPath(
-                "$basePath.formtaak.formulier.value",
+                "$basePath.portaalformulier.formulier.value",
             ).isEqualTo("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4")
-            .jsonPath("$basePath.formtaak.data.voornaam").isEqualTo("Jan")
+            .jsonPath("$basePath.portaalformulier.data.voornaam").isEqualTo("Jan")
             .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
             .jsonPath("$basePath.verloopdatum").isEqualTo("2023-09-20T18:25:43.524")
     }

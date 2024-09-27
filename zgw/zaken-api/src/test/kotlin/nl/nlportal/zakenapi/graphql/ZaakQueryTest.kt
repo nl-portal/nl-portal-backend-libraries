@@ -48,14 +48,14 @@ internal class ZaakQueryTest {
     fun getZaken() =
         runTest {
             zaakQuery.getZaken(environment, 3, null)
-            verify(zakenApiService).getZaken(3, authentication, null, null)
+            verify(zakenApiService).getZaken(3, authentication, null, null, null)
         }
 
     @Test
     fun `getZaken no page`() =
         runTest {
             zaakQuery.getZaken(environment)
-            verify(zakenApiService).getZaken(1, authentication, null, null)
+            verify(zakenApiService).getZaken(1, authentication, null, null, null)
         }
 
     @Test

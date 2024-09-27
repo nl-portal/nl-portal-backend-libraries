@@ -1,19 +1,19 @@
 {
     "url": "http://localhost:8010/api/v2/objects/2d725c07-2f26-4705-8637-438a42b5ac2d",
-    "uuid": "58fad5ab-dc2f-11ec-9075-f22a405ce708",
+    "uuid": "2d725c07-2f26-4705-8637-438a42b5ac2d",
     "type": "http://localhost:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb35",
     "record": {
         "index": 9,
         "typeVersion": 1,
         "data": {
-            "titel": "Check loan",
+            "titel": "Very important task",
             "status": "open",
             "soort": "portaalformulier",
             "verloopdatum": "2023-09-20T18:25:43.524Z",
             "eigenaar": "gzac",
             "identificatie": {
-                "type": "bsn",
-                "value": "82395551"
+                "type": "kvk",
+                "value": "14127293"
             },
             "koppeling": {
                 "registratie": "zaak",
