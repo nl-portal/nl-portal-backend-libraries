@@ -18,8 +18,12 @@
       "eigenschappen": {
         "contractnummer": "123456"
       },
+      "parameters": {
+        "payment": "erfpacht",
+        "emandate": "erfpacht"
+      },
       "omschrijving": "Dit is een voorbeeld van een product",
-      "beslistabellen": {
+      "beslistabelmapping": {
         "watkanikregelen": {
           "key": "watkanikregelenDmn",
           "variabelen": {
@@ -49,7 +53,7 @@
           }
         }
       },
-      "prefill": {
+      "prefillmapping": {
         "watkanikregelen":{
           "formulierUrl":"http://localhost:8080/formuliernaam",
           "variabelen":{

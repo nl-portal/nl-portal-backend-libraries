@@ -164,7 +164,7 @@ class PrefillService(
         val productType = productService.getProductType(productTypeId, productName)
 
         // find prefill configuration
-        return productType?.prefill?.get(formulier) ?: throw ResponseStatusException(
+        return productType?.prefillmapping?.get(formulier) ?: throw ResponseStatusException(
             HttpStatus.BAD_REQUEST,
             "Could not find a prefill configuration for $formulier",
         )

@@ -35,19 +35,19 @@ data class ProductType(
     val eigenschappen: ObjectNode?,
     val parameters: ObjectNode?,
     @GraphQLIgnore
-    val beslistabellen: Map<String, BeslisTabelConfiguration>?,
+    val beslistabelmapping: Map<String, BeslisTabelConfiguration>?,
     @GraphQLIgnore
-    val prefill: Map<String, PrefillConfiguration>?,
+    val prefillmapping: Map<String, PrefillConfiguration>?,
 ) {
     @GraphQLDescription("Get list of available beslistabellen, with their object configurations")
-    fun beslistabellen(): List<String>? {
-        return beslistabellen?.map { it.key }
+    fun beslistabelMappings(): List<String>? {
+        return beslistabelmapping?.map { it.key }
     }
 
     @GraphQLDescription("Get list of available forms to prefill, with their object configurations")
-    fun prefillFormulieren(): ObjectNode? {
+    fun prefillMappings(): ObjectNode? {
         val prefillMap = mutableMapOf<String, Set<String>>()
-        prefill?.forEach {
+        prefillmapping?.forEach {
             prefillMap.put(it.key, it.value.variabelen.keys)
         }
 

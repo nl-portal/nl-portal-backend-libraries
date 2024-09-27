@@ -4,7 +4,7 @@ query {
             naam,
             omschrijving,
             zaaktypen,
-            prefillFormulieren,
-            beslistabellen
+            beslistabelMappings,
+            prefillMappings
         }
 }

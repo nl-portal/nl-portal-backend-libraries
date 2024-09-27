@@ -186,7 +186,7 @@ class DmnService(
         formulier: String,
         productType: ProductType?,
     ): BeslisTabelConfiguration {
-        return productType?.beslistabellen?.get(formulier) ?: throw ResponseStatusException(
+        return productType?.beslistabelmapping?.get(formulier) ?: throw ResponseStatusException(
             HttpStatus.BAD_REQUEST,
             "Could not find a beslisTabelVariable configuration for $formulier",
         )

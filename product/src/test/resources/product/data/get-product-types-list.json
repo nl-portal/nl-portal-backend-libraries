@@ -53,6 +53,10 @@
           "eigenschappen": {
             "contractnummer": "123456"
           },
+          "parameters": {
+            "payment": "vergunningen",
+            "emandate": "vergunningen"
+          },
           "omschrijving": "Dit is een voorbeeld van een product"
         },
         "geometry": null,
