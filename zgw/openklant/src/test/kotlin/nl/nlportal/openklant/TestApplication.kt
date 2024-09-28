@@ -48,7 +48,7 @@ class TestApplication {
         return TestQuery()
     }
 
-    class TestQuery: Query {
+    class TestQuery : Query {
         fun runTest(): String {
             return "Test"
         }

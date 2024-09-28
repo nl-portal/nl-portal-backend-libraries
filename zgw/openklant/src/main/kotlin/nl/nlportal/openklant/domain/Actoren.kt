@@ -28,7 +28,7 @@ data class Actor(
     val naam: String,
     val soortActor: SoortActor,
     val indicatieActief: Boolean? = null,
-    val actoridentificator: Identificator? = null,
+    val actoridentificator: OpenKlant2Identificator? = null,
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -50,7 +50,7 @@ data class PatchActor(
     val name: String? = null,
     val soortActor: SoortActor,
     val indicatieActief: Boolean? = null,
-    val actoridentificator: Identificator? = null,
+    val actoridentificator: OpenKlant2Identificator? = null,
 ) {
     init {
         require(name == null || name.length in 1..200) { "Actor name has to be between 1 and 200 characters long" }

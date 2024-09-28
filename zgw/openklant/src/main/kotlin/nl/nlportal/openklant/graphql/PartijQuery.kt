@@ -17,7 +17,6 @@ package nl.nlportal.openklant.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Query
-import graphql.GraphQLException
 import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.openklant.domain.Partij

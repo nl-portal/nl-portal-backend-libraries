@@ -45,35 +45,36 @@ class ModuleConfigurationIT(
     @Autowired private val openKlantModuleConfiguration: OpenKlantModuleConfiguration,
 ) {
     @Test
-    fun `should not expose Partij type when module is disabled`() = runTest {
-        // when
-        val responseBodyContent =
-            webTestClient
-                .post()
-                .uri { builder ->
-                    builder
-                        .path("/graphql")
-                        .build()
-                }
-                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/partijTypeIntrospection.graphql")))
-                .exchange()
-                .expectStatus().isOk
-                .expectBody()
-                .returnResult()
-                .responseBodyContent
-                ?.toString(Charset.defaultCharset())
+    fun `should not expose Partij type when module is disabled`() =
+        runTest {
+            // when
+            val responseBodyContent =
+                webTestClient
+                    .post()
+                    .uri { builder ->
+                        builder
+                            .path("/graphql")
+                            .build()
+                    }
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/partijTypeIntrospection.graphql")))
+                    .exchange()
+                    .expectStatus().isOk
+                    .expectBody()
+                    .returnResult()
+                    .responseBodyContent
+                    ?.toString(Charset.defaultCharset())
 
-        val typeResponse =
-            objectMapper
-                .readValue<JsonNode>(responseBodyContent!!)
-                .get("data")
-                ?.get("__type")
+            val typeResponse =
+                objectMapper
+                    .readValue<JsonNode>(responseBodyContent!!)
+                    .get("data")
+                    ?.get("__type")
 
-        // then
-        assertFalse(openKlantModuleConfiguration.enabled)
-        assertTrue(typeResponse is NullNode)
-    }
+            // then
+            assertFalse(openKlantModuleConfiguration.enabled)
+            assertTrue(typeResponse is NullNode)
+        }
 
     companion object {
         private val objectMapper = Mapper.get()

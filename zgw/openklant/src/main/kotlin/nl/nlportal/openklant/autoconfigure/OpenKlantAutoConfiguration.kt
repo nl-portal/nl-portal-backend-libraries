@@ -46,18 +46,14 @@ class OpenKlantAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(PartijQuery::class)
     @ConditionalOnProperty(prefix = "nl-portal.config.openklant", name = ["enabled"], havingValue = "true")
-    fun partijQuery(
-        openKlant2Service: OpenKlant2Service,
-    ): Query {
+    fun partijQuery(openKlant2Service: OpenKlant2Service): Query {
         return PartijQuery(openKlant2Service)
     }
 
     @Bean
     @ConditionalOnMissingBean(PartijMutation::class)
     @ConditionalOnProperty(prefix = "nl-portal.config.openklant", name = ["enabled"], havingValue = "true")
-    fun partijMutation(
-        openKlant2Service: OpenKlant2Service,
-    ): Mutation {
+    fun partijMutation(openKlant2Service: OpenKlant2Service): Mutation {
         return PartijMutation(openKlant2Service)
     }
 

@@ -75,36 +75,37 @@ class PartijQueryIT(
     }
 
     @Test
-    fun `should introspect Partij type`() = runTest {
-        // when
-        val responseBodyContent =
-            webTestClient
-                .post()
-                .uri { builder ->
-                    builder
-                        .path("/graphql")
-                        .build()
-                }
-                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/partijTypeIntrospection.graphql")))
-                .exchange()
-                .expectStatus().isOk
-                .expectBody()
-                .returnResult()
-                .responseBodyContent
-                ?.toString(Charset.defaultCharset())
+    fun `should introspect Partij type`() =
+        runTest {
+            // when
+            val responseBodyContent =
+                webTestClient
+                    .post()
+                    .uri { builder ->
+                        builder
+                            .path("/graphql")
+                            .build()
+                    }
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/partijTypeIntrospection.graphql")))
+                    .exchange()
+                    .expectStatus().isOk
+                    .expectBody()
+                    .returnResult()
+                    .responseBodyContent
+                    ?.toString(Charset.defaultCharset())
 
-        val typeResponse =
-            objectMapper
-                .readValue<JsonNode>(responseBodyContent!!)
-                .get("data")
-                ?.get("__type")
+            val typeResponse =
+                objectMapper
+                    .readValue<JsonNode>(responseBodyContent!!)
+                    .get("data")
+                    ?.get("__type")
 
-        // then
-        assertEquals("OBJECT", typeResponse?.get("kind")?.textValue())
-        assertEquals("Partij", typeResponse?.get("name")?.textValue())
-        assertEquals("A Type that represents a Klantinteracties API Partij object", typeResponse?.get("description")?.textValue())
-    }
+            // then
+            assertEquals("OBJECT", typeResponse?.get("kind")?.textValue())
+            assertEquals("Partij", typeResponse?.get("name")?.textValue())
+            assertEquals("A Type that represents a Klantinteracties API Partij object", typeResponse?.get("description")?.textValue())
+        }
 
     @Test
     @WithBurgerUser("999990755")

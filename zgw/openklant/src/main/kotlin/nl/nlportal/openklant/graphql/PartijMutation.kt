@@ -18,15 +18,13 @@ package nl.nlportal.openklant.graphql
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Mutation
 import com.fasterxml.jackson.databind.node.ObjectNode
-import graphql.GraphQLException
 import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
-import nl.nlportal.openklant.domain.CreatePartij
 import nl.nlportal.openklant.domain.Partij
 import nl.nlportal.openklant.service.OpenKlant2Service
 
 class PartijMutation(
-    private val openklant2Service: OpenKlant2Service
+    private val openklant2Service: OpenKlant2Service,
 ) : Mutation {
     @GraphQLDescription("Create Partij for user")
     suspend fun createPartij(
