@@ -15,32 +15,50 @@
  */
 package nl.nlportal.openklant.autoconfigure
 
+import com.expediagroup.graphql.server.operations.Mutation
+import com.expediagroup.graphql.server.operations.Query
 import mu.KotlinLogging
 import nl.nlportal.openklant.client.OpenKlant2Client
+import nl.nlportal.openklant.graphql.PartijMutation
+import nl.nlportal.openklant.graphql.PartijQuery
 import nl.nlportal.openklant.service.OpenKlant2Service
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 
-@Configuration
 @EnableConfigurationProperties(
     OpenKlantModuleConfiguration::class,
 )
 class OpenKlantAutoConfiguration {
     @Bean
+    @ConditionalOnMissingBean(OpenKlant2Client::class)
     fun openKlant2Client(openklantModuleConfiguration: OpenKlantModuleConfiguration): OpenKlant2Client {
-        if (!openklantModuleConfiguration.enabled) {
-            logger.debug { "OpenKlant 2 is not configured." }
-        }
         return OpenKlant2Client(openKlantConfigurationProperties = openklantModuleConfiguration.properties)
     }
 
     @Bean
-    fun openKlant2Service(
-        openklantModuleConfiguration: OpenKlantModuleConfiguration,
-        openklant2Client: OpenKlant2Client
-    ): OpenKlant2Service {
-        return OpenKlant2Service(openklantModuleConfiguration.enabled, openklant2Client)
+    @ConditionalOnMissingBean(OpenKlant2Service::class)
+    fun openKlant2Service(openklant2Client: OpenKlant2Client): OpenKlant2Service {
+        return OpenKlant2Service(openklant2Client)
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(PartijQuery::class)
+    @ConditionalOnProperty(prefix = "nl-portal.config.openklant", name = ["enabled"], havingValue = "true")
+    fun partijQuery(
+        openKlant2Service: OpenKlant2Service,
+    ): Query {
+        return PartijQuery(openKlant2Service)
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(PartijMutation::class)
+    @ConditionalOnProperty(prefix = "nl-portal.config.openklant", name = ["enabled"], havingValue = "true")
+    fun partijMutation(
+        openKlant2Service: OpenKlant2Service,
+    ): Mutation {
+        return PartijMutation(openKlant2Service)
     }
 
     companion object {

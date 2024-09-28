@@ -15,33 +15,56 @@
  */
 package nl.nlportal.openklant.domain
 
+import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.annotation.JsonValue
+import nl.nlportal.commonground.authentication.BedrijfAuthentication
+import nl.nlportal.commonground.authentication.BurgerAuthentication
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.openklant.domain.CreatePartij.ContactpersoonIdentificatie
+import nl.nlportal.openklant.domain.CreatePartij.OrganisatieIdentificatie
+import nl.nlportal.openklant.domain.CreatePartij.PartijIdentificatie
+import nl.nlportal.openklant.domain.CreatePartij.PersoonsIdentificatie
+import java.time.LocalDate
 import java.util.Locale
 import java.util.UUID
 
+@GraphQLDescription(value = "A Type that represents a Klantinteracties API Partij object")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class Partij(
-    val betrokkenen: List<ForeignKey> = emptyList(),
-    val bezoekadres: Adres? = null,
+    val betrokkenen: List<OpenKlant2ForeignKey> = emptyList(),
+    val bezoekadres: OpenKlant2Adres? = null,
     val categorieRelaties: List<CategorieRelatieForeignKey>,
-    val correspondentieadres: Adres? = null,
-    val digitaleAdressen: List<ForeignKey>? = null,
+    val correspondentieadres: OpenKlant2Adres? = null,
+    val digitaleAdressen: List<OpenKlant2ForeignKey>? = null,
     val indicatieActief: Boolean,
     val indicatieGeheimhouding: Boolean? = null,
     val interneNotitie: String? = null,
     val nummer: String? = null,
-    val partijIdentificatoren: List<ForeignKey>,
-    val rekeningnummers: List<Rekeningnummer>? = null,
+    val partijIdentificatoren: List<OpenKlant2ForeignKey>,
+    val rekeningnummers: List<OpenKlant2ForeignKey>? = null,
     val soortPartij: SoortPartij,
     val url: String,
     val uuid: UUID,
-    val vertegenwoordigden: List<ForeignKey>,
-    val voorkeursDigitaalAdres: ForeignKey? = null,
-    val voorkeursRekeningnummer: Rekeningnummer? = null,
+    val vertegenwoordigden: List<OpenKlant2ForeignKey>,
+    val voorkeursDigitaalAdres: OpenKlant2ForeignKey? = null,
+    val voorkeursRekeningnummer: OpenKlant2ForeignKey? = null,
     val voorkeurstaal: String?,
+    @JsonTypeInfo(include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "soortPartij", use = JsonTypeInfo.Id.NAME)
+    @JsonSubTypes(
+        Type(PersoonsIdentificatie::class, name = "persoon"),
+        Type(OrganisatieIdentificatie::class, name = "organisatie"),
+        Type(ContactpersoonIdentificatie::class, name = "contactpersoon"),
+    )
+    val partijIdentificatie: PartijIdentificatie,
+    @JsonProperty("_expand")
+    val expand: PartijExpand? = null,
 ) {
     init {
         require(voorkeurstaal == null || voorkeurstaal in Locale.getAvailableLocales().map { it.isO3Language }) {
@@ -57,20 +80,32 @@ data class Partij(
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 data class CreatePartij(
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     val nummer: String? = null,
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     val interneNotitie: String? = null,
-    val digitaleAdressen: List<ForeignKey>,
-    val voorkeursDigitaalAdres: ForeignKey,
-    val rekeningnummers: List<Rekeningnummer>,
-    val voorkeursRekeningnummer: Rekeningnummer,
+    val digitaleAdressen: List<OpenKlant2ForeignKey>? = null,
+    val voorkeursDigitaalAdres: OpenKlant2ForeignKey? = null,
+    val rekeningnummers: List<OpenKlant2ForeignKey>? = null,
+    val voorkeursRekeningnummer: OpenKlant2ForeignKey? = null,
     val soortPartij: SoortPartij,
     val indicatieGeheimhouding: Boolean,
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     val voorkeurstaal: String? = null,
     val indicatieActief: Boolean,
-    val bezoekadres: Adres? = null,
-    val correspondentieadres: Adres? = null,
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    val bezoekadres: OpenKlant2Adres? = null,
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    val correspondentieadres: OpenKlant2Adres? = null,
+    val partijIdentificatoren: List<OpenKlant2ForeignKey>,
+    @JsonTypeInfo(include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "soortPartij", use = JsonTypeInfo.Id.NAME)
+    @JsonSubTypes(
+        Type(PersoonsIdentificatie::class, name = "persoon"),
+        Type(OrganisatieIdentificatie::class, name = "organisatie"),
+        Type(ContactpersoonIdentificatie::class, name = "contactpersoon"),
+    )
+    val partijIdentificatie: PartijIdentificatie,
 ) {
     init {
         require(voorkeurstaal == null || voorkeurstaal in Locale.getAvailableLocales().map { it.isO3Language }) {
@@ -83,58 +118,58 @@ data class CreatePartij(
             "Nummer can't be longer than 10 characters."
         }
     }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    open class PersoonsIdentificatie(
+        val contactnaam: Contactnaam? = null,
+        val volledigeNaam: String? = null,
+    ) : PartijIdentificatie
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    data class ContactpersoonIdentificatie(
+        val uuid: UUID? = null,
+        val werkteVoorPartij: OpenKlant2ForeignKey? = null,
+        val contactnaam: Contactnaam? = null,
+        val volledigeNaam: String? = null,
+    ) : PartijIdentificatie
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    data class OrganisatieIdentificatie(
+        val naam: String? = null,
+    ) : PartijIdentificatie
+
+    interface PartijIdentificatie
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    data class Contactnaam(
+        val voorletters: String? = null,
+        val voornaam: String? = null,
+        val voorvoegselAchternaam: String? = null,
+        val achternaam: String? = null,
+    )
 }
 
-data class PartijenFilterOptions(
-    val page: Int = 1,
-    val naam: String? = null,
-    val indicatieActief: Boolean? = null,
-    val soortPartij: SoortPartij? = null,
+class PartijExpand(
+    val betrokkenen: List<Betrokkene>? = null,
+    val hadKlantcontact: List<HadKlantcontact>? = null,
+    val categorieRelaties: List<CategorieRelatie>? = null,
+    val digitaleAdressen: List<DigitaleAdres>? = null,
 )
 
-data class Adres(
-    val adresregel1: String? = null,
-    val adresregel2: String? = null,
-    val adresregel3: String? = null,
-    val land: Landcode? = null,
-    val nummeraanduidingId: String? = null,
-) {
-    init {
-        require(nummeraanduidingId == null || nummeraanduidingId.length <= 255) {
-            "Adresregel1 can't be more than 255 characters long."
-        }
-        require(adresregel1 == null || adresregel1.length <= 80) {
-            "Adresregel1 can't be more than 255 characters long."
-        }
-        require(adresregel2 == null || adresregel2.length <= 80) {
-            "Adresregel1 can't be more than 255 characters long."
-        }
-        require(adresregel3 == null || adresregel3.length <= 80) {
-            "Adresregel1 can't be more than 255 characters long."
-        }
-    }
-}
-
 data class CategorieRelatieForeignKey(
-    val beginDatum: String,
+    val beginDatum: LocalDate? = null,
     val categorieNaam: String,
-    val eindDatum: String,
+    val eindDatum: LocalDate? = null,
     val url: String,
     val uuid: String,
 )
 
-data class Rekeningnummer(val uuid: String)
-
-data class CreatePartij(
-    val name: String,
-) {
-    init {
-        require(name.length in 1..200) { "Partij name has to be between 1 and 200 characters long" }
-    }
-}
-
 enum class SoortPartij(
-    @JsonValue private val value: String,
+    @JsonValue val value: String,
 ) {
     PERSOON("persoon"),
     ORGANISATIE("organisatie"),
@@ -143,5 +178,13 @@ enum class SoortPartij(
 
     override fun toString(): String {
         return this.value
+    }
+}
+
+fun CommonGroundAuthentication.asSoortPartij(): String {
+    return when (this) {
+        is BurgerAuthentication -> "persoon"
+        is BedrijfAuthentication -> "organisatie"
+        else -> "contactpersoon"
     }
 }

@@ -28,6 +28,7 @@ dependencies {
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.springframework.security", "spring-security-test")
     testImplementation(TestDependencies.kotlinCoroutines)
+    testImplementation(TestDependencies.mockitoKotlin)
     testImplementation(TestDependencies.okHttpMockWebserver)
     testImplementation(TestDependencies.okHttp)
 }

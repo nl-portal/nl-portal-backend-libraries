@@ -15,18 +15,59 @@
  */
 package nl.nlportal.openklant.service
 
+import com.fasterxml.jackson.databind.node.ObjectNode
+import com.fasterxml.jackson.module.kotlin.convertValue
+import mu.KotlinLogging
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.core.util.Mapper
 import nl.nlportal.openklant.client.OpenKlant2Client
+import nl.nlportal.openklant.client.path.Partijen
 import nl.nlportal.openklant.domain.Partij
+import nl.nlportal.openklant.domain.asSoortPartij
+import org.springframework.util.MultiValueMapAdapter
+import org.springframework.web.reactive.function.client.WebClientResponseException
 
 class OpenKlant2Service(
-    private val enabled: Boolean = false,
-    private val openKlant2Client: OpenKlant2Client
+    private val openKlant2Client: OpenKlant2Client,
 ) {
+    suspend fun findPartij(authentication: CommonGroundAuthentication): Partij? {
+        val searchVariables =
+            MultiValueMapAdapter(
+                mapOf(
+                    "soortPartij" to listOf(authentication.asSoortPartij()),
+                    "partijIdentificator__objectId" to listOf(authentication.userId),
+                ),
+            )
 
-    suspend fun getPartij(authentication: CommonGroundAuthentication): Partij? {
-        if (!enabled) return null
+        try {
+            return openKlant2Client.path<Partijen>().find(searchVariables)
+        } catch (ex: WebClientResponseException) {
+            logger.debug("Failed to find Partij: ${ex.responseBodyAsString}", ex)
+            return null
+        }
+    }
 
-        return openKlant2Client.findPartij(authentication)
+    suspend fun createPartij(
+        authentication: CommonGroundAuthentication,
+        partij: ObjectNode,
+    ): Partij? {
+        try {
+            return openKlant2Client.path<Partijen>().create(objectMapper.convertValue(partij))
+        } catch (ex: WebClientResponseException) {
+            logger.debug("Failed to create Partij: ${ex.responseBodyAsString}", ex)
+            return null
+        }
+    }
+
+    suspend fun updatePartij(
+        authentication: CommonGroundAuthentication,
+        partij: ObjectNode,
+    ): Partij {
+        return objectMapper.convertValue(partij)
+    }
+
+    companion object {
+        private val objectMapper = Mapper.get()
+        private val logger = KotlinLogging.logger {}
     }
 }

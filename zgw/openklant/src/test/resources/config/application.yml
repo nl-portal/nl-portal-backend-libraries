@@ -3,10 +3,12 @@ graphql:
         - "nl.nlportal"
 
 nl-portal:
-    openklant:
-        url: #filled in test
-        clientId: valtimo_client
-        secret: e09b8bc5-5831-4618-ab28-41411304309d
+    config:
+      openklant:
+          enabled: true
+          properties:
+              url: http://localhost:8007
+              token: ac045222c9e7cde8120b48735560f9b920bb58cd
 
 spring:
     security:
@@ -14,3 +16,30 @@ spring:
             resourceserver:
                 jwt:
                     issuer-uri: http://localhost:8082/auth/realms/nlportal
+
+---
+
+spring:
+    config:
+        activate:
+            on-profile: openklant-disabled
+
+nl-portal:
+    config:
+        openklant:
+            enabled: false
+
+---
+
+spring:
+    config:
+        activate:
+            on-profile: openklant-misconfigured
+
+nl-portal:
+    config:
+        openklant:
+            enabled: true
+            properties:
+                url:
+                token:

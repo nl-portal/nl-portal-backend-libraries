@@ -1,0 +1,7 @@
+query {
+    __type(name: "Partij") {
+        kind
+        name
+        description
+    }
+}

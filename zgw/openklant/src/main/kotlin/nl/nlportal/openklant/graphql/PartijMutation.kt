@@ -16,18 +16,31 @@
 package nl.nlportal.openklant.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Query
+import com.expediagroup.graphql.server.operations.Mutation
+import com.fasterxml.jackson.databind.node.ObjectNode
 import graphql.GraphQLException
 import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
+import nl.nlportal.openklant.domain.CreatePartij
 import nl.nlportal.openklant.domain.Partij
 import nl.nlportal.openklant.service.OpenKlant2Service
 
-class PartijQuery(
-    private val openklant2Service: OpenKlant2Service,
-) : Query {
-    @GraphQLDescription("Get user Partij")
-    suspend fun getPartij(dfe: DataFetchingEnvironment): Partij? {
-        return openklant2Service.findPartij(dfe.graphQlContext.get(AUTHENTICATION_KEY))
+class PartijMutation(
+    private val openklant2Service: OpenKlant2Service
+) : Mutation {
+    @GraphQLDescription("Create Partij for user")
+    suspend fun createPartij(
+        dfe: DataFetchingEnvironment,
+        createPartijPayload: ObjectNode,
+    ): Partij? {
+        return openklant2Service.createPartij(dfe.graphQlContext.get(AUTHENTICATION_KEY), createPartijPayload)
+    }
+
+    @GraphQLDescription("Update user Partij")
+    suspend fun updatePartij(
+        dfe: DataFetchingEnvironment,
+        partijPayload: ObjectNode,
+    ): Partij {
+        return openklant2Service.updatePartij(dfe.graphQlContext.get(AUTHENTICATION_KEY), partijPayload)
     }
 }

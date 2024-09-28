@@ -25,8 +25,12 @@ data class OpenKlantModuleConfiguration(
 ) {
     init {
         if (enabled) {
-            requireNotNull(properties.url)
-            requireNotNull(properties.token)
+            requireNotNull(properties.url) {
+                "OpenKlant URL not configured"
+            }
+            requireNotNull(properties.token) {
+                "OpenKlant token not configured"
+            }
         }
     }
 

@@ -15,6 +15,7 @@
  */
 package nl.nlportal.openklant
 
+import com.expediagroup.graphql.server.operations.Query
 import nl.nlportal.core.security.OauthSecurityAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -40,5 +41,16 @@ class TestApplication {
                 it.anyExchange().permitAll()
             }
             .build()
+    }
+
+    @Bean
+    fun testQuery(): Query {
+        return TestQuery()
+    }
+
+    class TestQuery: Query {
+        fun runTest(): String {
+            return "Test"
+        }
     }
 }
