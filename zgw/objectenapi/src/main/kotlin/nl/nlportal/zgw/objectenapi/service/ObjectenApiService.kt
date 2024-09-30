@@ -22,6 +22,7 @@ import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
 import java.net.URI
+import java.util.UUID
 
 class ObjectenApiService(
     val objectsApiClient: ObjectsApiClient,
@@ -58,5 +59,9 @@ class ObjectenApiService(
         return objectsApiClient.createObject(
             createObjectsApiObjectRequest,
         )
+    }
+
+    fun deleteObjectById(objectId: UUID) {
+        objectsApiClient.deleteObjectById(objectId)
     }
 }
