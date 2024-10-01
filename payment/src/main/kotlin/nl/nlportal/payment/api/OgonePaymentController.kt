@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 
 @RestController
-@RequestMapping(value = ["/api"])
+@RequestMapping(value = ["/api/public"])
 class OgonePaymentController(
     private val ogonePaymentService: OgonePaymentService,
 ) {
