@@ -61,6 +61,7 @@ class DmnService(
                 source,
             ),
         )
+
         val dmnRequest =
             createDmnRequest(
                 key,
@@ -105,8 +106,12 @@ class DmnService(
                     ),
                 )
             } else {
-                logger.warn("Could not find beslisTabel variables for key {}", it.key)
+                logger.warn(BESLISTABLE_NOT_FOUND_BY_KEY, it.key)
             }
+        }
+
+        if (variablesMapping.isEmpty()) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, SOURCE_MAPPING_FAILED + productType?.naam)
         }
 
         val dmnRequest =
@@ -159,7 +164,7 @@ class DmnService(
                         ),
                     )
                 } else {
-                    logger.warn("Could not find beslisTabel variables for key {}", it.key)
+                    logger.warn(BESLISTABLE_NOT_FOUND_BY_KEY, it.key)
                 }
             }
         }
@@ -173,6 +178,10 @@ class DmnService(
                     Mapper.get().writeValueAsString(productType),
                 ),
             )
+        }
+
+        if (variablesMapping.isEmpty()) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, SOURCE_MAPPING_FAILED + productType?.naam)
         }
         val dmnRequest =
             createDmnRequest(
@@ -266,5 +275,7 @@ class DmnService(
 
     companion object {
         val logger = KotlinLogging.logger {}
+        const val SOURCE_MAPPING_FAILED: String = "Source mapping failed for DMN, check beslistabelmapping of productType: "
+        const val BESLISTABLE_NOT_FOUND_BY_KEY: String = "Could not find beslisTabel variables for key {}"
     }
 }

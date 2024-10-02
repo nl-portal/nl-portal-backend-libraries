@@ -104,6 +104,9 @@ class PrefillService(
                 logger.warn("Could not find prefill configuration variables for source {}", it.key)
             }
         }
+        if (prefillData.isEmpty()) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, SOURCE_MAPPING_FAILED + productName)
+        }
         val json = JsonUnflattener.unflatten(prefillData)
         return hashAndCreatObject(json, formulier, prefillConfiguration.formulierUrl, authentication.userId)
     }
@@ -144,6 +147,10 @@ class PrefillService(
                     logger.warn("Could not find prefill configuration variables for key {}", it.key)
                 }
             }
+        }
+
+        if (prefillData.isEmpty()) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, SOURCE_MAPPING_FAILED + productName)
         }
 
         val json = JsonUnflattener.unflatten(prefillData)
@@ -260,5 +267,6 @@ class PrefillService(
 
     companion object {
         val logger = KotlinLogging.logger {}
+        const val SOURCE_MAPPING_FAILED: String = "Source mapping failed for Prefill, check prefillmapping of productType: "
     }
 }
