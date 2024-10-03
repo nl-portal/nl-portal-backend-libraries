@@ -15,6 +15,15 @@
  */
 package nl.nlportal.openklant.client.path
 
+import nl.nlportal.openklant.client.domain.OpenKlant2Filters
+import org.springframework.web.util.UriBuilder
+
 open class KlantInteractiesPath {
     open val path: String = "/"
+
+    fun UriBuilder.queryParams(filters: List<Pair<OpenKlant2Filters, String>>? = null): UriBuilder {
+        return apply {
+            filters?.forEach { queryParam(it.first.toString(), it.second) }
+        }
+    }
 }

@@ -24,10 +24,12 @@ import nl.nlportal.openklant.client.domain.OpenKlant2Identificator
 import nl.nlportal.openklant.client.domain.OpenKlant2IdentificeerdePartij
 import nl.nlportal.openklant.client.domain.OpenKlant2Partij
 import nl.nlportal.openklant.client.domain.OpenKlant2PartijIdentificator
+import nl.nlportal.openklant.client.domain.OpenKlant2PartijIdentificatorenFilters
+import nl.nlportal.openklant.client.domain.OpenKlant2PartijIdentificatorenFilters.PARTIJ_IDENTIFICATOR_OBJECT_ID
+import nl.nlportal.openklant.client.domain.OpenKlant2PartijenFilters
 import nl.nlportal.openklant.client.domain.asSoortPartij
 import nl.nlportal.openklant.client.path.PartijIdentificatoren
 import nl.nlportal.openklant.client.path.Partijen
-import org.springframework.util.MultiValueMapAdapter
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import java.util.UUID
 
@@ -36,11 +38,9 @@ class OpenKlant2Service(
 ) {
     suspend fun findPartij(authentication: CommonGroundAuthentication): OpenKlant2Partij? {
         val searchVariables =
-            MultiValueMapAdapter(
-                mapOf(
-                    "soortPartij" to listOf(authentication.asSoortPartij()),
-                    "partijIdentificator__objectId" to listOf(authentication.userId),
-                ),
+            listOf(
+                OpenKlant2PartijenFilters.SOORT_PARTIJ to authentication.asSoortPartij(),
+                OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_OBJECT_ID to authentication.userId,
             )
 
         try {
@@ -106,15 +106,13 @@ class OpenKlant2Service(
     }
 
     suspend fun findPartijIdentificatoren(authentication: CommonGroundAuthentication): List<OpenKlant2PartijIdentificator>? {
-        val searchVariables =
-            MultiValueMapAdapter(
-                mapOf(
-                    "partij_identificator_object_id" to listOf(authentication.userId),
-                ),
+        val searchFilters: List<Pair<OpenKlant2PartijIdentificatorenFilters, String>> =
+            listOf(
+                PARTIJ_IDENTIFICATOR_OBJECT_ID to authentication.userId,
             )
 
         try {
-            return openKlant2Client.path<PartijIdentificatoren>().find(searchVariables)
+            return openKlant2Client.path<PartijIdentificatoren>().find(searchFilters)
         } catch (ex: WebClientResponseException) {
             logger.debug("Failed to find Partij Identificatoren: ${ex.responseBodyAsString}", ex)
             return null

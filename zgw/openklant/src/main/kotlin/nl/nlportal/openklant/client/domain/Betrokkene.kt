@@ -29,16 +29,3 @@ data class Betrokkene(
     val volledigeNaam: String,
     val wasPartij: OpenKlant2ForeignKey? = null,
 )
-
-data class CreateBetrokkene(
-    val bezoekadres: OpenKlant2Adres? = null,
-    val contactnaam: Contactnaam? = null,
-    val correspondentieadres: OpenKlant2Adres? = null,
-    val digitaleAdressen: List<OpenKlant2ForeignKey>,
-    val hadKlantcontact: OpenKlant2ForeignKey,
-    val initiator: Boolean,
-    val organisatienaam: String,
-    val rol: String,
-    val volledigeNaam: String,
-    val wasPartij: OpenKlant2ForeignKey? = null,
-)

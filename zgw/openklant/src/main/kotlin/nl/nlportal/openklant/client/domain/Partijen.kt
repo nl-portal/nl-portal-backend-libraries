@@ -117,7 +117,7 @@ data class Contactnaam(
     val achternaam: String? = null,
 )
 
-class PartijExpand(
+data class PartijExpand(
     val betrokkenen: List<Betrokkene>? = null,
     val hadKlantcontact: List<HadKlantcontact>? = null,
     val categorieRelaties: List<CategorieRelatie>? = null,
@@ -131,6 +131,37 @@ data class CategorieRelatieForeignKey(
     val url: String,
     val uuid: String,
 )
+
+enum class OpenKlant2PartijenFilters(
+    @JsonValue val value: String,
+) : OpenKlant2Filters {
+    VERTEGENWOORDIGDE_PARTIJ_UUID("vertegenwoordigde_partij__uuid"),
+    VERTEGENWOORDIGDE_PARTIJ_URL("vertegenwoordigde_partij__url"),
+    PARTIJ_IDENTIFICATOR_CODE_OBJECTTYPE("partij_identificator__code_objecttype"),
+    PARTIJ_IDENTIFICATOR_CODE_SOORT_OBJECT_ID("partij_identificator__code_soort_object_id"),
+    PARTIJ_IDENTIFICATOR_OBJECT_ID("partij_identificator__object_id"),
+    PARTIJ_IDENTIFICATOR_CODE_REGISTER("partij_identificator__code_register"),
+    CATEGORIERELATIE__CATEGORIE_NAAM("categorierelatie__categorie__naam"),
+    NUMMER("nummer"),
+    INDICATIE_GEHEIMHOUDING("indicatie_geheimhouding"),
+    INDICATIE_ACTIEF("indicatie_actief"),
+    SOORT_PARTIJ("soort_partij"),
+    BEZOEKADRES_NUMMERAANDUIDING_ID("bezoekadres_nummeraanduiding_id"),
+    BEZOEKADRES_ADRESREGEL1("bezoekadres_adresregel1"),
+    BEZOEKADRES_ADRESREGEL2("bezoekadres_adresregel2"),
+    BEZOEKADRES_ADRESREGEL3("bezoekadres_adresregel3"),
+    BEZOEKADRES_LAND("bezoekadres_land"),
+    CORRESPONDENTIEADRES_NUMMERAANDUIDING_ID("correspondentieadres_nummeraanduiding_id"),
+    CORRESPONDENTIEADRES_ADRESREGEL1("correspondentieadres_adresregel1"),
+    CORRESPONDENTIEADRES_ADRESREGEL2("correspondentieadres_adresregel2"),
+    CORRESPONDENTIEADRES_ADRESREGEL3("correspondentieadres_adresregel3"),
+    CORRESPONDENTIEADRES_LAND("correspondentieadres_land"),
+    ;
+
+    override fun toString(): String {
+        return this.value
+    }
+}
 
 enum class SoortPartij(
     @JsonValue val value: String,

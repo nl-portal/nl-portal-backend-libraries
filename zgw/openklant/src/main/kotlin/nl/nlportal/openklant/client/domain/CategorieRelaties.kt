@@ -26,13 +26,6 @@ data class CategorieRelatie(
     val uuid: String,
 )
 
-data class CreateCategorieRelatie(
-    val beginDatum: LocalDate? = null,
-    val categorie: Categorie? = null,
-    val eindDatum: LocalDate? = null,
-    val partij: OpenKlant2ForeignKey? = null,
-)
-
 data class Categorie(
     val naam: String,
     val url: String,

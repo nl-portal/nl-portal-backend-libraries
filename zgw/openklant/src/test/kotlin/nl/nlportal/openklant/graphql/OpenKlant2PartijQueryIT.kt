@@ -49,7 +49,7 @@ import java.nio.charset.Charset
 @Tag("integration")
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-class PartijQueryIT(
+class OpenKlant2PartijQueryIT(
     @Autowired private val webTestClient: WebTestClient,
 ) {
     @SpyBean

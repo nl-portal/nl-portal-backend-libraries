@@ -28,16 +28,6 @@ data class DigitaleAdres(
     val uuid: String,
     val verstrektDoorBetrokkene: OpenKlant2ForeignKey? = null,
     val verstrektDoorPartij: OpenKlant2ForeignKey? = null,
-)
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-data class CreateDigitaleAdres(
-    val adres: String,
-    val omschrijving: String,
-    val soortDigitaalAdres: String,
-    val verstrektDoorBetrokkene: OpenKlant2ForeignKey? = null,
-    val verstrektDoorPartij: OpenKlant2ForeignKey? = null,
 ) {
     init {
         require(adres.length <= 80) {

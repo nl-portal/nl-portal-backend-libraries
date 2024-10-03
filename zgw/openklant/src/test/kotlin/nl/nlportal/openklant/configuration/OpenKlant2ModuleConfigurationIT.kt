@@ -42,7 +42,7 @@ import java.nio.charset.Charset
 @ActiveProfiles("openklant-disabled")
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-class ModuleConfigurationIT(
+class OpenKlant2ModuleConfigurationIT(
     @Autowired private val webTestClient: WebTestClient,
     @Autowired private val openKlantModuleConfiguration: OpenKlantModuleConfiguration,
 ) {

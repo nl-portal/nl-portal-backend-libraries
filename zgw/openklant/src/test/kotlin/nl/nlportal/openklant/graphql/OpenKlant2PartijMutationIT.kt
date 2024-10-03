@@ -49,7 +49,7 @@ import java.nio.charset.Charset
 @Tag("integration")
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-class PartijMutationIT(
+class OpenKlant2PartijMutationIT(
     @Autowired private val webTestClient: WebTestClient,
 ) {
     @SpyBean

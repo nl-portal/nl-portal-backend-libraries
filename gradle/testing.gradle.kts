@@ -19,12 +19,12 @@ tasks.register<Test>("integrationTest") {
     useJUnitPlatform {
         includeTags("integration")
     }
-
-    mustRunAfter(tasks.getByName("check"))
 }
 
 tasks.named<Test>("test") {
     useJUnitPlatform {
         excludeTags("integration")
     }
+
+    dependsOn(tasks.getByName("integrationTest"))
 }

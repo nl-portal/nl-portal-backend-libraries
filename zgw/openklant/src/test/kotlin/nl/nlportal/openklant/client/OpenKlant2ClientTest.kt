@@ -26,7 +26,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.web.reactive.function.client.awaitBodilessEntity
 
-class OpenKlantClientTest {
+class OpenKlant2ClientTest {
     private lateinit var openklantModuleConfiguration: OpenKlantModuleConfiguration
     private lateinit var mockServer: MockWebServer
     private lateinit var openKlant2Client: OpenKlant2Client

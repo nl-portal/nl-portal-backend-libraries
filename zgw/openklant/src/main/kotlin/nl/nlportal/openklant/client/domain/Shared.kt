@@ -15,6 +15,7 @@
  */
 package nl.nlportal.openklant.client.domain
 
+import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonValue
 
 data class OpenKlant2ForeignKey(
@@ -48,7 +49,7 @@ data class OpenKlant2Adres(
     val adresregel1: String? = null,
     val adresregel2: String? = null,
     val adresregel3: String? = null,
-    val land: Landcode? = null,
+    val land: OpenKlant2Landcode? = null,
     val nummeraanduidingId: String? = null,
 ) {
     init {
@@ -67,7 +68,10 @@ data class OpenKlant2Adres(
     }
 }
 
-enum class Landcode(
+@GraphQLIgnore
+interface OpenKlant2Filters
+
+enum class OpenKlant2Landcode(
     @JsonValue val landcode: String,
     val landnaam: String,
 ) {
@@ -460,7 +464,7 @@ enum class Landcode(
     MICRONESIA("9094", "Micronesia"),
     SVALBARDEILANDEN("9095", "Svalbardeilanden"),
     INTERNATIONAAL_GEBIED("9999", "Internationaal gebied"),
-    NULL("", "Null"),
+    NONE("", ""),
     ;
 
     override fun toString(): String {

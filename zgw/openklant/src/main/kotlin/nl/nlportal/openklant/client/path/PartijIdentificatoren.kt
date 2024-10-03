@@ -17,16 +17,18 @@ package nl.nlportal.openklant.client.path
 
 import nl.nlportal.openklant.client.OpenKlant2Client
 import nl.nlportal.openklant.client.domain.OpenKlant2PartijIdentificator
+import nl.nlportal.openklant.client.domain.OpenKlant2PartijIdentificatorenFilters
 import nl.nlportal.openklant.client.domain.ResultPage
 import org.springframework.http.MediaType
-import org.springframework.util.MultiValueMapAdapter
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.awaitBody
 
 class PartijIdentificatoren(val client: OpenKlant2Client) : KlantInteractiesPath() {
     override val path: String = "/partij-identificatoren"
 
-    suspend fun find(searchVariables: MultiValueMapAdapter<String, String>? = null): List<OpenKlant2PartijIdentificator> {
+    suspend fun find(
+        searchFilters: List<Pair<OpenKlant2PartijIdentificatorenFilters, String>>? = null,
+    ): List<OpenKlant2PartijIdentificator> {
         val response: ResultPage<OpenKlant2PartijIdentificator> =
             client
                 .webClient()
@@ -34,7 +36,7 @@ class PartijIdentificatoren(val client: OpenKlant2Client) : KlantInteractiesPath
                 .uri { uriBuilder ->
                     uriBuilder
                         .path(path)
-                    searchVariables?.let { uriBuilder.queryParams(it) }
+                        .queryParams(searchFilters)
                     uriBuilder.build()
                 }
                 .accept(MediaType.APPLICATION_JSON)
