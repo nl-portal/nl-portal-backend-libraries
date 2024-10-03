@@ -25,8 +25,11 @@ data class OpenKlantModuleConfiguration(
 ) {
     init {
         if (enabled) {
-            requireNotNull(properties.url) {
-                "OpenKlant URL not configured"
+            requireNotNull(properties.contactgegevensApiUrl) {
+                "OpenKlant Contactgegevens API URL not configured"
+            }
+            requireNotNull(properties.klantinteractiesApiUrl) {
+                "OpenKlant Klantinteracties API URL not configured"
             }
             requireNotNull(properties.token) {
                 "OpenKlant token not configured"
@@ -35,7 +38,8 @@ data class OpenKlantModuleConfiguration(
     }
 
     data class OpenKlantConfigurationProperties(
-        var url: URI? = null,
+        var contactgegevensApiUrl: URI? = null,
+        var klantinteractiesApiUrl: URI? = null,
         var token: String? = null,
     )
 }

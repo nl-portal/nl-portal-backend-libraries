@@ -19,7 +19,7 @@ import com.fasterxml.jackson.module.kotlin.convertValue
 import mu.KotlinLogging
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.Mapper
-import nl.nlportal.openklant.client.OpenKlant2Client
+import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
 import nl.nlportal.openklant.client.domain.OpenKlant2Identificator
 import nl.nlportal.openklant.client.domain.OpenKlant2IdentificeerdePartij
 import nl.nlportal.openklant.client.domain.OpenKlant2Partij
@@ -34,7 +34,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import java.util.UUID
 
 class OpenKlant2Service(
-    private val openKlant2Client: OpenKlant2Client,
+    private val openKlant2Client: OpenKlant2KlantinteractiesClient,
 ) {
     suspend fun findPartij(authentication: CommonGroundAuthentication): OpenKlant2Partij? {
         val searchVariables =

@@ -26,10 +26,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.web.reactive.function.client.awaitBodilessEntity
 
-class OpenKlant2ClientTest {
+class OpenKlant2KlantinteractiesClientTest {
     private lateinit var openklantModuleConfiguration: OpenKlantModuleConfiguration
     private lateinit var mockServer: MockWebServer
-    private lateinit var openKlant2Client: OpenKlant2Client
+    private lateinit var openKlant2Client: OpenKlant2KlantinteractiesClient
     private lateinit var hostUrl: String
     private lateinit var apiUrl: String
 
@@ -45,11 +45,11 @@ class OpenKlant2ClientTest {
                 enabled = true,
                 properties =
                     OpenKlantConfigurationProperties(
-                        url = mockServer.url("/myapi/v1").toUri(),
+                        klantinteractiesApiUrl = mockServer.url("/myapi/v1").toUri(),
                         token = "SuperSecretToken1234",
                     ),
             )
-        openKlant2Client = OpenKlant2Client(openklantModuleConfiguration.properties)
+        openKlant2Client = OpenKlant2KlantinteractiesClient(openklantModuleConfiguration.properties)
     }
 
     @AfterEach

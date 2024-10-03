@@ -17,7 +17,7 @@ package nl.nlportal.openklant.service
 
 import nl.nlportal.openklant.autoconfigure.OpenKlantModuleConfiguration
 import nl.nlportal.openklant.autoconfigure.OpenKlantModuleConfiguration.OpenKlantConfigurationProperties
-import nl.nlportal.openklant.client.OpenKlant2Client
+import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -25,7 +25,7 @@ import org.junit.jupiter.api.BeforeEach
 class OpenKlant2ServiceTest() {
     private lateinit var openklantModuleConfiguration: OpenKlantModuleConfiguration
     private lateinit var mockServer: MockWebServer
-    private lateinit var openKlant2Client: OpenKlant2Client
+    private lateinit var openKlant2Client: OpenKlant2KlantinteractiesClient
     private lateinit var hostUrl: String
     private lateinit var apiUrl: String
 
@@ -41,11 +41,11 @@ class OpenKlant2ServiceTest() {
                 enabled = true,
                 properties =
                     OpenKlantConfigurationProperties(
-                        url = mockServer.url("/myapi/v1").toUri(),
+                        klantinteractiesApiUrl = mockServer.url("/myapi/v1").toUri(),
                         token = "SuperSecretToken1234",
                     ),
             )
-        openKlant2Client = OpenKlant2Client(openklantModuleConfiguration.properties)
+        openKlant2Client = OpenKlant2KlantinteractiesClient(openklantModuleConfiguration.properties)
     }
 
     @AfterEach

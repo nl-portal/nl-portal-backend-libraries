@@ -76,7 +76,8 @@ nl-portal:
         openklant:
             enabled: true
             properties:
-                url: http://localhost:8007/klantinteracties/api/v1
+                contactgegevens-api-url: http://localhost:8007/contactgegevens/api/v1
+                klantinteracties-api-url: http://localhost:8007/klantinteracties/api/v1
                 token: ac045222c9e7cde8120b48735560f9b920bb58cd
     zgw:
         catalogiapi:

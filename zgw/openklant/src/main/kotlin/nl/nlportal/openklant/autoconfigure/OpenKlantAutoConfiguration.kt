@@ -18,7 +18,7 @@ package nl.nlportal.openklant.autoconfigure
 import com.expediagroup.graphql.server.operations.Mutation
 import com.expediagroup.graphql.server.operations.Query
 import mu.KotlinLogging
-import nl.nlportal.openklant.client.OpenKlant2Client
+import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
 import nl.nlportal.openklant.graphql.PartijMutation
 import nl.nlportal.openklant.graphql.PartijQuery
 import nl.nlportal.openklant.service.OpenKlant2Service
@@ -32,14 +32,14 @@ import org.springframework.context.annotation.Bean
 )
 class OpenKlantAutoConfiguration {
     @Bean
-    @ConditionalOnMissingBean(OpenKlant2Client::class)
-    fun openKlant2Client(openklantModuleConfiguration: OpenKlantModuleConfiguration): OpenKlant2Client {
-        return OpenKlant2Client(openKlantConfigurationProperties = openklantModuleConfiguration.properties)
+    @ConditionalOnMissingBean(OpenKlant2KlantinteractiesClient::class)
+    fun openKlant2Client(openklantModuleConfiguration: OpenKlantModuleConfiguration): OpenKlant2KlantinteractiesClient {
+        return OpenKlant2KlantinteractiesClient(openKlantConfigurationProperties = openklantModuleConfiguration.properties)
     }
 
     @Bean
     @ConditionalOnMissingBean(OpenKlant2Service::class)
-    fun openKlant2Service(openklant2Client: OpenKlant2Client): OpenKlant2Service {
+    fun openKlant2Service(openklant2Client: OpenKlant2KlantinteractiesClient): OpenKlant2Service {
         return OpenKlant2Service(openklant2Client)
     }
 

@@ -15,7 +15,7 @@
  */
 package nl.nlportal.openklant.client.path
 
-import nl.nlportal.openklant.client.OpenKlant2Client
+import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
 import nl.nlportal.openklant.client.domain.OpenKlant2Partij
 import nl.nlportal.openklant.client.domain.OpenKlant2PartijenFilters
 import nl.nlportal.openklant.client.domain.ResultPage
@@ -26,7 +26,7 @@ import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.awaitBodyOrNull
 import java.util.UUID
 
-class Partijen(val client: OpenKlant2Client) : KlantInteractiesPath() {
+class Partijen(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesPath() {
     override val path = "/partijen"
 
     suspend fun find(searchFilters: List<Pair<OpenKlant2PartijenFilters, String>>? = null): OpenKlant2Partij? {

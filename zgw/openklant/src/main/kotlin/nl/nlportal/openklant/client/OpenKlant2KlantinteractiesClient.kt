@@ -28,14 +28,14 @@ import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
 import kotlin.reflect.full.primaryConstructor
 
-class OpenKlant2Client(private val openKlantConfigurationProperties: OpenKlantConfigurationProperties) {
+class OpenKlant2KlantinteractiesClient(private val openKlantConfigurationProperties: OpenKlantConfigurationProperties) {
     inline fun <reified P : KlantInteractiesPath> path(): P {
         return P::class.primaryConstructor!!.call(this)
     }
 
     fun webClient(): WebClient {
         return webclientBuilder
-            .baseUrl(openKlantConfigurationProperties.url.toString())
+            .baseUrl(openKlantConfigurationProperties.klantinteractiesApiUrl.toString())
             .defaultHeader("Accept-Crs", "EPSG:4326")
             .defaultHeader("Content-Crs", "EPSG:4326")
             .defaultHeader("Authorization", "Token ${openKlantConfigurationProperties.token}")

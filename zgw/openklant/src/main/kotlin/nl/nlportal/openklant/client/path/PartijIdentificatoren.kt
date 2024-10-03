@@ -15,7 +15,7 @@
  */
 package nl.nlportal.openklant.client.path
 
-import nl.nlportal.openklant.client.OpenKlant2Client
+import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
 import nl.nlportal.openklant.client.domain.OpenKlant2PartijIdentificator
 import nl.nlportal.openklant.client.domain.OpenKlant2PartijIdentificatorenFilters
 import nl.nlportal.openklant.client.domain.ResultPage
@@ -23,7 +23,7 @@ import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.awaitBody
 
-class PartijIdentificatoren(val client: OpenKlant2Client) : KlantInteractiesPath() {
+class PartijIdentificatoren(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesPath() {
     override val path: String = "/partij-identificatoren"
 
     suspend fun find(
