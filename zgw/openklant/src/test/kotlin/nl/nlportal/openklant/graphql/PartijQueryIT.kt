@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Ritense BV, the Netherlands.
+ * Copyright 2024 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,18 +21,13 @@ import com.fasterxml.jackson.module.kotlin.treeToValue
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.core.util.Mapper
-import nl.nlportal.openklant.TestHelper
-import nl.nlportal.openklant.autoconfigure.OpenKlantModuleConfiguration
-import nl.nlportal.openklant.domain.CreatePartij.PersoonsIdentificatie
-import nl.nlportal.openklant.domain.SoortPartij
+import nl.nlportal.openklant.client.domain.PersoonsIdentificatie
+import nl.nlportal.openklant.client.domain.SoortPartij
 import nl.nlportal.openklant.service.OpenKlant2Service
-import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -51,28 +46,14 @@ import org.springframework.web.reactive.function.BodyInserters
 import java.nio.charset.Charset
 
 @SpringBootTest
+@Tag("integration")
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class PartijQueryIT(
     @Autowired private val webTestClient: WebTestClient,
-    @Autowired private val openKlantModuleConfiguration: OpenKlantModuleConfiguration,
 ) {
     @SpyBean
     lateinit var openKlant2Service: OpenKlant2Service
-
-    lateinit var mockOpenKlant: MockWebServer
-
-    @BeforeEach
-    fun setUp() {
-        mockOpenKlant = MockWebServer()
-        mockOpenKlant.start()
-        openKlantModuleConfiguration.properties.url = mockOpenKlant.url("/").toUri()
-    }
-
-    @AfterEach
-    internal fun tearDown() {
-        mockOpenKlant.shutdown()
-    }
 
     @Test
     fun `should introspect Partij type`() =
@@ -103,25 +84,17 @@ class PartijQueryIT(
 
             // then
             assertEquals("OBJECT", typeResponse?.get("kind")?.textValue())
-            assertEquals("Partij", typeResponse?.get("name")?.textValue())
-            assertEquals("A Type that represents a Klantinteracties API Partij object", typeResponse?.get("description")?.textValue())
+            assertEquals("OpenKlant2Partij", typeResponse?.get("name")?.textValue())
+            assertEquals(
+                "A Type that represents a Klantinteracties API Partij object",
+                typeResponse?.get("description")?.textValue(),
+            )
         }
 
     @Test
-    @WithBurgerUser("999990755")
-    fun `should return Partij for authenticated user`() =
+    @WithBurgerUser("123456788")
+    fun `should find Partij for authenticated user`() =
         runTest {
-            // given
-            val partijenResponse =
-                MockResponse()
-                    .setResponseCode(200)
-                    .addHeader("Content-Type", "application/json")
-                    .setBody(TestHelper.Partijen.persoonPartijResponse)
-
-            with(mockOpenKlant) {
-                enqueue(partijenResponse)
-            }
-
             // when
             val responseBody =
                 webTestClient
@@ -132,7 +105,7 @@ class PartijQueryIT(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getPartij.graphql")))
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/findUserPartij.graphql")))
                     .exchange()
                     .expectStatus().isOk
                     .expectBody()
@@ -144,15 +117,11 @@ class PartijQueryIT(
                 objectMapper
                     .readValue<JsonNode>(responseBody!!)
                     .get("data")
-                    ?.get("getPartij")
-
-            val recordedRequest = mockOpenKlant.takeRequest()
+                    ?.get("findUserPartij")
 
             // then
             verify(openKlant2Service, times(1)).findPartij(any())
 
-            assertTrue(recordedRequest.requestUrl.toString().contains("999990755"))
-            assertTrue(recordedRequest.requestUrl.toString().contains("persoon"))
             assertNotNull(responsePartij)
             assertEquals(SoortPartij.PERSOON.name, responsePartij?.get("soortPartij")?.textValue())
             assertDoesNotThrow { objectMapper.treeToValue<PersoonsIdentificatie>(responsePartij!!.get("partijIdentificatie")) }
@@ -160,20 +129,9 @@ class PartijQueryIT(
         }
 
     @Test
-    @WithBurgerUser("111111110")
-    fun `should return null when no Partij was found for authenticated user`() =
+    @WithBurgerUser("123456788")
+    fun `should get Partij by Id for authenticated user`() =
         runTest {
-            // given
-            val partijenResponse =
-                MockResponse()
-                    .setResponseCode(200)
-                    .addHeader("Content-Type", "application/json")
-                    .setBody(TestHelper.Partijen.emptyPage)
-
-            with(mockOpenKlant) {
-                enqueue(partijenResponse)
-            }
-
             // when
             val responseBody =
                 webTestClient
@@ -184,7 +142,7 @@ class PartijQueryIT(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getPartij.graphql")))
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserPartij.graphql")))
                     .exchange()
                     .expectStatus().isOk
                     .expectBody()
@@ -196,15 +154,82 @@ class PartijQueryIT(
                 objectMapper
                     .readValue<JsonNode>(responseBody!!)
                     .get("data")
-                    ?.get("getPartij")
+                    ?.get("getUserPartij")
 
-            val recordedRequest = mockOpenKlant.takeRequest()
+            // then
+            verify(openKlant2Service, times(1)).getPartij(any())
+
+            assertNotNull(responsePartij)
+            assertEquals(SoortPartij.PERSOON.name, responsePartij?.get("soortPartij")?.textValue())
+            assertDoesNotThrow { objectMapper.treeToValue<PersoonsIdentificatie>(responsePartij!!.get("partijIdentificatie")) }
+            assertEquals("Lucas Boom", responsePartij?.requiredAt("/partijIdentificatie/volledigeNaam")?.textValue())
+        }
+
+    @Test
+    @WithBurgerUser("99990755")
+    fun `should return null when user is not allowed to request Partij`() =
+        runTest {
+            // when
+            val responseBody =
+                webTestClient
+                    .post()
+                    .uri { builder ->
+                        builder
+                            .path("/graphql")
+                            .build()
+                    }
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserPartij.graphql")))
+                    .exchange()
+                    .expectStatus().isOk
+                    .expectBody()
+                    .returnResult()
+                    .responseBodyContent
+                    ?.toString(Charset.defaultCharset())
+
+            val responsePartij =
+                objectMapper
+                    .readValue<JsonNode>(responseBody!!)
+                    .get("data")
+                    ?.get("getUserPartij")
+
+            // then
+            verify(openKlant2Service, times(1)).findPartijIdentificatoren(any())
+            verify(openKlant2Service, times(0)).getPartij(any())
+
+            assertTrue(responsePartij!!.isNull)
+        }
+
+    @Test
+    @WithBurgerUser("111111110")
+    fun `should return null when no Partij was found for authenticated user`() =
+        runTest {
+            // when
+            val responseBody =
+                webTestClient
+                    .post()
+                    .uri { builder ->
+                        builder
+                            .path("/graphql")
+                            .build()
+                    }
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/findUserPartij.graphql")))
+                    .exchange()
+                    .expectStatus().isOk
+                    .expectBody()
+                    .returnResult()
+                    .responseBodyContent
+                    ?.toString(Charset.defaultCharset())
+
+            val responsePartij =
+                objectMapper
+                    .readValue<JsonNode>(responseBody!!)
+                    .get("data")
+                    ?.get("findUserPartij")
 
             // then
             verify(openKlant2Service, times(1)).findPartij(any())
-
-            assertTrue(recordedRequest.requestUrl.toString().contains("111111110"))
-            assertTrue(recordedRequest.requestUrl.toString().contains("persoon"))
             assertTrue(responsePartij!!.isNull)
         }
 

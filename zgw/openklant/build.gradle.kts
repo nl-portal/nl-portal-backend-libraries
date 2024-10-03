@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+
 /*
  * Copyright (c) 2024 Ritense BV, the Netherlands.
  *
@@ -19,12 +21,19 @@ plugins {
 
 val isLib = true
 
+dockerCompose {
+    setProjectName("$name-test")
+    isRequiredBy(tasks.getByName("integrationTest"))
+    useComposeFiles.addAll("../../docker-resources/docker-compose-base-test.yml", "docker-compose-override.yml")
+}
+
 dependencies {
     api(project(":graphql"))
     api(project(":portal-authentication"))
     api(project(":zgw:common-ground-authentication"))
 
     testImplementation(project(":zgw:common-ground-authentication-test"))
+    testImplementation(TestDependencies.postgresql)
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.springframework.security", "spring-security-test")
     testImplementation(TestDependencies.kotlinCoroutines)
@@ -34,7 +43,7 @@ dependencies {
 }
 
 val jar: Jar by tasks
-val bootJar: org.springframework.boot.gradle.tasks.bundling.BootJar by tasks
+val bootJar: BootJar by tasks
 bootJar.enabled = false
 jar.enabled = true
 

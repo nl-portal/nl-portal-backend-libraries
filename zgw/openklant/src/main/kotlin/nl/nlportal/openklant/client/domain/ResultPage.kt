@@ -13,8 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.openklant.client.path
+package nl.nlportal.openklant.client.domain
 
-open class KlantInteractiesPath {
-    open val path: String = "/"
+import java.net.URI
+
+data class ResultPage<T>(
+    val count: Int,
+    val next: URI? = null,
+    val previous: URI? = null,
+    val results: List<T>,
+) {
+    fun getNextPageNumber(): Int? {
+        return next
+            ?.query
+            ?.split("&")
+            ?.asSequence()
+            ?.map { Pair(it.substringBefore("="), it.substringAfter("=")) }
+            ?.firstOrNull { it.first == "page" }
+            ?.second?.toIntOrNull()
+    }
 }

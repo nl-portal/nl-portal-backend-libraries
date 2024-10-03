@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2024 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.openklant.domain
 
-import java.net.URI
+tasks.register<Test>("integrationTest") {
+    group = "verification"
+    useJUnitPlatform {
+        includeTags("integration")
+    }
 
-data class ResultPage<T>(
-    val count: Int,
-    val next: URI? = null,
-    val previous: URI? = null,
-    val results: List<T>,
-) {
-    fun getNextPageNumber(): Int? {
-        return next
-            ?.query
-            ?.split("&")
-            ?.asSequence()
-            ?.map { Pair(it.substringBefore("="), it.substringAfter("=")) }
-            ?.firstOrNull { it.first == "page" }
-            ?.second?.toIntOrNull()
+    mustRunAfter(tasks.getByName("check"))
+}
+
+tasks.named<Test>("test") {
+    useJUnitPlatform {
+        excludeTags("integration")
     }
 }

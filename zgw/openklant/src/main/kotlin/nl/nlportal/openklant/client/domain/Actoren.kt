@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Ritense BV, the Netherlands.
+ * Copyright 2024 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.openklant.domain
+package nl.nlportal.openklant.client.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
@@ -21,39 +21,18 @@ import com.fasterxml.jackson.annotation.JsonValue
 import java.util.UUID
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 data class Actor(
-    val uuid: UUID,
-    val url: String,
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    val uuid: UUID? = null,
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    val url: String? = null,
     val naam: String,
     val soortActor: SoortActor,
     val indicatieActief: Boolean? = null,
     val actoridentificator: OpenKlant2Identificator? = null,
-)
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-data class CreateActor(
-    val name: String,
-    val indicatieActief: Boolean,
-    val soortActor: SoortActor,
 ) {
     init {
-        require(name.length in 1..200) { "Actor name has to be between 1 and 200 characters long" }
-    }
-}
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-data class PatchActor(
-    val uuid: UUID,
-    val name: String? = null,
-    val soortActor: SoortActor,
-    val indicatieActief: Boolean? = null,
-    val actoridentificator: OpenKlant2Identificator? = null,
-) {
-    init {
-        require(name == null || name.length in 1..200) { "Actor name has to be between 1 and 200 characters long" }
+        require(naam == null || naam.length in 1..200) { "Actor name has to be between 1 and 200 characters long" }
     }
 }
 

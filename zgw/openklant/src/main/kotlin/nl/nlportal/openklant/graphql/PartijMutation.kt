@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Ritense BV, the Netherlands.
+ * Copyright 2024 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@ package nl.nlportal.openklant.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Mutation
-import com.fasterxml.jackson.databind.node.ObjectNode
 import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
-import nl.nlportal.openklant.domain.Partij
+import nl.nlportal.openklant.client.domain.OpenKlant2Partij
+import nl.nlportal.openklant.graphql.domain.PartijRequest
 import nl.nlportal.openklant.service.OpenKlant2Service
 
 class PartijMutation(
@@ -29,16 +29,22 @@ class PartijMutation(
     @GraphQLDescription("Create Partij for user")
     suspend fun createPartij(
         dfe: DataFetchingEnvironment,
-        createPartijPayload: ObjectNode,
-    ): Partij? {
-        return openklant2Service.createPartij(dfe.graphQlContext.get(AUTHENTICATION_KEY), createPartijPayload)
+        partijRequest: PartijRequest,
+    ): OpenKlant2Partij? {
+        return openklant2Service.createPartijWithIdentificator(
+            authentication = dfe.graphQlContext.get(AUTHENTICATION_KEY),
+            partijRequest = partijRequest.asOpenKlant2Partij(),
+        )
     }
 
     @GraphQLDescription("Update user Partij")
     suspend fun updatePartij(
         dfe: DataFetchingEnvironment,
-        partijPayload: ObjectNode,
-    ): Partij {
-        return openklant2Service.updatePartij(dfe.graphQlContext.get(AUTHENTICATION_KEY), partijPayload)
+        partijRequest: PartijRequest,
+    ): OpenKlant2Partij {
+        return openklant2Service.updatePartij(
+            dfe.graphQlContext.get(AUTHENTICATION_KEY),
+            partijRequest.asOpenKlant2Partij(),
+        )
     }
 }

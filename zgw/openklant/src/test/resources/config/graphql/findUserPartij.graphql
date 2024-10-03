@@ -1,5 +1,5 @@
 query {
-    getPartij {
+    findUserPartij {
         betrokkenen {
             uuid
             url

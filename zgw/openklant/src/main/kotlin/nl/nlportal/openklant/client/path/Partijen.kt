@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Ritense BV, the Netherlands.
+ * Copyright 2024 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,21 @@
 package nl.nlportal.openklant.client.path
 
 import nl.nlportal.openklant.client.OpenKlant2Client
-import nl.nlportal.openklant.domain.CreatePartij
-import nl.nlportal.openklant.domain.Partij
-import nl.nlportal.openklant.domain.ResultPage
+import nl.nlportal.openklant.client.domain.OpenKlant2Partij
+import nl.nlportal.openklant.client.domain.ResultPage
 import org.springframework.http.MediaType
 import org.springframework.util.MultiValueMap
 import org.springframework.web.reactive.function.BodyInserters
+import org.springframework.web.reactive.function.client.awaitBodilessEntity
 import org.springframework.web.reactive.function.client.awaitBody
+import org.springframework.web.reactive.function.client.awaitBodyOrNull
+import java.util.UUID
 
 class Partijen(val client: OpenKlant2Client) : KlantInteractiesPath() {
-    override val path = "/klantinteracties/api/v1/partijen"
+    override val path = "/partijen"
 
-    suspend fun find(queryParams: MultiValueMap<String, String>? = null): Partij? {
-        val response: ResultPage<Partij> =
+    suspend fun find(queryParams: MultiValueMap<String, String>? = null): OpenKlant2Partij? {
+        val response: ResultPage<OpenKlant2Partij> =
             client
                 .webClient()
                 .get()
@@ -45,8 +47,25 @@ class Partijen(val client: OpenKlant2Client) : KlantInteractiesPath() {
         return response.results.singleOrNull()
     }
 
-    suspend fun create(createPartij: CreatePartij): Partij {
-        val response: Partij =
+    suspend fun get(partijId: UUID): OpenKlant2Partij? {
+        val response: OpenKlant2Partij? =
+            client
+                .webClient()
+                .get()
+                .uri { uriBuilder ->
+                    uriBuilder
+                        .path("$path/$partijId")
+                        .build()
+                }
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .awaitBodyOrNull()
+
+        return response
+    }
+
+    suspend fun create(partijRequest: OpenKlant2Partij): OpenKlant2Partij {
+        val response: OpenKlant2Partij =
             client
                 .webClient()
                 .post()
@@ -55,7 +74,7 @@ class Partijen(val client: OpenKlant2Client) : KlantInteractiesPath() {
                         .path(path)
                         .build()
                 }
-                .body(BodyInserters.fromValue(createPartij))
+                .body(BodyInserters.fromValue(partijRequest))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .awaitBody()
@@ -63,8 +82,8 @@ class Partijen(val client: OpenKlant2Client) : KlantInteractiesPath() {
         return response
     }
 
-    suspend fun put(partij: Partij): Partij? {
-        val response: ResultPage<Partij> =
+    suspend fun put(partij: OpenKlant2Partij): OpenKlant2Partij? {
+        val response: ResultPage<OpenKlant2Partij> =
             client
                 .webClient()
                 .put()
@@ -79,5 +98,19 @@ class Partijen(val client: OpenKlant2Client) : KlantInteractiesPath() {
                 .awaitBody()
 
         return response.results.singleOrNull()
+    }
+
+    suspend fun delete(uuid: UUID) {
+        client
+            .webClient()
+            .delete()
+            .uri { uriBuilder ->
+                uriBuilder
+                    .path("$path/$uuid")
+                    .build()
+            }
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .awaitBodilessEntity()
     }
 }

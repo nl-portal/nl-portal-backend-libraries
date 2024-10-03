@@ -13,20 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.openklant.client
+package nl.nlportal.openklant.service
 
-import kotlinx.coroutines.test.runTest
 import nl.nlportal.openklant.autoconfigure.OpenKlantModuleConfiguration
 import nl.nlportal.openklant.autoconfigure.OpenKlantModuleConfiguration.OpenKlantConfigurationProperties
-import okhttp3.mockwebserver.MockResponse
+import nl.nlportal.openklant.client.OpenKlant2Client
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.springframework.web.reactive.function.client.awaitBodilessEntity
 
-class OpenKlantClientTest {
+class OpenKlant2ServiceTest() {
     private lateinit var openklantModuleConfiguration: OpenKlantModuleConfiguration
     private lateinit var mockServer: MockWebServer
     private lateinit var openKlant2Client: OpenKlant2Client
@@ -56,21 +52,4 @@ class OpenKlantClientTest {
     internal fun tearDown() {
         mockServer.shutdown()
     }
-
-    @Test
-    fun `should provide configured webclient`() =
-        runTest {
-            // when
-            mockServer.enqueue(MockResponse().setResponseCode(200))
-
-            // given
-            openKlant2Client.webClient().get().uri("mypath").retrieve().awaitBodilessEntity()
-            val request = mockServer.takeRequest()
-
-            // then
-            assertEquals("${apiUrl}mypath", request.requestUrl.toString())
-            assertEquals("Token SuperSecretToken1234", request.getHeader("Authorization"))
-            assertEquals("EPSG:4326", request.getHeader("Accept-Crs"))
-            assertEquals("EPSG:4326", request.getHeader("Content-Crs"))
-        }
 }

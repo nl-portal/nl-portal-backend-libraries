@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Ritense BV, the Netherlands.
+ * Copyright 2024 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.openklant.domain
+package nl.nlportal.openklant.client.domain
 
 import com.fasterxml.jackson.annotation.JsonValue
 
@@ -23,11 +23,26 @@ data class OpenKlant2ForeignKey(
 )
 
 data class OpenKlant2Identificator(
-    val objectId: String,
-    val codeObjecttype: String,
-    val codeRegister: String,
-    val codeSoortObjectId: String,
-)
+    val objectId: String = "",
+    val codeObjecttype: String = "",
+    val codeRegister: String = "",
+    val codeSoortObjectId: String = "",
+) {
+    init {
+        require(objectId.length <= 200) {
+            "ObjectID can't be longer than 200 characters"
+        }
+        require(codeObjecttype.length <= 200) {
+            "ObjectID can't be longer than 200 characters"
+        }
+        require(codeRegister.length <= 200) {
+            "ObjectID can't be longer than 200 characters"
+        }
+        require(codeSoortObjectId.length <= 200) {
+            "ObjectID can't be longer than 200 characters"
+        }
+    }
+}
 
 data class OpenKlant2Adres(
     val adresregel1: String? = null,
