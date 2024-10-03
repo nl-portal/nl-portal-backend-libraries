@@ -44,6 +44,7 @@ enum class OpenKlant2PartijIdentificatorenFilters(
     @JsonValue val value: String,
 ) : OpenKlant2Filters {
     ANDERE_PARTIJ_IDENTIFICATOR("andere_partij_identificator"),
+    PAGE("page"),
     PARTIJ_IDENTIFICATOR_CODE_OBJECTTYPE("partij_identificator_code_objecttype"),
     PARTIJ_IDENTIFICATOR_CODE_SOORT_OBJECT_ID("partij_identificator_code_soort_object_id"),
     PARTIJ_IDENTIFICATOR_OBJECT_ID("partij_identificator_object_id"),

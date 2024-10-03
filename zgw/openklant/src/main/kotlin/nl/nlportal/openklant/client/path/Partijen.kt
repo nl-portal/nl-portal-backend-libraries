@@ -38,13 +38,31 @@ class Partijen(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesP
                     uriBuilder
                         .path(path)
                         .queryParams(filters = searchFilters)
-                    uriBuilder.build()
+                        .build()
                 }
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .awaitBody()
 
         return response.results.singleOrNull()
+    }
+
+    suspend fun get(searchFilters: List<Pair<OpenKlant2PartijenFilters, String>>? = null): List<OpenKlant2Partij>? {
+        val response: ResultPage<OpenKlant2Partij>? =
+            client
+                .webClient()
+                .get()
+                .uri { uriBuilder ->
+                    uriBuilder
+                        .path("$path")
+                        .queryParams(filters = searchFilters)
+                        .build()
+                }
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .awaitBodyOrNull()
+
+        return response?.results
     }
 
     suspend fun get(partijId: UUID): OpenKlant2Partij? {

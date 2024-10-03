@@ -143,6 +143,7 @@ enum class OpenKlant2PartijenFilters(
     PARTIJ_IDENTIFICATOR_CODE_REGISTER("partij_identificator__code_register"),
     CATEGORIERELATIE__CATEGORIE_NAAM("categorierelatie__categorie__naam"),
     NUMMER("nummer"),
+    PAGE("page"),
     INDICATIE_GEHEIMHOUDING("indicatie_geheimhouding"),
     INDICATIE_ACTIEF("indicatie_actief"),
     SOORT_PARTIJ("soort_partij"),

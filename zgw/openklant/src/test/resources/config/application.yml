@@ -7,7 +7,6 @@ nl-portal:
       openklant:
           enabled: true
           properties:
-              contactgegevens-api-url: http://localhost:9007/contactgegevens/api/v1
               klantinteracties-api-url: http://localhost:9007/klantinteracties/api/v1
               token: ac045222c9e7cde8120b48735560f9b920bb58cd
 
@@ -42,5 +41,5 @@ nl-portal:
         openklant:
             enabled: true
             properties:
-                url:
+                klantinteracties-api-url:
                 token:

@@ -25,9 +25,6 @@ data class OpenKlantModuleConfiguration(
 ) {
     init {
         if (enabled) {
-            requireNotNull(properties.contactgegevensApiUrl) {
-                "OpenKlant Contactgegevens API URL not configured"
-            }
             requireNotNull(properties.klantinteractiesApiUrl) {
                 "OpenKlant Klantinteracties API URL not configured"
             }

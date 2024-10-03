@@ -25,6 +25,8 @@ tasks.named<Test>("test") {
     useJUnitPlatform {
         excludeTags("integration")
     }
+}
 
+tasks.named("check") {
     dependsOn(tasks.getByName("integrationTest"))
 }
