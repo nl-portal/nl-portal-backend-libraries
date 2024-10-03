@@ -156,14 +156,18 @@ class ProductQuery(
         productName: String,
         dmnVariables: ObjectNode? = null,
     ): List<DmnResponse> {
-        var sourceMap: Map<String, UUID>? = null
-        sources?.let { sourceMap = Mapper.get().convertValue(it, object : TypeReference<Map<String, UUID>>() {}) }
         return dmnService.getProductDecision(
-            sources = sourceMap,
+            sources = sources?.let { Mapper.get().convertValue(it, object : TypeReference<Map<String, UUID>>() {}) },
             formulier = formulier,
             productTypeId = productTypeId,
             productName = productName,
-            dmnVariables = Mapper.get().convertValue(dmnVariables, object : TypeReference<Map<String, DmnVariable>>() {}),
+            dmnVariables =
+                dmnVariables?.let {
+                    Mapper.get().convertValue(
+                        dmnVariables,
+                        object : TypeReference<Map<String, DmnVariable>>() {},
+                    )
+                },
         )
     }
 
@@ -180,10 +184,8 @@ class ProductQuery(
         formulier: String,
         dfe: DataFetchingEnvironment,
     ): PrefillResponse {
-        var sourceMap: Map<String, UUID>? = null
-        sources?.let { sourceMap = Mapper.get().convertValue(it, object : TypeReference<Map<String, UUID>>() {}) }
         return prefillService.prefill(
-            sources = sourceMap,
+            sources = sources?.let { Mapper.get().convertValue(it, object : TypeReference<Map<String, UUID>>() {}) },
             staticData = staticData?.let { Mapper.get().convertValue(it, object : TypeReference<Map<String, Any>>() {}) },
             productTypeId = productTypeId,
             productName = productName,
