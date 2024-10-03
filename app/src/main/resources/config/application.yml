@@ -163,7 +163,7 @@ nl-portal:
                   allowedOrigins: "*"
                   allowedMethods: "*"
         endpoints:
-            unsecured: /api/payment/**
+            unsecured: /api/public/**
     payment:
         ogone:
             url: https://secure.ogone.com/ncol/test/orderstandard.asp
