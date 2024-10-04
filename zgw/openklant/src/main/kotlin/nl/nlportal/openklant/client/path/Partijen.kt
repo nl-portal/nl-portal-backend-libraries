@@ -29,33 +29,20 @@ import java.util.UUID
 class Partijen(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesPath() {
     override val path = "/partijen"
 
-    suspend fun find(searchFilters: List<Pair<OpenKlant2PartijenFilters, String>>? = null): OpenKlant2Partij? {
-        val response: ResultPage<OpenKlant2Partij> =
-            client
-                .webClient()
-                .get()
-                .uri { uriBuilder ->
-                    uriBuilder
-                        .path(path)
-                        .queryParams(filters = searchFilters)
-                        .build()
-                }
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .awaitBody()
-
-        return response.results.singleOrNull()
+    suspend fun find(searchFilters: List<Pair<OpenKlant2PartijenFilters, Any>>? = null): OpenKlant2Partij? {
+        val results = get(searchFilters)
+        return results?.singleOrNull()
     }
 
-    suspend fun get(searchFilters: List<Pair<OpenKlant2PartijenFilters, String>>? = null): List<OpenKlant2Partij>? {
+    suspend fun get(searchFilters: List<Pair<OpenKlant2PartijenFilters, Any>>? = null): List<OpenKlant2Partij>? {
         val response: ResultPage<OpenKlant2Partij>? =
             client
                 .webClient()
                 .get()
                 .uri { uriBuilder ->
                     uriBuilder
-                        .path("$path")
-                        .queryParams(filters = searchFilters)
+                        .path(path)
+                        .applyFilters(filters = searchFilters)
                         .build()
                 }
                 .accept(MediaType.APPLICATION_JSON)
@@ -101,7 +88,7 @@ class Partijen(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesP
     }
 
     suspend fun put(partij: OpenKlant2Partij): OpenKlant2Partij? {
-        val response: ResultPage<OpenKlant2Partij> =
+        val response: OpenKlant2Partij? =
             client
                 .webClient()
                 .put()
@@ -113,9 +100,9 @@ class Partijen(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesP
                 .body(BodyInserters.fromValue(partij))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .awaitBody()
+                .awaitBodyOrNull()
 
-        return response.results.singleOrNull()
+        return response
     }
 
     suspend fun delete(uuid: UUID) {

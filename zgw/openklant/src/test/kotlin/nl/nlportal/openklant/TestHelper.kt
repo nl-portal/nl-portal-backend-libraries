@@ -16,6 +16,16 @@
 package nl.nlportal.openklant
 
 object TestHelper {
+    val emptyPage =
+        """
+        {
+            "count": 0,
+            "next": null,
+            "previous": null,
+            "results": []
+        }
+        """.trimIndent()
+
     object Partijen {
         val createPartijRequest =
             """
@@ -246,16 +256,6 @@ object TestHelper {
                         }
                     }
                 ]
-            }
-            """.trimIndent()
-
-        val emptyPage =
-            """
-            {
-                "count": 0,
-                "next": null,
-                "previous": null,
-                "results": []
             }
             """.trimIndent()
     }

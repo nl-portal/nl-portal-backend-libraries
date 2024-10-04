@@ -21,14 +21,15 @@ import nl.nlportal.openklant.client.domain.OpenKlant2PartijIdentificatorenFilter
 import nl.nlportal.openklant.client.domain.ResultPage
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.BodyInserters
+import org.springframework.web.reactive.function.client.awaitBodilessEntity
 import org.springframework.web.reactive.function.client.awaitBody
+import org.springframework.web.reactive.function.client.awaitBodyOrNull
+import java.util.UUID
 
 class PartijIdentificatoren(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesPath() {
     override val path: String = "/partij-identificatoren"
 
-    suspend fun find(
-        searchFilters: List<Pair<OpenKlant2PartijIdentificatorenFilters, String>>? = null,
-    ): List<OpenKlant2PartijIdentificator> {
+    suspend fun find(searchFilters: List<Pair<OpenKlant2PartijIdentificatorenFilters, Any>>? = null): List<OpenKlant2PartijIdentificator> {
         val response: ResultPage<OpenKlant2PartijIdentificator> =
             client
                 .webClient()
@@ -36,7 +37,7 @@ class PartijIdentificatoren(val client: OpenKlant2KlantinteractiesClient) : Klan
                 .uri { uriBuilder ->
                     uriBuilder
                         .path(path)
-                        .queryParams(searchFilters)
+                        .applyFilters(searchFilters)
                     uriBuilder.build()
                 }
                 .accept(MediaType.APPLICATION_JSON)
@@ -62,5 +63,37 @@ class PartijIdentificatoren(val client: OpenKlant2KlantinteractiesClient) : Klan
                 .awaitBody()
 
         return response
+    }
+
+    suspend fun put(partijIdentificatorRequest: OpenKlant2PartijIdentificator): OpenKlant2PartijIdentificator? {
+        val response: OpenKlant2PartijIdentificator? =
+            client
+                .webClient()
+                .put()
+                .uri { uriBuilder ->
+                    uriBuilder
+                        .path("$path/${partijIdentificatorRequest.uuid}")
+                        .build()
+                }
+                .body(BodyInserters.fromValue(partijIdentificatorRequest))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .awaitBodyOrNull()
+
+        return response
+    }
+
+    suspend fun delete(uuid: UUID) {
+        client
+            .webClient()
+            .delete()
+            .uri { uriBuilder ->
+                uriBuilder
+                    .path("$path/$uuid")
+                    .build()
+            }
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .awaitBodilessEntity()
     }
 }

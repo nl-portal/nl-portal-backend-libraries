@@ -25,7 +25,7 @@ import nl.nlportal.openklant.client.domain.SoortPartij.CONTACTPERSOON
 import nl.nlportal.openklant.client.domain.SoortPartij.ORGANISATIE
 import nl.nlportal.openklant.client.domain.SoortPartij.PERSOON
 
-data class PartijRequest(
+data class CreatePartijRequest(
     val indicatieGeheimhouding: Boolean,
     val indicatieActief: Boolean,
     val soortPartij: SoortPartij,
