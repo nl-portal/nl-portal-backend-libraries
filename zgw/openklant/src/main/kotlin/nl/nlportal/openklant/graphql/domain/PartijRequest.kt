@@ -20,32 +20,31 @@ import nl.nlportal.openklant.client.domain.OpenKlant2Partij
 import nl.nlportal.openklant.client.domain.OrganisatieIdentificatie
 import nl.nlportal.openklant.client.domain.PartijIdentificatie
 import nl.nlportal.openklant.client.domain.PersoonsIdentificatie
-import nl.nlportal.openklant.client.domain.SoortPartij
-import nl.nlportal.openklant.client.domain.SoortPartij.CONTACTPERSOON
-import nl.nlportal.openklant.client.domain.SoortPartij.ORGANISATIE
-import nl.nlportal.openklant.client.domain.SoortPartij.PERSOON
+import nl.nlportal.openklant.graphql.domain.PartijType.CONTACTPERSOON
+import nl.nlportal.openklant.graphql.domain.PartijType.ORGANISATIE
+import nl.nlportal.openklant.graphql.domain.PartijType.PERSOON
 
 data class PartijRequest(
     val indicatieGeheimhouding: Boolean,
     val indicatieActief: Boolean,
-    val soortPartij: SoortPartij,
-    val persoonIdentification: PersoonsIdentificatie? = null,
+    val type: PartijType,
+    val persoonsIdentificatie: PersoonsIdentificatie? = null,
     val organisatieIdentificatie: OrganisatieIdentificatie? = null,
     val contactpersoonIdentificatie: ContactpersoonIdentificatie? = null,
 ) {
     private val identificatie: PartijIdentificatie =
-        when (soortPartij) {
+        when (type) {
             PERSOON ->
-                requireNotNull(persoonIdentification) {
-                    "{persoonIdentification} can not be null when <soortPartij> is $soortPartij"
+                requireNotNull(persoonsIdentificatie) {
+                    "{persoonIdentification} can not be null when <type> is $type"
                 }
             ORGANISATIE ->
                 requireNotNull(organisatieIdentificatie) {
-                    "{organisatieIdentificatie} can not be null when <soortPartij> is $soortPartij"
+                    "{organisatieIdentificatie} can not be null when <type> is $type"
                 }
             CONTACTPERSOON ->
                 requireNotNull(contactpersoonIdentificatie) {
-                    "{contactpersoonIdentificatie} can not be null when <soortPartij> is $soortPartij"
+                    "{contactpersoonIdentificatie} can not be null when <type> is $type"
                 }
         }
 
@@ -53,7 +52,7 @@ data class PartijRequest(
         OpenKlant2Partij(
             indicatieGeheimhouding = indicatieGeheimhouding,
             indicatieActief = indicatieActief,
-            soortPartij = soortPartij,
+            soortPartij = type.asSoortPartij(),
             partijIdentificatie = identificatie,
         )
 }

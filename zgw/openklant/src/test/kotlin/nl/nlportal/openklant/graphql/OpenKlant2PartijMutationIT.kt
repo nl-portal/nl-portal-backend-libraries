@@ -20,8 +20,10 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.core.util.Mapper
+import nl.nlportal.openklant.graphql.domain.PartijType.PERSOON
 import nl.nlportal.openklant.service.OpenKlant2Service
-import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -50,9 +52,8 @@ class OpenKlant2PartijMutationIT(
     lateinit var openKlant2Service: OpenKlant2Service
 
     @Test
-    @Disabled
     @WithBurgerUser("999990755")
-    fun `should create Partij for authenticated user`() =
+    fun `should create Partij for burger`() =
         runTest {
             // when
             val responseBody =
@@ -72,7 +73,7 @@ class OpenKlant2PartijMutationIT(
                     .responseBodyContent
                     ?.toString(Charset.defaultCharset())
 
-            val responsePartij =
+            val partijResponse =
                 objectMapper
                     .readValue<JsonNode>(responseBody!!)
                     .get("data")
@@ -80,11 +81,9 @@ class OpenKlant2PartijMutationIT(
 
             // then
             verify(openKlant2Service, times(1)).createPartijWithIdentificator(any(), any())
-//
-//            assertNotNull(responsePartij)
-//            assertEquals(SoortPartij.PERSOON.name, responsePartij?.get("soortPartij")?.textValue())
-//            assertDoesNotThrow { objectMapper.treeToValue<PersoonsIdentificatie>(responsePartij!!.get("partijIdentificatie")) }
-//            assertEquals("Lucas Boom", responsePartij?.requiredAt("/partijIdentificatie/volledigeNaam")?.textValue())
+
+            assertNotNull(partijResponse)
+            assertEquals(PERSOON.name, partijResponse?.get("type")?.textValue())
         }
 
     companion object {

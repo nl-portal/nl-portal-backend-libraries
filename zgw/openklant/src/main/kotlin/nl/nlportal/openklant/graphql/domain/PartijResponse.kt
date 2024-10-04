@@ -19,13 +19,12 @@ import nl.nlportal.openklant.client.domain.ContactpersoonIdentificatie
 import nl.nlportal.openklant.client.domain.OpenKlant2Partij
 import nl.nlportal.openklant.client.domain.OrganisatieIdentificatie
 import nl.nlportal.openklant.client.domain.PersoonsIdentificatie
-import nl.nlportal.openklant.client.domain.SoortPartij
 
 data class PartijResponse(
     val indicatieGeheimhouding: Boolean,
     val indicatieActief: Boolean,
-    val soortPartij: SoortPartij,
-    val persoonIdentification: PersoonsIdentificatie? = null,
+    val type: PartijType,
+    val persoonsIdentificatie: PersoonsIdentificatie? = null,
     val organisatieIdentificatie: OrganisatieIdentificatie? = null,
     val contactpersoonIdentificatie: ContactpersoonIdentificatie? = null,
 ) {
@@ -34,8 +33,8 @@ data class PartijResponse(
             PartijResponse(
                 indicatieGeheimhouding = openKlant2Partij.indicatieGeheimhouding,
                 indicatieActief = openKlant2Partij.indicatieActief,
-                soortPartij = openKlant2Partij.soortPartij,
-                persoonIdentification = openKlant2Partij.partijIdentificatie as? PersoonsIdentificatie,
+                type = PartijType.valueOf(openKlant2Partij.soortPartij.name),
+                persoonsIdentificatie = openKlant2Partij.partijIdentificatie as? PersoonsIdentificatie,
                 organisatieIdentificatie = openKlant2Partij.partijIdentificatie as? OrganisatieIdentificatie,
                 contactpersoonIdentificatie = openKlant2Partij.partijIdentificatie as? ContactpersoonIdentificatie,
             )

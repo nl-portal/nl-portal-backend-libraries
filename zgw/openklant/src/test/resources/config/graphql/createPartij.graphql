@@ -1,5 +1,16 @@
 mutation {
-    createPartij(partijRequest: { soortPartij: PERSOON, indicatieActief: true, indicatieGeheimhouding: true }) {
-        soortPartij
+    createPartij(partijRequest: { type: PERSOON, indicatieActief: true, indicatieGeheimhouding: true, persoonsIdentificatie: {contactnaam: { voornaam: "Bob", voorvoegselAchternaam: "de", achternaam: "Bouwer" }, volledigeNaam: "Bob de Bouwer" } }) {
+        type
+        indicatieActief
+        indicatieGeheimhouding
+        persoonsIdentificatie {
+            contactnaam {
+                voorletters
+                voornaam
+                voorvoegselAchternaam
+                achternaam
+            }
+            volledigeNaam
+        }
     }
 }
