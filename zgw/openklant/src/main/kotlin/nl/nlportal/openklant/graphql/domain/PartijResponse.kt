@@ -18,14 +18,10 @@ package nl.nlportal.openklant.graphql.domain
 import nl.nlportal.openklant.client.domain.ContactpersoonIdentificatie
 import nl.nlportal.openklant.client.domain.OpenKlant2Partij
 import nl.nlportal.openklant.client.domain.OrganisatieIdentificatie
-import nl.nlportal.openklant.client.domain.PartijIdentificatie
 import nl.nlportal.openklant.client.domain.PersoonsIdentificatie
 import nl.nlportal.openklant.client.domain.SoortPartij
-import nl.nlportal.openklant.client.domain.SoortPartij.CONTACTPERSOON
-import nl.nlportal.openklant.client.domain.SoortPartij.ORGANISATIE
-import nl.nlportal.openklant.client.domain.SoortPartij.PERSOON
 
-data class CreatePartijRequest(
+data class PartijResponse(
     val indicatieGeheimhouding: Boolean,
     val indicatieActief: Boolean,
     val soortPartij: SoortPartij,
@@ -33,27 +29,15 @@ data class CreatePartijRequest(
     val organisatieIdentificatie: OrganisatieIdentificatie? = null,
     val contactpersoonIdentificatie: ContactpersoonIdentificatie? = null,
 ) {
-    private val identificatie: PartijIdentificatie =
-        when (soortPartij) {
-            PERSOON ->
-                requireNotNull(persoonIdentification) {
-                    "{persoonIdentification} can not be null when <soortPartij> is $soortPartij"
-                }
-            ORGANISATIE ->
-                requireNotNull(organisatieIdentificatie) {
-                    "{organisatieIdentificatie} can not be null when <soortPartij> is $soortPartij"
-                }
-            CONTACTPERSOON ->
-                requireNotNull(contactpersoonIdentificatie) {
-                    "{contactpersoonIdentificatie} can not be null when <soortPartij> is $soortPartij"
-                }
-        }
-
-    fun asOpenKlant2Partij(): OpenKlant2Partij =
-        OpenKlant2Partij(
-            indicatieGeheimhouding = indicatieGeheimhouding,
-            indicatieActief = indicatieActief,
-            soortPartij = soortPartij,
-            partijIdentificatie = identificatie,
-        )
+    companion object {
+        fun fromOpenKlant2Partij(openKlant2Partij: OpenKlant2Partij): PartijResponse =
+            PartijResponse(
+                indicatieGeheimhouding = openKlant2Partij.indicatieGeheimhouding,
+                indicatieActief = openKlant2Partij.indicatieActief,
+                soortPartij = openKlant2Partij.soortPartij,
+                persoonIdentification = openKlant2Partij.partijIdentificatie as? PersoonsIdentificatie,
+                organisatieIdentificatie = openKlant2Partij.partijIdentificatie as? OrganisatieIdentificatie,
+                contactpersoonIdentificatie = openKlant2Partij.partijIdentificatie as? ContactpersoonIdentificatie,
+            )
+    }
 }

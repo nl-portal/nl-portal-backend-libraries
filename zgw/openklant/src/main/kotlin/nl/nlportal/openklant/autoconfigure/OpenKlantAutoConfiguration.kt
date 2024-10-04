@@ -17,7 +17,6 @@ package nl.nlportal.openklant.autoconfigure
 
 import com.expediagroup.graphql.server.operations.Mutation
 import com.expediagroup.graphql.server.operations.Query
-import mu.KotlinLogging
 import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
 import nl.nlportal.openklant.graphql.PartijMutation
 import nl.nlportal.openklant.graphql.PartijQuery
@@ -55,9 +54,5 @@ class OpenKlantAutoConfiguration {
     @ConditionalOnProperty(prefix = "nl-portal.config.openklant", name = ["enabled"], havingValue = "true")
     fun partijMutation(openKlant2Service: OpenKlant2Service): Mutation {
         return PartijMutation(openKlant2Service)
-    }
-
-    companion object {
-        private val logger = KotlinLogging.logger {}
     }
 }

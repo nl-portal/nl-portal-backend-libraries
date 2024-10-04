@@ -120,7 +120,7 @@ class OpenKlant2PartijQueryIT(
                     ?.get("findUserPartij")
 
             // then
-            verify(openKlant2Service, times(1)).findPartij(any())
+            verify(openKlant2Service, times(1)).findPartijByAuthentication(any())
 
             assertNotNull(responsePartij)
             assertEquals(SoortPartij.PERSOON.name, responsePartij?.get("soortPartij")?.textValue())
@@ -229,7 +229,7 @@ class OpenKlant2PartijQueryIT(
                     ?.get("findUserPartij")
 
             // then
-            verify(openKlant2Service, times(1)).findPartij(any())
+            verify(openKlant2Service, times(1)).findPartijByAuthentication(any())
             assertTrue(responsePartij!!.isNull)
         }
 

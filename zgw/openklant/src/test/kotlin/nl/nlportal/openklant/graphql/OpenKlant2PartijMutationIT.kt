@@ -17,20 +17,14 @@ package nl.nlportal.openklant.graphql
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.fasterxml.jackson.module.kotlin.treeToValue
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.core.util.Mapper
-import nl.nlportal.openklant.client.domain.PersoonsIdentificatie
-import nl.nlportal.openklant.client.domain.SoortPartij
 import nl.nlportal.openklant.service.OpenKlant2Service
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.assertDoesNotThrow
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
@@ -56,7 +50,7 @@ class OpenKlant2PartijMutationIT(
     lateinit var openKlant2Service: OpenKlant2Service
 
     @Test
-    @Disabled("Not implemented yet")
+    @Disabled
     @WithBurgerUser("999990755")
     fun `should create Partij for authenticated user`() =
         runTest {
@@ -70,7 +64,7 @@ class OpenKlant2PartijMutationIT(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/findUserPartij.graphql")))
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/createPartij.graphql")))
                     .exchange()
                     .expectStatus().isOk
                     .expectBody()
@@ -82,15 +76,15 @@ class OpenKlant2PartijMutationIT(
                 objectMapper
                     .readValue<JsonNode>(responseBody!!)
                     .get("data")
-                    ?.get("getPartij")
+                    ?.get("createPartij")
 
             // then
             verify(openKlant2Service, times(1)).createPartijWithIdentificator(any(), any())
-
-            assertNotNull(responsePartij)
-            assertEquals(SoortPartij.PERSOON.name, responsePartij?.get("soortPartij")?.textValue())
-            assertDoesNotThrow { objectMapper.treeToValue<PersoonsIdentificatie>(responsePartij!!.get("partijIdentificatie")) }
-            assertEquals("Lucas Boom", responsePartij?.requiredAt("/partijIdentificatie/volledigeNaam")?.textValue())
+//
+//            assertNotNull(responsePartij)
+//            assertEquals(SoortPartij.PERSOON.name, responsePartij?.get("soortPartij")?.textValue())
+//            assertDoesNotThrow { objectMapper.treeToValue<PersoonsIdentificatie>(responsePartij!!.get("partijIdentificatie")) }
+//            assertEquals("Lucas Boom", responsePartij?.requiredAt("/partijIdentificatie/volledigeNaam")?.textValue())
         }
 
     companion object {

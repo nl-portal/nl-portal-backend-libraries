@@ -16,11 +16,9 @@
 package nl.nlportal.openklant.client.path
 
 import kotlinx.coroutines.test.runTest
-import nl.nlportal.openklant.TestHelper
 import nl.nlportal.openklant.autoconfigure.OpenKlantModuleConfiguration
 import nl.nlportal.openklant.autoconfigure.OpenKlantModuleConfiguration.OpenKlantConfigurationProperties
 import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
-import nl.nlportal.openklant.client.domain.OpenKlant2Partij
 import nl.nlportal.openklant.client.domain.OpenKlant2PartijenFilters
 import nl.nlportal.openklant.client.domain.OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_OBJECT_ID
 import nl.nlportal.openklant.client.domain.OpenKlant2PartijenFilters.SOORT_PARTIJ
@@ -29,11 +27,8 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.times
 
 class OpenKlant2PartijenPathTest {
     private lateinit var openklantModuleConfiguration: OpenKlantModuleConfiguration
@@ -104,31 +99,6 @@ class OpenKlant2PartijenPathTest {
             assertEquals("1", request.requestUrl?.queryParameter("page"))
             assertEquals("persoon", request.requestUrl?.queryParameter(SOORT_PARTIJ.toString()))
             assertEquals("999990755", request.requestUrl?.queryParameter(PARTIJ_IDENTIFICATOR_OBJECT_ID.toString()))
-        }
-
-    @Test
-    fun `find - should return single`() =
-        runTest {
-            // when
-            val filters =
-                listOf(
-                    OpenKlant2PartijenFilters.PAGE to 1,
-                    SOORT_PARTIJ to SoortPartij.PERSOON,
-                    PARTIJ_IDENTIFICATOR_OBJECT_ID to "999990755",
-                )
-            mockServer.enqueue(
-                MockResponse()
-                    .setResponseCode(200)
-                    .addHeader("Content-Type", "application/json")
-                    .setBody(TestHelper.Partijen.persoonPartijResponse),
-            )
-
-            // given
-            val response = openKlant2Client.path<Partijen>().find(filters)
-
-            // then
-            assertNotNull(response)
-            assertTrue(response is OpenKlant2Partij)
         }
 
     companion object {

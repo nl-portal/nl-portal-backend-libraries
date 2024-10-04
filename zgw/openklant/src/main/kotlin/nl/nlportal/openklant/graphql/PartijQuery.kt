@@ -29,7 +29,7 @@ class PartijQuery(
 ) : Query {
     @GraphQLDescription("Find the Partij of the authenticated user.")
     suspend fun findUserPartij(dfe: DataFetchingEnvironment): OpenKlant2Partij? {
-        return openklant2Service.findPartij(dfe.graphQlContext.get(AUTHENTICATION_KEY))
+        return openklant2Service.findPartijByAuthentication(dfe.graphQlContext.get(AUTHENTICATION_KEY))
     }
 
     @GraphQLDescription("Get Partij by Id for authenticated user.")

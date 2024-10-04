@@ -36,7 +36,7 @@ import java.util.UUID
 class OpenKlant2Service(
     private val openKlant2Client: OpenKlant2KlantinteractiesClient,
 ) {
-    suspend fun findPartij(authentication: CommonGroundAuthentication): OpenKlant2Partij? {
+    suspend fun findPartijByAuthentication(authentication: CommonGroundAuthentication): OpenKlant2Partij? {
         val searchVariables =
             listOf(
                 OpenKlant2PartijenFilters.SOORT_PARTIJ to authentication.asSoortPartij(),
@@ -44,7 +44,7 @@ class OpenKlant2Service(
             )
 
         try {
-            return openKlant2Client.path<Partijen>().find(searchVariables)
+            return openKlant2Client.path<Partijen>().get(searchVariables)?.singleOrNull()
         } catch (ex: WebClientResponseException) {
             logger.debug("Failed to find Partij: ${ex.responseBodyAsString}", ex)
             return null
@@ -62,7 +62,7 @@ class OpenKlant2Service(
 
     suspend fun createPartijWithIdentificator(
         authentication: CommonGroundAuthentication,
-        partijRequest: OpenKlant2Partij,
+        partij: OpenKlant2Partij,
     ): OpenKlant2Partij? {
         val partijIdentificator =
             OpenKlant2PartijIdentificator(
@@ -73,7 +73,7 @@ class OpenKlant2Service(
             )
         val partijResponse =
             try {
-                openKlant2Client.path<Partijen>().create(partijRequest)
+                openKlant2Client.path<Partijen>().create(partij)
                     .also {
                         try {
                             openKlant2Client

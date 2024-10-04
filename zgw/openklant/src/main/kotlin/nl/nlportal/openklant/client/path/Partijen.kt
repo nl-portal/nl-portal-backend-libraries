@@ -29,11 +29,6 @@ import java.util.UUID
 class Partijen(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesPath() {
     override val path = "/partijen"
 
-    suspend fun find(searchFilters: List<Pair<OpenKlant2PartijenFilters, Any>>? = null): OpenKlant2Partij? {
-        val results = get(searchFilters)
-        return results?.singleOrNull()
-    }
-
     suspend fun get(searchFilters: List<Pair<OpenKlant2PartijenFilters, Any>>? = null): List<OpenKlant2Partij>? {
         val response: ResultPage<OpenKlant2Partij>? =
             client

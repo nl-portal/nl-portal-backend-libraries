@@ -19,8 +19,8 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Mutation
 import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
-import nl.nlportal.openklant.client.domain.OpenKlant2Partij
-import nl.nlportal.openklant.graphql.domain.CreatePartijRequest
+import nl.nlportal.openklant.graphql.domain.PartijRequest
+import nl.nlportal.openklant.graphql.domain.PartijResponse
 import nl.nlportal.openklant.service.OpenKlant2Service
 
 class PartijMutation(
@@ -29,22 +29,27 @@ class PartijMutation(
     @GraphQLDescription("Create Partij for user")
     suspend fun createPartij(
         dfe: DataFetchingEnvironment,
-        partijRequest: CreatePartijRequest,
-    ): OpenKlant2Partij? {
-        return openklant2Service.createPartijWithIdentificator(
-            authentication = dfe.graphQlContext.get(AUTHENTICATION_KEY),
-            partijRequest = partijRequest.asOpenKlant2Partij(),
-        )
+        partijRequest: PartijRequest,
+    ): PartijResponse? {
+        val partij =
+            openklant2Service.createPartijWithIdentificator(
+                authentication = dfe.graphQlContext.get(AUTHENTICATION_KEY),
+                partij = partijRequest.asOpenKlant2Partij(),
+            )
+        return partij?.let { PartijResponse.fromOpenKlant2Partij(partij) }
     }
 
     @GraphQLDescription("Update user Partij")
     suspend fun updatePartij(
         dfe: DataFetchingEnvironment,
-        partijRequest: CreatePartijRequest,
-    ): OpenKlant2Partij {
-        return openklant2Service.updatePartij(
-            dfe.graphQlContext.get(AUTHENTICATION_KEY),
-            partijRequest.asOpenKlant2Partij(),
-        )
+        partijRequest: PartijRequest,
+    ): PartijResponse {
+        val partij =
+            openklant2Service.updatePartij(
+                dfe.graphQlContext.get(AUTHENTICATION_KEY),
+                partijRequest.asOpenKlant2Partij(),
+            )
+
+        return PartijResponse.fromOpenKlant2Partij(partij)
     }
 }
