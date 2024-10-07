@@ -23,5 +23,7 @@ data class DmnConfig(
     val url: String,
     val clientId: String? = null,
     val secret: String? = null,
+    val username: String? = null,
+    val password: String? = null,
     val ssl: Ssl? = null,
 )

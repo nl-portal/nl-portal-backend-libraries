@@ -75,6 +75,11 @@ class DmnClient(
                         it.defaultHeader("Authorization", "Bearer $token")
                     }
                 }
+                .apply {
+                    if (dmnConfig.username != null && dmnConfig.password != null) {
+                        it.defaultHeaders { header -> header.setBasicAuth(dmnConfig.username, dmnConfig.password) }
+                    }
+                }
                 .build()
     }
 
