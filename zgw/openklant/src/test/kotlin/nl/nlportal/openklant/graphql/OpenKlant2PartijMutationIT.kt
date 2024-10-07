@@ -16,6 +16,7 @@
 package nl.nlportal.openklant.graphql
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.readValue
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
@@ -23,7 +24,7 @@ import nl.nlportal.core.util.Mapper
 import nl.nlportal.openklant.graphql.domain.PartijType.PERSOON
 import nl.nlportal.openklant.service.OpenKlant2Service
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -56,7 +57,7 @@ class OpenKlant2PartijMutationIT(
     fun `should create Partij for burger`() =
         runTest {
             // when
-            val responseBody =
+            val createPartijResponse =
                 webTestClient
                     .post()
                     .uri { builder ->
@@ -73,17 +74,34 @@ class OpenKlant2PartijMutationIT(
                     .responseBodyContent
                     ?.toString(Charset.defaultCharset())
 
-            val partijResponse =
+            val createPartijResult =
                 objectMapper
-                    .readValue<JsonNode>(responseBody!!)
+                    .readValue<JsonNode>(createPartijResponse!!)
                     .get("data")
                     ?.get("createPartij")
-
             // then
             verify(openKlant2Service, times(1)).createPartijWithIdentificator(any(), any())
 
-            assertNotNull(partijResponse)
-            assertEquals(PERSOON.name, partijResponse?.get("type")?.textValue())
+            assertTrue(createPartijResult is ObjectNode)
+            assertEquals(PERSOON.name, createPartijResult!!.requiredAt("/type")?.textValue())
+            assertTrue(createPartijResult.requiredAt("/indicatieActief").booleanValue())
+            assertTrue(createPartijResult.requiredAt("/indicatieGeheimhouding").booleanValue())
+            assertEquals(
+                "Bob de Bouwer",
+                createPartijResult.requiredAt("/persoonsIdentificatie/volledigeNaam").textValue(),
+            )
+            assertEquals(
+                "Bob",
+                createPartijResult.requiredAt("/persoonsIdentificatie/contactnaam/voornaam").textValue(),
+            )
+            assertEquals(
+                "de",
+                createPartijResult.requiredAt("/persoonsIdentificatie/contactnaam/voorvoegselAchternaam").textValue(),
+            )
+            assertEquals(
+                "Bouwer",
+                createPartijResult.requiredAt("/persoonsIdentificatie/contactnaam/achternaam").textValue(),
+            )
         }
 
     companion object {
