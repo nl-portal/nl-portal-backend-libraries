@@ -319,7 +319,9 @@ internal class ProductQueryIT(
             .bodyValue(graphqlGetProductDecision)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath[0].value").isEqualTo("ok")
+            .jsonPath(
+                "$basePath[0].action.value",
+            ).isEqualTo("https://formulier.denhaag.nl/Tripleforms/formulier/nl-NL/DefaultEnvironment/scNaheffingsAanslagParkeren.aspx")
     }
 
     @Test

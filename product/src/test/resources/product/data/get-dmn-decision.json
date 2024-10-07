@@ -1,13 +1,52 @@
 [
   {
-    "result": {
+    "action": {
       "type": "String",
-      "value": "ok",
+      "value": "https://formulier.denhaag.nl/Tripleforms/formulier/nl-NL/DefaultEnvironment/scNaheffingsAanslagParkeren.aspx",
       "valueInfo": {}
     },
-    "reason": {
+    "text": {
       "type": "String",
-      "value": "you get anything you want",
+      "value": "Bezwaar maken tegen parkeerbon",
+      "valueInfo": {}
+    },
+    "type": {
+      "type": "String",
+      "value": "LINK",
+      "valueInfo": {}
+    }
+  },
+  {
+    "action": {
+      "type": "String",
+      "value": "https://formulier.denhaag.nl/Tripleforms/formulier/nl-NL/DefaultEnvironment/scAanvragenBetalingsregeling.aspx",
+      "valueInfo": {}
+    },
+    "text": {
+      "type": "String",
+      "value": "In termijnen betalen via een betalingsregeling",
+      "valueInfo": {}
+    },
+    "type": {
+      "type": "String",
+      "value": "LINK",
+      "valueInfo": {}
+    }
+  },
+  {
+    "action": {
+      "type": "String",
+      "value": "https://formulieren.denhaag.nl/bericht-of-antwoord-voor-de-directeur-gemeentebelastingen",
+      "valueInfo": {}
+    },
+    "text": {
+      "type": "String",
+      "value": "Ik heb een andere vraag of verzoek",
+      "valueInfo": {}
+    },
+    "type": {
+      "type": "String",
+      "value": "LINK",
       "valueInfo": {}
     }
   }

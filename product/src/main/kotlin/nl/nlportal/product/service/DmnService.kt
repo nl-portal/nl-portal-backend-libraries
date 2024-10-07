@@ -28,7 +28,6 @@ import nl.nlportal.product.domain.DmnVariable
 import nl.nlportal.product.domain.DmnVariableType
 import nl.nlportal.product.domain.ProductType
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
-import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
@@ -43,7 +42,7 @@ class DmnService(
         source: String,
         beslisTabelVariables: List<BeslisTabelVariable>,
         dmnVariables: Map<String, DmnVariable>? = null,
-    ): List<DmnResponse> {
+    ): List<Map<String, DmnResponse>> {
         val variablesMapping = mutableMapOf<String, DmnVariable>()
         // add dmnVariables
         dmnVariables?.forEach {
@@ -67,9 +66,7 @@ class DmnService(
                 key,
                 variablesMapping,
             )
-        return handleDmnResponse(
-            dmnClient.getDecision(dmnRequest),
-        )
+        return dmnClient.getDecision(dmnRequest)
     }
 
     suspend fun getDecision(
@@ -78,7 +75,7 @@ class DmnService(
         productTypeId: UUID? = null,
         productName: String,
         dmnVariables: Map<String, DmnVariable>? = null,
-    ): List<DmnResponse> {
+    ): List<Map<String, DmnResponse>> {
         val variablesMapping = mutableMapOf<String, DmnVariable>()
         // add dmnVariables
         dmnVariables?.forEach {
@@ -119,7 +116,7 @@ class DmnService(
                 beslisTabelConfiguration.key,
                 variablesMapping,
             )
-        return handleDmnResponse(dmnClient.getDecision(dmnRequest))
+        return dmnClient.getDecision(dmnRequest)
     }
 
     suspend fun getProductDecision(
@@ -128,7 +125,7 @@ class DmnService(
         productTypeId: UUID? = null,
         productName: String,
         dmnVariables: Map<String, DmnVariable>? = null,
-    ): List<DmnResponse> {
+    ): List<Map<String, DmnResponse>> {
         val variablesMapping = mutableMapOf<String, DmnVariable>()
         // add dmnVariables
         dmnVariables?.forEach {
@@ -188,7 +185,7 @@ class DmnService(
                 beslisTabelConfiguration.key,
                 variablesMapping,
             )
-        return handleDmnResponse(dmnClient.getDecision(dmnRequest))
+        return dmnClient.getDecision(dmnRequest)
     }
 
     private fun findBeslisTabelConfiguration(
@@ -199,17 +196,6 @@ class DmnService(
             HttpStatus.BAD_REQUEST,
             "Could not find a beslisTabelVariable configuration for $key",
         )
-    }
-
-    private fun handleDmnResponse(response: List<Map<String, DmnResponse>>): List<DmnResponse> {
-        val resulList = mutableListOf<DmnResponse>()
-        response.forEach {
-            it.entries.forEach {
-                it.value.name = it.key
-                resulList.add(it.value)
-            }
-        }
-        return resulList
     }
 
     private fun createDmnRequest(
@@ -267,10 +253,6 @@ class DmnService(
             logger.warn("Problem with parsing variable: {}", ex.message)
         }
         return ""
-    }
-
-    suspend inline fun <reified T> getObjectsApiObjectById(id: String): ObjectsApiObject<T>? {
-        return objectsApiClient.getObjectById<T>(id = id)
     }
 
     companion object {

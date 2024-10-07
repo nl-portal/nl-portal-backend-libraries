@@ -10,9 +10,5 @@ query {
             sum: { value: "gold", type: "String"},
             status: { value: 100, type: "Double"}
         }
-    ) {
-            name,
-            value,
-            type
-        }
+    )
 }

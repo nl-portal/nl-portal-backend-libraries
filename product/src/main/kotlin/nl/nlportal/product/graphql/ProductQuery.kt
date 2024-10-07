@@ -22,7 +22,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.graphql.security.SecurityConstants
-import nl.nlportal.product.domain.DmnResponse
 import nl.nlportal.product.domain.DmnVariable
 import nl.nlportal.product.domain.PrefillResponse
 import nl.nlportal.product.domain.Product
@@ -155,20 +154,23 @@ class ProductQuery(
         productTypeId: UUID? = null,
         productName: String,
         dmnVariables: ObjectNode? = null,
-    ): List<DmnResponse> {
-        return dmnService.getProductDecision(
-            sources = sources?.let { Mapper.get().convertValue(it, object : TypeReference<Map<String, UUID>>() {}) },
-            key = key,
-            productTypeId = productTypeId,
-            productName = productName,
-            dmnVariables =
-                dmnVariables?.let {
-                    Mapper.get().convertValue(
-                        dmnVariables,
-                        object : TypeReference<Map<String, DmnVariable>>() {},
-                    )
-                },
-        )
+    ): List<ObjectNode> {
+        val result =
+            dmnService.getProductDecision(
+                sources = sources?.let { Mapper.get().convertValue(it, object : TypeReference<Map<String, UUID>>() {}) },
+                key = key,
+                productTypeId = productTypeId,
+                productName = productName,
+                dmnVariables =
+                    dmnVariables?.let {
+                        Mapper.get().convertValue(
+                            dmnVariables,
+                            object : TypeReference<Map<String, DmnVariable>>() {},
+                        )
+                    },
+            )
+
+        return Mapper.get().convertValue(result, object : TypeReference<List<ObjectNode>>() {})
     }
 
     @GraphQLDescription(
