@@ -65,9 +65,9 @@ class OpenKlant2Service(
         val partijIdentificator =
             OpenKlant2PartijIdentificator(
                 partijIdentificator =
-                OpenKlant2Identificator(
-                    objectId = authentication.userId,
-                ),
+                    OpenKlant2Identificator(
+                        objectId = authentication.userId,
+                    ),
             )
         val partijResponse =
             try {
