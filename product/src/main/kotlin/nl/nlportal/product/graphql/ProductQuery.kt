@@ -151,14 +151,14 @@ class ProductQuery(
     )
     suspend fun getProductDecision(
         sources: ObjectNode? = null,
-        formulier: String,
+        key: String,
         productTypeId: UUID? = null,
         productName: String,
         dmnVariables: ObjectNode? = null,
     ): List<DmnResponse> {
         return dmnService.getProductDecision(
             sources = sources?.let { Mapper.get().convertValue(it, object : TypeReference<Map<String, UUID>>() {}) },
-            formulier = formulier,
+            key = key,
             productTypeId = productTypeId,
             productName = productName,
             dmnVariables =
@@ -181,7 +181,7 @@ class ProductQuery(
         staticData: ObjectNode? = null,
         productTypeId: UUID? = null,
         productName: String,
-        formulier: String,
+        key: String,
         dfe: DataFetchingEnvironment,
     ): PrefillResponse {
         return prefillService.prefill(
@@ -189,7 +189,7 @@ class ProductQuery(
             staticData = staticData?.let { Mapper.get().convertValue(it, object : TypeReference<Map<String, Any>>() {}) },
             productTypeId = productTypeId,
             productName = productName,
-            formulier = formulier,
+            key = key,
             dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
         )
     }

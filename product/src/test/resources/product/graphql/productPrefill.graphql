@@ -5,7 +5,7 @@ query {
             productverbruiksobject: "2d725c07-2f26-4705-8637-438a42b5a800"
         },
         staticData: { eigenschappen_test: "TEST"}
-        formulier: "watkanikregelen",
+        key: "watkanikregelen",
         productTypeId: null,
         productName: "erfpacht"
         )

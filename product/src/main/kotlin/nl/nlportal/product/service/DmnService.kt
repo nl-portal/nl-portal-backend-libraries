@@ -74,7 +74,7 @@ class DmnService(
 
     suspend fun getDecision(
         sources: Map<String, String>? = null,
-        formulier: String,
+        key: String,
         productTypeId: UUID? = null,
         productName: String,
         dmnVariables: Map<String, DmnVariable>? = null,
@@ -93,7 +93,7 @@ class DmnService(
         val productType = productService.getProductType(productTypeId, productName)
         val beslisTabelConfiguration =
             findBeslisTabelConfiguration(
-                formulier,
+                key,
                 productType,
             )
 
@@ -124,7 +124,7 @@ class DmnService(
 
     suspend fun getProductDecision(
         sources: Map<String, UUID>? = null,
-        formulier: String,
+        key: String,
         productTypeId: UUID? = null,
         productName: String,
         dmnVariables: Map<String, DmnVariable>? = null,
@@ -143,7 +143,7 @@ class DmnService(
         val productType = productService.getProductType(productTypeId, productName)
         val beslisTabelConfiguration =
             findBeslisTabelConfiguration(
-                formulier,
+                key,
                 productType,
             )
 
@@ -192,12 +192,12 @@ class DmnService(
     }
 
     private fun findBeslisTabelConfiguration(
-        formulier: String,
+        key: String,
         productType: ProductType?,
     ): BeslisTabelConfiguration {
-        return productType?.beslistabelmapping?.get(formulier) ?: throw ResponseStatusException(
+        return productType?.beslistabelmapping?.get(key) ?: throw ResponseStatusException(
             HttpStatus.BAD_REQUEST,
-            "Could not find a beslisTabelVariable configuration for $formulier",
+            "Could not find a beslisTabelVariable configuration for $key",
         )
     }
 

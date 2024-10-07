@@ -48,10 +48,10 @@ class PrefillService(
     suspend fun prefill(
         json: String,
         formulierUrl: String? = null,
-        formulier: String,
+        key: String,
         identification: String,
     ): PrefillResponse {
-        return hashAndCreatObject(json, formulier, formulierUrl, identification)
+        return hashAndCreatObject(json, key, formulierUrl, identification)
     }
 
     /*
@@ -78,7 +78,7 @@ class PrefillService(
      */
     suspend fun prefill(
         sources: Map<String, String>? = null,
-        formulier: String,
+        key: String,
         authentication: CommonGroundAuthentication,
         productTypeId: UUID? = null,
         productName: String,
@@ -93,7 +93,7 @@ class PrefillService(
         // find prefill configuration
         val prefillConfiguration =
             findPrefillConfiguration(
-                formulier,
+                key,
                 productTypeId,
                 productName,
             )
@@ -108,7 +108,7 @@ class PrefillService(
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, SOURCE_MAPPING_FAILED + productName)
         }
         val json = JsonUnflattener.unflatten(prefillData)
-        return hashAndCreatObject(json, formulier, prefillConfiguration.formulierUrl, authentication.userId)
+        return hashAndCreatObject(json, key, prefillConfiguration.formulierUrl, authentication.userId)
     }
 
     /*
@@ -119,7 +119,7 @@ class PrefillService(
         staticData: Map<String, Any>? = null,
         productTypeId: UUID? = null,
         productName: String,
-        formulier: String,
+        key: String,
         authentication: CommonGroundAuthentication,
     ): PrefillResponse {
         val prefillData = mutableMapOf<String, Any>()
@@ -131,7 +131,7 @@ class PrefillService(
         // find prefill configuration
         val prefillConfiguration =
             findPrefillConfiguration(
-                formulier,
+                key,
                 productTypeId,
                 productName,
             )
@@ -156,14 +156,14 @@ class PrefillService(
         val json = JsonUnflattener.unflatten(prefillData)
         return hashAndCreatObject(
             json,
-            formulier,
+            key,
             prefillConfiguration.formulierUrl,
             authentication.userId,
         )
     }
 
     private suspend fun findPrefillConfiguration(
-        formulier: String,
+        key: String,
         productTypeId: UUID? = null,
         productName: String,
     ): PrefillConfiguration {
@@ -171,15 +171,15 @@ class PrefillService(
         val productType = productService.getProductType(productTypeId, productName)
 
         // find prefill configuration
-        return productType?.prefillmapping?.get(formulier) ?: throw ResponseStatusException(
+        return productType?.prefillmapping?.get(key) ?: throw ResponseStatusException(
             HttpStatus.BAD_REQUEST,
-            "Could not find a prefill configuration for $formulier",
+            "Could not find a prefill configuration for $key",
         )
     }
 
     private suspend fun hashAndCreatObject(
         json: String,
-        formulier: String,
+        key: String,
         formulierUrl: String?,
         identification: String,
     ): PrefillResponse {
@@ -187,14 +187,14 @@ class PrefillService(
         if (prefillConfig.removeObjects) {
             removeObjects(
                 identification,
-                formulier,
+                key,
             )
         }
         val hash = CoreUtils.createHash(json, prefillConfig.prefillShaVersion)
         val prefill =
             PrefillObject(
                 identificatie = identification,
-                formulier = formulier,
+                formulier = key,
                 data = Mapper.get().readValue(json, ObjectNode::class.java),
             )
         val createRequest =
