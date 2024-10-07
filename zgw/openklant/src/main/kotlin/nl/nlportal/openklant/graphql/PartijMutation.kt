@@ -43,13 +43,13 @@ class PartijMutation(
     suspend fun updatePartij(
         dfe: DataFetchingEnvironment,
         partijRequest: PartijRequest,
-    ): PartijResponse {
+    ): PartijResponse? {
         val partij =
             openklant2Service.updatePartij(
                 dfe.graphQlContext.get(AUTHENTICATION_KEY),
                 partijRequest.asOpenKlant2Partij(),
             )
 
-        return PartijResponse.fromOpenKlant2Partij(partij)
+        return partij?.let { PartijResponse.fromOpenKlant2Partij(partij) }
     }
 }

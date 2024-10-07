@@ -15,10 +15,8 @@
  */
 package nl.nlportal.openklant.service
 
-import com.fasterxml.jackson.module.kotlin.convertValue
 import mu.KotlinLogging
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.core.util.Mapper
 import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
 import nl.nlportal.openklant.client.domain.OpenKlant2Identificator
 import nl.nlportal.openklant.client.domain.OpenKlant2IdentificeerdePartij
@@ -67,9 +65,9 @@ class OpenKlant2Service(
         val partijIdentificator =
             OpenKlant2PartijIdentificator(
                 partijIdentificator =
-                    OpenKlant2Identificator(
-                        objectId = authentication.userId,
-                    ),
+                OpenKlant2Identificator(
+                    objectId = authentication.userId,
+                ),
             )
         val partijResponse =
             try {
@@ -101,8 +99,31 @@ class OpenKlant2Service(
     suspend fun updatePartij(
         authentication: CommonGroundAuthentication,
         partij: OpenKlant2Partij,
-    ): OpenKlant2Partij {
-        return objectMapper.convertValue(partij)
+    ): OpenKlant2Partij? {
+        val previousPartij = findPartijByAuthentication(authentication)
+        if (previousPartij != null) {
+            val updatedPartij =
+                previousPartij.copy(
+                    indicatieGeheimhouding = partij.indicatieGeheimhouding,
+                    indicatieActief = partij.indicatieActief,
+                    soortPartij = partij.soortPartij,
+                    partijIdentificatie = partij.partijIdentificatie,
+                )
+            val partijResponse =
+                try {
+                    openKlant2Client
+                        .path<Partijen>()
+                        .put(updatedPartij)
+                } catch (ex: WebClientResponseException) {
+                    logger.debug("Failed to update Partij: ${ex.responseBodyAsString}", ex)
+                    return null
+                }
+
+            return partijResponse
+        }
+
+        logger.debug("Failed to update Partij: No existing Partij found. Creating new Partij")
+        return createPartijWithIdentificator(authentication, partij)
     }
 
     suspend fun findPartijIdentificatoren(authentication: CommonGroundAuthentication): List<OpenKlant2PartijIdentificator>? {
@@ -120,7 +141,6 @@ class OpenKlant2Service(
     }
 
     companion object {
-        private val objectMapper = Mapper.get()
         private val logger = KotlinLogging.logger {}
     }
 }

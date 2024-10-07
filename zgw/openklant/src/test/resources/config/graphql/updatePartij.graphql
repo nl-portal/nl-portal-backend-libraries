@@ -1,0 +1,16 @@
+mutation {
+    updatePartij(partijRequest: { type: PERSOON, indicatieActief: true, indicatieGeheimhouding: false, persoonsIdentificatie: {contactnaam: { voornaam: "Kees", voorvoegselAchternaam: "de", achternaam: "Boer" }, volledigeNaam: "Kees de Boer" } }) {
+        type
+        indicatieActief
+        indicatieGeheimhouding
+        persoonsIdentificatie {
+            contactnaam {
+                voorletters
+                voornaam
+                voorvoegselAchternaam
+                achternaam
+            }
+            volledigeNaam
+        }
+    }
+}
