@@ -47,7 +47,7 @@ class PrefillService(
      */
     suspend fun prefill(
         json: String,
-        formulierUrl: String? = null,
+        formulierUrl: String,
         key: String,
         identification: String,
     ): PrefillResponse {
@@ -60,7 +60,7 @@ class PrefillService(
      */
     suspend fun prefill(
         source: String,
-        formulierUrl: String? = null,
+        formulierUrl: String,
         variables: Map<String, String>,
         formulier: String,
         identification: String,
@@ -180,7 +180,7 @@ class PrefillService(
     private suspend fun hashAndCreatObject(
         json: String,
         key: String,
-        formulierUrl: String?,
+        formulierUrl: String,
         identification: String,
     ): PrefillResponse {
         // if in prefill config property removeObjects is TRUE, delete the objects
