@@ -63,7 +63,7 @@ class DigitaleAdresMutation(
     suspend fun deleteUserDigitaleAdres(
         dfe: DataFetchingEnvironment,
         digitaleAdresId: UUID,
-    ): DigitaleAdresResponse? {
+    ): Boolean? {
         openklant2Service
             .deleteDigitaleAdresById(
                 dfe.graphQlContext.get(AUTHENTICATION_KEY),

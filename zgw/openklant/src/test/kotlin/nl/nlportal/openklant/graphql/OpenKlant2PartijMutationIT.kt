@@ -26,10 +26,12 @@ import nl.nlportal.openklant.service.OpenKlant2Service
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.TestMethodOrder
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
@@ -46,8 +48,9 @@ import java.nio.charset.Charset
 
 @SpringBootTest
 @Tag("integration")
+@TestMethodOrder(OrderAnnotation::class)
 @AutoConfigureWebTestClient(timeout = "36000")
-@TestInstance(TestInstance.Lifecycle.PER_METHOD)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class OpenKlant2PartijMutationIT(
     @Autowired private val webTestClient: WebTestClient,
 ) {

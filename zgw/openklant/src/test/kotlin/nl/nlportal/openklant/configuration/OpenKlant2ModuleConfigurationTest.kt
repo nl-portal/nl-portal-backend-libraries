@@ -57,7 +57,7 @@ class OpenKlant2ModuleConfigurationTest(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/openKlant2TypeIntrospection.gql")))
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/partijIntrospection.gql")))
                     .exchange()
                     .expectStatus().isOk
                     .expectBody()
