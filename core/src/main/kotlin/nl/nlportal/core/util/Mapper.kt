@@ -25,7 +25,7 @@ import java.time.format.DateTimeFormatter
 
 object Mapper {
     private var mapper: ObjectMapper
-    private const val DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss"
+    private const val DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
     private val jacksonBuilderCustomizer =
         Jackson2ObjectMapperBuilderCustomizer { builder ->
             builder.simpleDateFormat(DATE_TIME_FORMAT)
