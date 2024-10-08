@@ -124,6 +124,10 @@ subprojects {
             freeCompilerArgs.add("-Xjsr305=strict")
             freeCompilerArgs.add("-Xemit-jvm-type-annotations")
         }
+        val ktlintFormat: Task? by tasks
+        if (ktlintFormat != null) {
+            dependsOn(ktlintFormat)
+        }
     }
 
     println("Enabling Spring Boot Dependency Management in project ${project.name}...")

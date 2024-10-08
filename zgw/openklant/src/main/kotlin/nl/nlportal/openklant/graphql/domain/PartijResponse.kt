@@ -16,6 +16,7 @@
 package nl.nlportal.openklant.graphql.domain
 
 import nl.nlportal.openklant.client.domain.ContactpersoonIdentificatie
+import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdres
 import nl.nlportal.openklant.client.domain.OpenKlant2Partij
 import nl.nlportal.openklant.client.domain.OrganisatieIdentificatie
 import nl.nlportal.openklant.client.domain.PersoonsIdentificatie
@@ -27,6 +28,7 @@ data class PartijResponse(
     val persoonsIdentificatie: PersoonsIdentificatie? = null,
     val organisatieIdentificatie: OrganisatieIdentificatie? = null,
     val contactpersoonIdentificatie: ContactpersoonIdentificatie? = null,
+    val digitaleAdressen: List<OpenKlant2DigitaleAdres>? = null,
 ) {
     companion object {
         fun fromOpenKlant2Partij(openKlant2Partij: OpenKlant2Partij): PartijResponse =
@@ -37,6 +39,7 @@ data class PartijResponse(
                 persoonsIdentificatie = openKlant2Partij.partijIdentificatie as? PersoonsIdentificatie,
                 organisatieIdentificatie = openKlant2Partij.partijIdentificatie as? OrganisatieIdentificatie,
                 contactpersoonIdentificatie = openKlant2Partij.partijIdentificatie as? ContactpersoonIdentificatie,
+                digitaleAdressen = openKlant2Partij.expand?.digitaleAdressen,
             )
     }
 }

@@ -16,8 +16,9 @@
 package nl.nlportal.openklant.client.path
 
 import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
+import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdres
+import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdressenFilters
 import nl.nlportal.openklant.client.domain.OpenKlant2PartijIdentificator
-import nl.nlportal.openklant.client.domain.OpenKlant2PartijIdentificatorenFilters
 import nl.nlportal.openklant.client.domain.ResultPage
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.BodyInserters
@@ -26,10 +27,10 @@ import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.awaitBodyOrNull
 import java.util.UUID
 
-class PartijIdentificatoren(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesPath() {
-    override val path: String = "/partij-identificatoren"
+class DigitaleAdressen(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesPath() {
+    override val path: String = "/digitale-adressen"
 
-    suspend fun get(searchFilters: List<Pair<OpenKlant2PartijIdentificatorenFilters, Any>>? = null): List<OpenKlant2PartijIdentificator> {
+    suspend fun get(searchFilters: List<Pair<OpenKlant2DigitaleAdressenFilters, Any>>? = null): List<OpenKlant2PartijIdentificator> {
         val response: ResultPage<OpenKlant2PartijIdentificator> =
             client
                 .webClient()
@@ -47,8 +48,8 @@ class PartijIdentificatoren(val client: OpenKlant2KlantinteractiesClient) : Klan
         return response.results
     }
 
-    suspend fun create(partijIdentificatorRequest: OpenKlant2PartijIdentificator): OpenKlant2PartijIdentificator {
-        val response: OpenKlant2PartijIdentificator =
+    suspend fun create(digitaleAdres: OpenKlant2DigitaleAdres): OpenKlant2DigitaleAdres? {
+        val response: OpenKlant2DigitaleAdres? =
             client
                 .webClient()
                 .post()
@@ -57,25 +58,25 @@ class PartijIdentificatoren(val client: OpenKlant2KlantinteractiesClient) : Klan
                         .path(path)
                         .build()
                 }
-                .body(BodyInserters.fromValue(partijIdentificatorRequest))
+                .body(BodyInserters.fromValue(digitaleAdres))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .awaitBody()
+                .awaitBodyOrNull()
 
         return response
     }
 
-    suspend fun put(partijIdentificatorRequest: OpenKlant2PartijIdentificator): OpenKlant2PartijIdentificator? {
-        val response: OpenKlant2PartijIdentificator? =
+    suspend fun put(digitaleAdres: OpenKlant2DigitaleAdres): OpenKlant2DigitaleAdres? {
+        val response: OpenKlant2DigitaleAdres? =
             client
                 .webClient()
                 .put()
                 .uri { uriBuilder ->
                     uriBuilder
-                        .path("$path/${partijIdentificatorRequest.uuid}")
+                        .path("$path/${digitaleAdres.uuid}")
                         .build()
                 }
-                .body(BodyInserters.fromValue(partijIdentificatorRequest))
+                .body(BodyInserters.fromValue(digitaleAdres))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .awaitBodyOrNull()

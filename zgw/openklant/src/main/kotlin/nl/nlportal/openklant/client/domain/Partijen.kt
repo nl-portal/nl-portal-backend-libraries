@@ -121,8 +121,20 @@ data class PartijExpand(
     val betrokkenen: List<Betrokkene>? = null,
     val hadKlantcontact: List<HadKlantcontact>? = null,
     val categorieRelaties: List<CategorieRelatie>? = null,
-    val digitaleAdressen: List<DigitaleAdres>? = null,
+    val digitaleAdressen: List<OpenKlant2DigitaleAdres>? = null,
 )
+
+enum class PartijExpandOptions(
+    @JsonValue val value: String,
+) : OpenKlant2Filters {
+    BETROKKENEN("betrokkenen"),
+    HAD_KLANTCONTACT("hadKlantcontact"),
+    CATEGORIE_RELATIES("categorieRelaties"),
+    DIGITALE_ADRESSEN("digitaleAdressen"),
+    ;
+
+    override fun toString() = value
+}
 
 data class CategorieRelatieForeignKey(
     val beginDatum: LocalDate? = null,
@@ -144,6 +156,7 @@ enum class OpenKlant2PartijenFilters(
     CATEGORIERELATIE__CATEGORIE_NAAM("categorierelatie__categorie__naam"),
     NUMMER("nummer"),
     PAGE("page"),
+    EXPAND("expand"),
     INDICATIE_GEHEIMHOUDING("indicatie_geheimhouding"),
     INDICATIE_ACTIEF("indicatie_actief"),
     SOORT_PARTIJ("soort_partij"),

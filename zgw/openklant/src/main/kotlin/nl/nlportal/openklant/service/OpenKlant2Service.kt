@@ -18,14 +18,17 @@ package nl.nlportal.openklant.service
 import mu.KotlinLogging
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
+import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdres
 import nl.nlportal.openklant.client.domain.OpenKlant2Identificator
 import nl.nlportal.openklant.client.domain.OpenKlant2IdentificeerdePartij
 import nl.nlportal.openklant.client.domain.OpenKlant2Partij
 import nl.nlportal.openklant.client.domain.OpenKlant2PartijIdentificator
 import nl.nlportal.openklant.client.domain.OpenKlant2PartijIdentificatorenFilters
-import nl.nlportal.openklant.client.domain.OpenKlant2PartijIdentificatorenFilters.PARTIJ_IDENTIFICATOR_OBJECT_ID
 import nl.nlportal.openklant.client.domain.OpenKlant2PartijenFilters
+import nl.nlportal.openklant.client.domain.OpenKlant2UUID
+import nl.nlportal.openklant.client.domain.PartijExpandOptions.DIGITALE_ADRESSEN
 import nl.nlportal.openklant.client.domain.asSoortPartij
+import nl.nlportal.openklant.client.path.DigitaleAdressen
 import nl.nlportal.openklant.client.path.PartijIdentificatoren
 import nl.nlportal.openklant.client.path.Partijen
 import org.springframework.web.reactive.function.client.WebClientResponseException
@@ -129,15 +132,95 @@ class OpenKlant2Service(
     suspend fun findPartijIdentificatoren(authentication: CommonGroundAuthentication): List<OpenKlant2PartijIdentificator>? {
         val searchFilters: List<Pair<OpenKlant2PartijIdentificatorenFilters, String>> =
             listOf(
-                PARTIJ_IDENTIFICATOR_OBJECT_ID to authentication.userId,
+                OpenKlant2PartijIdentificatorenFilters.PARTIJ_IDENTIFICATOR_OBJECT_ID to authentication.userId,
             )
 
         try {
-            return openKlant2Client.path<PartijIdentificatoren>().find(searchFilters)
+            return openKlant2Client.path<PartijIdentificatoren>().get(searchFilters)
         } catch (ex: WebClientResponseException) {
             logger.debug("Failed to find Partij Identificatoren: ${ex.responseBodyAsString}", ex)
             return null
         }
+    }
+
+    suspend fun findDigitaleAdressen(authentication: CommonGroundAuthentication): List<OpenKlant2DigitaleAdres>? {
+        val searchVariables =
+            listOf(
+                OpenKlant2PartijenFilters.SOORT_PARTIJ to authentication.asSoortPartij(),
+                OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_OBJECT_ID to authentication.userId,
+                OpenKlant2PartijenFilters.EXPAND to DIGITALE_ADRESSEN,
+            )
+
+        val response =
+            try {
+                openKlant2Client.path<Partijen>().get(searchVariables)?.singleOrNull()
+            } catch (ex: WebClientResponseException) {
+                logger.debug("Failed to get Partij with DigitaleAdressen: ${ex.responseBodyAsString}", ex)
+                return null
+            }
+
+        return response?.expand?.digitaleAdressen
+    }
+
+    suspend fun createDigitaleAdres(
+        authentication: CommonGroundAuthentication,
+        digitaleAdres: OpenKlant2DigitaleAdres,
+    ): OpenKlant2DigitaleAdres? {
+        val userPartijId =
+            findPartijIdentificatoren(authentication)
+                ?.singleOrNull { it.partijIdentificator?.objectId == authentication.userId }
+                ?.identificeerdePartij
+                ?.uuid
+
+        if (userPartijId == null) {
+            logger.debug("Failed to create Digitale Adres: Authenticated User does not have a Partij")
+            return null
+        }
+
+        val digitaleAdresResponse =
+            try {
+                openKlant2Client
+                    .path<DigitaleAdressen>()
+                    .create(
+                        digitaleAdres
+                            .copy(verstrektDoorPartij = OpenKlant2UUID(userPartijId)),
+                    )
+            } catch (ex: WebClientResponseException) {
+                logger.debug("Failed to create DigitaleAdres: ${ex.responseBodyAsString}", ex)
+                return null
+            }
+
+        return digitaleAdresResponse
+    }
+
+    suspend fun updateDigitaleAdresById(
+        authentication: CommonGroundAuthentication,
+        digitaleAdresId: UUID,
+        digitaleAdres: OpenKlant2DigitaleAdres,
+    ): OpenKlant2DigitaleAdres? {
+        val previousDigitaleAdres = findDigitaleAdressen(authentication)?.singleOrNull { it.uuid == digitaleAdresId }
+        if (previousDigitaleAdres == null) {
+            return null
+        }
+        val updatedDigitaleAdres =
+            previousDigitaleAdres.copy(
+                adres = digitaleAdres.adres,
+                omschrijving = digitaleAdres.omschrijving,
+                soortDigitaalAdres = digitaleAdres.soortDigitaalAdres,
+                verstrektDoorBetrokkene = digitaleAdres.verstrektDoorBetrokkene,
+                verstrektDoorPartij = digitaleAdres.verstrektDoorPartij,
+            )
+        val digitaleAdresResponse =
+            try {
+                openKlant2Client
+                    .path<DigitaleAdressen>()
+                    .put(updatedDigitaleAdres)
+            } catch (ex: WebClientResponseException) {
+                logger.debug("Failed to update DigitaleAdres: ${ex.responseBodyAsString}", ex)
+                return null
+            }
+
+        return digitaleAdresResponse
     }
 
     companion object {

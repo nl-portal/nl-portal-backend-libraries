@@ -17,10 +17,15 @@ package nl.nlportal.openklant.client.domain
 
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonValue
+import java.util.UUID
 
 data class OpenKlant2ForeignKey(
     val url: String,
-    val uuid: String,
+    val uuid: UUID,
+)
+
+data class OpenKlant2UUID(
+    val uuid: UUID,
 )
 
 data class OpenKlant2Identificator(

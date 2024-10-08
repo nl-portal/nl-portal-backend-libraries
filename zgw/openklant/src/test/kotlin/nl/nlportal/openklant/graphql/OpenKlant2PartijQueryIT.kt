@@ -68,7 +68,7 @@ class OpenKlant2PartijQueryIT(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/partijTypeIntrospection.graphql")))
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/openKlant2TypeIntrospection.gql")))
                     .exchange()
                     .expectStatus().isOk
                     .expectBody()
@@ -84,11 +84,7 @@ class OpenKlant2PartijQueryIT(
 
             // then
             assertEquals("OBJECT", typeResponse?.get("kind")?.textValue())
-            assertEquals("OpenKlant2Partij", typeResponse?.get("name")?.textValue())
-            assertEquals(
-                "A Type that represents a Klantinteracties API Partij object",
-                typeResponse?.get("description")?.textValue(),
-            )
+            assertEquals("PartijResponse", typeResponse?.get("name")?.textValue())
         }
 
     @Test
@@ -105,7 +101,7 @@ class OpenKlant2PartijQueryIT(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/findUserPartij.graphql")))
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/findUserPartij.gql")))
                     .exchange()
                     .expectStatus().isOk
                     .expectBody()
@@ -142,7 +138,7 @@ class OpenKlant2PartijQueryIT(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserPartij.graphql")))
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserPartij.gql")))
                     .exchange()
                     .expectStatus().isOk
                     .expectBody()
@@ -179,7 +175,7 @@ class OpenKlant2PartijQueryIT(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserPartij.graphql")))
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserPartij.gql")))
                     .exchange()
                     .expectStatus().isOk
                     .expectBody()
@@ -214,7 +210,7 @@ class OpenKlant2PartijQueryIT(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/findUserPartij.graphql")))
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/findUserPartij.gql")))
                     .exchange()
                     .expectStatus().isOk
                     .expectBody()

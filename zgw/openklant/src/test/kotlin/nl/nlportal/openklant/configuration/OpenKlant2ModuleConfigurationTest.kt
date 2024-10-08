@@ -23,7 +23,6 @@ import nl.nlportal.core.util.Mapper
 import nl.nlportal.openklant.autoconfigure.OpenKlantModuleConfiguration
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
@@ -38,16 +37,15 @@ import org.springframework.web.reactive.function.BodyInserters
 import java.nio.charset.Charset
 
 @SpringBootTest
-@Tag("integration")
 @ActiveProfiles("openklant-disabled")
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-class OpenKlant2ModuleConfigurationIT(
+class OpenKlant2ModuleConfigurationTest(
     @Autowired private val webTestClient: WebTestClient,
     @Autowired private val openKlantModuleConfiguration: OpenKlantModuleConfiguration,
 ) {
     @Test
-    fun `should not expose Partij type when module is disabled`() =
+    fun `should not expose openklant type when module is disabled`() =
         runTest {
             // when
             val responseBodyContent =
@@ -59,7 +57,7 @@ class OpenKlant2ModuleConfigurationIT(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/partijTypeIntrospection.graphql")))
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/openKlant2TypeIntrospection.gql")))
                     .exchange()
                     .expectStatus().isOk
                     .expectBody()

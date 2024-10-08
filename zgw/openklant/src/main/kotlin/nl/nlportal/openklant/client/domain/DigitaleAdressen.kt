@@ -17,17 +17,20 @@ package nl.nlportal.openklant.client.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonValue
+import java.util.UUID
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-data class DigitaleAdres(
+data class OpenKlant2DigitaleAdres(
     val adres: String,
     val omschrijving: String,
     val soortDigitaalAdres: String,
-    val url: String,
-    val uuid: String,
-    val verstrektDoorBetrokkene: OpenKlant2ForeignKey? = null,
-    val verstrektDoorPartij: OpenKlant2ForeignKey? = null,
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    val url: String? = null,
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    val uuid: UUID? = null,
+    val verstrektDoorBetrokkene: OpenKlant2UUID? = null,
+    val verstrektDoorPartij: OpenKlant2UUID? = null,
 ) {
     init {
         require(adres.length <= 80) {
@@ -40,4 +43,13 @@ data class DigitaleAdres(
             "soortDigitaalAdres can't be longer than 10 characters."
         }
     }
+}
+
+enum class OpenKlant2DigitaleAdressenFilters(
+    @JsonValue val value: String,
+) : OpenKlant2Filters {
+    PAGE("page"),
+    ;
+
+    override fun toString() = this.value
 }

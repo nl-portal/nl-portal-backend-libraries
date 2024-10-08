@@ -27,7 +27,7 @@ class PartijMutation(
     private val openklant2Service: OpenKlant2Service,
 ) : Mutation {
     @GraphQLDescription("Create Partij for user")
-    suspend fun createPartij(
+    suspend fun createUserPartij(
         dfe: DataFetchingEnvironment,
         partijRequest: PartijRequest,
     ): PartijResponse? {
@@ -40,7 +40,7 @@ class PartijMutation(
     }
 
     @GraphQLDescription("Update user Partij")
-    suspend fun updatePartij(
+    suspend fun updateUserPartij(
         dfe: DataFetchingEnvironment,
         partijRequest: PartijRequest,
     ): PartijResponse? {

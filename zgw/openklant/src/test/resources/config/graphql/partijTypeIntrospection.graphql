@@ -1,7 +1,0 @@
-query {
-    __type(name: "OpenKlant2Partij") {
-        kind
-        name
-        description
-    }
-}

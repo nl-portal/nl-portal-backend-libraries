@@ -69,7 +69,7 @@ class OpenKlant2PartijMutationIT(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/createPartij.graphql")))
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/createUserPartij.gql")))
                     .exchange()
                     .expectStatus().isOk
                     .expectBody()
@@ -81,7 +81,7 @@ class OpenKlant2PartijMutationIT(
                 objectMapper
                     .readValue<JsonNode>(createPartijResponse!!)
                     .get("data")
-                    ?.get("createPartij")
+                    ?.get("createUserPartij")
             // then
             verify(openKlant2Service, times(1)).createPartijWithIdentificator(any(), any())
 
@@ -122,7 +122,7 @@ class OpenKlant2PartijMutationIT(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/updatePartij.graphql")))
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/updateUserPartij.gql")))
                     .exchange()
                     .expectStatus().isOk
                     .expectBody()
@@ -134,7 +134,7 @@ class OpenKlant2PartijMutationIT(
                 objectMapper
                     .readValue<JsonNode>(updatePartijResponse!!)
                     .get("data")
-                    ?.get("updatePartij")
+                    ?.get("updateUserPartij")
             // then
             verify(openKlant2Service, times(1)).updatePartij(any(), any())
 
@@ -175,7 +175,7 @@ class OpenKlant2PartijMutationIT(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/updatePartij.graphql")))
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/updateUserPartij.gql")))
                     .exchange()
                     .expectStatus().isOk
                     .expectBody()
@@ -187,7 +187,7 @@ class OpenKlant2PartijMutationIT(
                 objectMapper
                     .readValue<JsonNode>(updatePartijResponse!!)
                     .get("data")
-                    ?.get("updatePartij")
+                    ?.get("updateUserPartij")
             // then
             verify(openKlant2Service, times(1)).updatePartij(any(), any())
             verify(openKlant2Service, times(1)).createPartijWithIdentificator(any(), any())
