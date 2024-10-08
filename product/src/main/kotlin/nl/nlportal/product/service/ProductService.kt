@@ -411,11 +411,11 @@ class ProductService(
                     Mapper.get().writeValueAsString(it.record.data)
                 }
             "productverbruiksobject" ->
-                getObjectsApiObjectById<ProductDetails>(value.toString())?.let {
+                getObjectsApiObjectById<ProductVerbruiksObject>(value.toString())?.let {
                     Mapper.get().writeValueAsString(it.record.data)
                 }
             "productdetails" ->
-                getObjectsApiObjectById<ProductVerbruiksObject>(value.toString())?.let {
+                getObjectsApiObjectById<ProductDetails>(value.toString())?.let {
                     Mapper.get().writeValueAsString(it.record.data)
                 }
             else -> null

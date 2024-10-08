@@ -1,7 +1,8 @@
 query {
     getProductDecision(
         sources: {
-           product:"2d725c07-2f26-4705-8637-438a42b5ac2d"
+           product:"2d725c07-2f26-4705-8637-438a42b5ac2d",
+           productverbruiksobject: "2d725c07-2f26-4705-8637-438a42b5a800"
         },
         key: "watkanikregelen",
         productTypeId: "7d9cd6c2-8147-46f2-9ae9-c67e8213c200",

@@ -9,7 +9,27 @@
       "soort": "test",
       "productInstantie": "2d725c07-2f26-4705-8637-438a42b5ac2d",
       "data": {
-        "test": "test"
+        "periodes":[
+          {
+            "status":"actief",
+            "datetimeEnd":"2025-12-31T12:00:00.000Z",
+            "aantalGasten":"4",
+            "datetimeStart":"2024-08-12T12:00:00.000Z"
+          },
+          {
+            "status":"geannuleerd",
+            "datetimeEnd":"2024-03-13T12:00:00.000Z",
+            "aantalGasten":"15",
+            "datetimeStart":"2024-03-12T12:00:00.000Z"
+          },
+          {
+            "status":"actief",
+            "datetimeEnd":"2026-12-31T12:00:00.000Z",
+            "aantalGasten":"2",
+            "datetimeStart":"2025-01-01T12:00:00.000Z"
+          }
+        ],
+        "beschikbareDagdelen":3
       }
     },
     "geometry": null,

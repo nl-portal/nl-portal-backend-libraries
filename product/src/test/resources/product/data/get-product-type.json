@@ -39,8 +39,9 @@
                 "regex":"$.rollen.initiator.identificatie"
               },
               {
-                "name":"product",
-                "classType":"Json"
+                "name":"geldigheideinddatum",
+                "regex":"$.geldigTot",
+                "classType":"Date"
               }
             ],
             "producttype": [
@@ -48,6 +49,13 @@
                 "name":"contractnummer",
                 "classType":"String",
                 "regex":"$.parameters.contractnummer"
+              }
+            ],
+            "productverbruiksobject":[
+              {
+                "name":"aantalnachten",
+                "regex":"$.data.beschikbareDagdelen",
+                "classType":"Integer"
               }
             ]
           }
