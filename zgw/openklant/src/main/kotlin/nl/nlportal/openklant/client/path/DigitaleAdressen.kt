@@ -28,7 +28,7 @@ import org.springframework.web.reactive.function.client.awaitBodyOrNull
 import java.util.UUID
 
 class DigitaleAdressen(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesPath() {
-    override val path: String = "/digitale-adressen"
+    override val path: String = "/digitaleadressen"
 
     suspend fun get(searchFilters: List<Pair<OpenKlant2DigitaleAdressenFilters, Any>>? = null): List<OpenKlant2PartijIdentificator> {
         val response: ResultPage<OpenKlant2PartijIdentificator> =

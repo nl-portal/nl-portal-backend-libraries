@@ -16,6 +16,7 @@
 package nl.nlportal.openklant.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
+import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
 import com.expediagroup.graphql.server.operations.Mutation
 import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
@@ -23,6 +24,7 @@ import nl.nlportal.openklant.graphql.domain.PartijRequest
 import nl.nlportal.openklant.graphql.domain.PartijResponse
 import nl.nlportal.openklant.service.OpenKlant2Service
 
+@AuthenticatedDirective
 class PartijMutation(
     private val openklant2Service: OpenKlant2Service,
 ) : Mutation {

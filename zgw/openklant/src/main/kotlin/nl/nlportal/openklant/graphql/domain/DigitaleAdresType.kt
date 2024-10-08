@@ -15,17 +15,8 @@
  */
 package nl.nlportal.openklant.graphql.domain
 
-import com.fasterxml.jackson.annotation.JsonValue
-
-enum class DigitaleAdresType(
-    @JsonValue val value: String,
-) {
-    TELEFOONNUMMER("telefoonnummer"),
-    EMAIL("e-mail"),
-    ANDERS("anders"),
-    ;
-
-    override fun toString(): String {
-        return this.value
-    }
+enum class DigitaleAdresType {
+    TELEFOONNUMMER,
+    EMAIL,
+    ANDERS,
 }

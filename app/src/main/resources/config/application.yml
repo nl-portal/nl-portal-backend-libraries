@@ -38,7 +38,7 @@ spring:
     jpa:
         database-platform: org.hibernate.dialect.PostgreSQLDialect
         database: postgresql
-        show_sql: true
+        show_sql: false
         open-in-view: false
         properties:
             hibernate:
@@ -69,7 +69,7 @@ graphql:
 
 logging:
     level:
-        org.springframework.amqp: DEBUG
+        root: INFO
 
 nl-portal:
     config:

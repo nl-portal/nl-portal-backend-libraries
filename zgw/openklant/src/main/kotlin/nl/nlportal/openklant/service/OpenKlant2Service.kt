@@ -200,6 +200,7 @@ class OpenKlant2Service(
     ): OpenKlant2DigitaleAdres? {
         val previousDigitaleAdres = findDigitaleAdressen(authentication)?.singleOrNull { it.uuid == digitaleAdresId }
         if (previousDigitaleAdres == null) {
+            logger.debug("Failed to update DigitaleAdres: No DigitaleAdres exists with provided Id")
             return null
         }
         val updatedDigitaleAdres =
@@ -221,6 +222,33 @@ class OpenKlant2Service(
             }
 
         return digitaleAdresResponse
+    }
+
+    suspend fun deleteDigitaleAdresById(
+        authentication: CommonGroundAuthentication,
+        digitaleAdresId: UUID,
+    ) {
+        val userPartijId =
+            findPartijIdentificatoren(authentication)
+                ?.singleOrNull { it.partijIdentificator?.objectId == authentication.userId }
+                ?.identificeerdePartij
+                ?.uuid
+
+        if (userPartijId == null) {
+            logger.debug("Failed to delete Digitale Adres: Given DigitaleAdres does not belong to Authenticated User")
+            return
+        }
+
+        try {
+            openKlant2Client
+                .path<DigitaleAdressen>()
+                .delete(digitaleAdresId)
+        } catch (ex: WebClientResponseException) {
+            logger.debug("Failed to delete DigitaleAdres: ${ex.responseBodyAsString}", ex)
+            return
+        }
+
+        return
     }
 
     companion object {

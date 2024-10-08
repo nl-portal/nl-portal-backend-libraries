@@ -16,6 +16,7 @@
 package nl.nlportal.openklant.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
+import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
 import com.expediagroup.graphql.server.operations.Mutation
 import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
@@ -24,6 +25,7 @@ import nl.nlportal.openklant.graphql.domain.DigitaleAdresResponse
 import nl.nlportal.openklant.service.OpenKlant2Service
 import java.util.UUID
 
+@AuthenticatedDirective
 class DigitaleAdresMutation(
     private val openklant2Service: OpenKlant2Service,
 ) : Mutation {
@@ -55,5 +57,18 @@ class DigitaleAdresMutation(
                 )
 
         return digitaleAdres?.let { DigitaleAdresResponse.fromOpenKlant2DigitaleAdres(digitaleAdres) }
+    }
+
+    @GraphQLDescription("Delete DigitaleAdres of User by Id")
+    suspend fun deleteUserDigitaleAdres(
+        dfe: DataFetchingEnvironment,
+        digitaleAdresId: UUID,
+    ): DigitaleAdresResponse? {
+        openklant2Service
+            .deleteDigitaleAdresById(
+                dfe.graphQlContext.get(AUTHENTICATION_KEY),
+                digitaleAdresId,
+            )
+        return null
     }
 }

@@ -16,6 +16,7 @@
 package nl.nlportal.openklant.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
+import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
 import com.expediagroup.graphql.server.operations.Query
 import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
@@ -23,6 +24,7 @@ import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.openklant.graphql.domain.DigitaleAdresResponse
 import nl.nlportal.openklant.service.OpenKlant2Service
 
+@AuthenticatedDirective
 class DigitaleAdresQuery(
     private val openklant2Service: OpenKlant2Service,
 ) : Query {
