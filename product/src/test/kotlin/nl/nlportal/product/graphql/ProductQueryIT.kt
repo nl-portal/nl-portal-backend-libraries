@@ -428,7 +428,7 @@ internal class ProductQueryIT(
                             "GET /api/v2/objects/2d725c07-2f26-4705-8637-438a42b5ac2d" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-product.json")
                             }
-                            "POST /decision-definition/key/watkanikregelenDmn/evaluate" -> {
+                            "POST /engine-rest/decision-definition/key/watkanikregelenDmn/evaluate" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-dmn-decision.json")
                             }
                             else -> MockResponse().setResponseCode(404)
