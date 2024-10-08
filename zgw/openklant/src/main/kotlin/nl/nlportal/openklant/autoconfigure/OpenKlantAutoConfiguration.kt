@@ -15,9 +15,16 @@
  */
 package nl.nlportal.openklant.autoconfigure
 
+import com.expediagroup.graphql.server.operations.Mutation
+import com.expediagroup.graphql.server.operations.Query
 import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
+import nl.nlportal.openklant.graphql.DigitaleAdresMutation
+import nl.nlportal.openklant.graphql.DigitaleAdresQuery
+import nl.nlportal.openklant.graphql.PartijMutation
+import nl.nlportal.openklant.graphql.PartijQuery
 import nl.nlportal.openklant.service.OpenKlant2Service
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
@@ -35,5 +42,41 @@ class OpenKlantAutoConfiguration {
     @ConditionalOnMissingBean(OpenKlant2Service::class)
     fun openKlant2Service(openklant2Client: OpenKlant2KlantinteractiesClient): OpenKlant2Service {
         return OpenKlant2Service(openklant2Client)
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(
+        PartijQuery::class,
+    )
+    @ConditionalOnProperty(prefix = "nl-portal.config.openklant", name = ["enabled"], havingValue = "true")
+    fun partijQuery(openKlant2Service: OpenKlant2Service): Query {
+        return PartijQuery(openKlant2Service)
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(
+        PartijMutation::class,
+    )
+    @ConditionalOnProperty(prefix = "nl-portal.config.openklant", name = ["enabled"], havingValue = "true")
+    fun partijMutation(openKlant2Service: OpenKlant2Service): Mutation {
+        return PartijMutation(openKlant2Service)
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(
+        DigitaleAdresQuery::class,
+    )
+    @ConditionalOnProperty(prefix = "nl-portal.config.openklant", name = ["enabled"], havingValue = "true")
+    fun digitaleAdresQuery(openKlant2Service: OpenKlant2Service): Query {
+        return DigitaleAdresQuery(openKlant2Service)
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(
+        DigitaleAdresMutation::class,
+    )
+    @ConditionalOnProperty(prefix = "nl-portal.config.openklant", name = ["enabled"], havingValue = "true")
+    fun digitaleAdresMutation(openKlant2Service: OpenKlant2Service): Mutation {
+        return DigitaleAdresMutation(openKlant2Service)
     }
 }
