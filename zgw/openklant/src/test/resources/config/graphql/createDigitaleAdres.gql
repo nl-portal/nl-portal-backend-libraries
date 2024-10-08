@@ -1,0 +1,5 @@
+mutation {
+    createDigitaleAdres(digitaleAdresRequest: {waarde: "0611111111", type: TELEFOONNUMMER, omschrijving: "Privè Telefoonnummer" }) {
+
+    }
+}

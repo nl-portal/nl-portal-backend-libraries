@@ -1,0 +1,7 @@
+query {
+    __type(name: "PartijResponse") {
+        kind
+        name
+        description
+    }
+}
