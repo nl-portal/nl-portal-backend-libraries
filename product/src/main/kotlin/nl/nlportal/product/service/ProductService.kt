@@ -407,15 +407,21 @@ class ProductService(
     ): String? {
         return when (key) {
             "product" ->
-                getObjectsApiObjectById<Product>(value.toString())?.let {
+                getObjectsApiObjectById<Product>(value.toString())?.apply {
+                    this.record.data.id = this.uuid
+                }?.let {
                     Mapper.get().writeValueAsString(it.record.data)
                 }
             "productverbruiksobject" ->
-                getObjectsApiObjectById<ProductVerbruiksObject>(value.toString())?.let {
+                getObjectsApiObjectById<ProductVerbruiksObject>(value.toString())?.apply {
+                    this.record.data.id = this.uuid
+                }?.let {
                     Mapper.get().writeValueAsString(it.record.data)
                 }
             "productdetails" ->
-                getObjectsApiObjectById<ProductDetails>(value.toString())?.let {
+                getObjectsApiObjectById<ProductDetails>(value.toString())?.apply {
+                    this.record.data.id = this.uuid
+                }?.let {
                     Mapper.get().writeValueAsString(it.record.data)
                 }
             else -> null
