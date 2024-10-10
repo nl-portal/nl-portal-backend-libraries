@@ -26,7 +26,7 @@ data class Bericht(
     val berichtType: BerichtType,
     val bijlages: List<String>,
     val einddatumHandelingstermijn: LocalDate,
-    val geopend: Boolean,
+    var geopend: Boolean,
     val handelingsperspectief: BerichtHandelingsperspectief,
     val identificatie: BerichtIdentificatie,
     val onderwerp: String,

@@ -25,14 +25,17 @@ import nl.nlportal.zgw.objectenapi.domain.Comparator.STRING_CONTAINS
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
+import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import nl.nlportal.zgw.objectenapi.service.ObjectenApiService
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
 
 class BerichtenService(
     private val objectenApiService: ObjectenApiService,
     private val berichtenConfigurationProperties: BerichtenConfigurationProperties,
 ) {
-    suspend fun getBericht(
+    suspend fun getBerichtOld(
         authentication: CommonGroundAuthentication,
         id: UUID,
     ): Bericht? {
@@ -66,6 +69,35 @@ class BerichtenService(
         val results = getBerichten(1, 1, searchParameters)
 
         return results.count
+    }
+
+    suspend fun getBericht(
+        authentication: CommonGroundAuthentication,
+        id: UUID,
+    ): Bericht? {
+        val objectsApiBericht = objectenApiService.getObjectById<Bericht>(id.toString())
+        if (objectsApiBericht == null) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Bericht not found")
+        }
+
+        val bericht = objectsApiBericht.record.data
+
+        if (bericht.identificatie.value != authentication.userId) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized for this Bericht")
+        }
+
+        if (bericht.geopend) {
+            // Bericht is already read, so return
+            return bericht
+        }
+
+        val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiBericht)
+        updateRequest.record.data.geopend = true
+        updateRequest.record.correctedBy = authentication.userId
+        updateRequest.record.correctionFor = objectsApiBericht.record.index.toString()
+        val updatedObjectsApiBericht = objectenApiService.updateObject(objectsApiBericht.uuid, updateRequest)
+
+        return updatedObjectsApiBericht?.record?.data
     }
 
     suspend fun getBerichtenPage(

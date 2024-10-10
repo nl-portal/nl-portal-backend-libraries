@@ -2,6 +2,10 @@ graphql:
     packages:
         - "nl.nlportal"
 
+logging:
+    level:
+        reactor.netty.http.client.HttpClient: TRACE
+
 nl-portal:
     openklant:
         url: #filled in test
