@@ -1,13 +1,11 @@
 package nl.nlportal.besluiten.client
 
-import io.netty.handler.logging.LogLevel
 import nl.nlportal.besluiten.domain.Besluit
 import nl.nlportal.besluiten.domain.BesluitAuditTrail
 import nl.nlportal.besluiten.domain.BesluitDocument
 import nl.nlportal.besluiten.domain.ResultPage
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import org.springframework.http.HttpStatus
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.reactive.function.client.ClientRequest
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
@@ -15,8 +13,6 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Mono
-import reactor.netty.http.client.HttpClient
-import reactor.netty.transport.logging.AdvancedByteBufFormat
 import java.util.UUID
 
 class BesluitenApiClient(
@@ -36,15 +32,6 @@ class BesluitenApiClient(
                             ClientRequest.from(it).header("Authorization", "Bearer ${getToken()}").build(),
                         )
                     },
-                )
-                .clientConnector(
-                    ReactorClientHttpConnector(
-                        HttpClient.create().wiretap(
-                            "reactor.netty.http.client.HttpClient",
-                            LogLevel.TRACE,
-                            AdvancedByteBufFormat.TEXTUAL,
-                        ),
-                    ),
                 )
                 .defaultHeader("Accept-Crs", "EPSG:4326")
                 .defaultHeader("Content-Crs", "EPSG:4326")
