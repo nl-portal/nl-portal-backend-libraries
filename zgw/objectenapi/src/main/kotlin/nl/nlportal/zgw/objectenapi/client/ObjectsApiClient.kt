@@ -23,6 +23,7 @@ import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
+import org.springframework.http.HttpStatusCode
 import org.springframework.http.MediaType
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.http.codec.json.Jackson2JsonDecoder
@@ -31,6 +32,7 @@ import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.awaitBodyOrNull
+import org.springframework.web.server.ResponseStatusException
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
 import java.util.UUID
@@ -44,6 +46,12 @@ open class ObjectsApiClient(
             .uri("/api/v2/objects/$id")
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
+            .onStatus(HttpStatusCode::isError) { response ->
+                throw ResponseStatusException(
+                    response.statusCode(),
+                    "Failed to ${response.request().method.name()} ${T::class.java.simpleName}",
+                )
+            }
             .awaitBodyOrNull()
     }
 
