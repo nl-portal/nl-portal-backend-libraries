@@ -128,7 +128,7 @@ enum class PartijExpandOptions(
     @JsonValue val value: String,
 ) : OpenKlant2Filters {
     BETROKKENEN("betrokkenen"),
-    HAD_KLANTCONTACT("hadKlantcontact"),
+    HAD_KLANTCONTACT("betrokkenen.hadKlantcontact"),
     CATEGORIE_RELATIES("categorieRelaties"),
     DIGITALE_ADRESSEN("digitaleAdressen"),
     ;

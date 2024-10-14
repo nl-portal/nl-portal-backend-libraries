@@ -252,7 +252,8 @@ object TestHelper {
                                     "soortDigitaalAdres": "Telefoon",
                                     "omschrijving": "Telefoonnummer van de klant"
                                 }
-                            ]
+                            ],
+                            
                         }
                     }
                 ]

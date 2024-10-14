@@ -18,6 +18,7 @@ package nl.nlportal.openklant.service
 import mu.KotlinLogging
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
+import nl.nlportal.openklant.client.domain.HadKlantcontact
 import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdres
 import nl.nlportal.openklant.client.domain.OpenKlant2Identificator
 import nl.nlportal.openklant.client.domain.OpenKlant2IdentificeerdePartij
@@ -27,8 +28,10 @@ import nl.nlportal.openklant.client.domain.OpenKlant2PartijIdentificatorenFilter
 import nl.nlportal.openklant.client.domain.OpenKlant2PartijenFilters
 import nl.nlportal.openklant.client.domain.OpenKlant2UUID
 import nl.nlportal.openklant.client.domain.PartijExpandOptions.DIGITALE_ADRESSEN
+import nl.nlportal.openklant.client.domain.PartijExpandOptions.HAD_KLANTCONTACT
 import nl.nlportal.openklant.client.domain.asSoortPartij
 import nl.nlportal.openklant.client.path.DigitaleAdressen
+import nl.nlportal.openklant.client.path.KlantContacten
 import nl.nlportal.openklant.client.path.PartijIdentificatoren
 import nl.nlportal.openklant.client.path.Partijen
 import org.springframework.web.reactive.function.client.WebClientResponseException
@@ -249,6 +252,31 @@ class OpenKlant2Service(
         }
 
         return
+    }
+
+    suspend fun findKlantContacten(authentication: CommonGroundAuthentication): List<HadKlantcontact>? {
+        val searchVariables =
+            listOf(
+                OpenKlant2PartijenFilters.SOORT_PARTIJ to authentication.asSoortPartij(),
+                OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_OBJECT_ID to authentication.userId,
+                OpenKlant2PartijenFilters.EXPAND to HAD_KLANTCONTACT,
+            )
+
+        val response =
+            try {
+                openKlant2Client.path<Partijen>().get(searchVariables)?.singleOrNull()
+            } catch (ex: WebClientResponseException) {
+                logger.debug("Failed to get Partij with Klantcontacten: ${ex.responseBodyAsString}", ex)
+                return null
+            }
+
+        return response?.expand?.hadKlantcontact
+    }
+
+    suspend fun findKlantContact(klantContactId: UUID): HadKlantcontact? {
+        return openKlant2Client
+            .path<KlantContacten>()
+            .get(klantContactId)
     }
 
     companion object {

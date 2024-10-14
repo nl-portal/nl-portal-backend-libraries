@@ -19,6 +19,7 @@ import com.expediagroup.graphql.server.operations.Mutation
 import com.expediagroup.graphql.server.operations.Query
 import nl.nlportal.openklant.graphql.DigitaleAdresMutation
 import nl.nlportal.openklant.graphql.DigitaleAdresQuery
+import nl.nlportal.openklant.graphql.KlantContactQuery
 import nl.nlportal.openklant.graphql.PartijMutation
 import nl.nlportal.openklant.graphql.PartijQuery
 import nl.nlportal.openklant.service.OpenKlant2Service
@@ -50,5 +51,11 @@ class OpenKlantGraphqlAutoConfiguration {
     @ConditionalOnMissingBean(DigitaleAdresMutation::class)
     fun digitaleAdresMutation(openKlant2Service: OpenKlant2Service): Mutation {
         return DigitaleAdresMutation(openKlant2Service)
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(KlantContactQuery::class)
+    fun klantContactQuery(openKlant2Service: OpenKlant2Service): Query {
+        return KlantContactQuery(openKlant2Service)
     }
 }

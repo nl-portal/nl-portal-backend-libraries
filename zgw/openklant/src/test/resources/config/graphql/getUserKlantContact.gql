@@ -1,0 +1,9 @@
+
+query {
+    getUserKlantContact {
+        uuid
+        inhoud
+        kanaal
+        onderwerp
+    }
+}
