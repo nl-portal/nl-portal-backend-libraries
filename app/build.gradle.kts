@@ -25,6 +25,7 @@ dependencies {
     implementation(project(":product"))
     implementation(project(":form"))
     implementation(project(":zgw:taak"))
+    implementation(project(":zgw:openklant"))
     implementation(project(":zgw:zaken-api"))
     implementation(project(":zgw:catalogi-api"))
     implementation(project(":zgw:documenten-api"))

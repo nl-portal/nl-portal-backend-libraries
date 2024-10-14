@@ -38,7 +38,7 @@ spring:
     jpa:
         database-platform: org.hibernate.dialect.PostgreSQLDialect
         database: postgresql
-        show_sql: true
+        show_sql: false
         open-in-view: false
         properties:
             hibernate:
@@ -69,9 +69,15 @@ graphql:
 
 logging:
     level:
-        org.springframework.amqp: DEBUG
+        root: INFO
 
 nl-portal:
+    config:
+        openklant:
+            enabled: true
+            properties:
+                klantinteracties-api-url: http://localhost:8007/klantinteracties/api/v1
+                token: ac045222c9e7cde8120b48735560f9b920bb58cd
     zgw:
         catalogiapi:
             url: http://localhost:8001

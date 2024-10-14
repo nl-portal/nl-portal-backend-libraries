@@ -1,0 +1,1 @@
+INSERT INTO public.token_tokenauth (id, token, contact_person, email, organization, last_modified, created, application, administration) VALUES (1, 'ac045222c9e7cde8120b48735560f9b920bb58cd', 'Admin', 'admin@example.com', '', '2024-09-06 07:26:53.703312 +00:00', '2024-09-06 07:26:53.703384 +00:00', '', '');

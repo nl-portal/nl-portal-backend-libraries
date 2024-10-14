@@ -1,0 +1,45 @@
+graphql:
+    packages:
+        - "nl.nlportal"
+
+nl-portal:
+    config:
+      openklant:
+          enabled: true
+          properties:
+              klantinteracties-api-url: http://localhost:9007/klantinteracties/api/v1
+              token: ac045222c9e7cde8120b48735560f9b920bb58cd
+
+spring:
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://localhost:8082/auth/realms/nlportal
+
+---
+
+spring:
+    config:
+        activate:
+            on-profile: openklant-disabled
+
+nl-portal:
+    config:
+        openklant:
+            enabled: false
+
+---
+
+spring:
+    config:
+        activate:
+            on-profile: openklant-misconfigured
+
+nl-portal:
+    config:
+        openklant:
+            enabled: true
+            properties:
+                klantinteracties-api-url:
+                token:
