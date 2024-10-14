@@ -21,5 +21,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 class TaakObjectConfig(
     @Deprecated("Use version 2")
     var typeUrl: String = "",
-    var typeUrlV2: String? = "",
+    var typeUrlV2: String = "",
 )

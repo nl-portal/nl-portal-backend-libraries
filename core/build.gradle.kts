@@ -33,6 +33,7 @@ dependencies {
     api("org.springframework.security", "spring-security-oauth2-resource-server")
 
     // Jackson
+    api(ApiDependencies.jacksonBom)
     api("com.fasterxml.jackson.module", "jackson-module-kotlin")
 
     // Liquibase

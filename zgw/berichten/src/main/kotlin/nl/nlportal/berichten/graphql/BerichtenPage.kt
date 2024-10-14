@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright (c) 2024 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.haalcentraal.brp.domain.persoon
+package nl.nlportal.berichten.graphql
 
-data class PersoonGeboorteDatum(
-    val datum: String? = null,
-    val jaar: Int? = null,
-    val maand: Int? = null,
-    val dag: Int? = null,
-)
+import nl.nlportal.berichten.domain.Bericht
+import nl.nlportal.graphql.Page
+
+class BerichtenPage(
+    number: Int,
+    size: Int,
+    content: List<Bericht>,
+    totalElements: Int,
+) : Page<Bericht>(
+        number,
+        size,
+        content,
+        totalElements,
+    )

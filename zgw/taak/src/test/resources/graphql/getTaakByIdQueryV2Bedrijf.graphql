@@ -1,0 +1,20 @@
+query {
+    getTaakByIdV2(id: "2d725c07-2f26-4705-8637-438a42b5ac2d") {
+        id,
+        titel
+        status,
+        soort,
+        verloopdatum
+        portaalformulier {
+            formulier{
+                soort,
+                value
+            },
+            data
+        }
+        identificatie {
+            type
+            value
+        }
+    }
+}

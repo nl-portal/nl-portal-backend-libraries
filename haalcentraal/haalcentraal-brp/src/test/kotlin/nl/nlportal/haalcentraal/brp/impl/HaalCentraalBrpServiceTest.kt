@@ -42,6 +42,7 @@ class HaalCentraalBrpServiceTest {
                 Persoon(
                     "123",
                     "geslacht",
+                    false,
                     PersoonNaam(
                         "Aanhef",
                         "Voornaam",
@@ -49,6 +50,8 @@ class HaalCentraalBrpServiceTest {
                         "van",
                         "Achternaam",
                     ),
+                    null,
+                    null,
                     null,
                     null,
                     null,

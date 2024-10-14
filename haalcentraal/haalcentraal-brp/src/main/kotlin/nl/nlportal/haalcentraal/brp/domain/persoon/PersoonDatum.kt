@@ -15,7 +15,9 @@
  */
 package nl.nlportal.haalcentraal.brp.domain.persoon
 
-data class PersoonGeboorteLand(
-    val code: String? = null,
-    val omschrijving: String? = null,
+data class PersoonDatum(
+    val datum: String? = null,
+    val jaar: Int? = null,
+    val maand: Int? = null,
+    val dag: Int? = null,
 )

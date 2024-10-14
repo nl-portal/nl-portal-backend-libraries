@@ -24,8 +24,6 @@ import nl.nlportal.payment.domain.OgonePayment
 import nl.nlportal.payment.domain.OgonePaymentRequest
 import nl.nlportal.payment.domain.PaymentField
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
-import nl.nlportal.zgw.objectenapi.domain.Comparator
-import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
@@ -90,7 +88,7 @@ class OgonePaymentService(
 
         val orderId = serverHttpRequest.queryParams[OgonePayment.QUERYSTRING_ORDER_ID]?.get(0)
         val objectsApiTask = getObjectsApiTaak(UUID.fromString(orderId))
-        if (objectsApiTask.record.data.status == TaakStatus.INGEDIEND) {
+        if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
             return "Task is already completed"
         }
 
@@ -104,7 +102,7 @@ class OgonePaymentService(
         }
 
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
-        updateRequest.record.data.status = TaakStatus.INGEDIEND
+        updateRequest.record.data.status = TaakStatus.AFGEROND
         updateRequest.record.correctedBy = "Payment provider"
         updateRequest.record.correctionFor = objectsApiTask.record.index.toString()
         objectsApiClient.updateObject(objectsApiTask.uuid, updateRequest)
@@ -113,17 +111,14 @@ class OgonePaymentService(
     }
 
     private suspend fun getObjectsApiTaak(taskId: UUID): ObjectsApiObject<TaakObjectV2> {
-        val objectSearchParameters =
-            listOf(
-                ObjectSearchParameter("verwerker_taak_id", Comparator.EQUAL_TO, taskId.toString()),
+        val objectsApiTask = objectsApiClient.getObjectById<TaakObjectV2>(taskId.toString())
+        if (objectsApiTask == null) {
+            throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                String.format("Taak kan niet gevonden worden", taskId),
             )
-
-        return objectsApiClient.getObjects<TaakObjectV2>(
-            objectSearchParameters = objectSearchParameters,
-            objectTypeUrl = objectsApiTaskConfig.typeUrlV2,
-            page = 1,
-            pageSize = 2,
-        ).results.single()
+        }
+        return objectsApiTask
     }
 
     private fun isValidOgoneRequest(

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright (c) 2024 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.haalcentraal.brp.domain.persoon
+package nl.nlportal.berichten.domain
 
-data class PersoonGeboorte(
-    val datum: PersoonGeboorteDatum? = null,
-    val land: PersoonGeboorteLand? = null,
-)
+import com.fasterxml.jackson.annotation.JsonValue
+
+enum class BerichtType(
+    @JsonValue val value: String,
+) {
+    NOTIFICATIE("notificatie"),
+    BETAALVERZOEK("betaalverzoek"),
+    UITNODIGING("uitnodiging"),
+    VERZOEK("verzoek"),
+    ;
+
+    override fun toString(): String {
+        return this.value
+    }
+}

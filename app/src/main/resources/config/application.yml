@@ -83,6 +83,21 @@ nl-portal:
             url: http://localhost:8001
             clientId: valtimo_client
             secret: e09b8bc5-5831-4618-ab28-41411304309d
+            zaak-documenten:
+                vertrouwelijkheidsaanduiding-whitelist:
+                    - openbaar
+                    - beperkt_openbaar
+                    - intern
+                    - zaakvertrouwelijk
+                    - vertrouwelijk
+                    - confidentieel
+                    - geheim
+                    - zeer_geheim
+                status-whitelist:
+                    - ter_vaststelling
+                    - in_bewerking
+                    - definitief
+                    - gearchiveerd
         taak:
             taakobject:
                 typeUrl: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
@@ -104,6 +119,8 @@ nl-portal:
                     url: http://localhost:8002/documenten/api/v1
                     clientId: docdoc
                     secret: e09b8bc5-5831-4618-ab28-41411304309d
+        berichten:
+            bericht-object-type-url: http://host.docker.internal:8011/api/v1/objecttypes/78731088-430f-49fd-9a4c-80ddd42ded28
     openklant:
         url: http://localhost:8006
         clientId: valtimo_client
@@ -142,7 +159,7 @@ nl-portal:
                   allowedOrigins: "*"
                   allowedMethods: "*"
         endpoints:
-            unsecured: /api/payment/**
+            unsecured: /api/public/**
     payment:
         ogone:
             url: https://secure.ogone.com/ncol/test/orderstandard.asp
@@ -155,4 +172,3 @@ nl-portal:
                     shaOutKey: de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00
                     failureUrl: http://localhost:3000
                     successUrl: http://localhost:3000
-

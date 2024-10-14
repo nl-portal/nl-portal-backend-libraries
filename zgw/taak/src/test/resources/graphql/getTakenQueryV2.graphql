@@ -11,8 +11,11 @@ query {
             status
             soort,
             verloopdatum
-            formtaak {
-                formulier
+            portaalformulier {
+                formulier{
+                    soort,
+                    value
+                },
                 data
             }
             identificatie {

@@ -2,10 +2,14 @@ query {
     getTaakByIdV2(id: "58fad5ab-dc2f-11ec-9075-f22a405ce708") {
         id,
         titel
-        status
+        status,
+        soort,
         verloopdatum
-        formtaak {
-            formulier
+        portaalformulier {
+            formulier{
+                soort,
+                value
+            },
             data
         }
         identificatie {

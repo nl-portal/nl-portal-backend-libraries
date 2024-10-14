@@ -23,7 +23,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     api(project(":core"))
 
-    implementation(Dependencies.kotlinxCoroutinesReactor)
+    implementation(Dependencies.kotlinCoroutines)
 
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation(TestDependencies.okHttpMockWebserver)

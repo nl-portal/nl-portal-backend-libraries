@@ -23,4 +23,8 @@ data class PersoonVerblijfplaats(
     val postcode: String? = null,
     val woonplaats: String? = null,
     val adresseerbaarObjectIdentificatie: String?,
+    val datumAanvangAdreshouding: PersoonDatum? = null,
+    val datumIngangGeldigheid: PersoonDatum? = null,
+    val datumInschrijvingInGemeente: PersoonDatum? = null,
+    val datumVestigingInNederland: PersoonDatum? = null,
 )

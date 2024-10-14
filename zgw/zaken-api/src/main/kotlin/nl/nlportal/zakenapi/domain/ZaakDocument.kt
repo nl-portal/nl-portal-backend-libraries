@@ -17,5 +17,6 @@ package nl.nlportal.zakenapi.domain
 
 data class ZaakDocument(
     var uuid: String,
-    var informatieobject: String?,
+    var informatieobject: String,
+    val zaak: String,
 )

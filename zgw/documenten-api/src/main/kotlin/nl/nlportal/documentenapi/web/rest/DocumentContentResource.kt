@@ -15,12 +15,13 @@
  */
 package nl.nlportal.documentenapi.web.rest
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.runBlocking
 import nl.nlportal.documentenapi.client.DocumentApisConfig
 import nl.nlportal.documentenapi.client.DocumentenApiClient
 import nl.nlportal.documentenapi.domain.VirusScanStatus
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.documentenapi.service.VirusScanService
-import kotlinx.coroutines.runBlocking
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -33,7 +34,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
-import reactor.core.publisher.Flux
 import java.util.UUID
 
 @RestController
@@ -48,9 +48,9 @@ class DocumentContentResource(
     fun downloadStreaming(
         @PathVariable documentId: UUID,
         @PathVariable documentapi: String,
-    ): ResponseEntity<Flux<DataBuffer>> {
+    ): ResponseEntity<Flow<DataBuffer>> {
         // Request service to get the file's data stream
-        val fileDataStream = documentenApiClient.getDocumentContentStream(documentId, documentapi)
+        val fileDataStream = documentenApiService.getDocumentContentStreaming(documentId, documentapi)
 
         val document = runBlocking { documentenApiService.getDocument(documentId, documentapi) }
 
@@ -59,10 +59,14 @@ class DocumentContentResource(
                 set("Content-Disposition", "attachment; filename=\"${document.bestandsnaam}\"")
             }
 
-        return ResponseEntity.ok().headers(responseHeaders).contentType(MediaType.APPLICATION_OCTET_STREAM).body(fileDataStream)
+        return ResponseEntity.ok().headers(responseHeaders).contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .body(fileDataStream)
     }
 
-    @PostMapping(value = ["/documentapi/{documentapi}/document/content"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    @PostMapping(
+        value = ["/documentapi/{documentapi}/document/content"],
+        consumes = [MediaType.MULTIPART_FORM_DATA_VALUE],
+    )
     suspend fun uploadStreaming(
         @RequestPart("file") file: FilePart,
         @PathVariable documentapi: String,

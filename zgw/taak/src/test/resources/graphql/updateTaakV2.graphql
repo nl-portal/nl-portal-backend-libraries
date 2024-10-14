@@ -1,11 +1,16 @@
 mutation {
-    submitTaakV2(id: "58fad5ab-dc2f-11ec-9075-f22a405ce708", submission: {test:"test"}) {
+    submitTaakV2(id: "58fad5ab-dc2f-11ec-9075-f22a405ce708", submission: {test:"test"}, version: V2) {
         id,
         titel
         status
+        soort,
+        version,
         verloopdatum
-        formtaak {
-            formulier
+        portaalformulier {
+            formulier{
+                soort,
+                value
+            },
             data
         }
         identificatie {

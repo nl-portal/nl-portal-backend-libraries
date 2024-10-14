@@ -4,15 +4,17 @@ graphql:
 
 logging:
     level:
-        reactor.netty.http.client.HttpClient: DEBUG
+        reactor.netty.http.client.HttpClient: TRACE
 
 nl-portal:
     objectsapi:
         url: http://localhost:8010
         token: 0000000000000000000000000000000000000000
+    zgw:
         taak:
-            typeUrl: "http://localhost:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb35"
-            typeUrlV2: "http://localhost:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb36"
+            taakobject:
+                typeUrl: "http://localhost:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
+                type-url-v2: "http://localhost:8011/api/v1/objecttypes/3c24cab6-4346-4c7d-912b-e34a1e9e21bf"
 
 spring:
     security:

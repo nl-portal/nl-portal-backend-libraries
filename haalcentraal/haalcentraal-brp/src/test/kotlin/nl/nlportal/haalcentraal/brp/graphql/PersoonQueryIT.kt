@@ -132,6 +132,7 @@ internal class PersoonQueryIT(
                 getPersoon {
                     burgerservicenummer,
                     geslachtsaanduiding,
+                    geheimhoudingPersoonsgegevens,
                     naam {
                         voornamen,
                         geslachtsnaam
@@ -158,6 +159,22 @@ internal class PersoonQueryIT(
                     nationaliteiten {
                         nationaliteit {
                             omschrijving
+                        }
+                    },
+                    kinderen{
+                        leeftijd,
+                        naam {
+                            geslachtsnaam
+                        }
+                    },
+                    partners{
+                        naam {
+                            geslachtsnaam
+                        }
+                    },
+                    ouders{
+                        naam {
+                            geslachtsnaam
                         }
                     }
                 }
@@ -191,8 +208,13 @@ internal class PersoonQueryIT(
             .jsonPath("$basePath.verblijfplaats.huisnummertoevoeging").isEqualTo("Achter")
             .jsonPath("$basePath.verblijfplaats.postcode").isEqualTo("2551XS")
             .jsonPath("$basePath.verblijfplaats.woonplaats").isEqualTo("'s-Gravenhage")
+            .jsonPath("$basePath.partners[0].naam.geslachtsnaam").isEqualTo("Maassen")
+            .jsonPath("$basePath.ouders[0].naam.geslachtsnaam").isEqualTo("Holthuizen")
+            .jsonPath("$basePath.kinderen[0].naam.geslachtsnaam").isEqualTo("Maassen")
+            .jsonPath("$basePath.kinderen[0].leeftijd").isEqualTo(18)
+            .jsonPath("$basePath.geheimhoudingPersoonsgegevens").isEqualTo(false)
             .jsonPath("$basePath.nationaliteiten").isArray()
-            .jsonPath("$basePath.nationaliteiten[*].nationaliteit.omschrijving", contains("Nederlandse", "Franse"))
+            .jsonPath("$basePath.nationaliteiten[0].nationaliteit.omschrijving", contains("Nederlandse", "Franse"))
     }
 
     private fun setupMockServer() {
