@@ -29,7 +29,7 @@ data class TaakObjectV2(
     val identificatie: TaakIdentificatie,
     val koppeling: TaakKoppeling,
     val url: TaakUrl?,
-    val formtaak: TaakForm?,
+    val portaalformulier: TaakForm?,
     val ogonebetaling: OgoneBetaling?,
     @JsonProperty("verwerker_taak_id") val verwerkerTaakId: UUID,
     val eigenaar: String,

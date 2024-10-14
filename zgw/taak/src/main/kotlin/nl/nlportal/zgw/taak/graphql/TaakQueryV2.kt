@@ -20,6 +20,7 @@ import com.expediagroup.graphql.server.operations.Query
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.zgw.taak.service.TaakService
 import graphql.schema.DataFetchingEnvironment
+import nl.nlportal.zgw.taak.domain.TaakStatus
 import nl.nlportal.zgw.taak.domain.TaakV2
 import java.util.UUID
 
@@ -32,12 +33,16 @@ class TaakQueryV2(
         pageNumber: Int? = 1,
         pageSize: Int? = 20,
         zaakUUID: UUID? = null,
+        status: TaakStatus? = null,
+        title: String? = null,
     ): TaakPageV2 {
         return taskService.getTaken(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
             zaakUUID = zaakUUID,
+            status = status,
+            title = title,
         )
     }
 
@@ -45,7 +50,7 @@ class TaakQueryV2(
     suspend fun getTaakByIdV2(
         id: UUID,
         dfe: DataFetchingEnvironment,
-    ): TaakV2 {
+    ): TaakV2? {
         return taskService.getTaakById(id, dfe.graphQlContext[AUTHENTICATION_KEY])
     }
 }

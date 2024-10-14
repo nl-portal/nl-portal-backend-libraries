@@ -15,6 +15,7 @@
  */
 package nl.nlportal.zakenapi.client
 
+import io.netty.handler.logging.LogLevel
 import nl.nlportal.catalogiapi.client.CatalogiApiConfig
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import nl.nlportal.zakenapi.client.request.ZaakInformatieobjecten
@@ -29,11 +30,15 @@ import nl.nlportal.zakenapi.client.request.ZakenImpl
 import nl.nlportal.zakenapi.client.request.ZakenInformatieobjectenImpl
 import nl.nlportal.zakenapi.client.request.ZoekenImpl
 import org.springframework.http.HttpStatus
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.ClientRequest
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Mono
+import reactor.netty.http.client.HttpClient
+import reactor.netty.transport.logging.AdvancedByteBufFormat
+import java.util.UUID
 
 class ZakenApiClient(
     private val zakenApiConfig: ZakenApiConfig,
@@ -47,6 +52,15 @@ class ZakenApiClient(
             webClientBuilder
                 .clone()
                 .baseUrl(zakenApiConfig.url)
+                .clientConnector(
+                    ReactorClientHttpConnector(
+                        HttpClient.create().wiretap(
+                            "reactor.netty.http.client.HttpClient",
+                            LogLevel.TRACE,
+                            AdvancedByteBufFormat.TEXTUAL,
+                        ),
+                    ),
+                )
                 .filter(
                     ExchangeFilterFunction.ofRequestProcessor {
                         Mono.just(
@@ -70,7 +84,7 @@ class ZakenApiClient(
         return "${zakenApiConfig.url}/zaken/api/v1/zaken/$zaakId"
     }
 
-    fun getZaakTypeUrl(zaakTypeId: Any): String {
+    fun getZaakTypeUrl(zaakTypeId: UUID): String {
         return "${catalogiApiConfig.url}/catalogi/api/v1/zaaktypen/$zaakTypeId"
     }
 

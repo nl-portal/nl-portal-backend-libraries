@@ -88,8 +88,8 @@ nl-portal:
                     - openbaar
                     - beperkt_openbaar
                     - intern
-                    - vertrouwelijk
                     - zaakvertrouwelijk
+                    - vertrouwelijk
                     - confidentieel
                     - geheim
                     - zeer_geheim
@@ -119,6 +119,8 @@ nl-portal:
                     url: http://localhost:8002/documenten/api/v1
                     clientId: docdoc
                     secret: e09b8bc5-5831-4618-ab28-41411304309d
+        berichten:
+            bericht-object-type-url: http://host.docker.internal:8011/api/v1/objecttypes/78731088-430f-49fd-9a4c-80ddd42ded28
     openklant:
         url: http://localhost:8006
         clientId: valtimo_client
@@ -157,7 +159,7 @@ nl-portal:
                   allowedOrigins: "*"
                   allowedMethods: "*"
         endpoints:
-            unsecured: /api/payment/**
+            unsecured: /api/public/**
     payment:
         ogone:
             url: https://secure.ogone.com/ncol/test/orderstandard.asp

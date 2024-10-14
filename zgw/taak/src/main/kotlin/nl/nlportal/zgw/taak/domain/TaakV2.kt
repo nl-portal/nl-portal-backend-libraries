@@ -30,7 +30,7 @@ class TaakV2(
     val identificatie: TaakIdentificatie,
     val koppeling: TaakKoppeling,
     val url: TaakUrl?,
-    val formtaak: TaakForm?,
+    val portaalformulier: TaakForm?,
     val ogonebetaling: OgoneBetaling?,
     val version: TaakVersion?,
     val eigenaar: String,
@@ -39,7 +39,7 @@ class TaakV2(
         fun fromObjectsApi(objectsApiTask: ObjectsApiObject<TaakObjectV2>): TaakV2 {
             val taakObjectV2 = objectsApiTask.record.data
             return TaakV2(
-                id = taakObjectV2.verwerkerTaakId,
+                id = objectsApiTask.uuid,
                 titel = taakObjectV2.titel,
                 status = taakObjectV2.status,
                 soort = taakObjectV2.soort,
@@ -47,7 +47,7 @@ class TaakV2(
                 identificatie = taakObjectV2.identificatie,
                 koppeling = taakObjectV2.koppeling,
                 url = taakObjectV2.url,
-                formtaak = taakObjectV2.formtaak,
+                portaalformulier = taakObjectV2.portaalformulier,
                 ogonebetaling = taakObjectV2.ogonebetaling,
                 version = TaakVersion.V2,
                 eigenaar = "gzac",
@@ -59,12 +59,12 @@ class TaakV2(
                 id = taakV1.id,
                 titel = taakV1.title,
                 status = taakV1.status,
-                soort = TaakSoort.FORMTAAK,
+                soort = TaakSoort.PORTAALFORMULIER,
                 verloopdatum = taakV1.verloopdatum,
                 identificatie = taakV1.identificatie,
                 koppeling = TaakKoppeling.migrate(taakV1.zaak),
                 url = null,
-                formtaak =
+                portaalformulier =
                     TaakForm(
                         formulier = TaakFormulierV2.migrate(taakV1.formulier),
                         data = Mapper.get().convertValue(taakV1.data, object : TypeReference<Map<String, Any>>() {}),
@@ -78,16 +78,16 @@ class TaakV2(
         fun migrateObjectsApiTask(objectsApiTask: ObjectsApiObject<TaakObject>): TaakV2 {
             val taakObject = objectsApiTask.record.data
             return TaakV2(
-                id = taakObject.verwerkerTaakId,
+                id = objectsApiTask.uuid,
                 titel = taakObject.title,
                 status = taakObject.status,
-                soort = TaakSoort.FORMTAAK,
+                soort = TaakSoort.PORTAALFORMULIER,
                 verloopdatum = taakObject.verloopdatum,
                 identificatie = taakObject.identificatie,
                 koppeling =
                     TaakKoppeling.migrate(taakObject.zaak),
                 url = null,
-                formtaak =
+                portaalformulier =
                     TaakForm(
                         formulier = TaakFormulierV2.migrate(taakObject.formulier),
                         data = taakObject.data,

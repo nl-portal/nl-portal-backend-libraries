@@ -78,7 +78,7 @@ internal class OgonePaymentControllerIT(
             ).uppercase()
 
         webTestClient.get()
-            .uri("/api/payment/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&STATUS=91&SHASIGN=$shaSign")
+            .uri("/api/public/payment/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&STATUS=91&SHASIGN=$shaSign")
             .exchange()
             .expectStatus().isOk
             .expectBody()
@@ -104,7 +104,7 @@ internal class OgonePaymentControllerIT(
             ).uppercase()
 
         webTestClient.get()
-            .uri("/api/payment/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&STATUS=1&AMOUNT=200&SHASIGN=$shaSign")
+            .uri("/api/public/payment/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&STATUS=1&AMOUNT=200&SHASIGN=$shaSign")
             .exchange()
             .expectStatus().isBadRequest
             .expectBody()
@@ -117,7 +117,7 @@ internal class OgonePaymentControllerIT(
     @Test
     fun postSaleTestNotFromPaymentProvider() {
         webTestClient.get()
-            .uri("/api/payment/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&PSPID=TAX&STATUS=91")
+            .uri("/api/public/payment/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&PSPID=TAX&STATUS=91")
             .exchange()
             .expectStatus().isBadRequest
             .expectBody()
@@ -130,7 +130,7 @@ internal class OgonePaymentControllerIT(
     @Test
     fun postSaleTestIncorrectOgoneStatus() {
         webTestClient.get()
-            .uri("/api/payment/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&PSPID=TAX&STATUS=1")
+            .uri("/api/public/payment/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&PSPID=TAX&STATUS=1")
             .exchange()
             .expectStatus().isBadRequest
             .expectBody()
@@ -146,20 +146,14 @@ internal class OgonePaymentControllerIT(
                 @Throws(InterruptedException::class)
                 override fun dispatch(request: RecordedRequest): MockResponse {
                     val path = request.path?.substringBefore('?')
-                    val queryParams = request.path?.substringAfter('?')?.split('&') ?: emptyList()
                     val response =
                         when (request.method + " " + path) {
-                            "GET /api/v2/objects" -> {
-                                if (queryParams.any { it.contains("verwerker_taak_id__exact__58fad5ab-dc2f-11ec-9075-f22a405ce707") }) {
-                                    TestHelper.mockResponseFromFile("/data/get-task.json")
-                                } else {
-                                    MockResponse().setResponseCode(404)
-                                }
+                            "GET /api/v2/objects/58fad5ab-dc2f-11ec-9075-f22a405ce707" -> {
+                                TestHelper.mockResponseFromFile("/data/get-task.json")
                             }
-                            "PUT /api/v2/objects/2d725c07-2f26-4705-8637-438a42b5ac2d" -> {
+                            "PUT /api/v2/objects/58fad5ab-dc2f-11ec-9075-f22a405ce707" -> {
                                 TestHelper.mockResponseFromFile("/data/put-task.json")
                             }
-
                             else -> MockResponse().setResponseCode(404)
                         }
                     return response

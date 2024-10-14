@@ -48,13 +48,18 @@ class SearchZoekenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
         return this
     }
 
-    override fun ofZaakTypes(zaakTypeIds: List<String>): SearchZaken {
-        bodyValue.add(
+    override fun ofZaakTypes(zaakTypeIds: List<UUID>): SearchZaken {
+        bodyValue.put(
             "zaaktype__in",
             zaakTypeIds.map {
                 zakenApiClient.getZaakTypeUrl(it)
-            }.joinToString(),
+            },
         )
+        return this
+    }
+
+    override fun ofIdentificatie(identificatie: String): SearchZaken {
+        bodyValue.add("identificatie", identificatie)
         return this
     }
 

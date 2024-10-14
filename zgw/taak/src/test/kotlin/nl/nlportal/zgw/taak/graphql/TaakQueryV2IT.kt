@@ -53,6 +53,9 @@ internal class TaakQueryV2IT(
     @Autowired
     private lateinit var getTaakByIdPayloadV2: String
 
+    @Autowired
+    private lateinit var getTaakByIdPayloadV2Bedrijf: String
+
     @BeforeEach
     internal fun setUp() {
         server = MockWebServer()
@@ -82,12 +85,12 @@ internal class TaakQueryV2IT(
             .verifyOnlyDataExists(basePath)
             .jsonPath("$resultPath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce708")
             .jsonPath("$resultPath.status").isEqualTo(TaakStatus.OPEN.toString())
-            .jsonPath("$resultPath.soort").isEqualTo(TaakSoort.FORMTAAK.name)
+            .jsonPath("$resultPath.soort").isEqualTo(TaakSoort.PORTAALFORMULIER.name)
             .jsonPath("$resultPath.verloopdatum").isEqualTo("2023-09-20T18:25:43.524")
             .jsonPath(
-                "$resultPath.formtaak.formulier.value",
+                "$resultPath.portaalformulier.formulier.value",
             ).isEqualTo("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4")
-            .jsonPath("$resultPath.formtaak.data.voornaam").isEqualTo("Jan")
+            .jsonPath("$resultPath.portaalformulier.data.voornaam").isEqualTo("Jan")
             .jsonPath("$basePath.number").isEqualTo(1)
             .jsonPath("$basePath.size").isEqualTo(1)
             .jsonPath("$basePath.totalPages").isEqualTo(2)
@@ -113,9 +116,9 @@ internal class TaakQueryV2IT(
             .jsonPath("$resultPath.status").isEqualTo(TaakStatus.OPEN.toString())
             .jsonPath("$resultPath.verloopdatum").isEqualTo("2023-09-20T18:25:43.524")
             .jsonPath(
-                "$resultPath.formtaak.formulier",
+                "$resultPath.portaalformulier.formulier",
             ).isEqualTo("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4")
-            .jsonPath("$resultPath.formtaak.data.voornaam").isEqualTo("Jan")
+            .jsonPath("$resultPath.portaalformulier.data.voornaam").isEqualTo("Jan")
             .jsonPath("$basePath.number").isEqualTo(1)
             .jsonPath("$basePath.size").isEqualTo(1)
             .jsonPath("$basePath.totalPages").isEqualTo(2)
@@ -137,9 +140,9 @@ internal class TaakQueryV2IT(
             .verifyOnlyDataExists(basePath)
             .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
             .jsonPath(
-                "$basePath.formtaak.formulier.value",
-            ).isEqualTo("check-loan-form")
-        // .jsonPath("$basePath.formtaak.data.voornaam").isEqualTo("Jan")
+                "$basePath.portaalformulier.formulier.value",
+            ).isEqualTo("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4")
+        // .jsonPath("$basePath.portaalformulier.data.voornaam").isEqualTo("Jan")
         // .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
         // .jsonPath("$basePath.verloopdatum").isEqualTo("2023-09-20T18:25:43.524")
     }
@@ -153,14 +156,14 @@ internal class TaakQueryV2IT(
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
-            .bodyValue(getTaakByIdPayloadV2)
+            .bodyValue(getTaakByIdPayloadV2Bedrijf)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce708")
+            .jsonPath("$basePath.id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
             .jsonPath(
-                "$basePath.formtaak.formulier.value",
+                "$basePath.portaalformulier.formulier.value",
             ).isEqualTo("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4")
-            .jsonPath("$basePath.formtaak.data.voornaam").isEqualTo("Jan")
+            .jsonPath("$basePath.portaalformulier.data.voornaam").isEqualTo("Jan")
             .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
             .jsonPath("$basePath.verloopdatum").isEqualTo("2023-09-20T18:25:43.524")
     }
@@ -208,6 +211,13 @@ internal class TaakQueryV2IT(
                                     MockResponse().setResponseCode(404)
                                 }
                             }
+                            "GET /api/v2/objects/58fad5ab-dc2f-11ec-9075-f22a405ce708" -> {
+                                TestHelper.mockResponseFromFile("/data/get-taskv2.json")
+                            }
+                            "GET /api/v2/objects/2d725c07-2f26-4705-8637-438a42b5ac2d" -> {
+                                TestHelper.mockResponseFromFile("/data/get-taskv2-bedrijf.json")
+                            }
+                            //
                             else -> MockResponse().setResponseCode(404)
                         }
                     return response

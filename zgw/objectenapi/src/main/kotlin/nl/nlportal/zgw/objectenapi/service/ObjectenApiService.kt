@@ -21,7 +21,9 @@ import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequest
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
+import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import java.net.URI
+import java.util.UUID
 
 class ObjectenApiService(
     val objectsApiClient: ObjectsApiClient,
@@ -45,6 +47,13 @@ class ObjectenApiService(
         return objectsApiClient.getObjectById(objectId)
     }
 
+    suspend inline fun <reified T> updateObject(
+        objectUuid: UUID,
+        objectsApiObject: UpdateObjectsApiObjectRequest<T>,
+    ): ObjectsApiObject<T>? {
+        return objectsApiClient.updateObject(objectUuid, objectsApiObject)
+    }
+
     suspend inline fun <reified T> getObjectByUrl(url: String): ObjectsApiObject<T>? {
         val requestedObjectenApiHost = URI.create(url).host
         val configuredObjectenApiHost = objectsApiClientConfig.url.host
@@ -58,5 +67,9 @@ class ObjectenApiService(
         return objectsApiClient.createObject(
             createObjectsApiObjectRequest,
         )
+    }
+
+    fun deleteObjectById(objectId: UUID) {
+        objectsApiClient.deleteObjectById(objectId)
     }
 }
