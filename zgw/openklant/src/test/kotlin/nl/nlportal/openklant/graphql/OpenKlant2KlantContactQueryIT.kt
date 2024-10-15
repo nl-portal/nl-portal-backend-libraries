@@ -21,6 +21,7 @@ import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.openklant.service.OpenKlant2Service
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -81,7 +82,42 @@ class OpenKlant2KlantContactQueryIT(
             verify(openKlant2Service, times(1)).findKlantContacten(any())
 
             assertNotNull(response)
-            // assertEquals("ANDERS", response?.get(0)?.get("type")?.textValue())
+            assertEquals("E-mail", response?.get(0)?.get("kanaal")?.textValue())
+        }
+
+    @Test
+    @WithBurgerUser("123456788")
+    fun `should find KlantContact for authenticated user`() =
+        runTest {
+            // when
+            val responseBody =
+                webTestClient
+                    .post()
+                    .uri { builder ->
+                        builder
+                            .path("/graphql")
+                            .build()
+                    }
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserKlantContact.gql")))
+                    .exchange()
+                    .expectStatus().isOk
+                    .expectBody()
+                    .returnResult()
+                    .responseBodyContent
+                    ?.toString(Charset.defaultCharset())
+
+            val response =
+                objectMapper
+                    .readValue<JsonNode>(responseBody!!)
+                    .get("data")
+                    ?.get("getUserKlantContact")
+
+            // then
+            verify(openKlant2Service, times(1)).findKlantContact(any())
+
+            assertNotNull(response)
+            assertEquals("E-mail", response?.get("kanaal")?.textValue())
         }
 
     companion object {

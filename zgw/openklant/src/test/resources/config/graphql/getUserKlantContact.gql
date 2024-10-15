@@ -1,6 +1,6 @@
 
 query {
-    getUserKlantContact {
+    getUserKlantContact(klantContactId: "33549ba5-95f0-44d2-9c63-776ec126bc55") {
         uuid
         inhoud
         kanaal

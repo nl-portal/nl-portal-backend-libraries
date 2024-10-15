@@ -259,5 +259,62 @@ object TestHelper {
                 ]
             }
             """.trimIndent()
+
+        val klantContact =
+            """
+            {
+                "uuid":"33549ba5-95f0-44d2-9c63-776ec126bc55",
+                "url":"http://localhost:8007/klantinteracties/api/v1/klantcontacten/33549ba5-95f0-44d2-9c63-776ec126bc55",
+                "gingOverOnderwerpobjecten":[
+                   {
+                      "uuid":"896821a7-0e35-45a8-84d1-0f4f033ee7c5",
+                      "url":"http://localhost:8007/klantinteracties/api/v1/onderwerpobjecten/896821a7-0e35-45a8-84d1-0f4f033ee7c5"
+                   }
+                ],
+                "hadBetrokkenActoren":[
+                   {
+                      "uuid":"02d4cea3-ebf4-4826-956e-7a5ca1be85ca",
+                      "url":"http://localhost:8007/klantinteracties/api/v1/actoren/02d4cea3-ebf4-4826-956e-7a5ca1be85ca",
+                      "naam":"Jasmijn",
+                      "soortActor":"medewerker",
+                      "indicatieActief":true,
+                      "actoridentificator":{
+                         "objectId":"",
+                         "codeObjecttype":"",
+                         "codeRegister":"",
+                         "codeSoortObjectId":""
+                      },
+                      "actorIdentificatie":{
+                         "functie":"receptioniste",
+                         "emailadres":"jasmijn@email.com",
+                         "telefoonnummer":"693624816"
+                      }
+                   }
+                ],
+                "omvatteBijlagen":[
+                   
+                ],
+                "hadBetrokkenen":[
+                   {
+                      "uuid":"d5de314b-58a4-4d02-9d66-4e68e8927a90",
+                      "url":"http://localhost:8007/klantinteracties/api/v1/betrokkenen/d5de314b-58a4-4d02-9d66-4e68e8927a90"
+                   }
+                ],
+                "leiddeTotInterneTaken":[
+                   {
+                      "uuid":"58d26043-0cdc-4a46-9110-6acca6e200f2",
+                      "url":"http://localhost:8007/klantinteracties/api/v1/internetaken/58d26043-0cdc-4a46-9110-6acca6e200f2"
+                   }
+                ],
+                "nummer":"0000000001",
+                "kanaal":"E-mail",
+                "onderwerp":"Vraag over vergunningsaanvraag",
+                "inhoud":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut aliquam velit. Vestibulum tempus purus vitae vehicula blandit. Aliquam erat volutpat. Suspendisse potenti. Maecenas ultrices condimentum lorem, sit amet aliquet sem sagittis at. Aenean lorem neque, tincidunt at ultrices ut, condimentum sed dui. Quisque sagittis eros eget sapien tempor lobortis. Aliquam magna nisi, ultrices vitae condimentum quis, ullamcorper luctus nulla. Proin condimentum diam lobortis lacinia accumsan. Etiam gravida neque quis lectus facilisis eleifend. Proin finibus non sapien a feugiat. Vestibulum consequat felis vitae felis aliquam faucibus. Morbi pellentesque quam velit, sed interdum quam cursus sed. Curabitur suscipit nunc eu cursus cursus. Etiam suscipit massa vel mauris tristique, non tristique tortor eleifend.",
+                "indicatieContactGelukt":true,
+                "taal":"nld",
+                "vertrouwelijk":true,
+                "plaatsgevondenOp":"2024-03-06T11:02:24Z"
+             } 
+            """.trimIndent()
     }
 }

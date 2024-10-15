@@ -19,7 +19,6 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
 import com.expediagroup.graphql.server.operations.Query
 import graphql.schema.DataFetchingEnvironment
-import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.openklant.graphql.domain.KlantContactResponse
 import nl.nlportal.openklant.service.OpenKlant2Service
@@ -30,15 +29,16 @@ class KlantContactQuery(
     private val openklant2Service: OpenKlant2Service,
 ) : Query {
     @GraphQLDescription("Get KlantContacten of authenticated user.")
-    suspend fun getUserKlantContacten(dfe: DataFetchingEnvironment): List<KlantContactResponse>? {
-        val authentication: CommonGroundAuthentication = dfe.graphQlContext[AUTHENTICATION_KEY]
-        val userKlantContacten = openklant2Service.findKlantContacten(authentication)
-        return userKlantContacten?.map { KlantContactResponse.fromHadKlantContact(it) }
+    suspend fun getUserKlantContacten(dfe: DataFetchingEnvironment): List<KlantContactResponse> {
+        return openklant2Service.findKlantContacten(
+            authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
+        )
     }
 
     @GraphQLDescription("Get KlantContact by id of authenticated user.")
     suspend fun getUserKlantContact(klantContactId: UUID): KlantContactResponse? {
-        val userKlantContact = openklant2Service.findKlantContact(klantContactId)
-        return userKlantContact?.let { KlantContactResponse.fromHadKlantContact(it) }
+        return openklant2Service.findKlantContact(
+            klantContactId = klantContactId,
+        )
     }
 }
