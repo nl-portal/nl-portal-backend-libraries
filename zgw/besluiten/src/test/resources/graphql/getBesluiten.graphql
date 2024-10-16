@@ -1,0 +1,13 @@
+query {
+    getBesluiten(zaak: "http://localhost:8001/zaken/api/v1/zaken/496f51fd-ccdb-406e-805a-e7602ae78a2x") {
+        number,
+        size,
+        totalElements,
+        content {
+            identificatie,
+            datum,
+            toelichting,
+            publicatiedatum
+        }
+    }
+}

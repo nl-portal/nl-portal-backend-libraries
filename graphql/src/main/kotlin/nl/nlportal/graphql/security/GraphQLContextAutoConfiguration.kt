@@ -19,14 +19,15 @@ import com.expediagroup.graphql.generator.execution.KotlinDataFetcherFactoryProv
 import com.expediagroup.graphql.server.spring.GraphQLAutoConfiguration
 import com.expediagroup.graphql.server.spring.execution.SpringGraphQLContextFactory
 import com.fasterxml.jackson.databind.ObjectMapper
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import nl.nlportal.graphql.security.context.AuthenticationGraphQLContextFactory
 import nl.nlportal.graphql.security.directive.ReactiveDataFactoryProvider
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.AutoConfigureBefore
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.DependsOn
 
 @AutoConfiguration
 @AutoConfigureBefore(GraphQLAutoConfiguration::class)
@@ -40,6 +41,7 @@ class GraphQLContextAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    @DependsOn("objectMapper")
     fun reactiveDataFactoryProvider(
         objectMapper: ObjectMapper,
         applicationContext: ApplicationContext,

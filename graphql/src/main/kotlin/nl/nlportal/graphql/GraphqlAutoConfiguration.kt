@@ -17,8 +17,10 @@ package nl.nlportal.graphql
 
 import com.expediagroup.graphql.generator.directives.KotlinDirectiveWiringFactory
 import nl.nlportal.graphql.hooks.CustomSchemaGeneratorHooks
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.context.annotation.Bean
 
+@AutoConfiguration
 class GraphqlAutoConfiguration {
     @Bean
     fun hooks() = CustomSchemaGeneratorHooks(KotlinDirectiveWiringFactory())
