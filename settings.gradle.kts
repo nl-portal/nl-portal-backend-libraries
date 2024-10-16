@@ -48,6 +48,7 @@ include(
     "product",
     "portal-authentication",
     "payment",
+    "zgw:berichten",
     "zgw:catalogi-api",
     "zgw:common-ground-authentication",
     "zgw:common-ground-authentication-test",
@@ -56,4 +57,5 @@ include(
     "zgw:taak",
     "zgw:zaken-api",
     "zgw:objectenapi",
+    "zgw:besluiten",
 )
