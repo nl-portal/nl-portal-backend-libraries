@@ -83,6 +83,7 @@ class BerichtenQueryIT(
             .verifyOnlyDataExists(basePath)
             .jsonPath("$basePath.content[0].berichtType").isEqualTo("NOTIFICATIE")
             .jsonPath("$basePath.content[0].geopend").isEqualTo("false")
+            .jsonPath("$basePath.content[0].publicatiedatum").isEqualTo("2024-07-18")
     }
 
     @WithBurgerUser("999990755")

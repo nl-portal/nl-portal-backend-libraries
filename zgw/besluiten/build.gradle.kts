@@ -22,29 +22,22 @@ val isLib = true
 
 dependencies {
 
-    api(project(":core"))
     api(project(":graphql"))
-    api(project(":zgw:catalogi-api"))
-    api(project(":zgw:common-ground-authentication"))
-    api(project(":zgw:documenten-api"))
     api(project(":zgw:idtoken-authentication"))
-    api(project(":zgw:objectenapi"))
-    api(project(":zgw:besluiten"))
 
     implementation("org.springframework.boot:spring-boot-starter")
-    implementation(Dependencies.kotlinCoroutines)
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
 
-    testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.kotlinCoroutines)
     testImplementation(TestDependencies.mockitoKotlin)
     testImplementation(TestDependencies.okHttpMockWebserver)
     testImplementation(TestDependencies.okHttp)
     testImplementation(TestDependencies.postgresql)
+    testImplementation(project(":zgw:common-ground-authentication-test"))
 }
 
 val jar: Jar by tasks

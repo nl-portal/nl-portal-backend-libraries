@@ -234,6 +234,38 @@ object TestHelper {
                                 "type": "bsn",
                                 "value": "999990755"
                             },
+                            "publicatiedatum": "2023-07-18",
+                            "handelingsperspectief": "informatie ontvangen",
+                            "einddatumHandelingstermijn": "2024-10-31"
+                        },
+                        "geometry": null,
+                        "startAt": "2024-07-18",
+                        "endAt": null,
+                        "registrationAt": "2024-07-18",
+                        "correctionFor": null,
+                        "correctedBy": null
+                    }
+                },
+                {
+                    "url": "http://localhost:8010/api/v2/objects/9e021130-8cbd-4c6f-846a-677448e21ce7",
+                    "uuid": "9e021130-8cbd-4c6f-846a-677448e21ce7",
+                    "type": "http://host.docker.internal:8011/api/v1/objecttypes/78731088-430f-49fd-9a4c-80ddd42ded28",
+                    "record": {
+                        "index": 1,
+                        "typeVersion": 1,
+                        "data": {
+                            "geopend": false,
+                            "bijlages": [
+                                "https://example.com/documenten/api/v1/enkelvoudiginformatieobjecten/1"
+                            ],
+                            "onderwerp": "Bericht over uw buurt.",
+                            "referentie": "ZAAK-2024-0000000001",
+                            "berichtType": "notificatie",
+                            "berichtTekst": "Er zijn werkzaamheden komende week in uw buurt. U kunt meer over dit lezen op de volgende website: https://example.com",
+                            "identificatie": {
+                                "type": "bsn",
+                                "value": "999990755"
+                            },
                             "publicatiedatum": "2024-07-18",
                             "handelingsperspectief": "informatie ontvangen",
                             "einddatumHandelingstermijn": "2024-10-31"

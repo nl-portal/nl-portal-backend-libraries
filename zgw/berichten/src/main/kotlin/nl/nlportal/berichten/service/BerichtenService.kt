@@ -35,30 +35,6 @@ class BerichtenService(
     private val objectenApiService: ObjectenApiService,
     private val berichtenConfigurationProperties: BerichtenConfigurationProperties,
 ) {
-    suspend fun getBerichtOld(
-        authentication: CommonGroundAuthentication,
-        id: UUID,
-    ): Bericht? {
-        val berichtQuery =
-            runCatching {
-                objectenApiService
-                    .getObjectById<Bericht>(id.toString())
-                    ?.record
-                    ?.data
-                    ?.copy(id = id)
-            }
-
-        if (berichtQuery.isFailure) {
-            logger.debug("Error getting Bericht", berichtQuery.exceptionOrNull())
-            return null
-        }
-
-        return when (berichtQuery.getOrNull()?.identificatie?.value == authentication.userId) {
-            true -> berichtQuery.getOrNull()
-            else -> null
-        }
-    }
-
     suspend fun getUnopenedBerichtenCount(authentication: CommonGroundAuthentication): Int {
         val searchParameters =
             listOf(
@@ -131,7 +107,7 @@ class BerichtenService(
         pageNumber: Int = 1,
         pageSize: Int = 20,
     ): BerichtenPage {
-        val berichten = results.map { it.record.data.copy(id = it.uuid) }
+        val berichten = results.map { it.record.data.copy(id = it.uuid) }.sortedByDescending { it.publicatiedatum }
 
         return BerichtenPage(
             number = pageNumber,
