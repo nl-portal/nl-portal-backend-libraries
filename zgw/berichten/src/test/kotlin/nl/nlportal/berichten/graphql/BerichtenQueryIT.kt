@@ -160,6 +160,24 @@ class BerichtenQueryIT(
             .jsonPath(basePath)
     }
 
+    @WithBurgerUser("999990755")
+    @Test
+    fun `should return unopened berichten`() {
+        val basePath = "$.data.getUnopenedBerichtenCount"
+        webTestClient
+            .post()
+            .uri { builder ->
+                builder
+                    .path("/graphql")
+                    .build()
+            }
+            .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+            .body(BodyInserters.fromValue(TestHelper.graphqlUnopenedBerichtenCountRequest))
+            .exchange()
+            .verifyOnlyDataExists(basePath)
+            .jsonPath(basePath).isEqualTo(2)
+    }
+
     fun setupMockObjectsApiServer() {
         val dispatcher: Dispatcher =
             object : Dispatcher() {
