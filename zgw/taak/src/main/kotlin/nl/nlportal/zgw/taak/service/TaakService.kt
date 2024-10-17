@@ -170,6 +170,7 @@ open class TaakService(
             Taak.fromObjectsApiTask(
                 getObjectsApiTaak<TaakObject>(id),
             )
+        // do validation if the user is authenticated for this task
         val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
         if (isAuthorized) {
             return taak
@@ -185,6 +186,7 @@ open class TaakService(
             TaakV2.fromObjectsApi(
                 getObjectsApiTaak<TaakObjectV2>(id),
             )
+        // do validation if the user is authenticated for this task
         val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
         if (isAuthorized) {
             return taak
@@ -209,7 +211,6 @@ open class TaakService(
                             authentication,
                         ),
                     )
-
                 else ->
                     submitTaakV2(
                         id,

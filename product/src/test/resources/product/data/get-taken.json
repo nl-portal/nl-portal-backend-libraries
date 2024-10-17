@@ -1,0 +1,158 @@
+{
+    "count": 2,
+    "next": "http://localhost:8010/api/v2/objects?page=2",
+    "previous": null,
+    "results": [
+        {
+            "url": "http://localhost:8010/api/v2/objects/2d725c07-2f26-4705-8637-438a42b5ac2d",
+            "uuid": "2d725c07-2f26-4705-8637-438a42b5ac2d",
+            "type": "http://localhost:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb35",
+            "record": {
+                "index": 1,
+                "typeVersion": 1,
+                "data": {
+                    "titel": "Taak linked to Zaak",
+                    "identificatie": {
+                        "type": "bsn",
+                        "value": "569312863"
+                    },
+                    "status": "open",
+                    "formulier": {
+                        "type": "id",
+                        "value": "check-loan-form"
+                    },
+                    "soort": "portaalformulier",
+                    "verwerker_taak_id": "58fad5ab-dc2f-11ec-9075-f22a405ce707",
+                    "verloopdatum": "2024-01-01T01:00:00",
+                    "eigenaar": "erfpacht",
+                    "koppeling": {
+                        "registratie": "zaak",
+                        "uuid": "7d9cd6c2-8147-46f2-9ae9-c67e8213c202"
+                    },
+                    "portaalformulier": {
+                        "formulier": {
+                            "soort": "url",
+                            "value": "http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4"
+                        },
+                        "data": {
+                            "voornaam": "Jan",
+                            "achternaam": "Smit",
+                            "toestemming": true,
+                            "geboortedatum": "01-01-1970"
+                        },
+                        "verzonden_data": {
+                            "voornaam": "Jan",
+                            "achternaam": "Smit",
+                            "toestemming": false,
+                            "geboortedatum": "01-01-1971"
+                        }
+                    }
+                },
+                "geometry": null,
+                "startAt": "2022-05-25",
+                "endAt": null,
+                "registrationAt": "2022-05-25",
+                "correctionFor": null,
+                "correctedBy": null
+            }
+        },
+        {
+            "url": "http://localhost:8010/api/v2/objects/2d725c07-2f26-4705-8637-438a42b5ac2d",
+            "uuid": "2d725c07-2f26-4705-8637-438a42b5ac2e",
+            "type": "http://localhost:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb35",
+            "record": {
+                "index": 1,
+                "typeVersion": 1,
+                "data": {
+                    "titel": "Taak linked to Product",
+                    "identificatie": {
+                        "type": "bsn",
+                        "value": "569312863"
+                    },
+                    "status": "open",
+                    "soort": "portaalformulier",
+                    "verwerker_taak_id": "58fad5ab-dc2f-11ec-9075-f22a405ce708",
+                    "verloopdatum": "2024-02-01T01:00:00",
+                    "eigenaar": "erfpacht",
+                    "koppeling": {
+                        "registratie": "product",
+                        "uuid": "2d725c07-2f26-4705-8637-438a42b5ac2d"
+                    },
+                    "portaalformulier": {
+                        "formulier": {
+                            "soort": "url",
+                            "value": "http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4"
+                        },
+                        "data": {
+                            "voornaam": "Jan",
+                            "achternaam": "Smit",
+                            "toestemming": true,
+                            "geboortedatum": "01-01-1970"
+                        },
+                        "verzonden_data": {
+                            "voornaam": "Jan",
+                            "achternaam": "Smit",
+                            "toestemming": false,
+                            "geboortedatum": "01-01-1971"
+                        }
+                    }
+                },
+                "geometry": null,
+                "startAt": "2022-05-25",
+                "endAt": null,
+                "registrationAt": "2022-05-25",
+                "correctionFor": null,
+                "correctedBy": null
+            }
+        },
+        {
+            "url": "http://localhost:8010/api/v2/objects/2d725c07-2f26-4705-8637-438a42b5ac2d",
+            "uuid": "2d725c07-2f26-4705-8637-438a42b5ac2f",
+            "type": "http://localhost:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb35",
+            "record": {
+                "index": 1,
+                "typeVersion": 1,
+                "data": {
+                    "titel": "Taak not linked",
+                    "identificatie": {
+                        "type": "bsn",
+                        "value": "569312863"
+                    },
+                    "status": "open",
+                    "soort": "portaalformulier",
+                    "verwerker_taak_id": "58fad5ab-dc2f-11ec-9075-f22a405ce709",
+                    "verloopdatum": "2024-03-01T01:00:00",
+                    "eigenaar": "erfpacht",
+                    "koppeling": {
+                        "registratie": "zaak",
+                        "uuid": "7d9cd6c2-8147-46f2-9ae9-c67e8213c204"
+                    },
+                    "portaalformulier": {
+                        "formulier": {
+                            "soort": "url",
+                            "value": "http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4"
+                        },
+                        "data": {
+                            "voornaam": "Jan",
+                            "achternaam": "Smit",
+                            "toestemming": true,
+                            "geboortedatum": "01-01-1970"
+                        },
+                        "verzonden_data": {
+                            "voornaam": "Jan",
+                            "achternaam": "Smit",
+                            "toestemming": false,
+                            "geboortedatum": "01-01-1971"
+                        }
+                    }
+                },
+                "geometry": null,
+                "startAt": "2022-05-25",
+                "endAt": null,
+                "registrationAt": "2022-05-25",
+                "correctionFor": null,
+                "correctedBy": null
+            }
+        }
+    ]
+}

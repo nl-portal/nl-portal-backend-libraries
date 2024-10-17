@@ -13,10 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.product.service
+package nl.nlportal.product.domain
 
-import nl.nlportal.product.domain.Form
+import com.fasterxml.jackson.annotation.JsonValue
 
-interface FormService {
-    suspend fun getForms(): List<Form>
+data class DmnRequest(
+    val key: String,
+    val mapping: DmnRequestMapping,
+)
+
+data class DmnRequestMapping(
+    val variables: Map<String, DmnVariable>,
+)
+
+data class DmnVariable(
+    val value: Any,
+    val type: DmnVariableType,
+)
+
+enum class DmnVariableType(
+    @JsonValue val value: String,
+) {
+    JSON("Json"),
+    STRING("String"),
+    INTEGER("Integer"),
+    DOUBLE("Double"),
+    BOOLEAN("Boolean"),
+    DATE("Date"),
+    LONG("Long"),
 }

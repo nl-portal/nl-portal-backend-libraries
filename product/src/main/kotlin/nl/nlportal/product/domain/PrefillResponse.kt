@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.product.graphql
+package nl.nlportal.product.domain
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Query
-import nl.nlportal.product.domain.Form
-import nl.nlportal.product.service.FormService
+import java.util.UUID
 
-class FormQuery(val formService: FormService) : Query {
-    @GraphQLDescription("Gets the forms available to the user")
-    suspend fun getFormList(): List<Form> {
-        return formService.getForms()
-    }
-}
+data class PrefillResponse(
+    val objectId: UUID,
+    val hash: String,
+    val formulierUrl: String,
+)
