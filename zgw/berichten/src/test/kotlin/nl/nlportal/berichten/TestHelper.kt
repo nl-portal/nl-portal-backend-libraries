@@ -38,6 +38,13 @@ object TestHelper {
             .setBody(body)
     }
 
+    val graphqlUnopenedBerichtenCountRequest =
+        """
+        query {
+            getUnopenedBerichtenCount
+        }
+        """.trimIndent()
+
     val graphqlBerichtenPageRequest =
         """
         query {
@@ -210,7 +217,7 @@ object TestHelper {
     val objectenApiBerichtenPageResponse =
         """
         {
-            "count": 1,
+            "count": 2,
             "next": null,
             "previous": null,
             "results": [

@@ -21,7 +21,6 @@ import nl.nlportal.berichten.domain.Bericht
 import nl.nlportal.berichten.graphql.BerichtenPage
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.zgw.objectenapi.domain.Comparator.EQUAL_TO
-import nl.nlportal.zgw.objectenapi.domain.Comparator.STRING_CONTAINS
 import nl.nlportal.zgw.objectenapi.domain.Comparator.LOWER_THAN_OR_EQUAL_TO
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
@@ -40,9 +39,10 @@ class BerichtenService(
     suspend fun getUnopenedBerichtenCount(authentication: CommonGroundAuthentication): Int {
         val searchParameters =
             listOf(
-                ObjectSearchParameter("geopend", STRING_CONTAINS, "false"),
+                ObjectSearchParameter("geopend", EQUAL_TO, "false"),
                 ObjectSearchParameter("identificatie__type", EQUAL_TO, authentication.userType),
                 ObjectSearchParameter("identificatie__value", EQUAL_TO, authentication.userId),
+                ObjectSearchParameter("publicatiedatum", LOWER_THAN_OR_EQUAL_TO, LocalDate.now().toString()),
             )
         val results = getBerichten(1, 1, searchParameters)
 
