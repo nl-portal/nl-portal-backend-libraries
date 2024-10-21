@@ -16,6 +16,7 @@
 
 object ApiDependencies {
     val commonsIo by lazy { "commons-io:commons-io:${ApiVersions.commonsIo}" }
+    val commonsCodec by lazy { "commons-codec:commons-codec:${ApiVersions.commonsCodec}" }
     val apacheCommons by lazy { "org.apache.commons:commons-lang3:${ApiVersions.apacheCommons}"}
     val graphqlJava by lazy { "com.graphql-java:graphql-java:${ApiVersions.graphqlJava}"}
     val graphqlJavaExtendedScalars by lazy { "com.graphql-java:graphql-java-extended-scalars:${ApiVersions.graphqlJava}"}

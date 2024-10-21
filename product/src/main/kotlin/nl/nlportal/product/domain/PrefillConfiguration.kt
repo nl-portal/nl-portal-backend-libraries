@@ -13,12 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.product.client
+package nl.nlportal.product.domain
 
-import org.springframework.boot.context.properties.ConfigurationProperties
-
-@ConfigurationProperties(prefix = "nl-portal.openformulieren")
-class OpenFormulierenClientConfig(
-    var url: String = "",
-    var token: String = "",
+data class PrefillConfiguration(
+    val formulierUrl: String,
+    val variabelen: Map<String, Map<String, String>>,
 )

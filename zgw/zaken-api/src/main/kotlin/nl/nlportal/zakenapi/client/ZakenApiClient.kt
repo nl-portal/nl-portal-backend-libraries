@@ -56,8 +56,7 @@ class ZakenApiClient(
                     ReactorClientHttpConnector(
                         HttpClient.create().wiretap(
                             "reactor.netty.http.client.HttpClient",
-                            LogLevel.TRACE,
-                            AdvancedByteBufFormat.TEXTUAL,
+                            LogLevel.TRACE, AdvancedByteBufFormat.TEXTUAL,
                         ),
                     ),
                 )

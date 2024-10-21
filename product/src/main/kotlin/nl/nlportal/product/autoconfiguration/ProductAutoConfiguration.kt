@@ -15,36 +15,97 @@
  */
 package nl.nlportal.product.autoconfiguration
 
-import nl.nlportal.product.client.OpenFormulierenClient
-import nl.nlportal.product.client.OpenFormulierenClientConfig
-import nl.nlportal.product.graphql.FormQuery
-import nl.nlportal.product.service.FormService
+import nl.nlportal.core.ssl.ClientSslContextResolver
+import nl.nlportal.product.client.DmnClient
+import nl.nlportal.product.client.DmnConfig
+import nl.nlportal.product.client.PrefillConfig
+import nl.nlportal.product.graphql.ProductQuery
+import nl.nlportal.product.client.ProductConfig
+import nl.nlportal.product.graphql.ProductMutation
+import nl.nlportal.product.service.DmnService
+import nl.nlportal.product.service.PrefillService
+import nl.nlportal.product.service.ProductService
+import nl.nlportal.zakenapi.client.ZakenApiClient
+import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
+import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfiguration
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
+import org.springframework.web.reactive.function.client.WebClient
 
 @AutoConfiguration
-@EnableConfigurationProperties(OpenFormulierenClientConfig::class)
+@EnableConfigurationProperties(ProductConfig::class, DmnConfig::class, PrefillConfig::class)
 class ProductAutoConfiguration {
-    @Bean
-    fun openFormulierenClientConfig(): OpenFormulierenClientConfig {
-        return OpenFormulierenClientConfig()
+    @Bean("dmnClient")
+    fun dmnClient(
+        dmnConfig: DmnConfig,
+        @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
+        webClientBuilder: WebClient.Builder,
+    ): DmnClient {
+        return DmnClient(
+            dmnConfig,
+            clientSslContextResolver,
+            webClientBuilder,
+        )
     }
 
     @Bean
-    fun openFormulierenClient(openFormulierenClientConfig: OpenFormulierenClientConfig): OpenFormulierenClient {
-        return OpenFormulierenClient(openFormulierenClientConfig)
+    fun productService(
+        productConfig: ProductConfig,
+        objectsApiClient: ObjectsApiClient,
+        zakenApiClient: ZakenApiClient,
+        taakObjectConfig: TaakObjectConfig,
+        objectsApiTaskConfig: TaakObjectConfig,
+        dmnClient: DmnClient,
+    ): ProductService {
+        return ProductService(
+            productConfig,
+            objectsApiClient,
+            zakenApiClient,
+            taakObjectConfig,
+            objectsApiTaskConfig,
+            dmnClient,
+        )
+    }
+
+    @Bean("dmnService")
+    fun dmnService(
+        objectsApiClient: ObjectsApiClient,
+        dmnClient: DmnClient,
+        productService: ProductService,
+    ): DmnService {
+        return DmnService(
+            objectsApiClient,
+            dmnClient,
+            productService,
+        )
+    }
+
+    @Bean("prefillService")
+    fun prefillService(
+        prefillConfig: PrefillConfig,
+        objectsApiClient: ObjectsApiClient,
+        productService: ProductService,
+    ): PrefillService {
+        return PrefillService(
+            prefillConfig,
+            objectsApiClient,
+            productService,
+        )
     }
 
     @Bean
-    @ConditionalOnMissingBean(FormService::class)
-    fun formService(openFormulierenClient: OpenFormulierenClient): FormService {
-        return nl.nlportal.product.service.impl.FormService(openFormulierenClient)
+    fun productQuery(
+        productService: ProductService,
+        dmnService: DmnService,
+        prefillService: PrefillService,
+    ): ProductQuery {
+        return ProductQuery(productService, dmnService, prefillService)
     }
 
     @Bean
-    fun formQuery(formService: FormService): FormQuery {
-        return FormQuery(formService)
+    fun productMutation(productService: ProductService): ProductMutation {
+        return ProductMutation(productService)
     }
 }

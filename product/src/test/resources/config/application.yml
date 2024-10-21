@@ -2,10 +2,65 @@ graphql:
     packages:
         - "nl.nlportal"
 
+logging:
+    level:
+        reactor:
+            netty:
+                http:
+                    client: DEBUG
 nl-portal:
+    zgw:
+        catalogiapi:
+            url: http://localhost:8001
+            clientId: valtimo_client
+            secret: e09b8bc5-5831-4618-ab28-41411304309d
+            rsin: "051845623"
+            documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/efc332f2-be3b-4bad-9e3c-49a6219c92ad
+        zakenapi:
+            url: http://localhost:8001
+            clientId: valtimo_client
+            secret: e09b8bc5-5831-4618-ab28-41411304309d
+        taak:
+            taakobject:
+                typeUrl: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
+        documentenapis:
+            #virusscan:
+            #clamav:
+            #hostName: localhost
+            #enabled: true
+            defaultDocumentApi: openzaak
+            configurations:
+                openzaak:
+                    url: http://localhost:8001/documenten/api/v1
+                    clientId: valtimo_client
+                    secret: e09b8bc5-5831-4618-ab28-41411304309d
+                    rsin: "051845623"
+                    documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/efc332f2-be3b-4bad-9e3c-49a6219c92ad
+                dummydoc:
+                    url: http://localhost:8002/documenten/api/v1
+                    clientId: docdoc
+                    secret: e09b8bc5-5831-4618-ab28-41411304309d
+    openklant:
+        url: http://localhost:8006
+        clientId: valtimo_client
+        secret: e09b8bc5-5831-4618-ab28-41411304309d
+        rsin: "051845623"
     openformulieren:
-        url: #filled in test
-        token: "some-test-token"
+        url: http://localhost:8003
+        token: 3ca04f4c11159811877444fdb1e019b7eac13f78
+    objectsapi:
+        url: http://localhost:8010
+        token: 182c13e2209161852c53cef53a879f7a2f923430
+    product:
+        product-type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb35
+        product-instantie-type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34
+        product-details-type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb36
+        product-verbruiks-object-type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb37
+    dmn:
+        url: http://localhost:9000/engine-rest
+    prefill:
+        type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb37
+        remove-objects: true
 
 spring:
     security:

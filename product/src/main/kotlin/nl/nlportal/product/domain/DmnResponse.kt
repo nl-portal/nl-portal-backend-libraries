@@ -13,12 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.payment.constants
+package nl.nlportal.product.domain
 
-enum class ShaVersion(
-    val version: String,
-) {
-    SHA1("SHA1"),
-    SHA256("SHA256"),
-    SHA512("SHA512"),
-}
+data class DmnResponse(
+    val value: String,
+    val type: String,
+)

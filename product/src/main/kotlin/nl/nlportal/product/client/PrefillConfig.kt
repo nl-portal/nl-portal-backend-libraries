@@ -13,23 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.product.service.impl
+package nl.nlportal.product.client
 
-import nl.nlportal.product.client.OpenFormulierenClient
-import nl.nlportal.product.domain.Form
-import nl.nlportal.product.service.FormService
-import java.util.stream.Collectors.toList
+import nl.nlportal.core.util.ShaVersion
+import org.springframework.boot.context.properties.ConfigurationProperties
 
-class FormService(
-    val openFormulierenClient: OpenFormulierenClient,
-) : FormService {
-    override suspend fun getForms(): List<Form> {
-        return openFormulierenClient
-            .getForms()
-            .stream()
-            .filter {
-                it.active && it.loginRequired
-            }
-            .collect(toList())
-    }
-}
+@ConfigurationProperties(prefix = "nl-portal.prefill", ignoreUnknownFields = true)
+data class PrefillConfig(
+    val typeUrl: String,
+    val prefillShaVersion: String = ShaVersion.SHA1.version,
+    val removeObjects: Boolean = false,
+)
