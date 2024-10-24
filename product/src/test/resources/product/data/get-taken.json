@@ -34,12 +34,6 @@
                             "soort": "url",
                             "value": "http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4"
                         },
-                        "data": {
-                            "voornaam": "Jan",
-                            "achternaam": "Smit",
-                            "toestemming": true,
-                            "geboortedatum": "01-01-1970"
-                        },
                         "verzonden_data": {
                             "voornaam": "Jan",
                             "achternaam": "Smit",
