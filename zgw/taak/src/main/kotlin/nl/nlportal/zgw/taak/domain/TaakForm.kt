@@ -10,12 +10,12 @@ import nl.nlportal.core.util.Mapper
 data class TaakForm(
     val formulier: TaakFormulierV2,
     @GraphQLIgnore
-    val data: Map<String, Any>,
+    val data: Map<String, Any>? = null,
     @GraphQLIgnore
     @JsonProperty("verzonden_data")
     var verzondenData: Map<String, Any>? = null,
 ) {
-    fun data(): ObjectNode {
-        return Mapper.get().valueToTree(data)
+    fun data(): ObjectNode? {
+        return data?.let { Mapper.get().valueToTree(it) }
     }
 }
