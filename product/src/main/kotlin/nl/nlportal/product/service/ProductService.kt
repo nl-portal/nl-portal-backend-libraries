@@ -92,27 +92,37 @@ class ProductService(
         pageNumber: Int,
         pageSize: Int,
     ): ProductPage {
-        var productTypeUUID = productTypeId
-        if (productTypeUUID == null) {
-            productTypeUUID = getProductType(null, productName)?.id
-        }
-        val objectSearchParametersProducten =
-            mutableListOf(
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.userId),
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE, Comparator.EQUAL_TO, productTypeUUID.toString()),
-            )
+        return try {
+            var productTypeUUID = productTypeId
+            if (productTypeUUID == null) {
+                productTypeUUID = getProductType(null, productName)?.id
+            }
+            val objectSearchParametersProducten =
+                mutableListOf(
+                    ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.userId),
+                    ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE, Comparator.EQUAL_TO, productTypeUUID.toString()),
+                )
 
-        productSubType?.let {
-            objectSearchParametersProducten.add(
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_SUB_PRODUCT_TYPE, Comparator.EQUAL_TO, productSubType),
+            productSubType?.let {
+                objectSearchParametersProducten.add(
+                    ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_SUB_PRODUCT_TYPE, Comparator.EQUAL_TO, productSubType),
+                )
+            }
+            getObjectsApiObjectResultPage<Product>(
+                productConfig.productInstantieTypeUrl,
+                objectSearchParametersProducten,
+                pageNumber,
+                pageSize,
+            ).let { ProductPage.fromResultPage(pageNumber, pageSize, it) }
+        } catch (ex: Exception) {
+            logger.warn { "Something went wrong with get Producten $productTypeId and name $productName with error: ${ex.message}" }
+            ProductPage(
+                pageNumber,
+                pageSize,
+                listOf(),
+                0,
             )
         }
-        return getObjectsApiObjectResultPage<Product>(
-            productConfig.productInstantieTypeUrl,
-            objectSearchParametersProducten,
-            pageNumber,
-            pageSize,
-        ).let { ProductPage.fromResultPage(pageNumber, pageSize, it) }
     }
 
     suspend fun getProductVerbruiksObjecten(
@@ -147,26 +157,31 @@ class ProductService(
         pageNumber: Int,
         isOpen: Boolean? = null,
     ): List<Zaak> {
-        val productType = getProductType(productTypeId, productName)
+        return try {
+            val productType = getProductType(productTypeId, productName)
 
-        if (productType?.zaaktypen == null || productType.zaaktypen.isEmpty()) {
-            return emptyList()
+            if (productType?.zaaktypen == null || productType.zaaktypen.isEmpty()) {
+                return emptyList()
+            }
+
+            val request =
+                zakenApiClient.zoeken()
+                    .search()
+                    .page(pageNumber)
+                    .withAuthentication(authentication)
+                    .ofZaakTypes(productType.zaaktypen.map { it })
+
+            isOpen?.let {
+                request.isOpen(isOpen)
+            }
+            request
+                .retrieve()
+                .results
+                .sortedBy { it.startdatum }
+        } catch (ex: Exception) {
+            logger.warn { "Something went wrong with get ProductenZaken $productTypeId and name $productName with error: ${ex.message}" }
+            emptyList()
         }
-
-        val request =
-            zakenApiClient.zoeken()
-                .search()
-                .page(pageNumber)
-                .withAuthentication(authentication)
-                .ofZaakTypes(productType.zaaktypen.map { it })
-
-        isOpen?.let {
-            request.isOpen(isOpen)
-        }
-        return request
-            .retrieve()
-            .results
-            .sortedBy { it.startdatum }
     }
 
     suspend fun getProductTaken(
@@ -177,44 +192,49 @@ class ProductService(
         pageNumber: Int,
         pageSize: Int,
     ): List<TaakV2> {
-        val taken =
-            findTakenByIdentification(
-                authentication,
-                pageNumber,
-                pageSize,
-            )
+        return try {
+            val taken =
+                findTakenByIdentification(
+                    authentication,
+                    pageNumber,
+                    pageSize,
+                )
 
-        // when no tasks are found, just return immediately
-        if (taken.isEmpty()) {
-            return taken
-        }
-
-        val zaken =
-            getProductZaken(
-                authentication,
-                productTypeId,
-                productName,
-                pageNumber,
-            )
-
-        val producten =
-            getProducten(
-                authentication,
-                productTypeId,
-                productName,
-                productSubType,
-                pageNumber,
-                999,
-            )
-                .content
-
-        // filter out the taak which is not connected to a zaak or product
-        return taken
-            .filterNot { task ->
-                !zaken.any { it.uuid == task.koppeling.uuid } &&
-                    !producten.any { it.id == task.koppeling.uuid }
+            // when no tasks are found, just return immediately
+            if (taken.isEmpty()) {
+                return taken
             }
-            .sortedBy { it.verloopdatum }
+
+            val zaken =
+                getProductZaken(
+                    authentication,
+                    productTypeId,
+                    productName,
+                    pageNumber,
+                )
+
+            val producten =
+                getProducten(
+                    authentication,
+                    productTypeId,
+                    productName,
+                    productSubType,
+                    pageNumber,
+                    999,
+                )
+                    .content
+
+            // filter out the taak which is not connected to a zaak or product
+            taken
+                .filterNot { task ->
+                    !zaken.any { it.uuid == task.koppeling.uuid } &&
+                        !producten.any { it.id == task.koppeling.uuid }
+                }
+                .sortedBy { it.verloopdatum }
+        } catch (ex: Exception) {
+            logger.warn { "Something went wrong with get ProductenTaken $productTypeId and name $productName with error: ${ex.message}" }
+            emptyList()
+        }
     }
 
     suspend fun updateVerbruiksObject(
