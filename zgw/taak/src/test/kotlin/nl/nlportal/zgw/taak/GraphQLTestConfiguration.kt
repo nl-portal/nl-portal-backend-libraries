@@ -24,15 +24,6 @@ import org.springframework.util.StreamUtils
 
 @Configuration
 class GraphQLTestConfiguration {
-    @Value("classpath:graphql/getTakenQuery.graphql")
-    private lateinit var getTakenFile: Resource
-
-    @Value("classpath:graphql/getTaakByIdQuery.graphql")
-    private lateinit var getTaakByIdFile: Resource
-
-    @Value("classpath:graphql/getTaakByIdQueryBedrijf.graphql")
-    private lateinit var getTaakByIdFileBedrijf: Resource
-
     @Value("classpath:graphql/getTakenQueryV2.graphql")
     private lateinit var getTakenFileV2: Resource
 
@@ -44,30 +35,6 @@ class GraphQLTestConfiguration {
 
     @Value("classpath:graphql/updateTaakV2.graphql")
     private lateinit var updateTaakV2: Resource
-
-    @Bean
-    fun getTakenPayload(): String {
-        return StreamUtils.copyToString(
-            getTakenFile.inputStream,
-            StandardCharsets.UTF_8,
-        )
-    }
-
-    @Bean
-    fun getTaakByIdPayload(): String {
-        return StreamUtils.copyToString(
-            getTaakByIdFile.inputStream,
-            StandardCharsets.UTF_8,
-        )
-    }
-
-    @Bean
-    fun getTaakByIdPayloadBedrijf(): String {
-        return StreamUtils.copyToString(
-            getTaakByIdFileBedrijf.inputStream,
-            StandardCharsets.UTF_8,
-        )
-    }
 
     @Bean
     fun getTakenPayloadV2(): String {

@@ -26,14 +26,10 @@ import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
-import nl.nlportal.zgw.taak.domain.Taak
 import nl.nlportal.zgw.taak.domain.TaakIdentificatie
-import nl.nlportal.zgw.taak.domain.TaakObject
 import nl.nlportal.zgw.taak.domain.TaakObjectV2
 import nl.nlportal.zgw.taak.domain.TaakStatus
 import nl.nlportal.zgw.taak.domain.TaakV2
-import nl.nlportal.zgw.taak.domain.TaakVersion
-import nl.nlportal.zgw.taak.graphql.TaakPage
 import nl.nlportal.zgw.taak.graphql.TaakPageV2
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -43,76 +39,6 @@ open class TaakService(
     private val objectsApiClient: ObjectsApiClient,
     private val objectsApiTaskConfig: TaakObjectConfig,
 ) {
-    @Deprecated("Use version 2, for migration only")
-    suspend fun getTaken(
-        pageNumber: Int,
-        pageSize: Int,
-        authentication: CommonGroundAuthentication,
-        zaakUUID: UUID? = null,
-        status: TaakStatus? = null,
-        title: String? = null,
-    ): TaakPageV2 {
-        val migratedList =
-            getTakenV1(
-                pageNumber,
-                pageSize,
-                authentication,
-                zaakUUID,
-                status,
-                title,
-            ).let {
-                it.content.map {
-                    TaakV2.migrate(it)
-                }
-            }
-
-        val taakListV2 =
-            getTakenV2(
-                pageNumber,
-                pageSize,
-                authentication,
-                zaakUUID,
-                status,
-                title,
-            ).content + migratedList
-
-        return TaakPageV2(
-            pageNumber,
-            pageSize,
-            taakListV2,
-            taakListV2.size,
-        )
-    }
-
-    @Deprecated("Use version 2")
-    suspend fun getTakenV1(
-        pageNumber: Int,
-        pageSize: Int,
-        authentication: CommonGroundAuthentication,
-        zaakUUID: UUID? = null,
-        status: TaakStatus? = null,
-        title: String? = null,
-    ): TaakPage {
-        try {
-            return getTakenResultPage<TaakObject>(
-                pageNumber,
-                pageSize,
-                authentication,
-                zaakUUID,
-                objectsApiTaskConfig.typeUrl,
-                status,
-                title,
-            ).let { TaakPage.fromResultPage(pageNumber, pageSize, it) }
-        } catch (ex: Exception) {
-            return return TaakPage(
-                number = pageNumber,
-                size = pageSize,
-                content = listOf(),
-                totalElements = 0,
-            )
-        }
-    }
-
     suspend fun getTakenV2(
         pageNumber: Int,
         pageSize: Int,
@@ -141,43 +67,6 @@ open class TaakService(
         }
     }
 
-    @Deprecated("Use version 2")
-    suspend fun getTaakById(
-        id: UUID,
-        authentication: CommonGroundAuthentication,
-    ): TaakV2 {
-        return try {
-            TaakV2.migrate(
-                getTaakByIdV1(
-                    id,
-                    authentication,
-                ),
-            )
-        } catch (ex: Exception) {
-            getTaakByIdV2(
-                id,
-                authentication,
-            )
-        }
-    }
-
-    @Deprecated("Use version 2")
-    suspend fun getTaakByIdV1(
-        id: UUID,
-        authentication: CommonGroundAuthentication,
-    ): Taak {
-        val taak =
-            Taak.fromObjectsApiTask(
-                getObjectsApiTaak<TaakObject>(id),
-            )
-        // do validation if the user is authenticated for this task
-        val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
-        if (isAuthorized) {
-            return taak
-        }
-        throw IllegalStateException("Access denied to this taak")
-    }
-
     suspend fun getTaakByIdV2(
         id: UUID,
         authentication: CommonGroundAuthentication,
@@ -193,59 +82,6 @@ open class TaakService(
         }
 
         throw IllegalStateException("Access denied to this taak")
-    }
-
-    suspend fun submitTaak(
-        id: UUID,
-        submission: ObjectNode,
-        authentication: CommonGroundAuthentication,
-        version: TaakVersion,
-    ): TaakV2 {
-        val submittedTask =
-            when (version) {
-                TaakVersion.V1 ->
-                    TaakV2.migrate(
-                        submitTaakV1(
-                            id,
-                            submission,
-                            authentication,
-                        ),
-                    )
-                else ->
-                    submitTaakV2(
-                        id,
-                        submission,
-                        authentication,
-                    )
-            }
-
-        return submittedTask
-    }
-
-    @Deprecated("Use version 2")
-    suspend fun submitTaakV1(
-        id: UUID,
-        submission: ObjectNode,
-        authentication: CommonGroundAuthentication,
-    ): Taak {
-        val objectsApiTask =
-            getObjectsApiTaak<TaakObject>(id)
-        if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
-            throw ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                String.format("Status is niet open, taak [%s] kan niet afgerond worden", id),
-            )
-        }
-        val submissionAsMap = Mapper.get().convertValue(submission, object : TypeReference<Map<String, Any>>() {})
-
-        val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
-        updateRequest.record.data.verzondenData = submissionAsMap
-        updateRequest.record.data.status = TaakStatus.INGEDIEND
-        updateRequest.record.correctedBy = authentication.getUserRepresentation()
-        updateRequest.record.correctionFor = objectsApiTask.record.index.toString()
-
-        val updatedObjectsApiTask = objectsApiClient.updateObject(objectsApiTask.uuid, updateRequest)
-        return Taak.fromObjectsApiTask(updatedObjectsApiTask)
     }
 
     suspend fun submitTaakV2(
@@ -282,53 +118,6 @@ open class TaakService(
             )
         }
         return objectsApiTask
-    }
-
-    private suspend inline fun <reified T> getTakenResultPage(
-        pageNumber: Int,
-        pageSize: Int,
-        authentication: CommonGroundAuthentication,
-        zaakUUID: UUID? = null,
-        objectTypeUrl: String,
-        status: TaakStatus?,
-        title: String?,
-    ): ResultPage<ObjectsApiObject<T>> {
-        val objectSearchParameters = mutableListOf<ObjectSearchParameter>()
-
-        objectSearchParameters.addAll(getUserSearchParameters(authentication))
-        when {
-            status != null -> {
-                objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, status.value))
-            }
-            else -> {
-                objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, TaakStatus.OPEN.value))
-            }
-        }
-        zaakUUID?.let {
-            objectSearchParameters.add(
-                ObjectSearchParameter(
-                    "zaak",
-                    Comparator.STRING_CONTAINS,
-                    it.toString(),
-                ),
-            )
-        }
-        title?.let {
-            objectSearchParameters.add(
-                ObjectSearchParameter(
-                    "title",
-                    Comparator.STRING_CONTAINS,
-                    it.toString(),
-                ),
-            )
-        }
-        return objectsApiClient.getObjects<T>(
-            objectSearchParameters = objectSearchParameters,
-            objectTypeUrl = objectTypeUrl,
-            page = pageNumber,
-            pageSize = pageSize,
-            ordering = "-record__startAt",
-        )
     }
 
     private suspend inline fun <reified T> getTakenResultPageV2(
