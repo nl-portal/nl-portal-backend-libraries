@@ -85,7 +85,7 @@ class OgonePaymentService(
         }
 
         val orderId = serverHttpRequest.queryParams[OgonePayment.QUERYSTRING_ORDER_ID]?.get(0)
-        val objectsApiTask = getObjectsApiTaak(UUID.fromString(orderId))
+        val objectsApiTask = getObjectsApiTaak(orderId!!)
         if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
             return "Task is already completed"
         }
@@ -108,15 +108,12 @@ class OgonePaymentService(
         return "Request successful processed"
     }
 
-    private suspend fun getObjectsApiTaak(taskId: UUID): ObjectsApiObject<TaakObjectV2> {
-        val objectsApiTask = objectsApiClient.getObjectById<TaakObjectV2>(taskId.toString())
-        if (objectsApiTask == null) {
-            throw ResponseStatusException(
+    private suspend fun getObjectsApiTaak(taskId: String): ObjectsApiObject<TaakObjectV2> {
+        return objectsApiClient.getObjectById<TaakObjectV2>(taskId)
+            ?: throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
                 String.format("Taak kan niet gevonden worden", taskId),
             )
-        }
-        return objectsApiTask
     }
 
     private fun isValidOgoneRequest(
