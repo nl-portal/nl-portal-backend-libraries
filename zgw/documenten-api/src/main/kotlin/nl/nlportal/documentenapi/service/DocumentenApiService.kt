@@ -80,11 +80,11 @@ class DocumentenApiService(
                 bestandsnaam = file.filename(),
                 indicatieGebruiksrecht = false,
                 informatieobjecttype =
-                informatieobjecttype
-                    .takeUnless {
-                        it.isNullOrEmpty()
-                    }
-                    ?: documentenApiConfig.documentTypeUrl!!
+                    informatieobjecttype
+                        .takeUnless {
+                            it.isNullOrEmpty()
+                        }
+                        ?: documentenApiConfig.documentTypeUrl!!,
             ),
             file.content(),
             documentApi,

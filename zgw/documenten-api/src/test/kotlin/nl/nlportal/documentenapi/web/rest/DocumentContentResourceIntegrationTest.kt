@@ -104,7 +104,7 @@ class DocumentContentResourceIntegrationTest(
             getRequestBody(
                 HttpMethod.POST,
                 "/enkelvoudiginformatieobjecten",
-                PostEnkelvoudiginformatieobjectRequest::class.java
+                PostEnkelvoudiginformatieobjectRequest::class.java,
             )
         assertThat(requestBody.bronorganisatie).isEqualTo("051845623")
         assertThat(requestBody.creatiedatum).isNotBlank
@@ -123,13 +123,14 @@ class DocumentContentResourceIntegrationTest(
     @Test
     @WithBurgerUser("569312863")
     fun `should upload using data streams with form-defined informatieobjecttype`() {
-        val bodyBuilder = MultipartBodyBuilder().apply {
-            part("file", ClassPathResource("/data/test-file.txt", this::class.java.classLoader))
-            part(
-                "informatieobjecttype",
-                "http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000001"
-            )
-        }
+        val bodyBuilder =
+            MultipartBodyBuilder().apply {
+                part("file", ClassPathResource("/data/test-file.txt", this::class.java.classLoader))
+                part(
+                    "informatieobjecttype",
+                    "http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000001",
+                )
+            }
 
         webTestClient.post()
             .uri("/api/document/content")
@@ -143,7 +144,7 @@ class DocumentContentResourceIntegrationTest(
             getRequestBody(
                 HttpMethod.POST,
                 "/enkelvoudiginformatieobjecten",
-                PostEnkelvoudiginformatieobjectRequest::class.java
+                PostEnkelvoudiginformatieobjectRequest::class.java,
             )
         assertThat(requestBody.bronorganisatie).isEqualTo("051845623")
         assertThat(requestBody.creatiedatum).isNotBlank
@@ -177,7 +178,7 @@ class DocumentContentResourceIntegrationTest(
             getRequestBody(
                 HttpMethod.POST,
                 "/enkelvoudiginformatieobjecten",
-                PostEnkelvoudiginformatieobjectRequest::class.java
+                PostEnkelvoudiginformatieobjectRequest::class.java,
             )
         assertThat(requestBody.bronorganisatie).isEqualTo("051845623")
         assertThat(requestBody.creatiedatum).isNotBlank
