@@ -1,0 +1,8 @@
+query {
+    getBesluit(besluitId: "58fad5ab-dc2f-11ec-9075-f22a405ce707") {
+        identificatie,
+        datum,
+        toelichting,
+        publicatiedatum
+    }
+}

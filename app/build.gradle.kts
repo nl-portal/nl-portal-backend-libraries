@@ -24,11 +24,13 @@ dependencies {
     implementation(project(":klantcontactmomenten"))
     implementation(project(":product"))
     implementation(project(":form"))
+    implementation(project(":zgw:berichten"))
     implementation(project(":zgw:taak"))
     implementation(project(":zgw:zaken-api"))
     implementation(project(":zgw:catalogi-api"))
     implementation(project(":zgw:documenten-api"))
     implementation(project(":payment"))
+    implementation(project(":zgw:besluiten"))
 
     implementation("org.springframework.boot", "spring-boot-starter-actuator")
     api("org.postgresql", "postgresql")

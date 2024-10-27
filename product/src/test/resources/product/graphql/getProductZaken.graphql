@@ -1,0 +1,6 @@
+query {
+    getProductZaken(productName: "erfpacht") {
+            uuid,
+            omschrijving
+        }
+}

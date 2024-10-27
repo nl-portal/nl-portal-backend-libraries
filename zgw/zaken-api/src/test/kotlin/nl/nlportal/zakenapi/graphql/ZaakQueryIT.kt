@@ -16,6 +16,7 @@
 package nl.nlportal.zakenapi.graphql
 
 import mu.KotlinLogging
+import nl.nlportal.besluiten.client.BesluitenApiConfig
 import nl.nlportal.catalogiapi.client.CatalogiApiConfig
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.documentenapi.client.DocumentApisConfig
@@ -48,6 +49,7 @@ internal class ZaakQueryIT(
     @Autowired private val zakenApiConfig: ZakenApiConfig,
     @Autowired private val catalogiApiConfig: CatalogiApiConfig,
     @Autowired private val documentApisConfig: DocumentApisConfig,
+    @Autowired private val besluitenApiConfig: BesluitenApiConfig,
 ) {
     private val logger = KotlinLogging.logger {}
 
@@ -62,6 +64,7 @@ internal class ZaakQueryIT(
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
             propsRegistry.add("nl-portal.zgw.zakenapi.url") { url }
+            propsRegistry.add("nl-portal.zgw.besluiten.url") { url }
         }
 
         @JvmStatic
@@ -86,6 +89,7 @@ internal class ZaakQueryIT(
 
         zakenApiConfig.url = url
         catalogiApiConfig.url = url
+        besluitenApiConfig.url = url
         documentApisConfig.getConfig("openzaak").url = url
     }
 
@@ -441,6 +445,12 @@ internal class ZaakQueryIT(
                     statussen {
                         omschrijving,
                         isEindstatus
+                    },
+                    besluiten {
+                        identificatie,
+                        datum,
+                        toelichting,
+                        publicatiedatum
                     }
                 }
             }
@@ -455,6 +465,7 @@ internal class ZaakQueryIT(
             .bodyValue(query)
             .exchange()
             .expectBody()
+            .consumeWith(System.out::println)
             .jsonPath(basePath).exists()
             .jsonPath("$basePath.uuid").isEqualTo("5d479908-fbb7-49c2-98c9-9afecf8de79a")
             .jsonPath("$basePath.identificatie").isEqualTo("ZAAK-2021-0000000003")
@@ -475,6 +486,7 @@ internal class ZaakQueryIT(
             .jsonPath("$basePath.statussen[0].isEindstatus").isEqualTo(false)
             .jsonPath("$basePath.statussen[2].omschrijving").isEqualTo("Derde status")
             .jsonPath("$basePath.statussen[2].isEindstatus").isEqualTo(true)
+            .jsonPath("$basePath.besluiten[0].identificatie").isEqualTo("klantportaal")
     }
 
     fun setupMockOpenZaakServer() {
@@ -502,6 +514,7 @@ internal class ZaakQueryIT(
                             "/zaken/api/v1/zaakinformatieobjecten" -> handleZaakInformatieObjectenRequest()
                             "/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> handleDocumentRequest()
                             "/zaken/api/v1/rollen" -> handleZaakRollenRequest()
+                            "/besluiten/api/v1/besluiten" -> handleBesluitenRequest()
                             else -> MockResponse().setResponseCode(404)
                         }
                     return response
@@ -933,6 +946,38 @@ internal class ZaakQueryIT(
                  }
                ]
              }
+            """.trimIndent()
+
+        return mockResponse(body)
+    }
+
+    fun handleBesluitenRequest(): MockResponse {
+        val body =
+            """
+            {
+              "count": 2,
+              "next": "http://localhost:8001/besluiten/api/v1/besluiten?page=2",
+              "previous": null,
+              "results": [
+                {
+                  "url": "http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z",
+                  "identificatie": "klantportaal",
+                  "verantwoordelijkeOrganisatie": "klantportaal",
+                  "besluittype": "http://localhost:8000/catalogi/api/v1/besluittypen/496f51fd-ccdb-406e-805a-e7602ae78a2b",
+                  "zaak": "http://localhost:8001/zaken/api/v1/zaken/496f51fd-ccdb-406e-805a-e7602ae78a2x",
+                  "datum": "2019-08-24",
+                  "toelichting": "toelichting",
+                  "bestuursorgaan": "klant",
+                  "ingangsdatum": "2019-08-24",
+                  "vervaldatum": "2019-08-24",
+                  "vervalreden": "tijdelijk",
+                  "vervalredenWeergave": "string",
+                  "publicatiedatum": "2019-08-24",
+                  "verzenddatum": "2019-08-24",
+                  "uiterlijkeReactiedatum": "2019-08-24"
+                }
+              ]
+            }
             """.trimIndent()
 
         return mockResponse(body)

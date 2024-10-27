@@ -20,6 +20,7 @@ import nl.nlportal.catalogiapi.domain.StatusType
 import java.util.UUID
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import nl.nlportal.catalogiapi.domain.BesluitType
 import nl.nlportal.catalogiapi.service.CatalogiApiService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -70,5 +71,67 @@ internal class CatalogiApiServiceTest {
             assertEquals("desc3", zaakStatusTypes.get(2).omschrijving)
 
             verify(catalogiApiClient).getStatusTypes(zaakUrl)
+        }
+
+    @Test
+    fun getBesluitType() =
+        runTest {
+            val uuid = UUID.randomUUID()
+            catalogiApiService.getBesluitType("http://some.domain.com/catalogi/api/v1/besluittypen/$uuid")
+            verify(catalogiApiClient).getBesluitType(uuid)
+        }
+
+    @Test
+    fun getBesluitTypes() =
+        runTest {
+            val uuid = UUID.randomUUID()
+            val zaakUrl = "http://some.domain.com/catalogi/api/v1/zaaktypen/$uuid"
+
+            `when`(catalogiApiClient.getBesluitTypes(zaakUrl)).thenReturn(
+                listOf(
+                    BesluitType(
+                        "besluittype 1",
+                        listOf("zaaktypen"),
+                        "omschrijving 1",
+                        "besluitcategorie 1",
+                        null,
+                        true,
+                        null,
+                        null,
+                        null,
+                    ),
+                    BesluitType(
+                        "besluittype 2",
+                        listOf("zaaktypen"),
+                        "omschrijving 2",
+                        "besluitcategorie 2",
+                        null,
+                        true,
+                        null,
+                        null,
+                        null,
+                    ),
+                    BesluitType(
+                        "besluittype 3",
+                        listOf("zaaktypen"),
+                        "omschrijving 3",
+                        "besluitcategorie 3",
+                        null,
+                        true,
+                        null,
+                        null,
+                        null,
+                    ),
+                ),
+            )
+
+            val besluitTypes = catalogiApiService.getBesluitTypes(zaakUrl)
+
+            assertEquals(3, besluitTypes.size)
+            assertEquals("omschrijving 1", besluitTypes.get(0).omschrijving)
+            assertEquals("omschrijving 2", besluitTypes.get(1).omschrijving)
+            assertEquals("omschrijving 3", besluitTypes.get(2).omschrijving)
+
+            verify(catalogiApiClient).getBesluitTypes(zaakUrl)
         }
 }

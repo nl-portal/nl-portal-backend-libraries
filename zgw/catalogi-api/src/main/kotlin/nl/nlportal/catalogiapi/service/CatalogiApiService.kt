@@ -16,6 +16,7 @@
 package nl.nlportal.catalogiapi.service
 
 import nl.nlportal.catalogiapi.client.CatalogiApiClient
+import nl.nlportal.catalogiapi.domain.BesluitType
 import nl.nlportal.catalogiapi.domain.StatusType
 import nl.nlportal.catalogiapi.domain.ZaakStatusType
 import nl.nlportal.catalogiapi.domain.ZaakType
@@ -34,5 +35,13 @@ class CatalogiApiService(
 
     suspend fun getZaakType(zaakTypeUrl: String): ZaakType {
         return catalogiApiClient.getZaakType(extractId(zaakTypeUrl))
+    }
+
+    suspend fun getBesluitTypes(zaakType: String): List<BesluitType> {
+        return catalogiApiClient.getBesluitTypes(zaakType)
+    }
+
+    suspend fun getBesluitType(besluitTypeUrl: String): BesluitType {
+        return catalogiApiClient.getBesluitType(extractId(besluitTypeUrl))
     }
 }

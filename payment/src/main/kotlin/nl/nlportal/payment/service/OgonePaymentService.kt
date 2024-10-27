@@ -17,9 +17,9 @@ package nl.nlportal.payment.service
 
 import mu.KLogger
 import mu.KotlinLogging
+import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig
 import nl.nlportal.payment.constants.OgoneState
-import nl.nlportal.payment.constants.ShaVersion
 import nl.nlportal.payment.domain.OgonePayment
 import nl.nlportal.payment.domain.OgonePaymentRequest
 import nl.nlportal.payment.domain.PaymentField
@@ -29,12 +29,10 @@ import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
 import nl.nlportal.zgw.taak.domain.TaakObjectV2
 import nl.nlportal.zgw.taak.domain.TaakStatus
-import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.lang3.StringUtils
 import org.springframework.http.HttpStatus
 import org.springframework.http.server.reactive.ServerHttpRequest
 import org.springframework.web.server.ResponseStatusException
-import java.security.NoSuchAlgorithmException
 import java.util.*
 
 class OgonePaymentService(
@@ -162,25 +160,7 @@ class OgonePaymentService(
                         .append(shaKey)
                 }
             logger.info("SHA version: {} - {}", shaVersion, parametersConcatenation.toString())
-            return createHash(parametersConcatenation.toString(), shaVersion)
-        }
-
-        @Throws(NoSuchAlgorithmException::class)
-        private fun createHash(
-            input: String,
-            shaVersion: String,
-        ): String {
-            return when (shaVersion) {
-                ShaVersion.SHA256.version -> {
-                    DigestUtils.sha512Hex(input)
-                }
-                ShaVersion.SHA512.version -> {
-                    DigestUtils.sha512Hex(input)
-                }
-                else -> {
-                    DigestUtils.sha1Hex(input)
-                }
-            }
+            return CoreUtils.createHash(parametersConcatenation.toString(), shaVersion)
         }
     }
 }

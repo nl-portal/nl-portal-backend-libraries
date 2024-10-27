@@ -1,0 +1,6 @@
+query {
+    getProductZaken(productName: "verhuur") {
+            uuid,
+            omschrijving
+        }
+}

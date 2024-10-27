@@ -1,0 +1,23 @@
+graphql:
+    packages:
+        - "nl.nlportal"
+
+logging:
+    level:
+        reactor.netty.http.client.HttpClient: TRACE
+
+nl-portal:
+    openklant:
+        url: #filled in test
+        clientId: valtimo_client
+        secret: e09b8bc5-5831-4618-ab28-41411304309d
+    zgw:
+        berichten:
+            bericht-object-type-url: "https://example.com/api/v1/objecttypes/78731088-430f-49fd-9a4c-80ddd42ded28"
+
+spring:
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://localhost:8082/auth/realms/nlportal
