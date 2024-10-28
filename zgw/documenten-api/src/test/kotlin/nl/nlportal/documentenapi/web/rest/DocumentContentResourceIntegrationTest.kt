@@ -101,7 +101,11 @@ class DocumentContentResourceIntegrationTest(
             .expectBody()
 
         val requestBody =
-            getRequestBody(HttpMethod.POST, "/enkelvoudiginformatieobjecten", PostEnkelvoudiginformatieobjectRequest::class.java)
+            getRequestBody(
+                HttpMethod.POST,
+                "/enkelvoudiginformatieobjecten",
+                PostEnkelvoudiginformatieobjectRequest::class.java,
+            )
         assertThat(requestBody.bronorganisatie).isEqualTo("051845623")
         assertThat(requestBody.creatiedatum).isNotBlank
         assertThat(requestBody.titel).isEqualTo("test-file.txt")
@@ -114,6 +118,46 @@ class DocumentContentResourceIntegrationTest(
         assertThat(
             requestBody.informatieobjecttype,
         ).isEqualTo("http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000")
+    }
+
+    @Test
+    @WithBurgerUser("569312863")
+    fun `should upload using data streams with form-defined informatieobjecttype`() {
+        val bodyBuilder =
+            MultipartBodyBuilder().apply {
+                part("file", ClassPathResource("/data/test-file.txt", this::class.java.classLoader))
+                part(
+                    "informatieobjecttype",
+                    "http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000001",
+                )
+            }
+
+        webTestClient.post()
+            .uri("/api/document/content")
+            .contentType(MediaType.MULTIPART_FORM_DATA)
+            .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
+            .exchange()
+            .expectStatus().isOk
+            .expectBody()
+
+        val requestBody =
+            getRequestBody(
+                HttpMethod.POST,
+                "/enkelvoudiginformatieobjecten",
+                PostEnkelvoudiginformatieobjectRequest::class.java,
+            )
+        assertThat(requestBody.bronorganisatie).isEqualTo("051845623")
+        assertThat(requestBody.creatiedatum).isNotBlank
+        assertThat(requestBody.titel).isEqualTo("test-file.txt")
+        assertThat(requestBody.auteur).isEqualTo("569312863")
+        assertThat(requestBody.status).isEqualTo(DocumentStatus.DEFINITIEF)
+        assertThat(requestBody.taal).isEqualTo("nld")
+        assertThat(requestBody.bestandsnaam).isEqualTo("test-file.txt")
+        assertThat(requestBody.inhoud).isEqualTo(Base64.getEncoder().encodeToString("Test content".toByteArray()))
+        assertThat(requestBody.indicatieGebruiksrecht).isFalse
+        assertThat(
+            requestBody.informatieobjecttype,
+        ).isEqualTo("http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000001")
     }
 
     @RepeatedTest(5)
@@ -131,7 +175,11 @@ class DocumentContentResourceIntegrationTest(
             .expectBody()
 
         val requestBody =
-            getRequestBody(HttpMethod.POST, "/enkelvoudiginformatieobjecten", PostEnkelvoudiginformatieobjectRequest::class.java)
+            getRequestBody(
+                HttpMethod.POST,
+                "/enkelvoudiginformatieobjecten",
+                PostEnkelvoudiginformatieobjectRequest::class.java,
+            )
         assertThat(requestBody.bronorganisatie).isEqualTo("051845623")
         assertThat(requestBody.creatiedatum).isNotBlank
         assertThat(requestBody.titel).isEqualTo("test-file.txt")
