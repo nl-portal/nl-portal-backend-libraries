@@ -47,6 +47,11 @@ class SearchRollenImpl(val zakenApiClient: ZakenApiClient) : SearchZaakRollen {
         return this
     }
 
+    override fun ofVestigingNummer(vestigingNummer: String): SearchZaakRollen {
+        queryParams.add("rol__betrokkeneIdentificatie__vestiging__vestigingsNummer", vestigingNummer)
+        return this
+    }
+
     override fun forZaak(zaakUrl: String): SearchZaakRollen {
         queryParams.add("zaak", zaakUrl)
         return this

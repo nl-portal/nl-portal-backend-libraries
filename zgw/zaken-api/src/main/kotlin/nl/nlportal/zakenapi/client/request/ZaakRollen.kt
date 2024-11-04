@@ -13,6 +13,8 @@ interface SearchZaakRollen : PagedRetrieve<SearchZaakRollen, ZaakRol>, Authentic
     fun forZaak(zaakUrl: String): SearchZaakRollen
 
     fun forZaak(zaakId: UUID): SearchZaakRollen
+
+    fun ofVestigingNummer(vestigingNummer: String): SearchZaakRollen
 }
 
 interface GetZaakRol : Retrieve<ZaakRol>

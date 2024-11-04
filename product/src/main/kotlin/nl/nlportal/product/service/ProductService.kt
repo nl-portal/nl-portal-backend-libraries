@@ -163,6 +163,10 @@ class ProductService(
         isOpen?.let {
             request.isOpen(isOpen)
         }
+
+        authentication.getVestigingNummer()?.let {
+            request.ofVestigingNummer(it)
+        }
         return request
             .retrieve()
             .results
