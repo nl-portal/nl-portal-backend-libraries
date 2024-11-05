@@ -32,5 +32,4 @@ data class Bericht(
     val onderwerp: String,
     val publicatiedatum: LocalDateTime,
     val referentie: String,
-) {
-}
+)
