@@ -16,7 +16,6 @@
 package nl.nlportal.berichten.domain
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -33,6 +32,5 @@ data class Bericht(
     val onderwerp: String,
     val publicatiedatum: LocalDateTime,
     val referentie: String,
-){
-
+) {
 }
