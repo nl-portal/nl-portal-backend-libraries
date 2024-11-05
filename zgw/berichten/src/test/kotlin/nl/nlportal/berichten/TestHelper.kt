@@ -164,9 +164,9 @@ object TestHelper {
                         "type": "bsn",
                         "value": "999990755"
                     },
-                    "publicatiedatum": "2024-07-18",
+                    "publicatiedatum": "2024-07-18T18:25:43.524Z",
                     "handelingsperspectief": "informatie ontvangen",
-                    "einddatumHandelingstermijn": "2024-10-31"
+                    "einddatumHandelingstermijn": "2024-10-31T18:25:43.524Z"
                 },
                 "geometry": null,
                 "startAt": "2024-07-18",
@@ -200,9 +200,9 @@ object TestHelper {
                         "type": "bsn",
                         "value": "999990755"
                     },
-                    "publicatiedatum": "2024-07-18",
+                    "publicatiedatum": "2024-07-18T18:25:43.524Z",
                     "handelingsperspectief": "informatie ontvangen",
-                    "einddatumHandelingstermijn": "2024-10-31"
+                    "einddatumHandelingstermijn": "2024-10-31T18:25:43.524Z"
                 },
                 "geometry": null,
                 "startAt": "2024-07-18",
@@ -241,9 +241,9 @@ object TestHelper {
                                 "type": "bsn",
                                 "value": "999990755"
                             },
-                            "publicatiedatum": "2023-07-18",
+                            "publicatiedatum": "2023-07-18T18:25:43.524Z",
                             "handelingsperspectief": "informatie ontvangen",
-                            "einddatumHandelingstermijn": "2024-10-31"
+                            "einddatumHandelingstermijn": "2024-10-31T18:25:43.524Z"
                         },
                         "geometry": null,
                         "startAt": "2024-07-18",
@@ -273,9 +273,9 @@ object TestHelper {
                                 "type": "bsn",
                                 "value": "999990755"
                             },
-                            "publicatiedatum": "2024-07-18",
+                            "publicatiedatum": "2024-07-18T18:25:43.524Z",
                             "handelingsperspectief": "informatie ontvangen",
-                            "einddatumHandelingstermijn": "2024-10-31"
+                            "einddatumHandelingstermijn": "2024-10-31T18:25:43.524Z"
                         },
                         "geometry": null,
                         "startAt": "2024-07-18",
