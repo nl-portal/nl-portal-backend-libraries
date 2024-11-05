@@ -25,7 +25,7 @@ dependencies {
     api(project(":zgw:taak"))
 
     implementation(Dependencies.jsonPath)
-    api("com.github.wnameless.json", "json-flattener", "0.17.0")
+    api("com.github.wnameless.json", "json-flattener", "0.17.1")
 
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
