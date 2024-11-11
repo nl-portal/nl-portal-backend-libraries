@@ -64,8 +64,8 @@ class ZakenApiService(
             request.ofIdentificatie(identificatie)
         }
 
-        authentication.getVestigingNummer()?.let {
-            request.ofVestigingNummer(it)
+        authentication.getVestigingsNummer()?.let {
+            request.ofVestigingsNummer(it)
         }
 
         return request.retrieve().let {
@@ -84,8 +84,8 @@ class ZakenApiService(
                 .forZaak(id)
                 .withAuthentication(authentication)
 
-        authentication.getVestigingNummer()?.let {
-            zaakRollenRequest.ofVestigingNummer(it)
+        authentication.getVestigingsNummer()?.let {
+            zaakRollenRequest.ofVestigingsNummer(it)
         }
         val rollen: List<ZaakRol> =
             zaakRollenRequest

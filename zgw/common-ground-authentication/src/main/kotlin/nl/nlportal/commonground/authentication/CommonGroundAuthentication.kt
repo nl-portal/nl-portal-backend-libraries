@@ -46,17 +46,12 @@ abstract class CommonGroundAuthentication(
     }
 
     /**
-     * Gets VestigingNummer property from the JWT
+     * Gets VestigingsNummer property from the JWT
      *
-     * @return VestigingNummer
+     * @return VestigingsNummer
      */
-    fun getVestigingNummer(): String? {
-        val vestigingNummer = token.claims[AANVRAGER_VESTIGINGNUMMER_KEY]
-        if (vestigingNummer == null) {
-            return null
-        } else {
-            return vestigingNummer.toString()
-        }
+    fun getVestigingsNummer(): String? {
+        return token.claims[AANVRAGER_VESTIGINGNUMMER_KEY]?.toString()
     }
 
     override fun getUserRepresentation() = "${this.userType.uppercase()}:${this.userId}"

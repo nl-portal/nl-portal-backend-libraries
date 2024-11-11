@@ -164,8 +164,8 @@ class ProductService(
             request.isOpen(isOpen)
         }
 
-        authentication.getVestigingNummer()?.let {
-            request.ofVestigingNummer(it)
+        authentication.getVestigingsNummer()?.let {
+            request.ofVestigingsNummer(it)
         }
         return request
             .retrieve()
