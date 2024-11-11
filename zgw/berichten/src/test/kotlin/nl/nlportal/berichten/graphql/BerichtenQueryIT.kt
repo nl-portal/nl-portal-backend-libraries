@@ -175,7 +175,7 @@ class BerichtenQueryIT(
             .body(BodyInserters.fromValue(TestHelper.graphqlUnopenedBerichtenCountRequest))
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath(basePath).isEqualTo(2)
+            .jsonPath(basePath).isEqualTo(11)
     }
 
     fun setupMockObjectsApiServer() {

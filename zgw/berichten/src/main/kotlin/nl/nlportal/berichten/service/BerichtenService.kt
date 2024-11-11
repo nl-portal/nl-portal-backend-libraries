@@ -92,7 +92,7 @@ class BerichtenService(
             )
         val results = getBerichten(pageNumber, pageSize, searchParameters)
 
-        return results.toBerichtenPage()
+        return results.toBerichtenPage(pageNumber, pageSize)
     }
 
     private suspend fun getBerichten(
@@ -108,8 +108,8 @@ class BerichtenService(
         )
 
     private fun ResultPage<ObjectsApiObject<Bericht>>.toBerichtenPage(
-        pageNumber: Int = 1,
-        pageSize: Int = 20,
+        pageNumber: Int,
+        pageSize: Int,
     ): BerichtenPage {
         val berichten = results.map { it.record.data.copy(id = it.uuid) }.sortedByDescending { it.publicatiedatum }
 
