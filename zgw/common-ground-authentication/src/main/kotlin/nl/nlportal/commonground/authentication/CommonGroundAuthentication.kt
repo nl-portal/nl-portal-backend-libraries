@@ -45,10 +45,20 @@ abstract class CommonGroundAuthentication(
         }
     }
 
+    /**
+     * Gets VestigingsNummer property from the JWT
+     *
+     * @return VestigingsNummer
+     */
+    fun getVestigingsNummer(): String? {
+        return token.claims[AANVRAGER_VESTIGINGNUMMER_KEY]?.toString()
+    }
+
     override fun getUserRepresentation() = "${this.userType.uppercase()}:${this.userId}"
 }
 
 const val BSN_KEY = "bsn"
 const val KVK_NUMMER_KEY = "kvk"
 const val AANVRAGER_KEY = "aanvrager"
+const val AANVRAGER_VESTIGINGNUMMER_KEY = "aanvrager.vestigingsnummer"
 const val GEMACHTIGDE_KEY = "gemachtigde"
