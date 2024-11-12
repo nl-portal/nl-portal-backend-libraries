@@ -19,7 +19,7 @@ import nl.nlportal.commonground.authentication.JwtBuilder
 import nl.nlportal.haalcentraal.hr.client.HandelsregisterClient
 import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import nl.nlportal.haalcentraal.hr.domain.MaterieleRegistratie
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -35,7 +35,7 @@ class HandelsregisterServiceTest {
 
     @Test
     fun `getMaatschappelijkeActiviteit calls client and gets MaatschappelijkeActiviteit`() =
-        runBlockingTest {
+        runTest {
             val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
             whenever(handelsregisterClient.getMaatschappelijkeActiviteit("123")).thenReturn(
                 MaatschappelijkeActiviteit(
@@ -60,7 +60,7 @@ class HandelsregisterServiceTest {
 
     @Test
     fun `getMaatschappelijkeActiviteit with invalid kvk`() =
-        runBlockingTest {
+        runTest {
             val authentication = JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication()
 
             val bedrijf = handelsregisterService.getMaatschappelijkeActiviteit(authentication)
