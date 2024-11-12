@@ -174,6 +174,11 @@ class ProductService(
             isOpen?.let {
                 request.isOpen(isOpen)
             }
+
+            authentication.getVestigingsNummer()?.let {
+                request.ofVestigingsNummer(it)
+            }
+
             request
                 .retrieve()
                 .results

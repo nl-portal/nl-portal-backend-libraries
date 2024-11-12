@@ -83,7 +83,7 @@ class BerichtenQueryIT(
             .verifyOnlyDataExists(basePath)
             .jsonPath("$basePath.content[0].berichtType").isEqualTo("NOTIFICATIE")
             .jsonPath("$basePath.content[0].geopend").isEqualTo("false")
-            .jsonPath("$basePath.content[0].publicatiedatum").isEqualTo("2024-07-18")
+            .jsonPath("$basePath.content[0].publicatiedatum").isEqualTo("2024-07-18T18:25:43.524")
     }
 
     @WithBurgerUser("999990755")
@@ -175,7 +175,7 @@ class BerichtenQueryIT(
             .body(BodyInserters.fromValue(TestHelper.graphqlUnopenedBerichtenCountRequest))
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath(basePath).isEqualTo(2)
+            .jsonPath(basePath).isEqualTo(11)
     }
 
     fun setupMockObjectsApiServer() {
