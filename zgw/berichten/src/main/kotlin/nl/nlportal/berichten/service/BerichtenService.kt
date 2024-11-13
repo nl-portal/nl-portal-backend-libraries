@@ -84,11 +84,13 @@ class BerichtenService(
         pageNumber: Int,
         pageSize: Int,
     ): BerichtenPage {
+        // fix because ObjectsAPI filter LTE only accept dates, not date-time
+        val filterPublicationDate = LocalDate.now().plusDays(1)
         val searchParameters =
             listOf(
                 ObjectSearchParameter("identificatie__type", EQUAL_TO, authentication.userType),
                 ObjectSearchParameter("identificatie__value", EQUAL_TO, authentication.userId),
-                ObjectSearchParameter("publicatiedatum", LOWER_THAN_OR_EQUAL_TO, LocalDate.now().toString()),
+                ObjectSearchParameter("publicatiedatum", LOWER_THAN_OR_EQUAL_TO, filterPublicationDate.toString()),
             )
         val results = getBerichten(pageNumber, pageSize, searchParameters)
 
