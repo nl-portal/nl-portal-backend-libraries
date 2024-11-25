@@ -18,18 +18,26 @@ package nl.nlportal.graphql.customtype
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.JsonNodeFactory
 import com.fasterxml.jackson.databind.node.ObjectNode
-import nl.nlportal.core.util.Mapper
+import graphql.GraphQLContext
+import graphql.execution.CoercedVariables
 import graphql.language.IntValue
 import graphql.language.ObjectField
 import graphql.language.ObjectValue
 import graphql.language.StringValue
+import graphql.language.Value
 import graphql.schema.Coercing
 import graphql.schema.CoercingParseLiteralException
 import graphql.schema.CoercingSerializeException
 import graphql.schema.GraphQLScalarType
+import nl.nlportal.core.util.Mapper
+import java.util.*
 
 object JSONCoercing : Coercing<ObjectNode, ObjectNode> {
-    override fun parseValue(input: Any): ObjectNode {
+    override fun parseValue(
+        input: Any,
+        graphQLContext: GraphQLContext,
+        locale: Locale,
+    ): ObjectNode {
         if (input is ObjectValue) {
             val jsonNode: ObjectNode = JsonNodeFactory.instance.objectNode()
             for (f: ObjectField in input.objectFields) {
@@ -42,16 +50,25 @@ object JSONCoercing : Coercing<ObjectNode, ObjectNode> {
         throw CoercingParseLiteralException("Expected valid JSON input but was $input")
     }
 
-    override fun parseLiteral(input: Any): ObjectNode {
+    override fun parseLiteral(
+        input: Value<*>,
+        variables: CoercedVariables,
+        graphQLContext: GraphQLContext,
+        locale: Locale,
+    ): ObjectNode? {
         val jsonString = (input as? ObjectValue)!!
         return runCatching {
-            parseValue(input)
+            parseValue(input, graphQLContext, locale)
         }.getOrElse {
             throw CoercingParseLiteralException("Expected valid JSON literal but was $jsonString")
         }
     }
 
-    override fun serialize(dataFetcherResult: Any): ObjectNode =
+    override fun serialize(
+        dataFetcherResult: Any,
+        graphQLContext: GraphQLContext,
+        locale: Locale,
+    ): ObjectNode =
         runCatching {
             Mapper.get().readValue(dataFetcherResult.toString(), ObjectNode::class.java)
         }.getOrElse {
