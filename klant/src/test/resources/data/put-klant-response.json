@@ -21,7 +21,7 @@
   },
   "subject": "http://example.com",
   "subjectType": "natuurlijk_persoon",
-  "aanmaakkanaal": "test",
+  "aanmaakkanaal": "EMAIL",
   "subjectIdentificatie": {
     "inpBsn": "569312863",
     "anpIdentificatie": "anp_identificatie",
