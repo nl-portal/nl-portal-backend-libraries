@@ -43,7 +43,8 @@ class OgonePaymentService(
     fun createPayment(paymentRequest: OgonePaymentRequest): OgonePayment {
         val pspId = paymentRequest.pspId
         val paymentProfile =
-            paymentConfig.getPaymentProfileByPspPid(pspId)
+            paymentConfig.getPaymentProfile(pspId)
+                ?: paymentConfig.getPaymentProfileByPspPid(pspId)
                 ?: throw ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Could not found payment profile for the pspId $pspId",
