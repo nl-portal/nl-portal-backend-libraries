@@ -15,6 +15,7 @@
  */
 package nl.nlportal.klant.graphql
 
+import mu.KotlinLogging
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.klant.TestHelper
 import nl.nlportal.klant.generiek.client.OpenKlantClientConfig
@@ -33,6 +34,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.reactive.server.WebTestClient
+import java.util.function.Consumer
 
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
@@ -42,6 +44,7 @@ internal class BurgerMutationIT(
     @Autowired private val openKlantClientConfig: OpenKlantClientConfig,
 ) {
     lateinit var server: MockWebServer
+    private val logger = KotlinLogging.logger {}
 
     @BeforeEach
     internal fun setUp() {
@@ -63,10 +66,11 @@ internal class BurgerMutationIT(
             """
             mutation {
                 updateBurgerProfiel(
-                    klant: { telefoonnummer: "0611111111", emailadres: "updated@email.nl" }
+                    klant: { telefoonnummer: "0611111111", emailadres: "updated@email.nl", aanmaakkanaal: "EMAIL" }
                 ) {
                     telefoonnummer
-                    emailadres
+                    emailadres,
+                    aanmaakkanaal
                 }
             }
             """.trimIndent()
@@ -80,6 +84,7 @@ internal class BurgerMutationIT(
             .bodyValue(mutation)
             .exchange()
             .expectBody()
+            .consumeWith(Consumer { t -> logger.info { t } })
             .jsonPath(basePath).exists()
             .jsonPath("$basePath.telefoonnummer").isEqualTo("0611111111")
             .jsonPath("$basePath.emailadres").isEqualTo("updated@email.nl")
