@@ -145,6 +145,7 @@ class ProductService(
         productTypeId: UUID?,
         productName: String,
         pageNumber: Int,
+        pageSize: Int? = null,
         isOpen: Boolean? = null,
     ): List<Zaak> {
         val productType = getProductType(productTypeId, productName)
@@ -159,7 +160,7 @@ class ProductService(
                 .page(pageNumber)
                 .withAuthentication(authentication)
                 .ofZaakTypes(productType.zaaktypen.map { it })
-
+        pageSize?.let { request.pageSize(it) }
         isOpen?.let {
             request.isOpen(isOpen)
         }
@@ -195,10 +196,10 @@ class ProductService(
 
         val zaken =
             getProductZaken(
-                authentication,
-                productTypeId,
-                productName,
-                pageNumber,
+                authentication = authentication,
+                productTypeId = productTypeId,
+                productName = productName,
+                pageNumber = pageNumber,
             )
 
         val producten =

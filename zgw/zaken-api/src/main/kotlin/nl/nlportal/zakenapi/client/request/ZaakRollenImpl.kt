@@ -67,6 +67,11 @@ class SearchRollenImpl(val zakenApiClient: ZakenApiClient) : SearchZaakRollen {
         return this
     }
 
+    override fun pageSize(page: Int): SearchZaakRollen {
+        queryParams.add("pageSize", page.toString())
+        return this
+    }
+
     override suspend fun retrieve(): ResultPage<ZaakRol> {
         return this.zakenApiClient.webClient.get()
             .uri { it.path("/zaken/api/v1/rollen").queryParams(queryParams).build() }

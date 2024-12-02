@@ -38,4 +38,5 @@ enum class Comparator(val value: String) {
     LOWER_THAN("lt"),
     LOWER_THAN_OR_EQUAL_TO("lte"),
     STRING_CONTAINS("icontains"),
+    IN_LIST("in"),
 }

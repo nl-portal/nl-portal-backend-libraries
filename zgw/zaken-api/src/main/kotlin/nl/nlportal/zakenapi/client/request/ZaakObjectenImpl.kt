@@ -47,6 +47,11 @@ class SearchZaakObjectenImpl(val zakenApiClient: ZakenApiClient) : SearchZaakObj
         return this
     }
 
+    override fun pageSize(pageSize: Int): SearchZaakObjecten {
+        queryParams.add("pageSize", pageSize.toString())
+        return this
+    }
+
     override suspend fun retrieve(): ResultPage<ZaakObject> {
         return this.zakenApiClient.webClient.get()
             .uri { it.path("/zaken/api/v1/zaakobjecten").queryParams(queryParams).build() }

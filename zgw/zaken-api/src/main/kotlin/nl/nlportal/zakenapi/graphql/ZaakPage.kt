@@ -13,13 +13,14 @@ class ZaakPage(
     companion object {
         fun fromResultPage(
             pageNumber: Int,
+            pageSize: Int,
             resultPage: ResultPage<Zaak>,
         ): ZaakPage {
             val zaken = resultPage.results.map { it }
 
             return ZaakPage(
                 number = pageNumber,
-                size = 100,
+                size = pageSize,
                 content = zaken,
                 totalElements = resultPage.count,
             )

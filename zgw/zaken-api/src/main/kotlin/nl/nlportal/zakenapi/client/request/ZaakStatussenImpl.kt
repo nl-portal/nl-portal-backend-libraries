@@ -52,6 +52,11 @@ class SearchZaakStatussenImpl(val zakenApiClient: ZakenApiClient) : SearchZaakSt
         return this
     }
 
+    override fun pageSize(page: Int): SearchZaakStatussen {
+        queryParams.add("pageSize", page.toString())
+        return this
+    }
+
     override suspend fun retrieve(): ResultPage<ZaakStatus> {
         return this.zakenApiClient.webClient.get()
             .uri { it.path("/zaken/api/v1/statussen").queryParams(queryParams).build() }

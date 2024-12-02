@@ -95,7 +95,8 @@ class ProductQuery(
             productName = productName,
             pageNumber = 1,
             isOpen = isOpen,
-        ).take(pageSize ?: 20)
+            pageSize = pageSize,
+        )
     }
 
     @GraphQLDescription("Get list of taken by product name ")
