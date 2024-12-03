@@ -52,7 +52,7 @@ class ZakenApiService(
         identificatie: String?,
     ): ZaakPage {
         val request =
-            zakenApiClient.zaken()
+            zakenApiClient.zoeken()
                 .search()
                 .page(page)
                 .withAuthentication(authentication)

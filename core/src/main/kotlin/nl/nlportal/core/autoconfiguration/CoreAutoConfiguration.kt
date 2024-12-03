@@ -17,11 +17,9 @@ package nl.nlportal.core.autoconfiguration
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import nl.nlportal.core.util.Mapper
-import nl.nlportal.core.util.ProfileNameManager
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
-import org.springframework.core.env.Environment
 
 @AutoConfiguration
 class CoreAutoConfiguration {
@@ -29,10 +27,5 @@ class CoreAutoConfiguration {
     @ConditionalOnMissingBean(name = ["objectMapper"])
     fun objectMapper(): ObjectMapper {
         return Mapper.get()
-    }
-
-    @Bean
-    fun profileNameManager(environment: Environment): ProfileNameManager {
-        return ProfileNameManager(environment)
     }
 }
