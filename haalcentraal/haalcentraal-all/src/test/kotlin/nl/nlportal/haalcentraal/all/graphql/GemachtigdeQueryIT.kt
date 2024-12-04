@@ -17,6 +17,7 @@ package nl.nlportal.haalcentraal.all.graphql
 
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.haalcentraal.all.TestHelper
+import nl.nlportal.haalcentraal.all.TestHelper.verifyOnlyDataExists
 import nl.nlportal.haalcentraal.client.HaalCentraalClientConfig
 import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrClientConfig
 import okhttp3.mockwebserver.Dispatcher
@@ -66,11 +67,16 @@ internal class GemachtigdeQueryIT(
             query {
                 getGemachtigde {
                     persoon {
-                        aanhef,
-                        voorletters,
-                        voornamen,
-                        voorvoegsel,
-                        geslachtsnaam
+                        naam {
+                            aanhef,
+                            voorletters,
+                            voornamen,
+                            voorvoegsel,
+                            geslachtsnaam,
+                            lastName,
+                            aanduidingNaamgebruik,
+                        },
+                        officialLastName
                     },
                     bedrijf {
                         naam
@@ -88,13 +94,11 @@ internal class GemachtigdeQueryIT(
             .bodyValue(query)
             .exchange()
             .expectStatus().isOk
-            .expectBody()
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.persoon.aanhef").isEqualTo("Geachte mevrouw Kooyman")
-            .jsonPath("$basePath.persoon.voorletters").isEqualTo("M.")
-            .jsonPath("$basePath.persoon.voornamen").isEqualTo("Merel")
-            .jsonPath("$basePath.persoon.voorvoegsel").isEqualTo("de")
-            .jsonPath("$basePath.persoon.geslachtsnaam").isEqualTo("Kooyman")
+            .verifyOnlyDataExists(basePath)
+            .jsonPath("$basePath.persoon.naam.voorletters").isEqualTo("M.")
+            .jsonPath("$basePath.persoon.naam.voornamen").isEqualTo("Merel")
+            .jsonPath("$basePath.persoon.naam.voorvoegsel").isEqualTo("de")
+            .jsonPath("$basePath.persoon.naam.geslachtsnaam").isEqualTo("Kooyman")
             .jsonPath("$basePath.bedrijf.naam").doesNotExist()
     }
 
@@ -106,11 +110,13 @@ internal class GemachtigdeQueryIT(
             query {
                 getGemachtigde {
                     persoon {
-                        aanhef,
-                        voorletters,
-                        voornamen,
-                        voorvoegsel,
-                        geslachtsnaam
+                        naam {
+                            aanhef,
+                            voorletters,
+                            voornamen,
+                            voorvoegsel,
+                            geslachtsnaam
+                        }
                     },
                     bedrijf {
                         naam

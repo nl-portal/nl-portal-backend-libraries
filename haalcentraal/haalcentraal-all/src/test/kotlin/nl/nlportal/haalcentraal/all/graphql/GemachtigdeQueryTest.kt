@@ -23,6 +23,7 @@ import nl.nlportal.haalcentraal.hr.domain.MaterieleRegistratie
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.haalcentraal.brp.domain.persoon.AanduidingNaamGebruik
+import nl.nlportal.haalcentraal.brp.domain.persoon.Persoon
 import nl.nlportal.haalcentraal.brp.domain.persoon.PersoonNaam
 import nl.nlportal.haalcentraal.brp.service.HaalCentraalBrpService
 import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
@@ -54,27 +55,29 @@ internal class GemachtigdeQueryTest {
     fun `getGemachtigde should call service`() =
         runTest {
             whenever(haalCentraalBrpService.getGemachtigde(authentication)).thenReturn(
-                PersoonNaam(
-                    "test",
-                    "test",
-                    "test",
-                    "test",
-                    "test",
-                    AanduidingNaamGebruik.EIGEN,
+                Persoon(
+                    burgerservicenummer = "0123456789",
+                    naam =
+                        PersoonNaam(
+                            aanhef = "test",
+                            voornamen = "John",
+                            geslachtsnaam = "Doe",
+                            aanduidingNaamgebruik = AanduidingNaamGebruik.EIGEN,
+                        ),
                 ),
             )
             whenever(handelsregisterService.getGemachtigde(authentication)).thenReturn(
                 MaatschappelijkeActiviteit(
                     naam = "Test bedrijf",
-                    "90012768",
-                    "test",
-                    "20230101",
-                    MaterieleRegistratie("20020202"),
-                    1,
-                    "Test bedrijf",
-                    listOf(),
-                    listOf(),
-                    null,
+                    kvkNummer = "90012768",
+                    indNonMailing = "test",
+                    formeleRegistratiedatum = "20230101",
+                    materieleRegistratie = MaterieleRegistratie("20020202"),
+                    totaalWerkzamePersonen = 1,
+                    statutaireNaam = "Test bedrijf",
+                    handelsnamen = listOf(),
+                    sbiActiviteiten = listOf(),
+                    embedded = null,
                 ),
             )
 
@@ -82,7 +85,7 @@ internal class GemachtigdeQueryTest {
             verify(haalCentraalBrpService).getGemachtigde(authentication)
             verify(handelsregisterService).getGemachtigde(authentication)
 
-            assertEquals("test", gemachtigde.persoon?.aanhef)
+            assertEquals("test", gemachtigde.persoon?.naam?.aanhef)
             assertEquals("Test bedrijf", gemachtigde.bedrijf?.naam)
         }
 }

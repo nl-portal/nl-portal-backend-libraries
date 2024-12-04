@@ -77,29 +77,39 @@ class HaalCentraalBrpServiceTest {
         }
 
     @Test
-    fun `getGemachtigde calls client and gets PersoonNaam`() =
+    fun `getGemachtigde calls client and gets Persoon`() =
         runTest {
             val authentication =
                 JwtBuilder()
                     .aanvragerBsn("123")
                     .gemachtigdeBsn("456")
                     .buildBurgerAuthentication()
-            whenever(haalCentraalBrpClient.getPersoonNaam("456", authentication)).thenReturn(
-                PersoonNaam(
-                    "Aanhef",
-                    "Voornaam",
-                    "V.",
-                    "van",
-                    "Achternaam",
-                    AanduidingNaamGebruik.EIGEN,
+            whenever(haalCentraalBrpClient.getPersoon("456", authentication)).thenReturn(
+                Persoon(
+                    "456",
+                    "geslacht",
+                    false,
+                    PersoonNaam(
+                        "Aanhef",
+                        "Voornaam",
+                        "V.",
+                        "van",
+                        "Achternaam",
+                        AanduidingNaamGebruik.EIGEN,
+                    ),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
                 ),
             )
 
-            val persoonNaam = haalCentraalBrpServiceImpl.getGemachtigde(authentication)!!
+            val persoon = haalCentraalBrpServiceImpl.getGemachtigde(authentication)!!
 
-            assertEquals("Achternaam", persoonNaam.geslachtsnaam)
+            assertEquals("Achternaam", persoon.naam.geslachtsnaam)
 
-            verify(haalCentraalBrpClient).getPersoonNaam("456", authentication)
+            verify(haalCentraalBrpClient).getPersoon("456", authentication)
         }
 
     @Test

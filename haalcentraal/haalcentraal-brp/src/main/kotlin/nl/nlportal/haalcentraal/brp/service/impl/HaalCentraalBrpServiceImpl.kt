@@ -22,7 +22,6 @@ import nl.nlportal.haalcentraal.brp.client.HaalCentraalBrpClient
 import nl.nlportal.haalcentraal.brp.domain.BewoningenApiRequest
 import nl.nlportal.haalcentraal.brp.domain.bewoning.Bewoning
 import nl.nlportal.haalcentraal.brp.domain.persoon.Persoon
-import nl.nlportal.haalcentraal.brp.domain.persoon.PersoonNaam
 import nl.nlportal.haalcentraal.brp.service.HaalCentraalBrpService
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -72,11 +71,11 @@ class HaalCentraalBrpServiceImpl(
         return null
     }
 
-    override suspend fun getGemachtigde(authentication: CommonGroundAuthentication): PersoonNaam? {
+    override suspend fun getGemachtigde(authentication: CommonGroundAuthentication): Persoon? {
         val authenticationGemachtigde = authentication.getGemachtigde()
 
         return authenticationGemachtigde?.bsn?.let {
-            haalCentraalBrpClient.getPersoonNaam(it, authentication)
+            haalCentraalBrpClient.getPersoon(it, authentication)
         }
     }
 

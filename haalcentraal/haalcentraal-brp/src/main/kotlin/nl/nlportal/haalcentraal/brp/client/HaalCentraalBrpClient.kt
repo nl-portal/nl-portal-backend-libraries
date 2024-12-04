@@ -18,7 +18,6 @@ package nl.nlportal.haalcentraal.brp.client
 import nl.nlportal.haalcentraal.brp.domain.BewoningenApiRequest
 import nl.nlportal.haalcentraal.brp.domain.bewoning.Bewoning
 import nl.nlportal.haalcentraal.brp.domain.persoon.Persoon
-import nl.nlportal.haalcentraal.brp.domain.persoon.PersoonNaam
 import nl.nlportal.haalcentraal.client.HaalCentraalClientProvider
 import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
@@ -40,26 +39,6 @@ class HaalCentraalBrpClient(
             }
             .retrieve()
             .awaitBody()
-    }
-
-    suspend fun getPersoonNaam(
-        bsn: String,
-        authentication: Authentication,
-    ): PersoonNaam? {
-        return haalCentraalClientProvider.webClient(authentication)
-            .get()
-            .uri {
-                val uriBuilder =
-                    it.path("/brp/ingeschrevenpersonen/$bsn")
-                        .queryParam(
-                            "fields",
-                            "naam",
-                        )
-                uriBuilder.build()
-            }
-            .retrieve()
-            .awaitBody<Persoon>()
-            .naam
     }
 
     suspend fun getBewoningen(

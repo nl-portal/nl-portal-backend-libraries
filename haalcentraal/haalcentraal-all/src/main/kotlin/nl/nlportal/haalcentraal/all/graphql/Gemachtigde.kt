@@ -15,10 +15,10 @@
  */
 package nl.nlportal.haalcentraal.all.graphql
 
-import nl.nlportal.haalcentraal.brp.domain.persoon.PersoonNaam
+import nl.nlportal.haalcentraal.brp.domain.persoon.Persoon
 import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 
 class Gemachtigde(
-    val persoon: PersoonNaam?,
+    val persoon: Persoon?,
     val bedrijf: MaatschappelijkeActiviteit?,
 )
