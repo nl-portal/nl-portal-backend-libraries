@@ -21,6 +21,7 @@ import nl.nlportal.commonground.authentication.JwtBuilder
 import nl.nlportal.core.ssl.ClientKey
 import nl.nlportal.core.ssl.Ssl
 import nl.nlportal.core.ssl.StringClientSslContextResolver
+import nl.nlportal.haalcentraal.brp.domain.persoon.AanduidingNaamGebruik
 import nl.nlportal.haalcentraal.brp.domain.persoon.Persoon
 import nl.nlportal.haalcentraal.brp.domain.persoon.PersoonNaam
 import nl.nlportal.haalcentraal.client.HaalCentraalClientConfig
@@ -40,7 +41,11 @@ internal class HaalCentraalBrpClientTest {
     private lateinit var haalCentraalClientConfig: HaalCentraalClientConfig
     private lateinit var server: MockWebServer
     private val bsn = "0123456789"
-    private val persoon = Persoon(burgerservicenummer = bsn, naam = PersoonNaam(voornamen = "John", geslachtsnaam = "Doe"))
+    private val persoon =
+        Persoon(
+            burgerservicenummer = bsn,
+            naam = PersoonNaam(voornamen = "John", geslachtsnaam = "Doe", aanduidingNaamgebruik = AanduidingNaamGebruik.EIGEN),
+        )
 
     @BeforeEach
     internal fun setUp() {

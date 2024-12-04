@@ -21,6 +21,7 @@ import nl.nlportal.haalcentraal.brp.domain.persoon.PersoonNaam
 import nl.nlportal.haalcentraal.brp.client.HaalCentraalBrpClient
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import nl.nlportal.haalcentraal.brp.domain.persoon.AanduidingNaamGebruik
 import nl.nlportal.haalcentraal.brp.service.impl.HaalCentraalBrpServiceImpl
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -49,6 +50,7 @@ class HaalCentraalBrpServiceTest {
                         "V.",
                         "van",
                         "Achternaam",
+                        AanduidingNaamGebruik.EIGEN,
                     ),
                     null,
                     null,
@@ -89,6 +91,7 @@ class HaalCentraalBrpServiceTest {
                     "V.",
                     "van",
                     "Achternaam",
+                    AanduidingNaamGebruik.EIGEN,
                 ),
             )
 
