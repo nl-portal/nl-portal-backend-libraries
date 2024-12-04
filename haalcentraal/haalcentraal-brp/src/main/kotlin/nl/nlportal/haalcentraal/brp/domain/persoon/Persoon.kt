@@ -25,7 +25,7 @@ data class Persoon(
     val burgerservicenummer: String? = null,
     val geslachtsaanduiding: String? = null,
     val geheimhoudingPersoonsgegevens: Boolean? = false,
-    val naam: PersoonNaam? = null,
+    val naam: PersoonNaam,
     val geboorte: PersoonDatumLandPlaats? = null,
     val nationaliteiten: List<PersoonNationaliteiten>? = null,
     val verblijfplaats: PersoonVerblijfplaats? = null,
@@ -43,6 +43,27 @@ data class Persoon(
     ): Int? {
         return verblijfplaats?.adresseerbaarObjectIdentificatie?.let {
             haalCentraalBrpService.getBewonersAantal(dfe.graphQlContext[AUTHENTICATION_KEY], it)
+        }
+    }
+
+    fun officialLastName(): String {
+        if (naam.aanduidingNaamgebruik == null) {
+            return naam.lastName()
+        }
+        val lastNamePartner = partners?.firstOrNull { it.naam != null }?.naam?.lastName() ?: ""
+        return when (naam.aanduidingNaamgebruik) {
+            AanduidingNaamGebruik.PARTNER -> {
+                lastNamePartner
+            }
+            AanduidingNaamGebruik.PARTNER_EIGEN -> {
+                "$lastNamePartner - ${naam.lastName()}"
+            }
+            AanduidingNaamGebruik.EIGEN_PARTNER -> {
+                "${naam.lastName()} - $lastNamePartner"
+            }
+            else -> {
+                naam.lastName()
+            }
         }
     }
 }

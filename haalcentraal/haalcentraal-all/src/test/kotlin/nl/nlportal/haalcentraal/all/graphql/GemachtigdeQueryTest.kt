@@ -22,6 +22,7 @@ import kotlinx.coroutines.test.runTest
 import nl.nlportal.haalcentraal.hr.domain.MaterieleRegistratie
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
+import nl.nlportal.haalcentraal.brp.domain.persoon.AanduidingNaamGebruik
 import nl.nlportal.haalcentraal.brp.domain.persoon.PersoonNaam
 import nl.nlportal.haalcentraal.brp.service.HaalCentraalBrpService
 import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
@@ -59,6 +60,7 @@ internal class GemachtigdeQueryTest {
                     "test",
                     "test",
                     "test",
+                    AanduidingNaamGebruik.EIGEN,
                 ),
             )
             whenever(handelsregisterService.getGemachtigde(authentication)).thenReturn(

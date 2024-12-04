@@ -20,7 +20,21 @@ data class PersoonPartner(
     val geslachtsaanduiding: String? = null,
     val soortVerbintenis: String? = null,
     val datumIngangFamilierechtelijkeBetrekking: PersoonDatum? = null,
-    val naam: PersoonNaam? = null,
+    val naam: Naam? = null,
     val geboorte: PersoonDatumLandPlaats? = null,
     val aangaanHuwelijkPartnerschap: PersoonDatumLandPlaats? = null,
 )
+
+data class Naam(
+    val voorletters: String? = null,
+    val voorvoegsel: String? = null,
+    val geslachtsnaam: String? = null,
+) {
+    fun lastName(): String {
+        return if (voorvoegsel != null && geslachtsnaam != null) {
+            "$voorvoegsel $geslachtsnaam"
+        } else {
+            geslachtsnaam ?: ""
+        }
+    }
+}

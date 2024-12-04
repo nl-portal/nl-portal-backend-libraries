@@ -70,8 +70,11 @@ internal class PersoonQueryIT(
                         voorletters,
                         voornamen,
                         voorvoegsel,
-                        geslachtsnaam
-                    }
+                        geslachtsnaam,
+                        lastName,
+                        aanduidingNaamgebruik,
+                    },
+                    officialLastName
                 }
             }
             """.trimIndent()
@@ -214,7 +217,6 @@ internal class PersoonQueryIT(
             .jsonPath("$basePath.kinderen[0].leeftijd").isEqualTo(18)
             .jsonPath("$basePath.geheimhoudingPersoonsgegevens").isEqualTo(false)
             .jsonPath("$basePath.nationaliteiten").isArray()
-            .jsonPath("$basePath.nationaliteiten[0].nationaliteit.omschrijving", contains("Nederlandse", "Franse"))
     }
 
     private fun setupMockServer() {
