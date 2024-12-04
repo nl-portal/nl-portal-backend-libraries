@@ -73,8 +73,8 @@ internal class PersoonQueryIT(
                         geslachtsnaam,
                         lastName,
                         aanduidingNaamgebruik,
-                    },
-                    officialLastName
+                        officialLastName
+                    }
                 }
             }
             """.trimIndent()

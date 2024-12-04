@@ -24,6 +24,7 @@ data class PersoonNaam(
     val voorvoegsel: String? = null,
     val geslachtsnaam: String? = null,
     val aanduidingNaamgebruik: AanduidingNaamGebruik?,
+    var officialLastName: String? = null,
 ) {
     fun lastName(): String {
         return if (voorvoegsel != null && geslachtsnaam != null) {

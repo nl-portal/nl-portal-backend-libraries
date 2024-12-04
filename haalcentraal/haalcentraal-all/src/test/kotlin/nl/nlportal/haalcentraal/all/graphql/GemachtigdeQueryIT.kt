@@ -75,8 +75,8 @@ internal class GemachtigdeQueryIT(
                             geslachtsnaam,
                             lastName,
                             aanduidingNaamgebruik,
-                        },
-                        officialLastName
+                            officialLastName,
+                        }
                     },
                     bedrijf {
                         naam

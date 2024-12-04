@@ -29,7 +29,7 @@ class HaalCentraalBrpClient(
     suspend fun getPersoon(
         bsn: String,
         authentication: Authentication,
-    ): Persoon {
+    ): Persoon? {
         return haalCentraalClientProvider.webClient(authentication)
             .get()
             .uri {
@@ -38,7 +38,7 @@ class HaalCentraalBrpClient(
                 uriBuilder.build()
             }
             .retrieve()
-            .awaitBody()
+            .awaitBody<Persoon>()
     }
 
     suspend fun getBewoningen(

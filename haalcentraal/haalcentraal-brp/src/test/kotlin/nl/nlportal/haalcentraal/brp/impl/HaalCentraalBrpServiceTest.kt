@@ -62,7 +62,7 @@ class HaalCentraalBrpServiceTest {
 
             val persoon = haalCentraalBrpServiceImpl.getPersoon(authentication)!!
 
-            assertEquals("Achternaam", persoon.naam?.geslachtsnaam)
+            assertEquals("Achternaam", persoon.naam.geslachtsnaam)
 
             verify(haalCentraalBrpClient).getPersoon("123", authentication)
         }
@@ -120,8 +120,8 @@ class HaalCentraalBrpServiceTest {
                     .aanvragerBsn("123")
                     .gemachtigdeBsn("456")
                     .buildBurgerAuthentication()
-            val persoonNaam = haalCentraalBrpServiceImpl.getPersoon(authentication)
+            val persoon = haalCentraalBrpServiceImpl.getGemachtigde(authentication)
 
-            assertNull(persoonNaam)
+            assertNull(persoon)
         }
 }
