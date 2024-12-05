@@ -44,7 +44,7 @@ plugins {
 
     id("org.jetbrains.dokka")
 
-    id("org.owasp.dependencycheck") version "11.1.0"
+    id("org.owasp.dependencycheck") version "11.1.1"
 
     `maven-publish`
     `signing`
