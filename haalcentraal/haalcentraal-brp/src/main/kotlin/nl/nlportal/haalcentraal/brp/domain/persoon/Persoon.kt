@@ -45,25 +45,4 @@ data class Persoon(
             haalCentraalBrpService.getBewonersAantal(dfe.graphQlContext[AUTHENTICATION_KEY], it)
         }
     }
-
-    fun officialLastName(): String {
-        if (naam.aanduidingNaamgebruik == null) {
-            return naam.lastName()
-        }
-        val lastNamePartner = partners?.firstOrNull { it.naam != null }?.naam?.lastName() ?: ""
-        return when (naam.aanduidingNaamgebruik) {
-            AanduidingNaamGebruik.PARTNER -> {
-                lastNamePartner
-            }
-            AanduidingNaamGebruik.PARTNER_EIGEN -> {
-                "$lastNamePartner - ${naam.lastName()}"
-            }
-            AanduidingNaamGebruik.EIGEN_PARTNER -> {
-                "${naam.lastName()} - $lastNamePartner"
-            }
-            else -> {
-                naam.lastName()
-            }
-        }
-    }
 }
