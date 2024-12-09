@@ -108,10 +108,10 @@ class DmnService(
         }
 
         // handle the configured static variables
-        if (beslisTabelConfiguration.variabelen.containsKey(BESLISTABLE_KEY_STATIC) && beslisTabelConfiguration.variabelen[BESLISTABLE_KEY_STATIC] != null) {
+        beslisTabelConfiguration.variabelen[BESLISTABLE_KEY_STATIC]?.let {
             variablesMapping.putAll(
                 mapBeslisTabelStaticVariables(
-                    beslisTabelConfiguration.variabelen[BESLISTABLE_KEY_STATIC]!!,
+                    it,
                 ),
             )
         }
@@ -179,20 +179,20 @@ class DmnService(
 
         // check if the beslisTabelVariables contains a producttype configuration,
         // if yes map the variables with the json of the productType
-        if (beslisTabelVariables.containsKey(BESLISTABLE_KEY_PRODUCT_TYPE) && beslisTabelVariables[BESLISTABLE_KEY_PRODUCT_TYPE] != null) {
+        beslisTabelVariables[BESLISTABLE_KEY_PRODUCT_TYPE]?.let {
             variablesMapping.putAll(
                 mapBeslisTabelVariablesWithSource(
-                    beslisTabelVariables[BESLISTABLE_KEY_PRODUCT_TYPE]!!,
+                    it,
                     Mapper.get().writeValueAsString(productType),
                 ),
             )
         }
 
         // handle the configured static variables
-        if (beslisTabelVariables.containsKey(BESLISTABLE_KEY_STATIC) && beslisTabelVariables[BESLISTABLE_KEY_STATIC] != null) {
+        beslisTabelVariables[BESLISTABLE_KEY_STATIC]?.let {
             variablesMapping.putAll(
                 mapBeslisTabelStaticVariables(
-                    beslisTabelVariables[BESLISTABLE_KEY_STATIC]!!,
+                    it,
                 ),
             )
         }
