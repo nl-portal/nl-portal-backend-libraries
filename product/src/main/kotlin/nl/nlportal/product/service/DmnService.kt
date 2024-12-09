@@ -107,6 +107,15 @@ class DmnService(
             }
         }
 
+        // handle the configured static variables
+        if (beslisTabelConfiguration.variabelen.containsKey(BESLISTABLE_KEY_STATIC)) {
+            variablesMapping.putAll(
+                mapBeslisTabelStaticVariables(
+                    beslisTabelConfiguration.variabelen[BESLISTABLE_KEY_STATIC]!!,
+                ),
+            )
+        }
+
         if (variablesMapping.isEmpty()) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, SOURCE_MAPPING_FAILED + productType?.naam)
         }
@@ -177,6 +186,15 @@ class DmnService(
             )
         }
 
+        // handle the configured static variables
+        if (beslisTabelVariables.containsKey(BESLISTABLE_KEY_STATIC)) {
+            variablesMapping.putAll(
+                mapBeslisTabelStaticVariables(
+                    beslisTabelVariables[BESLISTABLE_KEY_STATIC]!!,
+                ),
+            )
+        }
+
         if (variablesMapping.isEmpty()) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, SOURCE_MAPPING_FAILED + productType?.naam)
         }
@@ -209,6 +227,23 @@ class DmnService(
                     variables = variablesMapping,
                 ),
         )
+    }
+
+    private fun mapBeslisTabelStaticVariables(beslisTabelVariables: List<BeslisTabelVariable>): Map<String, DmnVariable> {
+        val variablesMapping = mutableMapOf<String, DmnVariable>()
+        beslisTabelVariables.forEach {
+            if (it.value != null) {
+                variablesMapping.put(
+                    it.name,
+                    DmnVariable(
+                        it.value,
+                        it.classType,
+                    ),
+                )
+            }
+        }
+
+        return variablesMapping
     }
 
     private fun mapBeslisTabelVariablesWithSource(
@@ -259,5 +294,6 @@ class DmnService(
         val logger = KotlinLogging.logger {}
         const val SOURCE_MAPPING_FAILED: String = "Source mapping failed for DMN, check beslistabelmapping of productType: "
         const val BESLISTABLE_NOT_FOUND_BY_KEY: String = "Could not find beslisTabel variables for key {}"
+        const val BESLISTABLE_KEY_STATIC: String = "static"
     }
 }
