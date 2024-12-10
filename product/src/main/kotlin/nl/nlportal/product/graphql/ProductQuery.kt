@@ -175,7 +175,8 @@ class ProductQuery(
 
     @GraphQLDescription(
         """
-        Get Product Decision by key. Don't use it till it is configured in ProductType
+        Get Decision by key and json as source
+        Don't use it directly but via custom queries
         """,
     )
     suspend fun getDecision(
