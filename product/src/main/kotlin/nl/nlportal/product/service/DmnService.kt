@@ -95,16 +95,16 @@ class DmnService(
             )
 
         sources?.forEach {
-            beslisTabelConfiguration.variabelen[it.key]?.let { variable ->
-                {
-                    variablesMapping.putAll(
-                        mapBeslisTabelVariablesWithSource(
-                            variable,
-                            it.value,
-                        ),
-                    )
-                }
-            } ?: logger.warn(BESLISTABLE_NOT_FOUND_BY_KEY, it.key)
+            if (beslisTabelConfiguration.variabelen.containsKey(it.key)) {
+                variablesMapping.putAll(
+                    mapBeslisTabelVariablesWithSource(
+                        beslisTabelConfiguration.variabelen[it.key]!!,
+                        it.value,
+                    ),
+                )
+            } else {
+                logger.warn(BESLISTABLE_NOT_FOUND_BY_KEY, it.key)
+            }
         }
 
         // handle the configured static variables
@@ -157,18 +157,20 @@ class DmnService(
 
         // loop through the sources and get the Object as Json and map with the variables
         sources?.forEach {
-            productService.getSourceAsJson(it.key, it.value)?.let { source ->
-                beslisTabelVariables[it.key]?.let { variable ->
-                    {
-                        variablesMapping.putAll(
-                            mapBeslisTabelVariablesWithSource(
-                                variable,
-                                source,
-                            ),
-                        )
-                    }
-                } ?: logger.warn(BESLISTABLE_NOT_FOUND_BY_KEY, it.key)
-            } ?: logger.warn("Could not find objects for key {} with uuid {}", it.key, it.value)
+            val source = productService.getSourceAsJson(it.key, it.value)
+
+            if (source == null) {
+                logger.warn("Could not find objects for key {} with uuid {}", it.key, it.value)
+            } else {
+                if (beslisTabelVariables.containsKey(it.key)) {
+                    variablesMapping.putAll(
+                        mapBeslisTabelVariablesWithSource(
+                            beslisTabelVariables[it.key]!!,
+                            source,
+                        ),
+                    )
+                }
+            }
         }
 
         // check if the beslisTabelVariables contains a producttype configuration,

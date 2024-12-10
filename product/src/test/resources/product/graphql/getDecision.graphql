@@ -1,0 +1,10 @@
+query {
+    getDecision(
+        sources: {
+           belastingzakenaanslag:"{aanslagBiljetTotaal: 79.3}",
+        },
+        key: "watkanikregelen",
+        productTypeId: "7d9cd6c2-8147-46f2-9ae9-c67e8213c200",
+        productName: "erfpacht"
+    )
+}
