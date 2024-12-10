@@ -175,6 +175,36 @@ class ProductQuery(
 
     @GraphQLDescription(
         """
+        Get Product Decision by key. Don't use it till it is configured in ProductType
+        """,
+    )
+    suspend fun getDecision(
+        sources: ObjectNode? = null,
+        key: String,
+        productTypeId: UUID? = null,
+        productName: String,
+        dmnVariables: ObjectNode? = null,
+    ): List<ObjectNode> {
+        val result =
+            dmnService.getDecision(
+                sources = sources?.let { Mapper.get().convertValue(it, object : TypeReference<Map<String, String>>() {}) },
+                key = key,
+                productTypeId = productTypeId,
+                productName = productName,
+                dmnVariables =
+                    dmnVariables?.let {
+                        Mapper.get().convertValue(
+                            dmnVariables,
+                            object : TypeReference<Map<String, DmnVariable>>() {},
+                        )
+                    },
+            )
+
+        return Mapper.get().convertValue(result, object : TypeReference<List<ObjectNode>>() {})
+    }
+
+    @GraphQLDescription(
+        """
         Prefill data to start a form.
         """,
     )

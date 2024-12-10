@@ -58,6 +58,18 @@
                 "classType":"Integer"
               }
             ],
+            "belastingzakenaanslag": [
+              {
+                "name":"jaar",
+                "classType":"Double",
+                "regex":"$.aanslagBiljet.belastingjaar"
+              },
+              {
+                "name":"saldo",
+                "classType":"Double",
+                "regex":"$.aanslagBiljetTotaal"
+              }
+            ],
             "static": [
               {
                 "name":"formulieren",
