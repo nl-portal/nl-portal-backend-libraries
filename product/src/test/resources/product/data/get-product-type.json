@@ -57,6 +57,13 @@
                 "regex":"$.data.beschikbareDagdelen",
                 "classType":"Integer"
               }
+            ],
+            "static": [
+              {
+                "name":"formulieren",
+                "classType":"String",
+                "value":"https://openformulieren-zgw.test.denhaag.nl"
+              }
             ]
           }
         }
