@@ -17,6 +17,7 @@ package nl.nlportal.product.service
 
 import com.fasterxml.jackson.databind.node.ObjectNode
 import mu.KotlinLogging
+import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.product.client.DmnClient
@@ -50,6 +51,7 @@ class ProductService(
     val taakObjectConfig: TaakObjectConfig,
     val objectsApiTaskConfig: TaakObjectConfig,
     val dmnClient: DmnClient,
+    val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
 ) {
     suspend fun getProduct(
         authentication: CommonGroundAuthentication,
@@ -163,6 +165,12 @@ class ProductService(
         pageSize?.let { request.pageSize(it) }
         isOpen?.let {
             request.isOpen(isOpen)
+        }
+
+        authentication.machtigingsDienstUUID()?.let {
+            authenticationMachtigingsDienstService.zaakTypes(it)?.let {
+                request.ofZaakTypes(it)
+            }
         }
 
         authentication.getVestigingsNummer()?.let {

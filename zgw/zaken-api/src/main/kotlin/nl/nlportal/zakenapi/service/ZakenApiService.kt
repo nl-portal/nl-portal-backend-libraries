@@ -16,6 +16,7 @@
 package nl.nlportal.zakenapi.service
 
 import kotlinx.coroutines.flow.Flow
+import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils.extractId
 import nl.nlportal.documentenapi.domain.Document
@@ -42,6 +43,7 @@ class ZakenApiService(
     private val zaakDocumentenConfig: ZaakDocumentenConfig,
     private val documentenApiService: DocumentenApiService,
     private val objectsApiClient: ObjectsApiClient,
+    private val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
 ) {
     suspend fun getZaken(
         page: Int,
@@ -65,6 +67,12 @@ class ZakenApiService(
 
         identificatie?.let {
             request.ofIdentificatie(identificatie)
+        }
+
+        authentication.machtigingsDienstUUID()?.let {
+            authenticationMachtigingsDienstService.zaakTypes(it)?.let {
+                request.ofZaakTypes(it)
+            }
         }
 
         authentication.getVestigingsNummer()?.let {

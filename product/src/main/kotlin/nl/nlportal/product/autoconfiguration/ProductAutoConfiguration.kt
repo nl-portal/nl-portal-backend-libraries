@@ -15,6 +15,7 @@
  */
 package nl.nlportal.product.autoconfiguration
 
+import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.product.client.DmnClient
 import nl.nlportal.product.client.DmnConfig
@@ -58,6 +59,7 @@ class ProductAutoConfiguration {
         taakObjectConfig: TaakObjectConfig,
         objectsApiTaskConfig: TaakObjectConfig,
         dmnClient: DmnClient,
+        authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
     ): ProductService {
         return ProductService(
             productConfig,
@@ -66,6 +68,7 @@ class ProductAutoConfiguration {
             taakObjectConfig,
             objectsApiTaskConfig,
             dmnClient,
+            authenticationMachtigingsDienstService,
         )
     }
 

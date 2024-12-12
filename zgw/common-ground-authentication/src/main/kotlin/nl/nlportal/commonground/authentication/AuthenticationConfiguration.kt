@@ -20,11 +20,22 @@ import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.core.annotation.Order
+import org.springframework.core.io.ResourceLoader
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 
-@EnableConfigurationProperties(KeycloakConfig::class)
+@EnableConfigurationProperties(KeycloakConfig::class, AuthenticationMachtigingsDienstConfig::class)
 @AutoConfiguration
 class AuthenticationConfiguration {
+    @Bean
+    fun authenticationMachtigingsDienstService(
+        authenticationMachtigingsDienstConfig: AuthenticationMachtigingsDienstConfig,
+        resourceLoader: ResourceLoader,
+    ): AuthenticationMachtigingsDienstService =
+        AuthenticationMachtigingsDienstService(
+            authenticationMachtigingsDienstConfig,
+            resourceLoader,
+        )
+
     @Order(value = 0)
     @Bean
     fun commonGroundAuthenticationConverter(

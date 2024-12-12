@@ -15,17 +15,11 @@
  */
 package nl.nlportal.commonground.authentication
 
-import org.springframework.security.test.context.support.WithSecurityContext
-import java.lang.annotation.Inherited
+import java.util.UUID
 
-@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
-@Retention(AnnotationRetention.RUNTIME)
-@Inherited
-@WithSecurityContext(factory = WithBedrijfUserSecurityContextFactory::class)
-annotation class WithBedrijfUser(
-    val kvkNummer: String,
-    val gemachtigdeBsn: String = "",
-    val gemachtigdeKvk: String = "",
-    val vestigingsNummer: String = "",
-    val machtigingsDienst: String = "",
+data class AuthenticationMachtigingsDienst(
+    val uuid: UUID,
+    val naam: String,
+    val zaakTypes: List<UUID> = listOf(),
+    val taakTypes: List<String> = listOf(),
 )

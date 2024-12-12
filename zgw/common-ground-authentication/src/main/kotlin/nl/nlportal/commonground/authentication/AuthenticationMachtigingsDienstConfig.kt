@@ -15,17 +15,9 @@
  */
 package nl.nlportal.commonground.authentication
 
-import org.springframework.security.test.context.support.WithSecurityContext
-import java.lang.annotation.Inherited
+import org.springframework.boot.context.properties.ConfigurationProperties
 
-@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
-@Retention(AnnotationRetention.RUNTIME)
-@Inherited
-@WithSecurityContext(factory = WithBedrijfUserSecurityContextFactory::class)
-annotation class WithBedrijfUser(
-    val kvkNummer: String,
-    val gemachtigdeBsn: String = "",
-    val gemachtigdeKvk: String = "",
-    val vestigingsNummer: String = "",
-    val machtigingsDienst: String = "",
+@ConfigurationProperties(prefix = "nl-portal.security.machtingdienst")
+data class AuthenticationMachtigingsDienstConfig(
+    val resourceUrl: String? = null,
 )
