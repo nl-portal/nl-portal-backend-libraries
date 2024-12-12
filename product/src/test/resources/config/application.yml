@@ -61,6 +61,10 @@ nl-portal:
     prefill:
         type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb37
         remove-objects: true
+    security:
+        machtingdienst:
+            resource-url: classpath:machtigingsdiensten.json
+
 
 spring:
     security:

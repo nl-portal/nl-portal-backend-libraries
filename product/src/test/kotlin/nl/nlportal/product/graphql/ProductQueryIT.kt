@@ -15,6 +15,7 @@
  */
 package nl.nlportal.product.graphql
 
+import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.product.TestHelper
 import nl.nlportal.product.TestHelper.verifyOnlyDataExists
@@ -185,6 +186,24 @@ internal class ProductQueryIT(
     @Test
     @WithBurgerUser("569312863")
     fun getProductZakenTestBurger() {
+        val basePath = "$.data.getProductZaken"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(graphqlGetProductZaken)
+            .exchange()
+            .verifyOnlyDataExists(basePath)
+            .jsonPath("$basePath[0].omschrijving").isEqualTo("Lopende zaak")
+    }
+
+    @Test
+    @WithBedrijfUser(
+        kvkNummer = "569312863",
+        machtigingsDienst = "dd95bdee-c493-4757-bae3-fe0a5b5063f8",
+    )
+    fun getProductZakenTestBedrijf() {
         val basePath = "$.data.getProductZaken"
 
         testClient.post()

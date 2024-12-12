@@ -156,12 +156,13 @@ class ProductService(
             return emptyList()
         }
 
+        val zaakTypes = mutableSetOf<UUID>()
+        zaakTypes.addAll(productType.zaaktypen)
         val request =
             zakenApiClient.zoeken()
                 .search()
                 .page(pageNumber)
                 .withAuthentication(authentication)
-                .ofZaakTypes(productType.zaaktypen.map { it })
         pageSize?.let { request.pageSize(it) }
         isOpen?.let {
             request.isOpen(isOpen)
@@ -169,8 +170,12 @@ class ProductService(
 
         authentication.machtigingsDienstUUID()?.let {
             authenticationMachtigingsDienstService.zaakTypes(it)?.let {
-                request.ofZaakTypes(it)
+                zaakTypes.addAll(it)
             }
+        }
+
+        if (zaakTypes.isNotEmpty()) {
+            request.ofZaakTypes(zaakTypes.toList())
         }
 
         authentication.getVestigingsNummer()?.let {
