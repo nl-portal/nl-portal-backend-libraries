@@ -107,6 +107,15 @@ class DmnService(
             }
         }
 
+        // handle the configured static variables
+        beslisTabelConfiguration.variabelen[BESLISTABLE_KEY_STATIC]?.let {
+            variablesMapping.putAll(
+                mapBeslisTabelStaticVariables(
+                    it,
+                ),
+            )
+        }
+
         if (variablesMapping.isEmpty()) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, SOURCE_MAPPING_FAILED + productType?.naam)
         }
@@ -160,19 +169,26 @@ class DmnService(
                             source,
                         ),
                     )
-                } else {
-                    logger.warn(BESLISTABLE_NOT_FOUND_BY_KEY, it.key)
                 }
             }
         }
 
         // check if the beslisTabelVariables contains a producttype configuration,
         // if yes map the variables with the json of the productType
-        if (beslisTabelVariables.containsKey("producttype")) {
+        beslisTabelVariables[BESLISTABLE_KEY_PRODUCT_TYPE]?.let {
             variablesMapping.putAll(
                 mapBeslisTabelVariablesWithSource(
-                    beslisTabelVariables["producttype"]!!,
+                    it,
                     Mapper.get().writeValueAsString(productType),
+                ),
+            )
+        }
+
+        // handle the configured static variables
+        beslisTabelVariables[BESLISTABLE_KEY_STATIC]?.let {
+            variablesMapping.putAll(
+                mapBeslisTabelStaticVariables(
+                    it,
                 ),
             )
         }
@@ -209,6 +225,23 @@ class DmnService(
                     variables = variablesMapping,
                 ),
         )
+    }
+
+    private fun mapBeslisTabelStaticVariables(beslisTabelVariables: List<BeslisTabelVariable>): Map<String, DmnVariable> {
+        val variablesMapping = mutableMapOf<String, DmnVariable>()
+        beslisTabelVariables.forEach {
+            if (it.value != null) {
+                variablesMapping.put(
+                    it.name,
+                    DmnVariable(
+                        it.value,
+                        it.classType,
+                    ),
+                )
+            }
+        }
+
+        return variablesMapping
     }
 
     private fun mapBeslisTabelVariablesWithSource(
@@ -259,5 +292,7 @@ class DmnService(
         val logger = KotlinLogging.logger {}
         const val SOURCE_MAPPING_FAILED: String = "Source mapping failed for DMN, check beslistabelmapping of productType: "
         const val BESLISTABLE_NOT_FOUND_BY_KEY: String = "Could not find beslisTabel variables for key {}"
+        const val BESLISTABLE_KEY_STATIC: String = "static"
+        const val BESLISTABLE_KEY_PRODUCT_TYPE: String = "producttype"
     }
 }

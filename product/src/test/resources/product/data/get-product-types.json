@@ -55,6 +55,13 @@
                     "classType":"String",
                     "regex":"$.parameters.contractnummer"
                   }
+                ],
+                "static": [
+                  {
+                    "name":"formulieren",
+                    "classType":"String",
+                    "value":"https://openformulieren-zgw.test.denhaag.nl"
+                  }
                 ]
               }
             }

@@ -18,6 +18,6 @@ package nl.nlportal.haalcentraal.brp.domain.persoon
 data class PersoonKind(
     val burgerservicenummer: String? = null,
     val leeftijd: Int? = null,
-    val naam: PersoonNaam? = null,
+    val naam: Naam? = null,
     val geboorte: PersoonDatumLandPlaats? = null,
 )

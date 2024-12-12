@@ -46,7 +46,7 @@
         "aanhef": "Geachte mevrouw Kooyman",
         "aanschrijfwijze": "M. Kooyman",
         "gebruikInLopendeTekst": "mevrouw Kooyman",
-        "aanduidingNaamgebruik": "eigen",
+        "aanduidingNaamgebruik": "eigen_partner",
         "voornamen": "Merel",
         "voorletters": "M.",
         "voorvoegsel": "de",
@@ -208,6 +208,7 @@
             "naam": {
                 "voornamen": "Martin Gerard",
                 "voorletters": "M.G.",
+                "voorvoegsel": "van der",
                 "geslachtsnaam": "Maassen"
             },
             "aangaanHuwelijkPartnerschap": {

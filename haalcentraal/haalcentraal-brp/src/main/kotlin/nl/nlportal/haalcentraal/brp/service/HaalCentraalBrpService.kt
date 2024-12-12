@@ -18,7 +18,6 @@ package nl.nlportal.haalcentraal.brp.service
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.haalcentraal.brp.domain.bewoning.Bewoning
 import nl.nlportal.haalcentraal.brp.domain.persoon.Persoon
-import nl.nlportal.haalcentraal.brp.domain.persoon.PersoonNaam
 
 interface HaalCentraalBrpService {
     suspend fun getPersoon(authentication: CommonGroundAuthentication): Persoon?
@@ -33,5 +32,5 @@ interface HaalCentraalBrpService {
         adresseerbaarObjectIdentificatie: String,
     ): Int?
 
-    suspend fun getGemachtigde(authentication: CommonGroundAuthentication): PersoonNaam?
+    suspend fun getGemachtigde(authentication: CommonGroundAuthentication): Persoon?
 }
