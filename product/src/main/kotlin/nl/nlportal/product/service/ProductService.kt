@@ -359,11 +359,17 @@ class ProductService(
         pageSize: Int,
     ): List<TaakV2> {
         val objectSearchParameters =
-            listOf(
+            mutableListOf(
                 ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, authentication.userType),
                 ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, authentication.userId),
                 ObjectSearchParameter("status", Comparator.EQUAL_TO, "open"),
             )
+
+        authentication.machtigingsDienstUUID()?.let {
+            authenticationMachtigingsDienstService.taakTypes(it)
+        }?.let {
+            objectSearchParameters.add(ObjectSearchParameter("eigenaar", Comparator.IN_LIST, it.joinToString("|")))
+        }
 
         return getObjectsApiObjectResultPage<TaakObjectV2>(
             objectsApiTaskConfig.typeUrlV2,

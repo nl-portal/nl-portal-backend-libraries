@@ -15,6 +15,7 @@
  */
 package nl.nlportal.zgw.taak.autoconfigure
 
+import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.taak.graphql.TaakMutation
 import nl.nlportal.zgw.taak.graphql.TaakMutationV2
@@ -34,8 +35,9 @@ class TaakAutoConfiguration {
     fun taskService(
         objectsApiClient: ObjectsApiClient,
         taakObjectConfig: TaakObjectConfig,
+        authenticationMachtigingsService: AuthenticationMachtigingsDienstService,
     ): TaakService {
-        return TaakService(objectsApiClient, taakObjectConfig)
+        return TaakService(objectsApiClient, taakObjectConfig, authenticationMachtigingsService)
     }
 
     @Bean

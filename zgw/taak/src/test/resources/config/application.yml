@@ -15,6 +15,9 @@ nl-portal:
             taakobject:
                 typeUrl: "http://localhost:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
                 type-url-v2: "http://localhost:8011/api/v1/objecttypes/3c24cab6-4346-4c7d-912b-e34a1e9e21bf"
+    security:
+        machtingdienst:
+            resource-url: classpath:machtigingsdiensten.json
 
 spring:
     security:
