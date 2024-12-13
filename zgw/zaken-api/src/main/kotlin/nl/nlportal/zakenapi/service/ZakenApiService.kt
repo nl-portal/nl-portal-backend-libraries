@@ -69,10 +69,8 @@ class ZakenApiService(
             request.ofIdentificatie(identificatie)
         }
 
-        authentication.machtigingsDienstUUID()?.let {
-            authenticationMachtigingsDienstService.zaakTypes(it)?.let {
-                request.ofZaakTypes(it)
-            }
+        authenticationMachtigingsDienstService.zaakTypes(authentication)?.let {
+            request.ofZaakTypes(it)
         }
 
         authentication.getVestigingsNummer()?.let {

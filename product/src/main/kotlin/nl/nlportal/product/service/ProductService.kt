@@ -168,10 +168,8 @@ class ProductService(
             request.isOpen(isOpen)
         }
 
-        authentication.machtigingsDienstUUID()?.let {
-            authenticationMachtigingsDienstService.zaakTypes(it)?.let {
-                zaakTypes.addAll(it)
-            }
+        authenticationMachtigingsDienstService.zaakTypes(authentication)?.let {
+            zaakTypes.addAll(it)
         }
 
         if (zaakTypes.isNotEmpty()) {
@@ -365,9 +363,7 @@ class ProductService(
                 ObjectSearchParameter("status", Comparator.EQUAL_TO, "open"),
             )
 
-        authentication.machtigingsDienstUUID()?.let {
-            authenticationMachtigingsDienstService.taakTypes(it)
-        }?.let {
+        authenticationMachtigingsDienstService.taakTypes(authentication)?.let {
             objectSearchParameters.add(ObjectSearchParameter("eigenaar", Comparator.IN_LIST, it.joinToString("|")))
         }
 

@@ -325,9 +325,7 @@ open class TaakService(
             )
         }
 
-        authentication.machtigingsDienstUUID()?.let {
-            authenticationMachtigingsDienstService.taakTypes(it)
-        }?.let {
+        authenticationMachtigingsDienstService.taakTypes(authentication)?.let {
             objectSearchParameters.add(ObjectSearchParameter("eigenaar", Comparator.IN_LIST, it.joinToString("|")))
         }
 
@@ -382,9 +380,7 @@ open class TaakService(
             )
         }
 
-        authentication.machtigingsDienstUUID()?.let {
-            authenticationMachtigingsDienstService.taakTypes(it)
-        }?.let {
+        authenticationMachtigingsDienstService.taakTypes(authentication)?.let {
             objectSearchParameters.add(ObjectSearchParameter("eigenaar", Comparator.IN_LIST, it.joinToString("|")))
         }
 

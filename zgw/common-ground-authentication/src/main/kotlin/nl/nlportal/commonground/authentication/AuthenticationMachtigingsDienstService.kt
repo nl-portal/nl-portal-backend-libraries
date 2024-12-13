@@ -44,12 +44,16 @@ class AuthenticationMachtigingsDienstService(
         return authenticationMachtingDiensten.find { it.uuid == uuid }
     }
 
-    fun zaakTypes(uuid: UUID?): List<UUID>? {
-        return authenticationMachtingDiensten.find { it.uuid == uuid }?.zaakTypes
+    fun zaakTypes(authentication: CommonGroundAuthentication): List<UUID>? {
+        return authentication.machtigingsDienstUUID()?.let {
+            getAuthenticationMachtingDienst(it)?.zaakTypes
+        }
     }
 
-    fun taakTypes(uuid: UUID?): List<String>? {
-        return authenticationMachtingDiensten.find { it.uuid == uuid }?.taakTypes
+    fun taakTypes(authentication: CommonGroundAuthentication): List<String>? {
+        return authentication.machtigingsDienstUUID()?.let {
+            getAuthenticationMachtingDienst(it)?.taakTypes
+        }
     }
 
     companion object {
