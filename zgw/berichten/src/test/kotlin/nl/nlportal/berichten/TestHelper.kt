@@ -48,7 +48,7 @@ object TestHelper {
     val graphqlBerichtenPageRequest =
         """
         query {
-            getBerichten(pageNumber: 1, pageSize: 10) {
+            getBerichten(pageNumber: 1, pageSize: 10, onderwerp: "zoeke") {
                 content {
                     berichtTekst
                     berichtType
