@@ -37,16 +37,23 @@ class BerichtenQuery(
         )
     }
 
-    @GraphQLDescription("Returns a paginated list of all Berichten")
+    @GraphQLDescription(
+        """
+        Returns a paginated list of all Berichten
+        Could partial search on 'onderwerp'
+    """,
+    )
     suspend fun getBerichten(
         dfe: DataFetchingEnvironment,
         pageNumber: Int? = 1,
         pageSize: Int? = 20,
+        onderwerp: String? = null,
     ): BerichtenPage {
         return berichtenService.getBerichtenPage(
             authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
+            onderwerp = onderwerp,
         )
     }
 
