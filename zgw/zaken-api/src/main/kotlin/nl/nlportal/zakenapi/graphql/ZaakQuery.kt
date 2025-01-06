@@ -35,7 +35,7 @@ open class ZaakQuery(val zakenApiService: ZakenApiService) : Query {
     open suspend fun getZaken(
         dfe: DataFetchingEnvironment,
         page: Int? = 1,
-        pageSize: Int? = 20,
+        pageSize: Int? = null,
         zaakTypeUrl: String? = null,
         isOpen: Boolean? = null,
         identificatie: String? = null,
