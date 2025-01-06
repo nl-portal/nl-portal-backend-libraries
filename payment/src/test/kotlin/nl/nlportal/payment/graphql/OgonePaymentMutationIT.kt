@@ -28,10 +28,8 @@ import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
-import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import org.springframework.test.web.reactive.server.WebTestClient
 import java.util.function.Consumer
 
@@ -42,9 +40,6 @@ internal class OgonePaymentMutationIT(
     @Autowired private val testClient: WebTestClient,
     @Autowired private val paymentConfig: OgonePaymentConfig,
 ) {
-    @MockBean
-    lateinit var reactiveJwtDecoder: ReactiveJwtDecoder
-
     @Test
     @WithBurgerUser("123")
     fun generateOgonePaymentWithIdentifier() {

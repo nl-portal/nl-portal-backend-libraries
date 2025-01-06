@@ -66,7 +66,7 @@ class DmnService(
                 key,
                 variablesMapping,
             )
-        return dmnClient.getDecision(dmnRequest)
+        return filterEmptyDecisionRules(dmnClient.getDecision(dmnRequest))
     }
 
     suspend fun getDecision(
@@ -125,7 +125,7 @@ class DmnService(
                 beslisTabelConfiguration.key,
                 variablesMapping,
             )
-        return dmnClient.getDecision(dmnRequest)
+        return filterEmptyDecisionRules(dmnClient.getDecision(dmnRequest))
     }
 
     suspend fun getProductDecision(
@@ -201,7 +201,11 @@ class DmnService(
                 beslisTabelConfiguration.key,
                 variablesMapping,
             )
-        return dmnClient.getDecision(dmnRequest)
+        return filterEmptyDecisionRules(dmnClient.getDecision(dmnRequest))
+    }
+
+    private fun filterEmptyDecisionRules(decisions: List<Map<String, DmnResponse>>): List<Map<String, DmnResponse>> {
+        return decisions.filter { it.isNotEmpty() }
     }
 
     private fun findBeslisTabelConfiguration(
