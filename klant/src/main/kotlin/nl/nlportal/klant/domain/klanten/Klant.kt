@@ -28,4 +28,5 @@ data class Klant(
     val websiteUrl: String,
     var telefoonnummer: String?,
     var emailadres: String?,
+    var aanmaakkanaal: String?,
 )

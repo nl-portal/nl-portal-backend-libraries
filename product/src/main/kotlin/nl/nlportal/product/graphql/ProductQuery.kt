@@ -175,6 +175,37 @@ class ProductQuery(
 
     @GraphQLDescription(
         """
+        Get Decision by key and json as source
+        Don't use it directly but via custom queries
+        """,
+    )
+    suspend fun getDecision(
+        sources: ObjectNode? = null,
+        key: String,
+        productTypeId: UUID? = null,
+        productName: String,
+        dmnVariables: ObjectNode? = null,
+    ): List<ObjectNode> {
+        val result =
+            dmnService.getDecision(
+                sources = sources?.let { Mapper.get().convertValue(it, object : TypeReference<Map<String, String>>() {}) },
+                key = key,
+                productTypeId = productTypeId,
+                productName = productName,
+                dmnVariables =
+                    dmnVariables?.let {
+                        Mapper.get().convertValue(
+                            dmnVariables,
+                            object : TypeReference<Map<String, DmnVariable>>() {},
+                        )
+                    },
+            )
+
+        return Mapper.get().convertValue(result, object : TypeReference<List<ObjectNode>>() {})
+    }
+
+    @GraphQLDescription(
+        """
         Prefill data to start a form.
         """,
     )

@@ -21,8 +21,8 @@ import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.haalcentraal.brp.client.HaalCentraalBrpClient
 import nl.nlportal.haalcentraal.brp.domain.BewoningenApiRequest
 import nl.nlportal.haalcentraal.brp.domain.bewoning.Bewoning
+import nl.nlportal.haalcentraal.brp.domain.persoon.AanduidingNaamGebruik
 import nl.nlportal.haalcentraal.brp.domain.persoon.Persoon
-import nl.nlportal.haalcentraal.brp.domain.persoon.PersoonNaam
 import nl.nlportal.haalcentraal.brp.service.HaalCentraalBrpService
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -32,7 +32,9 @@ class HaalCentraalBrpServiceImpl(
 ) : HaalCentraalBrpService {
     override suspend fun getPersoon(authentication: CommonGroundAuthentication): Persoon? {
         return if (authentication is BurgerAuthentication) {
-            haalCentraalBrpClient.getPersoon(authentication.getBsn(), authentication)
+            haalCentraalBrpClient.getPersoon(authentication.getBsn(), authentication)?.apply {
+                naam.officialLastName = determineOfficialLastName(this)
+            }
         } else {
             null
         }
@@ -72,11 +74,34 @@ class HaalCentraalBrpServiceImpl(
         return null
     }
 
-    override suspend fun getGemachtigde(authentication: CommonGroundAuthentication): PersoonNaam? {
+    override suspend fun getGemachtigde(authentication: CommonGroundAuthentication): Persoon? {
         val authenticationGemachtigde = authentication.getGemachtigde()
 
         return authenticationGemachtigde?.bsn?.let {
-            haalCentraalBrpClient.getPersoonNaam(it, authentication)
+            haalCentraalBrpClient.getPersoon(it, authentication)?.apply {
+                naam.officialLastName = determineOfficialLastName(this)
+            }
+        }
+    }
+
+    private fun determineOfficialLastName(persoon: Persoon): String {
+        if (persoon.naam.aanduidingNaamgebruik == null) {
+            return persoon.naam.lastName()
+        }
+        val lastNamePartner = persoon.partners?.firstOrNull { it.naam != null }?.naam?.lastName() ?: ""
+        return when (persoon.naam.aanduidingNaamgebruik) {
+            AanduidingNaamGebruik.PARTNER -> {
+                lastNamePartner
+            }
+            AanduidingNaamGebruik.PARTNER_EIGEN -> {
+                "$lastNamePartner - ${persoon.naam.lastName()}"
+            }
+            AanduidingNaamGebruik.EIGEN_PARTNER -> {
+                "${persoon.naam.lastName()} - $lastNamePartner"
+            }
+            else -> {
+                persoon.naam.lastName()
+            }
         }
     }
 

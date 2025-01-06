@@ -15,10 +15,31 @@
  */
 package nl.nlportal.haalcentraal.brp.domain.persoon
 
+import com.fasterxml.jackson.annotation.JsonValue
+
 data class PersoonNaam(
     val aanhef: String? = null,
     val voornamen: String? = null,
     val voorletters: String? = null,
     val voorvoegsel: String? = null,
     val geslachtsnaam: String? = null,
-)
+    val aanduidingNaamgebruik: AanduidingNaamGebruik?,
+    var officialLastName: String? = null,
+) {
+    fun lastName(): String {
+        return if (voorvoegsel != null && geslachtsnaam != null) {
+            "$voorvoegsel $geslachtsnaam"
+        } else {
+            geslachtsnaam ?: ""
+        }
+    }
+}
+
+enum class AanduidingNaamGebruik(
+    @JsonValue val value: String,
+) {
+    EIGEN("eigen"),
+    EIGEN_PARTNER("eigen_partner"),
+    PARTNER("partner"),
+    PARTNER_EIGEN("partner_eigen"),
+}

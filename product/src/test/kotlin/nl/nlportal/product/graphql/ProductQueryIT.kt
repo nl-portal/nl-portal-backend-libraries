@@ -61,6 +61,7 @@ internal class ProductQueryIT(
     @Autowired private val graphqlGetProductType: String,
     @Autowired private val graphqlGetProductTypes: String,
     @Autowired private val graphqlGetProductDecision: String,
+    @Autowired private val graphqlGetDecision: String,
     @Autowired private val graphqlProductPrefill: String,
 ) {
     companion object {
@@ -317,6 +318,23 @@ internal class ProductQueryIT(
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(graphqlGetProductDecision)
+            .exchange()
+            .verifyOnlyDataExists(basePath)
+            .jsonPath(
+                "$basePath[0].action.value",
+            ).isEqualTo("https://formulier.denhaag.nl/Tripleforms/formulier/nl-NL/DefaultEnvironment/scNaheffingsAanslagParkeren.aspx")
+    }
+
+    @Test
+    @WithBurgerUser("569312864")
+    fun getDescisionTest() {
+        val basePath = "$.data.getDecision"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(graphqlGetDecision)
             .exchange()
             .verifyOnlyDataExists(basePath)
             .jsonPath(

@@ -20,6 +20,7 @@ import nl.nlportal.berichten.autoconfigure.BerichtenConfigurationProperties
 import nl.nlportal.berichten.domain.Bericht
 import nl.nlportal.berichten.graphql.BerichtenPage
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.Comparator.EQUAL_TO
 import nl.nlportal.zgw.objectenapi.domain.Comparator.LOWER_THAN_OR_EQUAL_TO
 import nl.nlportal.zgw.objectenapi.domain.Comparator.STRING_CONTAINS
@@ -83,15 +84,26 @@ class BerichtenService(
         authentication: CommonGroundAuthentication,
         pageNumber: Int,
         pageSize: Int,
+        onderwerp: String?,
     ): BerichtenPage {
         // fix because ObjectsAPI filter LTE only accept dates, not date-time
         val filterPublicationDate = LocalDate.now().plusDays(1)
         val searchParameters =
-            listOf(
+            mutableListOf(
                 ObjectSearchParameter("identificatie__type", EQUAL_TO, authentication.userType),
                 ObjectSearchParameter("identificatie__value", EQUAL_TO, authentication.userId),
                 ObjectSearchParameter("publicatiedatum", LOWER_THAN_OR_EQUAL_TO, filterPublicationDate.toString()),
             )
+
+        onderwerp?.let {
+            searchParameters.add(
+                ObjectSearchParameter(
+                    "onderwerp",
+                    Comparator.STRING_CONTAINS,
+                    it.toString(),
+                ),
+            )
+        }
         val results = getBerichten(pageNumber, pageSize, searchParameters)
 
         return results.toBerichtenPage(pageNumber, pageSize)

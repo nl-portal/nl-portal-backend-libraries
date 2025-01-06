@@ -57,6 +57,25 @@
                 "regex":"$.data.beschikbareDagdelen",
                 "classType":"Integer"
               }
+            ],
+            "belastingzakenaanslag": [
+              {
+                "name":"jaar",
+                "classType":"Double",
+                "regex":"$.aanslagBiljet.belastingjaar"
+              },
+              {
+                "name":"saldo",
+                "classType":"Double",
+                "regex":"$.aanslagBiljetTotaal"
+              }
+            ],
+            "static": [
+              {
+                "name":"formulieren",
+                "classType":"String",
+                "value":"https://openformulieren-zgw.test.denhaag.nl"
+              }
             ]
           }
         }

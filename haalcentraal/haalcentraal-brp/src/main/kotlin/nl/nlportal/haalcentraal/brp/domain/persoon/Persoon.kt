@@ -25,7 +25,7 @@ data class Persoon(
     val burgerservicenummer: String? = null,
     val geslachtsaanduiding: String? = null,
     val geheimhoudingPersoonsgegevens: Boolean? = false,
-    val naam: PersoonNaam? = null,
+    val naam: PersoonNaam,
     val geboorte: PersoonDatumLandPlaats? = null,
     val nationaliteiten: List<PersoonNationaliteiten>? = null,
     val verblijfplaats: PersoonVerblijfplaats? = null,
