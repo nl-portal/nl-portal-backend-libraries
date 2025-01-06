@@ -44,7 +44,8 @@ class Product(
     val eigenschappen: ObjectNode?,
     val parameters: ObjectNode?,
     @GraphQLIgnore
-    val taken: List<UUID>,
+    @Deprecated("will be removed in a future release.")
+    val taken: List<UUID>?,
     @GraphQLIgnore
     val zaken: List<UUID>,
     val documenten: List<String>,

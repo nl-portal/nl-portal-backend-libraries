@@ -638,10 +638,11 @@ internal class ZaakQueryIT(
                 override fun dispatch(request: RecordedRequest): MockResponse {
                     val path = request.path?.substringBefore('?')
                     val queryParams = request.path?.substringAfter('?')?.split('&') ?: emptyList()
+                    val bodyContent = request.body.readUtf8()
                     val response =
                         when (path) {
-                            "/zaken/api/v1/zaken" -> {
-                                if (queryParams.any { it.contains("ZAAK-2024-0000000001") }) {
+                            "/zaken/api/v1/zaken/_zoek" -> {
+                                if (bodyContent.contains("ZAAK-2024-0000000001")) {
                                     handleZaakListRequestOfIdentificatie()
                                 } else {
                                     handleZaakListRequest()
