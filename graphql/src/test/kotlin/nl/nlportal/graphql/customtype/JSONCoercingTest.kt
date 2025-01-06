@@ -16,18 +16,23 @@
 package nl.nlportal.graphql.customtype
 
 import com.fasterxml.jackson.databind.node.ObjectNode
+import graphql.GraphQLContext
 import graphql.language.ObjectField
 import graphql.language.ObjectValue
 import graphql.language.StringValue
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.mock
+import java.util.Locale
 
 class JSONCoercingTest {
     @Test
     fun parseObjectValueToJacksonObjectNode() {
         val objectValue = ObjectValue(listOf(ObjectField("key", StringValue("value"))))
+        val graphQLContext: GraphQLContext = mock()
+        val locale: Locale = Locale.forLanguageTag("nl")
 
-        val parseValue = JSONCoercing.parseValue(objectValue)
+        val parseValue = JSONCoercing.parseValue(objectValue, graphQLContext, locale)
 
         assertThat(parseValue).isNotNull
         assertThat(parseValue).isInstanceOf(ObjectNode::class.java)

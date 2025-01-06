@@ -15,29 +15,46 @@
  */
 package nl.nlportal.graphql.customtype
 
+import graphql.GraphQLContext
+import graphql.execution.CoercedVariables
 import graphql.language.StringValue
+import graphql.language.Value
 import graphql.schema.Coercing
 import graphql.schema.CoercingParseLiteralException
 import graphql.schema.CoercingParseValueException
 import graphql.schema.CoercingSerializeException
 import graphql.schema.GraphQLScalarType
 import java.time.ZonedDateTime
+import java.util.Locale
 
 object ZonedDateTimeCoercing : Coercing<ZonedDateTime, String> {
-    override fun parseValue(input: Any): ZonedDateTime =
+    override fun parseValue(
+        input: Any,
+        graphQLContext: GraphQLContext,
+        locale: Locale,
+    ): ZonedDateTime =
         when (input is String) {
             true -> ZonedDateTime.parse(input)
             else -> throw CoercingParseValueException("Expected valid ZonedDateTime but was $input")
         }
 
-    override fun parseLiteral(input: Any): ZonedDateTime {
+    override fun parseLiteral(
+        input: Value<*>,
+        variables: CoercedVariables,
+        graphQLContext: GraphQLContext,
+        locale: Locale,
+    ): ZonedDateTime {
         when (input is StringValue) {
             true -> return ZonedDateTime.parse(input.value)
             else -> throw CoercingParseLiteralException("Expected valid ZonedDateTime literal but was $input")
         }
     }
 
-    override fun serialize(dataFetcherResult: Any): String =
+    override fun serialize(
+        dataFetcherResult: Any,
+        graphQLContext: GraphQLContext,
+        locale: Locale,
+    ): String =
         runCatching {
             dataFetcherResult.toString()
         }.getOrElse {

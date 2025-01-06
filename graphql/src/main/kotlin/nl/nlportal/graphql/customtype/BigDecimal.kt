@@ -15,23 +15,36 @@
  */
 package nl.nlportal.graphql.customtype
 
+import graphql.GraphQLContext
+import graphql.execution.CoercedVariables
 import graphql.language.StringValue
+import graphql.language.Value
 import graphql.schema.Coercing
 import graphql.schema.CoercingParseLiteralException
 import graphql.schema.CoercingParseValueException
 import graphql.schema.CoercingSerializeException
 import graphql.schema.GraphQLScalarType
 import java.math.BigDecimal
+import java.util.Locale
 
 object BigDecimalCoercing : Coercing<BigDecimal, String> {
-    override fun parseValue(input: Any): BigDecimal =
+    override fun parseValue(
+        input: Any,
+        graphQLContext: GraphQLContext,
+        locale: Locale,
+    ): BigDecimal =
         runCatching {
             BigDecimal(input as? String)
         }.getOrElse {
             throw CoercingParseValueException("Expected valid BigDecimal but was $input")
         }
 
-    override fun parseLiteral(input: Any): BigDecimal {
+    override fun parseLiteral(
+        input: Value<*>,
+        variables: CoercedVariables,
+        graphQLContext: GraphQLContext,
+        locale: Locale,
+    ): BigDecimal {
         val inputValue = (input as? StringValue)?.value
         return runCatching {
             BigDecimal(inputValue)
@@ -40,7 +53,11 @@ object BigDecimalCoercing : Coercing<BigDecimal, String> {
         }
     }
 
-    override fun serialize(dataFetcherResult: Any): String =
+    override fun serialize(
+        dataFetcherResult: Any,
+        graphQLContext: GraphQLContext,
+        locale: Locale,
+    ): String =
         runCatching {
             dataFetcherResult.toString()
         }.getOrElse {

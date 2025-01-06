@@ -15,23 +15,36 @@
  */
 package nl.nlportal.graphql.customtype
 
+import graphql.GraphQLContext
+import graphql.execution.CoercedVariables
 import graphql.language.StringValue
+import graphql.language.Value
 import graphql.schema.Coercing
 import graphql.schema.CoercingParseLiteralException
 import graphql.schema.CoercingParseValueException
 import graphql.schema.CoercingSerializeException
 import graphql.schema.GraphQLScalarType
 import java.time.LocalDate
+import java.util.Locale
 
 object LocalDateCoercing : Coercing<LocalDate, String> {
-    override fun parseValue(input: Any): LocalDate =
+    override fun parseValue(
+        input: Any,
+        graphQLContext: GraphQLContext,
+        locale: Locale,
+    ): LocalDate =
         runCatching {
             LocalDate.parse(input as? String)
         }.getOrElse {
             throw CoercingParseValueException("Expected valid LocalDate but was $input")
         }
 
-    override fun parseLiteral(input: Any): LocalDate {
+    override fun parseLiteral(
+        input: Value<*>,
+        variables: CoercedVariables,
+        graphQLContext: GraphQLContext,
+        locale: Locale,
+    ): LocalDate {
         val dateString = (input as? StringValue)?.value
         return runCatching {
             LocalDate.parse(dateString)
@@ -40,7 +53,11 @@ object LocalDateCoercing : Coercing<LocalDate, String> {
         }
     }
 
-    override fun serialize(dataFetcherResult: Any): String =
+    override fun serialize(
+        dataFetcherResult: Any,
+        graphQLContext: GraphQLContext,
+        locale: Locale,
+    ): String =
         runCatching {
             dataFetcherResult.toString()
         }.getOrElse {

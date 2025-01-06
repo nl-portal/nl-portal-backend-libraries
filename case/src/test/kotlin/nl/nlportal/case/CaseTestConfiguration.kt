@@ -15,8 +15,10 @@
  */
 package nl.nlportal.case
 
+import nl.nlportal.case.autodeployment.CaseDefinitionApplicationReadyEventListener
 import nl.nlportal.core.security.OauthSecurityAutoConfiguration
 import org.apache.commons.lang3.StringUtils
+import org.mockito.Mockito
 import org.springframework.beans.factory.ObjectProvider
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.SpringBootConfiguration
@@ -71,5 +73,10 @@ class CaseTestConfiguration {
             return password
         }
         return NOOP_PASSWORD_PREFIX + password
+    }
+
+    @Bean
+    fun caseDefinitionApplicationReadyEventListener(): CaseDefinitionApplicationReadyEventListener {
+        return Mockito.mock(CaseDefinitionApplicationReadyEventListener::class.java)
     }
 }
