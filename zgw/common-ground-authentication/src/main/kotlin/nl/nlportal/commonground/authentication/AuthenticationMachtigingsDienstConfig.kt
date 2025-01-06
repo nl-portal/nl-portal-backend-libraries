@@ -17,7 +17,7 @@ package nl.nlportal.commonground.authentication
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.security.machtingdienst")
+@ConfigurationProperties(prefix = "nl-portal.security.machtingsdienst")
 data class AuthenticationMachtigingsDienstConfig(
     val resourceUrl: String? = null,
 )
