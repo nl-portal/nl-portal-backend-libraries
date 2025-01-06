@@ -45,16 +45,19 @@ class ZakenApiService(
 ) {
     suspend fun getZaken(
         page: Int,
+        pageSize: Int? = null,
         authentication: CommonGroundAuthentication,
         zaakTypeUrl: String?,
         isOpen: Boolean?,
         identificatie: String?,
     ): ZaakPage {
         val request =
-            zakenApiClient.zaken()
+            zakenApiClient.zoeken()
                 .search()
+                .page(page)
                 .withAuthentication(authentication)
 
+        pageSize?.let { request.pageSize(it) }
         zaakTypeUrl?.let { request.ofZaakType(it) }
         isOpen?.let {
             request.isOpen(isOpen)
@@ -69,7 +72,7 @@ class ZakenApiService(
         }
 
         return request.retrieve().let {
-            ZaakPage.fromResultPage(page, it)
+            ZaakPage.fromResultPage(page, pageSize ?: 100, it)
         }
     }
 
