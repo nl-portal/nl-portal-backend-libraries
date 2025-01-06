@@ -30,7 +30,7 @@ import graphql.schema.CoercingParseLiteralException
 import graphql.schema.CoercingSerializeException
 import graphql.schema.GraphQLScalarType
 import nl.nlportal.core.util.Mapper
-import java.util.*
+import java.util.Locale
 
 object JSONCoercing : Coercing<ObjectNode, ObjectNode> {
     override fun parseValue(
@@ -55,7 +55,7 @@ object JSONCoercing : Coercing<ObjectNode, ObjectNode> {
         variables: CoercedVariables,
         graphQLContext: GraphQLContext,
         locale: Locale,
-    ): ObjectNode? {
+    ): ObjectNode {
         val jsonString = (input as? ObjectValue)!!
         return runCatching {
             parseValue(input, graphQLContext, locale)
