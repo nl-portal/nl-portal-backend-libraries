@@ -15,7 +15,7 @@
  */
 package nl.nlportal.klant.graphql
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.klant.TestHelper
 import nl.nlportal.klant.generiek.client.OpenKlantClientConfig

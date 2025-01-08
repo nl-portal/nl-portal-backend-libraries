@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.form.domain.request.CreateFormDefinitionRequest
 import nl.nlportal.form.service.FormIoFormDefinitionService
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.commons.io.IOUtils
 import org.springframework.core.io.Resource
 import org.springframework.core.io.ResourceLoader

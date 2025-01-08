@@ -16,8 +16,8 @@
 package nl.nlportal.product.client
 
 import io.netty.handler.logging.LogLevel
-import mu.KLogger
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KLogger
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import nl.nlportal.product.domain.DmnRequest

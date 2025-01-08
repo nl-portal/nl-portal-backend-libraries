@@ -20,8 +20,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import kotlinx.coroutines.withContext
-import mu.KLogger
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KLogger
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.domain.PostEnkelvoudiginformatieobjectRequest

@@ -15,7 +15,7 @@
  */
 package nl.nlportal.haalcentraal.brp.service.impl
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.haalcentraal.brp.client.HaalCentraalBrpClient

@@ -15,7 +15,7 @@
  */
 package nl.nlportal.haalcentraal.all
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import okhttp3.mockwebserver.MockResponse
 import org.springframework.test.web.reactive.server.WebTestClient
 import java.util.function.Consumer

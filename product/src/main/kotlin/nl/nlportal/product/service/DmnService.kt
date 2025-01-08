@@ -16,7 +16,7 @@
 package nl.nlportal.product.service
 
 import com.jayway.jsonpath.JsonPath
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.product.client.DmnClient
 import nl.nlportal.product.domain.BeslisTabelConfiguration

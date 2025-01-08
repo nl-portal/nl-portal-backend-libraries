@@ -1,6 +1,6 @@
 package nl.nlportal.documentenapi.autoconfigure
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.documentenapi.client.ClamAVVirusScanConfig
 import nl.nlportal.documentenapi.service.VirusScanService
 import nl.nlportal.documentenapi.service.impl.ClamAVService
