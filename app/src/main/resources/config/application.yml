@@ -165,7 +165,7 @@ nl-portal:
         endpoints:
             unsecured: /api/public/**
         machtingsdienst:
-            resource-url: classpath:machtigingsdiensten.json
+            #resource-url: classpath:machtigingsdiensten.json
     product:
         product-type-url: http://host.docker.internal:8011/api/v1/objecttypes/972e92ce-b964-4ca8-ad4d-ddc43dd7b244
         product-instantie-type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34
