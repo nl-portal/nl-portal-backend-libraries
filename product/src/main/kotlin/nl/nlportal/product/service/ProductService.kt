@@ -156,8 +156,8 @@ class ProductService(
             return emptyList()
         }
 
-        val zaakTypes = mutableSetOf<UUID>()
-        zaakTypes.addAll(productType.zaaktypen)
+        // val zaakTypes = mutableSetOf<UUID>()
+        val zaakTypes = productType.zaaktypen
         val request =
             zakenApiClient.zoeken()
                 .search()
@@ -168,8 +168,12 @@ class ProductService(
             request.isOpen(isOpen)
         }
 
-        authenticationMachtigingsDienstService.zaakTypes(authentication)?.let {
+        /*authenticationMachtigingsDienstService.zaakTypes(authentication)?.let {
             zaakTypes.addAll(it)
+        }*/
+
+        if (!authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes)) {
+            return emptyList()
         }
 
         if (zaakTypes.isNotEmpty()) {

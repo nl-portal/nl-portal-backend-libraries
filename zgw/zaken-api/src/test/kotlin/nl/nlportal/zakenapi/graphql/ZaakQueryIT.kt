@@ -703,6 +703,95 @@ internal class ZaakQueryIT(
             .jsonPath("$basePath.besluiten[0].identificatie").isEqualTo("klantportaal")
     }
 
+    @Test
+    @WithBedrijfUser(
+        kvkNummer = "123",
+        machtigingsDienst = "dd95bdee-c493-4757-bae3-fe0a5b5063f8",
+    )
+    fun getZaakWithMachtingsdienst() {
+        val query =
+            """
+            query {
+                getZaak(id: "5d479908-fbb7-49c2-98c9-9afecf8de79a") {
+                    uuid,
+                    identificatie,
+                    omschrijving,
+                    zaaktype {
+                        identificatie,
+                        omschrijving
+                    },
+                    startdatum,
+                    status {
+                        datumStatusGezet,
+                        statustype {
+                            omschrijving,
+                            isEindstatus
+                        }
+                    },
+                    statusGeschiedenis {
+                        datumStatusGezet,
+                        statustype {
+                            omschrijving,
+                            isEindstatus
+                        }
+                    },
+                    documenten {
+                        uuid,
+                        documentapi,
+                        identificatie,
+                        creatiedatum,
+                        titel,
+                        formaat,
+                        bestandsnaam,
+                        bestandsomvang
+                    },
+                    statussen {
+                        omschrijving,
+                        isEindstatus
+                    },
+                    besluiten {
+                        identificatie,
+                        datum,
+                        toelichting,
+                        publicatiedatum
+                    }
+                }
+            }
+            """.trimIndent()
+
+        val basePath = "$.data.getZaak"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(query)
+            .exchange()
+            .expectBody()
+            .consumeWith(System.out::println)
+            .jsonPath(basePath).exists()
+            .jsonPath("$basePath.uuid").isEqualTo("5d479908-fbb7-49c2-98c9-9afecf8de79a")
+            .jsonPath("$basePath.identificatie").isEqualTo("ZAAK-2021-0000000003")
+            .jsonPath("$basePath.omschrijving").isEqualTo("Voorbeeld afgesloten zaak 1")
+            .jsonPath("$basePath.startdatum").isEqualTo("2021-09-16")
+            .jsonPath("$basePath.zaaktype.identificatie").isEqualTo("bezwaar-behandelen")
+            .jsonPath("$basePath.zaaktype.omschrijving").isEqualTo("Bezwaar behandelen")
+            .jsonPath("$basePath.status.datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
+            .jsonPath("$basePath.status.statustype.omschrijving").isEqualTo("Zaak afgerond")
+            .jsonPath("$basePath.status.statustype.isEindstatus").isEqualTo(true)
+            .jsonPath("$basePath.statusGeschiedenis[0].datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
+            .jsonPath("$basePath.statusGeschiedenis[0].statustype.omschrijving").isEqualTo("Zaak afgerond")
+            .jsonPath("$basePath.statusGeschiedenis[0].statustype.isEindstatus").isEqualTo(true)
+            .jsonPath("$basePath.documenten[0].uuid").isEqualTo("095be615-a8ad-4c33-8e9c-c7612fbf6c9f")
+            .jsonPath("$basePath.documenten[0].titel").isEqualTo("Een titel")
+            .jsonPath("$basePath.documenten[0].formaat").isEqualTo(".pdf")
+            .jsonPath("$basePath.statussen[0].omschrijving").isEqualTo("Eerste status")
+            .jsonPath("$basePath.statussen[0].isEindstatus").isEqualTo(false)
+            .jsonPath("$basePath.statussen[2].omschrijving").isEqualTo("Derde status")
+            .jsonPath("$basePath.statussen[2].isEindstatus").isEqualTo(true)
+            .jsonPath("$basePath.besluiten[0].identificatie").isEqualTo("klantportaal")
+    }
+
     fun setupMockOpenZaakServer() {
         val dispatcher: Dispatcher =
             object : Dispatcher() {

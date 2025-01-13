@@ -105,7 +105,13 @@ class ZakenApiService(
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this zaak")
         }
 
-        return zakenApiClient.zaken().get(id).retrieve()
+        val zaak = zakenApiClient.zaken().get(id).retrieve()
+
+        if (!authenticationMachtigingsDienstService.isAllowedZaakType(authentication, extractId(zaak.zaaktype))) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this zaak")
+        }
+
+        return zaak
     }
 
     suspend fun getZaakFromZaakApi(id: UUID): Zaak {

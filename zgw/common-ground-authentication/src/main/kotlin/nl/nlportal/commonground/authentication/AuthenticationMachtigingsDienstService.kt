@@ -56,6 +56,40 @@ class AuthenticationMachtigingsDienstService(
         }
     }
 
+    fun isAllowedZaakType(
+        authentication: CommonGroundAuthentication,
+        zaakTypeUUID: UUID,
+    ): Boolean {
+        val zaaktypes = zaakTypes(authentication)
+
+        if (zaaktypes != null && zaaktypes.isNotEmpty()) {
+            return zaaktypes.contains(zaakTypeUUID)
+        }
+
+        return true
+    }
+
+    fun isAllowedZaakTypes(
+        authentication: CommonGroundAuthentication,
+        zaakTypeUUIDs: List<UUID>,
+    ): Boolean {
+        val zaaktypes = zaakTypes(authentication)
+
+        val allowedZaaktypes = mutableSetOf<UUID>()
+
+        if (zaaktypes != null && zaaktypes.isNotEmpty()) {
+            zaakTypeUUIDs.forEach {
+                if (zaaktypes.contains(it)) {
+                    allowedZaaktypes.add(it)
+                }
+            }
+
+            return allowedZaaktypes.isNotEmpty()
+        }
+
+        return true
+    }
+
     companion object {
         private val logger: KLogger = KotlinLogging.logger {}
     }
