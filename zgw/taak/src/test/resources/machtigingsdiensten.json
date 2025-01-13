@@ -7,7 +7,8 @@
     ],
     "taakTypes": [
       "RMWA",
-      "WMO"
+      "WMO",
+      "gzac"
     ]
   }
 ]

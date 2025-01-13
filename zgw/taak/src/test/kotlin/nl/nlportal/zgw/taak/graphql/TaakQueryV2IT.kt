@@ -197,6 +197,30 @@ internal class TaakQueryV2IT(
     }
 
     @Test
+    @WithBedrijfUser(
+        kvkNummer = "14127293",
+        machtigingsDienst = "dd95bdee-c493-4757-bae3-fe0a5b5063f8",
+    )
+    fun `should get task by id for bedrijf and machtigingsdienst`() {
+        val basePath = "$.data.getTaakByIdV2"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(getTaakByIdPayloadV2Bedrijf)
+            .exchange()
+            .verifyOnlyDataExists(basePath)
+            .jsonPath("$basePath.id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
+            .jsonPath(
+                "$basePath.portaalformulier.formulier.value",
+            ).isEqualTo("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4")
+            .jsonPath("$basePath.portaalformulier.data.voornaam").isEqualTo("Jan")
+            .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
+            .jsonPath("$basePath.verloopdatum").isEqualTo("2023-09-20T18:25:43.524")
+    }
+
+    @Test
     @WithBurgerUser("569312864")
     fun `should unauthorized get task by id for burger`() {
         val basePath = "$.data.getTaakByIdV2"

@@ -190,11 +190,11 @@ open class TaakService(
             )
         // do validation if the user is authenticated for this task
         val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
-        if (isAuthorized) {
-            return taak
+        if (!isAuthorized || !authenticationMachtigingsDienstService.isAllowedTaakType(authentication, taak.eigenaar)) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this taak")
         }
 
-        throw IllegalStateException("Access denied to this taak")
+        return taak
     }
 
     suspend fun submitTaak(

@@ -90,6 +90,19 @@ class AuthenticationMachtigingsDienstService(
         return true
     }
 
+    fun isAllowedTaakType(
+        authentication: CommonGroundAuthentication,
+        taakType: String,
+    ): Boolean {
+        val taaktypes = taakTypes(authentication)
+
+        if (taaktypes != null && taaktypes.isNotEmpty()) {
+            return taaktypes.contains(taakType)
+        }
+
+        return true
+    }
+
     companion object {
         private val logger: KLogger = KotlinLogging.logger {}
     }
