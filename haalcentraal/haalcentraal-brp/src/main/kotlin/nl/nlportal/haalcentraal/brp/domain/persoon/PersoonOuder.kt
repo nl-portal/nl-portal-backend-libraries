@@ -20,6 +20,6 @@ data class PersoonOuder(
     val geslachtsaanduiding: String? = null,
     val ouderAanduiding: String? = null,
     val datumIngangFamilierechtelijkeBetrekking: PersoonDatum? = null,
-    val naam: PersoonNaam? = null,
+    val naam: Naam? = null,
     val geboorte: PersoonDatumLandPlaats? = null,
 )

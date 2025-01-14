@@ -28,10 +28,8 @@ import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
-import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import org.springframework.test.web.reactive.server.WebTestClient
 import java.util.function.Consumer
 
@@ -42,12 +40,67 @@ internal class OgonePaymentMutationIT(
     @Autowired private val testClient: WebTestClient,
     @Autowired private val paymentConfig: OgonePaymentConfig,
 ) {
-    @MockBean
-    lateinit var reactiveJwtDecoder: ReactiveJwtDecoder
+    @Test
+    @WithBurgerUser("123")
+    fun generateOgonePaymentWithIdentifier() {
+        val paymentRequest =
+            OgonePaymentRequest(
+                pspId = "belastingzaken",
+                amount = 100.25,
+                orderId = "123456",
+                reference = "12345",
+                title = "Gemeente belastingen 2024",
+                langId = null,
+                successUrl = null,
+                failureUrl = null,
+            )
+        val payment =
+            OgonePayment.create(
+                paymentConfig.url,
+                paymentConfig.getPaymentProfile("belastingzaken")!!,
+                paymentRequest,
+            )
+
+        val shaSign =
+            OgonePaymentService.hashParameters(
+                payment.fillFields(),
+                paymentConfig.getPaymentProfile("belastingzaken")!!.shaOutKey,
+                paymentConfig.getPaymentProfile("belastingzaken")!!.shaVersion,
+            )
+        val mutation =
+            """
+            mutation {
+                generateOgonePayment(
+                    paymentRequest: { pspId: "TAX", amount: 100.25, orderId: "123456", reference: "12345", title: "Gemeente belastingen 2024" }
+                ) {
+                formAction,
+                formFields{
+                    name,
+                    value
+                }
+                }
+            }
+            """.trimIndent()
+
+        val basePath = "$.data.generateOgonePayment"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(mutation)
+            .exchange()
+            .expectBody()
+            .consumeWith(Consumer { t -> logger.info { t } })
+            .jsonPath(basePath).exists()
+            .jsonPath("$basePath.formFields[0].value").isEqualTo("http://localhost:3000")
+            .jsonPath("$basePath.formFields[9].value").isEqualTo("10025")
+            .jsonPath("$basePath.formFields[11].value").isEqualTo(shaSign)
+    }
 
     @Test
     @WithBurgerUser("123")
-    fun generateOgonePayment() {
+    fun generateOgonePaymentWithPspId() {
         val paymentRequest =
             OgonePaymentRequest(
                 pspId = "TAX",

@@ -30,6 +30,9 @@ class WithBedrijfUserSecurityContextFactory : WithSecurityContextFactory<WithBed
         if (!bedrijf.gemachtigdeKvk.isEmpty()) {
             builder.gemachtigdeKvk(bedrijf.gemachtigdeKvk)
         }
+        if (!bedrijf.vestigingsNummer.isEmpty()) {
+            builder.vestigingsNummerKvk(bedrijf.vestigingsNummer)
+        }
         context.authentication = builder.buildBedrijfAuthentication()
 
         return context

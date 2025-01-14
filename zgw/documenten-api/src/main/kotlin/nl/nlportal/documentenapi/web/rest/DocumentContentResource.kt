@@ -69,6 +69,7 @@ class DocumentContentResource(
     )
     suspend fun uploadStreaming(
         @RequestPart("file") file: FilePart,
+        @RequestPart("informatieobjecttype", required = false) informatieobjecttype: String?,
         @PathVariable documentapi: String,
     ): ResponseEntity<Any> {
         val virusScanResult = virusScanService?.scan(file.content())
@@ -77,12 +78,13 @@ class DocumentContentResource(
         if (VirusScanStatus.VIRUS_FOUND == virusScanResult?.status) {
             return ResponseEntity(virusScanResult, HttpStatus.BAD_REQUEST)
         }
-        return ResponseEntity.ok(documentenApiService.uploadDocument(file, documentapi))
+        return ResponseEntity.ok(documentenApiService.uploadDocument(file, documentapi, informatieobjecttype))
     }
 
     @PostMapping(value = ["/document/content"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     suspend fun uploadStreamingDefault(
         @RequestPart("file") file: FilePart,
+        @RequestPart("informatieobjecttype", required = false) informatieobjecttype: String?,
     ): ResponseEntity<Any> {
         val documentapi: String = documentApisConfig.defaultDocumentApi
         val virusScanResult = virusScanService?.scan(file.content())
@@ -91,6 +93,6 @@ class DocumentContentResource(
         if (VirusScanStatus.VIRUS_FOUND == virusScanResult?.status) {
             return ResponseEntity(virusScanResult, HttpStatus.BAD_REQUEST)
         }
-        return ResponseEntity.ok(documentenApiService.uploadDocument(file, documentapi))
+        return ResponseEntity.ok(documentenApiService.uploadDocument(file, documentapi, informatieobjecttype))
     }
 }

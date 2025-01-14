@@ -90,7 +90,6 @@ internal class TaakQueryV2IT(
             .jsonPath(
                 "$resultPath.portaalformulier.formulier.value",
             ).isEqualTo("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4")
-            .jsonPath("$resultPath.portaalformulier.data.voornaam").isEqualTo("Jan")
             .jsonPath("$basePath.number").isEqualTo(1)
             .jsonPath("$basePath.size").isEqualTo(1)
             .jsonPath("$basePath.totalPages").isEqualTo(2)

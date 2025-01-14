@@ -89,6 +89,12 @@ class JwtBuilder {
         return this
     }
 
+    fun vestigingsNummerKvk(vestigingsNummer: String): JwtBuilder {
+        jwtBuilder.claim(AANVRAGER_VESTIGINGNUMMER_KEY, vestigingsNummer)
+
+        return this
+    }
+
     fun buildJwt(): Jwt {
         if (this.aanvragerBsn == null && this.aanvragerKvk == null && this.aanvragerUid == null) {
             throw IllegalStateException("aanvrager needs to be set with either bsn or kvk")

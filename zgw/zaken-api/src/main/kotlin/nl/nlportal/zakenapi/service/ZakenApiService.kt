@@ -45,16 +45,19 @@ class ZakenApiService(
 ) {
     suspend fun getZaken(
         page: Int,
+        pageSize: Int? = null,
         authentication: CommonGroundAuthentication,
         zaakTypeUrl: String?,
         isOpen: Boolean?,
         identificatie: String?,
     ): ZaakPage {
         val request =
-            zakenApiClient.zaken()
+            zakenApiClient.zoeken()
                 .search()
+                .page(page)
                 .withAuthentication(authentication)
 
+        pageSize?.let { request.pageSize(it) }
         zaakTypeUrl?.let { request.ofZaakType(it) }
         isOpen?.let {
             request.isOpen(isOpen)
@@ -64,8 +67,12 @@ class ZakenApiService(
             request.ofIdentificatie(identificatie)
         }
 
+        authentication.getVestigingsNummer()?.let {
+            request.ofVestigingsNummer(it)
+        }
+
         return request.retrieve().let {
-            ZaakPage.fromResultPage(page, it)
+            ZaakPage.fromResultPage(page, pageSize ?: 100, it)
         }
     }
 
@@ -74,11 +81,17 @@ class ZakenApiService(
         authentication: CommonGroundAuthentication,
     ): Zaak {
         // Get rollen of zaak to check if user has access
-        val rollen: List<ZaakRol> =
+        val zaakRollenRequest =
             zakenApiClient.zaakRollen()
                 .search()
                 .forZaak(id)
                 .withAuthentication(authentication)
+
+        authentication.getVestigingsNummer()?.let {
+            zaakRollenRequest.ofVestigingsNummer(it)
+        }
+        val rollen: List<ZaakRol> =
+            zaakRollenRequest
                 .retrieveAll()
 
         // if no rol is found, the current user does not have access to this zaak

@@ -1,0 +1,6 @@
+query {
+    getProductZaken(productName: "noZaakTypes") {
+            uuid,
+            omschrijving
+        }
+}

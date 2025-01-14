@@ -36,6 +36,8 @@ dependencies {
     api(ApiDependencies.jacksonBom)
     api("com.fasterxml.jackson.module", "jackson-module-kotlin")
 
+    api(ApiDependencies.commonsCodec)
+
     // Liquibase
     api("org.liquibase", "liquibase-core")
 

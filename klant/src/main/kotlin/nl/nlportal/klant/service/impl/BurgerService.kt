@@ -67,6 +67,7 @@ class BurgerService(
         } else {
             klantUpdate.emailadres?.let { existingKlant.emailadres = it }
             klantUpdate.telefoonnummer?.let { existingKlant.telefoonnummer = it }
+            klantUpdate.aanmaakkanaal?.let { existingKlant.aanmaakkanaal = it }
             return openKlantClient.patchKlant(authentication, existingKlant.url, existingKlant)
         }
     }

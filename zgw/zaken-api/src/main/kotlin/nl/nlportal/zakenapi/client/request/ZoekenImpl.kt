@@ -22,6 +22,7 @@ class ZoekenImpl(val zakenApiClient: ZakenApiClient) : Zaken {
 
 class SearchZoekenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
     val bodyValue: MultiValueMap<String, Any> = LinkedMultiValueMap()
+    val queryParams: MultiValueMap<String, String> = LinkedMultiValueMap()
 
     override fun withBsn(bsn: String): SearchZaken {
         bodyValue.add("rol__betrokkeneIdentificatie__natuurlijkPersoon__inpBsn", bsn)
@@ -63,15 +64,27 @@ class SearchZoekenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
         return this
     }
 
+    override fun ofVestigingsNummer(vestigingsNummer: String): SearchZaken {
+        bodyValue.add("rol__betrokkeneIdentificatie__vestiging__vestigingsNummer", vestigingsNummer)
+        return this
+    }
+
+    // needs to be added as querystring parameter
     override fun page(page: Int): SearchZaken {
-        bodyValue.add("page", page.toString())
+        queryParams.add("page", page.toString())
+        return this
+    }
+
+    // needs to be added as querystring parameter
+    override fun pageSize(pageSize: Int): SearchZaken {
+        queryParams.add("pageSize", pageSize.toString())
         return this
     }
 
     override suspend fun retrieve(): ResultPage<Zaak> {
         return this.zakenApiClient.webClient
             .post()
-            .uri("/zaken/api/v1/zaken/_zoek")
+            .uri { it.path("/zaken/api/v1/zaken/_zoek").queryParams(queryParams).build() }
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
             .bodyValue(bodyValue)

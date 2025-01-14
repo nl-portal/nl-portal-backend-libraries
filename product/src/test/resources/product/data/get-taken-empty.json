@@ -1,0 +1,6 @@
+{
+    "count": 2,
+    "next": "http://localhost:8010/api/v2/objects?page=2",
+    "previous": null,
+    "results": []
+}

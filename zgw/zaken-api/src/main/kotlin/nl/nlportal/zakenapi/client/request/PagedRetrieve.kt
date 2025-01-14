@@ -5,6 +5,8 @@ import nl.nlportal.zakenapi.domain.ResultPage
 interface PagedRetrieve<O : PagedRetrieve<O, T>, T> : Retrieve<ResultPage<T>> {
     fun page(page: Int): O
 
+    fun pageSize(pageSize: Int): O
+
     suspend fun retrieveAll(): List<T> {
         val results = mutableListOf<T>()
         do {

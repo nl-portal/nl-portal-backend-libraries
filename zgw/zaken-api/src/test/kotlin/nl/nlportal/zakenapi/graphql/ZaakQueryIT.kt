@@ -16,7 +16,9 @@
 package nl.nlportal.zakenapi.graphql
 
 import mu.KotlinLogging
+import nl.nlportal.besluiten.client.BesluitenApiConfig
 import nl.nlportal.catalogiapi.client.CatalogiApiConfig
+import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.documentenapi.client.DocumentApisConfig
 import nl.nlportal.zakenapi.client.ZakenApiConfig
@@ -48,6 +50,7 @@ internal class ZaakQueryIT(
     @Autowired private val zakenApiConfig: ZakenApiConfig,
     @Autowired private val catalogiApiConfig: CatalogiApiConfig,
     @Autowired private val documentApisConfig: DocumentApisConfig,
+    @Autowired private val besluitenApiConfig: BesluitenApiConfig,
 ) {
     private val logger = KotlinLogging.logger {}
 
@@ -62,6 +65,7 @@ internal class ZaakQueryIT(
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
             propsRegistry.add("nl-portal.zgw.zakenapi.url") { url }
+            propsRegistry.add("nl-portal.zgw.besluiten.url") { url }
         }
 
         @JvmStatic
@@ -86,6 +90,7 @@ internal class ZaakQueryIT(
 
         zakenApiConfig.url = url
         catalogiApiConfig.url = url
+        besluitenApiConfig.url = url
         documentApisConfig.getConfig("openzaak").url = url
     }
 
@@ -271,6 +276,147 @@ internal class ZaakQueryIT(
     }
 
     @Test
+    @WithBedrijfUser("123")
+    fun getZakenBedrijf() {
+        val query =
+            """
+            query {
+                getZaken(page: 1) {
+                number
+                size
+                totalPages
+                totalElements
+                numberOfElements
+                content {
+                        uuid,
+                        identificatie,
+                        omschrijving,
+                        zaaktype {
+                            identificatie,
+                            omschrijving
+                        },
+                        startdatum,
+                        status {
+                            datumStatusGezet,
+                            statustype {
+                                omschrijving,
+                                isEindstatus
+                            }
+                        },
+                        statusGeschiedenis {
+                            datumStatusGezet,
+                            statustype {
+                                omschrijving,
+                                isEindstatus
+                            }
+                        }
+                    }
+                }
+            }
+            """.trimIndent()
+
+        val basePath = "$.data.getZaken"
+        val resultPath = "$basePath.content[0]"
+
+        val response =
+            testClient.post()
+                .uri("/graphql")
+                .accept(APPLICATION_JSON)
+                .contentType(MediaType("application", "graphql"))
+                .bodyValue(query)
+                .exchange()
+                .expectBody()
+                .consumeWith(Consumer { t -> logger.info { t } })
+
+        response
+            .jsonPath(basePath).exists()
+            .jsonPath("$resultPath.uuid").isEqualTo("5d479908-fbb7-49c2-98c9-9afecf8de79a")
+            .jsonPath("$resultPath.identificatie").isEqualTo("ZAAK-2021-0000000003")
+            .jsonPath("$resultPath.omschrijving").isEqualTo("Voorbeeld afgesloten zaak 1")
+            .jsonPath("$resultPath.startdatum").isEqualTo("2021-09-16")
+            .jsonPath("$resultPath.zaaktype.identificatie").isEqualTo("bezwaar-behandelen")
+            .jsonPath("$resultPath.zaaktype.omschrijving").isEqualTo("Bezwaar behandelen")
+            .jsonPath("$resultPath.status.datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
+            .jsonPath("$resultPath.status.statustype.omschrijving").isEqualTo("Zaak afgerond")
+            .jsonPath("$resultPath.status.statustype.isEindstatus").isEqualTo(true)
+            .jsonPath("$resultPath.statusGeschiedenis[0].datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
+            .jsonPath("$resultPath.statusGeschiedenis[0].statustype.omschrijving").isEqualTo("Zaak afgerond")
+            .jsonPath("$resultPath.statusGeschiedenis[0].statustype.isEindstatus").isEqualTo(true)
+    }
+
+    @Test
+    @WithBedrijfUser(
+        kvkNummer = "123",
+        vestigingsNummer = "12345",
+    )
+    fun getZakenBedrijfMetVestiging() {
+        val query =
+            """
+            query {
+                getZaken(page: 1) {
+                number
+                size
+                totalPages
+                totalElements
+                numberOfElements
+                content {
+                        uuid,
+                        identificatie,
+                        omschrijving,
+                        zaaktype {
+                            identificatie,
+                            omschrijving
+                        },
+                        startdatum,
+                        status {
+                            datumStatusGezet,
+                            statustype {
+                                omschrijving,
+                                isEindstatus
+                            }
+                        },
+                        statusGeschiedenis {
+                            datumStatusGezet,
+                            statustype {
+                                omschrijving,
+                                isEindstatus
+                            }
+                        }
+                    }
+                }
+            }
+            """.trimIndent()
+
+        val basePath = "$.data.getZaken"
+        val resultPath = "$basePath.content[0]"
+
+        val response =
+            testClient.post()
+                .uri("/graphql")
+                .accept(APPLICATION_JSON)
+                .contentType(MediaType("application", "graphql"))
+                .bodyValue(query)
+                .exchange()
+                .expectBody()
+                .consumeWith(Consumer { t -> logger.info { t } })
+
+        response
+            .jsonPath(basePath).exists()
+            .jsonPath("$resultPath.uuid").isEqualTo("5d479908-fbb7-49c2-98c9-9afecf8de79a")
+            .jsonPath("$resultPath.identificatie").isEqualTo("ZAAK-2021-0000000003")
+            .jsonPath("$resultPath.omschrijving").isEqualTo("Voorbeeld afgesloten zaak 1")
+            .jsonPath("$resultPath.startdatum").isEqualTo("2021-09-16")
+            .jsonPath("$resultPath.zaaktype.identificatie").isEqualTo("bezwaar-behandelen")
+            .jsonPath("$resultPath.zaaktype.omschrijving").isEqualTo("Bezwaar behandelen")
+            .jsonPath("$resultPath.status.datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
+            .jsonPath("$resultPath.status.statustype.omschrijving").isEqualTo("Zaak afgerond")
+            .jsonPath("$resultPath.status.statustype.isEindstatus").isEqualTo(true)
+            .jsonPath("$resultPath.statusGeschiedenis[0].datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
+            .jsonPath("$resultPath.statusGeschiedenis[0].statustype.omschrijving").isEqualTo("Zaak afgerond")
+            .jsonPath("$resultPath.statusGeschiedenis[0].statustype.isEindstatus").isEqualTo(true)
+    }
+
+    @Test
     @WithBurgerUser("")
     fun getZakenNotFound() {
         // Make the GraphQL request
@@ -441,6 +587,12 @@ internal class ZaakQueryIT(
                     statussen {
                         omschrijving,
                         isEindstatus
+                    },
+                    besluiten {
+                        identificatie,
+                        datum,
+                        toelichting,
+                        publicatiedatum
                     }
                 }
             }
@@ -455,6 +607,7 @@ internal class ZaakQueryIT(
             .bodyValue(query)
             .exchange()
             .expectBody()
+            .consumeWith(System.out::println)
             .jsonPath(basePath).exists()
             .jsonPath("$basePath.uuid").isEqualTo("5d479908-fbb7-49c2-98c9-9afecf8de79a")
             .jsonPath("$basePath.identificatie").isEqualTo("ZAAK-2021-0000000003")
@@ -475,6 +628,7 @@ internal class ZaakQueryIT(
             .jsonPath("$basePath.statussen[0].isEindstatus").isEqualTo(false)
             .jsonPath("$basePath.statussen[2].omschrijving").isEqualTo("Derde status")
             .jsonPath("$basePath.statussen[2].isEindstatus").isEqualTo(true)
+            .jsonPath("$basePath.besluiten[0].identificatie").isEqualTo("klantportaal")
     }
 
     fun setupMockOpenZaakServer() {
@@ -484,10 +638,11 @@ internal class ZaakQueryIT(
                 override fun dispatch(request: RecordedRequest): MockResponse {
                     val path = request.path?.substringBefore('?')
                     val queryParams = request.path?.substringAfter('?')?.split('&') ?: emptyList()
+                    val bodyContent = request.body.readUtf8()
                     val response =
                         when (path) {
-                            "/zaken/api/v1/zaken" -> {
-                                if (queryParams.any { it.contains("ZAAK-2024-0000000001") }) {
+                            "/zaken/api/v1/zaken/_zoek" -> {
+                                if (bodyContent.contains("ZAAK-2024-0000000001")) {
                                     handleZaakListRequestOfIdentificatie()
                                 } else {
                                     handleZaakListRequest()
@@ -502,6 +657,7 @@ internal class ZaakQueryIT(
                             "/zaken/api/v1/zaakinformatieobjecten" -> handleZaakInformatieObjectenRequest()
                             "/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> handleDocumentRequest()
                             "/zaken/api/v1/rollen" -> handleZaakRollenRequest()
+                            "/besluiten/api/v1/besluiten" -> handleBesluitenRequest()
                             else -> MockResponse().setResponseCode(404)
                         }
                     return response
@@ -933,6 +1089,38 @@ internal class ZaakQueryIT(
                  }
                ]
              }
+            """.trimIndent()
+
+        return mockResponse(body)
+    }
+
+    fun handleBesluitenRequest(): MockResponse {
+        val body =
+            """
+            {
+              "count": 2,
+              "next": "http://localhost:8001/besluiten/api/v1/besluiten?page=2",
+              "previous": null,
+              "results": [
+                {
+                  "url": "http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z",
+                  "identificatie": "klantportaal",
+                  "verantwoordelijkeOrganisatie": "klantportaal",
+                  "besluittype": "http://localhost:8000/catalogi/api/v1/besluittypen/496f51fd-ccdb-406e-805a-e7602ae78a2b",
+                  "zaak": "http://localhost:8001/zaken/api/v1/zaken/496f51fd-ccdb-406e-805a-e7602ae78a2x",
+                  "datum": "2019-08-24",
+                  "toelichting": "toelichting",
+                  "bestuursorgaan": "klant",
+                  "ingangsdatum": "2019-08-24",
+                  "vervaldatum": "2019-08-24",
+                  "vervalreden": "tijdelijk",
+                  "vervalredenWeergave": "string",
+                  "publicatiedatum": "2019-08-24",
+                  "verzenddatum": "2019-08-24",
+                  "uiterlijkeReactiedatum": "2019-08-24"
+                }
+              ]
+            }
             """.trimIndent()
 
         return mockResponse(body)

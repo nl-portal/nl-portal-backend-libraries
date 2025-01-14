@@ -61,15 +61,17 @@ class DocumentenApiService(
     suspend fun uploadDocument(
         file: FilePart,
         documentApi: String,
+        informatieobjecttype: String? = null,
     ): Document {
         val auteur =
             ReactiveSecurityContextHolder.getContext()
                 .map { (it.authentication as PortalAuthentication).userId }
                 .awaitSingleOrNull() ?: "valtimo"
+        val documentenApiConfig = documentenApiConfig.getConfig(documentApi)
 
         return documentenApiClient.postDocument(
             PostEnkelvoudiginformatieobjectRequest(
-                bronorganisatie = documentenApiConfig.getConfig(documentApi).rsin!!,
+                bronorganisatie = documentenApiConfig.rsin!!,
                 creatiedatum = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE),
                 titel = file.filename(),
                 auteur = auteur,
@@ -77,7 +79,12 @@ class DocumentenApiService(
                 taal = "nld",
                 bestandsnaam = file.filename(),
                 indicatieGebruiksrecht = false,
-                informatieobjecttype = documentenApiConfig.getConfig(documentApi).documentTypeUrl!!,
+                informatieobjecttype =
+                    informatieobjecttype
+                        .takeUnless {
+                            it.isNullOrEmpty()
+                        }
+                        ?: documentenApiConfig.documentTypeUrl!!,
             ),
             file.content(),
             documentApi,

@@ -1,0 +1,21 @@
+{
+  "uuid": "095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+  "bron": "ac",
+  "applicatieId": "applicatieId",
+  "applicatieWeergave": "applicatie weergave",
+  "gebruikersId": "gebruikersId",
+  "gebruikersWeergave": "gebruikers weergave",
+  "actie": "list",
+  "actieWeergave": "lijst",
+  "resultaat": 100,
+  "hoofdObject": "http://example.com",
+  "resource": "string",
+  "resourceUrl": "http://example.com",
+  "toelichting": "string",
+  "resourceWeergave": "string",
+  "aanmaakdatum": "2019-08-24T14:15:22Z",
+  "wijzigingen": {
+    "oud": null,
+    "nieuw": null
+  }
+}

@@ -35,12 +35,14 @@ open class ZaakQuery(val zakenApiService: ZakenApiService) : Query {
     open suspend fun getZaken(
         dfe: DataFetchingEnvironment,
         page: Int? = 1,
+        pageSize: Int? = null,
         zaakTypeUrl: String? = null,
         isOpen: Boolean? = null,
         identificatie: String? = null,
     ): ZaakPage {
         return zakenApiService.getZaken(
-            page = page!!,
+            page = page ?: 1,
+            pageSize = pageSize,
             authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
             zaakTypeUrl = zaakTypeUrl,
             isOpen = isOpen,
