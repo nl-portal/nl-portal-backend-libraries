@@ -17,6 +17,7 @@ package nl.nlportal.product.service
 
 import com.fasterxml.jackson.databind.node.ObjectNode
 import io.github.oshai.kotlinlogging.KotlinLogging
+import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.product.client.DmnClient
@@ -50,6 +51,7 @@ class ProductService(
     val taakObjectConfig: TaakObjectConfig,
     val objectsApiTaskConfig: TaakObjectConfig,
     val dmnClient: DmnClient,
+    val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
 ) {
     suspend fun getProduct(
         authentication: CommonGroundAuthentication,
@@ -154,15 +156,28 @@ class ProductService(
             return emptyList()
         }
 
+        // val zaakTypes = mutableSetOf<UUID>()
+        val zaakTypes = productType.zaaktypen
         val request =
             zakenApiClient.zoeken()
                 .search()
                 .page(pageNumber)
                 .withAuthentication(authentication)
-                .ofZaakTypes(productType.zaaktypen.map { it })
         pageSize?.let { request.pageSize(it) }
         isOpen?.let {
             request.isOpen(isOpen)
+        }
+
+        /*authenticationMachtigingsDienstService.zaakTypes(authentication)?.let {
+            zaakTypes.addAll(it)
+        }*/
+
+        if (!authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes)) {
+            return emptyList()
+        }
+
+        if (zaakTypes.isNotEmpty()) {
+            request.ofZaakTypes(zaakTypes.toList())
         }
 
         authentication.getVestigingsNummer()?.let {
@@ -346,11 +361,15 @@ class ProductService(
         pageSize: Int,
     ): List<TaakV2> {
         val objectSearchParameters =
-            listOf(
+            mutableListOf(
                 ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, authentication.userType),
                 ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, authentication.userId),
                 ObjectSearchParameter("status", Comparator.EQUAL_TO, "open"),
             )
+
+        authenticationMachtigingsDienstService.taakTypes(authentication)?.let {
+            objectSearchParameters.add(ObjectSearchParameter("eigenaar", Comparator.IN_LIST, it.joinToString("|")))
+        }
 
         return getObjectsApiObjectResultPage<TaakObjectV2>(
             objectsApiTaskConfig.typeUrlV2,

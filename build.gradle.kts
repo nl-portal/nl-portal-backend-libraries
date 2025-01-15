@@ -1,4 +1,6 @@
 import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
+import io.spring.gradle.dependencymanagement.org.codehaus.plexus.interpolation.os.Os.FAMILY_MAC
+import org.apache.tools.ant.taskdefs.condition.Os
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import java.net.URI
@@ -44,7 +46,7 @@ plugins {
 
     id("org.jetbrains.dokka")
 
-    id("org.owasp.dependencycheck") version "11.1.1"
+    id("org.owasp.dependencycheck") version "12.0.0"
 
     `maven-publish`
     `signing`
@@ -122,6 +124,10 @@ subprojects {
             freeCompilerArgs.add("-Xjsr305=strict")
             freeCompilerArgs.add("-Xemit-jvm-type-annotations")
         }
+        val ktlintFormat: Task? by tasks
+        if (ktlintFormat != null) {
+            dependsOn(ktlintFormat)
+        }
     }
 
     println("Enabling Spring Boot Dependency Management in project ${project.name}...")
@@ -132,10 +138,6 @@ subprojects {
                 bomProperty("graphql-java.version", ApiVersions.graphqlJava)
             }
         }
-    }
-
-    tasks.withType<Test> {
-        useJUnitPlatform()
     }
 
     publishing {
@@ -206,6 +208,16 @@ subprojects {
 
             useInMemoryPgpKeys(signingKey, signingKeyPassword)
             sign(publishing.publications["default"])
+        }
+    }
+
+    apply(from = "${rootProject.projectDir}/gradle/testing.gradle.kts")
+
+    if (Os.isFamily(FAMILY_MAC)) {
+        println("Configure docker compose for macOs")
+        dockerCompose {
+            executable = "/usr/local/bin/docker-compose"
+            dockerExecutable = "/usr/local/bin/docker"
         }
     }
 }

@@ -58,4 +58,5 @@ include(
     "zgw:zaken-api",
     "zgw:objectenapi",
     "zgw:besluiten",
+    "zgw:openklant",
 )

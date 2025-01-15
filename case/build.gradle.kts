@@ -1,6 +1,3 @@
-import io.spring.gradle.dependencymanagement.org.codehaus.plexus.interpolation.os.Os.FAMILY_MAC
-import org.apache.tools.ant.taskdefs.condition.Os
-
 /*
  * Copyright 2015-2023 Ritense BV, the Netherlands.
  *
@@ -21,12 +18,8 @@ plugins {
 }
 
 dockerCompose {
-    if (Os.isFamily(FAMILY_MAC)) {
-        executable = "/usr/local/bin/docker-compose"
-        dockerExecutable = "/usr/local/bin/docker"
-    }
-    projectNamePrefix = "case"
-    isRequiredBy(tasks.getByName("test"))
+    setProjectName("$name-test")
+    isRequiredBy(tasks.getByName("integrationTest"))
     useComposeFiles.addAll("../docker-resources/docker-compose-base-test.yml", "docker-compose-override.yml")
 }
 
