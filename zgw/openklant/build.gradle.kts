@@ -1,5 +1,7 @@
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright (c) 2024 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,34 +19,32 @@ plugins {
     kotlin("jvm")
 }
 
+val isLib = true
+
 dockerCompose {
     setProjectName("$name-test")
     isRequiredBy(tasks.getByName("integrationTest"))
-    useComposeFiles.addAll("../docker-resources/docker-compose-base-test.yml", "docker-compose-override.yml")
+    useComposeFiles.addAll("../../docker-resources/docker-compose-base-test.yml", "docker-compose-override.yml")
+}
+
+dependencies {
+    api(project(":graphql"))
+    api(project(":portal-authentication"))
+    api(project(":zgw:common-ground-authentication"))
+
+    testImplementation(project(":zgw:common-ground-authentication-test"))
+    testImplementation(TestDependencies.postgresql)
+    testImplementation("org.springframework.boot", "spring-boot-starter-test")
+    testImplementation("org.springframework.security", "spring-security-test")
+    testImplementation(TestDependencies.kotlinCoroutines)
+    testImplementation(TestDependencies.mockitoKotlin)
+    testImplementation(TestDependencies.okHttpMockWebserver)
+    testImplementation(TestDependencies.okHttp)
 }
 
 val jar: Jar by tasks
-val bootJar: org.springframework.boot.gradle.tasks.bundling.BootJar by tasks
-
+val bootJar: BootJar by tasks
 bootJar.enabled = false
 jar.enabled = true
-
-dependencies {
-    api(project(":core"))
-    api(project(":data"))
-    api(project(":graphql"))
-    api(project(":messaging"))
-
-    implementation("org.springframework.boot", "spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot", "spring-boot-starter-validation")
-
-    // JsonSchema support
-    implementation(Dependencies.everitJsonSchema)
-    implementation(Dependencies.jsonPath)
-
-    testImplementation(TestDependencies.postgresql)
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
-    testImplementation("org.assertj", "assertj-core")
-}
 
 apply(from = "gradle/publishing.gradle.kts")
