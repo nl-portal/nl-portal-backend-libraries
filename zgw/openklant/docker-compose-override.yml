@@ -29,7 +29,7 @@ services:
       command: sh /app/init/init.sh
 
   openklant-2-db:
-      image: postgres:15
+      image: postgres:17
       container_name: openklant-2-db-test
       environment:
           - POSTGRES_USER=openklant
@@ -39,5 +39,5 @@ services:
           - ./imports/openklant-2/database:/docker-entrypoint-initdb.d/
 
   redis:
-      image: redis:6.2.17
+      image: redis:7.4.2
       container_name: redis-test
