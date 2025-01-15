@@ -1,0 +1,14 @@
+[
+  {
+    "uuid":"dd95bdee-c493-4757-bae3-fe0a5b5063f8",
+    "naam":"Uitvoeren WMO-dienstverlening",
+    "zaakTypes": [
+      "dd95bdee-c493-4757-bae3-fe0a5b5063f8",
+      "7d9cd6c2-8147-46f2-9ae9-c67e8213c300"
+    ],
+    "taakTypes": [
+      "RMWA",
+      "WMO"
+    ]
+  }
+]

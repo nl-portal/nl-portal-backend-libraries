@@ -15,6 +15,7 @@
  */
 package nl.nlportal.product.graphql
 
+import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.product.TestHelper
 import nl.nlportal.product.TestHelper.verifyOnlyDataExists
@@ -198,6 +199,24 @@ internal class ProductQueryIT(
     }
 
     @Test
+    @WithBedrijfUser(
+        kvkNummer = "569312863",
+        machtigingsDienst = "dd95bdee-c493-4757-bae3-fe0a5b5063f8",
+    )
+    fun getProductZakenTestBedrijf() {
+        val basePath = "$.data.getProductZaken"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(graphqlGetProductZaken)
+            .exchange()
+            .verifyOnlyDataExists(basePath)
+            .jsonPath("$basePath[0].omschrijving").isEqualTo("Lopende zaak")
+    }
+
+    @Test
     @WithBurgerUser("569312863")
     fun getProductZakenTestBurgerNoZaakTypes() {
         val basePath = "$.data.getProductZaken"
@@ -279,6 +298,26 @@ internal class ProductQueryIT(
     @Test
     @WithBurgerUser("569312863")
     fun getProductTakenTestBurger() {
+        val basePath = "$.data.getProductTaken"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(graphqlGetProductTaken)
+            .exchange()
+            .verifyOnlyDataExists(basePath)
+            .jsonPath("$basePath.size()").isEqualTo(2)
+            .jsonPath("$basePath[0].id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
+            .jsonPath("$basePath[0].titel").isEqualTo("Taak linked to Zaak")
+    }
+
+    @Test
+    @WithBedrijfUser(
+        kvkNummer = "569312863",
+        machtigingsDienst = "dd95bdee-c493-4757-bae3-fe0a5b5063f8",
+    )
+    fun getProductTakenTestBedrijf() {
         val basePath = "$.data.getProductTaken"
 
         testClient.post()

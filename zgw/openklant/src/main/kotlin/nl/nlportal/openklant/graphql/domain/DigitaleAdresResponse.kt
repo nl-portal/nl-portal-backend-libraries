@@ -16,7 +16,7 @@
 package nl.nlportal.openklant.graphql.domain
 
 import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdres
-import nl.nlportal.openklant.graphql.domain.DigitaleAdresType.ANDERS
+import nl.nlportal.openklant.graphql.domain.DigitaleAdresType.OVERIG
 import java.util.UUID
 
 data class DigitaleAdresResponse(
@@ -34,8 +34,8 @@ data class DigitaleAdresResponse(
                 type =
                     DigitaleAdresType
                         .entries
-                        .singleOrNull { it.name == openKlant2DigitaleAdres.soortDigitaalAdres }
-                        ?: ANDERS,
+                        .singleOrNull { it.name.lowercase() == openKlant2DigitaleAdres.soortDigitaalAdres }
+                        ?: OVERIG,
             )
     }
 }

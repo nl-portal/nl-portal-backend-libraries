@@ -86,7 +86,7 @@ class ProductQuery(
         dfe: DataFetchingEnvironment,
         productTypeId: UUID? = null,
         productName: String,
-        pageSize: Int? = 20,
+        pageSize: Int? = null,
         isOpen: Boolean? = null,
     ): List<Zaak> {
         return productService.getProductZaken(

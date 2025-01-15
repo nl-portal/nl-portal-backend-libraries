@@ -19,6 +19,7 @@ import nl.nlportal.portal.authentication.domain.PortalAuthentication
 import nl.nlportal.portal.authentication.domain.SUB_KEY
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.oauth2.jwt.Jwt
+import java.util.UUID
 
 abstract class CommonGroundAuthentication(
     jwt: Jwt,
@@ -54,6 +55,19 @@ abstract class CommonGroundAuthentication(
         return token.claims[AANVRAGER_VESTIGINGNUMMER_KEY]?.toString()
     }
 
+    /**
+     * Gets MachtingsDienst UUID property from the JWT
+     *
+     * @return MachtingsDienst UUID
+     */
+    fun machtigingsDienstUUID(): UUID? {
+        if (token.claims[MACHTIGINGSDIENST_KEY] == null) {
+            return null
+        }
+
+        return UUID.fromString(token.claims[MACHTIGINGSDIENST_KEY].toString())
+    }
+
     override fun getUserRepresentation() = "${this.userType.uppercase()}:${this.userId}"
 }
 
@@ -62,3 +76,4 @@ const val KVK_NUMMER_KEY = "kvk"
 const val AANVRAGER_KEY = "aanvrager"
 const val AANVRAGER_VESTIGINGNUMMER_KEY = "aanvrager.vestigingsnummer"
 const val GEMACHTIGDE_KEY = "gemachtigde"
+const val MACHTIGINGSDIENST_KEY = "urn:etoegang:core:ServiceUUID"
