@@ -1,0 +1,7 @@
+query {
+    __type(name: "DigitaleAdresResponse") {
+        kind
+        name
+        description
+    }
+}
