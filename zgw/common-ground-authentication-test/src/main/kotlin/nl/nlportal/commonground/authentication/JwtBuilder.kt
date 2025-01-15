@@ -95,6 +95,12 @@ class JwtBuilder {
         return this
     }
 
+    fun machtingDienstKvk(machtingDienst: String): JwtBuilder {
+        jwtBuilder.claim(MACHTIGINGSDIENST_KEY, machtingDienst)
+
+        return this
+    }
+
     fun buildJwt(): Jwt {
         if (this.aanvragerBsn == null && this.aanvragerKvk == null && this.aanvragerUid == null) {
             throw IllegalStateException("aanvrager needs to be set with either bsn or kvk")

@@ -17,6 +17,7 @@ package nl.nlportal.zgw.taak.service
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.node.ObjectNode
+import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
@@ -42,6 +43,7 @@ import java.util.UUID
 open class TaakService(
     private val objectsApiClient: ObjectsApiClient,
     private val objectsApiTaskConfig: TaakObjectConfig,
+    val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
 ) {
     @Deprecated("Use version 2, for migration only")
     suspend fun getTaken(
@@ -188,11 +190,11 @@ open class TaakService(
             )
         // do validation if the user is authenticated for this task
         val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
-        if (isAuthorized) {
-            return taak
+        if (!isAuthorized || !authenticationMachtigingsDienstService.isAllowedTaakType(authentication, taak.eigenaar)) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this taak")
         }
 
-        throw IllegalStateException("Access denied to this taak")
+        return taak
     }
 
     suspend fun submitTaak(
@@ -322,6 +324,11 @@ open class TaakService(
                 ),
             )
         }
+
+        authenticationMachtigingsDienstService.taakTypes(authentication)?.let {
+            objectSearchParameters.add(ObjectSearchParameter("eigenaar", Comparator.IN_LIST, it.joinToString("|")))
+        }
+
         return objectsApiClient.getObjects<T>(
             objectSearchParameters = objectSearchParameters,
             objectTypeUrl = objectTypeUrl,
@@ -372,6 +379,11 @@ open class TaakService(
                 ),
             )
         }
+
+        authenticationMachtigingsDienstService.taakTypes(authentication)?.let {
+            objectSearchParameters.add(ObjectSearchParameter("eigenaar", Comparator.IN_LIST, it.joinToString("|")))
+        }
+
         return objectsApiClient.getObjects<T>(
             objectSearchParameters = objectSearchParameters,
             objectTypeUrl = objectTypeUrl,

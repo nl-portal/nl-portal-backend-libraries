@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.openklant.graphql.domain
+package nl.nlportal.commonground.authentication
 
-import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdres
-import java.util.UUID
+import org.springframework.boot.context.properties.ConfigurationProperties
 
-data class DigitaleAdresRequest(
-    val uuid: UUID? = null,
-    val waarde: String,
-    val type: DigitaleAdresType,
-    val omschrijving: String,
-) {
-    fun asOpenKlant2DigitaleAdres(): OpenKlant2DigitaleAdres =
-        OpenKlant2DigitaleAdres(
-            adres = waarde,
-            omschrijving = omschrijving,
-            soortDigitaalAdres = type.name.lowercase(),
-        )
-}
+@ConfigurationProperties(prefix = "nl-portal.security.machtingsdienst")
+data class AuthenticationMachtigingsDienstConfig(
+    val resourceUrl: String? = null,
+)

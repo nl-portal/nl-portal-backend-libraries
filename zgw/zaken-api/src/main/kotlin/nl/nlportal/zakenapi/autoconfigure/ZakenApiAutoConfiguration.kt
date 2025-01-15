@@ -17,6 +17,7 @@ package nl.nlportal.zakenapi.autoconfigure
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import nl.nlportal.catalogiapi.client.CatalogiApiConfig
+import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.core.security.config.HttpSecurityConfigurer
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.zakenapi.client.ZaakDocumentenConfig
@@ -47,12 +48,14 @@ class ZakenApiAutoConfiguration {
         documentenApiService: DocumentenApiService,
         objectsApiClient: ObjectsApiClient,
         objectMapper: ObjectMapper,
+        authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
     ): ZakenApiService {
         return ZakenApiService(
             zakenApiClient,
             zaakDocumentenConfig,
             documentenApiService,
             objectsApiClient,
+            authenticationMachtigingsDienstService,
         )
     }
 

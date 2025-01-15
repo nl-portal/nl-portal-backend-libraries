@@ -3,6 +3,7 @@ package nl.nlportal.zakenapi.service
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
+import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.domain.DocumentStatus
@@ -54,6 +55,9 @@ class ZakenApiServiceTest {
     private lateinit var zaakDocumentenConfig: ZaakDocumentenConfig
 
     @Mock
+    private lateinit var authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService
+
+    @Mock
     private lateinit var authentication: CommonGroundAuthentication
 
     @BeforeEach
@@ -69,7 +73,7 @@ class ZakenApiServiceTest {
                     ),
             )
 
-        zakenApiService = ZakenApiService(zakenApiClient, zaakDocumentenConfig, documentenApiService, objectsApiClient)
+        zakenApiService = ZakenApiService(zakenApiClient, zaakDocumentenConfig, documentenApiService, objectsApiClient, authenticationMachtigingsDienstService)
     }
 
     @Test

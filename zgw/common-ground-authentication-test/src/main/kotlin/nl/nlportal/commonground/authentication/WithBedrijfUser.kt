@@ -27,4 +27,5 @@ annotation class WithBedrijfUser(
     val gemachtigdeBsn: String = "",
     val gemachtigdeKvk: String = "",
     val vestigingsNummer: String = "",
+    val machtigingsDienst: String = "",
 )

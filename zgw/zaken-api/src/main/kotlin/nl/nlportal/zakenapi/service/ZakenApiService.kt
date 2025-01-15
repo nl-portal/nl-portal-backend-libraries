@@ -16,6 +16,7 @@
 package nl.nlportal.zakenapi.service
 
 import kotlinx.coroutines.flow.Flow
+import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils.extractId
 import nl.nlportal.documentenapi.domain.Document
@@ -42,6 +43,7 @@ class ZakenApiService(
     private val zaakDocumentenConfig: ZaakDocumentenConfig,
     private val documentenApiService: DocumentenApiService,
     private val objectsApiClient: ObjectsApiClient,
+    private val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
 ) {
     suspend fun getZaken(
         page: Int,
@@ -65,6 +67,10 @@ class ZakenApiService(
 
         identificatie?.let {
             request.ofIdentificatie(identificatie)
+        }
+
+        authenticationMachtigingsDienstService.zaakTypes(authentication)?.let {
+            request.ofZaakTypes(it)
         }
 
         authentication.getVestigingsNummer()?.let {
@@ -99,7 +105,13 @@ class ZakenApiService(
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this zaak")
         }
 
-        return zakenApiClient.zaken().get(id).retrieve()
+        val zaak = zakenApiClient.zaken().get(id).retrieve()
+
+        if (!authenticationMachtigingsDienstService.isAllowedZaakType(authentication, extractId(zaak.zaaktype))) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this zaak")
+        }
+
+        return zaak
     }
 
     suspend fun getZaakFromZaakApi(id: UUID): Zaak {
