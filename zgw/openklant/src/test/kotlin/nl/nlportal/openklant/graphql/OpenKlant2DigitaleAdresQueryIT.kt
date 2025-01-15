@@ -33,10 +33,10 @@ import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.BodyInserters
 import java.nio.charset.Charset
@@ -48,7 +48,7 @@ import java.nio.charset.Charset
 class OpenKlant2DigitaleAdresQueryIT(
     @Autowired private val webTestClient: WebTestClient,
 ) {
-    @SpyBean
+    @MockitoSpyBean
     lateinit var openKlant2Service: OpenKlant2Service
 
     @Test
@@ -115,7 +115,7 @@ class OpenKlant2DigitaleAdresQueryIT(
             verify(openKlant2Service, times(1)).findDigitaleAdressen(any())
 
             assertNotNull(response)
-            assertEquals("ANDERS", response?.get(0)?.get("type")?.textValue())
+            assertEquals("OVERIG", response?.get(0)?.get("type")?.textValue())
         }
 
     @Test

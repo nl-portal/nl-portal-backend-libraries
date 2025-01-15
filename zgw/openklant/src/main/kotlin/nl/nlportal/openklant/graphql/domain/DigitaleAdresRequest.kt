@@ -28,6 +28,6 @@ data class DigitaleAdresRequest(
         OpenKlant2DigitaleAdres(
             adres = waarde,
             omschrijving = omschrijving,
-            soortDigitaalAdres = type.name,
+            soortDigitaalAdres = type.name.lowercase(),
         )
 }

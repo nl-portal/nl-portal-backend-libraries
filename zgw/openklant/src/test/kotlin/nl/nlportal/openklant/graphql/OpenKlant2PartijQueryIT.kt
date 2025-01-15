@@ -37,10 +37,10 @@ import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.BodyInserters
 import java.nio.charset.Charset
@@ -52,7 +52,7 @@ import java.nio.charset.Charset
 class OpenKlant2PartijQueryIT(
     @Autowired private val webTestClient: WebTestClient,
 ) {
-    @SpyBean
+    @MockitoSpyBean
     lateinit var openKlant2Service: OpenKlant2Service
 
     @Test
