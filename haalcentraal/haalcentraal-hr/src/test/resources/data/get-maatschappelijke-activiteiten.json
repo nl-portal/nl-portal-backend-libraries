@@ -2,105 +2,113 @@
     "kvkNummer": "90012768",
     "indNonMailing": "Ja",
     "naam": "Test bedrijf",
-    "formeleRegistratiedatum": "20170710",
+    "formeleRegistratiedatum": "20161124",
     "materieleRegistratie": {
-        "datumAanvang": "20170108"
+        "datumAanvang": "20161124"
     },
     "totaalWerkzamePersonen": 1,
     "handelsnamen": [
         {
-            "naam": "Test EMZ Dagobert",
+            "naam": "Test bedrijf",
             "volgorde": 0
         },
         {
-            "naam": "Tweede handelsnaam 1MZ",
+            "naam": "Rappórt Frans van den Broek",
             "volgorde": 1
-        },
-        {
-            "naam": "Derde handelsnaam 1MZ",
-            "volgorde": 2
-        },
-        {
-            "naam": "Vierde handelsnaam 1MZ",
-            "volgorde": 3
         }
     ],
     "sbiActiviteiten": [
         {
-            "sbiCode": "1011",
-            "sbiOmschrijving": "Slachterijen (geen pluimvee-)",
+            "sbiCode": "70222",
+            "sbiOmschrijving": "Advisering op het gebied van management en bedrijfsvoering (geen public relations en organisatie- adviesbureaus)",
             "indHoofdactiviteit": "Ja"
         },
         {
-            "sbiCode": "1012",
-            "sbiOmschrijving": "Pluimveeslachterijen",
+            "sbiCode": "69202",
+            "sbiOmschrijving": "Accountants-administratieconsulenten",
             "indHoofdactiviteit": "Nee"
         },
         {
-            "sbiCode": "1013",
-            "sbiOmschrijving": "Vleesverwerking (niet tot maaltijden)",
+            "sbiCode": "8211",
+            "sbiOmschrijving": "Brede administratieve dienstverlening",
             "indHoofdactiviteit": "Nee"
         }
     ],
-    "_links": {
-        "self": {
-            "href": "https://api.kvk.nl/test/api/v1/basisprofielen/69599084"
+    "links": [
+        {
+            "rel": "self",
+            "href": "https://api.kvk.nl/api/v1/basisprofielen/90012768"
         },
-        "vestigingen": {
-            "href": "https://api.kvk.nl/test/api/v1/basisprofielen/69599084/vestigingen"
+        {
+            "rel": "vestigingen",
+            "href": "https://api.kvk.nl/api/v1/basisprofielen/90012768/vestigingen"
         }
-    },
+    ],
     "_embedded": {
         "hoofdvestiging": {
             "vestigingsnummer": "000038509504",
             "kvkNummer": "69599084",
-            "formeleRegistratiedatum": "20200828",
+            "formeleRegistratiedatum": "20161124",
             "materieleRegistratie": {
-                "datumAanvang": "20150828"
+                "datumAanvang": "20161124"
             },
-            "eersteHandelsnaam": "Test EMZ Dagobert",
+            "eersteHandelsnaam": "Test bedrijf",
             "indHoofdvestiging": "Ja",
             "indCommercieleVestiging": "Ja",
             "totaalWerkzamePersonen": 1,
             "adressen": [
                 {
+                    "type": "correspondentieadres",
+                    "indAfgeschermd": "Nee",
+                    "volledigAdres": "Postbus 1000 2260BA LEIDSCHENDAM",
+                    "postcode": "2260BA",
+                    "postbusnummer": 1000,
+                    "plaats": "LEIDSCHENDAM",
+                    "land": "Nederland"
+                },
+                {
                     "type": "bezoekadres",
                     "indAfgeschermd": "Nee",
-                    "volledigAdres": "Abebe Bikilalaan 17 M                                 1034WL Amsterdam",
-                    "straatnaam": "Abebe Bikilalaan",
-                    "huisnummer": 17,
-                    "huisletter": "M",
-                    "postcode": "1034WL",
-                    "plaats": "Amsterdam",
+                    "volledigAdres": "Genemuidenstraat 208 2545NZ 's-Gravenhage",
+                    "straatnaam": "Genemuidenstraat",
+                    "huisnummer": 208,
+                    "postcode": "2545NZ",
+                    "plaats": "'s-Gravenhage",
                     "land": "Nederland"
                 }
             ],
-            "_links": {
-                "self": {
+            "links": [
+                {
+                    "rel": "self",
                     "href": "https://api.kvk.nl/test/api/v1/basisprofielen/69599084/hoofdvestiging"
                 },
-                "vestigingen": {
+                {
+                    "rel": "vestigingen",
                     "href": "https://api.kvk.nl/test/api/v1/basisprofielen/69599084/vestigingen"
                 },
-                "basisprofiel": {
+                {
+                    "rel": "basisprofiel",
                     "href": "https://api.kvk.nl/test/api/v1/basisprofielen/69599084"
                 },
-                "vestigingsprofiel": {
+                {
+                    "rel": "vestigingsprofiel",
                     "href": "https://api.kvk.nl/test/api/v1/vestigingsprofielen/000038509504"
                 }
-            }
+            ]
         },
         "eigenaar": {
             "rechtsvorm": "Eenmanszaak",
             "uitgebreideRechtsvorm": "Eenmanszaak",
-            "_links": {
-                "self": {
-                    "href": "https://api.kvk.nl/test/api/v1/basisprofielen/69599084/eigenaar"
+            "links": [
+                {
+                    "rel": "self",
+                    "href": "https://api.kvk.nl/api/v1/basisprofielen/69599084/eigenaar"
                 },
-                "basisprofiel": {
-                    "href": "https://api.kvk.nl/test/api/v1/basisprofielen/69599084"
+                {
+                    "rel": "basisprofiel",
+                    "href": "https://api.kvk.nl/api/v1/basisprofielen/69599084"
                 }
-            }
+            ]
         }
     }
 }
