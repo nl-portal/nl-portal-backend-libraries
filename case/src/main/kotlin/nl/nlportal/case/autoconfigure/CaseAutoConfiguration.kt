@@ -15,7 +15,7 @@
  */
 package nl.nlportal.case.autoconfigure
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.case.autodeployment.CaseDefinitionApplicationReadyEventListener
 import nl.nlportal.case.repository.CaseDefinitionRepository
 import nl.nlportal.case.repository.CaseRepository

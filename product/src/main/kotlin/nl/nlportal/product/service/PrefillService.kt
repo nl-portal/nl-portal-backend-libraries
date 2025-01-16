@@ -18,7 +18,7 @@ package nl.nlportal.product.service
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.github.wnameless.json.unflattener.JsonUnflattener
 import com.jayway.jsonpath.JsonPath
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.core.util.Mapper

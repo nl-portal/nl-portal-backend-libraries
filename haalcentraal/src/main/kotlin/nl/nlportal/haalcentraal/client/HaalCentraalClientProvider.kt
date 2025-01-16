@@ -17,8 +17,8 @@ package nl.nlportal.haalcentraal.client
 
 import nl.nlportal.core.ssl.ClientSslContextResolver
 import io.netty.handler.logging.LogLevel
-import mu.KLogger
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KLogger
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import org.springframework.http.HttpHeaders
 import org.springframework.http.client.reactive.ReactorClientHttpConnector

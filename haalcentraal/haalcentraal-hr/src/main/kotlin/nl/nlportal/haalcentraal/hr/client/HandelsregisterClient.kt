@@ -16,8 +16,8 @@
 package nl.nlportal.haalcentraal.hr.client
 
 import io.netty.handler.logging.LogLevel
-import mu.KLogger
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KLogger
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
