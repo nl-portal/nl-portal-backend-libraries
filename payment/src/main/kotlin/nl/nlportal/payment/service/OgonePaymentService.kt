@@ -15,8 +15,8 @@
  */
 package nl.nlportal.payment.service
 
-import mu.KLogger
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KLogger
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig
 import nl.nlportal.payment.constants.OgoneState

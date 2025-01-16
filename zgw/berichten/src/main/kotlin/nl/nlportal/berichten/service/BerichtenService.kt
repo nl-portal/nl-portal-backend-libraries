@@ -15,7 +15,7 @@
  */
 package nl.nlportal.berichten.service
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.berichten.autoconfigure.BerichtenConfigurationProperties
 import nl.nlportal.berichten.domain.Bericht
 import nl.nlportal.berichten.graphql.BerichtenPage

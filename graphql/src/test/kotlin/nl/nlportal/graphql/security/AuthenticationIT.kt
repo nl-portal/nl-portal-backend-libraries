@@ -16,7 +16,7 @@
 package nl.nlportal.graphql.security
 
 import nl.nlportal.graphql.BaseIntegrationTest
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType

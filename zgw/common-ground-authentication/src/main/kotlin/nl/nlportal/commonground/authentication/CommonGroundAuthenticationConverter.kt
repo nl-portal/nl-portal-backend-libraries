@@ -17,7 +17,7 @@ package nl.nlportal.commonground.authentication
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.exception.UserTypeUnsupportedException
 import nl.nlportal.portal.authentication.domain.PortalAuthentication
 import nl.nlportal.portal.authentication.domain.SUB_KEY

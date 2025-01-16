@@ -15,7 +15,7 @@
  */
 package nl.nlportal.zakenapi.graphql
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.besluiten.client.BesluitenApiConfig
 import nl.nlportal.catalogiapi.client.CatalogiApiConfig
 import nl.nlportal.commonground.authentication.WithBedrijfUser
