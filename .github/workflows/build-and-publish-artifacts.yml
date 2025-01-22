@@ -1,0 +1,44 @@
+name: Build and Publish Artifacts
+on:
+  create:
+    branches:
+      - "!**"
+      - "release/*"
+  push:
+    branches:
+      - "!**"
+      - "release/*"
+jobs:
+  detect-variables:
+    runs-on: ubuntu-latest
+    outputs:
+      scope: ${{ steps.detect-scope.outputs.SCOPE }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get version from project
+        id: get-version
+        run: |
+          PROJECT_VERSION=$(grep "version" gradle.properties | sed 's/^.*=//')
+          echo "VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
+      - name: Detect scope
+        id: detect-scope
+        run: echo "SCOPE=$(if grep -Eq "^\d+\.\d+\.\d+$" <<< $VERSION ; then echo "RELEASE" ; elif grep -Eq "^\d+\.\d+\.\d+-.+$" <<< $VERSION ; then echo "SNAPSHOT" ; else echo "UNKNOWN" ; fi)" >> $GITHUB_OUTPUT
+  publish-snapshot:
+    needs:
+      - detect-variables
+    if: ${{ needs.detect-scope.outputs.scope == 'SNAPSHOT' }}
+    uses: .github/workflows/publish-snapshot.yml
+    secrets: inherit
+  publish-release:
+    needs:
+      - detect-variables
+    if: ${{ needs.detect-scope.outputs.scope == 'RELEASE' }}
+    uses: .github/workflows/publish-release.yml
+    secrets: inherit
+  unknown:
+    needs:
+      - detect-variables
+    if: ${{ needs.detect-scope.outputs.scope == 'UNKNOWN' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "::error::Incorrect version format. Make sure the version property in gradle.properties is valid" && exit 1
