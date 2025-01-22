@@ -27,13 +27,13 @@ jobs:
     needs:
       - detect-variables
     if: ${{ needs.detect-scope.outputs.scope == 'SNAPSHOT' }}
-    uses: .github/workflows/publish-snapshot.yml
+    uses: ./.github/workflows/publish-snapshot.yml
     secrets: inherit
   publish-release:
     needs:
       - detect-variables
     if: ${{ needs.detect-scope.outputs.scope == 'RELEASE' }}
-    uses: .github/workflows/publish-release.yml
+    uses: ./.github/workflows/publish-release.yml
     secrets: inherit
   unknown:
     needs:
