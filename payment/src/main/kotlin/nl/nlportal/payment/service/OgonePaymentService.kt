@@ -73,7 +73,7 @@ class OgonePaymentService(
     suspend fun handlePostSale(serverHttpRequest: ServerHttpRequest): String {
         val pspId = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_PSPID]?.get(0)
         if (!StringUtils.isBlank(pspId)) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request is not from payment provider")
+            return "Request is not from payment provider"
         }
 
         val status = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_STATUS]?.get(0)?.toInt()
@@ -82,10 +82,13 @@ class OgonePaymentService(
             status != OgoneState.PENDING1.status &&
             status != OgoneState.PENDING2.status
         ) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request has not the correct status: $status")
+            return "Request has not the correct status: $status"
         }
 
         val orderId = serverHttpRequest.queryParams[OgonePayment.QUERYSTRING_ORDER_ID]?.get(0)
+        if (!isUUID(orderId)) {
+            return "OrderId is not an UUID: $orderId"
+        }
         val objectsApiTask = getObjectsApiTaak(UUID.fromString(orderId))
         if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
             return "Task is already completed"
@@ -97,7 +100,7 @@ class OgonePaymentService(
                 ?: return "Task does not have a pspId"
 
         if (!isValidOgoneRequest(serverHttpRequest, pspIdFromTask)) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request is not valid")
+            return "Request is not valid"
         }
 
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
@@ -160,8 +163,15 @@ class OgonePaymentService(
                         .append(field.value)
                         .append(shaKey)
                 }
-            logger.info("SHA version: {} - {}", shaVersion, parametersConcatenation.toString())
             return CoreUtils.createHash(parametersConcatenation.toString(), shaVersion)
+        }
+
+        fun isUUID(orderId: String?): Boolean {
+            return try {
+                UUID.fromString(orderId) != null
+            } catch (e: IllegalArgumentException) {
+                false
+            }
         }
     }
 }
