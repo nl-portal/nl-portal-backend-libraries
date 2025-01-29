@@ -71,6 +71,11 @@ class OgonePaymentService(
     }
 
     suspend fun handlePostSale(serverHttpRequest: ServerHttpRequest): String {
+        val orderId = serverHttpRequest.queryParams[OgonePayment.QUERYSTRING_ORDER_ID]?.get(0)
+        if (!isUUID(orderId)) {
+            return "OrderId is not an UUID: $orderId"
+        }
+
         val pspId = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_PSPID]?.get(0)
         if (!StringUtils.isBlank(pspId)) {
             return "Request is not from payment provider"
@@ -85,10 +90,6 @@ class OgonePaymentService(
             return "Request has not the correct status: $status"
         }
 
-        val orderId = serverHttpRequest.queryParams[OgonePayment.QUERYSTRING_ORDER_ID]?.get(0)
-        if (!isUUID(orderId)) {
-            return "OrderId is not an UUID: $orderId"
-        }
         val objectsApiTask = getObjectsApiTaak(UUID.fromString(orderId))
         if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
             return "Task is already completed"
