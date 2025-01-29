@@ -34,11 +34,11 @@ import org.springframework.http.server.reactive.ServerHttpRequest
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
-class OgonePaymentService(
+open class OgonePaymentService(
     private val paymentConfig: OgonePaymentConfig,
     private val objectsApiClient: ObjectsApiClient,
 ) {
-    fun createPayment(paymentRequest: OgonePaymentRequest): OgonePayment {
+    open fun createPayment(paymentRequest: OgonePaymentRequest): OgonePayment {
         val pspId = paymentRequest.pspId
         val paymentProfile =
             paymentConfig.getPaymentProfile(pspId)
@@ -68,7 +68,7 @@ class OgonePaymentService(
         return payment
     }
 
-    suspend fun handlePostSale(serverHttpRequest: ServerHttpRequest): String {
+    open suspend fun handlePostSale(serverHttpRequest: ServerHttpRequest): String {
         val orderId = serverHttpRequest.queryParams[OgonePayment.QUERYSTRING_ORDER_ID]?.get(0)
         if (isUUID(orderId)) {
             val pspId = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_PSPID]?.get(0)
