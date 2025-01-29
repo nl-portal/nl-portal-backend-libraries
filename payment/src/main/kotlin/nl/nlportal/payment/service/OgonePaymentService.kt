@@ -73,7 +73,7 @@ open class OgonePaymentService(
         if (isUUID(orderId)) {
             val pspId = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_PSPID]?.get(0)
             if (!StringUtils.isBlank(pspId)) {
-                return "Request is not from payment provider"
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request is not from payment provider")
             }
 
             val status = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_STATUS]?.get(0)?.toInt()
@@ -82,7 +82,7 @@ open class OgonePaymentService(
                 status != OgoneState.PENDING1.status &&
                 status != OgoneState.PENDING2.status
             ) {
-                return "Request has not the correct status: $status"
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request has not the correct status: $status")
             }
 
             val objectsApiTask = getObjectsApiTaak(UUID.fromString(orderId))
@@ -96,7 +96,7 @@ open class OgonePaymentService(
                     ?: return "Task does not have a pspId"
 
             if (!isValidOgoneRequest(serverHttpRequest, pspIdFromTask)) {
-                return "Request is not valid"
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request is not valid")
             }
 
             val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)

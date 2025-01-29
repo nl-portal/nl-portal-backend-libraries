@@ -127,7 +127,7 @@ internal class OgonePaymentControllerIT(
         webTestClient.get()
             .uri("/api/public/payment/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&STATUS=1&AMOUNT=200&SHASIGN=$shaSign")
             .exchange()
-            .expectStatus().isOk
+            .expectStatus().isBadRequest
             .expectBody()
             .returnResult()
             .responseBody
@@ -140,7 +140,7 @@ internal class OgonePaymentControllerIT(
         webTestClient.get()
             .uri("/api/public/payment/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&PSPID=TAX&STATUS=91")
             .exchange()
-            .expectStatus().isOk
+            .expectStatus().isBadRequest
             .expectBody()
             .returnResult()
             .responseBody
@@ -153,7 +153,7 @@ internal class OgonePaymentControllerIT(
         webTestClient.get()
             .uri("/api/public/payment/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&PSPID=TAX&STATUS=1")
             .exchange()
-            .expectStatus().isOk
+            .expectStatus().isBadRequest
             .expectBody()
             .returnResult()
             .responseBody
