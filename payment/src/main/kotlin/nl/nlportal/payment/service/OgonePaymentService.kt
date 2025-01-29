@@ -26,21 +26,20 @@ import nl.nlportal.payment.domain.PaymentField
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
-import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
 import nl.nlportal.zgw.taak.domain.TaakObjectV2
 import nl.nlportal.zgw.taak.domain.TaakStatus
 import org.apache.commons.lang3.StringUtils
 import org.springframework.http.HttpStatus
 import org.springframework.http.server.reactive.ServerHttpRequest
 import org.springframework.web.server.ResponseStatusException
-import java.util.*
+import java.util.Locale
+import java.util.UUID
 
-class OgonePaymentService(
+open class OgonePaymentService(
     private val paymentConfig: OgonePaymentConfig,
-    private val objectsApiTaskConfig: TaakObjectConfig,
     private val objectsApiClient: ObjectsApiClient,
 ) {
-    fun createPayment(paymentRequest: OgonePaymentRequest): OgonePayment {
+    open fun createPayment(paymentRequest: OgonePaymentRequest): OgonePayment {
         val pspId = paymentRequest.pspId
         val paymentProfile =
             paymentConfig.getPaymentProfile(pspId)
@@ -70,43 +69,44 @@ class OgonePaymentService(
         return payment
     }
 
-    suspend fun handlePostSale(serverHttpRequest: ServerHttpRequest): String {
-        val pspId = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_PSPID]?.get(0)
-        if (!StringUtils.isBlank(pspId)) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request is not from payment provider")
-        }
-
-        val status = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_STATUS]?.get(0)?.toInt()
-        if (status != OgoneState.SUCCESS.status &&
-            status != OgoneState.PENDING.status &&
-            status != OgoneState.PENDING1.status &&
-            status != OgoneState.PENDING2.status
-        ) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request has not the correct status: $status")
-        }
-
+    open suspend fun handlePostSale(serverHttpRequest: ServerHttpRequest): String {
         val orderId = serverHttpRequest.queryParams[OgonePayment.QUERYSTRING_ORDER_ID]?.get(0)
-        val objectsApiTask = getObjectsApiTaak(UUID.fromString(orderId))
-        if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
-            return "Task is already completed"
+        if (isUUID(orderId)) {
+            val pspId = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_PSPID]?.get(0)
+            if (!StringUtils.isBlank(pspId)) {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request is not from payment provider")
+            }
+
+            val status = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_STATUS]?.get(0)?.toInt()
+            if (status != OgoneState.SUCCESS.status &&
+                status != OgoneState.PENDING.status &&
+                status != OgoneState.PENDING1.status &&
+                status != OgoneState.PENDING2.status
+            ) {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request has not the correct status: $status")
+            }
+
+            val objectsApiTask = getObjectsApiTaak(UUID.fromString(orderId))
+            if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
+                return "Task is already completed"
+            }
+
+            // validate ogone request
+            val pspIdFromTask =
+                objectsApiTask.record.data.ogonebetaling?.pspid
+                    ?: return "Task does not have a pspId"
+
+            if (!isValidOgoneRequest(serverHttpRequest, pspIdFromTask)) {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request is not valid")
+            }
+
+            val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
+            updateRequest.record.data.status = TaakStatus.AFGEROND
+            updateRequest.record.correctedBy = "Payment provider"
+            updateRequest.record.correctionFor = objectsApiTask.record.index.toString()
+            objectsApiClient.updateObject(objectsApiTask.uuid, updateRequest)
         }
-
-        // validate ogone request
-        val pspIdFromTask =
-            objectsApiTask.record.data.ogonebetaling?.pspid
-                ?: return "Task does not have a pspId"
-
-        if (!isValidOgoneRequest(serverHttpRequest, pspIdFromTask)) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request is not valid")
-        }
-
-        val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
-        updateRequest.record.data.status = TaakStatus.AFGEROND
-        updateRequest.record.correctedBy = "Payment provider"
-        updateRequest.record.correctionFor = objectsApiTask.record.index.toString()
-        objectsApiClient.updateObject(objectsApiTask.uuid, updateRequest)
-
-        return "Request successful processed"
+        return "Request successful processed for order $orderId"
     }
 
     private suspend fun getObjectsApiTaak(taskId: UUID): ObjectsApiObject<TaakObjectV2> {
@@ -160,8 +160,15 @@ class OgonePaymentService(
                         .append(field.value)
                         .append(shaKey)
                 }
-            logger.info("SHA version: {} - {}", shaVersion, parametersConcatenation.toString())
             return CoreUtils.createHash(parametersConcatenation.toString(), shaVersion)
+        }
+
+        fun isUUID(orderId: String?): Boolean {
+            return try {
+                UUID.fromString(orderId) != null
+            } catch (e: IllegalArgumentException) {
+                false
+            }
         }
     }
 }

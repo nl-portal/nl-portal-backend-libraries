@@ -19,8 +19,8 @@ import nl.nlportal.payment.api.OgonePaymentController
 import nl.nlportal.payment.graphql.OgonePaymentMutation
 import nl.nlportal.payment.service.OgonePaymentService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
-import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
 import org.springframework.boot.autoconfigure.AutoConfiguration
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
@@ -28,14 +28,13 @@ import org.springframework.context.annotation.Bean
 @EnableConfigurationProperties(OgonePaymentConfig::class)
 class PaymentAutoConfiguration {
     @Bean
+    @ConditionalOnMissingBean(OgonePaymentService::class)
     fun ogonePaymentService(
         ogonePaymentConfig: OgonePaymentConfig,
         objectsApiClient: ObjectsApiClient,
-        taakObjectConfig: TaakObjectConfig,
     ): OgonePaymentService {
         return OgonePaymentService(
             ogonePaymentConfig,
-            taakObjectConfig,
             objectsApiClient,
         )
     }
@@ -46,6 +45,7 @@ class PaymentAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(OgonePaymentController::class)
     fun ogonePaymentController(ogonePaymentService: OgonePaymentService): OgonePaymentController {
         return OgonePaymentController(ogonePaymentService)
     }
