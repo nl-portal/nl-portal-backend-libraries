@@ -72,45 +72,42 @@ class OgonePaymentService(
 
     suspend fun handlePostSale(serverHttpRequest: ServerHttpRequest): String {
         val orderId = serverHttpRequest.queryParams[OgonePayment.QUERYSTRING_ORDER_ID]?.get(0)
-        if (!isUUID(orderId)) {
-            return "OrderId is not an UUID: $orderId"
+        if (isUUID(orderId)) {
+            val pspId = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_PSPID]?.get(0)
+            if (!StringUtils.isBlank(pspId)) {
+                return "Request is not from payment provider"
+            }
+
+            val status = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_STATUS]?.get(0)?.toInt()
+            if (status != OgoneState.SUCCESS.status &&
+                status != OgoneState.PENDING.status &&
+                status != OgoneState.PENDING1.status &&
+                status != OgoneState.PENDING2.status
+            ) {
+                return "Request has not the correct status: $status"
+            }
+
+            val objectsApiTask = getObjectsApiTaak(UUID.fromString(orderId))
+            if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
+                return "Task is already completed"
+            }
+
+            // validate ogone request
+            val pspIdFromTask =
+                objectsApiTask.record.data.ogonebetaling?.pspid
+                    ?: return "Task does not have a pspId"
+
+            if (!isValidOgoneRequest(serverHttpRequest, pspIdFromTask)) {
+                return "Request is not valid"
+            }
+
+            val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
+            updateRequest.record.data.status = TaakStatus.AFGEROND
+            updateRequest.record.correctedBy = "Payment provider"
+            updateRequest.record.correctionFor = objectsApiTask.record.index.toString()
+            objectsApiClient.updateObject(objectsApiTask.uuid, updateRequest)
         }
-
-        val pspId = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_PSPID]?.get(0)
-        if (!StringUtils.isBlank(pspId)) {
-            return "Request is not from payment provider"
-        }
-
-        val status = serverHttpRequest.queryParams[OgonePayment.PAYMENT_PROPERTY_STATUS]?.get(0)?.toInt()
-        if (status != OgoneState.SUCCESS.status &&
-            status != OgoneState.PENDING.status &&
-            status != OgoneState.PENDING1.status &&
-            status != OgoneState.PENDING2.status
-        ) {
-            return "Request has not the correct status: $status"
-        }
-
-        val objectsApiTask = getObjectsApiTaak(UUID.fromString(orderId))
-        if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
-            return "Task is already completed"
-        }
-
-        // validate ogone request
-        val pspIdFromTask =
-            objectsApiTask.record.data.ogonebetaling?.pspid
-                ?: return "Task does not have a pspId"
-
-        if (!isValidOgoneRequest(serverHttpRequest, pspIdFromTask)) {
-            return "Request is not valid"
-        }
-
-        val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
-        updateRequest.record.data.status = TaakStatus.AFGEROND
-        updateRequest.record.correctedBy = "Payment provider"
-        updateRequest.record.correctionFor = objectsApiTask.record.index.toString()
-        objectsApiClient.updateObject(objectsApiTask.uuid, updateRequest)
-
-        return "Request successful processed"
+        return "Request successful processed for order $orderId"
     }
 
     private suspend fun getObjectsApiTaak(taskId: UUID): ObjectsApiObject<TaakObjectV2> {
