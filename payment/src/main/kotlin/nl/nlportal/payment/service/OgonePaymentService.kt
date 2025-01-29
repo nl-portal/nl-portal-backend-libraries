@@ -26,7 +26,6 @@ import nl.nlportal.payment.domain.PaymentField
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
-import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
 import nl.nlportal.zgw.taak.domain.TaakObjectV2
 import nl.nlportal.zgw.taak.domain.TaakStatus
 import org.apache.commons.lang3.StringUtils
@@ -37,7 +36,6 @@ import java.util.*
 
 class OgonePaymentService(
     private val paymentConfig: OgonePaymentConfig,
-    private val objectsApiTaskConfig: TaakObjectConfig,
     private val objectsApiClient: ObjectsApiClient,
 ) {
     fun createPayment(paymentRequest: OgonePaymentRequest): OgonePayment {
