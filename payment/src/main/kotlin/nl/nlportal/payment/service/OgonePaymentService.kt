@@ -32,7 +32,8 @@ import org.apache.commons.lang3.StringUtils
 import org.springframework.http.HttpStatus
 import org.springframework.http.server.reactive.ServerHttpRequest
 import org.springframework.web.server.ResponseStatusException
-import java.util.*
+import java.util.Locale
+import java.util.UUID
 
 open class OgonePaymentService(
     private val paymentConfig: OgonePaymentConfig,
