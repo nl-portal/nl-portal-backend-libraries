@@ -122,7 +122,7 @@ class ProductQuery(
         return productService.getProductVerbruiksObjecten(
             productId.toString(),
             pageNumber = 1,
-            pageSize = 100,
+            pageSize = 20,
         )
     }
 
