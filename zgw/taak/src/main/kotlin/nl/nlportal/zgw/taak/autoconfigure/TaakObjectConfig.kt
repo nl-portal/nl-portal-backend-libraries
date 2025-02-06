@@ -17,7 +17,7 @@ package nl.nlportal.zgw.taak.autoconfigure
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.zgw.taak.taakobject")
+@ConfigurationProperties(prefix = "nl-portal.config.taak.taakobject")
 class TaakObjectConfig(
     @Deprecated("Use version 2")
     var typeUrl: String = "",

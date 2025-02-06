@@ -17,7 +17,7 @@ package nl.nlportal.documentenapi.client
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.zgw.documentenapis.virusscan.clamav")
+@ConfigurationProperties(prefix = "nl-portal.config.virusscan.clamav")
 data class ClamAVVirusScanConfig(
     var enabled: Boolean = false,
     var hostName: String = "",

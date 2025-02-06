@@ -14,7 +14,7 @@ spring:
                     issuer-uri: http://localhost:8082/auth/realms/nlportal
 
 nl-portal:
-    zgw:
+    config:
         documentenapis:
             default-document-api: openzaak
             configurations:

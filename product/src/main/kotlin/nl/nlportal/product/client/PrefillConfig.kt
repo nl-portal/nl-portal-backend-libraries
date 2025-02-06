@@ -18,7 +18,7 @@ package nl.nlportal.product.client
 import nl.nlportal.core.util.ShaVersion
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.prefill", ignoreUnknownFields = true)
+@ConfigurationProperties(prefix = "nl-portal.config.prefill", ignoreUnknownFields = true)
 data class PrefillConfig(
     val typeUrl: String,
     val prefillShaVersion: String = ShaVersion.SHA1.version,

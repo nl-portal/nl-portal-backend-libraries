@@ -17,7 +17,7 @@ package nl.nlportal.zakenapi.client
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.zgw.zakenapi")
+@ConfigurationProperties(prefix = "nl-portal.config.zakenapi")
 data class ZakenApiConfig(
     var url: String = "",
     var clientId: String = "",

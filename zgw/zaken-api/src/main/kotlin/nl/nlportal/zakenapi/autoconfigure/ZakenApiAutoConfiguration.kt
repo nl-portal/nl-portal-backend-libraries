@@ -20,7 +20,7 @@ import nl.nlportal.catalogiapi.client.CatalogiApiConfig
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.core.security.config.HttpSecurityConfigurer
 import nl.nlportal.documentenapi.service.DocumentenApiService
-import nl.nlportal.zakenapi.client.ZaakDocumentenConfig
+import nl.nlportal.zakenapi.client.EnkelvoudiginformatieobjectenConfig
 import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.client.ZakenApiConfig
 import nl.nlportal.zakenapi.graphql.ZaakQuery
@@ -37,13 +37,13 @@ import org.springframework.web.reactive.function.client.WebClient
 @AutoConfiguration
 @EnableConfigurationProperties(
     ZakenApiConfig::class,
-    ZaakDocumentenConfig::class,
+    EnkelvoudiginformatieobjectenConfig::class,
 )
 class ZakenApiAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(ZakenApiService::class)
     fun zakenApiService(
-        zaakDocumentenConfig: ZaakDocumentenConfig,
+        zaakDocumentenConfig: EnkelvoudiginformatieobjectenConfig,
         zakenApiClient: ZakenApiClient,
         documentenApiService: DocumentenApiService,
         objectsApiClient: ObjectsApiClient,

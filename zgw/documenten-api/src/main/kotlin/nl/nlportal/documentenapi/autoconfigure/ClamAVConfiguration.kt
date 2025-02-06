@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-@ConditionalOnProperty(prefix = "nl-portal.zgw.documentenapis.virusscan.clamav", name = ["enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config.virusscan.clamav", name = ["enabled"], havingValue = "true")
 @EnableConfigurationProperties(ClamAVVirusScanConfig::class)
 class ClamAVConfiguration {
     @Bean

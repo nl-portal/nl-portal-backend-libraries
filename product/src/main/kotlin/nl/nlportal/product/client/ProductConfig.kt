@@ -17,7 +17,7 @@ package nl.nlportal.product.client
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.product", ignoreUnknownFields = true)
+@ConfigurationProperties(prefix = "nl-portal.config.product", ignoreUnknownFields = true)
 class ProductConfig(
     val productTypeUrl: String,
     val productInstantieTypeUrl: String,

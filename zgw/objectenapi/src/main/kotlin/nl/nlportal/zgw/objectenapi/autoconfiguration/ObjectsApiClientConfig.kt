@@ -18,7 +18,7 @@ package nl.nlportal.zgw.objectenapi.autoconfiguration
 import org.springframework.boot.context.properties.ConfigurationProperties
 import java.net.URI
 
-@ConfigurationProperties(prefix = "nl-portal.objectsapi")
+@ConfigurationProperties(prefix = "nl-portal.config.objectenapi")
 class ObjectsApiClientConfig(
     var url: URI = URI.create(""),
     var token: String = "",

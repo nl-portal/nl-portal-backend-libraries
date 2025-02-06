@@ -17,7 +17,7 @@ package nl.nlportal.catalogiapi.client
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.zgw.catalogiapi")
+@ConfigurationProperties(prefix = "nl-portal.config.catalogiapi")
 data class CatalogiApiConfig(
     var url: String = "",
     var clientId: String = "",
