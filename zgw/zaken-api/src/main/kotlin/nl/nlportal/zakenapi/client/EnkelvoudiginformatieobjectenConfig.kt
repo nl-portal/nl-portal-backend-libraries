@@ -25,8 +25,8 @@ import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.OPENBAAR
 import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.ZAAKVERTROUWELIJK
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.zgw.zaken-api.zaak-documenten")
-data class ZaakDocumentenConfig(
+@ConfigurationProperties(prefix = "nl-portal.config.enkelvoudiginformatieobjecten")
+data class EnkelvoudiginformatieobjectenConfig(
     var vertrouwelijkheidsaanduidingWhitelist: List<Vertrouwelijkheid> =
         listOf(
             OPENBAAR,

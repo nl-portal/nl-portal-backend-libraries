@@ -18,7 +18,7 @@ package nl.nlportal.openklant.autoconfigure
 import org.springframework.boot.context.properties.ConfigurationProperties
 import java.net.URI
 
-@ConfigurationProperties(prefix = "nl-portal.config.openklant")
+@ConfigurationProperties(prefix = "nl-portal.config.openklant2")
 data class OpenKlantModuleConfiguration(
     var enabled: Boolean = false,
     var properties: OpenKlantConfigurationProperties,

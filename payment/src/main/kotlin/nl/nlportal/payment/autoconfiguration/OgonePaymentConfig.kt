@@ -18,7 +18,7 @@ package nl.nlportal.payment.autoconfiguration
 import nl.nlportal.core.util.ShaVersion
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.payment.ogone", ignoreUnknownFields = true)
+@ConfigurationProperties(prefix = "nl-portal.config.payment.ogone", ignoreUnknownFields = true)
 data class OgonePaymentConfig(
     val url: String,
     val shaOutParameters: List<String>,

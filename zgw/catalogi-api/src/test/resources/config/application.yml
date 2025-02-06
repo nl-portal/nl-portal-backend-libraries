@@ -7,7 +7,7 @@ logging:
         reactor.netty.http.client.HttpClient: DEBUG
 
 nl-portal:
-    zgw:
+    config:
         catalogiapi:
             url: #filled in test
             clientId: valtimo_client

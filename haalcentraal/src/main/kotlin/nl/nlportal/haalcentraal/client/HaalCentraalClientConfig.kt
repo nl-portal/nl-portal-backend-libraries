@@ -18,7 +18,7 @@ package nl.nlportal.haalcentraal.client
 import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.haalcentraal", ignoreUnknownFields = true)
+@ConfigurationProperties(prefix = "nl-portal.config.haalcentraal", ignoreUnknownFields = true)
 data class HaalCentraalClientConfig(
     var url: String = "",
     val apiKey: String? = null,

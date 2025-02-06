@@ -17,13 +17,13 @@ package nl.nlportal.commonground.authentication
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "keycloak")
+@ConfigurationProperties(prefix = "nl-portal.authentication.keycloak")
 data class KeycloakConfig(
     var resource: String = "",
     var audience: String = "",
-    var credentials: Credentials = Credentials(""),
-)
-
-data class Credentials(
-    var secret: String = "",
-)
+    var credentials: KeycloakCredentials = KeycloakCredentials(""),
+) {
+    data class KeycloakCredentials(
+        var secret: String = "",
+    )
+}

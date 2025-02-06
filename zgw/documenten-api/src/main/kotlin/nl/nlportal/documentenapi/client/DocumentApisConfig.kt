@@ -18,7 +18,7 @@ package nl.nlportal.documentenapi.client
 import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.zgw.documentenapis", ignoreUnknownFields = true)
+@ConfigurationProperties(prefix = "nl-portal.config.documentenapis", ignoreUnknownFields = true)
 data class DocumentApisConfig(
     var defaultDocumentApi: String,
     var configurations: Map<String, DocumentApiConfig> = mapOf(),
@@ -37,13 +37,13 @@ data class DocumentApisConfig(
             .firstOrNull()
             ?: throw NullPointerException("No documentapi configuration found for zaakdocument with url $documentUrl")
     }
-}
 
-data class DocumentApiConfig(
-    var url: String,
-    var clientId: String? = null,
-    var secret: String? = null,
-    var rsin: String? = null,
-    var documentTypeUrl: String? = null,
-    val ssl: Ssl? = null,
-)
+    data class DocumentApiConfig(
+        var url: String,
+        var clientId: String? = null,
+        var secret: String? = null,
+        var rsin: String? = null,
+        var documentTypeUrl: String? = null,
+        val ssl: Ssl? = null,
+    )
+}

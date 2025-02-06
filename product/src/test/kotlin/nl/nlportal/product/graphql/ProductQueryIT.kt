@@ -75,8 +75,8 @@ internal class ProductQueryIT(
         @JvmStatic
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
-            propsRegistry.add("nl-portal.zgw.zakenapi.url") { url }
-            propsRegistry.add("nl-portal.dmn.url") { url }
+            propsRegistry.add("nl-portal.config.zakenapi.url") { url }
+            propsRegistry.add("nl-portal.config.dmn.url") { url }
         }
 
         @JvmStatic

@@ -17,7 +17,7 @@ package nl.nlportal.berichten.autoconfigure
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.zgw.berichten")
+@ConfigurationProperties(prefix = "nl-portal.config.berichten")
 data class BerichtenConfigurationProperties(
     var berichtObjectTypeUrl: String,
 )

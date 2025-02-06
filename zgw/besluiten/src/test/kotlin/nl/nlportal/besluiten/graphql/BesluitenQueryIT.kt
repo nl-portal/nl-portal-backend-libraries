@@ -46,7 +46,7 @@ class BesluitenQueryIT(
         @JvmStatic
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
-            propsRegistry.add("nl-portal.zgw.besluiten.url") { url }
+            propsRegistry.add("nl-portal.config.besluitenapi.url") { url }
         }
 
         @JvmStatic

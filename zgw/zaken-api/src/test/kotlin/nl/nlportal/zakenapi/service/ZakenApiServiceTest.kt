@@ -17,7 +17,7 @@ import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.zakenapi.TestHelper.testDocument
 import nl.nlportal.zakenapi.TestHelper.testZaakDocument
 import nl.nlportal.zakenapi.TestHelper.testZaakRol
-import nl.nlportal.zakenapi.client.ZaakDocumentenConfig
+import nl.nlportal.zakenapi.client.EnkelvoudiginformatieobjectenConfig
 import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.domain.ZaakDocument
 import nl.nlportal.zakenapi.domain.ZaakRol
@@ -52,7 +52,7 @@ class ZakenApiServiceTest {
 
     @Mock
     private lateinit var documentenApiService: DocumentenApiService
-    private lateinit var zaakDocumentenConfig: ZaakDocumentenConfig
+    private lateinit var zaakDocumentenConfig: EnkelvoudiginformatieobjectenConfig
 
     @Mock
     private lateinit var authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService
@@ -65,7 +65,7 @@ class ZakenApiServiceTest {
         MockitoAnnotations.openMocks(this)
 
         zaakDocumentenConfig =
-            ZaakDocumentenConfig(
+            EnkelvoudiginformatieobjectenConfig(
                 vertrouwelijkheidsaanduidingWhitelist =
                     listOf(
                         OPENBAAR,

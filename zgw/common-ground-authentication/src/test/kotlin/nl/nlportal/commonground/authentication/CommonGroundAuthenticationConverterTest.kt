@@ -15,6 +15,7 @@
  */
 package nl.nlportal.commonground.authentication
 
+import nl.nlportal.commonground.authentication.KeycloakConfig.KeycloakCredentials
 import nl.nlportal.commonground.authentication.exception.UserTypeUnsupportedException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -36,7 +37,7 @@ import reactor.core.publisher.Mono
 internal class CommonGroundAuthenticationConverterTest {
     @Mock
     lateinit var decoder: ReactiveJwtDecoder
-    val keycloak = KeycloakConfig("bla", "bla_audience", Credentials("Bla"))
+    val keycloak = KeycloakConfig("bla", "bla_audience", KeycloakCredentials("Bla"))
     lateinit var converter: CommonGroundAuthenticationConverter
 
     @BeforeEach

@@ -64,8 +64,8 @@ internal class ZaakQueryIT(
         @JvmStatic
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
-            propsRegistry.add("nl-portal.zgw.zakenapi.url") { url }
-            propsRegistry.add("nl-portal.zgw.besluiten.url") { url }
+            propsRegistry.add("nl-portal.config.zakenapi.url") { url }
+            propsRegistry.add("nl-portal.config.besluitenapi.url") { url }
         }
 
         @JvmStatic

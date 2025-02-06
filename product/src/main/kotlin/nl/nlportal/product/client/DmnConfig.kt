@@ -18,7 +18,7 @@ package nl.nlportal.product.client
 import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.dmn", ignoreUnknownFields = true)
+@ConfigurationProperties(prefix = "nl-portal.config.dmn", ignoreUnknownFields = true)
 data class DmnConfig(
     val url: String,
     val clientId: String? = null,
