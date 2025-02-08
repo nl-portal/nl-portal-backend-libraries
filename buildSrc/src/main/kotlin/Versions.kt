@@ -19,6 +19,7 @@ internal object Versions {
     const val jsonPath = "2.9.0"
     const val jsonWebTokens = "0.12.6"
     const val kotlinCoroutines = "1.8.1"
+    const val springCloudVersion = "4.2.0"
 }
 
 internal object TestVersions {

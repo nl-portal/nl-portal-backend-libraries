@@ -160,7 +160,7 @@ class OgonePaymentService(
                         .append(field.value)
                         .append(shaKey)
                 }
-            logger.info{"SHA version: ${shaVersion} - ${ parametersConcatenation}"}
+            logger.info { "SHA version: $shaVersion - ${ parametersConcatenation}" }
             return CoreUtils.createHash(parametersConcatenation.toString(), shaVersion)
         }
     }
