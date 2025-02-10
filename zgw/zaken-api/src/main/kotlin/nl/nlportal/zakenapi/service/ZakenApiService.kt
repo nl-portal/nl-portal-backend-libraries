@@ -78,7 +78,7 @@ class ZakenApiService(
         }
 
         return request.retrieve().let {
-            ZaakPage.fromResultPage(page, pageSize ?: 100, it)
+            ZaakPage.fromResultPage(page, pageSize ?: 20, it)
         }
     }
 

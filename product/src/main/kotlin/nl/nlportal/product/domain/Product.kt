@@ -95,7 +95,7 @@ class Product(
         return productService.getProductVerbruiksObjecten(
             productId = id.toString(),
             pageNumber = 1,
-            pageSize = 100,
+            pageSize = 20,
         )
     }
 
