@@ -17,6 +17,10 @@ query {
                     value
                 },
                 data
+            },
+            koppeling {
+                registratie,
+                value
             }
             identificatie {
                 type
