@@ -84,6 +84,32 @@ internal class OgonePaymentControllerIT(
     }
 
     @Test
+    fun postSaleTestOrderIdNotUUID() {
+        val parameterList =
+            listOf(
+                PaymentField(OgonePayment.PAYMENT_PROPERTY_ORDER_ID, "58fad5ab"),
+                PaymentField(OgonePayment.PAYMENT_PROPERTY_STATUS, "91"),
+            )
+
+        val shaSign =
+            OgonePaymentService.hashParameters(
+                parameterList,
+                paymentConfig.getPaymentProfile("belastingzaken")!!.shaOutKey,
+                paymentConfig.getPaymentProfile("belastingzaken")!!.shaVersion,
+            ).uppercase()
+
+        webTestClient.get()
+            .uri("/api/public/payment/ogone/postsale?orderID=58fad5ab&STATUS=91&SHASIGN=$shaSign")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody()
+            .returnResult()
+            .responseBody
+            .contentToString()
+            .contentEquals("Request Successful processed")
+    }
+
+    @Test
     fun postSaleTestInvalid() {
         val parameterList =
             listOf(

@@ -21,7 +21,6 @@ import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig
 import nl.nlportal.payment.autoconfiguration.OgonePaymentProfile
 import nl.nlportal.payment.domain.OgonePaymentRequest
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
-import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
@@ -35,8 +34,7 @@ import org.springframework.web.server.ResponseStatusException
 internal class OgonePaymentServiceTest {
     val paymentConfig: OgonePaymentConfig = mock()
     val objectsApiClient: ObjectsApiClient = mock()
-    val taakObjectConfig: TaakObjectConfig = mock()
-    val ogonePaymentService = OgonePaymentService(paymentConfig, taakObjectConfig, objectsApiClient)
+    val ogonePaymentService = OgonePaymentService(paymentConfig, objectsApiClient)
 
     @BeforeEach
     fun setup() {
