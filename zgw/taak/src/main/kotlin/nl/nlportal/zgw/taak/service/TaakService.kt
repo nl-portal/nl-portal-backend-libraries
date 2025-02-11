@@ -363,7 +363,7 @@ open class TaakService(
             objectSearchParameters.add(ObjectSearchParameter("koppeling__registratie", Comparator.EQUAL_TO, "zaak"))
             objectSearchParameters.add(
                 ObjectSearchParameter(
-                    "koppeling__uuid",
+                    "koppeling__value",
                     Comparator.STRING_CONTAINS,
                     it.toString(),
                 ),
