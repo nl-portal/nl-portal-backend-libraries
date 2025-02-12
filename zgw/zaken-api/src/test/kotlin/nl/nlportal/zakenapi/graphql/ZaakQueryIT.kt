@@ -100,7 +100,7 @@ internal class ZaakQueryIT(
         val query =
             """
             query {
-                getZaken(pageNumber: 1) {
+                getZaken(page: 1) {
                 number
                 size
                 totalPages
@@ -169,7 +169,7 @@ internal class ZaakQueryIT(
         val query =
             """
             query {
-                getZaken(pageNumber: 1, isOpen: true) {
+                getZaken(page: 1, isOpen: true) {
                 number
                 size
                 totalPages
@@ -238,7 +238,7 @@ internal class ZaakQueryIT(
         val query =
             """
             query {
-                getZaken(pageNumber: 1, identificatie: "ZAAK-2024-0000000001") {
+                getZaken(page: 1, identificatie: "ZAAK-2024-0000000001") {
                 number
                 size
                 totalPages
@@ -281,7 +281,7 @@ internal class ZaakQueryIT(
         val query =
             """
             query {
-                getZaken(pageNumber: 1) {
+                getZaken(page: 1) {
                 number
                 size
                 totalPages
@@ -353,7 +353,7 @@ internal class ZaakQueryIT(
         val query =
             """
             query {
-                getZaken(pageNumber: 1) {
+                getZaken(page: 1) {
                 number
                 size
                 totalPages
@@ -425,7 +425,7 @@ internal class ZaakQueryIT(
         val query =
             """
             query {
-                getZaken(pageNumber: 1) {
+                getZaken(page: 1) {
                 number
                 size
                 totalPages
@@ -507,7 +507,7 @@ internal class ZaakQueryIT(
         val query =
             """
             query {
-                getZaken(pageNumber: 0) {
+                getZaken(page: 0) {
                     number
                 size
                 totalPages
