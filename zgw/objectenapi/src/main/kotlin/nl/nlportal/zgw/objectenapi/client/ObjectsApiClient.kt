@@ -30,6 +30,7 @@ import org.springframework.http.codec.json.Jackson2JsonDecoder
 import org.springframework.http.codec.json.Jackson2JsonEncoder
 import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.awaitBodilessEntity
 import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.awaitBodyOrNull
 import org.springframework.web.server.ResponseStatusException
@@ -112,11 +113,13 @@ open class ObjectsApiClient(
             .awaitBody()
     }
 
-    fun deleteObjectById(id: UUID) {
+    suspend fun deleteObjectById(id: UUID) {
         webClient()
             .delete()
             .uri("/api/v2/objects/$id")
             .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .awaitBodilessEntity()
     }
 
     fun webClient(): WebClient {

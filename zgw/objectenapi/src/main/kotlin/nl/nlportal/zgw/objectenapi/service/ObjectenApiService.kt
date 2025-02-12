@@ -69,7 +69,7 @@ class ObjectenApiService(
         )
     }
 
-    fun deleteObjectById(objectId: UUID) {
+    suspend fun deleteObjectById(objectId: UUID) {
         objectsApiClient.deleteObjectById(objectId)
     }
 }
