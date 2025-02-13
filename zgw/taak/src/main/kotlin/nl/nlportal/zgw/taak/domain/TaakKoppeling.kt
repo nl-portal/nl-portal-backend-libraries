@@ -6,7 +6,6 @@ import java.util.UUID
 
 data class TaakKoppeling(
     val registratie: String,
-    @GraphQLIgnore
     val uuid: UUID? = null,
     @GraphQLIgnore
     val value: String? = null,

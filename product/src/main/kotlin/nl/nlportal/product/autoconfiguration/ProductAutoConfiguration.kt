@@ -56,18 +56,14 @@ class ProductAutoConfiguration {
         productConfig: ProductConfig,
         objectsApiClient: ObjectsApiClient,
         zakenApiClient: ZakenApiClient,
-        taakObjectConfig: TaakObjectConfig,
         objectsApiTaskConfig: TaakObjectConfig,
-        dmnClient: DmnClient,
         authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
     ): ProductService {
         return ProductService(
             productConfig,
             objectsApiClient,
             zakenApiClient,
-            taakObjectConfig,
             objectsApiTaskConfig,
-            dmnClient,
             authenticationMachtigingsDienstService,
         )
     }
