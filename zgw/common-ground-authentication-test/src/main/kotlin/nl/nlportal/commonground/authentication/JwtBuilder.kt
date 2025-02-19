@@ -89,8 +89,16 @@ class JwtBuilder {
         return this
     }
 
-    fun vestigingsNummerKvk(vestigingsNummer: String): JwtBuilder {
-        jwtBuilder.claim(AANVRAGER_VESTIGINGNUMMER_KEY, vestigingsNummer)
+    fun vestigingsNummerKvk(
+        kvk: String,
+        vestigingsNummer: String,
+    ): JwtBuilder {
+        val aanvrager =
+            mapOf<String, Any>(
+                KVK_NUMMER_KEY to kvk,
+                VESTIGINGNUMMER_KEY to vestigingsNummer,
+            )
+        jwtBuilder.claim(AANVRAGER_KEY, aanvrager)
 
         return this
     }
