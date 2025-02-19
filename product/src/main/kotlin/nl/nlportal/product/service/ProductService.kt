@@ -223,8 +223,8 @@ class ProductService(
         // filter out the taak which is not connected to a zaak or product
         return taken
             .filterNot { task ->
-                !zaken.any { it.uuid.toString() == task.koppeling.value() } &&
-                    !producten.any { it.id.toString() == task.koppeling.value() }
+                !zaken.any { it.uuid.toString() == task.koppeling.value } &&
+                    !producten.any { it.id.toString() == task.koppeling.value }
             }
             .sortedBy { it.verloopdatum }
     }
@@ -332,8 +332,8 @@ class ProductService(
         // filter zaakIds and productId from list
         return taken
             .filterNot { task ->
-                !zaakIds.any { it.toString() == task.koppeling.value() } &&
-                    (productId.toString() != task.koppeling.value())
+                !zaakIds.any { it.toString() == task.koppeling.value } &&
+                    (productId.toString() != task.koppeling.value)
             }
             .sortedBy { it.verloopdatum }
     }
