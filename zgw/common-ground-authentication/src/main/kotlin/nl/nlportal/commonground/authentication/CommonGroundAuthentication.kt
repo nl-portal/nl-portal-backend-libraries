@@ -19,7 +19,7 @@ import nl.nlportal.portal.authentication.domain.PortalAuthentication
 import nl.nlportal.portal.authentication.domain.SUB_KEY
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.oauth2.jwt.Jwt
-import java.util.UUID
+import java.util.*
 
 abstract class CommonGroundAuthentication(
     jwt: Jwt,
@@ -52,7 +52,7 @@ abstract class CommonGroundAuthentication(
      * @return VestigingsNummer
      */
     fun getVestigingsNummer(): String? {
-        return ((token.claims[AANVRAGER_KEY] as Map<*, *>?) ?: token.claims)[VESTIGINGNUMMER_KEY].toString()
+        return ((token.claims[AANVRAGER_KEY] as Map<*, *>?) ?: token.claims)[VESTIGINGNUMMER_KEY]?.toString()
     }
 
     /**
