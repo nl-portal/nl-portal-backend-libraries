@@ -172,9 +172,6 @@ class ProductService(
             request.ofZaakTypes(zaakTypes.toList())
         }
 
-        authentication.getVestigingsNummer()?.let {
-            request.ofVestigingsNummer(it)
-        }
         return request
             .retrieve()
             .results

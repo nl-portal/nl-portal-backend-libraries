@@ -73,10 +73,6 @@ class ZakenApiService(
             request.ofZaakTypes(it)
         }
 
-        authentication.getVestigingsNummer()?.let {
-            request.ofVestigingsNummer(it)
-        }
-
         return request.retrieve().let {
             ZaakPage.fromResultPage(page, pageSize ?: 20, it)
         }
