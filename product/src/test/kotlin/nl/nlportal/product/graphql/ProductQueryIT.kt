@@ -488,9 +488,6 @@ internal class ProductQueryIT(
                             "POST /engine-rest/decision-definition/key/watkanikregelenDmn/evaluate" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-dmn-decision.json")
                             }
-                            "DELETE /api/v2/objects/f9d7f166-bcea-4448-a984-4e717e558458" -> {
-                                TestHelper.mockResponseFromFile("/product/data/get-dmn-decision.json")
-                            }
                             else -> MockResponse().setResponseCode(404)
                         }
                     return response

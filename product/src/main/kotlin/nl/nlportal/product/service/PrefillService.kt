@@ -27,10 +27,8 @@ import nl.nlportal.product.domain.PrefillConfiguration
 import nl.nlportal.product.domain.PrefillObject
 import nl.nlportal.product.domain.PrefillResponse
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
-import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequest
 import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequestRecord
-import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
@@ -101,7 +99,7 @@ class PrefillService(
             if (prefillConfiguration.variabelen.containsKey(it.key)) {
                 prefillData.putAll(mapPrefillVariables(prefillConfiguration.variabelen[it.key]!!, it.value))
             } else {
-                logger.warn("Could not find prefill configuration variables for source {}", it.key)
+                logger.warn { "Could not find prefill configuration variables for source $it.key" }
             }
         }
         if (prefillData.isEmpty()) {
@@ -139,12 +137,12 @@ class PrefillService(
             val source = productService.getSourceAsJson(it.key, it.value)
 
             if (source == null) {
-                logger.warn("Could not find objects for key {} with uuid {}", it.key, it.value)
+                logger.warn { "Could not find objects for key $it.key with uuid $it.value" }
             } else {
                 if (prefillConfiguration.variabelen.containsKey(it.key)) {
                     prefillData.putAll(mapPrefillVariables(prefillConfiguration.variabelen[it.key]!!, source))
                 } else {
-                    logger.warn("Could not find prefill configuration variables for key {}", it.key)
+                    logger.warn { "Could not find prefill configuration variables for key $it.key" }
                 }
             }
         }
@@ -183,13 +181,6 @@ class PrefillService(
         formulierUrl: String,
         identification: String,
     ): PrefillResponse {
-        // if in prefill config property removeObjects is TRUE, delete the objects
-        if (prefillConfig.removeObjects) {
-            removeObjects(
-                identification,
-                key,
-            )
-        }
         val hash = CoreUtils.createHash(json, prefillConfig.prefillShaVersion)
         val prefill =
             PrefillObject(
@@ -226,43 +217,11 @@ class PrefillService(
             try {
                 mapped.put(k, inputJsonPath.read<Any>(v))
             } catch (ex: Exception) {
-                logger.warn("Problem with parsing variables: {}", ex.message)
+                logger.warn { "Problem with parsing variables: ${ex.message}" }
             }
         }
 
         return mapped
-    }
-
-    private suspend fun removeObjects(
-        identification: String,
-        formulier: String,
-    ) {
-        val searchParameters =
-            mutableListOf(
-                ObjectSearchParameter(
-                    "identificatie",
-                    Comparator.EQUAL_TO,
-                    identification,
-                ),
-                ObjectSearchParameter(
-                    "formulier",
-                    Comparator.EQUAL_TO,
-                    formulier,
-                ),
-            )
-        val prefillObjects =
-            objectsApiClient.getObjects<PrefillObject>(
-                objectSearchParameters = searchParameters,
-                objectTypeUrl = prefillConfig.typeUrl,
-                page = 1,
-                pageSize = 99,
-                ordering = "-record__startAt",
-            ).results
-
-        // delete all objects found in the query
-        prefillObjects.forEach {
-            objectsApiClient.deleteObjectById(it.uuid)
-        }
     }
 
     companion object {
