@@ -17,7 +17,7 @@ package nl.nlportal.payment.domain
 
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonIgnore
-import nl.nlportal.payment.autoconfiguration.OgonePaymentProfile
+import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig.OgonePaymentProfile
 import java.math.BigDecimal
 
 data class OgonePayment(

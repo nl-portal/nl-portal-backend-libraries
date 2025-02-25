@@ -19,7 +19,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.catalogiapi")
 data class CatalogiApiConfig(
-    var url: String = "",
-    var clientId: String = "",
-    var secret: String = "",
-)
+    var enabled: Boolean = false,
+    var properties: CatalogiApiConfigProperties = CatalogiApiConfigProperties(),
+) {
+    data class CatalogiApiConfigProperties(
+        var url: String = "",
+        var clientId: String = "",
+        var secret: String = "",
+    )
+}

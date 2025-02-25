@@ -18,7 +18,7 @@ package nl.nlportal.payment.service
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.core.util.CoreUtils
-import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig
+import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig.OgonePaymentConfigProperties
 import nl.nlportal.payment.constants.OgoneState
 import nl.nlportal.payment.domain.OgonePayment
 import nl.nlportal.payment.domain.OgonePaymentRequest
@@ -26,7 +26,6 @@ import nl.nlportal.payment.domain.PaymentField
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
-import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
 import nl.nlportal.zgw.taak.domain.TaakObjectV2
 import nl.nlportal.zgw.taak.domain.TaakStatus
 import org.apache.commons.lang3.StringUtils
@@ -36,8 +35,7 @@ import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
 class OgonePaymentService(
-    private val paymentConfig: OgonePaymentConfig,
-    private val objectsApiTaskConfig: TaakObjectConfig,
+    private val paymentConfig: OgonePaymentConfigProperties,
     private val objectsApiClient: ObjectsApiClient,
 ) {
     fun createPayment(paymentRequest: OgonePaymentRequest): OgonePayment {

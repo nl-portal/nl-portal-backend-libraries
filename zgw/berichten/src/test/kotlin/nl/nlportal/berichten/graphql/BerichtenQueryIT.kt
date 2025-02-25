@@ -17,8 +17,6 @@ package nl.nlportal.berichten.graphql
 
 import nl.nlportal.berichten.TestHelper
 import nl.nlportal.berichten.TestHelper.verifyOnlyDataExists
-import nl.nlportal.berichten.autoconfigure.BerichtenConfigurationProperties
-import nl.nlportal.berichten.service.BerichtenService
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import okhttp3.mockwebserver.Dispatcher
@@ -29,28 +27,21 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.test.context.bean.override.mockito.MockitoSpyBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.BodyInserters
 
 @SpringBootTest
-@ExtendWith(SpringExtension::class)
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class BerichtenQueryIT(
     @Autowired private val webTestClient: WebTestClient,
-    @Autowired private val berichtenConfigurationProperties: BerichtenConfigurationProperties,
     @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
 ) {
-    @MockitoSpyBean lateinit var berichtenService: BerichtenService
-
     lateinit var mockObjectenApi: MockWebServer
 
     @BeforeEach
@@ -58,7 +49,7 @@ class BerichtenQueryIT(
         mockObjectenApi = MockWebServer()
         setupMockObjectsApiServer()
         mockObjectenApi.start()
-        objectsApiClientConfig.url = mockObjectenApi.url("/").toUri()
+        objectsApiClientConfig.properties.url = mockObjectenApi.url("/").toUri()
     }
 
     @AfterEach

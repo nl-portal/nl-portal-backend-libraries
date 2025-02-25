@@ -22,12 +22,14 @@ import nl.nlportal.klant.contactmomenten.service.KlantContactMomentenService
 import nl.nlportal.klant.generiek.client.OpenKlantClientConfig
 import nl.nlportal.klant.generiek.client.OpenKlantClientProvider
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
 @EnableConfigurationProperties(OpenKlantClientConfig::class)
+@ConditionalOnProperty(prefix = "nl-portal.config.openklant", name = ["enabled"], havingValue = "true")
 class KlantContactMomentenAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(KlantContactMomentenService::class)

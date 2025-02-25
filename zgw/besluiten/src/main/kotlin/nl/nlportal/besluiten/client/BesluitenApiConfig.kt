@@ -20,7 +20,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.besluitenapi")
 data class BesluitenApiConfig(
-    var url: String = "",
-    var clientId: String = "",
-    var secret: String = "",
-)
+    var enabled: Boolean = false,
+    var properties: BesluitenApiConfigProperties = BesluitenApiConfigProperties(),
+) {
+    data class BesluitenApiConfigProperties(
+        var url: String = "",
+        var clientId: String = "",
+        var secret: String = "",
+    )
+}

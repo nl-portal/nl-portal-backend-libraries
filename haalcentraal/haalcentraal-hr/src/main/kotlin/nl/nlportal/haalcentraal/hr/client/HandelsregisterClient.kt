@@ -15,10 +15,11 @@
  */
 package nl.nlportal.haalcentraal.hr.client
 
-import io.netty.handler.logging.LogLevel
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
+import io.netty.handler.logging.LogLevel
 import nl.nlportal.core.ssl.ClientSslContextResolver
+import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrConfig.HaalCentraalHrConfigProperties
 import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient
@@ -27,7 +28,7 @@ import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
 
 class HandelsregisterClient(
-    val haalCentraalHrClientConfig: HaalCentraalHrClientConfig,
+    val haalCentraalHrClientConfig: HaalCentraalHrConfigProperties,
     val clientSslContextResolver: ClientSslContextResolver? = null,
 ) {
     suspend fun getMaatschappelijkeActiviteit(kvkNummer: String): MaatschappelijkeActiviteit {

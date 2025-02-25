@@ -20,7 +20,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.prefill", ignoreUnknownFields = true)
 data class PrefillConfig(
-    val typeUrl: String,
-    val prefillShaVersion: String = ShaVersion.SHA1.version,
-    val removeObjects: Boolean = false,
-)
+    var enabled: Boolean = false,
+    var properties: PrefillConfigProperties = PrefillConfigProperties(),
+) {
+    data class PrefillConfigProperties(
+        val typeUrl: String = "",
+        val prefillShaVersion: String = ShaVersion.SHA1.version,
+        val removeObjects: Boolean = false,
+    )
+}

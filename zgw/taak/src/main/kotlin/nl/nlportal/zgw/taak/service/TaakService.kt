@@ -26,7 +26,7 @@ import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
-import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
+import nl.nlportal.zgw.taak.autoconfigure.TaakConfig.TaakConfigProperties
 import nl.nlportal.zgw.taak.domain.Taak
 import nl.nlportal.zgw.taak.domain.TaakIdentificatie
 import nl.nlportal.zgw.taak.domain.TaakObject
@@ -42,7 +42,7 @@ import java.util.UUID
 
 open class TaakService(
     private val objectsApiClient: ObjectsApiClient,
-    private val objectsApiTaskConfig: TaakObjectConfig,
+    private val taakConfigProperties: TaakConfigProperties,
     val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
 ) {
     @Deprecated("Use version 2, for migration only")
@@ -101,7 +101,7 @@ open class TaakService(
                 pageSize,
                 authentication,
                 zaakUUID,
-                objectsApiTaskConfig.typeUrl,
+                taakConfigProperties.typeUrl,
                 status,
                 title,
             ).let { TaakPage.fromResultPage(pageNumber, pageSize, it) }
@@ -129,7 +129,7 @@ open class TaakService(
                 pageSize,
                 authentication,
                 zaakUUID,
-                objectsApiTaskConfig.typeUrlV2,
+                taakConfigProperties.typeUrlV2,
                 status,
                 title,
             ).let { TaakPageV2.fromResultPage(pageNumber, pageSize, it) }
@@ -213,6 +213,7 @@ open class TaakService(
                             authentication,
                         ),
                     )
+
                 else ->
                     submitTaakV2(
                         id,
@@ -302,6 +303,7 @@ open class TaakService(
             status != null -> {
                 objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, status.value))
             }
+
             else -> {
                 objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, TaakStatus.OPEN.value))
             }
@@ -354,6 +356,7 @@ open class TaakService(
             status != null -> {
                 objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, status.value))
             }
+
             else -> {
                 objectSearchParameters.add(ObjectSearchParameter("status", Comparator.EQUAL_TO, TaakStatus.OPEN.value))
             }

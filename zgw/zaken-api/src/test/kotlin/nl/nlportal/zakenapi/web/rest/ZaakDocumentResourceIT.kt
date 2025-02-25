@@ -30,7 +30,7 @@ class ZaakDocumentResourceIT(
     fun setUp() {
         mockZakenApi = MockWebServer()
         mockZakenApi.start(8001)
-        zakenApiConfig.url = mockZakenApi.url("/").toString()
+        zakenApiConfig.properties.url = mockZakenApi.url("/").toString()
     }
 
     @AfterAll

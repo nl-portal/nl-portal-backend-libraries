@@ -18,13 +18,13 @@ package nl.nlportal.klant.impl
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.commonground.authentication.JwtBuilder
 import nl.nlportal.klant.client.OpenKlantClient
-import nl.nlportal.klant.generiek.client.OpenKlantClientConfig
 import nl.nlportal.klant.domain.klanten.Klant
 import nl.nlportal.klant.domain.klanten.KlantCreationRequest
 import nl.nlportal.klant.domain.klanten.KlantUpdate
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import nl.nlportal.klant.service.impl.BurgerService
+import nl.nlportal.klant.generiek.client.OpenKlantClientConfig.OpenKlantClientConfigProperties
+import nl.nlportal.klant.service.impl.BurgerServiceImpl
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -38,19 +38,19 @@ import org.mockito.MockitoAnnotations
 import org.springframework.security.oauth2.jwt.Jwt
 
 @ExperimentalCoroutinesApi
-internal class BurgerServiceTest {
+internal class BurgerServiceImplTest {
     @Mock
     lateinit var openKlantClient: OpenKlantClient
 
-    lateinit var openKlantClientConfig: OpenKlantClientConfig
+    lateinit var openKlantClientConfigProperties: OpenKlantClientConfigProperties
 
-    lateinit var burgerService: BurgerService
+    lateinit var burgerService: BurgerServiceImpl
 
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        openKlantClientConfig = OpenKlantClientConfig(rsin = "000000000")
-        burgerService = BurgerService(openKlantClientConfig, openKlantClient)
+        openKlantClientConfigProperties = OpenKlantClientConfigProperties(rsin = "000000000")
+        burgerService = BurgerServiceImpl(openKlantClientConfigProperties, openKlantClient)
     }
 
     @Test

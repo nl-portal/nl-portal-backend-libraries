@@ -16,19 +16,22 @@
 package nl.nlportal.klant.autoconfiguration
 
 import nl.nlportal.klant.client.OpenKlantClient
+import nl.nlportal.klant.generiek.client.OpenKlantClientConfig
+import nl.nlportal.klant.generiek.client.OpenKlantClientProvider
+import nl.nlportal.klant.generiek.validation.GraphQlValidator
 import nl.nlportal.klant.graphql.BurgerMutation
 import nl.nlportal.klant.graphql.BurgerQuery
 import nl.nlportal.klant.service.BurgerService
-import nl.nlportal.klant.generiek.client.OpenKlantClientConfig
+import nl.nlportal.klant.service.impl.BurgerServiceImpl
 import org.springframework.boot.autoconfigure.AutoConfiguration
-import nl.nlportal.klant.generiek.client.OpenKlantClientProvider
-import nl.nlportal.klant.generiek.validation.GraphQlValidator
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
 @EnableConfigurationProperties(OpenKlantClientConfig::class)
+@ConditionalOnProperty(prefix = "nl-portal.config.openklant", name = ["enabled"], havingValue = "true")
 class KlantAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(BurgerService::class)
@@ -36,7 +39,7 @@ class KlantAutoConfiguration {
         openKlantClientConfig: OpenKlantClientConfig,
         openKlantClient: OpenKlantClient,
     ): BurgerService {
-        return nl.nlportal.klant.service.impl.BurgerService(openKlantClientConfig, openKlantClient)
+        return BurgerServiceImpl(openKlantClientConfig.properties, openKlantClient)
     }
 
     @Bean

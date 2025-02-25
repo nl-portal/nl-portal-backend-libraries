@@ -22,7 +22,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.core.util.Mapper
-import nl.nlportal.product.client.PrefillConfig
+import nl.nlportal.product.client.PrefillConfig.PrefillConfigProperties
 import nl.nlportal.product.domain.PrefillConfiguration
 import nl.nlportal.product.domain.PrefillObject
 import nl.nlportal.product.domain.PrefillResponse
@@ -38,7 +38,7 @@ import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 class PrefillService(
-    val prefillConfig: PrefillConfig,
+    val prefillConfigProperties: PrefillConfigProperties,
     val objectsApiClient: ObjectsApiClient,
     val productService: ProductService,
 ) {
@@ -184,13 +184,13 @@ class PrefillService(
         identification: String,
     ): PrefillResponse {
         // if in prefill config property removeObjects is TRUE, delete the objects
-        if (prefillConfig.removeObjects) {
+        if (prefillConfigProperties.removeObjects) {
             removeObjects(
                 identification,
                 key,
             )
         }
-        val hash = CoreUtils.createHash(json, prefillConfig.prefillShaVersion)
+        val hash = CoreUtils.createHash(json, prefillConfigProperties.prefillShaVersion)
         val prefill =
             PrefillObject(
                 identificatie = identification,
@@ -200,7 +200,7 @@ class PrefillService(
         val createRequest =
             CreateObjectsApiObjectRequest(
                 UUID.randomUUID(),
-                prefillConfig.typeUrl,
+                prefillConfigProperties.typeUrl,
                 CreateObjectsApiObjectRequestRecord(
                     typeVersion = 1,
                     data = prefill,
@@ -253,7 +253,7 @@ class PrefillService(
         val prefillObjects =
             objectsApiClient.getObjects<PrefillObject>(
                 objectSearchParameters = searchParameters,
-                objectTypeUrl = prefillConfig.typeUrl,
+                objectTypeUrl = prefillConfigProperties.typeUrl,
                 page = 1,
                 pageSize = 99,
                 ordering = "-record__startAt",
@@ -267,6 +267,7 @@ class PrefillService(
 
     companion object {
         val logger = KotlinLogging.logger {}
-        const val SOURCE_MAPPING_FAILED: String = "Source mapping failed for Prefill, check prefillmapping of productType: "
+        const val SOURCE_MAPPING_FAILED: String =
+            "Source mapping failed for Prefill, check prefillmapping of productType: "
     }
 }

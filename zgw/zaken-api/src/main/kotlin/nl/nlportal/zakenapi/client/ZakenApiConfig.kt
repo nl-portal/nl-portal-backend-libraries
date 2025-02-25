@@ -15,11 +15,40 @@
  */
 package nl.nlportal.zakenapi.client
 
+import nl.nlportal.documentenapi.domain.DocumentStatus
+import nl.nlportal.documentenapi.domain.DocumentStatus.DEFINITIEF
+import nl.nlportal.documentenapi.domain.DocumentStatus.GEARCHIVEERD
+import nl.nlportal.documentenapi.domain.Vertrouwelijkheid
+import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.BEPERKT_OPENBAAR
+import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.INTERN
+import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.OPENBAAR
+import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.ZAAKVERTROUWELIJK
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.zakenapi")
 data class ZakenApiConfig(
-    var url: String = "",
-    var clientId: String = "",
-    var secret: String = "",
-)
+    var enabled: Boolean = false,
+    var properties: ZakenApiConfigProperties = ZakenApiConfigProperties(),
+) {
+    data class ZakenApiConfigProperties(
+        var url: String = "",
+        var clientId: String = "",
+        var secret: String = "",
+        var zaakDocumentenConfig: ZaakDocumentenConfig = ZaakDocumentenConfig(),
+    ) {
+        data class ZaakDocumentenConfig(
+            var vertrouwelijkheidsaanduidingWhitelist: List<Vertrouwelijkheid> =
+                listOf(
+                    OPENBAAR,
+                    BEPERKT_OPENBAAR,
+                    INTERN,
+                    ZAAKVERTROUWELIJK,
+                ),
+            var statusWhitelist: List<DocumentStatus> =
+                listOf(
+                    DEFINITIEF,
+                    GEARCHIVEERD,
+                ),
+        )
+    }
+}

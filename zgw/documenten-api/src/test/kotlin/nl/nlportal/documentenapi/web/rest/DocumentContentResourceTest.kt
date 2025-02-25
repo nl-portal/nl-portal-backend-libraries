@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.documentenapi.client.DocumentApisConfig
-import nl.nlportal.documentenapi.client.DocumentenApiClient
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.documentenapi.service.VirusScanService
@@ -39,12 +38,11 @@ import java.util.UUID
 
 @ExperimentalCoroutinesApi
 class DocumentContentResourceTest {
-    private val documentenApiClient: DocumentenApiClient = mock()
     private val documentenApiService: DocumentenApiService = mock()
     private val virusScanService: VirusScanService = mock()
     private val documentApisConfig: DocumentApisConfig = mock()
     private val downloadResource =
-        DocumentContentResource(documentenApiClient, documentenApiService, virusScanService, documentApisConfig)
+        DocumentContentResource(documentenApiService, virusScanService, documentApisConfig)
     val document: Document = mock()
 
     @Test

@@ -20,6 +20,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties(prefix = "nl-portal.config.virusscan.clamav")
 data class ClamAVVirusScanConfig(
     var enabled: Boolean = false,
-    var hostName: String = "",
-    var port: Int = 3310,
-)
+    var properties: ClamAVVirusScanConfigProperties = ClamAVVirusScanConfigProperties(),
+) {
+    data class ClamAVVirusScanConfigProperties(
+        var hostName: String = "",
+        var port: Int = 3310,
+    )
+}

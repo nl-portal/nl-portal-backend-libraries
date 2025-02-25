@@ -20,10 +20,15 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.dmn", ignoreUnknownFields = true)
 data class DmnConfig(
-    val url: String,
-    val clientId: String? = null,
-    val secret: String? = null,
-    val username: String? = null,
-    val password: String? = null,
-    val ssl: Ssl? = null,
-)
+    var enabled: Boolean = false,
+    var properties: DmnConfigProperties = DmnConfigProperties(),
+) {
+    data class DmnConfigProperties(
+        var url: String = "",
+        var clientId: String = "",
+        var secret: String = "",
+        var username: String = "",
+        var password: String = "",
+        var ssl: Ssl? = null,
+    )
+}

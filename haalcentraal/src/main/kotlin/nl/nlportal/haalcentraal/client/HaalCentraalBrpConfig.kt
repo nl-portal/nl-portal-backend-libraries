@@ -13,14 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.haalcentraal.hr.client
+package nl.nlportal.haalcentraal.client
 
 import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.config.haalcentraal.hr", ignoreUnknownFields = true)
-data class HaalCentraalHrClientConfig(
-    var url: String = "",
-    val apiKey: String? = null,
-    val ssl: Ssl? = null,
-)
+@ConfigurationProperties(prefix = "nl-portal.config.haalcentraal.brp", ignoreUnknownFields = true)
+data class HaalCentraalBrpConfig(
+    var enabled: Boolean = false,
+    var properties: HaalCentraalBrpConfigProperties = HaalCentraalBrpConfigProperties(),
+) {
+    data class HaalCentraalBrpConfigProperties(
+        var url: String = "",
+        var apiKey: String? = null,
+        var ssl: Ssl? = null,
+    )
+}

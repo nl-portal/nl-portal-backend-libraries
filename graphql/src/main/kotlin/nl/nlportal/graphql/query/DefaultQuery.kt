@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2025 Ritense BV, the Netherlands.
+ * Copyright 2025 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.klant.generiek.client
+package nl.nlportal.graphql.query
 
-import org.springframework.boot.context.properties.ConfigurationProperties
+import com.expediagroup.graphql.generator.annotations.GraphQLDescription
+import com.expediagroup.graphql.server.operations.Query
+import io.github.oshai.kotlinlogging.KotlinLogging
 
-@ConfigurationProperties(prefix = "nl-portal.config.openklant")
-data class OpenKlantClientConfig(
-    var enabled: Boolean = false,
-    var properties: OpenKlantClientConfigProperties,
-) {
-    data class OpenKlantClientConfigProperties(
-        var url: String = "",
-        var clientId: String = "",
-        var secret: String = "",
-        var rsin: String = "",
-    )
+class DefaultQuery : Query {
+    @GraphQLDescription("Default Query")
+    suspend fun getDefault(): Boolean {
+        logger.info { "No queries are enabled. Please configure NL Portal features." }
+        return true
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger {}
+    }
 }

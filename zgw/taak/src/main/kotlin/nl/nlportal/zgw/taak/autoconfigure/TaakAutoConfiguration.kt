@@ -24,20 +24,22 @@ import nl.nlportal.zgw.taak.graphql.TaakQueryV2
 import nl.nlportal.zgw.taak.service.TaakService
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
-@EnableConfigurationProperties(TaakObjectConfig::class)
+@EnableConfigurationProperties(TaakConfig::class)
+@ConditionalOnProperty(prefix = "nl-portal.config.taak", name = ["enabled"], havingValue = "true")
 class TaakAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(TaakService::class)
     fun taskService(
         objectsApiClient: ObjectsApiClient,
-        taakObjectConfig: TaakObjectConfig,
+        taakObjectConfig: TaakConfig,
         authenticationMachtigingsService: AuthenticationMachtigingsDienstService,
     ): TaakService {
-        return TaakService(objectsApiClient, taakObjectConfig, authenticationMachtigingsService)
+        return TaakService(objectsApiClient, taakObjectConfig.properties, authenticationMachtigingsService)
     }
 
     @Bean

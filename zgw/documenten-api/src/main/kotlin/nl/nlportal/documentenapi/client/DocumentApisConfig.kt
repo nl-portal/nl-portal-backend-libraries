@@ -20,30 +20,35 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.documentenapis", ignoreUnknownFields = true)
 data class DocumentApisConfig(
-    var defaultDocumentApi: String,
-    var configurations: Map<String, DocumentApiConfig> = mapOf(),
+    var enabled: Boolean = false,
+    var properties: DocumentenApisConfigProperties = DocumentenApisConfigProperties(),
 ) {
-    fun getConfig(documentApi: String): DocumentApiConfig {
-        return configurations[documentApi]
-            ?: throw NullPointerException("No documentapi configuration with key $documentApi")
-    }
+    data class DocumentenApisConfigProperties(
+        var defaultDocumentApi: String = "",
+        var configurations: Map<String, DocumentApiConfig> = emptyMap(),
+    ) {
+        fun getConfig(documentApi: String): DocumentApiConfig {
+            return configurations[documentApi]
+                ?: throw NullPointerException("No documentapi configuration with key $documentApi")
+        }
 
-    fun getConfigForDocumentUrl(documentUrl: String): String {
-        return configurations
-            .filterValues { documentenApiConfig ->
-                documentUrl.contains(documentenApiConfig.url)
-            }
-            .keys
-            .firstOrNull()
-            ?: throw NullPointerException("No documentapi configuration found for zaakdocument with url $documentUrl")
-    }
+        fun getConfigForDocumentUrl(documentUrl: String): String {
+            return configurations
+                .filterValues { documentenApiConfig ->
+                    documentUrl.contains(documentenApiConfig.url)
+                }
+                .keys
+                .firstOrNull()
+                ?: throw NullPointerException("No documentapi configuration found for zaakdocument with url $documentUrl")
+        }
 
-    data class DocumentApiConfig(
-        var url: String,
-        var clientId: String? = null,
-        var secret: String? = null,
-        var rsin: String? = null,
-        var documentTypeUrl: String? = null,
-        val ssl: Ssl? = null,
-    )
+        data class DocumentApiConfig(
+            var url: String,
+            var clientId: String? = null,
+            var secret: String? = null,
+            var rsin: String? = null,
+            var documentTypeUrl: String? = null,
+            var ssl: Ssl? = null,
+        )
+    }
 }

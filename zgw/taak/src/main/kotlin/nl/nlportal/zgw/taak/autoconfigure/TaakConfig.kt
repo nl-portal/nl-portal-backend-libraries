@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.haalcentraal.client
+package nl.nlportal.zgw.taak.autoconfigure
 
-import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.config.haalcentraal", ignoreUnknownFields = true)
-data class HaalCentraalClientConfig(
-    var url: String = "",
-    val apiKey: String? = null,
-    val ssl: Ssl? = null,
-)
+@ConfigurationProperties(prefix = "nl-portal.config.taak")
+data class TaakConfig(
+    var enabled: Boolean = false,
+    var properties: TaakConfigProperties = TaakConfigProperties(),
+) {
+    data class TaakConfigProperties(
+        @Deprecated("Use version 2")
+        var typeUrl: String = "",
+        var typeUrlV2: String = "",
+    )
+}

@@ -62,7 +62,7 @@ class DocumentContentResourceIntegrationTest(
         server = MockWebServer()
         setupMockDocumentServer()
         server.start()
-        documentApisConfig.getConfig("openzaak").url = server.url("/").toString()
+        documentApisConfig.properties.getConfig("openzaak").url = server.url("/").toString()
     }
 
     @AfterAll

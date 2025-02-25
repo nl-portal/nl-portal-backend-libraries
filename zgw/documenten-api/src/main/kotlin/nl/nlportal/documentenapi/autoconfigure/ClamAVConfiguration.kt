@@ -38,8 +38,10 @@ class ClamAVConfiguration {
     @Bean
     @ConditionalOnMissingBean(VirusScanService::class)
     fun virusScanService(clamAVVirusScanConfig: ClamAVVirusScanConfig): VirusScanService {
-        logger.info { "ClamAV virusscan is loaded with host: ${clamAVVirusScanConfig.hostName} and port: ${clamAVVirusScanConfig.port}" }
-        return ClamAVService(clamAVVirusScanConfig)
+        logger.info {
+            "ClamAV virusscan is loaded with host: ${clamAVVirusScanConfig.properties.hostName} and port: ${clamAVVirusScanConfig.properties.port}"
+        }
+        return ClamAVService(clamAVVirusScanConfig.properties)
     }
 
     companion object {

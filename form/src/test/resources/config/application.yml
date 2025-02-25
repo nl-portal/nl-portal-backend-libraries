@@ -47,6 +47,9 @@ nl-portal:
             audience: audience
             credentials:
                 secret: yoursecret
+    config:
+      objectenapi:
+          enabled: true
 
 graphql:
     packages:

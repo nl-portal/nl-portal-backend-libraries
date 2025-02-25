@@ -19,23 +19,24 @@ import nl.nlportal.payment.api.OgonePaymentController
 import nl.nlportal.payment.graphql.OgonePaymentMutation
 import nl.nlportal.payment.service.OgonePaymentService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
-import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
+import nl.nlportal.zgw.taak.autoconfigure.TaakConfig
 import org.springframework.boot.autoconfigure.AutoConfiguration
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
 @EnableConfigurationProperties(OgonePaymentConfig::class)
+@ConditionalOnProperty(prefix = "nl-portal.config.payment.ogone", name = ["enabled"], havingValue = "true")
 class PaymentAutoConfiguration {
     @Bean
     fun ogonePaymentService(
         ogonePaymentConfig: OgonePaymentConfig,
         objectsApiClient: ObjectsApiClient,
-        taakObjectConfig: TaakObjectConfig,
+        taakObjectConfig: TaakConfig,
     ): OgonePaymentService {
         return OgonePaymentService(
-            ogonePaymentConfig,
-            taakObjectConfig,
+            ogonePaymentConfig.properties,
             objectsApiClient,
         )
     }
