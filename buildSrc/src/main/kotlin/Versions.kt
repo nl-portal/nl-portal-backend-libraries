@@ -34,7 +34,7 @@ object ApiVersions {
     const val commonsIo = "2.17.0"
     const val commonsCodec = "1.17.0"
     const val graphqlJava ="21.0"
-    const val graphqlKotlin = "7.0.1"
+    const val graphqlKotlin = "8.3.0"
     const val jacksonBom = "2.17.2"
     const val kotlinLogging = "7.0.3"
     const val springCloud = "4.1.3"
