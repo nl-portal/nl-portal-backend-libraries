@@ -43,6 +43,8 @@ jobs:
     needs:
       - detect-variables
     if: ${{ needs.detect-variables.outputs.scope == 'UNKNOWN' }}
+    env:
+      VERSION: ${{ needs.detect-variables.outputs.version }}
     runs-on: ubuntu-latest
     steps:
-      - run: echo "::error::Incorrect version format. Make sure the version property in gradle.properties is valid" && exit 1
+      - run: echo "::error::Incorrect version format. Detected version - \"${VERSION}\". Make sure the version property in gradle.properties is valid"
