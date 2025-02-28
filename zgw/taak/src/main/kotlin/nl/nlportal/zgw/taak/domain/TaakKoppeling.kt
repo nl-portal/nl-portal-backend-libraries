@@ -1,23 +1,21 @@
 package nl.nlportal.zgw.taak.domain
 
 import nl.nlportal.core.util.CoreUtils
-import java.util.UUID
 
 data class TaakKoppeling(
     val registratie: String,
-    val uuid: UUID?,
+    val value: String? = null,
 ) {
     companion object {
         fun migrate(zaak: String?): TaakKoppeling {
             return if (zaak != null) {
                 TaakKoppeling(
                     registratie = TaakKoppelingRegistratie.ZAAK.value,
-                    uuid = CoreUtils.extractId(zaak),
+                    value = CoreUtils.extractId(zaak).toString(),
                 )
             } else {
                 TaakKoppeling(
                     registratie = TaakKoppelingRegistratie.ZAAK.value,
-                    uuid = null,
                 )
             }
         }

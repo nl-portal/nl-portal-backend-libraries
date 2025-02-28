@@ -31,7 +31,7 @@ class WithBedrijfUserSecurityContextFactory : WithSecurityContextFactory<WithBed
             builder.gemachtigdeKvk(bedrijf.gemachtigdeKvk)
         }
         if (!bedrijf.vestigingsNummer.isEmpty()) {
-            builder.vestigingsNummerKvk(bedrijf.vestigingsNummer)
+            builder.vestigingsNummerKvk(bedrijf.kvkNummer, bedrijf.vestigingsNummer)
         }
         if (!bedrijf.machtigingsDienst.isEmpty()) {
             builder.machtingDienstKvk(bedrijf.machtigingsDienst)

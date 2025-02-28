@@ -67,8 +67,12 @@ class SearchZakenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
         return this
     }
 
-    override fun ofVestigingsNummer(vestigingsNummer: String): SearchZaken {
+    override fun withKvkAndVestigingsNummer(
+        kvkNummer: String,
+        vestigingsNummer: String,
+    ): SearchZaken {
         queryParams.add("rol__betrokkeneIdentificatie__vestiging__vestigingsNummer", vestigingsNummer)
+        queryParams.add("rol__betrokkeneIdentificatie__vestiging__kvkNummer", kvkNummer)
         return this
     }
 

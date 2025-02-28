@@ -17,6 +17,7 @@ package nl.nlportal.zgw.taak.service
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.node.ObjectNode
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.Mapper
@@ -106,6 +107,7 @@ open class TaakService(
                 title,
             ).let { TaakPage.fromResultPage(pageNumber, pageSize, it) }
         } catch (ex: Exception) {
+            logger.info { "Something went wrong with getTakenV1: ${ex.message}" }
             return return TaakPage(
                 number = pageNumber,
                 size = pageSize,
@@ -134,6 +136,7 @@ open class TaakService(
                 title,
             ).let { TaakPageV2.fromResultPage(pageNumber, pageSize, it) }
         } catch (ex: Exception) {
+            logger.info { "Something went wrong with getTakenV2: ${ex.message}" }
             return return TaakPageV2(
                 number = pageNumber,
                 size = pageSize,
@@ -363,7 +366,7 @@ open class TaakService(
             objectSearchParameters.add(ObjectSearchParameter("koppeling__registratie", Comparator.EQUAL_TO, "zaak"))
             objectSearchParameters.add(
                 ObjectSearchParameter(
-                    "koppeling__uuid",
+                    "koppeling__value",
                     Comparator.STRING_CONTAINS,
                     it.toString(),
                 ),
@@ -405,5 +408,9 @@ open class TaakService(
         taakIdentificatie: TaakIdentificatie,
     ): Boolean {
         return taakIdentificatie.type.lowercase() == authentication.userType && taakIdentificatie.value == authentication.userId
+    }
+
+    companion object {
+        val logger = KotlinLogging.logger {}
     }
 }

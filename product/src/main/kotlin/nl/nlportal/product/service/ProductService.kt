@@ -20,7 +20,6 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.Mapper
-import nl.nlportal.product.client.DmnClient
 import nl.nlportal.product.client.ProductConfig
 import nl.nlportal.product.domain.Product
 import nl.nlportal.product.domain.ProductDetails
@@ -48,9 +47,7 @@ class ProductService(
     val productConfig: ProductConfig,
     val objectsApiClient: ObjectsApiClient,
     val zakenApiClient: ZakenApiClient,
-    val taakObjectConfig: TaakObjectConfig,
     val objectsApiTaskConfig: TaakObjectConfig,
-    val dmnClient: DmnClient,
     val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
 ) {
     suspend fun getProduct(
@@ -156,7 +153,6 @@ class ProductService(
             return emptyList()
         }
 
-        // val zaakTypes = mutableSetOf<UUID>()
         val zaakTypes = productType.zaaktypen
         val request =
             zakenApiClient.zoeken()
@@ -168,10 +164,6 @@ class ProductService(
             request.isOpen(isOpen)
         }
 
-        /*authenticationMachtigingsDienstService.zaakTypes(authentication)?.let {
-            zaakTypes.addAll(it)
-        }*/
-
         if (!authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes)) {
             return emptyList()
         }
@@ -180,9 +172,6 @@ class ProductService(
             request.ofZaakTypes(zaakTypes.toList())
         }
 
-        authentication.getVestigingsNummer()?.let {
-            request.ofVestigingsNummer(it)
-        }
         return request
             .retrieve()
             .results
@@ -231,8 +220,8 @@ class ProductService(
         // filter out the taak which is not connected to a zaak or product
         return taken
             .filterNot { task ->
-                !zaken.any { it.uuid == task.koppeling.uuid } &&
-                    !producten.any { it.id == task.koppeling.uuid }
+                !zaken.any { it.uuid.toString() == task.koppeling.value } &&
+                    !producten.any { it.id.toString() == task.koppeling.value }
             }
             .sortedBy { it.verloopdatum }
     }
@@ -340,8 +329,8 @@ class ProductService(
         // filter zaakIds and productId from list
         return taken
             .filterNot { task ->
-                !zaakIds.any { it == task.koppeling.uuid } &&
-                    (productId != task.koppeling.uuid)
+                !zaakIds.any { it.toString() == task.koppeling.value } &&
+                    (productId.toString() != task.koppeling.value)
             }
             .sortedBy { it.verloopdatum }
     }

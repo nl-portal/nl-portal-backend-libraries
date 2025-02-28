@@ -46,7 +46,7 @@ plugins {
 
     id("org.jetbrains.dokka")
 
-    id("org.owasp.dependencycheck") version "12.0.1"
+    id("org.owasp.dependencycheck") version "12.1.0"
 
     `maven-publish`
     `signing`
@@ -170,10 +170,7 @@ subprojects {
                     password = System.getenv("OSSRH_TOKEN")
                 }
 
-                var snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-                if (version.toString().endsWith("SNAPSHOT")) {
-                    url = snapshotsRepoUrl
-                }
+                url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
             }
         }
 
