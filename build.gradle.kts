@@ -49,7 +49,7 @@ plugins {
     id("org.owasp.dependencycheck") version "12.1.0"
 
     `maven-publish`
-    `signing`
+    signing
 }
 
 allprojects {
@@ -151,26 +151,26 @@ subprojects {
                 }
             }
             maven {
-                name = "Sonatype"
-                credentials {
-                    username = System.getenv("OSSRH_USERNAME")
-                    password = System.getenv("OSSRH_TOKEN")
-                }
-
-                var stagingRepoUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-
-                if (version.toString().matches("^(\\d+\\.)?(\\d+\\.)?(\\d+)\$".toRegex())) {
-                    url = stagingRepoUrl
-                }
-            }
-            maven {
                 name = "SonatypeSnapshot"
                 credentials {
                     username = System.getenv("OSSRH_USERNAME")
                     password = System.getenv("OSSRH_TOKEN")
                 }
 
-                url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+                if (version.toString().endsWith("-SNAPSHOT")) {
+                    url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+                }
+            }
+            maven {
+                name = "Sonatype"
+                credentials {
+                    username = System.getenv("OSSRH_USERNAME")
+                    password = System.getenv("OSSRH_TOKEN")
+                }
+
+                if (version.toString().matches("^(\\d+\\.)?(\\d+\\.)?(\\d+)\$".toRegex())) {
+                    url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                }
             }
         }
 

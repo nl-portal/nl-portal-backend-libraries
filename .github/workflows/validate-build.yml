@@ -9,9 +9,7 @@ name: Validate Build
 on:
   push:
     branches:
-      - "next-minor"
-      - "next-major"
-      - "release/*"
+      - "**"
   pull_request:
     branches:
       - "next-minor"
@@ -20,17 +18,19 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
   cancel-in-progress: true
+env:
+  javaVersion: "21"
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up JDK 21
+      - name: Set up JDK ${{ env.javaVersion }}
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
+          java-version: '${{ env.javaVersion }}'
           distribution: 'temurin'
       - name: Set up gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
       - name: Build with Gradle
         run: ./gradlew build
