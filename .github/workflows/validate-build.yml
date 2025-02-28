@@ -9,7 +9,9 @@ name: Validate Build
 on:
   push:
     branches:
-      - "**"
+      - "next-minor"
+      - "next-major"
+      - "release/*"
   pull_request:
     branches:
       - "next-minor"
