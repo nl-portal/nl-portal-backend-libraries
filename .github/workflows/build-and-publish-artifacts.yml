@@ -2,11 +2,9 @@ name: Build and Publish Artifacts
 on:
   create:
     branches:
-      - "!**"
       - "release/*"
   push:
     branches:
-      - "!**"
       - "release/*"
 jobs:
   detect-variables:
@@ -47,4 +45,5 @@ jobs:
       VERSION: ${{ needs.detect-variables.outputs.version }}
     runs-on: ubuntu-latest
     steps:
-      - run: echo "::error::Invalid version format. Detected version - \"${VERSION}\". Make sure the version property in gradle.properties is valid."
+      - name: Fail on invalid version
+        run: echo "::error::Invalid version format. Detected version - \"${VERSION}\". Make sure the version property in gradle.properties is valid."  && exit 1
