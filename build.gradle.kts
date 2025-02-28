@@ -170,10 +170,7 @@ subprojects {
                     password = System.getenv("OSSRH_TOKEN")
                 }
 
-                var snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-                if (version.toString().endsWith("SNAPSHOT")) {
-                    url = snapshotsRepoUrl
-                }
+                url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
             }
         }
 
