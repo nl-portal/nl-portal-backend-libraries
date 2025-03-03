@@ -1,0 +1,49 @@
+name: Build and Publish Artifacts
+on:
+  create:
+    branches:
+      - "release/*"
+  push:
+    branches:
+      - "release/*"
+jobs:
+  detect-variables:
+    runs-on: ubuntu-latest
+    outputs:
+      scope: ${{ steps.detect-scope.outputs.SCOPE }}
+      version: ${{ steps.get-version.outputs.VERSION }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get version from project
+        id: get-version
+        run: |
+          PROJECT_VERSION=$(grep "version" gradle.properties | sed 's/^.*=//')
+          echo "VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
+          echo "VERSION=$PROJECT_VERSION" >> $GITHUB_OUTPUT
+      - name: Detect scope
+        id: detect-scope
+        run: echo "SCOPE=$(if grep -Eq "^\d+\.\d+\.\d+$" <<< $VERSION ; then echo "RELEASE" ; elif grep -Eq "^\d+\.\d+\.\d+-.*SNAPSHOT$" <<< $VERSION ; then echo "SNAPSHOT" ; else echo "UNKNOWN" ; fi)" >> $GITHUB_OUTPUT
+  publish-snapshot:
+    needs:
+      - detect-variables
+    if: ${{ needs.detect-variables.outputs.scope == 'SNAPSHOT' }}
+    uses: ./.github/workflows/publish-snapshot.yml
+    secrets: inherit
+  publish-release:
+    needs:
+      - detect-variables
+    if: ${{ needs.detect-variables.outputs.scope == 'RELEASE' }}
+    uses: ./.github/workflows/publish-release.yml
+    with:
+      artifactVersion: ${{ needs.detect-variables.outputs.version }}
+    secrets: inherit
+  unknown:
+    needs:
+      - detect-variables
+    if: ${{ needs.detect-variables.outputs.scope == 'UNKNOWN' }}
+    env:
+      VERSION: ${{ needs.detect-variables.outputs.version }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail on invalid version
+        run: echo "::error::Invalid version format. Detected version - \"${VERSION}\". Make sure the version property in gradle.properties is valid."  && exit 1
