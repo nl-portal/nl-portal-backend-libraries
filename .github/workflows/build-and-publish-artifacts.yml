@@ -22,7 +22,7 @@ jobs:
           echo "VERSION=$PROJECT_VERSION" >> $GITHUB_OUTPUT
       - name: Detect scope
         id: detect-scope
-        run: echo "SCOPE=$(if grep -Eq "^\d+\.\d+\.\d+$" <<< $VERSION ; then echo "RELEASE" ; elif grep -Eq "^\d+\.\d+\.\d+-.*SNAPSHOT$" <<< $VERSION ; then echo "SNAPSHOT" ; else echo "UNKNOWN" ; fi)" >> $GITHUB_OUTPUT
+        run: echo "SCOPE=$(if echo $VERSION | grep -Eq "^\d+\.\d+\.\d+$" ; then echo "RELEASE" ; elif echo $VERSION | grep -Eq "^\d+\.\d+\.\d+-.*SNAPSHOT$" ; then echo "SNAPSHOT" ; else echo "UNKNOWN" ; fi)" >> $GITHUB_OUTPUT
   publish-snapshot:
     needs:
       - detect-variables
