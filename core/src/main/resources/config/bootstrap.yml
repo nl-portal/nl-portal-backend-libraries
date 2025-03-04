@@ -1,0 +1,6 @@
+spring:
+    cloud:
+        config:
+            enabled: ${CONFIGURATION_PANEL_ENABLED:false}
+            uri: ${CONFIGURATION_PANEL_URI}
+            token: ${CONFIGURATION_PANEL_TOKEN}
