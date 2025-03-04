@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Ritense BV, the Netherlands.
+ * Copyright 2024-2025 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,13 @@ package nl.nlportal.commonground.authentication
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "keycloak")
+@ConfigurationProperties(prefix = "nl-portal.authentication.keycloak")
 data class KeycloakConfig(
     var resource: String = "",
     var audience: String = "",
-    var credentials: Credentials = Credentials(""),
-)
-
-data class Credentials(
-    var secret: String = "",
-)
+    var credentials: KeycloakCredentials = KeycloakCredentials(""),
+) {
+    data class KeycloakCredentials(
+        var secret: String = "",
+    )
+}

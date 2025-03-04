@@ -56,16 +56,16 @@ internal class OgonePaymentMutationIT(
             )
         val payment =
             OgonePayment.create(
-                paymentConfig.url,
-                paymentConfig.getPaymentProfile("belastingzaken")!!,
+                paymentConfig.properties.url,
+                paymentConfig.properties.getPaymentProfile("belastingzaken")!!,
                 paymentRequest,
             )
 
         val shaSign =
             OgonePaymentService.hashParameters(
                 payment.fillFields(),
-                paymentConfig.getPaymentProfile("belastingzaken")!!.shaOutKey,
-                paymentConfig.getPaymentProfile("belastingzaken")!!.shaVersion,
+                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaOutKey,
+                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaVersion,
             )
         val mutation =
             """
@@ -114,16 +114,16 @@ internal class OgonePaymentMutationIT(
             )
         val payment =
             OgonePayment.create(
-                paymentConfig.url,
-                paymentConfig.getPaymentProfile("belastingzaken")!!,
+                paymentConfig.properties.url,
+                paymentConfig.properties.getPaymentProfile("belastingzaken")!!,
                 paymentRequest,
             )
 
         val shaSign =
             OgonePaymentService.hashParameters(
                 payment.fillFields(),
-                paymentConfig.getPaymentProfile("belastingzaken")!!.shaOutKey,
-                paymentConfig.getPaymentProfile("belastingzaken")!!.shaVersion,
+                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaOutKey,
+                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaVersion,
             )
         val mutation =
             """

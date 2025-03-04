@@ -20,7 +20,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.Mapper
-import nl.nlportal.product.client.ProductConfig
+import nl.nlportal.product.client.ProductConfig.ProductConfigProperties
 import nl.nlportal.product.domain.Product
 import nl.nlportal.product.domain.ProductDetails
 import nl.nlportal.product.domain.ProductRol
@@ -35,7 +35,7 @@ import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
-import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
+import nl.nlportal.zgw.taak.autoconfigure.TaakConfig.TaakConfigProperties
 import nl.nlportal.zgw.taak.domain.TaakObjectV2
 import nl.nlportal.zgw.taak.domain.TaakV2
 import nl.nlportal.zgw.taak.graphql.TaakPageV2
@@ -44,10 +44,10 @@ import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
 class ProductService(
-    val productConfig: ProductConfig,
+    val productConfigProperties: ProductConfigProperties,
+    val objectsApiTaskConfig: TaakConfigProperties,
     val objectsApiClient: ObjectsApiClient,
     val zakenApiClient: ZakenApiClient,
-    val objectsApiTaskConfig: TaakObjectConfig,
     val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
 ) {
     suspend fun getProduct(
@@ -76,7 +76,7 @@ class ProductService(
                 ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE, Comparator.EQUAL_TO, productTypeId.toString()),
             )
         return getObjectsApiObjectResultPage<Product>(
-            productConfig.productInstantieTypeUrl,
+            productConfigProperties.productInstantieTypeUrl,
             objectSearchParametersProducten,
             1,
             2,
@@ -107,7 +107,7 @@ class ProductService(
             )
         }
         return getObjectsApiObjectResultPage<Product>(
-            productConfig.productInstantieTypeUrl,
+            productConfigProperties.productInstantieTypeUrl,
             objectSearchParametersProducten,
             pageNumber,
             pageSize,
@@ -125,7 +125,7 @@ class ProductService(
                     ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_INSTANTIE, Comparator.EQUAL_TO, productId),
                 )
             return getObjectsApiObjectResultPage<ProductVerbruiksObject>(
-                productConfig.productVerbruiksObjectTypeUrl,
+                productConfigProperties.productVerbruiksObjectTypeUrl,
                 objectSearchParameters,
                 pageNumber,
                 pageSize,
@@ -252,7 +252,7 @@ class ProductService(
                 )
 
             getObjectsApiObject<ProductDetails>(
-                productConfig.productDetailsTypeUrl,
+                productConfigProperties.productDetailsTypeUrl,
                 objectSearchParameters,
             ).apply {
                 this.record.data.id = this.uuid
@@ -278,7 +278,7 @@ class ProductService(
                     ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_NAME, Comparator.EQUAL_TO, productName),
                 )
             return getObjectsApiObject<ProductType>(
-                productConfig.productTypeUrl,
+                productConfigProperties.productTypeUrl,
                 objectSearchParameters,
             ).apply {
                 this.record.data.id = this.uuid
@@ -292,7 +292,7 @@ class ProductService(
     suspend fun getProductTypes(authentication: CommonGroundAuthentication): List<ProductType> {
         val productTypes =
             getObjectsApiObjectResultPage<ProductType>(
-                productConfig.productTypeUrl,
+                productConfigProperties.productTypeUrl,
                 listOf(),
                 1,
                 999,

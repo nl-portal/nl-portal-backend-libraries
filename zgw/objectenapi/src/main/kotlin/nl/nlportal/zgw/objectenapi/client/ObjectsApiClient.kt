@@ -17,7 +17,7 @@ package nl.nlportal.zgw.objectenapi.client
 
 import io.netty.handler.logging.LogLevel.TRACE
 import nl.nlportal.core.util.Mapper
-import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
+import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig.ObjectsApiClientConfigProperties
 import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequest
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
@@ -39,7 +39,7 @@ import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
 import java.util.UUID
 
 open class ObjectsApiClient(
-    private val objectsApiClientConfig: ObjectsApiClientConfig,
+    private val objectsApiClientConfig: ObjectsApiClientConfigProperties,
 ) {
     suspend inline fun <reified T> getObjectById(id: String): ObjectsApiObject<T>? {
         return webClient()

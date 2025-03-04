@@ -19,16 +19,18 @@ import nl.nlportal.haalcentraal.brp.client.HaalCentraalBrpClient
 import nl.nlportal.haalcentraal.brp.graphql.HaalCentraalBrpQuery
 import nl.nlportal.haalcentraal.brp.service.HaalCentraalBrpService
 import nl.nlportal.haalcentraal.brp.service.impl.HaalCentraalBrpServiceImpl as HaalCentraalBrpServiceImpl
-import nl.nlportal.haalcentraal.client.HaalCentraalClientConfig
+import nl.nlportal.haalcentraal.client.HaalCentraalBrpConfig
 import nl.nlportal.haalcentraal.client.HaalCentraalClientProvider
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
 
 @AutoConfiguration
-@EnableConfigurationProperties(HaalCentraalClientConfig::class)
+@EnableConfigurationProperties(HaalCentraalBrpConfig::class)
+@ConditionalOnProperty(prefix = "nl-portal.config.haalcentraal.brp", name = ["enabled"], havingValue = "true")
 @Import(HaalCentraalClientProvider::class)
 class HaalCentraalBrpAutoConfiguration {
     @Bean

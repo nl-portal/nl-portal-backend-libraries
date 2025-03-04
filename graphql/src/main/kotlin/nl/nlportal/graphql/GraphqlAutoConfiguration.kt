@@ -16,12 +16,21 @@
 package nl.nlportal.graphql
 
 import com.expediagroup.graphql.generator.directives.KotlinDirectiveWiringFactory
+import com.expediagroup.graphql.server.operations.Query
 import nl.nlportal.graphql.hooks.CustomSchemaGeneratorHooks
+import nl.nlportal.graphql.query.DefaultQuery
 import org.springframework.boot.autoconfigure.AutoConfiguration
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
 class GraphqlAutoConfiguration {
     @Bean
     fun hooks() = CustomSchemaGeneratorHooks(KotlinDirectiveWiringFactory())
+
+    @Bean
+    @ConditionalOnMissingBean(Query::class)
+    fun defaultQuery(): Query {
+        return DefaultQuery()
+    }
 }

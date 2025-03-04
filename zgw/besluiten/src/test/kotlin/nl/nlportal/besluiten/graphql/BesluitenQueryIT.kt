@@ -46,7 +46,7 @@ class BesluitenQueryIT(
         @JvmStatic
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
-            propsRegistry.add("nl-portal.zgw.besluiten.url") { url }
+            propsRegistry.add("nl-portal.config.besluitenapi.properties.url") { url }
         }
 
         @JvmStatic
@@ -68,7 +68,7 @@ class BesluitenQueryIT(
     internal fun setUp() {
         setupMockObjectsApiServer()
         url = server?.url("/").toString()
-        besluitenApiConfig.url = url
+        besluitenApiConfig.properties.url = url
     }
 
     @Test

@@ -17,8 +17,8 @@ import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.zakenapi.TestHelper.testDocument
 import nl.nlportal.zakenapi.TestHelper.testZaakDocument
 import nl.nlportal.zakenapi.TestHelper.testZaakRol
-import nl.nlportal.zakenapi.client.ZaakDocumentenConfig
 import nl.nlportal.zakenapi.client.ZakenApiClient
+import nl.nlportal.zakenapi.client.ZakenApiConfig.ZakenApiConfigProperties.ZaakDocumentenConfig
 import nl.nlportal.zakenapi.domain.ZaakDocument
 import nl.nlportal.zakenapi.domain.ZaakRol
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
@@ -52,7 +52,7 @@ class ZakenApiServiceTest {
 
     @Mock
     private lateinit var documentenApiService: DocumentenApiService
-    private lateinit var zaakDocumentenConfig: ZaakDocumentenConfig
+    private lateinit var zaakDocumentenConfigProperties: ZaakDocumentenConfig
 
     @Mock
     private lateinit var authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService
@@ -64,7 +64,7 @@ class ZakenApiServiceTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
 
-        zaakDocumentenConfig =
+        zaakDocumentenConfigProperties =
             ZaakDocumentenConfig(
                 vertrouwelijkheidsaanduidingWhitelist =
                     listOf(
@@ -73,7 +73,14 @@ class ZakenApiServiceTest {
                     ),
             )
 
-        zakenApiService = ZakenApiService(zakenApiClient, zaakDocumentenConfig, documentenApiService, objectsApiClient, authenticationMachtigingsDienstService)
+        zakenApiService =
+            ZakenApiService(
+                zakenApiClient,
+                zaakDocumentenConfigProperties,
+                documentenApiService,
+                objectsApiClient,
+                authenticationMachtigingsDienstService,
+            )
     }
 
     @Test
@@ -112,8 +119,8 @@ class ZakenApiServiceTest {
                 zakenApiService.getDocumenten("example.com")
 
             assertEquals(1, filteredDocuments.size)
-            assertTrue { filteredDocuments.first().status in zaakDocumentenConfig.statusWhitelist }
-            assertTrue { filteredDocuments.first().vertrouwelijkheidaanduiding in zaakDocumentenConfig.vertrouwelijkheidsaanduidingWhitelist }
+            assertTrue { filteredDocuments.first().status in zaakDocumentenConfigProperties.statusWhitelist }
+            assertTrue { filteredDocuments.first().vertrouwelijkheidaanduiding in zaakDocumentenConfigProperties.vertrouwelijkheidsaanduidingWhitelist }
         }
 
     @Test
@@ -124,7 +131,7 @@ class ZakenApiServiceTest {
                 GEARCHIVEERD,
             )
 
-        assertEquals(expectedStatuses, zaakDocumentenConfig.statusWhitelist)
+        assertEquals(expectedStatuses, zaakDocumentenConfigProperties.statusWhitelist)
     }
 
     @Test

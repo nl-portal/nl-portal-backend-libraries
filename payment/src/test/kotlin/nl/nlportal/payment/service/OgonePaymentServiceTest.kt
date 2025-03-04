@@ -17,8 +17,8 @@ package nl.nlportal.payment.service
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig
-import nl.nlportal.payment.autoconfiguration.OgonePaymentProfile
+import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig.OgonePaymentConfigProperties
+import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig.OgonePaymentProfile
 import nl.nlportal.payment.domain.OgonePaymentRequest
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -32,9 +32,9 @@ import org.springframework.web.server.ResponseStatusException
 
 @ExperimentalCoroutinesApi
 internal class OgonePaymentServiceTest {
-    val paymentConfig: OgonePaymentConfig = mock()
+    val paymentConfigProperties: OgonePaymentConfigProperties = mock()
     val objectsApiClient: ObjectsApiClient = mock()
-    val ogonePaymentService = OgonePaymentService(paymentConfig, objectsApiClient)
+    val ogonePaymentService = OgonePaymentService(paymentConfigProperties, objectsApiClient)
 
     @BeforeEach
     fun setup() {
@@ -63,8 +63,8 @@ internal class OgonePaymentServiceTest {
                 successUrl = "http://dummy.nl",
             )
 
-        whenever(paymentConfig.getPaymentProfileByPspPid(anyString())).thenReturn(paymentProfile)
-        whenever(paymentConfig.url).thenReturn("https://secure.ogone.com/ncol/prod/orderstandard.asp")
+        whenever(paymentConfigProperties.getPaymentProfileByPspPid(anyString())).thenReturn(paymentProfile)
+        whenever(paymentConfigProperties.url).thenReturn("https://secure.ogone.com/ncol/prod/orderstandard.asp")
 
         val payment = ogonePaymentService.createPayment(paymentRequest)
         assertEquals(paymentProfile.pspId, payment.pspId)

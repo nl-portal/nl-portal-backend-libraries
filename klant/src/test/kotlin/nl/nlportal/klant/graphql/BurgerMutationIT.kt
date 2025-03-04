@@ -51,7 +51,7 @@ internal class BurgerMutationIT(
         server = MockWebServer()
         setupMockOpenKlantServer()
         server.start()
-        openKlantClientConfig.url = server.url("/").toString()
+        openKlantClientConfig.properties.url = server.url("/").toString()
     }
 
     @AfterEach

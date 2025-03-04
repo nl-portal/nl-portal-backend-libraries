@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright (c) 2025 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.zgw.taak.autoconfigure
+package nl.nlportal.berichten.autoconfigure
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.zgw.taak.taakobject")
-class TaakObjectConfig(
-    @Deprecated("Use version 2")
-    var typeUrl: String = "",
-    var typeUrlV2: String = "",
-)
+@ConfigurationProperties(prefix = "nl-portal.config.berichten")
+data class BerichtenConfiguration(
+    var enabled: Boolean = false,
+    var properties: BerichtenConfigurationProperties = BerichtenConfigurationProperties(),
+) {
+    data class BerichtenConfigurationProperties(
+        var berichtObjectTypeUrl: String = "",
+    )
+}

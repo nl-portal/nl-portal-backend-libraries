@@ -28,7 +28,7 @@ import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
 
 class HaalCentraalClientProvider(
-    private val haalCentraalClientConfig: HaalCentraalClientConfig,
+    private val haalCentraalClientConfig: HaalCentraalBrpConfig,
     private val clientSslContextResolver: ClientSslContextResolver? = null,
 ) {
     fun webClient(authentication: Authentication): WebClient {
@@ -48,7 +48,7 @@ class HaalCentraalClientProvider(
                     ).let { client ->
                         var result = client
                         if (clientSslContextResolver != null) {
-                            haalCentraalClientConfig.ssl?.let {
+                            haalCentraalClientConfig.properties.ssl?.let {
                                 val sslContext =
                                     clientSslContextResolver.resolve(
                                         it.key,
@@ -67,10 +67,10 @@ class HaalCentraalClientProvider(
                     },
                 ),
             )
-            .baseUrl(haalCentraalClientConfig.url)
+            .baseUrl(haalCentraalClientConfig.properties.url)
             .apply {
-                if (!haalCentraalClientConfig.apiKey.isNullOrBlank()) {
-                    it.defaultHeader("X-API-KEY", haalCentraalClientConfig.apiKey)
+                if (!haalCentraalClientConfig.properties.apiKey.isNullOrBlank()) {
+                    it.defaultHeader("X-API-KEY", haalCentraalClientConfig.properties.apiKey)
                     logger.debug { "X-API-KEY was set for client" }
                 }
             }

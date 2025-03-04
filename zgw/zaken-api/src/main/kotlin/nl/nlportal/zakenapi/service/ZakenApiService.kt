@@ -21,8 +21,8 @@ import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils.extractId
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.service.DocumentenApiService
-import nl.nlportal.zakenapi.client.ZaakDocumentenConfig
 import nl.nlportal.zakenapi.client.ZakenApiClient
+import nl.nlportal.zakenapi.client.ZakenApiConfig.ZakenApiConfigProperties
 import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zakenapi.domain.ZaakDetails
 import nl.nlportal.zakenapi.domain.ZaakDetailsObject
@@ -40,7 +40,7 @@ import java.util.UUID
 
 class ZakenApiService(
     private val zakenApiClient: ZakenApiClient,
-    private val zaakDocumentenConfig: ZaakDocumentenConfig,
+    private val zaakDocumentenConfig: ZakenApiConfigProperties.ZaakDocumentenConfig,
     private val documentenApiService: DocumentenApiService,
     private val objectsApiClient: ObjectsApiClient,
     private val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,

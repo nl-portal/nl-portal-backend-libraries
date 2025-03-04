@@ -39,7 +39,7 @@ internal class DocumentenApiServiceTest(
     @Autowired private var documentApisConfig: DocumentApisConfig,
 ) {
     var documentenApiClient: DocumentenApiClient = mock()
-    var documentenApiService: DocumentenApiService = DocumentenApiService(documentenApiClient, documentApisConfig)
+    var documentenApiService: DocumentenApiService = DocumentenApiService(documentenApiClient, documentApisConfig.properties)
 
     @Test
     fun `should find single document by UUID`() =

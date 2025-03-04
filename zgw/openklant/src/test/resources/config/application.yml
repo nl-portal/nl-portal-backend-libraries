@@ -4,7 +4,7 @@ graphql:
 
 nl-portal:
     config:
-      openklant:
+      openklant2:
           enabled: true
           properties:
               klantinteracties-api-url: http://localhost:9007/klantinteracties/api/v1
@@ -30,7 +30,7 @@ spring:
 
 nl-portal:
     config:
-        openklant:
+        openklant2:
             enabled: false
 
 ---
@@ -42,7 +42,7 @@ spring:
 
 nl-portal:
     config:
-        openklant:
+        openklant2:
             enabled: true
             properties:
                 klantinteracties-api-url:

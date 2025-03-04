@@ -13,21 +13,21 @@ class DocumentApisTest(
 ) {
     @Test
     fun `localhost documentapi should resolve to localhost config`() {
-        assertEquals("https://localhost:8001/documenten/api/v1", documentApisConfig.getConfig("openzaak").url)
-        assertEquals("e09b8bc5-5831-4618-ab28-41411304309d", documentApisConfig.getConfig("openzaak").secret)
+        assertEquals("https://localhost:8001/documenten/api/v1", documentApisConfig.properties.getConfig("openzaak").url)
+        assertEquals("e09b8bc5-5831-4618-ab28-41411304309d", documentApisConfig.properties.getConfig("openzaak").secret)
     }
 
     @Test
     fun `exampleorg documentapi should resolve to localhost config`() {
-        assertEquals("https://example.org/documenten/api/v1", documentApisConfig.getConfig("example").url)
-        assertEquals("e09b8bc5-5831-4618-ab28-111111111111", documentApisConfig.getConfig("example").secret)
+        assertEquals("https://example.org/documenten/api/v1", documentApisConfig.properties.getConfig("example").url)
+        assertEquals("e09b8bc5-5831-4618-ab28-111111111111", documentApisConfig.properties.getConfig("example").secret)
     }
 
     @Test
     fun `openzaak url should resolve to openzaak`() {
         assertEquals(
             "openzaak",
-            documentApisConfig.getConfigForDocumentUrl(
+            documentApisConfig.properties.getConfigForDocumentUrl(
                 "https://localhost:8001/documenten/api/v1/enkelvoudiginformatieobjecten/5f1e2695-8b68-448a-a62d-531321c744ec",
             ),
         )
@@ -37,7 +37,9 @@ class DocumentApisTest(
     fun `exampleorg url should resolve to example`() {
         assertEquals(
             "example",
-            documentApisConfig.getConfigForDocumentUrl("https://example.org/documenten/api/v1/adsf/api/v1/werwer/5f1e2695-8b68-448q"),
+            documentApisConfig.properties.getConfigForDocumentUrl(
+                "https://example.org/documenten/api/v1/adsf/api/v1/werwer/5f1e2695-8b68-448q",
+            ),
         )
     }
 }
