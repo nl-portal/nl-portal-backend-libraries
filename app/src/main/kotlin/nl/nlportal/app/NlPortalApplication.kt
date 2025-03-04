@@ -15,14 +15,25 @@
  */
 package nl.nlportal.app
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
+import java.net.InetAddress
 
 @EnableConfigurationProperties
 @SpringBootApplication
 class PortalApplication
 
 fun main(args: Array<String>) {
-    runApplication<PortalApplication>(*args)
+    runApplication<PortalApplication>(*args).apply {
+        KotlinLogging.logger { }.info {
+            """
+
+            Application '${environment.getProperty("spring.application.name")}' is running!
+            Local URL: [http://127.0.0.1:${environment.getProperty("server.port")}].
+            External URL: [http://${InetAddress.getLocalHost().hostAddress}:${environment.getProperty("server.port")}]
+            """.trimIndent()
+        }
+    }
 }

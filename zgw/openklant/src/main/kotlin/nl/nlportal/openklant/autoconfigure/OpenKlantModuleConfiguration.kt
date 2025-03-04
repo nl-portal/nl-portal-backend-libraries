@@ -21,7 +21,7 @@ import java.net.URI
 @ConfigurationProperties(prefix = "nl-portal.config.openklant")
 data class OpenKlantModuleConfiguration(
     var enabled: Boolean = false,
-    var properties: OpenKlantConfigurationProperties,
+    var properties: OpenKlantConfigurationProperties = OpenKlantConfigurationProperties(),
 ) {
     init {
         if (enabled) {
