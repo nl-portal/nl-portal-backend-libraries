@@ -21,4 +21,6 @@ object Dependencies {
     val jsonWebTokensImpl by lazy { "io.jsonwebtoken:jjwt-impl:${Versions.jsonWebTokens}" }
     val jsonWebTokensJackson by lazy { "io.jsonwebtoken:jjwt-jackson:${Versions.jsonWebTokens}" }
     val kotlinCoroutines by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlinCoroutines}" }
+    val springCloudConfig by lazy { "org.springframework.cloud:spring-cloud-starter-config:${Versions.springCloudVersion}" }
+    val springCloudBootstrap by lazy { "org.springframework.cloud:spring-cloud-starter-bootstrap:${Versions.springCloudVersion}" }
 }

@@ -32,6 +32,10 @@ dependencies {
     api("org.springframework.security", "spring-security-oauth2-jose")
     api("org.springframework.security", "spring-security-oauth2-resource-server")
 
+    // Spring Cloud
+    api(Dependencies.springCloudConfig)
+    api(Dependencies.springCloudBootstrap)
+
     // Jackson
     api(ApiDependencies.jacksonBom)
     api("com.fasterxml.jackson.module", "jackson-module-kotlin")

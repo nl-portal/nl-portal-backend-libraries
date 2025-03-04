@@ -19,23 +19,24 @@ internal object Versions {
     const val jsonPath = "2.9.0"
     const val jsonWebTokens = "0.12.6"
     const val kotlinCoroutines = "1.8.1"
+    const val springCloudVersion = "4.2.0"
 }
 
 internal object TestVersions {
-    const val hamcrest = "2.2"
-    const val kotlinCoroutines = "1.7.3"
+    const val hamcrest = "3.0"
+    const val kotlinCoroutines = "1.10.1"
     const val mockitoKotlin = "5.4.0"
     const val okHttp3 = "4.12.0"
-    const val postgresql = "42.7.0"
+    const val postgresql = "42.7.5"
 }
 
 object ApiVersions {
-    const val apacheCommons = "3.13.0"
+    const val apacheCommons = "3.17.0"
     const val commonsIo = "2.17.0"
-    const val commonsCodec = "1.17.0"
+    const val commonsCodec = "1.18.0"
     const val graphqlJava ="21.0"
     const val graphqlKotlin = "8.3.0"
-    const val jacksonBom = "2.17.2"
-    const val kotlinLogging = "7.0.3"
-    const val springCloud = "4.1.3"
+    const val jacksonBom = "2.18.2"
+    const val kotlinLogging = "7.0.4"
+    const val springCloud = "4.2.0"
 }
