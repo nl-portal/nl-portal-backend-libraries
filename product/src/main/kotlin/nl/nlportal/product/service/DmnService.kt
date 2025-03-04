@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2025 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,7 +103,7 @@ class DmnService(
                     ),
                 )
             } else {
-                logger.warn(BESLISTABLE_NOT_FOUND_BY_KEY, it.key)
+                logger.warn { "Could not find beslisTabel variables for key ${it.key}" }
             }
         }
 
@@ -160,7 +160,7 @@ class DmnService(
             val source = productService.getSourceAsJson(it.key, it.value)
 
             if (source == null) {
-                logger.warn("Could not find objects for key {} with uuid {}", it.key, it.value)
+                logger.warn { "Could not find objects for key ${it.key} with uuid ${it.value}" }
             } else {
                 if (beslisTabelVariables.containsKey(it.key)) {
                     variablesMapping.putAll(
@@ -287,15 +287,15 @@ class DmnService(
             val inputJsonPath = JsonPath.parse(source)
             return inputJsonPath.read<Any>(regex)
         } catch (ex: Exception) {
-            logger.warn("Problem with parsing variable: {}", ex.message)
+            logger.warn { "Problem with parsing variable: ${ex.message}" }
         }
         return ""
     }
 
     companion object {
         val logger = KotlinLogging.logger {}
-        const val SOURCE_MAPPING_FAILED: String = "Source mapping failed for DMN, check beslistabelmapping of productType: "
-        const val BESLISTABLE_NOT_FOUND_BY_KEY: String = "Could not find beslisTabel variables for key {}"
+        const val SOURCE_MAPPING_FAILED: String =
+            "Source mapping failed for DMN, check beslistabelmapping of productType: "
         const val BESLISTABLE_KEY_STATIC: String = "static"
         const val BESLISTABLE_KEY_PRODUCT_TYPE: String = "producttype"
     }

@@ -94,8 +94,8 @@ internal class OgonePaymentControllerIT(
         val shaSign =
             OgonePaymentService.hashParameters(
                 parameterList,
-                paymentConfig.getPaymentProfile("belastingzaken")!!.shaOutKey,
-                paymentConfig.getPaymentProfile("belastingzaken")!!.shaVersion,
+                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaOutKey,
+                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaVersion,
             ).uppercase()
 
         webTestClient.get()
