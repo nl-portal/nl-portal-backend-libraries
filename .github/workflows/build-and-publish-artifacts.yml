@@ -18,12 +18,12 @@ jobs:
           echo "VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
           echo "VERSION=$PROJECT_VERSION" >> $GITHUB_OUTPUT
       - name: Log project version
-        run: echo "::info::Detected project version - \"${PROJECT_VERSION}\".
+        run: echo "::info::Detected project version - \"${PROJECT_VERSION}\"."
       - name: Detect scope
         id: detect-scope
         run: echo "SCOPE=$(if echo $PROJECT_VERSION | grep -Eq "^\d+\.\d+\.\d+$" ; then echo "RELEASE" ; elif echo $PROJECT_VERSION | grep -Eq "^\d+\.\d+\.\d+-.*SNAPSHOT$" ; then echo "SNAPSHOT" ; else echo "UNKNOWN" ; fi)" >> $GITHUB_OUTPUT
       - name: Log scope
-        run: echo "::info::Detected scope version - \"${{ steps.detect-scope.outputs.SCOPE }}\".
+        run: echo "::info::Detected scope version - \"${{ steps.detect-scope.outputs.SCOPE }}\"."
   publish-snapshot:
     needs:
       - detect-variables
