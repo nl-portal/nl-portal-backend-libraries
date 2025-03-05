@@ -19,7 +19,7 @@ jobs:
         run: echo "::info::Detected project version - \"${{ steps.get-project-version.outputs.PROJECT_VERSION }}\"."
       - name: Detect scope
         id: detect-scope
-        run: echo "SCOPE=$(if echo -n "${{ steps.get-project-version.outputs.PROJECT_VERSION }}" | grep -Eq "^\d+\.\d+\.\d+$" ; then echo "RELEASE" ; elif echo -n "${{ steps.get-project-version.outputs.PROJECT_VERSION }}" | grep -Eq "^\d+\.\d+\.\d+-.*SNAPSHOT$" ; then echo "SNAPSHOT" ; else echo "UNKNOWN" ; fi)" >> $GITHUB_OUTPUT
+        run: echo "SCOPE=$(if grep -Pq "^\d+\.\d+\.\d+$" <<< ${{ steps.get-project-version.outputs.PROJECT_VERSION }} ; then echo "RELEASE" ; elif grep -Pq "^\d+\.\d+\.\d+-.*SNAPSHOT$" <<< ${{ steps.get-project-version.outputs.PROJECT_VERSION }} ; then echo "SNAPSHOT" ; else echo "UNKNOWN" ; fi)" >> $GITHUB_OUTPUT
       - name: Log scope
         run: echo "::info::Detected scope version - \"${{ steps.detect-scope.outputs.SCOPE }}\"."
   publish-snapshot:
