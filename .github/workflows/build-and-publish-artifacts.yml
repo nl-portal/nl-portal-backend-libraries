@@ -13,8 +13,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Get version from project
         id: get-project-version
-        run: |
-          echo "PROJECT_VERSION=$(grep "version" gradle.properties | sed 's/^.*=//')" >> $GITHUB_OUTPUT
+        run: echo "PROJECT_VERSION=$(grep "version" gradle.properties | sed 's/^.*=//')" >> $GITHUB_OUTPUT
       - name: Log project version
         run: echo "::notice:: Detected project version - \"${{ steps.get-project-version.outputs.PROJECT_VERSION }}\"."
       - name: Detect scope
