@@ -15,12 +15,12 @@ jobs:
         id: get-project-version
         run: echo "PROJECT_VERSION=$(grep "version" gradle.properties | sed 's/^.*=//')" >> $GITHUB_OUTPUT
       - name: Log project version
-        run: echo "::notice:: Detected project version - \"${{ steps.get-project-version.outputs.PROJECT_VERSION }}\"."
+        run: echo "::notice::Detected project version - \"${{ steps.get-project-version.outputs.PROJECT_VERSION }}\"."
       - name: Detect scope
         id: detect-scope
         run: echo "SCOPE=$(if grep -Pq "^\d+\.\d+\.\d+$" <<< ${{ steps.get-project-version.outputs.PROJECT_VERSION }} ; then echo "RELEASE" ; elif grep -Pq "^\d+\.\d+\.\d+-.*SNAPSHOT$" <<< ${{ steps.get-project-version.outputs.PROJECT_VERSION }} ; then echo "SNAPSHOT" ; else echo "UNKNOWN" ; fi)" >> $GITHUB_OUTPUT
       - name: Log scope
-        run: echo "::notice:: Detected scope - \"${{ steps.detect-scope.outputs.SCOPE }}\"."
+        run: echo "::notice::Detected scope - \"${{ steps.detect-scope.outputs.SCOPE }}\"."
   validate-build:
     uses: ./.github/workflows/validate-build.yml
     permissions: read-all
@@ -49,4 +49,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Fail on invalid version
-        run: echo "::error:: Detected version \"${{ env.VERSION }}\" is neither a RELEASE nor SNAPSHOT. Please make sure the version property in gradle.properties is correct."  && exit 1
+        run: echo "::error::Detected version \"${{ env.VERSION }}\" is neither a RELEASE nor SNAPSHOT. Please make sure the version property in gradle.properties is correct."  && exit 1
