@@ -8,33 +8,39 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       scope: ${{ steps.detect-scope.outputs.SCOPE }}
-      version: ${{ steps.get-version.outputs.VERSION }}
+      version: ${{ steps.get-project-version.outputs.PROJECT_VERSION }}
     steps:
       - uses: actions/checkout@v4
       - name: Get version from project
-        id: get-version
-        run: |
-          PROJECT_VERSION=$(grep "version" gradle.properties | sed 's/^.*=//')
-          echo "VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
-          echo "VERSION=$PROJECT_VERSION" >> $GITHUB_OUTPUT
+        id: get-project-version
+        run: echo "PROJECT_VERSION=$(grep "version" gradle.properties | sed 's/^.*=//')" >> $GITHUB_OUTPUT
+      - name: Log project version
+        run: echo "::notice::Detected project version - \"${{ steps.get-project-version.outputs.PROJECT_VERSION }}\"."
       - name: Detect scope
         id: detect-scope
-        run: echo "SCOPE=$(if echo $VERSION | grep -Eq "^\d+\.\d+\.\d+$" ; then echo "RELEASE" ; elif echo $VERSION | grep -Eq "^\d+\.\d+\.\d+-.*SNAPSHOT$" ; then echo "SNAPSHOT" ; else echo "UNKNOWN" ; fi)" >> $GITHUB_OUTPUT
+        run: echo "SCOPE=$(if grep -Pq "^\d+\.\d+\.\d+$" <<< ${{ steps.get-project-version.outputs.PROJECT_VERSION }} ; then echo "RELEASE" ; elif grep -Pq "^\d+\.\d+\.\d+-.*SNAPSHOT$" <<< ${{ steps.get-project-version.outputs.PROJECT_VERSION }} ; then echo "SNAPSHOT" ; else echo "UNKNOWN" ; fi)" >> $GITHUB_OUTPUT
+      - name: Log scope
+        run: echo "::notice::Detected scope - \"${{ steps.detect-scope.outputs.SCOPE }}\"."
+  validate-build:
+    uses: ./.github/workflows/validate-build.yml
+    permissions: read-all
   publish-snapshot:
     needs:
       - detect-variables
+      - validate-build
     if: ${{ needs.detect-variables.outputs.scope == 'SNAPSHOT' }}
     uses: ./.github/workflows/publish-snapshot.yml
     secrets: inherit
   publish-release:
     needs:
       - detect-variables
+      - validate-build
     if: ${{ needs.detect-variables.outputs.scope == 'RELEASE' }}
     uses: ./.github/workflows/publish-release.yml
     with:
       artifactVersion: ${{ needs.detect-variables.outputs.version }}
     secrets: inherit
-  unknown:
+  unknown-version:
     needs:
       - detect-variables
     if: ${{ needs.detect-variables.outputs.scope == 'UNKNOWN' }}
@@ -43,4 +49,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Fail on invalid version
-        run: echo "::error::Invalid version format. Detected version - \"${VERSION}\". Make sure the version property in gradle.properties is valid."  && exit 1
+        run: echo "::error::Detected version \"${{ env.VERSION }}\" is neither a RELEASE nor SNAPSHOT. Please make sure the version property in gradle.properties is correct."  && exit 1

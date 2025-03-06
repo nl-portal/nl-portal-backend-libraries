@@ -7,6 +7,7 @@
 
 name: Validate Build
 on:
+  workflow_call:
   push:
     branches:
       - "next-minor"

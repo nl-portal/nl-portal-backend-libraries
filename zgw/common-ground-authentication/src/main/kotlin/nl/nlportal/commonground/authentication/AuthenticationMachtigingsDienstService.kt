@@ -32,6 +32,7 @@ class AuthenticationMachtigingsDienstService(
         try {
             if (authenticationMachtingsDienstConfig.resourceUrl != null) {
                 val json = resourceLoader.getResource(authenticationMachtingsDienstConfig.resourceUrl).getContentAsString(Charsets.UTF_8)
+                logger.debug { "Machtigingsdiensten is loaded: $json" }
                 this.authenticationMachtingDiensten = Mapper.get().readValue(json, object : TypeReference<List<AuthenticationMachtigingsDienst>>() {})
             }
         } catch (ex: Exception) {
