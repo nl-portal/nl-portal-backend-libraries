@@ -56,16 +56,26 @@ abstract class CommonGroundAuthentication(
     }
 
     /**
-     * Gets MachtingsDienst UUID property from the JWT
+     * Gets MachtingsDienst UUIDs property from the JWT
      *
-     * @return MachtingsDienst UUID
+     * @return MachtingsDienst UUIDs
      */
-    fun machtigingsDienstUUID(): UUID? {
+    fun machtigingsDienstUUIDs(): List<UUID>? {
         if (token.claims[MACHTIGINGSDIENST_KEY] == null) {
             return null
         }
+        val claim = token.claims[MACHTIGINGSDIENST_KEY]
+        return when (claim) {
+            is List<*> -> {
+                claim.filterIsInstance<String>().map { UUID.fromString(it) }
+            }
 
-        return UUID.fromString(token.claims[MACHTIGINGSDIENST_KEY].toString())
+            is String -> {
+                listOf(UUID.fromString(claim))
+            }
+
+            else -> null
+        }
     }
 
     override fun getUserRepresentation() = "${this.userType.uppercase()}:${this.userId}"

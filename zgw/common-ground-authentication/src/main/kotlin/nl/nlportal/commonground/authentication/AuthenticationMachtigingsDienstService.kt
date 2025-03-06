@@ -36,7 +36,7 @@ class AuthenticationMachtigingsDienstService(
                 this.authenticationMachtingDiensten = Mapper.get().readValue(json, object : TypeReference<List<AuthenticationMachtigingsDienst>>() {})
             }
         } catch (ex: Exception) {
-            logger.warn("Could not load json from {}", authenticationMachtingsDienstConfig.resourceUrl)
+            logger.warn { "Could not load json from $authenticationMachtingsDienstConfig.resourceUrl with reason ${ex.message}" }
         }
     }
 
@@ -46,15 +46,25 @@ class AuthenticationMachtigingsDienstService(
     }
 
     fun zaakTypes(authentication: CommonGroundAuthentication): List<UUID>? {
-        return authentication.machtigingsDienstUUID()?.let {
-            getAuthenticationMachtingDienst(it)?.zaakTypes
+        val zaakTypeList = mutableListOf<UUID>()
+        authentication.machtigingsDienstUUIDs()?.forEach {
+            val machtigingsDienst = getAuthenticationMachtingDienst(it)
+            if (machtigingsDienst != null) {
+                zaakTypeList.addAll(machtigingsDienst.zaakTypes)
+            }
         }
+        return zaakTypeList
     }
 
     fun taakTypes(authentication: CommonGroundAuthentication): List<String>? {
-        return authentication.machtigingsDienstUUID()?.let {
-            getAuthenticationMachtingDienst(it)?.taakTypes
+        val taakTypeList = mutableListOf<String>()
+        authentication.machtigingsDienstUUIDs()?.forEach {
+            val machtigingsDienst = getAuthenticationMachtingDienst(it)
+            if (machtigingsDienst != null) {
+                taakTypeList.addAll(machtigingsDienst.taakTypes)
+            }
         }
+        return taakTypeList
     }
 
     fun isAllowedZaakType(
@@ -63,7 +73,7 @@ class AuthenticationMachtigingsDienstService(
     ): Boolean {
         val zaaktypes = zaakTypes(authentication)
 
-        if (zaaktypes != null && zaaktypes.isNotEmpty()) {
+        if (!zaaktypes.isNullOrEmpty()) {
             return zaaktypes.contains(zaakTypeUUID)
         }
 
@@ -78,7 +88,7 @@ class AuthenticationMachtigingsDienstService(
 
         val allowedZaaktypes = mutableSetOf<UUID>()
 
-        if (zaaktypes != null && zaaktypes.isNotEmpty()) {
+        if (!zaaktypes.isNullOrEmpty()) {
             zaakTypeUUIDs.forEach {
                 if (zaaktypes.contains(it)) {
                     allowedZaaktypes.add(it)
@@ -97,7 +107,7 @@ class AuthenticationMachtigingsDienstService(
     ): Boolean {
         val taaktypes = taakTypes(authentication)
 
-        if (taaktypes != null && taaktypes.isNotEmpty()) {
+        if (!taaktypes.isNullOrEmpty()) {
             return taaktypes.contains(taakType)
         }
 
