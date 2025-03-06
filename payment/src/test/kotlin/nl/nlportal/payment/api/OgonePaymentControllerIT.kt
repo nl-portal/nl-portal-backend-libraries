@@ -49,7 +49,7 @@ internal class OgonePaymentControllerIT(
         server = MockWebServer()
         setupMockObjectsApiServer()
         server.start()
-        objectsApiClientConfig.url = server.url("/").toUri()
+        objectsApiClientConfig.properties.url = server.url("/").toUri()
     }
 
     @AfterEach
@@ -68,8 +68,8 @@ internal class OgonePaymentControllerIT(
         val shaSign =
             OgonePaymentService.hashParameters(
                 parameterList,
-                paymentConfig.getPaymentProfile("belastingzaken")!!.shaOutKey,
-                paymentConfig.getPaymentProfile("belastingzaken")!!.shaVersion,
+                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaOutKey,
+                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaVersion,
             ).uppercase()
 
         webTestClient.get()
@@ -94,8 +94,8 @@ internal class OgonePaymentControllerIT(
         val shaSign =
             OgonePaymentService.hashParameters(
                 parameterList,
-                paymentConfig.getPaymentProfile("belastingzaken")!!.shaOutKey,
-                paymentConfig.getPaymentProfile("belastingzaken")!!.shaVersion,
+                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaOutKey,
+                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaVersion,
             ).uppercase()
 
         webTestClient.get()
@@ -120,8 +120,8 @@ internal class OgonePaymentControllerIT(
         val shaSign =
             OgonePaymentService.hashParameters(
                 parameterList,
-                paymentConfig.getPaymentProfile("belastingzaken")!!.shaOutKey,
-                paymentConfig.getPaymentProfile("belastingzaken")!!.shaVersion,
+                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaOutKey,
+                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaVersion,
             ).uppercase()
 
         webTestClient.get()

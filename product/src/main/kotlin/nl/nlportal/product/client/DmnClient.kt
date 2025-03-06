@@ -15,11 +15,12 @@
  */
 package nl.nlportal.product.client
 
-import io.netty.handler.logging.LogLevel
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
+import io.netty.handler.logging.LogLevel
 import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
+import nl.nlportal.product.client.DmnConfig.DmnConfigProperties
 import nl.nlportal.product.domain.DmnRequest
 import nl.nlportal.product.domain.DmnResponse
 import org.springframework.http.HttpStatus
@@ -33,7 +34,7 @@ import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
 
 class DmnClient(
-    val dmnConfig: DmnConfig,
+    val dmnConfigProperties: DmnConfigProperties,
     private val clientSslContextResolver: ClientSslContextResolver? = null,
     webClientBuilder: WebClient.Builder,
 ) {
@@ -52,7 +53,7 @@ class DmnClient(
                         ).let { client ->
                             var result = client
                             if (clientSslContextResolver != null) {
-                                dmnConfig.ssl?.let {
+                                dmnConfigProperties.ssl?.let {
                                     val sslContext =
                                         clientSslContextResolver.resolve(
                                             it.key,
@@ -68,7 +69,7 @@ class DmnClient(
                         },
                     ),
                 )
-                .baseUrl(dmnConfig.url)
+                .baseUrl(dmnConfigProperties.url)
                 .apply {
                     val token = getToken()
                     if (token != null) {
@@ -76,8 +77,13 @@ class DmnClient(
                     }
                 }
                 .apply {
-                    if (dmnConfig.username != null && dmnConfig.password != null) {
-                        it.defaultHeaders { header -> header.setBasicAuth(dmnConfig.username, dmnConfig.password) }
+                    if (dmnConfigProperties.username.isNotEmpty() && dmnConfigProperties.password.isNotEmpty()) {
+                        it.defaultHeaders { header ->
+                            header.setBasicAuth(
+                                dmnConfigProperties.username,
+                                dmnConfigProperties.password,
+                            )
+                        }
                     }
                 }
                 .build()
@@ -98,10 +104,10 @@ class DmnClient(
     }
 
     private fun getToken(): String? {
-        if (dmnConfig.clientId != null && dmnConfig.secret != null) {
+        if (dmnConfigProperties.clientId.isNotEmpty() && dmnConfigProperties.secret.isNotEmpty()) {
             return IdTokenGenerator().generateToken(
-                dmnConfig.secret,
-                dmnConfig.clientId,
+                dmnConfigProperties.secret,
+                dmnConfigProperties.clientId,
             )
         }
         return null
@@ -109,7 +115,10 @@ class DmnClient(
 
     fun WebClient.ResponseSpec.handleStatus() =
         this
-            .onStatus({ httpStatus -> HttpStatus.NOT_FOUND == httpStatus }, { throw ResponseStatusException(HttpStatus.NOT_FOUND) })
+            .onStatus(
+                { httpStatus -> HttpStatus.NOT_FOUND == httpStatus },
+                { throw ResponseStatusException(HttpStatus.NOT_FOUND) },
+            )
             .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, {
                 throw ResponseStatusException(
                     HttpStatus.UNAUTHORIZED,

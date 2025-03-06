@@ -20,7 +20,6 @@ import nl.nlportal.catalogiapi.client.CatalogiApiConfig
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.core.security.config.HttpSecurityConfigurer
 import nl.nlportal.documentenapi.service.DocumentenApiService
-import nl.nlportal.zakenapi.client.ZaakDocumentenConfig
 import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.client.ZakenApiConfig
 import nl.nlportal.zakenapi.graphql.ZaakQuery
@@ -30,6 +29,7 @@ import nl.nlportal.zakenapi.web.rest.ZaakDocumentResource
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.web.reactive.function.client.WebClient
@@ -37,13 +37,13 @@ import org.springframework.web.reactive.function.client.WebClient
 @AutoConfiguration
 @EnableConfigurationProperties(
     ZakenApiConfig::class,
-    ZaakDocumentenConfig::class,
 )
+@ConditionalOnProperty(prefix = "nl-portal.config.zakenapi", name = ["enabled"], havingValue = "true")
 class ZakenApiAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(ZakenApiService::class)
     fun zakenApiService(
-        zaakDocumentenConfig: ZaakDocumentenConfig,
+        zakenApiConfig: ZakenApiConfig,
         zakenApiClient: ZakenApiClient,
         documentenApiService: DocumentenApiService,
         objectsApiClient: ObjectsApiClient,
@@ -52,7 +52,7 @@ class ZakenApiAutoConfiguration {
     ): ZakenApiService {
         return ZakenApiService(
             zakenApiClient,
-            zaakDocumentenConfig,
+            zakenApiConfig.properties.zaakDocumentenConfig,
             documentenApiService,
             objectsApiClient,
             authenticationMachtigingsDienstService,
@@ -70,7 +70,7 @@ class ZakenApiAutoConfiguration {
         catalogiApiConfig: CatalogiApiConfig,
         webClientBuilder: WebClient.Builder,
     ): ZakenApiClient {
-        return ZakenApiClient(zakenApiConfig, catalogiApiConfig, webClientBuilder)
+        return ZakenApiClient(zakenApiConfig.properties, catalogiApiConfig.properties, webClientBuilder)
     }
 
     @Bean

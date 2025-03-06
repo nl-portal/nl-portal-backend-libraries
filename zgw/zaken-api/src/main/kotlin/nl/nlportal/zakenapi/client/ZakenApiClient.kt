@@ -16,8 +16,9 @@
 package nl.nlportal.zakenapi.client
 
 import io.netty.handler.logging.LogLevel
-import nl.nlportal.catalogiapi.client.CatalogiApiConfig
+import nl.nlportal.catalogiapi.client.CatalogiApiConfig.CatalogiApiConfigProperties
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
+import nl.nlportal.zakenapi.client.ZakenApiConfig.ZakenApiConfigProperties
 import nl.nlportal.zakenapi.client.request.ZaakInformatieobjecten
 import nl.nlportal.zakenapi.client.request.ZaakObjecten
 import nl.nlportal.zakenapi.client.request.ZaakObjectenImpl
@@ -41,8 +42,8 @@ import reactor.netty.transport.logging.AdvancedByteBufFormat
 import java.util.UUID
 
 class ZakenApiClient(
-    private val zakenApiConfig: ZakenApiConfig,
-    private val catalogiApiConfig: CatalogiApiConfig,
+    private val zakenApiConfig: ZakenApiConfigProperties,
+    private val catalogiApiConfig: CatalogiApiConfigProperties,
     webClientBuilder: WebClient.Builder,
 ) {
     val webClient: WebClient

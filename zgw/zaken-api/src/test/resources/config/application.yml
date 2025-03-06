@@ -7,35 +7,45 @@ logging:
         reactor.netty.http.client.HttpClient: TRACE
 
 nl-portal:
-    zgw:
+    config:
         catalogiapi:
-            url: http://localhost:8001
-            clientId: valtimo_client
-            secret: e09b8bc5-5831-4618-ab28-41411304309d
-        besluiten:
-            url: http://localhost:8001
-            clientId: valtimo_client
-            secret: e09b8bc5-5831-4618-ab28-41411304309d
+            enabled: true
+            properties:
+                url: http://localhost:8001
+                clientId: valtimo_client
+                secret: e09b8bc5-5831-4618-ab28-41411304309d
+        besluitenapi:
+            enabled: true
+            properties:
+                url: http://localhost:8001
+                clientId: valtimo_client
+                secret: e09b8bc5-5831-4618-ab28-41411304309d
         documentenapis:
-            default-document-api: openzaak
-            configurations:
-                openzaak:
-                    url: http://localhost:8001
-                    clientId: valtimo_client
-                    secret: e09b8bc5-5831-4618-ab28-41411304309d
-                    rsin: "051845623"
-                    documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000
-                example:
-                    url: https://example.org/documenten/api/v1
-                    clientId: valtimo_client
-                    secret: e09b8bc5-5831-4618-ab28-111111111111
+            enabled: true
+            properties:
+                default-document-api: openzaak
+                configurations:
+                    openzaak:
+                        url: http://localhost:8001
+                        clientId: valtimo_client
+                        secret: e09b8bc5-5831-4618-ab28-41411304309d
+                        rsin: "051845623"
+                        documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000
+                    example:
+                        url: https://example.org/documenten/api/v1
+                        clientId: valtimo_client
+                        secret: e09b8bc5-5831-4618-ab28-111111111111
         zakenapi:
-            url: http://localhost:8001
-            clientId: valtimo_client
-            secret: e09b8bc5-5831-4618-ab28-41411304309d
-    objectsapi:
-        token: 0000000000000000000000000000000000000000
-    security:
+            enabled: true
+            properties:
+                url: http://localhost:8001
+                clientId: valtimo_client
+                secret: e09b8bc5-5831-4618-ab28-41411304309d
+        objectenapi:
+            enabled: true
+            properties:
+                token: 0000000000000000000000000000000000000000
+    authentication:
         machtingsdienst:
             resource-url: classpath:machtigingsdiensten.json
 

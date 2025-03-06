@@ -27,15 +27,15 @@ import nl.nlportal.documentenapi.web.rest.DocumentContentResource
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Import
 import org.springframework.core.io.ResourceLoader
 
 @Configuration
 @EnableConfigurationProperties(DocumentApisConfig::class)
-@Import(ClamAVConfiguration::class)
+@ConditionalOnProperty(prefix = "nl-portal.config.documentenapis", name = ["enabled"], havingValue = "true")
 class DocumentenApiAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(ClientSslContextResolver::class)
@@ -49,7 +49,7 @@ class DocumentenApiAutoConfiguration {
         documentenApiClient: DocumentenApiClient,
         documentApisConfig: DocumentApisConfig,
     ): DocumentenApiService {
-        return DocumentenApiService(documentenApiClient, documentApisConfig)
+        return DocumentenApiService(documentenApiClient, documentApisConfig.properties)
     }
 
     @Bean
@@ -58,7 +58,7 @@ class DocumentenApiAutoConfiguration {
         idTokenGenerator: IdTokenGenerator,
         @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
     ): DocumentenApiClient {
-        return DocumentenApiClient(documentApisConfig, idTokenGenerator, clientSslContextResolver)
+        return DocumentenApiClient(documentApisConfig.properties, idTokenGenerator, clientSslContextResolver)
     }
 
     @Bean
@@ -75,11 +75,10 @@ class DocumentenApiAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(DocumentContentResource::class)
     fun documentContentResource2(
-        documentenApiClient: DocumentenApiClient,
         documentenApiService: DocumentenApiService,
         virusScanService: VirusScanService?,
         documentApisConfig: DocumentApisConfig,
     ): DocumentContentResource {
-        return DocumentContentResource(documentenApiClient, documentenApiService, virusScanService, documentApisConfig)
+        return DocumentContentResource(documentenApiService, virusScanService, documentApisConfig)
     }
 }

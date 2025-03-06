@@ -18,12 +18,11 @@ package nl.nlportal.haalcentraal.brp.graphql
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.haalcentraal.brp.TestHelper
 import nl.nlportal.haalcentraal.brp.TestHelper.verifyOnlyDataExists
-import nl.nlportal.haalcentraal.client.HaalCentraalClientConfig
+import nl.nlportal.haalcentraal.client.HaalCentraalBrpConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
-import org.hamcrest.Matchers.contains
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -40,7 +39,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class PersoonQueryIT(
     @Autowired private val testClient: WebTestClient,
-    @Autowired private val haalCentraalClientConfig: HaalCentraalClientConfig,
+    @Autowired private val haalCentraalClientConfig: HaalCentraalBrpConfig,
 ) {
     lateinit var server: MockWebServer
 
@@ -50,7 +49,7 @@ internal class PersoonQueryIT(
         setupMockServer()
         server.start()
 
-        haalCentraalClientConfig.url = server.url("/").toString()
+        haalCentraalClientConfig.properties.url = server.url("/").toString()
     }
 
     @AfterEach

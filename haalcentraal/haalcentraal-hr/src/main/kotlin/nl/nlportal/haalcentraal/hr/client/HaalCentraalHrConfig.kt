@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2025 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,14 @@ package nl.nlportal.haalcentraal.hr.client
 import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.haalcentraal.hr", ignoreUnknownFields = true)
-data class HaalCentraalHrClientConfig(
-    var url: String = "",
-    val apiKey: String? = null,
-    val ssl: Ssl? = null,
-)
+@ConfigurationProperties(prefix = "nl-portal.config.haalcentraal.hr", ignoreUnknownFields = true)
+data class HaalCentraalHrConfig(
+    var enabled: Boolean = false,
+    var properties: HaalCentraalHrConfigProperties = HaalCentraalHrConfigProperties(),
+) {
+    class HaalCentraalHrConfigProperties(
+        var url: String = "",
+        var apiKey: String? = null,
+        var ssl: Ssl? = null,
+    )
+}

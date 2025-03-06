@@ -18,7 +18,6 @@ package nl.nlportal.documentenapi.web.rest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.runBlocking
 import nl.nlportal.documentenapi.client.DocumentApisConfig
-import nl.nlportal.documentenapi.client.DocumentenApiClient
 import nl.nlportal.documentenapi.domain.VirusScanStatus
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.documentenapi.service.VirusScanService
@@ -39,7 +38,6 @@ import java.util.UUID
 @RestController
 @RequestMapping(value = ["/api"])
 class DocumentContentResource(
-    val documentenApiClient: DocumentenApiClient,
     val documentenApiService: DocumentenApiService,
     val virusScanService: VirusScanService?,
     val documentApisConfig: DocumentApisConfig,
@@ -86,7 +84,7 @@ class DocumentContentResource(
         @RequestPart("file") file: FilePart,
         @RequestPart("informatieobjecttype", required = false) informatieobjecttype: String?,
     ): ResponseEntity<Any> {
-        val documentapi: String = documentApisConfig.defaultDocumentApi
+        val documentapi: String = documentApisConfig.properties.defaultDocumentApi
         val virusScanResult = virusScanService?.scan(file.content())
 
         // only return a bad request as a virus is found, otherwise continue....

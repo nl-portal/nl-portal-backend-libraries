@@ -19,11 +19,8 @@ import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.product.TestHelper
 import nl.nlportal.product.TestHelper.verifyOnlyDataExists
-import nl.nlportal.product.client.DmnConfig
-import nl.nlportal.product.client.ProductConfig
 import nl.nlportal.zakenapi.client.ZakenApiConfig
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
-import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -47,9 +44,6 @@ import java.net.URI
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 internal class ProductQueryIT(
     @Autowired private val testClient: WebTestClient,
-    @Autowired private val productApiConfig: ProductConfig,
-    @Autowired private val taakObjectConfig: TaakObjectConfig,
-    @Autowired private val dmnConfig: DmnConfig,
     @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
     @Autowired private val zakenApiConfig: ZakenApiConfig,
     @Autowired private val graphqlGetProduct: String,
@@ -75,8 +69,8 @@ internal class ProductQueryIT(
         @JvmStatic
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
-            propsRegistry.add("nl-portal.zgw.zakenapi.url") { url }
-            propsRegistry.add("nl-portal.dmn.url") { url }
+            propsRegistry.add("nl-portal.config.zakenapi.properties.url") { url }
+            propsRegistry.add("nl-portal.config.dmn.properties.url") { url }
         }
 
         @JvmStatic
@@ -98,8 +92,8 @@ internal class ProductQueryIT(
     internal fun setUp() {
         setupMockServer()
         url = server?.url("/").toString()
-        objectsApiClientConfig.url = URI(url)
-        zakenApiConfig.url = url
+        objectsApiClientConfig.properties.url = URI(url)
+        zakenApiConfig.properties.url = url
     }
 
     @Test

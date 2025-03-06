@@ -3,7 +3,7 @@ package nl.nlportal.documentenapi.service
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import nl.nlportal.core.util.CoreUtils.extractId
-import nl.nlportal.documentenapi.client.DocumentApisConfig
+import nl.nlportal.documentenapi.client.DocumentApisConfig.DocumentenApisConfigProperties
 import nl.nlportal.documentenapi.client.DocumentenApiClient
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.domain.DocumentContent
@@ -20,7 +20,7 @@ import java.util.UUID
 
 class DocumentenApiService(
     val documentenApiClient: DocumentenApiClient,
-    val documentenApiConfig: DocumentApisConfig,
+    val documentenApisConfigProperties: DocumentenApisConfigProperties,
 ) {
     suspend fun getDocument(
         documentId: UUID,
@@ -32,7 +32,7 @@ class DocumentenApiService(
     suspend fun getDocument(documentUrl: String): Document {
         return documentenApiClient.getDocument(
             extractId(documentUrl),
-            documentenApiConfig.getConfigForDocumentUrl(documentUrl),
+            documentenApisConfigProperties.getConfigForDocumentUrl(documentUrl),
         )
     }
 
@@ -53,7 +53,7 @@ class DocumentenApiService(
 
     fun getDocumentContentStreaming(informatieobejctUrl: String): Flow<DataBuffer> {
         val informatieObjectId = extractId(informatieobejctUrl)
-        val documentenApi = documentenApiConfig.getConfigForDocumentUrl(informatieobejctUrl)
+        val documentenApi = documentenApisConfigProperties.getConfigForDocumentUrl(informatieobejctUrl)
 
         return documentenApiClient.getDocumentContentStream(informatieObjectId, documentenApi)
     }
@@ -67,7 +67,7 @@ class DocumentenApiService(
             ReactiveSecurityContextHolder.getContext()
                 .map { (it.authentication as PortalAuthentication).userId }
                 .awaitSingleOrNull() ?: "valtimo"
-        val documentenApiConfig = documentenApiConfig.getConfig(documentApi)
+        val documentenApiConfig = documentenApisConfigProperties.getConfig(documentApi)
 
         return documentenApiClient.postDocument(
             PostEnkelvoudiginformatieobjectRequest(

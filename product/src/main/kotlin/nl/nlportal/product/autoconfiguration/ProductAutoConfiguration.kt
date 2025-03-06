@@ -28,9 +28,10 @@ import nl.nlportal.product.service.PrefillService
 import nl.nlportal.product.service.ProductService
 import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
-import nl.nlportal.zgw.taak.autoconfigure.TaakObjectConfig
+import nl.nlportal.zgw.taak.autoconfigure.TaakConfig
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfiguration
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.web.reactive.function.client.WebClient
@@ -39,36 +40,39 @@ import org.springframework.web.reactive.function.client.WebClient
 @EnableConfigurationProperties(ProductConfig::class, DmnConfig::class, PrefillConfig::class)
 class ProductAutoConfiguration {
     @Bean("dmnClient")
+    @ConditionalOnProperty(prefix = "nl-portal.config.dmn", name = ["enabled"], havingValue = "true")
     fun dmnClient(
         dmnConfig: DmnConfig,
         @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
         webClientBuilder: WebClient.Builder,
     ): DmnClient {
         return DmnClient(
-            dmnConfig,
+            dmnConfig.properties,
             clientSslContextResolver,
             webClientBuilder,
         )
     }
 
     @Bean
+    @ConditionalOnProperty(prefix = "nl-portal.config.product", name = ["enabled"], havingValue = "true")
     fun productService(
         productConfig: ProductConfig,
         objectsApiClient: ObjectsApiClient,
         zakenApiClient: ZakenApiClient,
-        objectsApiTaskConfig: TaakObjectConfig,
+        taakObjectConfig: TaakConfig,
         authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
     ): ProductService {
         return ProductService(
-            productConfig,
+            productConfig.properties,
+            taakObjectConfig.properties,
             objectsApiClient,
             zakenApiClient,
-            objectsApiTaskConfig,
             authenticationMachtigingsDienstService,
         )
     }
 
     @Bean("dmnService")
+    @ConditionalOnProperty(prefix = "nl-portal.config.dmn", name = ["enabled"], havingValue = "true")
     fun dmnService(
         objectsApiClient: ObjectsApiClient,
         dmnClient: DmnClient,
@@ -82,19 +86,21 @@ class ProductAutoConfiguration {
     }
 
     @Bean("prefillService")
+    @ConditionalOnProperty(prefix = "nl-portal.config.prefill", name = ["enabled"], havingValue = "true")
     fun prefillService(
         prefillConfig: PrefillConfig,
         objectsApiClient: ObjectsApiClient,
         productService: ProductService,
     ): PrefillService {
         return PrefillService(
-            prefillConfig,
+            prefillConfig.properties,
             objectsApiClient,
             productService,
         )
     }
 
     @Bean
+    @ConditionalOnProperty(prefix = "nl-portal.config.product", name = ["enabled"], havingValue = "true")
     fun productQuery(
         productService: ProductService,
         dmnService: DmnService,
@@ -104,6 +110,7 @@ class ProductAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnProperty(prefix = "nl-portal.config.product", name = ["enabled"], havingValue = "true")
     fun productMutation(productService: ProductService): ProductMutation {
         return ProductMutation(productService)
     }

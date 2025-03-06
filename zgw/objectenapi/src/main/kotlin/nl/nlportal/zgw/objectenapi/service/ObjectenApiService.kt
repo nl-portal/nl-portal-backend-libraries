@@ -15,7 +15,7 @@
  */
 package nl.nlportal.zgw.objectenapi.service
 
-import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
+import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig.ObjectsApiClientConfigProperties
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequest
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
@@ -27,7 +27,7 @@ import java.util.UUID
 
 class ObjectenApiService(
     val objectsApiClient: ObjectsApiClient,
-    val objectsApiClientConfig: ObjectsApiClientConfig,
+    val objectsApiClientConfig: ObjectsApiClientConfigProperties,
 ) {
     suspend inline fun <reified T> getObjects(
         objectSearchParameters: List<ObjectSearchParameter>,

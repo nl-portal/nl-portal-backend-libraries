@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Ritense BV, the Netherlands.
+ * Copyright 2024-2025 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 
-@ConditionalOnProperty(prefix = "nl-portal.config.openklant", name = ["enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config.openklant2", name = ["enabled"], havingValue = "true")
 class OpenKlantGraphqlAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(PartijQuery::class)

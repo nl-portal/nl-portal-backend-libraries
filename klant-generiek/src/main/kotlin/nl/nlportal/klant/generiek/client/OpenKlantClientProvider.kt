@@ -15,8 +15,9 @@
  */
 package nl.nlportal.klant.generiek.client
 
-import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import io.netty.handler.logging.LogLevel
+import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
+import nl.nlportal.klant.generiek.client.OpenKlantClientConfig.OpenKlantClientConfigProperties
 import nl.nlportal.portal.authentication.domain.PortalAuthentication
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient
@@ -24,7 +25,7 @@ import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
 
 class OpenKlantClientProvider(
-    private val openKlantClientConfig: OpenKlantClientConfig,
+    private val openKlantClientConfig: OpenKlantClientConfigProperties,
     private val idTokenGenerator: IdTokenGenerator,
 ) {
     fun webClient(authentication: PortalAuthentication): WebClient {

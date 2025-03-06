@@ -1,5 +1,6 @@
 package nl.nlportal.besluiten.client
 
+import nl.nlportal.besluiten.client.BesluitenApiConfig.BesluitenApiConfigProperties
 import nl.nlportal.besluiten.domain.Besluit
 import nl.nlportal.besluiten.domain.BesluitAuditTrail
 import nl.nlportal.besluiten.domain.BesluitDocument
@@ -16,7 +17,7 @@ import reactor.core.publisher.Mono
 import java.util.UUID
 
 class BesluitenApiClient(
-    private val besluitenApiConfig: BesluitenApiConfig,
+    private val besluitenApiConfig: BesluitenApiConfigProperties,
     webClientBuilder: WebClient.Builder,
 ) {
     val webClient: WebClient

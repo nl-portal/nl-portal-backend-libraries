@@ -23,6 +23,7 @@ import kotlinx.coroutines.withContext
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.core.ssl.ClientSslContextResolver
+import nl.nlportal.documentenapi.client.DocumentApisConfig.DocumentenApisConfigProperties
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.domain.PostEnkelvoudiginformatieobjectRequest
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
@@ -42,7 +43,7 @@ import java.util.Base64
 import java.util.UUID
 
 class DocumentenApiClient(
-    private val documentenApiConfigs: DocumentApisConfig,
+    private val documentenApiConfigs: DocumentenApisConfigProperties,
     private val idTokenGenerator: IdTokenGenerator,
     private val clientSslContextResolver: ClientSslContextResolver? = null,
 ) {
@@ -58,7 +59,7 @@ class DocumentenApiClient(
                     .retrieve()
                     .awaitBody()
             } catch (e: WebClientResponseException) {
-                logger.error("Could not retrieve document: ${e.responseBodyAsString}", e)
+                logger.error(e) { "Could not retrieve document: ${e.responseBodyAsString}" }
                 throw RuntimeException("Could not retrieve document: ${e.responseBodyAsString}", e)
             }
         document.documentapi = documentApi

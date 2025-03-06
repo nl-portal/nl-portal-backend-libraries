@@ -3,15 +3,16 @@ server:
 
 management:
     endpoint:
-      health:
-          enabled: true
-          probes:
-              enabled: true
+        health:
+            probes:
+                enabled: true
+            access: read_only
     endpoints:
         web:
             exposure:
                 include: health
-        enabled-by-default: false
+        access:
+            default: none
 
 spring:
     profiles:
@@ -55,12 +56,6 @@ spring:
                 connection:
                     provider_disables_autocommit: true
 
-keycloak:
-    resource: gzac-portal-m2m
-    audience: gzac-portal-token-exchange
-    credentials:
-        secret: ookVRUAxmEWMcosfcGR5nxeoUC4Rgwbc
-
 graphql:
     packages:
         - "nl.nlportal"
@@ -72,124 +67,153 @@ logging:
         root: INFO
 
 nl-portal:
+    authentication:
+        keycloak:
+            resource: gzac-portal-m2m
+            audience: gzac-portal-token-exchange
+            credentials:
+                secret: ookVRUAxmEWMcosfcGR5nxeoUC4Rgwbc
+        machtingsdienst:
+            resource-url: # classpath:machtigingsdiensten.json
+    security:
+        cors:
+            -   path: "/**"
+                config:
+                    allowedHeaders: "*"
+                    allowedOrigins: "*"
+                    allowedMethods: "*"
+        endpoints:
+            unsecured: /api/public/**
     config:
+        besluitenapi:
+            enabled: true
+            properties:
+                url: http://localhost:8001
+                clientId: valtimo_client
+                secret: e09b8bc5-5831-4618-ab28-41411304309d
+        catalogiapi:
+            enabled: true
+            properties:
+                url: http://localhost:8001
+                clientId: valtimo_client
+                secret: e09b8bc5-5831-4618-ab28-41411304309d
+        documentenapis:
+            enabled: true
+            properties:
+                default-document-api: openzaak
+                configurations:
+                    openzaak:
+                        url: http://localhost:8001/documenten/api/v1
+                        clientId: valtimo_client
+                        secret: e09b8bc5-5831-4618-ab28-41411304309d
+                        rsin: "051845623"
+                        documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/efc332f2-be3b-4bad-9e3c-49a6219c92ad
+                    dummydoc:
+                        url: http://localhost:8002/documenten/api/v1
+                        clientId: docdoc
+                        secret: e09b8bc5-5831-4618-ab28-41411304309d
+        virusscan:
+            clamav:
+                enabled: false
+                properties:
+                    hostName: localhost
+        zakenapi:
+            enabled: true
+            properties:
+                url: http://localhost:8001
+                clientId: valtimo_client
+                secret: e09b8bc5-5831-4618-ab28-41411304309d
+                zaak-documenten-config:
+                    vertrouwelijkheidsaanduiding-whitelist:
+                        - openbaar
+                        - beperkt_openbaar
+                        - intern
+                        - zaakvertrouwelijk
+                        - vertrouwelijk
+                        - confidentieel
+                        - geheim
+                        - zeer_geheim
+                    status-whitelist:
+                        - ter_vaststelling
+                        - in_bewerking
+                        - definitief
+                        - gearchiveerd
+        objectenapi:
+            enabled: true
+            properties:
+                url: http://localhost:8010
+                token: 182c13e2209161852c53cef53a879f7a2f923430
         openklant:
+            enabled: true
+            properties:
+                url: http://localhost:8006
+                clientId: valtimo_client
+                secret: e09b8bc5-5831-4618-ab28-41411304309d
+        openklant2:
             enabled: true
             properties:
                 klantinteracties-api-url: http://localhost:8007/klantinteracties/api/v1
                 token: ac045222c9e7cde8120b48735560f9b920bb58cd
-    zgw:
-        besluiten:
-            url: http://localhost:8001
-            clientId: valtimo_client
-            secret: e09b8bc5-5831-4618-ab28-41411304309d
-        catalogiapi:
-            url: http://localhost:8001
-            clientId: valtimo_client
-            secret: e09b8bc5-5831-4618-ab28-41411304309d
-            rsin: "051845623"
-            documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/efc332f2-be3b-4bad-9e3c-49a6219c92ad
-        zakenapi:
-            url: http://localhost:8001
-            clientId: valtimo_client
-            secret: e09b8bc5-5831-4618-ab28-41411304309d
-            zaak-documenten:
-                vertrouwelijkheidsaanduiding-whitelist:
-                    - openbaar
-                    - beperkt_openbaar
-                    - intern
-                    - zaakvertrouwelijk
-                    - vertrouwelijk
-                    - confidentieel
-                    - geheim
-                    - zeer_geheim
-                status-whitelist:
-                    - ter_vaststelling
-                    - in_bewerking
-                    - definitief
-                    - gearchiveerd
+        haalcentraal:
+            brp:
+                enabled: false
+                properties:
+                    url:
+                    apiKey:
+                    ssl:
+                        enabled: false
+                        key:
+                            key:
+                            certChain:
+                            keyPassword:
+                        trustedCertificate:
+            hr:
+                enabled: false
+                properties:
+                    url:
+                    apiKey:
+                    ssl:
+                        enabled: false
+                        key:
+                            key:
+                            certChain:
+                            keyPassword:
+                        trustedCertificate:
         taak:
-            taakobject:
+            enabled: true
+            properties:
                 typeUrl: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
                 type-url-v2: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
-        documentenapis:
-            #virusscan:
-                #clamav:
-                    #hostName: localhost
-                    #enabled: true
-            default-document-api: openzaak
-            configurations:
-                openzaak:
-                    url: http://localhost:8001/documenten/api/v1
-                    clientId: valtimo_client
-                    secret: e09b8bc5-5831-4618-ab28-41411304309d
-                    rsin: "051845623"
-                    documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/efc332f2-be3b-4bad-9e3c-49a6219c92ad
-                dummydoc:
-                    url: http://localhost:8002/documenten/api/v1
-                    clientId: docdoc
-                    secret: e09b8bc5-5831-4618-ab28-41411304309d
         berichten:
-            bericht-object-type-url: http://host.docker.internal:8011/api/v1/objecttypes/78731088-430f-49fd-9a4c-80ddd42ded28
-    openklant:
-        url: http://localhost:8006
-        clientId: valtimo_client
-        secret: e09b8bc5-5831-4618-ab28-41411304309d
-        rsin: "051845623"
-    openformulieren:
-        url: http://localhost:8003
-        token: 3ca04f4c11159811877444fdb1e019b7eac13f78
-    objectsapi:
-        url: http://localhost:8010
-        token: 182c13e2209161852c53cef53a879f7a2f923430
-    #haalcentraal:
-    #hr:
-            #api-key: ${VALTIMO_HAALCENTRAAL_HR_APIKEY}
-            #ssl:
-                #trusted-certificate: ${VALTIMO_HAALCENTRAAL_HR_SSL_TRUSTED_CERTIFICATE}
-                #key:
-                    #key: ${VALTIMO_HAALCENTRAAL_HR_SSL_KEY_KEY}
-                    #certChain: ${VALTIMO_HAALCENTRAAL_HR_SSL_KEY_CERT_CHAIN}
-                    #keyPassword: ${VALTIMO_HAALCENTRAAL_HR_SSL_KEY_KEY_PASSWORD}
-            #url: ${VALTIMO_HAALCENTRAAL_HR_URL}
-    #   url: ${VALTIMO_HAALCENTRAAL_URL}
-    #   apiKey: ${VALTIMO_HAALCENTRAAL_APIKEY}
-    #   ssl:
-    #     enabled: ${VALTIMO_HAALCENTRAAL_SSL_ENABLED}
-    #     key:
-    #        key: ${VALTIMO_HAALCENTRAAL_SSL_KEY_KEY}
-    #        certChain: ${VALTIMO_HAALCENTRAAL_SSL_KEY_CERT_CHAIN}
-    #        keyPassword: ${VALTIMO_HAALCENTRAAL_SSL_KEY_KEY_PASSWORD}
-    #     trustedCertificate: ${VALTIMO_HAALCENTRAAL_SSL_TRUSTED_CERTIFICATE}
-    security:
-        cors:
-          -   path: "/**"
-              config:
-                  allowedHeaders: "*"
-                  allowedOrigins: "*"
-                  allowedMethods: "*"
-        endpoints:
-            unsecured: /api/public/**
-        machtingsdienst:
-            #resource-url: classpath:machtigingsdiensten.json
-    product:
-        product-type-url: http://host.docker.internal:8011/api/v1/objecttypes/972e92ce-b964-4ca8-ad4d-ddc43dd7b244
-        product-instantie-type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34
-        product-details-type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb36
-        product-verbruiks-object-type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb37
-    dmn:
-        url: http://localhost:9000
-    prefill:
-        type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb37
-    payment:
-        ogone:
-            url: https://secure.ogone.com/ncol/test/orderstandard.asp
-            sha-out-parameters: AAVADDRESS,AAVCHECK,AAVMAIL,AAVNAME,AAVPHONE,AAVZIP,ACCEPTANCE,ALIAS,AMOUNT,BIC,BIN,BRAND,CARDNO,CCCTY,CN,COLLECTOR_BIC,COLLECTOR_IBAN,COMPLUS,CREATION_STATUS,CREDITDEBIT,CURRENCY,CVCCHECK,DCC_COMMPERCENTAGE,DCC_CONVAMOUNT,DCC_CONVCCY,DCC_EXCHRATE,DCC_EXCHRATESOURCE,DCC_EXCHRATETS,DCC_INDICATOR,DCC_MARGINPERCENTAGE,DCC_VALIDHOURS,DIGESTCARDNO,ECI,ED,EMAIL,ENCCARDNO,FXAMOUNT,FXCURRENCY,IP,IPCTY,MANDATEID,MOBILEMODE,NBREMAILUSAGE,NBRIPUSAGE,NBRIPUSAGE_ALLTX,NBRUSAGE,NCERROR,ORDERID,PAYID,PAYIDSUB,PAYMENT_REFERENCE,PM,SCO_CATEGORY,SCORING,SEQUENCETYPE,SIGNDATE,STATUS,SUBBRAND,SUBSCRIPTION_ID,TRXDATE,VC
-            configurations:
-                belastingzaken:
-                    pspId: TAX
-                    title: Belastingzaken
-                    shaInKey: de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00
-                    shaOutKey: de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00
-                    failureUrl: http://localhost:3000
-                    successUrl: http://localhost:3000
+            enabled: true
+            properties:
+                bericht-object-type-url: "http://host.docker.internal:8011/api/v1/objecttypes/78731088-430f-49fd-9a4c-80ddd42ded28"
+        product:
+            enabled: true
+            properties:
+                product-type-url: "http://host.docker.internal:8011/api/v1/objecttypes/972e92ce-b964-4ca8-ad4d-ddc43dd7b244"
+                product-instantie-type-url: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
+                product-details-type-url: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb36"
+                product-verbruiks-object-type-url: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb37"
+        dmn:
+            enabled: true
+            properties:
+                url: "http://localhost:9000"
+        prefill:
+            enabled: true
+            properties:
+                type-url: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb37"
+        payment:
+            ogone:
+                enabled: true
+                properties:
+                    url: https://secure.ogone.com/ncol/test/orderstandard.asp
+                    sha-out-parameters: AAVADDRESS,AAVCHECK,AAVMAIL,AAVNAME,AAVPHONE,AAVZIP,ACCEPTANCE,ALIAS,AMOUNT,BIC,BIN,BRAND,CARDNO,CCCTY,CN,COLLECTOR_BIC,COLLECTOR_IBAN,COMPLUS,CREATION_STATUS,CREDITDEBIT,CURRENCY,CVCCHECK,DCC_COMMPERCENTAGE,DCC_CONVAMOUNT,DCC_CONVCCY,DCC_EXCHRATE,DCC_EXCHRATESOURCE,DCC_EXCHRATETS,DCC_INDICATOR,DCC_MARGINPERCENTAGE,DCC_VALIDHOURS,DIGESTCARDNO,ECI,ED,EMAIL,ENCCARDNO,FXAMOUNT,FXCURRENCY,IP,IPCTY,MANDATEID,MOBILEMODE,NBREMAILUSAGE,NBRIPUSAGE,NBRIPUSAGE_ALLTX,NBRUSAGE,NCERROR,ORDERID,PAYID,PAYIDSUB,PAYMENT_REFERENCE,PM,SCO_CATEGORY,SCORING,SEQUENCETYPE,SIGNDATE,STATUS,SUBBRAND,SUBSCRIPTION_ID,TRXDATE,VC
+                    configurations:
+                        belastingzaken:
+                            pspId: TAX
+                            title: Belastingzaken
+                            shaInKey: de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00
+                            shaOutKey: de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00
+                            failureUrl: http://localhost:3000
+                            successUrl: http://localhost:3000
