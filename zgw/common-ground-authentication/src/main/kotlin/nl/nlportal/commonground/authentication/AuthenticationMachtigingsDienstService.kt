@@ -36,7 +36,7 @@ class AuthenticationMachtigingsDienstService(
                 this.authenticationMachtingDiensten = Mapper.get().readValue(json, object : TypeReference<List<AuthenticationMachtigingsDienst>>() {})
             }
         } catch (ex: Exception) {
-            logger.warn { "Could not load json from $authenticationMachtingsDienstConfig.resourceUrl with reason ${ex.message}" }
+            logger.warn { "Could not load json from ${authenticationMachtingsDienstConfig.resourceUrl} with reason ${ex.message}" }
         }
     }
 
