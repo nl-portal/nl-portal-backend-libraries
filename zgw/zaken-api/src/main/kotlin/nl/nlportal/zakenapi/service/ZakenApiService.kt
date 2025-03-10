@@ -58,7 +58,7 @@ class ZakenApiService(
                 .search()
                 .page(page)
                 .withAuthentication(authentication)
-                .withOmschrijvingGeneriek()
+                .withRolOmschrijvingGeneriek()
 
         pageSize?.let { request.pageSize(it) }
         zaakTypeUrl?.let { request.ofZaakType(it) }

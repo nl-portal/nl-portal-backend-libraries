@@ -86,7 +86,7 @@ class SearchZakenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
         return this
     }
 
-    override fun withOmschrijvingGeneriek(): SearchZaken {
+    override fun withRolOmschrijvingGeneriek(): SearchZaken {
         queryParams.add("rol__omschrijvingGeneriek", "initiator")
         return this
     }

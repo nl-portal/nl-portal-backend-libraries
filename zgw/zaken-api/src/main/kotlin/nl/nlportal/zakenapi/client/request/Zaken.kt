@@ -18,7 +18,7 @@ interface SearchZaken : PagedRetrieve<SearchZaken, Zaak>, AuthenticationFilter<S
 
     fun ofIdentificatie(identificatie: String): SearchZaken
 
-    fun withOmschrijvingGeneriek(): SearchZaken
+    fun withRolOmschrijvingGeneriek(): SearchZaken
 }
 
 interface GetZaak : Retrieve<Zaak>
