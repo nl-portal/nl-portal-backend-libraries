@@ -58,6 +58,7 @@ class ZakenApiService(
                 .search()
                 .page(page)
                 .withAuthentication(authentication)
+                .withOmschrijvingGeneriek()
 
         pageSize?.let { request.pageSize(it) }
         zaakTypeUrl?.let { request.ofZaakType(it) }
@@ -88,6 +89,7 @@ class ZakenApiService(
                 .search()
                 .forZaak(id)
                 .withAuthentication(authentication)
+                .withOmschrijvingGeneriek()
 
         val rollen: List<ZaakRol> =
             zaakRollenRequest

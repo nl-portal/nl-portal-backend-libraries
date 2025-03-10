@@ -53,7 +53,14 @@ class AuthenticationMachtigingsDienstService(
                 zaakTypeList.addAll(machtigingsDienst.zaakTypes)
             }
         }
-        return zaakTypeList
+
+        return when {
+            zaakTypeList.isEmpty() -> {
+                null
+            }
+
+            else -> zaakTypeList
+        }
     }
 
     fun taakTypes(authentication: CommonGroundAuthentication): List<String>? {
@@ -64,7 +71,13 @@ class AuthenticationMachtigingsDienstService(
                 taakTypeList.addAll(machtigingsDienst.taakTypes)
             }
         }
-        return taakTypeList
+        return when {
+            taakTypeList.isEmpty() -> {
+                null
+            }
+
+            else -> taakTypeList
+        }
     }
 
     fun isAllowedZaakType(

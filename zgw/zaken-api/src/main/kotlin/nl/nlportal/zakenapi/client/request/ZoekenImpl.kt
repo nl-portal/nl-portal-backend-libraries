@@ -85,6 +85,11 @@ class SearchZoekenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
         return this
     }
 
+    override fun withOmschrijvingGeneriek(): SearchZaken {
+        bodyValue.add("rol__omschrijvingGeneriek", "initiator")
+        return this
+    }
+
     override suspend fun retrieve(): ResultPage<Zaak> {
         return this.zakenApiClient.webClient
             .post()
