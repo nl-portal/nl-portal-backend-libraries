@@ -35,6 +35,7 @@ jobs:
     uses: ./.github/workflows/publish-release.yml
     with:
       artifactVersion: ${{ needs.detect-variables.outputs.version }}
+      targets: "['sonatype-snapshots']"
     secrets: inherit
   unknown:
     needs:
