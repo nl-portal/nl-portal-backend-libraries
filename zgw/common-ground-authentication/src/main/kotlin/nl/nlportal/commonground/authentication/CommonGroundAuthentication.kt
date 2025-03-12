@@ -61,7 +61,7 @@ abstract class CommonGroundAuthentication(
      *
      * @return MachtingsDienst UUIDs
      */
-    fun machtigingsDienstUUIDs(portalMachtigingUuid: UUID?): List<UUID>? {
+    fun machtigingsDienstUUIDs(allMachtigingUuid: UUID?): List<UUID>? {
         if (token.claims[MACHTIGINGSDIENST_KEY] == null) {
             return null
         }
@@ -81,7 +81,7 @@ abstract class CommonGroundAuthentication(
             return null
         }
 
-        return if (list.contains(portalMachtigingUuid)) {
+        return if (list.contains(allMachtigingUuid)) {
             null
         } else {
             list

@@ -47,7 +47,7 @@ class AuthenticationMachtigingsDienstService(
 
     fun zaakTypes(authentication: CommonGroundAuthentication): List<UUID>? {
         val zaakTypeList = mutableListOf<UUID>()
-        authentication.machtigingsDienstUUIDs(authenticationMachtingsDienstConfig.portalMachtigingUuid)?.forEach {
+        authentication.machtigingsDienstUUIDs(authenticationMachtingsDienstConfig.allMachtigingUuid)?.forEach {
             val machtigingsDienst = getAuthenticationMachtingDienst(it)
             if (machtigingsDienst != null) {
                 zaakTypeList.addAll(machtigingsDienst.zaakTypes)
@@ -65,7 +65,7 @@ class AuthenticationMachtigingsDienstService(
 
     fun taakTypes(authentication: CommonGroundAuthentication): List<String>? {
         val taakTypeList = mutableListOf<String>()
-        authentication.machtigingsDienstUUIDs(authenticationMachtingsDienstConfig.portalMachtigingUuid)?.forEach {
+        authentication.machtigingsDienstUUIDs(authenticationMachtingsDienstConfig.allMachtigingUuid)?.forEach {
             val machtigingsDienst = getAuthenticationMachtingDienst(it)
             if (machtigingsDienst != null) {
                 taakTypeList.addAll(machtigingsDienst.taakTypes)

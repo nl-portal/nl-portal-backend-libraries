@@ -21,5 +21,5 @@ import java.util.UUID
 @ConfigurationProperties(prefix = "nl-portal.security.machtingsdienst")
 data class AuthenticationMachtigingsDienstConfig(
     val resourceUrl: String? = null,
-    val portalMachtigingUuid: UUID? = null,
+    val allMachtigingUuid: UUID? = null,
 )
