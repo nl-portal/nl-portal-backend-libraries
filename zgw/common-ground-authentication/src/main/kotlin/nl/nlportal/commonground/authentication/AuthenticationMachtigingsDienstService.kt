@@ -23,7 +23,7 @@ import org.springframework.core.io.ResourceLoader
 import java.util.UUID
 
 class AuthenticationMachtigingsDienstService(
-    authenticationMachtingsDienstConfig: AuthenticationMachtigingsDienstConfig,
+    val authenticationMachtingsDienstConfig: AuthenticationMachtigingsDienstConfig,
     resourceLoader: ResourceLoader,
 ) {
     var authenticationMachtingDiensten: List<AuthenticationMachtigingsDienst> = emptyList()
@@ -47,7 +47,7 @@ class AuthenticationMachtigingsDienstService(
 
     fun zaakTypes(authentication: CommonGroundAuthentication): List<UUID>? {
         val zaakTypeList = mutableListOf<UUID>()
-        authentication.machtigingsDienstUUIDs()?.forEach {
+        authentication.machtigingsDienstUUIDs(authenticationMachtingsDienstConfig.portalMachtigingUuid)?.forEach {
             val machtigingsDienst = getAuthenticationMachtingDienst(it)
             if (machtigingsDienst != null) {
                 zaakTypeList.addAll(machtigingsDienst.zaakTypes)
@@ -65,7 +65,7 @@ class AuthenticationMachtigingsDienstService(
 
     fun taakTypes(authentication: CommonGroundAuthentication): List<String>? {
         val taakTypeList = mutableListOf<String>()
-        authentication.machtigingsDienstUUIDs()?.forEach {
+        authentication.machtigingsDienstUUIDs(authenticationMachtingsDienstConfig.portalMachtigingUuid)?.forEach {
             val machtigingsDienst = getAuthenticationMachtingDienst(it)
             if (machtigingsDienst != null) {
                 taakTypeList.addAll(machtigingsDienst.taakTypes)
