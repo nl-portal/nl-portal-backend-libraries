@@ -57,24 +57,34 @@ abstract class CommonGroundAuthentication(
 
     /**
      * Gets MachtingsDienst UUIDs property from the JWT
+     * param: portalMachtigingUuid: portal uuid which indicates the user has all the machtigingen
      *
      * @return MachtingsDienst UUIDs
      */
-    fun machtigingsDienstUUIDs(): List<UUID>? {
+    fun machtigingsDienstUUIDs(allMachtigingUuid: UUID? = null): List<UUID>? {
         if (token.claims[MACHTIGINGSDIENST_KEY] == null) {
             return null
         }
         val claim = token.claims[MACHTIGINGSDIENST_KEY]
-        return when (claim) {
-            is List<*> -> {
-                claim.filterIsInstance<String>().map { UUID.fromString(it) }
+        val list =
+            when (claim) {
+                is List<*> -> {
+                    claim.filterIsInstance<String>().map { UUID.fromString(it) }
+                }
+                is String -> {
+                    listOf(UUID.fromString(claim))
+                }
+                else -> null
             }
 
-            is String -> {
-                listOf(UUID.fromString(claim))
-            }
+        if (list == null) {
+            return null
+        }
 
-            else -> null
+        return if (list.contains(allMachtigingUuid)) {
+            null
+        } else {
+            list
         }
     }
 
