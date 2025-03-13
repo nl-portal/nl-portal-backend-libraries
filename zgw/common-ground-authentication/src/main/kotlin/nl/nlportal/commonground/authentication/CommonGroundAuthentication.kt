@@ -61,7 +61,7 @@ abstract class CommonGroundAuthentication(
      *
      * @return MachtingsDienst UUIDs
      */
-    fun machtigingsDienstUUIDs(allMachtigingUuid: UUID?): List<UUID>? {
+    fun machtigingsDienstUUIDs(allMachtigingUuid: UUID? = null): List<UUID>? {
         if (token.claims[MACHTIGINGSDIENST_KEY] == null) {
             return null
         }
@@ -100,7 +100,7 @@ abstract class CommonGroundAuthentication(
         """,
     )
     fun machtigingsDienstUUID(): UUID? {
-        return machtigingsDienstUUIDs(null)?.get(0)
+        return machtigingsDienstUUIDs()?.get(0)
     }
 
     override fun getUserRepresentation() = "${this.userType.uppercase()}:${this.userId}"

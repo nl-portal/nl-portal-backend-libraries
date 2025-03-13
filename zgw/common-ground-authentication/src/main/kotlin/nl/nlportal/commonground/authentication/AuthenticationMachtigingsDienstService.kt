@@ -46,6 +46,9 @@ class AuthenticationMachtigingsDienstService(
     }
 
     fun zaakTypes(authentication: CommonGroundAuthentication): List<UUID>? {
+        if (authentication !is BedrijfAuthentication) {
+            return null
+        }
         val zaakTypeList = mutableListOf<UUID>()
         authentication.machtigingsDienstUUIDs(authenticationMachtingsDienstConfig.allMachtigingUuid)?.forEach {
             val machtigingsDienst = getAuthenticationMachtingDienst(it)
@@ -64,6 +67,9 @@ class AuthenticationMachtigingsDienstService(
     }
 
     fun taakTypes(authentication: CommonGroundAuthentication): List<String>? {
+        if (authentication !is BedrijfAuthentication) {
+            return null
+        }
         val taakTypeList = mutableListOf<String>()
         authentication.machtigingsDienstUUIDs(authenticationMachtingsDienstConfig.allMachtigingUuid)?.forEach {
             val machtigingsDienst = getAuthenticationMachtingDienst(it)
@@ -84,6 +90,9 @@ class AuthenticationMachtigingsDienstService(
         authentication: CommonGroundAuthentication,
         zaakTypeUUID: UUID,
     ): Boolean {
+        if (authentication !is BedrijfAuthentication) {
+            return true
+        }
         val zaaktypes = zaakTypes(authentication)
 
         if (!zaaktypes.isNullOrEmpty()) {
@@ -97,6 +106,9 @@ class AuthenticationMachtigingsDienstService(
         authentication: CommonGroundAuthentication,
         zaakTypeUUIDs: List<UUID>,
     ): Boolean {
+        if (authentication !is BedrijfAuthentication) {
+            return true
+        }
         val zaaktypes = zaakTypes(authentication)
 
         val allowedZaaktypes = mutableSetOf<UUID>()
@@ -118,6 +130,9 @@ class AuthenticationMachtigingsDienstService(
         authentication: CommonGroundAuthentication,
         taakType: String,
     ): Boolean {
+        if (authentication !is BedrijfAuthentication) {
+            return true
+        }
         val taaktypes = taakTypes(authentication)
 
         if (!taaktypes.isNullOrEmpty()) {
