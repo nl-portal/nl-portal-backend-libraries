@@ -13,10 +13,10 @@ jobs:
             version: ${{ steps.detect-scope.outputs.SCOPE == 'SNAPSHOT' && steps.generate-snapshot-version.outputs.VERSION || steps.get-project-version.outputs.PROJECT_VERSION }}
         steps:
             -   name: Detect scope
-            -   id: detect-scope
-            -   run: echo "SCOPE=$(if ${{ github.ref_name == 'next-minor' || github.ref_name == 'next-major' }} ; then echo "SNAPSHOT" ; elif ${{ startsWith(github.ref-name, 'release/') }} ; then echo "RELEASE" ; else echo "UNKNOWN" ; fi)" >> $GITHUB_OUTPUT
+                id: detect-scope
+                run: echo "SCOPE=$(if ${{ github.ref_name == 'next-minor' || github.ref_name == 'next-major' }} ; then echo "SNAPSHOT" ; elif ${{ startsWith(github.ref-name, 'release/') }} ; then echo "RELEASE" ; else echo "UNKNOWN" ; fi)" >> $GITHUB_OUTPUT
             -   name: Log scope
-            -   run: echo "::notice::Using scope - \"${{ steps.detect-scope.outputs.SCOPE }}\"."
+                run: echo "::notice::Using scope - \"${{ steps.detect-scope.outputs.SCOPE }}\"."
             -   name: Checkout
                 uses: actions/checkout@v4
             -   name: Get version from project
