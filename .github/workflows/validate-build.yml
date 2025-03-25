@@ -8,11 +8,6 @@
 name: Validate Build
 on:
     workflow_call:
-    push:
-        branches:
-            - "next-minor"
-            - "next-major"
-            - "release/*"
     pull_request:
         branches:
             - "next-minor"
