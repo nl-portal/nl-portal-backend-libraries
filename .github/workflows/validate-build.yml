@@ -7,33 +7,33 @@
 
 name: Validate Build
 on:
-  workflow_call:
-  push:
-    branches:
-      - "next-minor"
-      - "next-major"
-      - "release/*"
-  pull_request:
-    branches:
-      - "next-minor"
-      - "next-major"
-      - "release/*"
+    workflow_call:
+    push:
+        branches:
+            - "next-minor"
+            - "next-major"
+            - "release/*"
+    pull_request:
+        branches:
+            - "next-minor"
+            - "next-major"
+            - "release/*"
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
-  cancel-in-progress: true
+    group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+    cancel-in-progress: true
 env:
-  JAVA_VERSION: "21"
+    JAVA_VERSION: "21"
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v4
-        with:
-          java-version: '${{ env.JAVA_VERSION }}'
-          distribution: 'temurin'
-      - name: Set up gradle
-        uses: gradle/actions/setup-gradle@v4
-      - name: Build with Gradle
-        run: ./gradlew build
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v4
+            -   name: Set up JDK ${{ env.JAVA_VERSION }}
+                uses: actions/setup-java@v4
+                with:
+                    java-version: '${{ env.JAVA_VERSION }}'
+                    distribution: 'temurin'
+            -   name: Set up gradle
+                uses: gradle/actions/setup-gradle@v4
+            -   name: Build with Gradle
+                run: ./gradlew build
