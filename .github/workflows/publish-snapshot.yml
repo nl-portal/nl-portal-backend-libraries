@@ -6,6 +6,9 @@ on:
         description: "The Java Version that should be used in this workflow."
         default: '21'
         type: string
+      artifactVersion:
+        description: "The Version of the to be published artifact."
+        type: string
       targets:
         description: "The target repositories to publish to. See default for options and input format."
         default: "['github-packages', 'sonatype-snapshots']"
@@ -14,6 +17,7 @@ jobs:
   build-and-publish:
     env:
       JAVA_VERSION: ${{ inputs.javaVersion }}
+      ARTIFACT_VERSION: ${{ inputs.artifactVersion }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,13 +30,13 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
       - name: Gradle publish Snapshot to Github
         if: ${{ contains(fromJSON(inputs.targets),'github-packages') }}
-        run: ./gradlew publishDefaultPublicationToGitHubPackagesRepository
+        run: ./gradlew publishDefaultPublicationToGitHubPackagesRepository -Pversion=${{ARTIFACT_VERSION}}-SNAPSHOT
         env:
           USER: ${{ secrets.USER }}
           TOKEN: ${{ secrets.TOKEN }}
       - name: Gradle Publish Snapshot to OSS
         if: ${{ contains(fromJSON(inputs.targets),'sonatype-snapshots') }}
-        run: ./gradlew publishDefaultPublicationToSonatypeSnapshotRepository
+        run: ./gradlew publishDefaultPublicationToSonatypeSnapshotRepository -Pversion=${{ARTIFACT_VERSION}}-SNAPSHOT
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}

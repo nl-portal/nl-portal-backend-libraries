@@ -2,23 +2,34 @@ name: Build and Publish Artifacts
 on:
   push:
     branches:
+      - "next-minor"
+      - "next-major"
       - "release/*"
 jobs:
   detect-variables:
     runs-on: ubuntu-latest
     outputs:
       scope: ${{ steps.detect-scope.outputs.SCOPE }}
-      version: ${{ steps.get-project-version.outputs.PROJECT_VERSION }}
+      version: ${{ steps.get-project-version.outputs.VERSION || steps.generate-version.outputs.VERSION }}
     steps:
       - uses: actions/checkout@v4
       - name: Get version from project
         id: get-project-version
-        run: echo "PROJECT_VERSION=$(grep "version" gradle.properties | sed 's/^.*=//')" >> $GITHUB_OUTPUT
-      - name: Log project version
-        run: echo "::notice::Detected project version - \"${{ steps.get-project-version.outputs.PROJECT_VERSION }}\"."
+        if: ${{ startsWith(github.ref_name,'release/') }}
+        run: echo "VERSION=$(grep "version" gradle.properties | sed 's/^.*=//')" >> $GITHUB_OUTPUT
+      - name: Generate version
+        id: generate-version
+        if: ${{ github.ref_name == 'next-minor' || github.ref_name == 'next-major' }}
+        run: |
+          branch=${GITHUB_REF##*/}
+          sha=${GITHUB_SHA::8}
+          ts=$(date +'%Y%m%d%H%M')
+          echo "VERSION=${branch}-${ts}-${sha}" >> "$GITHUB_OUTPUT"
+      - name: Log version
+        run: echo "::notice::Detected version - \"${{ steps.get-project-version.outputs.VERSION || steps.generate-version.outputs.VERSION }}\"."
       - name: Detect scope
         id: detect-scope
-        run: echo "SCOPE=$(if grep -Pq "^\d+\.\d+\.\d+$" <<< ${{ steps.get-project-version.outputs.PROJECT_VERSION }} ; then echo "RELEASE" ; elif grep -Pq "^\d+\.\d+\.\d+-.*SNAPSHOT$" <<< ${{ steps.get-project-version.outputs.PROJECT_VERSION }} ; then echo "SNAPSHOT" ; else echo "UNKNOWN" ; fi)" >> $GITHUB_OUTPUT
+        run: echo "SCOPE=$(if grep -Pq "^\d+\.\d+\.\d+$" <<< ${{ steps.get-project-version.outputs.VERSION || steps.generate-version.outputs.VERSION }} ; then echo "RELEASE" ; elif grep -Pq "^\d+\.\d+\.\d+-.*SNAPSHOT$" <<< ${{ steps.get-project-version.outputs.VERSION  || steps.generate-version.outputs.VERSION  }} ; then echo "SNAPSHOT" ; else echo "UNKNOWN" ; fi)" >> $GITHUB_OUTPUT
       - name: Log scope
         run: echo "::notice::Detected scope - \"${{ steps.detect-scope.outputs.SCOPE }}\"."
   validate-build:
@@ -30,6 +41,9 @@ jobs:
       - validate-build
     if: ${{ needs.detect-variables.outputs.scope == 'SNAPSHOT' }}
     uses: ./.github/workflows/publish-snapshot.yml
+    with:
+      targets: "['sonatype-snapshots']"
+      artifactVersion: ${{ needs.detect-variables.outputs.version }}
     secrets: inherit
   publish-release:
     needs:
