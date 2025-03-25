@@ -24,7 +24,7 @@ jobs:
           branch=${GITHUB_REF##*/}
           sha=${GITHUB_SHA::8}
           ts=$(date +'%Y%m%d%H%M')
-          echo "VERSION=${branch}-${ts}-${sha}" >> "$GITHUB_OUTPUT"
+          echo "VERSION=${branch}-${ts}-${sha}-SNAPSHOT" >> "$GITHUB_OUTPUT"
       - name: Log version
         run: echo "::notice::Detected version - \"${{ steps.get-project-version.outputs.VERSION || steps.generate-version.outputs.VERSION }}\"."
       - name: Detect scope
