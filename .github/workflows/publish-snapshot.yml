@@ -30,13 +30,13 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
       - name: Gradle publish Snapshot to Github
         if: ${{ contains(fromJSON(inputs.targets),'github-packages') }}
-        run: ./gradlew publishDefaultPublicationToGitHubPackagesRepository -Pversion=${{ARTIFACT_VERSION}}-SNAPSHOT
+        run: ./gradlew publishDefaultPublicationToGitHubPackagesRepository -Pversion=${{env.ARTIFACT_VERSION}}-SNAPSHOT
         env:
           USER: ${{ secrets.USER }}
           TOKEN: ${{ secrets.TOKEN }}
       - name: Gradle Publish Snapshot to OSS
         if: ${{ contains(fromJSON(inputs.targets),'sonatype-snapshots') }}
-        run: ./gradlew publishDefaultPublicationToSonatypeSnapshotRepository -Pversion=${{ARTIFACT_VERSION}}-SNAPSHOT
+        run: ./gradlew publishDefaultPublicationToSonatypeSnapshotRepository -Pversion=${{env.ARTIFACT_VERSION}}-SNAPSHOT
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
