@@ -39,10 +39,10 @@ import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.BodyInserters
 import java.nio.charset.Charset
@@ -55,14 +55,14 @@ import java.nio.charset.Charset
 class OpenKlant2DigitaleAdresMutationIT(
     @Autowired private val webTestClient: WebTestClient,
 ) {
-    @SpyBean
+    @MockitoSpyBean
     lateinit var openKlant2Service: OpenKlant2Service
 
     lateinit var testdigitaleAdresUUID: String
 
     @Test
     @Order(1)
-    @WithBurgerUser("123456788")
+    @WithBurgerUser("296648875")
     fun `should create DigitaleAdres for burger`() =
         runTest {
             // when
@@ -101,7 +101,7 @@ class OpenKlant2DigitaleAdresMutationIT(
 
     @Test
     @Order(2)
-    @WithBurgerUser("123456788")
+    @WithBurgerUser("296648875")
     fun `should update existing DigitaleAdres for burger`() =
         runTest {
             // when
@@ -156,7 +156,7 @@ class OpenKlant2DigitaleAdresMutationIT(
 
     @Test
     @Order(3)
-    @WithBurgerUser("123456788")
+    @WithBurgerUser("296648875")
     fun `should delete existing DigitaleAdres for burger`() =
         runTest {
             // when

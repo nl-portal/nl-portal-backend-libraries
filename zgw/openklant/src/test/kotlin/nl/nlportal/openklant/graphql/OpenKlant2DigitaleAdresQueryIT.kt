@@ -84,7 +84,7 @@ class OpenKlant2DigitaleAdresQueryIT(
         }
 
     @Test
-    @WithBurgerUser("123456788")
+    @WithBurgerUser("296648875")
     fun `should find DigitaleAdressen for authenticated user`() =
         runTest {
             // when
