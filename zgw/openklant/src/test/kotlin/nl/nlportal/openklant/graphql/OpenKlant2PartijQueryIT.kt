@@ -88,7 +88,7 @@ class OpenKlant2PartijQueryIT(
         }
 
     @Test
-    @WithBurgerUser("123456788")
+    @WithBurgerUser("296648875")
     fun `should find Partij for authenticated user`() =
         runTest {
             // when
@@ -125,7 +125,7 @@ class OpenKlant2PartijQueryIT(
         }
 
     @Test
-    @WithBurgerUser("123456788")
+    @WithBurgerUser("296648875")
     fun `should get Partij by Id for authenticated user`() =
         runTest {
             // when

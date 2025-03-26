@@ -86,6 +86,11 @@ class SearchZakenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
         return this
     }
 
+    override fun withRolOmschrijvingGeneriek(): SearchZaken {
+        queryParams.add("rol__omschrijvingGeneriek", "initiator")
+        return this
+    }
+
     override suspend fun retrieve(): ResultPage<Zaak> {
         return this.zakenApiClient.webClient.get()
             .uri { it.path("/zaken/api/v1/zaken").queryParams(queryParams).build() }
