@@ -104,7 +104,10 @@ class JwtBuilder {
     }
 
     fun machtingDienstKvk(machtingDienst: String): JwtBuilder {
-        jwtBuilder.claim(MACHTIGINGSDIENST_KEY, machtingDienst)
+        jwtBuilder.claim(
+            MACHTIGINGSDIENST_KEY,
+            listOf(machtingDienst),
+        )
 
         return this
     }

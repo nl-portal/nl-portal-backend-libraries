@@ -2,7 +2,7 @@ services:
 
   # openklant 2
   openklant-2:
-      image: maykinmedia/open-klant:2.4.0
+      image: maykinmedia/open-klant:2.6.1
       container_name: openklant-2-test
       ports:
           - "9007:8000"
@@ -24,7 +24,9 @@ services:
           - CELERY_BROKER_URL=redis://redis-test:6379/0
           - CELERY_RESULT_BACKEND=redis://redis-test:6379/0
           - DISABLE_2FA=true
+          - RUN_SETUP_CONFIG=true
       volumes:
+          - ./imports/openklant-2/init/data.yaml:/app/data.yaml
           - ./imports/openklant-2/init:/app/init
       command: sh /app/init/init.sh
 

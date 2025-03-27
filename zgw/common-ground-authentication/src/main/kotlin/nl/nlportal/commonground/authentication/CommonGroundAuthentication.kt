@@ -56,16 +56,51 @@ abstract class CommonGroundAuthentication(
     }
 
     /**
+     * Gets MachtingsDienst UUIDs property from the JWT
+     * param: portalMachtigingUuid: portal uuid which indicates the user has all the machtigingen
+     *
+     * @return MachtingsDienst UUIDs
+     */
+    fun machtigingsDienstUUIDs(allMachtigingUuid: UUID? = null): List<UUID>? {
+        if (token.claims[MACHTIGINGSDIENST_KEY] == null) {
+            return null
+        }
+        val claim = token.claims[MACHTIGINGSDIENST_KEY]
+        val list =
+            when (claim) {
+                is List<*> -> {
+                    claim.filterIsInstance<String>().map { UUID.fromString(it) }
+                }
+                is String -> {
+                    listOf(UUID.fromString(claim))
+                }
+                else -> null
+            }
+
+        if (list == null) {
+            return null
+        }
+
+        return if (list.contains(allMachtigingUuid)) {
+            null
+        } else {
+            list
+        }
+    }
+
+    /**
      * Gets MachtingsDienst UUID property from the JWT
      *
      * @return MachtingsDienst UUID
      */
+    @Deprecated(
+        """
+            Will be removed in a future version.
+            Use machtigingsDienstUUIDs which has support for multiple machtigingen  
+        """,
+    )
     fun machtigingsDienstUUID(): UUID? {
-        if (token.claims[MACHTIGINGSDIENST_KEY] == null) {
-            return null
-        }
-
-        return UUID.fromString(token.claims[MACHTIGINGSDIENST_KEY].toString())
+        return machtigingsDienstUUIDs()?.get(0)
     }
 
     override fun getUserRepresentation() = "${this.userType.uppercase()}:${this.userId}"

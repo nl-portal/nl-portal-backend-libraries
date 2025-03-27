@@ -62,7 +62,7 @@ class OpenKlant2DigitaleAdresMutationIT(
 
     @Test
     @Order(1)
-    @WithBurgerUser("123456788")
+    @WithBurgerUser("296648875")
     fun `should create DigitaleAdres for burger`() =
         runTest {
             // when
@@ -101,7 +101,7 @@ class OpenKlant2DigitaleAdresMutationIT(
 
     @Test
     @Order(2)
-    @WithBurgerUser("123456788")
+    @WithBurgerUser("296648875")
     fun `should update existing DigitaleAdres for burger`() =
         runTest {
             // when
@@ -156,7 +156,7 @@ class OpenKlant2DigitaleAdresMutationIT(
 
     @Test
     @Order(3)
-    @WithBurgerUser("123456788")
+    @WithBurgerUser("296648875")
     fun `should delete existing DigitaleAdres for burger`() =
         runTest {
             // when

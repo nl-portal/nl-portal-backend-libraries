@@ -3,6 +3,7 @@
 # Apply database migrations
 >&2 echo "Apply database migrations"
 python src/manage.py migrate
+python src/manage.py setup_configuration --yaml-file data.yaml
 
 exists=$(echo "from django.contrib.auth import get_user_model; User = get_user_model(); print(User.objects.filter(username='admin').exists())" | python src/manage.py shell)
 if [ "False" = "${exists}" ]
