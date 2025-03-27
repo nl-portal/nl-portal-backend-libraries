@@ -8,7 +8,7 @@ nl-portal:
           enabled: true
           properties:
               klantinteracties-api-url: http://localhost:9007/klantinteracties/api/v1
-              token: ac045222c9e7cde8120b48735560f9b920bb58cd
+              token: ba9d233e95e04c4a8a661a27daffe7c9bd019067
 
 logging:
     level:

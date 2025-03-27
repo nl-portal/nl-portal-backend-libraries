@@ -16,8 +16,10 @@
 package nl.nlportal.commonground.authentication
 
 import org.springframework.boot.context.properties.ConfigurationProperties
+import java.util.UUID
 
 @ConfigurationProperties(prefix = "nl-portal.authentication.machtingsdienst")
 data class AuthenticationMachtigingsDienstConfig(
     val resourceUrl: String? = null,
+    val allMachtigingUuid: UUID? = null,
 )

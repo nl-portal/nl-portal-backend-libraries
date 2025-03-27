@@ -51,7 +51,7 @@ class OpenKlant2KlantContactQueryIT(
     lateinit var openKlant2Service: OpenKlant2Service
 
     @Test
-    @WithBurgerUser("123456788")
+    @WithBurgerUser("296648875")
     fun `should find KlantContacten for authenticated user`() =
         runTest {
             // when
