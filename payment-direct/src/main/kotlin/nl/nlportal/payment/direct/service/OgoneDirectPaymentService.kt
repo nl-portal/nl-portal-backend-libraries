@@ -49,50 +49,54 @@ open class OgoneDirectPaymentService(
     private val objectsApiClient: ObjectsApiClient,
 ) {
     open fun doDirectPayment(paymentRequest: OgoneDirectPaymentRequest): OgoneDirectPaymentResponse {
-        val paymentDirectProfile =
-            ogoneDirectPaymentModuleConfiguration.properties.getPaymentProfile(paymentRequest.identifier)
-                ?: ogoneDirectPaymentModuleConfiguration.properties.getPaymentProfileByPspPid(paymentRequest.identifier)
-                ?: throw ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Could not found direct payment profile for the identifier $paymentRequest.identifier",
+        try {
+            val paymentDirectProfile =
+                ogoneDirectPaymentModuleConfiguration.properties.getPaymentProfile(paymentRequest.identifier)
+                    ?: ogoneDirectPaymentModuleConfiguration.properties.getPaymentProfileByPspPid(paymentRequest.identifier)
+                    ?: throw ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Could not found direct payment profile for the identifier $paymentRequest.identifier",
+                    )
+            val client =
+                Factory.createClient(
+                    CommunicatorConfiguration()
+                        .withApiKeyId(paymentDirectProfile.apiKey)
+                        .withSecretApiKey(paymentDirectProfile.apiSecret)
+                        .withApiEndpoint(URI.create(checkAndRemovePath(ogoneDirectPaymentModuleConfiguration.properties.url)))
+                        .withIntegrator(paymentRequest.identifier)
+                        .withAuthorizationType(AuthorizationType.V1HMAC),
                 )
-        val client =
-            Factory.createClient(
-                CommunicatorConfiguration()
-                    .withApiKeyId(paymentDirectProfile.apiKey)
-                    .withSecretApiKey(paymentDirectProfile.apiSecret)
-                    .withApiEndpoint(URI.create(checkAndRemovePath(ogoneDirectPaymentModuleConfiguration.properties.url)))
-                    .withIntegrator(paymentRequest.identifier)
-                    .withAuthorizationType(AuthorizationType.V1HMAC),
+            val merchantClient = client.merchant(paymentDirectProfile.pspId)
+
+            val checkoutRequest =
+                CreateHostedCheckoutRequest()
+                    .withOrder(
+                        Order()
+                            .withAmountOfMoney(
+                                AmountOfMoney()
+                                    .withAmount((paymentRequest.amount * 100).toLong())
+                                    .withCurrencyCode(paymentDirectProfile.currency),
+                            )
+                            .withReferences(
+                                OrderReferences()
+                                    .withDescriptor(paymentRequest.reference)
+                                    .withMerchantReference(paymentRequest.orderId),
+                            ),
+                    )
+                    .withHostedCheckoutSpecificInput(
+                        HostedCheckoutSpecificInput()
+                            .withLocale(paymentRequest.langId ?: paymentDirectProfile.language)
+                            .withReturnUrl(paymentRequest.returnUrl ?: paymentDirectProfile.returnUrl),
+                    )
+
+            val response = merchantClient.hostedCheckout().createHostedCheckout(checkoutRequest)
+
+            return OgoneDirectPaymentResponse(
+                redirectUrl = response.redirectUrl,
             )
-        val merchantClient = client.merchant(paymentDirectProfile.pspId)
-
-        val checkoutRequest =
-            CreateHostedCheckoutRequest()
-                .withOrder(
-                    Order()
-                        .withAmountOfMoney(
-                            AmountOfMoney()
-                                .withAmount((paymentRequest.amount * 100).toLong())
-                                .withCurrencyCode(paymentDirectProfile.currency),
-                        )
-                        .withReferences(
-                            OrderReferences()
-                                .withDescriptor(paymentRequest.reference)
-                                .withMerchantReference(paymentRequest.orderId),
-                        ),
-                )
-                .withHostedCheckoutSpecificInput(
-                    HostedCheckoutSpecificInput()
-                        .withLocale(paymentRequest.langId ?: paymentDirectProfile.language)
-                        .withReturnUrl(paymentRequest.returnUrl ?: paymentDirectProfile.returnUrl),
-                )
-
-        val response = merchantClient.hostedCheckout().createHostedCheckout(checkoutRequest)
-
-        return OgoneDirectPaymentResponse(
-            redirectUrl = response.redirectUrl,
-        )
+        } catch (ex: Exception) {
+            throw ex
+        }
     }
 
     open suspend fun handlePostSale(serverHttpRequest: ServerHttpRequest): String {

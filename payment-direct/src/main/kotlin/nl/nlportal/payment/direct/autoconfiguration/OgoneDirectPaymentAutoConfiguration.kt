@@ -31,7 +31,7 @@ import org.springframework.context.annotation.Bean
 class OgoneDirectPaymentAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(OgoneDirectPaymentService::class)
-    fun ogonePaymentDirectService(
+    fun ogoneDirectPaymentService(
         ogoneDirectPaymentModuleConfiguration: OgoneDirectPaymentModuleConfiguration,
         objectsApiClient: ObjectsApiClient,
     ): OgoneDirectPaymentService {
@@ -42,13 +42,13 @@ class OgoneDirectPaymentAutoConfiguration {
     }
 
     @Bean
-    fun ogonePaymentDirectMutation(ogoneDirectPaymentService: OgoneDirectPaymentService): OgoneDirectPaymentMutation {
+    fun ogoneDirectPaymentMutation(ogoneDirectPaymentService: OgoneDirectPaymentService): OgoneDirectPaymentMutation {
         return OgoneDirectPaymentMutation(ogoneDirectPaymentService)
     }
 
     @Bean
     @ConditionalOnMissingBean(OgoneDirectPaymentController::class)
-    fun ogonePaymentDirectController(ogoneDirectPaymentService: OgoneDirectPaymentService): OgoneDirectPaymentController {
+    fun ogoneDirectPaymentController(ogoneDirectPaymentService: OgoneDirectPaymentService): OgoneDirectPaymentController {
         return OgoneDirectPaymentController(ogoneDirectPaymentService)
     }
 }

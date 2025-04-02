@@ -22,11 +22,11 @@ import nl.nlportal.payment.direct.domain.OgoneDirectPaymentResponse
 import nl.nlportal.payment.direct.service.OgoneDirectPaymentService
 
 class OgoneDirectPaymentMutation(
-    private val ogonePaymentService: OgoneDirectPaymentService,
+    private val ogoneDirectPaymentService: OgoneDirectPaymentService,
 ) : Mutation {
     @GraphQLDescription("Do Ogone Direct payment")
     fun doOgoneDirectPayment(paymentRequest: OgoneDirectPaymentRequest): OgoneDirectPaymentResponse {
-        return ogonePaymentService.doDirectPayment(
+        return ogoneDirectPaymentService.doDirectPayment(
             paymentRequest = paymentRequest,
         )
     }
