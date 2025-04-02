@@ -48,6 +48,7 @@ include(
     "product",
     "portal-authentication",
     "payment",
+    "payment-direct",
     "zgw:berichten",
     "zgw:catalogi-api",
     "zgw:common-ground-authentication",
