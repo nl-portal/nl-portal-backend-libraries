@@ -19,8 +19,8 @@ pluginManager.withPlugin("maven-publish") {
         publications {
             withType(MavenPublication::class.java) {
                 pom {
-                    getName().set("Payment module")
-                    getDescription().set("The Payment Direct module provides functionality in the Portal.")
+                    getName().set("Direct Payment module")
+                    getDescription().set("The Direct Payment module provides functionality in the Portal.")
                     developers {
                         developer {
                             getId().set("team-nl-portal")
