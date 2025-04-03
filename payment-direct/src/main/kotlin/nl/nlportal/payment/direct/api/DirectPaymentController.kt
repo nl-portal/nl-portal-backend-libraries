@@ -15,7 +15,7 @@
  */
 package nl.nlportal.payment.direct.api
 
-import nl.nlportal.payment.direct.service.OgoneDirectPaymentService
+import nl.nlportal.payment.direct.service.DirectPaymentService
 import org.springframework.http.ResponseEntity
 import org.springframework.http.server.reactive.ServerHttpRequest
 import org.springframework.web.bind.annotation.PostMapping
@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping(value = ["/api/public"])
-class OgoneDirectPaymentController(
-    private val ogoneDirectPaymentService: OgoneDirectPaymentService,
+class DirectPaymentController(
+    private val directPaymentService: DirectPaymentService,
 ) {
     @PostMapping(value = ["/payment/direct/ogone/postsale"])
     suspend fun postSale(
@@ -34,7 +34,7 @@ class OgoneDirectPaymentController(
         @RequestBody ogoneDirectPaymentWebhookRequest: String,
     ): ResponseEntity<String> {
         return ResponseEntity.ok(
-            ogoneDirectPaymentService.handlePostSale(
+            directPaymentService.handlePostSale(
                 httpServletRequest.headers,
                 ogoneDirectPaymentWebhookRequest,
             ),

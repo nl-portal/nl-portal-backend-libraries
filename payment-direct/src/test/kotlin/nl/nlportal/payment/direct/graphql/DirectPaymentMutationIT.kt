@@ -19,7 +19,7 @@ import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.payment.direct.TestHelper
-import nl.nlportal.payment.direct.autoconfiguration.OgoneDirectPaymentModuleConfiguration
+import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -40,9 +40,9 @@ import java.util.function.Consumer
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(PER_CLASS)
-internal class OgoneDirectPaymentMutationIT(
+internal class DirectPaymentMutationIT(
     @Autowired private val testClient: WebTestClient,
-    @Autowired private val ogoneDirectPaymentModuleConfiguration: OgoneDirectPaymentModuleConfiguration,
+    @Autowired private val directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
 ) {
     lateinit var server: MockWebServer
 
@@ -51,7 +51,7 @@ internal class OgoneDirectPaymentMutationIT(
         server = MockWebServer()
         setupMockObjectsApiServer()
         server.start()
-        ogoneDirectPaymentModuleConfiguration.properties.url = server.url("/").toString()
+        directPaymentModuleConfiguration.properties.url = server.url("/").toString()
     }
 
     @AfterEach
@@ -61,11 +61,11 @@ internal class OgoneDirectPaymentMutationIT(
 
     @Test
     @WithBurgerUser("123")
-    fun generateOgonePaymentWithIdentifier() {
+    fun doDirectPaymentWithIdentifier() {
         val mutation =
             """
             mutation {
-                doOgoneDirectPayment(
+                doDirectPayment(
                     paymentRequest: { 
                         identifier: "belastingzaken", 
                         amount: 100.25, 
@@ -78,7 +78,7 @@ internal class OgoneDirectPaymentMutationIT(
             }
             """.trimIndent()
 
-        val basePath = "$.data.doOgoneDirectPayment"
+        val basePath = "$.data.doDirectPayment"
 
         testClient.post()
             .uri("/graphql")

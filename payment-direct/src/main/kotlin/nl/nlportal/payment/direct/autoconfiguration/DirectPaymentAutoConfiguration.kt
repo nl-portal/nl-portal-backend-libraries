@@ -15,9 +15,9 @@
  */
 package nl.nlportal.payment.direct.autoconfiguration
 
-import nl.nlportal.payment.direct.api.OgoneDirectPaymentController
-import nl.nlportal.payment.direct.graphql.OgoneDirectPaymentMutation
-import nl.nlportal.payment.direct.service.OgoneDirectPaymentService
+import nl.nlportal.payment.direct.api.DirectPaymentController
+import nl.nlportal.payment.direct.graphql.DirectPaymentMutation
+import nl.nlportal.payment.direct.service.DirectPaymentService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -26,29 +26,29 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
-@EnableConfigurationProperties(OgoneDirectPaymentModuleConfiguration::class)
-@ConditionalOnProperty(prefix = "nl-portal.config.payment.direct.ogone", name = ["enabled"], havingValue = "true")
-class OgoneDirectPaymentAutoConfiguration {
+@EnableConfigurationProperties(DirectPaymentModuleConfiguration::class)
+@ConditionalOnProperty(prefix = "nl-portal.config.payment.direct", name = ["enabled"], havingValue = "true")
+class DirectPaymentAutoConfiguration {
     @Bean
-    @ConditionalOnMissingBean(OgoneDirectPaymentService::class)
-    fun ogoneDirectPaymentService(
-        ogoneDirectPaymentModuleConfiguration: OgoneDirectPaymentModuleConfiguration,
+    @ConditionalOnMissingBean(DirectPaymentService::class)
+    fun directPaymentService(
+        directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
         objectsApiClient: ObjectsApiClient,
-    ): OgoneDirectPaymentService {
-        return OgoneDirectPaymentService(
-            ogoneDirectPaymentModuleConfiguration,
+    ): DirectPaymentService {
+        return DirectPaymentService(
+            directPaymentModuleConfiguration,
             objectsApiClient,
         )
     }
 
     @Bean
-    fun ogoneDirectPaymentMutation(ogoneDirectPaymentService: OgoneDirectPaymentService): OgoneDirectPaymentMutation {
-        return OgoneDirectPaymentMutation(ogoneDirectPaymentService)
+    fun directPaymentMutation(directPaymentService: DirectPaymentService): DirectPaymentMutation {
+        return DirectPaymentMutation(directPaymentService)
     }
 
     @Bean
-    @ConditionalOnMissingBean(OgoneDirectPaymentController::class)
-    fun ogoneDirectPaymentController(ogoneDirectPaymentService: OgoneDirectPaymentService): OgoneDirectPaymentController {
-        return OgoneDirectPaymentController(ogoneDirectPaymentService)
+    @ConditionalOnMissingBean(DirectPaymentController::class)
+    fun directPaymentController(directPaymentService: DirectPaymentService): DirectPaymentController {
+        return DirectPaymentController(directPaymentService)
     }
 }

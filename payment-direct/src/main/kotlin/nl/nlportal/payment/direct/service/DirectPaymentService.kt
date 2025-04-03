@@ -31,11 +31,11 @@ import com.onlinepayments.webhooks.WebhooksHelper
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.core.util.Mapper
-import nl.nlportal.payment.direct.autoconfiguration.OgoneDirectPaymentModuleConfiguration
-import nl.nlportal.payment.direct.constants.OgoneDirectPaymentState
-import nl.nlportal.payment.direct.domain.OgoneDirectPaymentRequest
-import nl.nlportal.payment.direct.domain.OgoneDirectPaymentResponse
-import nl.nlportal.payment.direct.domain.OgoneDirectPaymentWebhookRequest
+import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration
+import nl.nlportal.payment.direct.constants.DirectPaymentState
+import nl.nlportal.payment.direct.domain.DirectPaymentRequest
+import nl.nlportal.payment.direct.domain.DirectPaymentResponse
+import nl.nlportal.payment.direct.domain.DirectPaymentWebhookRequest
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
@@ -45,16 +45,16 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.net.URI
-import java.util.UUID
+import java.util.*
 
-open class OgoneDirectPaymentService(
-    private val ogoneDirectPaymentModuleConfiguration: OgoneDirectPaymentModuleConfiguration,
+open class DirectPaymentService(
+    private val directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
     private val objectsApiClient: ObjectsApiClient,
 ) {
     val webhookHelper = WebhooksHelper(DefaultMarshaller.INSTANCE, InMemorySecretKeyStore.INSTANCE)
 
     init {
-        ogoneDirectPaymentModuleConfiguration.properties.configurations.forEach {
+        directPaymentModuleConfiguration.properties.configurations.forEach {
             InMemorySecretKeyStore.INSTANCE.storeSecretKey(it.value.webhookApiKey, it.value.webhookApiSecret)
         }
     }
@@ -64,11 +64,11 @@ open class OgoneDirectPaymentService(
      * @param paymentRequest: properties to create a payment
      * @return redirectUrl to do the actual payment at payment provider
      */
-    open fun doDirectPayment(paymentRequest: OgoneDirectPaymentRequest): OgoneDirectPaymentResponse {
+    open fun doDirectPayment(paymentRequest: DirectPaymentRequest): DirectPaymentResponse {
         try {
             val paymentDirectProfile =
-                ogoneDirectPaymentModuleConfiguration.properties.getPaymentProfile(paymentRequest.identifier)
-                    ?: ogoneDirectPaymentModuleConfiguration.properties.getPaymentProfileByPspPid(paymentRequest.identifier)
+                directPaymentModuleConfiguration.properties.getPaymentProfile(paymentRequest.identifier)
+                    ?: directPaymentModuleConfiguration.properties.getPaymentProfileByPspPid(paymentRequest.identifier)
                     ?: throw ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
                         "Could not found direct payment profile for the identifier $paymentRequest.identifier",
@@ -78,7 +78,7 @@ open class OgoneDirectPaymentService(
                     CommunicatorConfiguration()
                         .withApiKeyId(paymentDirectProfile.apiKey)
                         .withSecretApiKey(paymentDirectProfile.apiSecret)
-                        .withApiEndpoint(URI.create(checkAndRemovePath(ogoneDirectPaymentModuleConfiguration.properties.url)))
+                        .withApiEndpoint(URI.create(checkAndRemovePath(directPaymentModuleConfiguration.properties.url)))
                         .withIntegrator(paymentRequest.identifier)
                         .withAuthorizationType(AuthorizationType.V1HMAC),
                 )
@@ -107,7 +107,7 @@ open class OgoneDirectPaymentService(
 
             val response = merchantClient.hostedCheckout().createHostedCheckout(checkoutRequest)
 
-            return OgoneDirectPaymentResponse(
+            return DirectPaymentResponse(
                 redirectUrl = response.redirectUrl,
             )
         } catch (ex: Exception) {
@@ -133,15 +133,15 @@ open class OgoneDirectPaymentService(
         val ogoneDirectPaymentWebhookRequest =
             Mapper.get().readValue(
                 jsonBody,
-                OgoneDirectPaymentWebhookRequest::class.java,
+                DirectPaymentWebhookRequest::class.java,
             )
         val orderId = ogoneDirectPaymentWebhookRequest.payment.paymentOutput.references.merchantReference
         if (isUUID(orderId)) {
             val status = ogoneDirectPaymentWebhookRequest.payment.statusOutput.statusCode
-            if (status != OgoneDirectPaymentState.SUCCESS.status &&
-                status != OgoneDirectPaymentState.PENDING.status &&
-                status != OgoneDirectPaymentState.PENDING1.status &&
-                status != OgoneDirectPaymentState.PENDING2.status
+            if (status != DirectPaymentState.SUCCESS.status &&
+                status != DirectPaymentState.PENDING.status &&
+                status != DirectPaymentState.PENDING1.status &&
+                status != DirectPaymentState.PENDING2.status
             ) {
                 return "Request has not the correct status: $status"
             }
@@ -177,7 +177,7 @@ open class OgoneDirectPaymentService(
     ): Boolean {
         val requestHeaders = mutableListOf<RequestHeader>()
         httpHeaders.forEach {
-            if (ogoneDirectPaymentModuleConfiguration.properties.webhookHeaders.contains(it.key)) {
+            if (directPaymentModuleConfiguration.properties.webhookHeaders.contains(it.key)) {
                 requestHeaders.add(RequestHeader(it.key, it.value[0]))
             }
         }

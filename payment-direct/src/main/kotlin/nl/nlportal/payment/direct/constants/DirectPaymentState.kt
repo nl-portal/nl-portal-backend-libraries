@@ -13,8 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.payment.direct.domain
+package nl.nlportal.payment.direct.constants
 
-data class OgoneDirectPaymentResponse(
-    val redirectUrl: String,
-)
+enum class DirectPaymentState(
+    val status: Int,
+) {
+    FAILED(1),
+    SUCCESS(9),
+    PENDING(91),
+    PENDING1(92),
+    PENDING2(93),
+}

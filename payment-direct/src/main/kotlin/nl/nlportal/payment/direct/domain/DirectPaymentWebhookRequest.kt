@@ -15,7 +15,7 @@
  */
 package nl.nlportal.payment.direct.domain
 
-data class OgoneDirectPaymentWebhookRequest(
+data class DirectPaymentWebhookRequest(
     val merchantId: String,
     val id: String,
     val type: String,
@@ -24,24 +24,24 @@ data class OgoneDirectPaymentWebhookRequest(
 
 data class OgoneDirectPayment(
     val status: String,
-    val statusOutput: OgoneDirectPaymentStatusOutput,
-    val paymentOutput: OgoneDirectPaymentOutput,
+    val statusOutput: DirectPaymentStatusOutput,
+    val paymentOutput: DirectPaymentOutput,
 )
 
-data class OgoneDirectPaymentStatusOutput(
+data class DirectPaymentStatusOutput(
     val statusCode: Int,
 )
 
-data class OgoneDirectPaymentOutput(
-    val amountOfMoney: OgoneDirectPaymentAmountOfMoney,
-    val references: OgoneDirectPaymentReference,
+data class DirectPaymentOutput(
+    val amountOfMoney: DirectPaymentAmountOfMoney,
+    val references: DirectPaymentReference,
 )
 
-data class OgoneDirectPaymentAmountOfMoney(
+data class DirectPaymentAmountOfMoney(
     val amount: Long,
     val currencyCode: String,
 )
 
-data class OgoneDirectPaymentReference(
+data class DirectPaymentReference(
     val merchantReference: String,
 )

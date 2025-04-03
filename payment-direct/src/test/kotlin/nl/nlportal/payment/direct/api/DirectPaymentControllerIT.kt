@@ -16,7 +16,7 @@
 package nl.nlportal.payment.direct.api
 
 import nl.nlportal.payment.direct.TestHelper
-import nl.nlportal.payment.direct.autoconfiguration.OgoneDirectPaymentModuleConfiguration
+import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -40,10 +40,10 @@ import javax.crypto.spec.SecretKeySpec
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-internal class OgoneDirectPaymentControllerIT(
+internal class DirectPaymentControllerIT(
     @Autowired private val webTestClient: WebTestClient,
     @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
-    @Autowired private val ogoneDirectPaymentModuleConfiguration: OgoneDirectPaymentModuleConfiguration,
+    @Autowired private val directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
 ) {
     lateinit var server: MockWebServer
 
@@ -98,11 +98,11 @@ internal class OgoneDirectPaymentControllerIT(
         val signature =
             createSignature(
                 body = body,
-                secretKey = ogoneDirectPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiSecret.toString(),
+                secretKey = directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiSecret.toString(),
             )
         val headers = HttpHeaders()
         headers.add("X-GCS-Signature", signature)
-        headers.add("X-GCS-KeyId", ogoneDirectPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
+        headers.add("X-GCS-KeyId", directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
         webTestClient.post()
             .uri("/api/public/payment/direct/ogone/postsale")
             .headers {
@@ -157,11 +157,11 @@ internal class OgoneDirectPaymentControllerIT(
         val signature =
             createSignature(
                 body = body,
-                secretKey = ogoneDirectPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiSecret.toString(),
+                secretKey = directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiSecret.toString(),
             )
         val headers = HttpHeaders()
         headers.add("X-GCS-Signature", signature)
-        headers.add("X-GCS-KeyId", ogoneDirectPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
+        headers.add("X-GCS-KeyId", directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
         webTestClient.post()
             .uri("/api/public/payment/direct/ogone/postsale")
             .headers {
@@ -213,10 +213,10 @@ internal class OgoneDirectPaymentControllerIT(
 
             """.trimIndent()
 
-        val signature = ogoneDirectPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiSecret.toString()
+        val signature = directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiSecret.toString()
         val headers = HttpHeaders()
         headers.add("X-GCS-Signature", signature)
-        headers.add("X-GCS-KeyId", ogoneDirectPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
+        headers.add("X-GCS-KeyId", directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
         webTestClient.post()
             .uri("/api/public/payment/direct/ogone/postsale")
             .headers {
@@ -271,11 +271,11 @@ internal class OgoneDirectPaymentControllerIT(
         val signature =
             createSignature(
                 body = body,
-                secretKey = ogoneDirectPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiSecret.toString(),
+                secretKey = directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiSecret.toString(),
             )
         val headers = HttpHeaders()
         headers.add("X-GCS-Signature", signature)
-        headers.add("X-GCS-KeyId", ogoneDirectPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
+        headers.add("X-GCS-KeyId", directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
         webTestClient.post()
             .uri("/api/public/payment/direct/ogone/postsale")
             .headers {

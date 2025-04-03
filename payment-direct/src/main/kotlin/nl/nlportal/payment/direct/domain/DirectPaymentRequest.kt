@@ -15,7 +15,7 @@
  */
 package nl.nlportal.payment.direct.domain
 
-data class OgoneDirectPaymentRequest(
+data class DirectPaymentRequest(
     val identifier: String,
     val amount: Double,
     val reference: String,

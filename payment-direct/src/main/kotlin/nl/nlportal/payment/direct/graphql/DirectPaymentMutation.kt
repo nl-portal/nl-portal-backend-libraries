@@ -17,16 +17,16 @@ package nl.nlportal.payment.direct.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Mutation
-import nl.nlportal.payment.direct.domain.OgoneDirectPaymentRequest
-import nl.nlportal.payment.direct.domain.OgoneDirectPaymentResponse
-import nl.nlportal.payment.direct.service.OgoneDirectPaymentService
+import nl.nlportal.payment.direct.domain.DirectPaymentRequest
+import nl.nlportal.payment.direct.domain.DirectPaymentResponse
+import nl.nlportal.payment.direct.service.DirectPaymentService
 
-class OgoneDirectPaymentMutation(
-    private val ogoneDirectPaymentService: OgoneDirectPaymentService,
+class DirectPaymentMutation(
+    private val directPaymentService: DirectPaymentService,
 ) : Mutation {
-    @GraphQLDescription("Do Ogone Direct payment")
-    fun doOgoneDirectPayment(paymentRequest: OgoneDirectPaymentRequest): OgoneDirectPaymentResponse {
-        return ogoneDirectPaymentService.doDirectPayment(
+    @GraphQLDescription("Do Worldline Direct payment")
+    fun doDirectPayment(paymentRequest: DirectPaymentRequest): DirectPaymentResponse {
+        return directPaymentService.doDirectPayment(
             paymentRequest = paymentRequest,
         )
     }

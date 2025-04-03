@@ -17,23 +17,23 @@ package nl.nlportal.payment.direct.autoconfiguration
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.config.payment.direct.ogone", ignoreUnknownFields = true)
-data class OgoneDirectPaymentModuleConfiguration(
+@ConfigurationProperties(prefix = "nl-portal.config.payment.direct", ignoreUnknownFields = true)
+data class DirectPaymentModuleConfiguration(
     var enabled: Boolean = false,
-    var properties: OgonePaymentDirectProperties,
+    var properties: DirectPaymentProperties,
 )
 
-data class OgonePaymentDirectProperties(
+data class DirectPaymentProperties(
     var url: String,
     val shaOutParameters: List<String>,
     val webhookHeaders: List<String>,
-    val configurations: Map<String, OgonePaymentDirectProfile> = mapOf(),
+    val configurations: Map<String, DirectPaymentProfile> = mapOf(),
 ) {
-    fun getPaymentProfile(profileIdentifier: String): OgonePaymentDirectProfile? {
+    fun getPaymentProfile(profileIdentifier: String): DirectPaymentProfile? {
         return configurations[profileIdentifier]
     }
 
-    fun getPaymentProfileByPspPid(pspId: String?): OgonePaymentDirectProfile? {
+    fun getPaymentProfileByPspPid(pspId: String?): DirectPaymentProfile? {
         configurations.forEach {
             if (it.value.pspId == pspId) {
                 return it.value
@@ -43,7 +43,7 @@ data class OgonePaymentDirectProperties(
     }
 }
 
-data class OgonePaymentDirectProfile(
+data class DirectPaymentProfile(
     val pspId: String = "",
     val language: String = "nl_NL",
     val currency: String = "EUR",
