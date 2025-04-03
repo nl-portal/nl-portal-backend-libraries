@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping(value = ["/api/public"])
@@ -33,16 +32,12 @@ class OgoneDirectPaymentController(
     suspend fun postSale(
         httpServletRequest: ServerHttpRequest,
         @RequestBody ogoneDirectPaymentWebhookRequest: String,
-    ): ResponseEntity<Any> {
-        try {
-            return ResponseEntity.ok(
-                ogoneDirectPaymentService.handlePostSale(
-                    httpServletRequest.headers,
-                    ogoneDirectPaymentWebhookRequest,
-                ),
-            )
-        } catch (exception: ResponseStatusException) {
-            return ResponseEntity(exception.message, exception.statusCode)
-        }
+    ): ResponseEntity<String> {
+        return ResponseEntity.ok(
+            ogoneDirectPaymentService.handlePostSale(
+                httpServletRequest.headers,
+                ogoneDirectPaymentWebhookRequest,
+            ),
+        )
     }
 }

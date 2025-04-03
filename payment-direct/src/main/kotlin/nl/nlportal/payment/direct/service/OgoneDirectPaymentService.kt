@@ -45,7 +45,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.net.URI
-import java.util.*
+import java.util.UUID
 
 open class OgoneDirectPaymentService(
     private val ogoneDirectPaymentModuleConfiguration: OgoneDirectPaymentModuleConfiguration,
@@ -128,7 +128,7 @@ open class OgoneDirectPaymentService(
         jsonBody: String,
     ): String {
         if (!isValidOgoneRequest(httpHeaders, jsonBody)) {
-            throw ResponseStatusException(HttpStatus.OK, "Request is not valid")
+            return "Request is not valid"
         }
         val ogoneDirectPaymentWebhookRequest =
             Mapper.get().readValue(
@@ -143,7 +143,7 @@ open class OgoneDirectPaymentService(
                 status != OgoneDirectPaymentState.PENDING1.status &&
                 status != OgoneDirectPaymentState.PENDING2.status
             ) {
-                throw ResponseStatusException(HttpStatus.OK, "Request has not the correct status: $status")
+                return "Request has not the correct status: $status"
             }
 
             val objectsApiTask = getObjectsApiTaak(UUID.fromString(orderId))
