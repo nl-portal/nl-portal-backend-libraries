@@ -90,10 +90,10 @@ nl-portal:
                                 pspId: TAX
                                 language: "nl_NL"
                                 returnUrl: http://localhost:3000
-                                apiKey: 1DB05658A45C7417655A
-                                apiSecret: Rodnj4mrrSGUZGgyNopKXR9ugcHr8GG4IVL5JunBBWU//Wwahyb2YG3ZmNCBY7My4RCGNgG1JRj3TQ7BAnb3pA==
-                                webhookApiKey: 65325525d7b846168fa4784f94485a
-                                webhookApiSecret: 418f68e5-fcff-413f-9b06-77649ba3c52e
+                                apiKey: dummy
+                                apiSecret: dummy
+                                webhookApiKey: dummy
+                                webhookApiSecret: dummy
 
     zgw:
         besluiten:
