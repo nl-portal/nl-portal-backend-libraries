@@ -31,6 +31,7 @@ dependencies {
     implementation(project(":zgw:catalogi-api"))
     implementation(project(":zgw:documenten-api"))
     implementation(project(":payment"))
+    implementation(project(":payment-direct"))
     implementation(project(":zgw:besluiten"))
 
     implementation("org.springframework.boot", "spring-boot-starter-actuator")
