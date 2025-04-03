@@ -17,14 +17,12 @@ package nl.nlportal.payment.direct.api
 
 import nl.nlportal.payment.direct.TestHelper
 import nl.nlportal.payment.direct.autoconfiguration.OgoneDirectPaymentModuleConfiguration
-import nl.nlportal.payment.direct.constants.OgoneDirectPaymentConstants
-import nl.nlportal.payment.direct.domain.OgoneDirectPaymentField
-import nl.nlportal.payment.direct.service.OgoneDirectPaymentService
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
+import org.apache.commons.codec.binary.Base64
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -32,7 +30,12 @@ import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
+import java.nio.charset.Charset
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
@@ -59,21 +62,54 @@ internal class OgoneDirectPaymentControllerIT(
 
     @Test
     fun postSaleTest() {
-        val parameterList =
-            listOf(
-                OgoneDirectPaymentField(OgoneDirectPaymentConstants.PAYMENT_PROPERTY_ORDER_ID, "58fad5ab-dc2f-11ec-9075-f22a405ce707"),
-                OgoneDirectPaymentField(OgoneDirectPaymentConstants.PAYMENT_PROPERTY_STATUS, "91"),
+        val body =
+            """
+            {
+              "apiVersion": "v1",
+              "created": "2020-12-09T11:20:40.3744722+01:00",
+              "id": "34b8a607-1fce-4003-b3ae-a4d29e92b232",
+              "merchantId": "TAX",
+              "payment": {
+                "paymentOutput": {
+                  "amountOfMoney": {
+                    "amount": 1000,
+                    "currencyCode": "EUR"
+                  },
+                  "references": {
+                    "merchantReference": "58fad5ab-dc2f-11ec-9075-f22a405ce707"
+                  },
+                  "paymentMethod": "card"
+                },
+                "status": "COMPLETED",
+                "statusOutput": {
+                  "isCancellable": false,
+                  "statusCategory": "CREATED",
+                  "statusCode": 9,
+                  "isAuthorized": false,
+                  "isRefundable": false
+                },
+                "id": "***3092546156***"
+              },
+              "type": "payment.created"
+            }
+
+            """.trimIndent()
+
+        val signature =
+            createSignature(
+                body = body,
+                secretKey = ogoneDirectPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiSecret.toString(),
             )
-
-        val shaSign =
-            OgoneDirectPaymentService.hashParameters(
-                parameterList,
-                ogoneDirectPaymentModuleConfiguration.properties.getPaymentProfile("belastingzaken")!!.shaOutKey,
-                ogoneDirectPaymentModuleConfiguration.properties.getPaymentProfile("belastingzaken")!!.shaVersion,
-            ).uppercase()
-
-        webTestClient.get()
-            .uri("/api/public/payment/direct/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&STATUS=91&SHASIGN=$shaSign")
+        val headers = HttpHeaders()
+        headers.add("X-GCS-Signature", signature)
+        headers.add("X-GCS-KeyId", ogoneDirectPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
+        webTestClient.post()
+            .uri("/api/public/payment/direct/ogone/postsale")
+            .headers {
+                it.addAll(headers)
+            }
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(body)
             .exchange()
             .expectStatus().isOk
             .expectBody()
@@ -85,21 +121,54 @@ internal class OgoneDirectPaymentControllerIT(
 
     @Test
     fun postSaleTestOrderIdNotUUID() {
-        val parameterList =
-            listOf(
-                OgoneDirectPaymentField(OgoneDirectPaymentConstants.PAYMENT_PROPERTY_ORDER_ID, "58fad5ab"),
-                OgoneDirectPaymentField(OgoneDirectPaymentConstants.PAYMENT_PROPERTY_STATUS, "91"),
+        val body =
+            """
+            {
+              "apiVersion": "v1",
+              "created": "2020-12-09T11:20:40.3744722+01:00",
+              "id": "34b8a607-1fce-4003-b3ae-a4d29e92b232",
+              "merchantId": "TAX",
+              "payment": {
+                "paymentOutput": {
+                  "amountOfMoney": {
+                    "amount": 1000,
+                    "currencyCode": "EUR"
+                  },
+                  "references": {
+                    "merchantReference": "58fad5ab"
+                  },
+                  "paymentMethod": "card"
+                },
+                "status": "COMPLETED",
+                "statusOutput": {
+                  "isCancellable": false,
+                  "statusCategory": "CREATED",
+                  "statusCode": 9,
+                  "isAuthorized": false,
+                  "isRefundable": false
+                },
+                "id": "***3092546156***"
+              },
+              "type": "payment.created"
+            }
+
+            """.trimIndent()
+
+        val signature =
+            createSignature(
+                body = body,
+                secretKey = ogoneDirectPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiSecret.toString(),
             )
-
-        val shaSign =
-            OgoneDirectPaymentService.hashParameters(
-                parameterList,
-                ogoneDirectPaymentModuleConfiguration.properties.getPaymentProfile("belastingzaken")!!.shaOutKey,
-                ogoneDirectPaymentModuleConfiguration.properties.getPaymentProfile("belastingzaken")!!.shaVersion,
-            ).uppercase()
-
-        webTestClient.get()
-            .uri("/api/public/payment/direct/ogone/postsale?orderID=58fad5ab&STATUS=91&SHASIGN=$shaSign")
+        val headers = HttpHeaders()
+        headers.add("X-GCS-Signature", signature)
+        headers.add("X-GCS-KeyId", ogoneDirectPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
+        webTestClient.post()
+            .uri("/api/public/payment/direct/ogone/postsale")
+            .headers {
+                it.addAll(headers)
+            }
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(body)
             .exchange()
             .expectStatus().isOk
             .expectBody()
@@ -111,25 +180,52 @@ internal class OgoneDirectPaymentControllerIT(
 
     @Test
     fun postSaleTestInvalid() {
-        val parameterList =
-            listOf(
-                OgoneDirectPaymentField(OgoneDirectPaymentConstants.PAYMENT_PROPERTY_ORDER_ID, "58fad5ab-dc2f-11ec-9075-f22a405ce707"),
-                OgoneDirectPaymentField(OgoneDirectPaymentConstants.PAYMENT_PROPERTY_STATUS, "91"),
-            )
+        val body =
+            """
+            {
+              "apiVersion": "v1",
+              "created": "2020-12-09T11:20:40.3744722+01:00",
+              "id": "34b8a607-1fce-4003-b3ae-a4d29e92b232",
+              "merchantId": "TAX",
+              "payment": {
+                "paymentOutput": {
+                  "amountOfMoney": {
+                    "amount": 1000,
+                    "currencyCode": "EUR"
+                  },
+                  "references": {
+                    "merchantReference": "58fad5ab-dc2f-11ec-9075-f22a405ce707"
+                  },
+                  "paymentMethod": "card"
+                },
+                "status": "COMPLETED",
+                "statusOutput": {
+                  "isCancellable": false,
+                  "statusCategory": "CREATED",
+                  "statusCode": 9,
+                  "isAuthorized": false,
+                  "isRefundable": false
+                },
+                "id": "***3092546156***"
+              },
+              "type": "payment.created"
+            }
 
-        val shaSign =
-            OgoneDirectPaymentService.hashParameters(
-                parameterList,
-                ogoneDirectPaymentModuleConfiguration.properties.getPaymentProfile("belastingzaken")!!.shaOutKey,
-                ogoneDirectPaymentModuleConfiguration.properties.getPaymentProfile("belastingzaken")!!.shaVersion,
-            ).uppercase()
+            """.trimIndent()
 
-        webTestClient.get()
-            .uri(
-                "/api/public/payment/direct/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&STATUS=1&AMOUNT=200&SHASIGN=$shaSign",
-            )
+        val signature = ogoneDirectPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiSecret.toString()
+        val headers = HttpHeaders()
+        headers.add("X-GCS-Signature", signature)
+        headers.add("X-GCS-KeyId", ogoneDirectPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
+        webTestClient.post()
+            .uri("/api/public/payment/direct/ogone/postsale")
+            .headers {
+                it.addAll(headers)
+            }
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(body)
             .exchange()
-            .expectStatus().isBadRequest
+            .expectStatus().isOk
             .expectBody()
             .returnResult()
             .responseBody
@@ -138,29 +234,62 @@ internal class OgoneDirectPaymentControllerIT(
     }
 
     @Test
-    fun postSaleTestNotFromPaymentProvider() {
-        webTestClient.get()
-            .uri("/api/public/payment/direct/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&PSPID=TAX&STATUS=91")
-            .exchange()
-            .expectStatus().isBadRequest
-            .expectBody()
-            .returnResult()
-            .responseBody
-            .contentToString()
-            .contentEquals("400 BAD_REQUEST \"Request is not from payment provider\"")
-    }
-
-    @Test
     fun postSaleTestIncorrectOgoneStatus() {
-        webTestClient.get()
-            .uri("/api/public/payment/direct/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&PSPID=TAX&STATUS=1")
+        val body =
+            """
+            {
+              "apiVersion": "v1",
+              "created": "2020-12-09T11:20:40.3744722+01:00",
+              "id": "34b8a607-1fce-4003-b3ae-a4d29e92b232",
+              "merchantId": "TAX",
+              "payment": {
+                "paymentOutput": {
+                  "amountOfMoney": {
+                    "amount": 1000,
+                    "currencyCode": "EUR"
+                  },
+                  "references": {
+                    "merchantReference": "58fad5ab-dc2f-11ec-9075-f22a405ce707"
+                  },
+                  "paymentMethod": "card"
+                },
+                "status": "COMPLETED",
+                "statusOutput": {
+                  "isCancellable": false,
+                  "statusCategory": "CREATED",
+                  "statusCode": 50,
+                  "isAuthorized": false,
+                  "isRefundable": false
+                },
+                "id": "***3092546156***"
+              },
+              "type": "payment.created"
+            }
+
+            """.trimIndent()
+
+        val signature =
+            createSignature(
+                body = body,
+                secretKey = ogoneDirectPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiSecret.toString(),
+            )
+        val headers = HttpHeaders()
+        headers.add("X-GCS-Signature", signature)
+        headers.add("X-GCS-KeyId", ogoneDirectPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
+        webTestClient.post()
+            .uri("/api/public/payment/direct/ogone/postsale")
+            .headers {
+                it.addAll(headers)
+            }
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(body)
             .exchange()
-            .expectStatus().isBadRequest
+            .expectStatus().isOk
             .expectBody()
             .returnResult()
             .responseBody
             .contentToString()
-            .contentEquals("400 BAD_REQUEST \"Request has not the correct status\"")
+            .contentEquals("200 OK \"Request has not the correct status\"")
     }
 
     fun setupMockObjectsApiServer() {
@@ -183,5 +312,19 @@ internal class OgoneDirectPaymentControllerIT(
                 }
             }
         server.dispatcher = dispatcher
+    }
+
+    companion object {
+        fun createSignature(
+            body: String,
+            secretKey: String,
+        ): String {
+            val hmac = Mac.getInstance("HmacSHA256")
+            val key = SecretKeySpec(secretKey.toByteArray(charset = Charset.forName("UTF-8")), "HmacSHA256")
+            hmac.init(key)
+
+            val unencodedResult = hmac.doFinal(body.toByteArray(charset = Charset.forName("UTF-8")))
+            return Base64.encodeBase64String(unencodedResult)
+        }
     }
 }

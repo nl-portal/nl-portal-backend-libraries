@@ -17,29 +17,32 @@ package nl.nlportal.payment.direct.service
 
 import com.onlinepayments.CommunicatorConfiguration
 import com.onlinepayments.Factory
+import com.onlinepayments.RequestHeader
 import com.onlinepayments.defaultimpl.AuthorizationType
+import com.onlinepayments.defaultimpl.DefaultMarshaller
 import com.onlinepayments.domain.AmountOfMoney
 import com.onlinepayments.domain.CreateHostedCheckoutRequest
 import com.onlinepayments.domain.HostedCheckoutSpecificInput
 import com.onlinepayments.domain.Order
 import com.onlinepayments.domain.OrderReferences
+import com.onlinepayments.webhooks.InMemorySecretKeyStore
+import com.onlinepayments.webhooks.SignatureValidationException
+import com.onlinepayments.webhooks.WebhooksHelper
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
-import nl.nlportal.core.util.CoreUtils
+import nl.nlportal.core.util.Mapper
 import nl.nlportal.payment.direct.autoconfiguration.OgoneDirectPaymentModuleConfiguration
-import nl.nlportal.payment.direct.constants.OgoneDirectPaymentConstants
 import nl.nlportal.payment.direct.constants.OgoneDirectPaymentState
-import nl.nlportal.payment.direct.domain.OgoneDirectPaymentField
 import nl.nlportal.payment.direct.domain.OgoneDirectPaymentRequest
 import nl.nlportal.payment.direct.domain.OgoneDirectPaymentResponse
+import nl.nlportal.payment.direct.domain.OgoneDirectPaymentWebhookRequest
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import nl.nlportal.zgw.taak.domain.TaakObjectV2
 import nl.nlportal.zgw.taak.domain.TaakStatus
-import org.apache.commons.lang3.StringUtils
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
-import org.springframework.http.server.reactive.ServerHttpRequest
 import org.springframework.web.server.ResponseStatusException
 import java.net.URI
 import java.util.*
@@ -48,6 +51,19 @@ open class OgoneDirectPaymentService(
     private val ogoneDirectPaymentModuleConfiguration: OgoneDirectPaymentModuleConfiguration,
     private val objectsApiClient: ObjectsApiClient,
 ) {
+    val webhookHelper = WebhooksHelper(DefaultMarshaller.INSTANCE, InMemorySecretKeyStore.INSTANCE)
+
+    init {
+        ogoneDirectPaymentModuleConfiguration.properties.configurations.forEach {
+            InMemorySecretKeyStore.INSTANCE.storeSecretKey(it.value.webhookApiKey, it.value.webhookApiSecret)
+        }
+    }
+
+    /**
+     * Do Direct Payment at payment provider
+     * @param paymentRequest: properties to create a payment
+     * @return redirectUrl to do the actual payment at payment provider
+     */
     open fun doDirectPayment(paymentRequest: OgoneDirectPaymentRequest): OgoneDirectPaymentResponse {
         try {
             val paymentDirectProfile =
@@ -99,35 +115,40 @@ open class OgoneDirectPaymentService(
         }
     }
 
-    open suspend fun handlePostSale(serverHttpRequest: ServerHttpRequest): String {
-        val orderId = serverHttpRequest.queryParams[OgoneDirectPaymentConstants.QUERYSTRING_ORDER_ID]?.get(0)
+    /**
+     * Handle Postsale webhook server to server call from payment provider
+     * @param: httpHeaders, headers from the request
+     * @param: jsonBody, the raw body of the request
+     *
+     * @return: information which will used in the response of the webhook
+     * @throws: ResponseStatusException is some check is not valid
+     */
+    open suspend fun handlePostSale(
+        httpHeaders: HttpHeaders,
+        jsonBody: String,
+    ): String {
+        if (!isValidOgoneRequest(httpHeaders, jsonBody)) {
+            throw ResponseStatusException(HttpStatus.OK, "Request is not valid")
+        }
+        val ogoneDirectPaymentWebhookRequest =
+            Mapper.get().readValue(
+                jsonBody,
+                OgoneDirectPaymentWebhookRequest::class.java,
+            )
+        val orderId = ogoneDirectPaymentWebhookRequest.payment.paymentOutput.references.merchantReference
         if (isUUID(orderId)) {
-            val pspId = serverHttpRequest.queryParams[OgoneDirectPaymentConstants.PAYMENT_PROPERTY_PSPID]?.get(0)
-            if (!StringUtils.isBlank(pspId)) {
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request is not from payment provider")
-            }
-
-            val status = serverHttpRequest.queryParams[OgoneDirectPaymentConstants.PAYMENT_PROPERTY_STATUS]?.get(0)?.toInt()
+            val status = ogoneDirectPaymentWebhookRequest.payment.statusOutput.statusCode
             if (status != OgoneDirectPaymentState.SUCCESS.status &&
                 status != OgoneDirectPaymentState.PENDING.status &&
                 status != OgoneDirectPaymentState.PENDING1.status &&
                 status != OgoneDirectPaymentState.PENDING2.status
             ) {
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request has not the correct status: $status")
+                throw ResponseStatusException(HttpStatus.OK, "Request has not the correct status: $status")
             }
 
             val objectsApiTask = getObjectsApiTaak(UUID.fromString(orderId))
             if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
                 return "Task is already completed"
-            }
-
-            // validate ogone request
-            val pspIdFromTask =
-                objectsApiTask.record.data.ogonebetaling?.pspid
-                    ?: return "Task does not have a pspId"
-
-            if (!isValidOgoneRequest(serverHttpRequest, pspIdFromTask)) {
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Request is not valid")
             }
 
             val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
@@ -143,7 +164,7 @@ open class OgoneDirectPaymentService(
         val objectsApiTask = objectsApiClient.getObjectById<TaakObjectV2>(taskId.toString())
         if (objectsApiTask == null) {
             throw ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
+                HttpStatus.OK,
                 String.format("Taak kan niet gevonden worden", taskId),
             )
         }
@@ -151,47 +172,26 @@ open class OgoneDirectPaymentService(
     }
 
     private fun isValidOgoneRequest(
-        serverHttpRequest: ServerHttpRequest,
-        pspId: String,
+        httpHeaders: HttpHeaders,
+        bodyOfRequest: String,
     ): Boolean {
-        val queryStringParameters = serverHttpRequest.queryParams
-        val fields = ArrayList<OgoneDirectPaymentField>()
-        queryStringParameters.forEach {
-            // filter out only the accepted parameters
-            val uppercaseKey = it.key.uppercase()
-            if (ogoneDirectPaymentModuleConfiguration.properties.shaOutParameters.contains(uppercaseKey)) {
-                fields.add(OgoneDirectPaymentField(uppercaseKey, it.value[0]))
+        val requestHeaders = mutableListOf<RequestHeader>()
+        httpHeaders.forEach {
+            if (ogoneDirectPaymentModuleConfiguration.properties.webhookHeaders.contains(it.key)) {
+                requestHeaders.add(RequestHeader(it.key, it.value[0]))
             }
         }
 
-        val paymentProfile = ogoneDirectPaymentModuleConfiguration.properties.getPaymentProfileByPspPid(pspId) ?: return false
-        val hashOutParameter = hashParameters(fields, paymentProfile.shaOutKey, paymentProfile.shaVersion).uppercase()
-        val shaOutKey = serverHttpRequest.queryParams[OgoneDirectPaymentConstants.PAYMENT_PROPERTY_SHASIGN]?.get(0)
-
-        return hashOutParameter == shaOutKey
+        try {
+            webhookHelper.unmarshal(bodyOfRequest, requestHeaders)
+            return true
+        } catch (e: SignatureValidationException) {
+            return false
+        }
     }
 
     companion object {
         private val logger: KLogger = KotlinLogging.logger {}
-
-        fun hashParameters(
-            paymentsParameters: List<OgoneDirectPaymentField>,
-            shaKey: String,
-            shaVersion: String,
-        ): String {
-            val parametersConcatenation = StringBuilder()
-            paymentsParameters
-                .sortedBy { it.name }
-                .filterNot { field -> field.value.isEmpty() }
-                .forEach { field ->
-                    parametersConcatenation
-                        .append(field.name.uppercase(Locale.getDefault()))
-                        .append("=")
-                        .append(field.value)
-                        .append(shaKey)
-                }
-            return CoreUtils.createHash(parametersConcatenation.toString(), shaVersion)
-        }
 
         fun isUUID(orderId: String?): Boolean {
             return try {

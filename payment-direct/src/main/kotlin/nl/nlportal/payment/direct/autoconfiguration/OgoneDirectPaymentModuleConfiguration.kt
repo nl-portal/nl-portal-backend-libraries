@@ -15,7 +15,6 @@
  */
 package nl.nlportal.payment.direct.autoconfiguration
 
-import nl.nlportal.core.util.ShaVersion
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.payment.direct.ogone", ignoreUnknownFields = true)
@@ -27,6 +26,7 @@ data class OgoneDirectPaymentModuleConfiguration(
 data class OgonePaymentDirectProperties(
     var url: String,
     val shaOutParameters: List<String>,
+    val webhookHeaders: List<String>,
     val configurations: Map<String, OgonePaymentDirectProfile> = mapOf(),
 ) {
     fun getPaymentProfile(profileIdentifier: String): OgonePaymentDirectProfile? {
@@ -50,6 +50,6 @@ data class OgonePaymentDirectProfile(
     val apiKey: String = "",
     val apiSecret: String = "",
     val returnUrl: String = "",
-    val shaOutKey: String = "",
-    val shaVersion: String = ShaVersion.SHA1.version,
+    val webhookApiKey: String = "",
+    val webhookApiSecret: String = "",
 )

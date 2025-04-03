@@ -18,7 +18,8 @@ package nl.nlportal.payment.direct.api
 import nl.nlportal.payment.direct.service.OgoneDirectPaymentService
 import org.springframework.http.ResponseEntity
 import org.springframework.http.server.reactive.ServerHttpRequest
-import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
@@ -28,12 +29,16 @@ import org.springframework.web.server.ResponseStatusException
 class OgoneDirectPaymentController(
     private val ogoneDirectPaymentService: OgoneDirectPaymentService,
 ) {
-    @GetMapping(value = ["/payment/direct/ogone/postsale"])
-    suspend fun postSale(httpServletRequest: ServerHttpRequest): ResponseEntity<Any> {
+    @PostMapping(value = ["/payment/direct/ogone/postsale"])
+    suspend fun postSale(
+        httpServletRequest: ServerHttpRequest,
+        @RequestBody ogoneDirectPaymentWebhookRequest: String,
+    ): ResponseEntity<Any> {
         try {
             return ResponseEntity.ok(
                 ogoneDirectPaymentService.handlePostSale(
-                    httpServletRequest,
+                    httpServletRequest.headers,
+                    ogoneDirectPaymentWebhookRequest,
                 ),
             )
         } catch (exception: ResponseStatusException) {
