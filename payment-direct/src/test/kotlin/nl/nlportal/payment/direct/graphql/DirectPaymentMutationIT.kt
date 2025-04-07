@@ -96,6 +96,43 @@ internal class DirectPaymentMutationIT(
             )
     }
 
+    @Test
+    @WithBurgerUser("123")
+    fun doDirectPaymentWithInvalidIdentifier() {
+        val mutation =
+            """
+            mutation {
+                doDirectPayment(
+                    paymentRequest: { 
+                        identifier: "invalid-identifier", 
+                        amount: 100.25, 
+                        orderId: "123456", 
+                        reference: "12345",
+                    }
+                ) {
+                redirectUrl,
+                }
+            }
+            """.trimIndent()
+
+        val basePath = "$.errors"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(mutation)
+            .exchange()
+            .expectBody()
+            .consumeWith(Consumer { t -> logger.info { t } })
+            .jsonPath(basePath).exists()
+            .jsonPath(
+                "$basePath[0].message",
+            ).isEqualTo(
+                "Exception while fetching data (/doDirectPayment) : 400 BAD_REQUEST \"Could not found direct payment profile for the identifier DirectPaymentRequest(identifier=invalid-identifier, amount=100.25, reference=12345, orderId=123456, langId=null, returnUrl=null).identifier\"",
+            )
+    }
+
     fun setupMockObjectsApiServer() {
         val dispatcher: Dispatcher =
             object : Dispatcher() {

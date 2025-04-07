@@ -27,6 +27,7 @@ data class DirectPaymentProperties(
     var url: String,
     val shaOutParameters: List<String>,
     val webhookHeaders: List<String>,
+    val webhookUrl: String? = null,
     val configurations: Map<String, DirectPaymentProfile> = mapOf(),
 ) {
     fun getPaymentProfile(profileIdentifier: String): DirectPaymentProfile? {

@@ -17,14 +17,15 @@ package nl.nlportal.payment.direct.service
 
 import com.onlinepayments.CommunicatorConfiguration
 import com.onlinepayments.Factory
-import com.onlinepayments.RequestHeader
-import com.onlinepayments.defaultimpl.AuthorizationType
-import com.onlinepayments.defaultimpl.DefaultMarshaller
+import com.onlinepayments.authentication.AuthorizationType
+import com.onlinepayments.communication.RequestHeader
 import com.onlinepayments.domain.AmountOfMoney
 import com.onlinepayments.domain.CreateHostedCheckoutRequest
+import com.onlinepayments.domain.Feedbacks
 import com.onlinepayments.domain.HostedCheckoutSpecificInput
 import com.onlinepayments.domain.Order
 import com.onlinepayments.domain.OrderReferences
+import com.onlinepayments.json.DefaultMarshaller
 import com.onlinepayments.webhooks.InMemorySecretKeyStore
 import com.onlinepayments.webhooks.SignatureValidationException
 import com.onlinepayments.webhooks.WebhooksHelper
@@ -104,6 +105,13 @@ open class DirectPaymentService(
                             .withLocale(paymentRequest.langId ?: paymentDirectProfile.language)
                             .withReturnUrl(paymentRequest.returnUrl ?: paymentDirectProfile.returnUrl),
                     )
+
+            // if webhookUrl property is configured, set webhook url in the request. Benefit is dynamically set the webhook url per environment.
+            directPaymentModuleConfiguration.properties.webhookUrl?.let {
+                checkoutRequest.withFeedbacks(
+                    Feedbacks().withWebhookUrl(it),
+                )
+            }
 
             val response = merchantClient.hostedCheckout().createHostedCheckout(checkoutRequest)
 
