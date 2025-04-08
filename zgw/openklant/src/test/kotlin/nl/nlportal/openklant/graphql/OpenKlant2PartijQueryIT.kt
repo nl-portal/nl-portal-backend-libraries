@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.treeToValue
 import kotlinx.coroutines.test.runTest
+import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.openklant.client.domain.PersoonsIdentificatie
@@ -122,6 +123,85 @@ class OpenKlant2PartijQueryIT(
             assertEquals(SoortPartij.PERSOON.name, responsePartij?.get("soortPartij")?.textValue())
             assertDoesNotThrow { objectMapper.treeToValue<PersoonsIdentificatie>(responsePartij!!.get("partijIdentificatie")) }
             assertEquals("Lucas Boom", responsePartij?.requiredAt("/partijIdentificatie/volledigeNaam")?.textValue())
+        }
+
+    @Test
+    @WithBedrijfUser(
+        kvkNummer = "14127293",
+    )
+    fun `should find Partij for authenticated user as bedrijf`() =
+        runTest {
+            // when
+            val responseBody =
+                webTestClient
+                    .post()
+                    .uri { builder ->
+                        builder
+                            .path("/graphql")
+                            .build()
+                    }
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/findUserPartij.gql")))
+                    .exchange()
+                    .expectStatus().isOk
+                    .expectBody()
+                    .returnResult()
+                    .responseBodyContent
+                    ?.toString(Charset.defaultCharset())
+
+            val responsePartij =
+                objectMapper
+                    .readValue<JsonNode>(responseBody!!)
+                    .get("data")
+                    ?.get("findUserPartij")
+
+            // then
+            verify(openKlant2Service, times(1)).findPartijByAuthentication(any())
+
+            assertNotNull(responsePartij)
+            assertEquals(SoortPartij.ORGANISATIE.name, responsePartij?.get("soortPartij")?.textValue())
+            assertDoesNotThrow { objectMapper.treeToValue<PersoonsIdentificatie>(responsePartij!!.get("partijIdentificatie")) }
+            assertEquals("Ritense", responsePartij?.requiredAt("/partijIdentificatie/naam")?.textValue())
+        }
+
+    @Test
+    @WithBedrijfUser(
+        kvkNummer = "14127293",
+        vestigingsNummer = "000037143557",
+    )
+    fun `should find Partij for authenticated user as bedrijf with vestigingsnummer`() =
+        runTest {
+            // when
+            val responseBody =
+                webTestClient
+                    .post()
+                    .uri { builder ->
+                        builder
+                            .path("/graphql")
+                            .build()
+                    }
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/findUserPartij.gql")))
+                    .exchange()
+                    .expectStatus().isOk
+                    .expectBody()
+                    .returnResult()
+                    .responseBodyContent
+                    ?.toString(Charset.defaultCharset())
+
+            val responsePartij =
+                objectMapper
+                    .readValue<JsonNode>(responseBody!!)
+                    .get("data")
+                    ?.get("findUserPartij")
+
+            // then
+            verify(openKlant2Service, times(1)).findPartijByAuthentication(any())
+
+            assertNotNull(responsePartij)
+            assertEquals(SoortPartij.ORGANISATIE.name, responsePartij?.get("soortPartij")?.textValue())
+            assertDoesNotThrow { objectMapper.treeToValue<PersoonsIdentificatie>(responsePartij!!.get("partijIdentificatie")) }
+            assertEquals("Ritense", responsePartij?.requiredAt("/partijIdentificatie/naam")?.textValue())
         }
 
     @Test

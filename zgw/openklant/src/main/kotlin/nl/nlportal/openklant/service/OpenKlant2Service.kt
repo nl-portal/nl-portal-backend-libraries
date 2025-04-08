@@ -16,6 +16,8 @@
 package nl.nlportal.openklant.service
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import nl.nlportal.commonground.authentication.BedrijfAuthentication
+import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
 import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdres
@@ -25,9 +27,13 @@ import nl.nlportal.openklant.client.domain.OpenKlant2Partij
 import nl.nlportal.openklant.client.domain.OpenKlant2PartijIdentificator
 import nl.nlportal.openklant.client.domain.OpenKlant2PartijIdentificatorenFilters
 import nl.nlportal.openklant.client.domain.OpenKlant2PartijenFilters
+import nl.nlportal.openklant.client.domain.OpenKlant2SubIdentificatorVan
 import nl.nlportal.openklant.client.domain.OpenKlant2UUID
 import nl.nlportal.openklant.client.domain.PartijExpandOptions.DIGITALE_ADRESSEN
 import nl.nlportal.openklant.client.domain.PartijExpandOptions.BETROKKENEN
+import nl.nlportal.openklant.client.domain.PartijIdentificatorCodeRegister
+import nl.nlportal.openklant.client.domain.PartijIdentificatorCodeSoort
+import nl.nlportal.openklant.client.domain.PartijIdentificatorCodeType
 import nl.nlportal.openklant.client.domain.asSoortPartij
 import nl.nlportal.openklant.client.path.DigitaleAdressen
 import nl.nlportal.openklant.client.path.KlantContacten
@@ -41,14 +47,14 @@ class OpenKlant2Service(
     private val openKlant2Client: OpenKlant2KlantinteractiesClient,
 ) {
     suspend fun findPartijByAuthentication(authentication: CommonGroundAuthentication): OpenKlant2Partij? {
-        val searchVariables =
-            listOf(
-                OpenKlant2PartijenFilters.SOORT_PARTIJ to authentication.asSoortPartij(),
-                OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_OBJECT_ID to authentication.userId,
-            )
+        val searchVariables = searchVariables(authentication)
 
         try {
-            return openKlant2Client.path<Partijen>().get(searchVariables)?.singleOrNull()
+            val partijResult = openKlant2Client.path<Partijen>().get(searchVariables)
+            if (partijResult == null || partijResult.isEmpty()) {
+                return null
+            }
+            return partijResult[0]
         } catch (ex: WebClientResponseException) {
             logger.debug("Failed to find Partij: ${ex.responseBodyAsString}", ex)
             return null
@@ -71,9 +77,7 @@ class OpenKlant2Service(
         val partijIdentificator =
             OpenKlant2PartijIdentificator(
                 partijIdentificator =
-                    OpenKlant2Identificator(
-                        objectId = authentication.userId,
-                    ),
+                    createPartijIndicator(authentication),
             )
         val partijResponse =
             try {
@@ -87,7 +91,26 @@ class OpenKlant2Service(
                                         .copy(
                                             identificeerdePartij = OpenKlant2IdentificeerdePartij(it.uuid!!),
                                         ),
-                                )
+                                ).also {
+                                    val vestigingsNummer = authentication.getVestigingsNummer()
+                                    if (vestigingsNummer != null) {
+                                        openKlant2Client
+                                            .path<PartijIdentificatoren>()
+                                            .create(
+                                                OpenKlant2PartijIdentificator(
+                                                    identificeerdePartij = OpenKlant2IdentificeerdePartij(it.identificeerdePartij?.uuid!!),
+                                                    subIdentificatorVan = OpenKlant2SubIdentificatorVan(it.uuid!!),
+                                                    partijIdentificator =
+                                                        OpenKlant2Identificator(
+                                                            objectId = vestigingsNummer,
+                                                            codeSoortObjectId = PartijIdentificatorCodeSoort.VESTIGINGSNUMMER.soort,
+                                                            codeObjecttype = PartijIdentificatorCodeType.VESTIGING.type,
+                                                            codeRegister = PartijIdentificatorCodeRegister.HR.register,
+                                                        ),
+                                                ),
+                                            )
+                                    }
+                                }
                         } catch (ex: WebClientResponseException) {
                             logger.debug("Failed to create PartijIdentificator")
                             openKlant2Client.path<Partijen>().delete(it.uuid!!)
@@ -286,6 +309,65 @@ class OpenKlant2Service(
             .get(klantContactId)?.let {
                 KlantContactResponse.fromHadKlantContact(it)
             }
+    }
+
+    private fun createPartijIndicator(authentication: CommonGroundAuthentication): OpenKlant2Identificator {
+        return when (authentication) {
+            is BurgerAuthentication -> {
+                OpenKlant2Identificator(
+                    objectId = authentication.userId,
+                    codeSoortObjectId = PartijIdentificatorCodeSoort.BSN.soort,
+                    codeObjecttype = PartijIdentificatorCodeType.NATUURLIJKPERSOON.type,
+                    codeRegister = PartijIdentificatorCodeRegister.BRP.register,
+                )
+            }
+            is BedrijfAuthentication -> {
+                OpenKlant2Identificator(
+                    objectId = authentication.userId,
+                    codeSoortObjectId = PartijIdentificatorCodeSoort.KVKNUMMER.soort,
+                    codeObjecttype = PartijIdentificatorCodeType.NIETNATUURLIJKPERSOON.type,
+                    codeRegister = PartijIdentificatorCodeRegister.HR.register,
+                )
+            }
+            else -> throw IllegalArgumentException("Unsupported authentication type: ${authentication::class.qualifiedName}")
+        }
+    }
+
+    private fun searchVariables(authentication: CommonGroundAuthentication): List<Pair<OpenKlant2PartijenFilters, String>> {
+        return when (authentication) {
+            is BurgerAuthentication -> {
+                listOf(
+                    OpenKlant2PartijenFilters.SOORT_PARTIJ to authentication.asSoortPartij(),
+                    OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_OBJECT_ID to authentication.userId,
+                    OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_CODE_OBJECTTYPE to PartijIdentificatorCodeType.NATUURLIJKPERSOON.type,
+                    OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_CODE_SOORT_OBJECT_ID to PartijIdentificatorCodeSoort.BSN.soort,
+                    OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_CODE_REGISTER to PartijIdentificatorCodeRegister.BRP.register,
+                )
+            }
+
+            is BedrijfAuthentication -> {
+                val vestigingsNummer = authentication.getVestigingsNummer()
+                if (vestigingsNummer != null) {
+                    listOf(
+                        OpenKlant2PartijenFilters.SOORT_PARTIJ to authentication.asSoortPartij(),
+                        OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_OBJECT_ID to authentication.userId,
+                        OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_CODE_OBJECTTYPE to PartijIdentificatorCodeType.VESTIGING.type,
+                        OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_CODE_SOORT_OBJECT_ID to PartijIdentificatorCodeSoort.VESTIGINGSNUMMER.soort,
+                        OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_CODE_REGISTER to PartijIdentificatorCodeRegister.HR.register,
+                    )
+                } else {
+                    listOf(
+                        OpenKlant2PartijenFilters.SOORT_PARTIJ to authentication.asSoortPartij(),
+                        OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_OBJECT_ID to authentication.userId,
+                        OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_CODE_OBJECTTYPE to PartijIdentificatorCodeType.NIETNATUURLIJKPERSOON.type,
+                        OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_CODE_SOORT_OBJECT_ID to PartijIdentificatorCodeSoort.KVKNUMMER.soort,
+                        OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_CODE_REGISTER to PartijIdentificatorCodeRegister.HR.register,
+                    )
+                }
+            }
+
+            else -> throw IllegalArgumentException("Unsupported authentication type: ${authentication::class.qualifiedName}")
+        }
     }
 
     companion object {
