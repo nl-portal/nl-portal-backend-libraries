@@ -50,11 +50,7 @@ class OpenKlant2Service(
         val searchVariables = searchVariables(authentication)
 
         try {
-            val partijResult = openKlant2Client.path<Partijen>().get(searchVariables)
-            if (partijResult == null || partijResult.isEmpty()) {
-                return null
-            }
-            return partijResult[0]
+            return openKlant2Client.path<Partijen>().get(searchVariables)?.firstOrNull()
         } catch (ex: WebClientResponseException) {
             logger.debug("Failed to find Partij: ${ex.responseBodyAsString}", ex)
             return null
