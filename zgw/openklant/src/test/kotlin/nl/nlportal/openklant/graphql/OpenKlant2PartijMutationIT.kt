@@ -23,6 +23,7 @@ import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.openklant.graphql.domain.PartijType.PERSOON
+import nl.nlportal.openklant.graphql.domain.PartijType.ORGANISATIE
 import nl.nlportal.openklant.service.OpenKlant2Service
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -235,7 +236,7 @@ class OpenKlant2PartijMutationIT(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/createUserPartij.gql")))
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/createBedrijfPartij.gql")))
                     .exchange()
                     .expectStatus().isOk
                     .expectBody()
@@ -253,24 +254,12 @@ class OpenKlant2PartijMutationIT(
             verify(openKlant2Service, times(1)).createPartijWithIdentificator(any(), any())
 
             assertTrue(createPartijResult is ObjectNode)
-            assertEquals(PERSOON.name, createPartijResult!!.requiredAt("/type")?.textValue())
+            assertEquals(ORGANISATIE.name, createPartijResult!!.requiredAt("/type")?.textValue())
             assertTrue(createPartijResult.requiredAt("/indicatieActief").booleanValue())
             assertTrue(createPartijResult.requiredAt("/indicatieGeheimhouding").booleanValue())
             assertEquals(
-                "Bob de Bouwer",
-                createPartijResult.requiredAt("/persoonsIdentificatie/volledigeNaam").textValue(),
-            )
-            assertEquals(
-                "Bob",
-                createPartijResult.requiredAt("/persoonsIdentificatie/contactnaam/voornaam").textValue(),
-            )
-            assertEquals(
-                "de",
-                createPartijResult.requiredAt("/persoonsIdentificatie/contactnaam/voorvoegselAchternaam").textValue(),
-            )
-            assertEquals(
-                "Bouwer",
-                createPartijResult.requiredAt("/persoonsIdentificatie/contactnaam/achternaam").textValue(),
+                "Gemeente Den Haag",
+                createPartijResult.requiredAt("/organisatieIdentificatie/naam").textValue(),
             )
         }
 
@@ -292,7 +281,7 @@ class OpenKlant2PartijMutationIT(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/createUserPartij.gql")))
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/createBedrijfPartij.gql")))
                     .exchange()
                     .expectStatus().isOk
                     .expectBody()
@@ -310,24 +299,12 @@ class OpenKlant2PartijMutationIT(
             verify(openKlant2Service, times(1)).createPartijWithIdentificator(any(), any())
 
             assertTrue(createPartijResult is ObjectNode)
-            assertEquals(PERSOON.name, createPartijResult!!.requiredAt("/type")?.textValue())
+            assertEquals(ORGANISATIE.name, createPartijResult!!.requiredAt("/type")?.textValue())
             assertTrue(createPartijResult.requiredAt("/indicatieActief").booleanValue())
             assertTrue(createPartijResult.requiredAt("/indicatieGeheimhouding").booleanValue())
             assertEquals(
-                "Bob de Bouwer",
-                createPartijResult.requiredAt("/persoonsIdentificatie/volledigeNaam").textValue(),
-            )
-            assertEquals(
-                "Bob",
-                createPartijResult.requiredAt("/persoonsIdentificatie/contactnaam/voornaam").textValue(),
-            )
-            assertEquals(
-                "de",
-                createPartijResult.requiredAt("/persoonsIdentificatie/contactnaam/voorvoegselAchternaam").textValue(),
-            )
-            assertEquals(
-                "Bouwer",
-                createPartijResult.requiredAt("/persoonsIdentificatie/contactnaam/achternaam").textValue(),
+                "Gemeente Den Haag",
+                createPartijResult.requiredAt("/organisatieIdentificatie/naam").textValue(),
             )
         }
 
