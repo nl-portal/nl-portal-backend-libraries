@@ -63,6 +63,11 @@ class SearchZakenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
     }
 
     override fun ofIdentificatie(identificatie: String): SearchZaken {
+        queryParams.add("identificatie", identificatie)
+        return this
+    }
+
+    override fun ofIdenfitifactieContains(identificatie: String): SearchZaken {
         queryParams.add("identificatie__icontains", identificatie)
         return this
     }

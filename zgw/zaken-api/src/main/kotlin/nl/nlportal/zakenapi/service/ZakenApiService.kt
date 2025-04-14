@@ -53,6 +53,7 @@ class ZakenApiService(
         isOpen: Boolean? = null,
         identificatie: String? = null,
         omschrijving: String? = null,
+        identificatieContains: String? = null,
     ): ZaakPage {
         val request =
             zakenApiClient.zoeken()
@@ -69,6 +70,10 @@ class ZakenApiService(
 
         identificatie?.let {
             request.ofIdentificatie(identificatie)
+        }
+
+        identificatieContains?.let {
+            request.ofIdenfitifactieContains(identificatieContains)
         }
 
         omschrijving?.let {

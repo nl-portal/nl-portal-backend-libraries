@@ -277,6 +277,49 @@ internal class ZaakQueryIT(
 
     @Test
     @WithBurgerUser("123")
+    fun getZakenFilterOfIdentificatieContains() {
+        val query =
+            """
+            query {
+                getZaken(page: 1, identificatieContains: "ZAAK-2021") {
+                number
+                size
+                totalPages
+                totalElements
+                numberOfElements
+                content {
+                        uuid,
+                        identificatie,
+                        omschrijving,
+                        startdatum
+                    }
+                }
+            }
+            """.trimIndent()
+
+        val basePath = "$.data.getZaken"
+        val resultPath = "$basePath.content[0]"
+
+        val response =
+            testClient.post()
+                .uri("/graphql")
+                .accept(APPLICATION_JSON)
+                .contentType(MediaType("application", "graphql"))
+                .bodyValue(query)
+                .exchange()
+                .expectBody()
+                .consumeWith(Consumer { t -> logger.info { t } })
+
+        response
+            .jsonPath(basePath).exists()
+            .jsonPath("$resultPath.uuid").isEqualTo("5d479908-fbb7-49c2-98c9-9afecf8de79a")
+            .jsonPath("$resultPath.identificatie").isEqualTo("ZAAK-2021-0000000003")
+            .jsonPath("$resultPath.omschrijving").isEqualTo("Voorbeeld afgesloten zaak 1")
+            .jsonPath("$resultPath.startdatum").isEqualTo("2021-09-16")
+    }
+
+    @Test
+    @WithBurgerUser("123")
     fun getZakenFilterOfOmschrijving() {
         val query =
             """
