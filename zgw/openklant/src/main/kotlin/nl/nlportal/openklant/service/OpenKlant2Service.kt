@@ -210,10 +210,8 @@ class OpenKlant2Service(
             previousDigitaleAdres.copy(
                 adres = digitaleAdres.adres,
                 omschrijving = digitaleAdres.omschrijving,
-                soortDigitaalAdres = digitaleAdres.soortDigitaalAdres,
-                verstrektDoorBetrokkene = digitaleAdres.verstrektDoorBetrokkene,
-                verstrektDoorPartij = digitaleAdres.verstrektDoorPartij,
             )
+
         val digitaleAdresResponse =
             try {
                 openKlant2Client
