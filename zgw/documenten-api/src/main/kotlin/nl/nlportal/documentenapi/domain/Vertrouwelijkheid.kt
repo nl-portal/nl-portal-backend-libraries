@@ -28,4 +28,5 @@ enum class Vertrouwelijkheid(
     CONFIDENTIEEL("confidentieel"),
     GEHEIM("geheim"),
     ZEER_GEHEIM("zeer_geheim"),
+    GEEN(""),
 }
