@@ -73,8 +73,8 @@ class SearchZoekenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
         kvkNummer: String,
         vestigingsNummer: String,
     ): SearchZaken {
-        bodyValue.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__vestigingsNummer", vestigingsNummer)
-        bodyValue.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__kvkNummer", kvkNummer)
+        bodyValue.add("rol__betrokkeneIdentificatie__vestiging__vestigingsNummer", vestigingsNummer)
+        bodyValue.add("rol__betrokkeneIdentificatie__vestiging__kvkNummer", kvkNummer)
         return this
     }
 
