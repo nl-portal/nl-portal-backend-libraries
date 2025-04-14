@@ -39,6 +39,7 @@ open class ZaakQuery(val zakenApiService: ZakenApiService) : Query {
         zaakTypeUrl: String? = null,
         isOpen: Boolean? = null,
         identificatie: String? = null,
+        omschrijving: String? = null,
     ): ZaakPage {
         return zakenApiService.getZaken(
             page = page ?: 1,
@@ -47,6 +48,7 @@ open class ZaakQuery(val zakenApiService: ZakenApiService) : Query {
             zaakTypeUrl = zaakTypeUrl,
             isOpen = isOpen,
             identificatie = identificatie,
+            omschrijving = omschrijving,
         )
     }
 

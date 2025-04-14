@@ -49,9 +49,10 @@ class ZakenApiService(
         page: Int,
         pageSize: Int? = null,
         authentication: CommonGroundAuthentication,
-        zaakTypeUrl: String?,
-        isOpen: Boolean?,
-        identificatie: String?,
+        zaakTypeUrl: String? = null,
+        isOpen: Boolean? = null,
+        identificatie: String? = null,
+        omschrijving: String? = null,
     ): ZaakPage {
         val request =
             zakenApiClient.zoeken()
@@ -68,6 +69,10 @@ class ZakenApiService(
 
         identificatie?.let {
             request.ofIdentificatie(identificatie)
+        }
+
+        omschrijving?.let {
+            request.ofOmschrijving(it)
         }
 
         authenticationMachtigingsDienstService.zaakTypes(authentication)?.let {

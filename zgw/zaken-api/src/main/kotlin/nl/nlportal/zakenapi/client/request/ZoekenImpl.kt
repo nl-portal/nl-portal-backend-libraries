@@ -60,7 +60,12 @@ class SearchZoekenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
     }
 
     override fun ofIdentificatie(identificatie: String): SearchZaken {
-        bodyValue.add("identificatie", identificatie)
+        bodyValue.add("identificatie__icontains", identificatie)
+        return this
+    }
+
+    override fun ofOmschrijving(omschrijving: String): SearchZaken {
+        bodyValue.add("omschrijving", omschrijving)
         return this
     }
 
@@ -68,8 +73,8 @@ class SearchZoekenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
         kvkNummer: String,
         vestigingsNummer: String,
     ): SearchZaken {
-        bodyValue.add("rol__betrokkeneIdentificatie__vestiging__vestigingsNummer", vestigingsNummer)
-        bodyValue.add("rol__betrokkeneIdentificatie__vestiging__kvkNummer", kvkNummer)
+        bodyValue.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__vestigingsNummer", vestigingsNummer)
+        bodyValue.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__kvkNummer", kvkNummer)
         return this
     }
 
