@@ -92,7 +92,7 @@ class DmnClient(
     suspend fun getDecision(dmnRequest: DmnRequest): List<Map<String, DmnResponse>> {
         return webClient
             .post()
-            .uri("/engine-rest/decision-definition/key/${dmnRequest.key}/evaluate")
+            .uri("/decision-definition/key/${dmnRequest.key}/evaluate")
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
             .body(
