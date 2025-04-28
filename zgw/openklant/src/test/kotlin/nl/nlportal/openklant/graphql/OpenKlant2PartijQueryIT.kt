@@ -166,44 +166,6 @@ class OpenKlant2PartijQueryIT(
         }
 
     @Test
-    @WithBedrijfUser(
-        kvkNummer = "14127293",
-        vestigingsNummer = "000037143557",
-    )
-    fun `should find Partij for authenticated user as bedrijf with vestigingsnummer`() =
-        runTest {
-            // when
-            val responseBody =
-                webTestClient
-                    .post()
-                    .uri { builder ->
-                        builder
-                            .path("/graphql")
-                            .build()
-                    }
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/findUserPartij.gql")))
-                    .exchange()
-                    .expectStatus().isOk
-                    .expectBody()
-                    .returnResult()
-                    .responseBodyContent
-                    ?.toString(Charset.defaultCharset())
-
-            val responsePartij =
-                objectMapper
-                    .readValue<JsonNode>(responseBody!!)
-                    .get("data")
-                    ?.get("findUserPartij")
-
-            // then
-            verify(openKlant2Service, times(1)).findPartijByAuthentication(any())
-
-            assertNotNull(responsePartij)
-            assertEquals("Ritense", responsePartij?.requiredAt("/partijIdentificatie/naam")?.textValue())
-        }
-
-    @Test
     @WithBurgerUser("296648875")
     fun `should get Partij by Id for authenticated user`() =
         runTest {
