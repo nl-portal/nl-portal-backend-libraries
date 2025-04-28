@@ -22,6 +22,7 @@ import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.core.util.Mapper
+import nl.nlportal.openklant.client.domain.OrganisatieIdentificatie
 import nl.nlportal.openklant.client.domain.PersoonsIdentificatie
 import nl.nlportal.openklant.client.domain.SoortPartij
 import nl.nlportal.openklant.service.OpenKlant2Service
@@ -160,7 +161,7 @@ class OpenKlant2PartijQueryIT(
 
             assertNotNull(responsePartij)
             assertEquals(SoortPartij.ORGANISATIE.name, responsePartij?.get("soortPartij")?.textValue())
-            assertDoesNotThrow { objectMapper.treeToValue<PersoonsIdentificatie>(responsePartij!!.get("partijIdentificatie")) }
+            assertDoesNotThrow { objectMapper.treeToValue<OrganisatieIdentificatie>(responsePartij!!.get("partijIdentificatie")) }
             assertEquals("Ritense", responsePartij?.requiredAt("/partijIdentificatie/naam")?.textValue())
         }
 
@@ -199,8 +200,6 @@ class OpenKlant2PartijQueryIT(
             verify(openKlant2Service, times(1)).findPartijByAuthentication(any())
 
             assertNotNull(responsePartij)
-            assertEquals(SoortPartij.ORGANISATIE.name, responsePartij?.get("soortPartij")?.textValue())
-            assertDoesNotThrow { objectMapper.treeToValue<PersoonsIdentificatie>(responsePartij!!.get("partijIdentificatie")) }
             assertEquals("Ritense", responsePartij?.requiredAt("/partijIdentificatie/naam")?.textValue())
         }
 

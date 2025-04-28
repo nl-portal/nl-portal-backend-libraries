@@ -50,7 +50,7 @@ class OpenKlant2Service(
         val searchVariables = searchVariables(authentication)
 
         try {
-            return openKlant2Client.path<Partijen>().get(searchVariables)?.firstOrNull()
+            return openKlant2Client.path<Partijen>().get(searchVariables)?.singleOrNull()
         } catch (ex: WebClientResponseException) {
             logger.debug("Failed to find Partij: ${ex.responseBodyAsString}", ex)
             return null
@@ -335,9 +335,6 @@ class OpenKlant2Service(
                 listOf(
                     OpenKlant2PartijenFilters.SOORT_PARTIJ to authentication.asSoortPartij(),
                     OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_OBJECT_ID to authentication.userId,
-                    OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_CODE_OBJECTTYPE to PartijIdentificatorCodeType.NATUURLIJKPERSOON.type,
-                    OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_CODE_SOORT_OBJECT_ID to PartijIdentificatorCodeSoort.BSN.soort,
-                    OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_CODE_REGISTER to PartijIdentificatorCodeRegister.BRP.register,
                 )
             }
 
@@ -346,18 +343,12 @@ class OpenKlant2Service(
                 if (vestigingsNummer != null) {
                     listOf(
                         OpenKlant2PartijenFilters.SOORT_PARTIJ to authentication.asSoortPartij(),
-                        OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_OBJECT_ID to authentication.userId,
-                        OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_CODE_OBJECTTYPE to PartijIdentificatorCodeType.VESTIGING.type,
-                        OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_CODE_SOORT_OBJECT_ID to PartijIdentificatorCodeSoort.VESTIGINGSNUMMER.soort,
-                        OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_CODE_REGISTER to PartijIdentificatorCodeRegister.HR.register,
+                        OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_OBJECT_ID to vestigingsNummer,
                     )
                 } else {
                     listOf(
                         OpenKlant2PartijenFilters.SOORT_PARTIJ to authentication.asSoortPartij(),
                         OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_OBJECT_ID to authentication.userId,
-                        OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_CODE_OBJECTTYPE to PartijIdentificatorCodeType.NIETNATUURLIJKPERSOON.type,
-                        OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_CODE_SOORT_OBJECT_ID to PartijIdentificatorCodeSoort.KVKNUMMER.soort,
-                        OpenKlant2PartijenFilters.PARTIJ_IDENTIFICATOR_CODE_REGISTER to PartijIdentificatorCodeRegister.HR.register,
                     )
                 }
             }
