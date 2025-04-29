@@ -1,0 +1,179 @@
+/*
+ * Copyright 2015-2023 Ritense BV, the Netherlands.
+ *
+ * Licensed under EUPL, Version 1.2 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package nl.nlportal.haalcentraal2.graphql
+
+import nl.nlportal.commonground.authentication.WithBurgerUser
+import nl.nlportal.haalcentraal2.TestHelper
+import nl.nlportal.haalcentraal2.TestHelper.verifyOnlyDataExists
+import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrConfig
+import nl.nlportal.haalcentraal2.autoconfiguration.HaalCentraal2ModuleConfiguration
+import okhttp3.mockwebserver.Dispatcher
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.RecordedRequest
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.MediaType
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
+import org.springframework.test.web.reactive.server.WebTestClient
+
+@SpringBootTest
+@AutoConfigureWebTestClient(timeout = "36000")
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
+internal class GemachtigdeQueryIT(
+    @Autowired private val testClient: WebTestClient,
+    @Autowired private val haalCentraal2ModuleConfiguration: HaalCentraal2ModuleConfiguration,
+    @Autowired private val haalCentraalHrClientConfig: HaalCentraalHrConfig,
+) {
+    companion object {
+        @JvmStatic
+        var server: MockWebServer? = null
+
+        @JvmStatic
+        var url: String = ""
+
+        @JvmStatic
+        @DynamicPropertySource
+        fun properties(propsRegistry: DynamicPropertyRegistry) {
+            propsRegistry.add("nl-portal.config.haalcentraal2.properties.url") { url }
+            propsRegistry.add("nl-portal.config.haalcentraal.hr.properties.url") { url }
+        }
+
+        @JvmStatic
+        @BeforeAll
+        fun beforeAll() {
+            server = MockWebServer()
+            server?.start()
+            url = server?.url("/").toString()
+        }
+
+        @JvmStatic
+        @AfterAll
+        fun afterAll() {
+            server?.shutdown()
+        }
+    }
+
+    @BeforeEach
+    internal fun setUp() {
+        setupMockServer()
+        url = server?.url("/").toString()
+        haalCentraal2ModuleConfiguration.properties.url = url
+        haalCentraalHrClientConfig.properties.url = url
+    }
+
+    @Test
+    @WithBurgerUser("318634776", gemachtigdeBsn = "999993847")
+    fun `getGemachtigde with bsn`() {
+        val query =
+            """
+            query {
+                getGemachtigdeV2 {
+                    persoon {
+                        burgerservicenummer,
+                        naam {
+                            geslachtsnaam,
+                            volledigeNaam,
+                        }
+                    },
+                    bedrijf {
+                        naam
+                    }
+                }
+            }
+            """.trimIndent()
+
+        val basePath = "$.data.getGemachtigdeV2"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(query)
+            .exchange()
+            .expectStatus().isOk
+            .verifyOnlyDataExists(basePath)
+            .jsonPath("$basePath.persoon.naam.volledigeNaam").isEqualTo("Pieter Jan de Vries")
+            .jsonPath("$basePath.persoon.naam.geslachtsnaam").isEqualTo("Vries")
+            .jsonPath("$basePath.bedrijf.naam").doesNotExist()
+    }
+
+    @Test
+    @WithBurgerUser("318634776", gemachtigdeKvk = "90012768")
+    fun `getGemachtigde with kvk`() {
+        val query =
+            """
+            query {
+                getGemachtigdeV2 {
+                    persoon {
+                        burgerservicenummer,
+                        naam {
+                            geslachtsnaam,
+                            volledigeNaam,
+                        },
+                    },
+                    bedrijf {
+                        naam
+                    }
+                }
+            }
+            """.trimIndent()
+
+        val basePath = "$.data.getGemachtigdeV2"
+
+        testClient.post()
+            .uri("/graphql")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(query)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody()
+            .jsonPath(basePath).exists()
+            .jsonPath("$basePath.bedrijf.naam").isEqualTo("Test bedrijf")
+            .jsonPath("$basePath.persoon.volledigeNaam").doesNotExist()
+    }
+
+    private fun setupMockServer() {
+        val dispatcher: Dispatcher =
+            object : Dispatcher() {
+                @Throws(InterruptedException::class)
+                override fun dispatch(request: RecordedRequest): MockResponse {
+                    val path = request.path?.substringBefore('?')
+                    val response =
+                        when (request.method + " " + path) {
+                            "POST /brp/personen" -> {
+                                TestHelper.mockResponseFromFile("/data/get-personen.json")
+                            }
+                            "GET /basisprofielen/90012768" ->
+                                TestHelper.mockResponseFromFile(
+                                    "/data/get-maatschappelijke-activiteiten.json",
+                                )
+                            else -> MockResponse().setResponseCode(404)
+                        }
+                    return response
+                }
+            }
+        server?.dispatcher = dispatcher
+    }
+}
