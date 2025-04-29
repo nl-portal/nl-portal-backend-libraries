@@ -41,6 +41,7 @@ include(
     "haalcentraal:haalcentraal-all",
     "haalcentraal:haalcentraal-brp",
     "haalcentraal:haalcentraal-hr",
+    "haalcentraal2",
     "klant",
     "klant-generiek",
     "klantcontactmomenten",
