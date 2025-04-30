@@ -71,8 +71,8 @@ class SearchZakenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
         kvkNummer: String,
         vestigingsNummer: String,
     ): SearchZaken {
-        queryParams.add("rol__betrokkeneIdentificatie__vestiging__vestigingsNummer", vestigingsNummer)
-        queryParams.add("rol__betrokkeneIdentificatie__vestiging__kvkNummer", kvkNummer)
+        queryParams.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__vestigingsNummer", vestigingsNummer)
+        queryParams.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__annIdentificatie", kvkNummer)
         return this
     }
 
