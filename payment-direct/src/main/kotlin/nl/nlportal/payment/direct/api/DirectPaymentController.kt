@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController
 class DirectPaymentController(
     private val directPaymentService: DirectPaymentService,
 ) {
-    @PostMapping(value = ["/payment/direct/ogone/postsale"])
+    @PostMapping(value = ["/payment/direct/postsale"])
     suspend fun postSale(
         httpServletRequest: ServerHttpRequest,
         @RequestBody ogoneDirectPaymentWebhookRequest: String,
