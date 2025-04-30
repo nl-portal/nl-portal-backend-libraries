@@ -104,7 +104,7 @@ internal class DirectPaymentControllerIT(
         headers.add("X-GCS-Signature", signature)
         headers.add("X-GCS-KeyId", directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
         webTestClient.post()
-            .uri("/api/public/payment/direct/ogone/postsale")
+            .uri(PAYMENT_DIRECT_POSTSALE_ENDPOINT)
             .headers {
                 it.addAll(headers)
             }
@@ -163,7 +163,7 @@ internal class DirectPaymentControllerIT(
         headers.add("X-GCS-Signature", signature)
         headers.add("X-GCS-KeyId", directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
         webTestClient.post()
-            .uri("/api/public/payment/direct/ogone/postsale")
+            .uri(PAYMENT_DIRECT_POSTSALE_ENDPOINT)
             .headers {
                 it.addAll(headers)
             }
@@ -218,7 +218,7 @@ internal class DirectPaymentControllerIT(
         headers.add("X-GCS-Signature", signature)
         headers.add("X-GCS-KeyId", directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
         webTestClient.post()
-            .uri("/api/public/payment/direct/ogone/postsale")
+            .uri(PAYMENT_DIRECT_POSTSALE_ENDPOINT)
             .headers {
                 it.addAll(headers)
             }
@@ -277,7 +277,7 @@ internal class DirectPaymentControllerIT(
         headers.add("X-GCS-Signature", signature)
         headers.add("X-GCS-KeyId", directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
         webTestClient.post()
-            .uri("/api/public/payment/direct/ogone/postsale")
+            .uri(PAYMENT_DIRECT_POSTSALE_ENDPOINT)
             .headers {
                 it.addAll(headers)
             }
@@ -315,6 +315,8 @@ internal class DirectPaymentControllerIT(
     }
 
     companion object {
+        const val PAYMENT_DIRECT_POSTSALE_ENDPOINT: String = "/api/public/payment/direct/postsale"
+
         fun createSignature(
             body: String,
             secretKey: String,

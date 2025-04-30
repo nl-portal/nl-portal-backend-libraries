@@ -135,7 +135,7 @@ open class DirectPaymentService(
         httpHeaders: HttpHeaders,
         jsonBody: String,
     ): String {
-        if (!isValidOgoneRequest(httpHeaders, jsonBody)) {
+        if (!isValidDirectRequest(httpHeaders, jsonBody)) {
             return "Request is not valid"
         }
         val ogoneDirectPaymentWebhookRequest =
@@ -179,7 +179,7 @@ open class DirectPaymentService(
         return objectsApiTask
     }
 
-    private fun isValidOgoneRequest(
+    private fun isValidDirectRequest(
         httpHeaders: HttpHeaders,
         bodyOfRequest: String,
     ): Boolean {
