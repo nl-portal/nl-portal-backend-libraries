@@ -58,6 +58,8 @@ class ThemaQueryIT(
                 .verifyOnlyDataExists(basePath)
                 .jsonPath("$basePath.number").isEqualTo(1)
                 .jsonPath("$resultPath.naam").isEqualTo("Parkeren")
+                .jsonPath("$resultPath.producttypen[0].uniformeProductNaam").isEqualTo("UPL-naam nog niet beschikbaar")
+                .jsonPath("$resultPath.producttypen[0].code").isEqualTo("PARKEREN")
         }
 
     @Test
@@ -77,6 +79,8 @@ class ThemaQueryIT(
                 .exchange()
                 .verifyOnlyDataExists(basePath)
                 .jsonPath("$basePath.naam").isEqualTo("Parkeren")
+                .jsonPath("$basePath.producttypen[0].uniformeProductNaam").isEqualTo("UPL-naam nog niet beschikbaar")
+                .jsonPath("$basePath.producttypen[0].code").isEqualTo("PARKEREN")
         }
 
     companion object {
