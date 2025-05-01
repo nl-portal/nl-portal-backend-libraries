@@ -1,15 +1,24 @@
 query {
-    getThemas {
-        uuid,
-        naam,
-        beschrijving,
-        gepubliceerd,
-        producttypen {
+    getThemas(
+        pageNumber: 1,
+        pageSize: 20
+     ){
+        number
+         size
+         totalElements
+         numberOfElements
+         content {
             uuid,
-            code,
-            uniformeProductNaam
-        },
-        aanmaakDatum,
-        updateDatum
+            naam,
+            beschrijving,
+            gepubliceerd,
+            producttypen {
+                uuid,
+                code,
+                uniformeProductNaam
+            },
+            aanmaakDatum,
+            updateDatum
+        }
     }
 }

@@ -17,7 +17,7 @@ package nl.nlportal.openproduct.client.domain
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import java.util.UUID
 
 data class OpenProductThema(
@@ -26,12 +26,12 @@ data class OpenProductThema(
     val beschrijving: String? = null,
     val gepubliceerd: Boolean? = false,
     @JsonProperty("hoofd_thema")
-    val hoofdThema: String,
+    val hoofdThema: String? = null,
     val producttypen: List<OpenProductThemaProductType> = emptyList(),
     @JsonProperty("aanmaak_datum")
-    val aanmaakDatum: LocalDateTime,
+    val aanmaakDatum: ZonedDateTime,
     @JsonProperty("update_datum")
-    val updateDatum: LocalDateTime,
+    val updateDatum: ZonedDateTime,
 )
 
 data class OpenProductThemaProductType(
@@ -44,9 +44,9 @@ data class OpenProductThemaProductType(
     val toegestaneStatussen: List<String> = emptyList(),
     val gepubliceerd: Boolean? = false,
     @JsonProperty("aanmaak_datum")
-    val aanmaakDatum: LocalDateTime,
+    val aanmaakDatum: ZonedDateTime,
     @JsonProperty("update_datum")
-    val updateDatum: LocalDateTime,
+    val updateDatum: ZonedDateTime,
 )
 
 enum class OpenProductThemasFilters(

@@ -8,8 +8,8 @@ nl-portal:
             enabled: true
             properties:
                 token: ac045222c9e7cde8120b48735560f9b920bb58cd
-                product-api-url: http://localhost:9010/producten/api/v1
-                product-type-api-url: http://localhost:9010/producttypen/api/v1
+                product-api-url: http://localhost:9070/producten/api/v1
+                product-type-api-url: http://localhost:9070/producttypen/api/v1
 
 logging:
     level:

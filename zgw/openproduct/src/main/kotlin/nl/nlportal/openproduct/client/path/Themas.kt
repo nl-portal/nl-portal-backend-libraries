@@ -15,35 +15,32 @@
  */
 package nl.nlportal.openproduct.client.path
 
-import nl.nlportal.openproduct.client.OpenProductClient
+import nl.nlportal.openproduct.client.OpenProductTypeClient
 import nl.nlportal.openproduct.client.domain.OpenProductThema
 import nl.nlportal.openproduct.client.domain.OpenProductThemasFilters
 import nl.nlportal.openproduct.client.domain.ResultPage
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.client.awaitBody
-import java.util.UUID
+import java.util.*
 
 class Themas(
-    val client: OpenProductClient,
+    val client: OpenProductTypeClient,
 ) : OpenProductPath() {
     override val path: String = "/themas/"
 
-    suspend fun get(searchFilters: List<Pair<OpenProductThemasFilters, Any>>? = null): List<OpenProductThema> {
-        val response: ResultPage<OpenProductThema> =
-            client
-                .webClient
-                .get()
-                .uri { uriBuilder ->
-                    uriBuilder
-                        .path(path)
-                        .applyFilters(searchFilters)
-                    uriBuilder.build()
-                }
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .awaitBody()
-
-        return response.results
+    suspend fun get(searchFilters: List<Pair<OpenProductThemasFilters, Any>>? = null): ResultPage<OpenProductThema> {
+        return client
+            .webClient
+            .get()
+            .uri { uriBuilder ->
+                uriBuilder
+                    .path(path)
+                    .applyFilters(searchFilters)
+                uriBuilder.build()
+            }
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .awaitBody()
     }
 
     suspend fun get(themaId: UUID): OpenProductThema? {
@@ -52,7 +49,7 @@ class Themas(
             .get()
             .uri { uriBuilder ->
                 uriBuilder
-                    .path("$path$themaId")
+                    .path("$path$themaId/")
                     .build()
             }
             .accept(MediaType.APPLICATION_JSON)

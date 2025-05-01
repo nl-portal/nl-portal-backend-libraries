@@ -15,21 +15,45 @@
  */
 package nl.nlportal.openproduct.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.openproduct.client.OpenProductClient
 import nl.nlportal.openproduct.client.OpenProductTypeClient
 import nl.nlportal.openproduct.client.domain.OpenProductThema
+import nl.nlportal.openproduct.client.domain.OpenProductThemasFilters
 import nl.nlportal.openproduct.client.path.Themas
+import nl.nlportal.openproduct.graphql.ThemasPage
 import java.util.UUID
 
 class OpenProductService(
     private val openProductClient: OpenProductClient,
     private val openProductTypeClient: OpenProductTypeClient,
 ) {
-    suspend fun getThemas(): List<OpenProductThema> {
-        return openProductClient.path<Themas>().get()
+    suspend fun getThemas(
+        pageNumber: Int,
+        pageSize: Int,
+    ): ThemasPage {
+        val searchVariables =
+            listOf(
+                OpenProductThemasFilters.PAGE to pageNumber.toString(),
+                OpenProductThemasFilters.PAGE_SIZE to pageSize.toString(),
+            )
+        return ThemasPage.fromResultPage(
+            pageNumber = pageNumber,
+            pageSize = pageSize,
+            resultPage = openProductTypeClient.path<Themas>().get(searchVariables),
+        )
     }
 
     suspend fun getThema(themaId: UUID): OpenProductThema? {
-        return openProductClient.path<Themas>().get(themaId)
+        try {
+            return openProductTypeClient.path<Themas>().get(themaId)
+        } catch (e: Exception) {
+            logger.error(e) { "Error getting thema $themaId" }
+        }
+        return null
+    }
+
+    companion object {
+        val logger = KotlinLogging.logger {}
     }
 }

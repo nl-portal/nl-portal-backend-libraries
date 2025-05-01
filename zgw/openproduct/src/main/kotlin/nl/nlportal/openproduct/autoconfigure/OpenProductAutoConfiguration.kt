@@ -52,6 +52,9 @@ class OpenProductAutoConfiguration {
         openProductClient: OpenProductClient,
         openProductTypeClient: OpenProductTypeClient,
     ): OpenProductService {
-        return OpenProductService(openProductClient, openProductTypeClient)
+        return OpenProductService(
+            openProductClient = openProductClient,
+            openProductTypeClient = openProductTypeClient,
+        )
     }
 }

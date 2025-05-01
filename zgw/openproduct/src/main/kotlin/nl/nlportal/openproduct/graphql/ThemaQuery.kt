@@ -28,8 +28,14 @@ class ThemaQuery(
     val openProductService: OpenProductService,
 ) : Query {
     @GraphQLDescription("Get all themas")
-    suspend fun getThemas(dfe: DataFetchingEnvironment): List<OpenProductThema> {
-        return openProductService.getThemas()
+    suspend fun getThemas(
+        pageNumber: Int? = null,
+        pageSize: Int? = null,
+    ): ThemasPage {
+        return openProductService.getThemas(
+            pageNumber = pageNumber ?: 1,
+            pageSize = pageSize ?: 20,
+        )
     }
 
     @GraphQLDescription("Get a thema")
@@ -37,8 +43,10 @@ class ThemaQuery(
         dfe: DataFetchingEnvironment,
         themaId: UUID,
     ): OpenProductThema? {
-        return openProductService.getThema(
-            themaId = themaId,
-        )
+        val response =
+            openProductService.getThema(
+                themaId = themaId,
+            )
+        return response
     }
 }

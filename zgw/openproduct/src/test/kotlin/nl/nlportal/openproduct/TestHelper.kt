@@ -15,14 +15,30 @@
  */
 package nl.nlportal.openproduct
 
+import io.github.oshai.kotlinlogging.KotlinLogging
+import okhttp3.mockwebserver.MockResponse
+import org.springframework.test.web.reactive.server.WebTestClient
+import java.util.function.Consumer
+
 object TestHelper {
-    val emptyPage =
-        """
-        {
-            "count": 0,
-            "next": null,
-            "previous": null,
-            "results": []
-        }
-        """.trimIndent()
+    val ERRORS_JSON_PATH = "$.errors"
+    val EXTENSIONS_JSON_PATH = "$.extensions"
+    val logger = KotlinLogging.logger {}
+
+    fun mockResponseFromFile(fileName: String): MockResponse {
+        return MockResponse()
+            .addHeader("Content-Type", "application/json; charset=utf-8")
+            .setResponseCode(200)
+            .setBody(readFileAsString(fileName))
+    }
+
+    private fun readFileAsString(fileName: String): String = this::class.java.getResource(fileName).readText(Charsets.UTF_8)
+
+    fun WebTestClient.ResponseSpec.verifyOnlyDataExists(basePath: String): WebTestClient.BodyContentSpec {
+        return this.expectBody()
+            .consumeWith(Consumer { t -> logger.info { t } })
+            .jsonPath(basePath).exists()
+            .jsonPath(ERRORS_JSON_PATH).doesNotExist()
+            .jsonPath(EXTENSIONS_JSON_PATH).doesNotExist()
+    }
 }

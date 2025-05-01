@@ -60,5 +60,5 @@ include(
     "zgw:objectenapi",
     "zgw:besluiten",
     "zgw:openklant",
+    "zgw:openproduct",
 )
-include("zgw:openproduct")

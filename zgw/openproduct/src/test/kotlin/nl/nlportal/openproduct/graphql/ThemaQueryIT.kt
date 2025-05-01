@@ -15,14 +15,13 @@
  */
 package nl.nlportal.openproduct.graphql
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.test.runTest
+import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.core.util.Mapper
-import nl.nlportal.openproduct.service.OpenProductService
-import org.junit.jupiter.api.Assertions.assertEquals
+import nl.nlportal.openproduct.TestHelper.verifyOnlyDataExists
 import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
@@ -30,10 +29,8 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.test.context.bean.override.mockito.MockitoSpyBean
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.BodyInserters
-import java.nio.charset.Charset
 
 @SpringBootTest
 @Tag("integration")
@@ -42,75 +39,44 @@ import java.nio.charset.Charset
 class ThemaQueryIT(
     @Autowired private val webTestClient: WebTestClient,
 ) {
-    @MockitoSpyBean
-    lateinit var openProductService: OpenProductService
-
-    // @Test
+    @Test
+    @WithBurgerUser("569312863")
     fun `get themas`() =
         runTest {
-            // when
-            val responseBodyContent =
-                webTestClient
-                    .post()
-                    .uri { builder ->
-                        builder
-                            .path("/graphql")
-                            .build()
-                    }
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getThemas.gql")))
-                    .exchange()
-                    .expectStatus().isOk
-                    .expectBody()
-                    .returnResult()
-                    .responseBodyContent
-                    ?.toString(Charset.defaultCharset())
-
-            logger.info { "RESPONSE => " + responseBodyContent }
-
-            val typeResponse =
-                objectMapper
-                    .readValue<JsonNode>(responseBodyContent!!)
-                    .get("data")
-                    ?.get("__type")
-
-            // then
-            assertEquals("OBJECT", typeResponse?.get("kind")?.textValue())
-            assertEquals("PartijResponse", typeResponse?.get("code")?.textValue())
+            val basePath = "$.data.getThemas"
+            val resultPath = "$basePath.content[0]"
+            webTestClient
+                .post()
+                .uri { builder ->
+                    builder
+                        .path("/graphql")
+                        .build()
+                }
+                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getThemas.gql")))
+                .exchange()
+                .verifyOnlyDataExists(basePath)
+                .jsonPath("$basePath.number").isEqualTo(1)
+                .jsonPath("$resultPath.naam").isEqualTo("Parkeren")
         }
 
-    // @Test
+    @Test
+    @WithBurgerUser("569312863")
     fun `get thema`() =
         runTest {
-            // when
-            val responseBodyContent =
-                webTestClient
-                    .post()
-                    .uri { builder ->
-                        builder
-                            .path("/graphql")
-                            .build()
-                    }
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getThema.gql")))
-                    .exchange()
-                    .expectStatus().isOk
-                    .expectBody()
-                    .returnResult()
-                    .responseBodyContent
-                    ?.toString(Charset.defaultCharset())
-
-            logger.info { "RESPONSE => " + responseBodyContent }
-
-            val typeResponse =
-                objectMapper
-                    .readValue<JsonNode>(responseBodyContent!!)
-                    .get("data")
-                    ?.get("__type")
-
-            // then
-            assertEquals("OBJECT", typeResponse?.get("kind")?.textValue())
-            assertEquals("PartijResponse", typeResponse?.get("code")?.textValue())
+            val basePath = "$.data.getThema"
+            webTestClient
+                .post()
+                .uri { builder ->
+                    builder
+                        .path("/graphql")
+                        .build()
+                }
+                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getThema.gql")))
+                .exchange()
+                .verifyOnlyDataExists(basePath)
+                .jsonPath("$basePath.naam").isEqualTo("Parkeren")
         }
 
     companion object {

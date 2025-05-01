@@ -16,9 +16,13 @@
 package nl.nlportal.openproduct.client
 
 import io.netty.handler.logging.LogLevel
+import nl.nlportal.core.util.Mapper
 import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration.OpenProductConfigurationProperties
 import nl.nlportal.openproduct.client.path.OpenProductPath
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
+import org.springframework.http.codec.json.Jackson2JsonDecoder
+import org.springframework.http.codec.json.Jackson2JsonEncoder
+import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
@@ -52,6 +56,21 @@ class OpenProductTypeClient(
                     it.defaultHeader("Accept-Crs", "EPSG:4326")
                     it.defaultHeader("Content-Crs", "EPSG:4326")
                 }
+                .exchangeStrategies(
+                    ExchangeStrategies.builder()
+                        .codecs { configurer ->
+                            with(configurer.defaultCodecs()) {
+                                maxInMemorySize(16 * 1024 * 1024)
+                                jackson2JsonEncoder(
+                                    Jackson2JsonEncoder(Mapper.get()),
+                                )
+                                jackson2JsonDecoder(
+                                    Jackson2JsonDecoder(Mapper.get()),
+                                )
+                            }
+                        }
+                        .build(),
+                )
                 .build()
     }
 }
