@@ -61,3 +61,4 @@ include(
     "zgw:besluiten",
     "zgw:openklant",
 )
+include("zgw:openproduct")

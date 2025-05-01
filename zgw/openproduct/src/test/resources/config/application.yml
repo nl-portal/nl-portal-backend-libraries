@@ -1,0 +1,51 @@
+graphql:
+    packages:
+        - "nl.nlportal"
+
+nl-portal:
+    config:
+        openproduct:
+            enabled: true
+            properties:
+                token: ac045222c9e7cde8120b48735560f9b920bb58cd
+                product-api-url: http://localhost:9010/producten/api/v1
+                product-type-api-url: http://localhost:9010/producttypen/api/v1
+
+logging:
+    level:
+        reactor.netty.http.client.HttpClient: TRACE
+
+spring:
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://localhost:8082/auth/realms/nlportal
+
+---
+
+spring:
+    config:
+        activate:
+            on-profile: openproduct-disabled
+
+nl-portal:
+    config:
+        openproduct:
+            enabled: false
+
+---
+
+spring:
+    config:
+        activate:
+            on-profile: openproduct-misconfigured
+
+nl-portal:
+    config:
+        openproduct:
+            enabled: true
+            properties:
+                token:
+                product-api-url:
+                product-type-api-url:

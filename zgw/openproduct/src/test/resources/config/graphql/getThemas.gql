@@ -1,0 +1,15 @@
+query {
+    getThemas {
+        uuid,
+        naam,
+        beschrijving,
+        gepubliceerd,
+        producttypen {
+            uuid,
+            code,
+            uniformeProductNaam
+        },
+        aanmaakDatum,
+        updateDatum
+    }
+}
