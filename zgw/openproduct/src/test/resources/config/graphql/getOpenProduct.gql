@@ -1,0 +1,25 @@
+query {
+    getOpenProduct(
+        productId: "694242af-d906-470b-b7e1-eb3527886854"
+     ){
+        uuid,
+        url,
+        startDatum,
+        gepubliceerd,
+        aanmaakDatum,
+        producttype {
+            code,
+            uniformeProductNaam,
+            toegestaneStatussen,
+        }
+        prijs,
+        gepubliceerd,
+        status,
+        documenten {
+            url
+        },
+        frequentie,
+        verbruiksobject,
+        dataobject
+    }
+}

@@ -41,7 +41,7 @@ data class OpenProductThemaProductType(
     @JsonProperty("uniforme_product_naam")
     val uniformeProductNaam: String,
     @JsonProperty("toegestane_statussen")
-    val toegestaneStatussen: List<String> = emptyList(),
+    val toegestaneStatussen: List<OpenProductToegestaneStatus> = emptyList(),
     val gepubliceerd: Boolean? = false,
     @JsonProperty("aanmaak_datum")
     val aanmaakDatum: ZonedDateTime,

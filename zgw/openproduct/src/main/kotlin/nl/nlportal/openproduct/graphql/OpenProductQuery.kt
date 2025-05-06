@@ -19,34 +19,36 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
 import com.expediagroup.graphql.server.operations.Query
 import graphql.schema.DataFetchingEnvironment
-import nl.nlportal.openproduct.client.domain.OpenProductThema
+import nl.nlportal.graphql.security.SecurityConstants
+import nl.nlportal.openproduct.client.domain.OpenProductProduct
 import nl.nlportal.openproduct.service.OpenProductService
 import java.util.*
 
 @AuthenticatedDirective
-class ThemaQuery(
+class OpenProductQuery(
     val openProductService: OpenProductService,
 ) : Query {
-    @GraphQLDescription("Get all themas")
-    suspend fun getThemas(
+    @GraphQLDescription("Get all Open producten")
+    suspend fun getOpenProducten(
+        dfe: DataFetchingEnvironment,
         pageNumber: Int? = null,
         pageSize: Int? = null,
-    ): ThemasPage {
-        return openProductService.getThemas(
+    ): ProductenPage {
+        return openProductService.getProducten(
+            authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
         )
     }
 
-    @GraphQLDescription("Get a thema")
-    suspend fun getThema(
+    @GraphQLDescription("Get a Open product type by id")
+    suspend fun getOpenProduct(
         dfe: DataFetchingEnvironment,
-        themaId: UUID,
-    ): OpenProductThema? {
-        val response =
-            openProductService.getThema(
-                themaId = themaId,
-            )
-        return response
+        productId: UUID,
+    ): OpenProductProduct? {
+        return openProductService.getProduct(
+            authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+            productId = productId,
+        )
     }
 }

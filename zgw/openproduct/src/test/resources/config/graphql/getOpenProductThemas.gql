@@ -1,5 +1,5 @@
 query {
-    getThemas(
+    getOpenProductThemas(
         pageNumber: 1,
         pageSize: 20
      ){

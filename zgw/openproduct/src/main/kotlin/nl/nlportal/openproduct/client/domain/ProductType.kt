@@ -31,7 +31,7 @@ data class OpenProductProductType(
     @JsonProperty("uniforme_product_naam")
     val uniformeProductNaam: String,
     @JsonProperty("toegestane_statussen")
-    val toegestaneStatussen: List<String> = emptyList(),
+    val toegestaneStatussen: List<OpenProductToegestaneStatus> = emptyList(),
     @JsonProperty("interne_opmerkingen")
     val interneOpmerking: String? = null,
     val gepubliceerd: Boolean? = false,

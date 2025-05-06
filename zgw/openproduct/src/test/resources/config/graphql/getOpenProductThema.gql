@@ -1,5 +1,5 @@
 query {
-    getThema(themaId: "41f71c2e-9e0c-4a1b-8d39-709669b256c2") {
+    getOpenProductThema(themaId: "41f71c2e-9e0c-4a1b-8d39-709669b256c2") {
         uuid,
         naam,
         beschrijving,

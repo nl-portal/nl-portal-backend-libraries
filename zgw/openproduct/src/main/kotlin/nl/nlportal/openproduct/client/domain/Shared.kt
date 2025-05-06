@@ -16,6 +16,7 @@
 package nl.nlportal.openproduct.client.domain
 
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
+import com.fasterxml.jackson.annotation.JsonValue
 import com.fasterxml.jackson.databind.node.ObjectNode
 import java.util.UUID
 
@@ -36,3 +37,21 @@ data class OpenProductSchema(
     val naam: String,
     val schema: ObjectNode,
 )
+
+enum class OpenProductToegestaneStatus(
+    @JsonValue val status: String,
+) {
+    GEREED("gereed"),
+    ACTIEF("actief"),
+    INGETROKKEN("ingetrokken"),
+    GEWEIGERD("geweigerd"),
+    VERLOPEN("verlopen"),
+}
+
+enum class OpenProductFrequentie(
+    @JsonValue val frequentie: String,
+) {
+    GEREED("eenmalig"),
+    ACTIEF("maandelijks"),
+    INGETROKKEN("jaarlijks"),
+}

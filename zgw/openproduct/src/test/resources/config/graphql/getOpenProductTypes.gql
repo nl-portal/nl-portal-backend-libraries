@@ -1,5 +1,5 @@
 query {
-    getProductTypes(
+    getOpenProductTypes(
         pageNumber: 1,
         pageSize: 20,
         language: "nl"

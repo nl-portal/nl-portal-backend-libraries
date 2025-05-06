@@ -16,8 +16,9 @@
 package nl.nlportal.openproduct.autoconfigure
 
 import com.expediagroup.graphql.server.operations.Query
-import nl.nlportal.openproduct.graphql.ProductTypeQuery
-import nl.nlportal.openproduct.graphql.ThemaQuery
+import nl.nlportal.openproduct.graphql.OpenProductQuery
+import nl.nlportal.openproduct.graphql.OpenProductThemaQuery
+import nl.nlportal.openproduct.graphql.OpenProductTypeQuery
 import nl.nlportal.openproduct.service.OpenProductService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -26,17 +27,25 @@ import org.springframework.context.annotation.Bean
 @ConditionalOnProperty(prefix = "nl-portal.config.openproduct", name = ["enabled"], havingValue = "true")
 class OpenProductGraphqlAutoConfiguration {
     @Bean
-    @ConditionalOnMissingBean(ThemaQuery::class)
-    fun themaQuery(openProductService: OpenProductService): Query {
-        return ThemaQuery(
+    @ConditionalOnMissingBean(OpenProductThemaQuery::class)
+    fun openProductthemaQuery(openProductService: OpenProductService): Query {
+        return OpenProductThemaQuery(
             openProductService = openProductService,
         )
     }
 
     @Bean
-    @ConditionalOnMissingBean(ProductTypeQuery::class)
-    fun productTypeQuery(openProductService: OpenProductService): Query {
-        return ProductTypeQuery(
+    @ConditionalOnMissingBean(OpenProductTypeQuery::class)
+    fun openProductTypeQuery(openProductService: OpenProductService): Query {
+        return OpenProductTypeQuery(
+            openProductService = openProductService,
+        )
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(OpenProductQuery::class)
+    fun openProductQuery(openProductService: OpenProductService): Query {
+        return OpenProductQuery(
             openProductService = openProductService,
         )
     }

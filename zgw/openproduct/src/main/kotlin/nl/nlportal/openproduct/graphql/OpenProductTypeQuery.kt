@@ -24,11 +24,11 @@ import nl.nlportal.openproduct.service.OpenProductService
 import java.util.*
 
 @AuthenticatedDirective
-class ProductTypeQuery(
+class OpenProductTypeQuery(
     val openProductService: OpenProductService,
 ) : Query {
-    @GraphQLDescription("Get all product types ")
-    suspend fun getProductTypes(
+    @GraphQLDescription("Get all Open product types ")
+    suspend fun getOpenProductTypes(
         pageNumber: Int? = null,
         pageSize: Int? = null,
         language: String,
@@ -40,8 +40,8 @@ class ProductTypeQuery(
         )
     }
 
-    @GraphQLDescription("Get a product type by id")
-    suspend fun getProductType(
+    @GraphQLDescription("Get a Open product type by id")
+    suspend fun getOpenProductType(
         dfe: DataFetchingEnvironment,
         productTypeId: UUID,
         language: String,

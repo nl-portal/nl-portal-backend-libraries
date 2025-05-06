@@ -16,15 +16,22 @@
 package nl.nlportal.openproduct.service
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import nl.nlportal.commonground.authentication.BedrijfAuthentication
+import nl.nlportal.commonground.authentication.BurgerAuthentication
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.openproduct.client.OpenProductClient
 import nl.nlportal.openproduct.client.OpenProductTypeClient
+import nl.nlportal.openproduct.client.domain.OpenProductProduct
 import nl.nlportal.openproduct.client.domain.OpenProductProductType
 import nl.nlportal.openproduct.client.domain.OpenProductProductTypesFilters
+import nl.nlportal.openproduct.client.domain.OpenProductProductenFilters
 import nl.nlportal.openproduct.client.domain.OpenProductThema
 import nl.nlportal.openproduct.client.domain.OpenProductThemasFilters
 import nl.nlportal.openproduct.client.path.ProductTypes
+import nl.nlportal.openproduct.client.path.Producten
 import nl.nlportal.openproduct.client.path.Themas
 import nl.nlportal.openproduct.graphql.ProductTypesPage
+import nl.nlportal.openproduct.graphql.ProductenPage
 import nl.nlportal.openproduct.graphql.ThemasPage
 import java.util.*
 
@@ -91,6 +98,80 @@ class OpenProductService(
             logger.error(e) { "Error getting producttype with id: $productTypeId" }
         }
         return null
+    }
+
+    suspend fun getProducten(
+        authentication: CommonGroundAuthentication,
+        pageNumber: Int,
+        pageSize: Int,
+    ): ProductenPage {
+        val searchVariables =
+            mutableListOf(
+                OpenProductProductenFilters.PAGE to pageNumber.toString(),
+                OpenProductProductenFilters.PAGE_SIZE to pageSize.toString(),
+            )
+
+        searchVariables.addAll(getEigenaarFilter(authentication))
+
+        return ProductenPage.fromResultPage(
+            pageNumber = pageNumber,
+            pageSize = pageSize,
+            resultPage =
+                openProductClient.path<Producten>().get(
+                    searchFilters = searchVariables,
+                ),
+        )
+    }
+
+    suspend fun getProduct(
+        authentication: CommonGroundAuthentication,
+        productId: UUID,
+    ): OpenProductProduct? {
+        try {
+            return openProductClient.path<Producten>().get(
+                productId = productId,
+            )
+        } catch (e: Exception) {
+            logger.error(e) { "Error getting product with id: $productId" }
+        }
+        return null
+    }
+
+    private fun getEigenaarFilter(authentication: CommonGroundAuthentication): List<Pair<OpenProductProductenFilters, String>> {
+        return when (authentication) {
+            is BurgerAuthentication -> {
+                listOf(
+                    Pair(
+                        OpenProductProductenFilters.PAGE,
+                        authentication.userId,
+                    ),
+                )
+            }
+            is BedrijfAuthentication -> {
+                val vestigingsNummer = authentication.getVestigingsNummer()
+                if (vestigingsNummer != null) {
+                    listOf(
+                        Pair(
+                            OpenProductProductenFilters.EIGENAREN_KVKNUMMER,
+                            authentication.userId,
+                        ),
+                    )
+                } else {
+                    listOf(
+                        Pair(
+                            OpenProductProductenFilters.EIGENAREN_VESTIGINGSNUMMER,
+                            authentication.userId,
+                        ),
+                        Pair(
+                            OpenProductProductenFilters.EIGENAREN_KVKNUMMER,
+                            authentication.userId,
+                        ),
+                    )
+                }
+            }
+
+            else -> throw IllegalArgumentException("Authentication not supported")
+        }
     }
 
     companion object {

@@ -44,7 +44,7 @@ import java.net.URI
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-class ProductTypeQueryIT(
+class OpenProductQueryIT(
     @Autowired private val webTestClient: WebTestClient,
     @Autowired private val openProductModuleConfiguration: OpenProductModuleConfiguration,
 ) {
@@ -58,7 +58,7 @@ class ProductTypeQueryIT(
         @JvmStatic
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
-            propsRegistry.add("nl-portal.config.openproduct.properties.product-type-api-url") { url }
+            propsRegistry.add("nl-portal.config.openproduct.properties.product-api-url") { url }
         }
 
         @JvmStatic
@@ -80,14 +80,14 @@ class ProductTypeQueryIT(
     internal fun setUp() {
         setupMockServer()
         url = server?.url("/").toString()
-        openProductModuleConfiguration.properties.productTypeApiUrl = URI(url)
+        openProductModuleConfiguration.properties.productApiUrl = URI(url)
     }
 
     @Test
     @WithBurgerUser("569312863")
-    fun `get product types`() =
+    fun `get producten`() =
         runTest {
-            val basePath = "$.data.getProductTypes"
+            val basePath = "$.data.getOpenProducten"
             val resultPath = "$basePath.content[0]"
             webTestClient
                 .post()
@@ -97,37 +97,23 @@ class ProductTypeQueryIT(
                         .build()
                 }
                 .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getProductTypes.gql")))
+                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProducten.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.number").isEqualTo(1)
-                .jsonPath("$resultPath.naam").isEqualTo("Parkeren")
-                .jsonPath("$resultPath.uniformeProductNaam").isEqualTo("Parkeervergunning")
-                .jsonPath("$resultPath.code").isEqualTo("PARKEREN")
-                .jsonPath("$resultPath.themas[0].naam").isEqualTo("Parkeren")
-                .jsonPath("$resultPath.prijzen[0].uuid").isEqualTo("317ab929-5cb4-4dde-ae4a-489f4d388699")
-                .jsonPath("$resultPath.prijzen[0].prijsopties[0].bedrag").isEqualTo(100.00)
+                .jsonPath("$basePath.numberOfElements").isEqualTo(4)
                 .jsonPath(
-                    "$resultPath.prijzen[0].prijsregels[0].url",
-                ).isEqualTo("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen")
-                .jsonPath("$resultPath.links[0].naam").isEqualTo("link naar Ritense website")
-                .jsonPath("$resultPath.acties[0].naam").isEqualTo("watkanikregelen-belastingen")
-                .jsonPath(
-                    "$resultPath.acties[0].url",
-                ).isEqualTo("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen")
-                .jsonPath("$resultPath.externCodes[0].code").isEqualTo("RMWA")
-                .jsonPath("$resultPath.parameters[0].naam").isEqualTo("paymentcategorie")
-                .jsonPath("$resultPath.parameters[0].waarde").isEqualTo("parkeren")
-                .jsonPath(
-                    "$resultPath.zaaktypen[0].url",
-                ).isEqualTo("http://localhost:8001/catalogi/api/v1/744ca059-f412-49d4-8963-5800e4afd486")
+                    "$resultPath.url",
+                ).isEqualTo("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/")
+                .jsonPath("$resultPath.startDatum").isEqualTo("2025-04-30")
+                .jsonPath("$resultPath.producttype.code").isEqualTo("PARKEREN")
+                .jsonPath("$resultPath.verbruiksobject.uren").isEqualTo(30)
         }
 
     @Test
     @WithBurgerUser("569312863")
-    fun `get product type`() =
+    fun `get product`() =
         runTest {
-            val basePath = "$.data.getProductType"
+            val basePath = "$.data.getOpenProduct"
             webTestClient
                 .post()
                 .uri { builder ->
@@ -136,29 +122,15 @@ class ProductTypeQueryIT(
                         .build()
                 }
                 .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getProductType.gql")))
+                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProduct.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.naam").isEqualTo("Parkeren")
-                .jsonPath("$basePath.uniformeProductNaam").isEqualTo("Parkeervergunning")
-                .jsonPath("$basePath.code").isEqualTo("PARKEREN")
-                .jsonPath("$basePath.themas[0].naam").isEqualTo("Parkeren")
-                .jsonPath("$basePath.prijzen[0].uuid").isEqualTo("317ab929-5cb4-4dde-ae4a-489f4d388699")
-                .jsonPath("$basePath.prijzen[0].prijsopties[0].bedrag").isEqualTo(100.00)
                 .jsonPath(
-                    "$basePath.prijzen[0].prijsregels[0].url",
-                ).isEqualTo("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen")
-                .jsonPath("$basePath.links[0].naam").isEqualTo("link naar Ritense website")
-                .jsonPath("$basePath.acties[0].naam").isEqualTo("watkanikregelen-belastingen")
-                .jsonPath(
-                    "$basePath.acties[0].url",
-                ).isEqualTo("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen")
-                .jsonPath("$basePath.externCodes[0].code").isEqualTo("RMWA")
-                .jsonPath("$basePath.parameters[0].naam").isEqualTo("paymentcategorie")
-                .jsonPath("$basePath.parameters[0].waarde").isEqualTo("parkeren")
-                .jsonPath(
-                    "$basePath.zaaktypen[0].url",
-                ).isEqualTo("http://localhost:8001/catalogi/api/v1/744ca059-f412-49d4-8963-5800e4afd486")
+                    "$basePath.url",
+                ).isEqualTo("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/")
+                .jsonPath("$basePath.startDatum").isEqualTo("2025-04-30")
+                .jsonPath("$basePath.producttype.code").isEqualTo("PARKEREN")
+                .jsonPath("$basePath.verbruiksobject.uren").isEqualTo(30)
         }
 
     private fun setupMockServer() {
@@ -169,11 +141,11 @@ class ProductTypeQueryIT(
                     val path = request.path?.substringBefore('?')
                     val response =
                         when (request.method + " " + path) {
-                            "GET /producttypen/dee273e9-2aa8-40ae-84b7-cb7da3c075ba/" -> {
-                                TestHelper.mockResponseFromFile("/config/data/get-producttype.json")
+                            "GET /producten/694242af-d906-470b-b7e1-eb3527886854/" -> {
+                                TestHelper.mockResponseFromFile("/config/data/get-product.json")
                             }
-                            "GET /producttypen/" -> {
-                                TestHelper.mockResponseFromFile("/config/data/get-producttypes.json")
+                            "GET /producten/" -> {
+                                TestHelper.mockResponseFromFile("/config/data/get-producten.json")
                             }
                             else -> MockResponse().setResponseCode(404)
                         }

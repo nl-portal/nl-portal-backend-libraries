@@ -44,7 +44,7 @@ import java.net.URI
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-class ThemaQueryIT(
+class OpenProductThemaQueryIT(
     @Autowired private val webTestClient: WebTestClient,
     @Autowired private val openProductModuleConfiguration: OpenProductModuleConfiguration,
 ) {
@@ -87,7 +87,7 @@ class ThemaQueryIT(
     @WithBurgerUser("569312863")
     fun `get themas`() =
         runTest {
-            val basePath = "$.data.getThemas"
+            val basePath = "$.data.getOpenProductThemas"
             val resultPath = "$basePath.content[0]"
             webTestClient
                 .post()
@@ -97,7 +97,7 @@ class ThemaQueryIT(
                         .build()
                 }
                 .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getThemas.gql")))
+                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductThemas.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
                 .jsonPath("$basePath.number").isEqualTo(1)
@@ -110,7 +110,7 @@ class ThemaQueryIT(
     @WithBurgerUser("569312863")
     fun `get thema`() =
         runTest {
-            val basePath = "$.data.getThema"
+            val basePath = "$.data.getOpenProductThema"
             webTestClient
                 .post()
                 .uri { builder ->
@@ -119,7 +119,7 @@ class ThemaQueryIT(
                         .build()
                 }
                 .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getThema.gql")))
+                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductThema.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
                 .jsonPath("$basePath.naam").isEqualTo("Parkeren")
