@@ -4,6 +4,11 @@ graphql:
 
 nl-portal:
     config:
+        objectenapi:
+            enabled: true
+            properties:
+                url: http://localhost:8010
+                token: 182c13e2209161852c53cef53a879f7a2f923430
         payment:
             direct:
                 enabled: true
