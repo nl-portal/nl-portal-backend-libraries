@@ -15,12 +15,18 @@
  */
 package nl.nlportal.openproduct.graphql
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
-import nl.nlportal.core.util.Mapper
+import nl.nlportal.openproduct.TestHelper
 import nl.nlportal.openproduct.TestHelper.verifyOnlyDataExists
-import org.junit.jupiter.api.Tag
+import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration
+import okhttp3.mockwebserver.Dispatcher
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.RecordedRequest
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,16 +35,55 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.BodyInserters
+import java.net.URI
 
 @SpringBootTest
-@Tag("integration")
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class ThemaQueryIT(
     @Autowired private val webTestClient: WebTestClient,
+    @Autowired private val openProductModuleConfiguration: OpenProductModuleConfiguration,
 ) {
+    companion object {
+        @JvmStatic
+        var server: MockWebServer? = null
+
+        @JvmStatic
+        var url: String = ""
+
+        @JvmStatic
+        @DynamicPropertySource
+        fun properties(propsRegistry: DynamicPropertyRegistry) {
+            propsRegistry.add("nl-portal.config.openproduct.properties.product-type-api-url") { url }
+            propsRegistry.add("nl-portal.config.openproduct.properties.product-api-url") { url }
+        }
+
+        @JvmStatic
+        @BeforeAll
+        fun beforeAll() {
+            server = MockWebServer()
+            server?.start()
+            url = server?.url("/").toString()
+        }
+
+        @JvmStatic
+        @AfterAll
+        fun afterAll() {
+            server?.shutdown()
+        }
+    }
+
+    @BeforeEach
+    internal fun setUp() {
+        setupMockServer()
+        url = server?.url("/").toString()
+        openProductModuleConfiguration.properties.productTypeApiUrl = URI(url)
+    }
+
     @Test
     @WithBurgerUser("569312863")
     fun `get themas`() =
@@ -58,6 +103,8 @@ class ThemaQueryIT(
                 .verifyOnlyDataExists(basePath)
                 .jsonPath("$basePath.number").isEqualTo(1)
                 .jsonPath("$resultPath.naam").isEqualTo("Parkeren")
+                .jsonPath("$resultPath.producttypen[0].uniformeProductNaam").isEqualTo("Parkeervergunning")
+                .jsonPath("$resultPath.producttypen[0].code").isEqualTo("PARKEREN")
         }
 
     @Test
@@ -77,10 +124,29 @@ class ThemaQueryIT(
                 .exchange()
                 .verifyOnlyDataExists(basePath)
                 .jsonPath("$basePath.naam").isEqualTo("Parkeren")
+                .jsonPath("$basePath.producttypen[0].uniformeProductNaam").isEqualTo("Parkeervergunning")
+                .jsonPath("$basePath.producttypen[0].code").isEqualTo("PARKEREN")
         }
 
-    companion object {
-        private val objectMapper = Mapper.get()
-        val logger = KotlinLogging.logger {}
+    private fun setupMockServer() {
+        val dispatcher: Dispatcher =
+            object : Dispatcher() {
+                @Throws(InterruptedException::class)
+                override fun dispatch(request: RecordedRequest): MockResponse {
+                    val path = request.path?.substringBefore('?')
+                    val response =
+                        when (request.method + " " + path) {
+                            "GET /themas/41f71c2e-9e0c-4a1b-8d39-709669b256c2/" -> {
+                                TestHelper.mockResponseFromFile("/config/data/get-thema.json")
+                            }
+                            "GET /themas/" -> {
+                                TestHelper.mockResponseFromFile("/config/data/get-themas.json")
+                            }
+                            else -> MockResponse().setResponseCode(404)
+                        }
+                    return response
+                }
+            }
+        server?.dispatcher = dispatcher
     }
 }
