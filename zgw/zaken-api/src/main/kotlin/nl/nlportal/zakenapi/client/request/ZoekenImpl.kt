@@ -80,6 +80,16 @@ class SearchZoekenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
         return this
     }
 
+    override fun ofIdenfitifactieContains(identificatie: String): SearchZaken {
+        bodyValue.add("identificatie__icontains", identificatie)
+        return this
+    }
+
+    override fun ofOmschrijving(omschrijving: String): SearchZaken {
+        bodyValue.add("omschrijving", omschrijving)
+        return this
+    }
+
     override fun withKvkAndVestigingsNummer(
         kvkNummer: String,
         vestigingsNummer: String,
