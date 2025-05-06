@@ -54,15 +54,15 @@ enum class OpenProductThemasFilters(
 ) : OpenProductFilters {
     PAGE("page"),
     PAGE_SIZE("page_size"),
-    THEMA_NAAM("naam"),
-    THEMA_AANMAAK_DATUM("aanmaak_datum"),
-    THEMA_AANMAAK_DATUM_GTE("aanmaak_datum__gte"),
-    THEMA_AANMAAK_DATUM_LTE("aanmaak_datum__lte"),
-    THEMA_GEPUBLICEERD("gepubliceerd"),
-    THEMA_HOOFDTHEMA_NAAM("hoofd_thema__naam"),
-    THEMA_UPDATE_DATUM("update_datum"),
-    THEMA_UPDATE_DATUM_GTE("update_datum__gte"),
-    THEMA_UPDATE_DATUM_LTE("update_datum__lte"),
+    NAAM("naam"),
+    AANMAAK_DATUM("aanmaak_datum"),
+    AANMAAK_DATUM_GTE("aanmaak_datum__gte"),
+    AANMAAK_DATUM_LTE("aanmaak_datum__lte"),
+    GEPUBLICEERD("gepubliceerd"),
+    HOOFDTHEMA_NAAM("hoofd_thema__naam"),
+    UPDATE_DATUM("update_datum"),
+    UPDATE_DATUM_GTE("update_datum__gte"),
+    UPDATE_DATUM_LTE("update_datum__lte"),
     ;
 
     override fun toString() = this.value

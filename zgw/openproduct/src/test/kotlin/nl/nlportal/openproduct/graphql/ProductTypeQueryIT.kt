@@ -44,7 +44,7 @@ import java.net.URI
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-class ThemaQueryIT(
+class ProductTypeQueryIT(
     @Autowired private val webTestClient: WebTestClient,
     @Autowired private val openProductModuleConfiguration: OpenProductModuleConfiguration,
 ) {
@@ -85,9 +85,9 @@ class ThemaQueryIT(
 
     @Test
     @WithBurgerUser("569312863")
-    fun `get themas`() =
+    fun `get product types`() =
         runTest {
-            val basePath = "$.data.getThemas"
+            val basePath = "$.data.getProductTypes"
             val resultPath = "$basePath.content[0]"
             webTestClient
                 .post()
@@ -97,20 +97,37 @@ class ThemaQueryIT(
                         .build()
                 }
                 .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getThemas.gql")))
+                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getProductTypes.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
                 .jsonPath("$basePath.number").isEqualTo(1)
                 .jsonPath("$resultPath.naam").isEqualTo("Parkeren")
-                .jsonPath("$resultPath.producttypen[0].uniformeProductNaam").isEqualTo("Parkeervergunning")
-                .jsonPath("$resultPath.producttypen[0].code").isEqualTo("PARKEREN")
+                .jsonPath("$resultPath.uniformeProductNaam").isEqualTo("Parkeervergunning")
+                .jsonPath("$resultPath.code").isEqualTo("PARKEREN")
+                .jsonPath("$resultPath.themas[0].naam").isEqualTo("Parkeren")
+                .jsonPath("$resultPath.prijzen[0].uuid").isEqualTo("317ab929-5cb4-4dde-ae4a-489f4d388699")
+                .jsonPath("$resultPath.prijzen[0].prijsopties[0].bedrag").isEqualTo(100.00)
+                .jsonPath(
+                    "$resultPath.prijzen[0].prijsregels[0].url",
+                ).isEqualTo("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen")
+                .jsonPath("$resultPath.links[0].naam").isEqualTo("link naar Ritense website")
+                .jsonPath("$resultPath.acties[0].naam").isEqualTo("watkanikregelen-belastingen")
+                .jsonPath(
+                    "$resultPath.acties[0].url",
+                ).isEqualTo("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen")
+                .jsonPath("$resultPath.externCodes[0].code").isEqualTo("RMWA")
+                .jsonPath("$resultPath.parameters[0].naam").isEqualTo("paymentcategorie")
+                .jsonPath("$resultPath.parameters[0].waarde").isEqualTo("parkeren")
+                .jsonPath(
+                    "$resultPath.zaaktypen[0].url",
+                ).isEqualTo("http://localhost:8001/catalogi/api/v1/744ca059-f412-49d4-8963-5800e4afd486")
         }
 
     @Test
     @WithBurgerUser("569312863")
-    fun `get thema`() =
+    fun `get product type`() =
         runTest {
-            val basePath = "$.data.getThema"
+            val basePath = "$.data.getProductType"
             webTestClient
                 .post()
                 .uri { builder ->
@@ -119,12 +136,29 @@ class ThemaQueryIT(
                         .build()
                 }
                 .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getThema.gql")))
+                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getProductType.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
                 .jsonPath("$basePath.naam").isEqualTo("Parkeren")
-                .jsonPath("$basePath.producttypen[0].uniformeProductNaam").isEqualTo("Parkeervergunning")
-                .jsonPath("$basePath.producttypen[0].code").isEqualTo("PARKEREN")
+                .jsonPath("$basePath.uniformeProductNaam").isEqualTo("Parkeervergunning")
+                .jsonPath("$basePath.code").isEqualTo("PARKEREN")
+                .jsonPath("$basePath.themas[0].naam").isEqualTo("Parkeren")
+                .jsonPath("$basePath.prijzen[0].uuid").isEqualTo("317ab929-5cb4-4dde-ae4a-489f4d388699")
+                .jsonPath("$basePath.prijzen[0].prijsopties[0].bedrag").isEqualTo(100.00)
+                .jsonPath(
+                    "$basePath.prijzen[0].prijsregels[0].url",
+                ).isEqualTo("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen")
+                .jsonPath("$basePath.links[0].naam").isEqualTo("link naar Ritense website")
+                .jsonPath("$basePath.acties[0].naam").isEqualTo("watkanikregelen-belastingen")
+                .jsonPath(
+                    "$basePath.acties[0].url",
+                ).isEqualTo("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen")
+                .jsonPath("$basePath.externCodes[0].code").isEqualTo("RMWA")
+                .jsonPath("$basePath.parameters[0].naam").isEqualTo("paymentcategorie")
+                .jsonPath("$basePath.parameters[0].waarde").isEqualTo("parkeren")
+                .jsonPath(
+                    "$basePath.zaaktypen[0].url",
+                ).isEqualTo("http://localhost:8001/catalogi/api/v1/744ca059-f412-49d4-8963-5800e4afd486")
         }
 
     private fun setupMockServer() {
@@ -135,11 +169,11 @@ class ThemaQueryIT(
                     val path = request.path?.substringBefore('?')
                     val response =
                         when (request.method + " " + path) {
-                            "GET /themas/41f71c2e-9e0c-4a1b-8d39-709669b256c2/" -> {
-                                TestHelper.mockResponseFromFile("/config/data/get-thema.json")
+                            "GET /producttypen/dee273e9-2aa8-40ae-84b7-cb7da3c075ba/" -> {
+                                TestHelper.mockResponseFromFile("/config/data/get-producttype.json")
                             }
-                            "GET /themas/" -> {
-                                TestHelper.mockResponseFromFile("/config/data/get-themas.json")
+                            "GET /producttypen/" -> {
+                                TestHelper.mockResponseFromFile("/config/data/get-producttypes.json")
                             }
                             else -> MockResponse().setResponseCode(404)
                         }

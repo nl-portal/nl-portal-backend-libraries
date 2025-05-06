@@ -18,11 +18,15 @@ package nl.nlportal.openproduct.service
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.openproduct.client.OpenProductClient
 import nl.nlportal.openproduct.client.OpenProductTypeClient
+import nl.nlportal.openproduct.client.domain.OpenProductProductType
+import nl.nlportal.openproduct.client.domain.OpenProductProductTypesFilters
 import nl.nlportal.openproduct.client.domain.OpenProductThema
 import nl.nlportal.openproduct.client.domain.OpenProductThemasFilters
+import nl.nlportal.openproduct.client.path.ProductTypes
 import nl.nlportal.openproduct.client.path.Themas
+import nl.nlportal.openproduct.graphql.ProductTypesPage
 import nl.nlportal.openproduct.graphql.ThemasPage
-import java.util.UUID
+import java.util.*
 
 class OpenProductService(
     private val openProductClient: OpenProductClient,
@@ -48,7 +52,43 @@ class OpenProductService(
         try {
             return openProductTypeClient.path<Themas>().get(themaId)
         } catch (e: Exception) {
-            logger.error(e) { "Error getting thema $themaId" }
+            logger.error(e) { "Error getting thema with id: $themaId" }
+        }
+        return null
+    }
+
+    suspend fun getProductTypes(
+        pageNumber: Int,
+        pageSize: Int,
+        language: String,
+    ): ProductTypesPage {
+        val searchVariables =
+            listOf(
+                OpenProductProductTypesFilters.PAGE to pageNumber.toString(),
+                OpenProductProductTypesFilters.PAGE_SIZE to pageSize.toString(),
+            )
+        return ProductTypesPage.fromResultPage(
+            pageNumber = pageNumber,
+            pageSize = pageSize,
+            resultPage =
+                openProductTypeClient.path<ProductTypes>().get(
+                    searchFilters = searchVariables,
+                    language = language,
+                ),
+        )
+    }
+
+    suspend fun getProcductType(
+        productTypeId: UUID,
+        language: String,
+    ): OpenProductProductType? {
+        try {
+            return openProductTypeClient.path<ProductTypes>().get(
+                productTypeId = productTypeId,
+                language = language,
+            )
+        } catch (e: Exception) {
+            logger.error(e) { "Error getting producttype with id: $productTypeId" }
         }
         return null
     }

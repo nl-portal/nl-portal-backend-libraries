@@ -16,12 +16,23 @@
 package nl.nlportal.openproduct.client.domain
 
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
+import com.fasterxml.jackson.databind.node.ObjectNode
 import java.util.UUID
-
-data class OpenProductForeignKey(
-    val url: String,
-    val uuid: UUID,
-)
 
 @GraphQLIgnore
 interface OpenProductFilters
+
+data class OpenProductNaamUrl(
+    val uuid: UUID,
+    val url: String,
+    val naam: String,
+)
+
+data class OpenProductUrl(
+    val url: String,
+)
+
+data class OpenProductSchema(
+    val naam: String,
+    val schema: ObjectNode,
+)

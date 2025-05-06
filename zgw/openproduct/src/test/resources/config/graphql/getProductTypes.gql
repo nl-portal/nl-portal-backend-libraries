@@ -1,0 +1,78 @@
+query {
+    getProductTypes(
+        pageNumber: 1,
+        pageSize: 20,
+        language: "nl"
+     ){
+        number
+         size
+         totalElements
+         numberOfElements
+         content {
+            uuid,
+            naam,
+            samenvatting,
+            gepubliceerd,
+            taal,
+            code,
+            keywords,
+            uniformeProductNaam
+            themas {
+                uuid,
+                naam
+            },
+            aanmaakDatum,
+            updateDatum,
+            toegestaneStatussen,
+            locaties {
+                naam,
+                email
+            },
+            prijzen {
+                uuid
+                prijsopties {
+                    bedrag,
+                    beschrijving,
+                }
+                prijsregels {
+                    uuid,
+                    beschrijving,
+                    url
+                }
+            }
+            links {
+                naam,
+                url
+            }
+            acties {
+                naam,
+                url
+            }
+            externCodes {
+                naam,
+                code
+            }
+            parameters {
+                naam,
+                waarde
+            }
+            verbruiksObjectSchema {
+                naam,
+                schema
+            },
+            dataObjectSchema {
+                naam,
+                schema
+            },
+            zaaktypen{
+                url
+            }
+            verzoektypen{
+                url
+            }
+            processen{
+                url
+            }
+        }
+    }
+}

@@ -16,6 +16,7 @@
 package nl.nlportal.openproduct.autoconfigure
 
 import com.expediagroup.graphql.server.operations.Query
+import nl.nlportal.openproduct.graphql.ProductTypeQuery
 import nl.nlportal.openproduct.graphql.ThemaQuery
 import nl.nlportal.openproduct.service.OpenProductService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -28,6 +29,14 @@ class OpenProductGraphqlAutoConfiguration {
     @ConditionalOnMissingBean(ThemaQuery::class)
     fun themaQuery(openProductService: OpenProductService): Query {
         return ThemaQuery(
+            openProductService = openProductService,
+        )
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(ProductTypeQuery::class)
+    fun productTypeQuery(openProductService: OpenProductService): Query {
+        return ProductTypeQuery(
             openProductService = openProductService,
         )
     }
