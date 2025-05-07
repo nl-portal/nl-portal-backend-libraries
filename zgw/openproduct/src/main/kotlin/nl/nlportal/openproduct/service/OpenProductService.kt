@@ -25,6 +25,7 @@ import nl.nlportal.openproduct.client.OpenProductClient
 import nl.nlportal.openproduct.client.OpenProductTypeClient
 import nl.nlportal.openproduct.client.domain.OpenProductProduct
 import nl.nlportal.openproduct.client.domain.OpenProductProductType
+import nl.nlportal.openproduct.client.domain.OpenProductProductTypeContent
 import nl.nlportal.openproduct.client.domain.OpenProductProductTypesFilters
 import nl.nlportal.openproduct.client.domain.OpenProductProductenFilters
 import nl.nlportal.openproduct.client.domain.OpenProductThema
@@ -119,7 +120,7 @@ class OpenProductService(
         )
     }
 
-    suspend fun getProcductType(
+    suspend fun getProductType(
         productTypeId: UUID,
         language: String,
     ): OpenProductProductType? {
@@ -130,6 +131,17 @@ class OpenProductService(
             )
         } catch (e: Exception) {
             logger.error(e) { "Error getting producttype with id: $productTypeId" }
+        }
+        return null
+    }
+
+    suspend fun getProductTypeContent(productTypeId: UUID): List<OpenProductProductTypeContent>? {
+        try {
+            return openProductTypeClient.path<ProductTypes>().get(
+                productTypeId = productTypeId,
+            )
+        } catch (e: Exception) {
+            logger.error(e) { "Error getting producttype content with id: $productTypeId" }
         }
         return null
     }
@@ -230,7 +242,7 @@ class OpenProductService(
 
         themas.forEach { thema ->
             thema.producttypen.forEach {
-                getProcductType(
+                getProductType(
                     productTypeId = it.uuid,
                     language = language,
                 )?.zaaktypen?.forEach { zaakType ->

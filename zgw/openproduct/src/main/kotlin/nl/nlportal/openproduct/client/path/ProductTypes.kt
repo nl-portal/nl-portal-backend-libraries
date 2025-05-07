@@ -17,6 +17,7 @@ package nl.nlportal.openproduct.client.path
 
 import nl.nlportal.openproduct.client.OpenProductTypeClient
 import nl.nlportal.openproduct.client.domain.OpenProductProductType
+import nl.nlportal.openproduct.client.domain.OpenProductProductTypeContent
 import nl.nlportal.openproduct.client.domain.OpenProductProductTypesFilters
 import nl.nlportal.openproduct.client.domain.ResultPage
 import org.springframework.http.MediaType
@@ -60,6 +61,20 @@ class ProductTypes(
                     .build()
             }
             .header("Accept-Language", language)
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .awaitBody()
+    }
+
+    suspend fun get(productTypeId: UUID): List<OpenProductProductTypeContent>? {
+        return client
+            .webClient
+            .get()
+            .uri { uriBuilder ->
+                uriBuilder
+                    .path("$path$productTypeId/content/")
+                    .build()
+            }
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody()

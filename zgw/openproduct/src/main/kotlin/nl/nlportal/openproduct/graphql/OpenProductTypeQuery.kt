@@ -46,7 +46,7 @@ class OpenProductTypeQuery(
         productTypeId: UUID,
         language: String,
     ): OpenProductProductType? {
-        return openProductService.getProcductType(
+        return openProductService.getProductType(
             productTypeId = productTypeId,
             language = language,
         )

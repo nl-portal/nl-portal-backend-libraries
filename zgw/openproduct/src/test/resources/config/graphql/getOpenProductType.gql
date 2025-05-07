@@ -67,5 +67,10 @@ query {
         processen{
             url
         }
+        content {
+            taal,
+            content,
+            labels
+        }
     }
 }
