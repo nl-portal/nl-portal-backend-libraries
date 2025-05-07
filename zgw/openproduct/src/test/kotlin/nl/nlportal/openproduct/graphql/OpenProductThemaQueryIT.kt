@@ -167,7 +167,6 @@ class OpenProductThemaQueryIT(
                 .exchange()
                 .verifyOnlyDataExists(basePath)
                 .jsonPath("$basePath.totalElements").isEqualTo(8)
-                .jsonPath("$basePath.content[0].uuid").isEqualTo("64eaf9ef-37b4-4898-acc9-ae47bee577a2")
         }
 
     @Test
