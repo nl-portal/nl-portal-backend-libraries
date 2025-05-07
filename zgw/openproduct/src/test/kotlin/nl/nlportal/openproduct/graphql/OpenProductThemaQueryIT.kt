@@ -20,6 +20,8 @@ import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.openproduct.TestHelper
 import nl.nlportal.openproduct.TestHelper.verifyOnlyDataExists
 import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration
+import nl.nlportal.zakenapi.client.ZakenApiConfig
+import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -47,6 +49,8 @@ import java.net.URI
 class OpenProductThemaQueryIT(
     @Autowired private val webTestClient: WebTestClient,
     @Autowired private val openProductModuleConfiguration: OpenProductModuleConfiguration,
+    @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
+    @Autowired private val zakenApiConfig: ZakenApiConfig,
 ) {
     companion object {
         @JvmStatic
@@ -59,6 +63,8 @@ class OpenProductThemaQueryIT(
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
             propsRegistry.add("nl-portal.config.openproduct.properties.product-type-api-url") { url }
+            propsRegistry.add("nl-portal.config.zakenapi.properties.url") { url }
+            propsRegistry.add("nl-portal.config.objectenapi.properties.url") { url }
         }
 
         @JvmStatic
@@ -81,6 +87,8 @@ class OpenProductThemaQueryIT(
         setupMockServer()
         url = server?.url("/").toString()
         openProductModuleConfiguration.properties.productTypeApiUrl = URI(url)
+        objectsApiClientConfig.properties.url = URI(url)
+        zakenApiConfig.properties.url = url
     }
 
     @Test
@@ -166,7 +174,29 @@ class OpenProductThemaQueryIT(
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductThemaZaken.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.totalElements").isEqualTo(8)
+                .jsonPath("$basePath.size()").isEqualTo(1)
+                .jsonPath("$basePath[0].omschrijving").isEqualTo("Lopende zaak")
+        }
+
+    @Test
+    @WithBurgerUser("569312863")
+    fun `get themas taken`() =
+        runTest {
+            val basePath = "$.data.getOpenProductThemaTaken"
+            webTestClient
+                .post()
+                .uri { builder ->
+                    builder
+                        .path("/graphql")
+                        .build()
+                }
+                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductThemaTaken.gql")))
+                .exchange()
+                .verifyOnlyDataExists(basePath)
+                .jsonPath("$basePath.size()").isEqualTo(1)
+                .jsonPath("$basePath[0].id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
+                .jsonPath("$basePath[0].titel").isEqualTo("Taak linked to Zaak")
         }
 
     @Test
@@ -212,7 +242,7 @@ class OpenProductThemaQueryIT(
                                 TestHelper.mockResponseFromFile("/config/data/get-themas.json")
                             }
                             "POST /zaken/api/v1/zaken/_zoek" -> {
-                                TestHelper.mockResponseFromFile("/product/data/get-zaken.json")
+                                TestHelper.mockResponseFromFile("/config/data/get-zaken.json")
                             }
                             "GET /producttypen/dee273e9-2aa8-40ae-84b7-cb7da3c075ba/" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-producttype.json")

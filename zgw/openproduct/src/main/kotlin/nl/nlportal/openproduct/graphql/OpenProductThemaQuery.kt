@@ -23,7 +23,8 @@ import nl.nlportal.graphql.security.SecurityConstants
 import nl.nlportal.openproduct.client.domain.OpenProductThema
 import nl.nlportal.openproduct.graphql.domain.OpenProductThemaHierarchy
 import nl.nlportal.openproduct.service.OpenProductService
-import nl.nlportal.zakenapi.graphql.ZaakPage
+import nl.nlportal.zakenapi.domain.Zaak
+import nl.nlportal.zgw.taak.domain.TaakV2
 import java.util.*
 
 @AuthenticatedDirective
@@ -68,16 +69,31 @@ class OpenProductThemaQuery(
         themaId: UUID,
         language: String,
         isOpen: Boolean? = null,
-    ): ZaakPage? {
-        val response =
-            openProductService.getThemaZaken(
-                authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
-                themaId = themaId,
-                pageNumber = pageNumber ?: 1,
-                pageSize = pageSize ?: 20,
-                language = language,
-                isOpen = isOpen,
-            )
-        return response
+    ): List<Zaak> {
+        return openProductService.getThemaZaken(
+            authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+            themaId = themaId,
+            pageNumber = pageNumber ?: 1,
+            pageSize = pageSize ?: 20,
+            language = language,
+            isOpen = isOpen,
+        )
+    }
+
+    @GraphQLDescription("Get taken of a thema, including their hoofd themas")
+    suspend fun getOpenProductThemaTaken(
+        dfe: DataFetchingEnvironment,
+        pageNumber: Int? = null,
+        pageSize: Int? = null,
+        themaId: UUID,
+        language: String,
+    ): List<TaakV2> {
+        return openProductService.getThemaTaken(
+            authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+            themaId = themaId,
+            pageNumber = pageNumber ?: 1,
+            pageSize = pageSize ?: 20,
+            language = language,
+        )
     }
 }

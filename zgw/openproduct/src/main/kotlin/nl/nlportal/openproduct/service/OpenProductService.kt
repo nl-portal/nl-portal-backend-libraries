@@ -38,8 +38,16 @@ import nl.nlportal.openproduct.graphql.ProductenPage
 import nl.nlportal.openproduct.graphql.ThemasPage
 import nl.nlportal.openproduct.graphql.domain.OpenProductThemaHierarchy
 import nl.nlportal.zakenapi.client.ZakenApiClient
-import nl.nlportal.zakenapi.graphql.ZaakPage
+import nl.nlportal.zakenapi.domain.Zaak
+import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
+import nl.nlportal.zgw.objectenapi.domain.Comparator
+import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
+import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
+import nl.nlportal.zgw.objectenapi.domain.ResultPage
 import nl.nlportal.zgw.taak.autoconfigure.TaakConfig.TaakConfigProperties
+import nl.nlportal.zgw.taak.domain.TaakObjectV2
+import nl.nlportal.zgw.taak.domain.TaakV2
+import nl.nlportal.zgw.taak.graphql.TaakPageV2
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
@@ -48,6 +56,7 @@ class OpenProductService(
     private val openProductClient: OpenProductClient,
     private val openProductTypeClient: OpenProductTypeClient,
     private val objectsApiTaskConfigProperties: TaakConfigProperties,
+    private val objectsApiClient: ObjectsApiClient,
     private val zakenApiClient: ZakenApiClient,
     private val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
 ) {
@@ -205,11 +214,11 @@ class OpenProductService(
     suspend fun getThemaZaken(
         authentication: CommonGroundAuthentication,
         pageNumber: Int,
-        pageSize: Int? = null,
+        pageSize: Int,
         isOpen: Boolean? = null,
         themaId: UUID,
         language: String,
-    ): ZaakPage? {
+    ): List<Zaak> {
         // 1. get themas, including the hoofdthema and may be their hoofdthema
         val themas = mutableSetOf<OpenProductThema>()
 
@@ -219,17 +228,7 @@ class OpenProductService(
             )
 
         if (thema == null) {
-            return ZaakPage.fromResultPage(
-                pageNumber = pageNumber,
-                pageSize = pageSize ?: 20,
-                resultPage =
-                    nl.nlportal.zakenapi.domain.ResultPage(
-                        count = 1,
-                        next = null,
-                        previous = null,
-                        results = emptyList(),
-                    ),
-            )
+            return emptyList()
         } else {
             themas.add(thema)
         }
@@ -263,29 +262,102 @@ class OpenProductService(
         }
 
         if (!authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes)) {
-            return ZaakPage.fromResultPage(
-                pageNumber = pageNumber,
-                pageSize = pageSize ?: 20,
-                resultPage =
-                    nl.nlportal.zakenapi.domain.ResultPage(
-                        count = 1,
-                        next = null,
-                        previous = null,
-                        results = emptyList(),
-                    ),
-            )
+            return emptyList()
         }
 
         if (zaakTypes.isNotEmpty()) {
             request.ofZaakTypes(zaakTypes.toList())
         }
 
-        return ZaakPage.fromResultPage(
-            pageNumber = pageNumber,
-            pageSize = pageSize ?: 20,
-            resultPage =
-                request
-                    .retrieve(),
+        return request
+            .retrieve()
+            .results
+            .sortedBy { it.startdatum }
+    }
+
+    suspend fun getThemaTaken(
+        authentication: CommonGroundAuthentication,
+        pageNumber: Int,
+        pageSize: Int,
+        themaId: UUID,
+        language: String,
+    ): List<TaakV2> {
+        val taken =
+            findTakenByIdentification(
+                authentication = authentication,
+                pageNumber = pageNumber,
+                pageSize = pageSize,
+            )
+
+        // when no tasks are found, just return immediately
+        if (taken.isEmpty()) {
+            return taken
+        }
+
+        val zaken =
+            getThemaZaken(
+                authentication = authentication,
+                pageNumber = pageNumber,
+                pageSize = pageSize,
+                themaId = themaId,
+                language = language,
+            )
+
+        // filter out the taak which is not connected to a zaak
+        return taken
+            .filterNot { task ->
+                !zaken.any { it.uuid.toString() == task.koppeling.value }
+            }
+            .sortedBy { it.verloopdatum }
+    }
+
+    private suspend fun findTakenByIdentification(
+        authentication: CommonGroundAuthentication,
+        pageNumber: Int,
+        pageSize: Int,
+    ): List<TaakV2> {
+        val objectSearchParameters =
+            mutableListOf(
+                ObjectSearchParameter(
+                    "identificatie__type",
+                    nl.nlportal.zgw.objectenapi.domain.Comparator.EQUAL_TO,
+                    authentication.userType,
+                ),
+                ObjectSearchParameter(
+                    "identificatie__value",
+                    nl.nlportal.zgw.objectenapi.domain.Comparator.EQUAL_TO,
+                    authentication.userId,
+                ),
+                ObjectSearchParameter("status", nl.nlportal.zgw.objectenapi.domain.Comparator.EQUAL_TO, "open"),
+            )
+
+        authenticationMachtigingsDienstService.taakTypes(authentication)?.let {
+            objectSearchParameters.add(ObjectSearchParameter("eigenaar", Comparator.IN_LIST, it.joinToString("|")))
+        }
+
+        return getObjectsApiObjectResultPage<TaakObjectV2>(
+            objectsApiTaskConfigProperties.typeUrlV2,
+            objectSearchParameters,
+            pageNumber,
+            pageSize,
+        ).let { resultPage ->
+            TaakPageV2.fromResultPage(pageNumber, pageSize, resultPage)
+        }
+            .content
+    }
+
+    private suspend inline fun <reified T> getObjectsApiObjectResultPage(
+        objectTypeUrl: String,
+        searchParameters: List<ObjectSearchParameter>,
+        pageNumber: Int,
+        pageSize: Int,
+    ): ResultPage<ObjectsApiObject<T>> {
+        return objectsApiClient.getObjects<T>(
+            objectSearchParameters = searchParameters,
+            objectTypeUrl = objectTypeUrl,
+            page = pageNumber,
+            pageSize = pageSize,
+            ordering = "-record__startAt",
         )
     }
 
