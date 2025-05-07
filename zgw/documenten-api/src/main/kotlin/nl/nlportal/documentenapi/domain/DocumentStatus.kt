@@ -24,4 +24,5 @@ enum class DocumentStatus(
     TER_VASTSTELLING("ter_vaststelling"),
     DEFINITIEF("definitief"),
     GEARCHIVEERD("gearchiveerd"),
+    GEEN_STATUS(""),
 }

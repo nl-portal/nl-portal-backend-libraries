@@ -1,0 +1,8 @@
+{
+  "RETURNMAC": "12345678-90ab-cdef-1234-567890abcdef",
+  "hostedCheckoutId": "123456",
+  "merchantReference": "7e21badb48fe45848bbc1efef2a88504",
+  "partialRedirectUrl": "preprod.direct.worldline-solutions.com/hostedcheckout/PaymentMethods/Selection/e61340e579e04172a740676ffdda162e",
+  "redirectUrl": "https://payment.preprod.direct.worldline-solutions.com/hostedcheckout/PaymentMethods/Selection/e61340e579e04172a740676ffdda162e"
+}
+
