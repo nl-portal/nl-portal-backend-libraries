@@ -15,9 +15,12 @@
  */
 package nl.nlportal.openproduct.autoconfigure
 
+import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.openproduct.client.OpenProductClient
 import nl.nlportal.openproduct.client.OpenProductTypeClient
 import nl.nlportal.openproduct.service.OpenProductService
+import nl.nlportal.zakenapi.client.ZakenApiClient
+import nl.nlportal.zgw.taak.autoconfigure.TaakConfig
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -51,10 +54,16 @@ class OpenProductAutoConfiguration {
     fun openProductService(
         openProductClient: OpenProductClient,
         openProductTypeClient: OpenProductTypeClient,
+        zakenApiClient: ZakenApiClient,
+        taakObjectConfig: TaakConfig,
+        authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
     ): OpenProductService {
         return OpenProductService(
             openProductClient = openProductClient,
             openProductTypeClient = openProductTypeClient,
+            objectsApiTaskConfigProperties = taakObjectConfig.properties,
+            zakenApiClient = zakenApiClient,
+            authenticationMachtigingsDienstService = authenticationMachtigingsDienstService,
         )
     }
 }

@@ -22,6 +22,8 @@ dependencies {
     api(project(":graphql"))
     api(project(":portal-authentication"))
     api(project(":zgw:common-ground-authentication"))
+    api(project(":zgw:zaken-api"))
+    api(project(":zgw:taak"))
 
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.postgresql)

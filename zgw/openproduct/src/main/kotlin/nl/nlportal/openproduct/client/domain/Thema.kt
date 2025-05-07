@@ -26,7 +26,7 @@ data class OpenProductThema(
     val beschrijving: String? = null,
     val gepubliceerd: Boolean? = false,
     @JsonProperty("hoofd_thema")
-    val hoofdThema: String? = null,
+    val hoofdThema: UUID? = null,
     val producttypen: List<OpenProductThemaProductType> = emptyList(),
     @JsonProperty("aanmaak_datum")
     val aanmaakDatum: ZonedDateTime,

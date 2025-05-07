@@ -19,8 +19,11 @@ import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
 import com.expediagroup.graphql.server.operations.Query
 import graphql.schema.DataFetchingEnvironment
+import nl.nlportal.graphql.security.SecurityConstants
 import nl.nlportal.openproduct.client.domain.OpenProductThema
+import nl.nlportal.openproduct.graphql.domain.OpenProductThemaHierarchy
 import nl.nlportal.openproduct.service.OpenProductService
+import nl.nlportal.zakenapi.graphql.ZaakPage
 import java.util.*
 
 @AuthenticatedDirective
@@ -38,14 +41,42 @@ class OpenProductThemaQuery(
         )
     }
 
+    @GraphQLDescription("Get all hoofd themas")
+    suspend fun getOpenProductHoofdThemas(): List<OpenProductThema> {
+        return openProductService.getHoofdThemas()
+    }
+
+    @GraphQLDescription("Get all themas hierarchy")
+    suspend fun getOpenProductThemasHierarchy(): List<OpenProductThemaHierarchy> {
+        return openProductService.getThemasHierarchy()
+    }
+
     @GraphQLDescription("Get a thema")
-    suspend fun getOpenProductThema(
-        dfe: DataFetchingEnvironment,
-        themaId: UUID,
-    ): OpenProductThema? {
+    suspend fun getOpenProductThema(themaId: UUID): OpenProductThema? {
         val response =
             openProductService.getThema(
                 themaId = themaId,
+            )
+        return response
+    }
+
+    @GraphQLDescription("Get zaken of a thema, including their hoofd themas")
+    suspend fun getOpenProductThemaZaken(
+        dfe: DataFetchingEnvironment,
+        pageNumber: Int? = null,
+        pageSize: Int? = null,
+        themaId: UUID,
+        language: String,
+        isOpen: Boolean? = null,
+    ): ZaakPage? {
+        val response =
+            openProductService.getThemaZaken(
+                authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+                themaId = themaId,
+                pageNumber = pageNumber ?: 1,
+                pageSize = pageSize ?: 20,
+                language = language,
+                isOpen = isOpen,
             )
         return response
     }

@@ -12,6 +12,7 @@ query {
             naam,
             beschrijving,
             gepubliceerd,
+            hoofdThema,
             producttypen {
                 uuid,
                 code,

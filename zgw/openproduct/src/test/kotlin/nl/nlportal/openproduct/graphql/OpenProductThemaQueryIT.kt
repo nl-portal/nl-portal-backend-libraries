@@ -100,10 +100,74 @@ class OpenProductThemaQueryIT(
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductThemas.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.number").isEqualTo(1)
+                .jsonPath("$basePath.totalElements").isEqualTo(4)
                 .jsonPath("$resultPath.naam").isEqualTo("Parkeren")
                 .jsonPath("$resultPath.producttypen[0].uniformeProductNaam").isEqualTo("Parkeervergunning")
                 .jsonPath("$resultPath.producttypen[0].code").isEqualTo("PARKEREN")
+        }
+
+    @Test
+    @WithBurgerUser("569312863")
+    fun `get hoofd themas`() =
+        runTest {
+            val basePath = "$.data.getOpenProductHoofdThemas"
+            webTestClient
+                .post()
+                .uri { builder ->
+                    builder
+                        .path("/graphql")
+                        .build()
+                }
+                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductHoofdThemas.gql")))
+                .exchange()
+                .verifyOnlyDataExists(basePath)
+                .jsonPath("$basePath.size()").isEqualTo(2)
+                .jsonPath("$basePath[0].naam").isEqualTo("Belastingzaken")
+                .jsonPath("$basePath[0].producttypen[0].uniformeProductNaam").isEqualTo("toeristenbelasting")
+                .jsonPath("$basePath[0].producttypen[0].code").isEqualTo("BELASTINGZAKEN")
+        }
+
+    @Test
+    @WithBurgerUser("569312863")
+    fun `get themas hierarchy`() =
+        runTest {
+            val basePath = "$.data.getOpenProductThemasHierarchy"
+            webTestClient
+                .post()
+                .uri { builder ->
+                    builder
+                        .path("/graphql")
+                        .build()
+                }
+                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductThemasHierarchy.gql")))
+                .exchange()
+                .verifyOnlyDataExists(basePath)
+                .jsonPath("$basePath.size()").isEqualTo(2)
+                .jsonPath("$basePath[0].thema.naam").isEqualTo("Belastingzaken")
+                .jsonPath("$basePath[0].thema.producttypen[0].uniformeProductNaam").isEqualTo("toeristenbelasting")
+                .jsonPath("$basePath[0].thema.producttypen[0].code").isEqualTo("BELASTINGZAKEN")
+        }
+
+    @Test
+    @WithBurgerUser("569312863")
+    fun `get themas zaken`() =
+        runTest {
+            val basePath = "$.data.getOpenProductThemaZaken"
+            webTestClient
+                .post()
+                .uri { builder ->
+                    builder
+                        .path("/graphql")
+                        .build()
+                }
+                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductThemaZaken.gql")))
+                .exchange()
+                .verifyOnlyDataExists(basePath)
+                .jsonPath("$basePath.totalElements").isEqualTo(8)
+                .jsonPath("$basePath.content[0].uuid").isEqualTo("64eaf9ef-37b4-4898-acc9-ae47bee577a2")
         }
 
     @Test
@@ -133,13 +197,34 @@ class OpenProductThemaQueryIT(
                 @Throws(InterruptedException::class)
                 override fun dispatch(request: RecordedRequest): MockResponse {
                     val path = request.path?.substringBefore('?')
+                    val queryParams = request.path?.substringAfter('?')?.split('&') ?: emptyList()
                     val response =
                         when (request.method + " " + path) {
                             "GET /themas/41f71c2e-9e0c-4a1b-8d39-709669b256c2/" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-thema.json")
                             }
+                            "GET /themas/5422b0e4-18ae-4017-bcea-fb03446a8136/" -> {
+                                TestHelper.mockResponseFromFile("/config/data/get-subthema.json")
+                            }
+                            "GET /themas/c111ce6f-308f-4e6d-9460-ffe6a07e283a/" -> {
+                                TestHelper.mockResponseFromFile("/config/data/get-hoofdthema.json")
+                            }
                             "GET /themas/" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-themas.json")
+                            }
+                            "POST /zaken/api/v1/zaken/_zoek" -> {
+                                TestHelper.mockResponseFromFile("/product/data/get-zaken.json")
+                            }
+                            "GET /producttypen/dee273e9-2aa8-40ae-84b7-cb7da3c075ba/" -> {
+                                TestHelper.mockResponseFromFile("/config/data/get-producttype.json")
+                            }
+                            "GET /api/v2/objects" -> {
+                                if (queryParams.any { it.contains("identificatie__value__exact__569312863") }
+                                ) {
+                                    TestHelper.mockResponseFromFile("/config/data/get-taken.json")
+                                } else {
+                                    MockResponse().setResponseCode(404)
+                                }
                             }
                             else -> MockResponse().setResponseCode(404)
                         }

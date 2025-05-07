@@ -1,5 +1,5 @@
 {
-  "count": 1,
+  "count": 4,
   "next": null,
   "previous": null,
   "results": [
@@ -10,7 +10,7 @@
       "gepubliceerd": true,
       "aanmaak_datum": "2025-04-30T13:51:32.735390+02:00",
       "update_datum": "2025-04-30T13:51:32.735390+02:00",
-      "hoofd_thema": null,
+      "hoofd_thema": "5422b0e4-18ae-4017-bcea-fb03446a8136",
       "producttypen": [
         {
           "uuid": "dee273e9-2aa8-40ae-84b7-cb7da3c075ba",
@@ -28,6 +28,53 @@
           "update_datum": "2025-04-30T13:51:32.736333+02:00"
         }
       ]
+    },
+    {
+      "uuid": "f51faf86-0a3a-4540-8345-50035ab84876",
+      "naam": "Belastingzaken",
+      "beschrijving": "Beschrijving belastingzaken",
+      "gepubliceerd": true,
+      "aanmaak_datum": "2025-05-07T07:13:57.996714+02:00",
+      "update_datum": "2025-05-07T07:13:57.996735+02:00",
+      "hoofd_thema": null,
+      "producttypen": [
+        {
+          "uuid": "202fef9d-4594-45c5-86e4-4bccb06a2679",
+          "code": "BELASTINGZAKEN",
+          "keywords": [],
+          "uniforme_product_naam": "toeristenbelasting",
+          "toegestane_statussen": [
+            "gereed",
+            "actief",
+            "ingetrokken",
+            "geweigerd",
+            "verlopen"
+          ],
+          "gepubliceerd": true,
+          "aanmaak_datum": "2025-05-07T07:16:14.908618+02:00",
+          "update_datum": "2025-05-07T07:16:14.908630+02:00"
+        }
+      ]
+    },
+    {
+      "uuid": "5422b0e4-18ae-4017-bcea-fb03446a8136",
+      "naam": "Sub thema",
+      "beschrijving": "dit is een subthema",
+      "gepubliceerd": true,
+      "aanmaak_datum": "2025-05-06T16:35:50.250542+02:00",
+      "update_datum": "2025-05-06T16:36:49.477374+02:00",
+      "hoofd_thema": "c111ce6f-308f-4e6d-9460-ffe6a07e283a",
+      "producttypen": []
+    },
+    {
+      "uuid": "c111ce6f-308f-4e6d-9460-ffe6a07e283a",
+      "naam": "HoofdThema",
+      "beschrijving": "Dit is een test thema",
+      "gepubliceerd": true,
+      "aanmaak_datum": "2025-05-01T09:40:43.307637+02:00",
+      "update_datum": "2025-05-06T16:36:43.971399+02:00",
+      "hoofd_thema": null,
+      "producttypen": []
     }
   ]
 }

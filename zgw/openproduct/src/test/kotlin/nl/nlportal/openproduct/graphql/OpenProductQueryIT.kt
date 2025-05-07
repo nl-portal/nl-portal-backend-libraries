@@ -20,6 +20,8 @@ import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.openproduct.TestHelper
 import nl.nlportal.openproduct.TestHelper.verifyOnlyDataExists
 import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration
+import nl.nlportal.zakenapi.client.ZakenApiConfig
+import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -47,6 +49,8 @@ import java.net.URI
 class OpenProductQueryIT(
     @Autowired private val webTestClient: WebTestClient,
     @Autowired private val openProductModuleConfiguration: OpenProductModuleConfiguration,
+    @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
+    @Autowired private val zakenApiConfig: ZakenApiConfig,
 ) {
     companion object {
         @JvmStatic
@@ -59,6 +63,8 @@ class OpenProductQueryIT(
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
             propsRegistry.add("nl-portal.config.openproduct.properties.product-api-url") { url }
+            propsRegistry.add("nl-portal.config.zakenapi.properties.url") { url }
+            propsRegistry.add("nl-portal.config.objectenapi.properties.url") { url }
         }
 
         @JvmStatic
@@ -81,6 +87,8 @@ class OpenProductQueryIT(
         setupMockServer()
         url = server?.url("/").toString()
         openProductModuleConfiguration.properties.productApiUrl = URI(url)
+        objectsApiClientConfig.properties.url = URI(url)
+        zakenApiConfig.properties.url = url
     }
 
     @Test
@@ -111,7 +119,7 @@ class OpenProductQueryIT(
 
     @Test
     @WithBurgerUser("569312863")
-    fun `get product`() =
+    fun `get product is allowed`() =
         runTest {
             val basePath = "$.data.getOpenProduct"
             webTestClient
@@ -131,6 +139,27 @@ class OpenProductQueryIT(
                 .jsonPath("$basePath.startDatum").isEqualTo("2025-04-30")
                 .jsonPath("$basePath.producttype.code").isEqualTo("PARKEREN")
                 .jsonPath("$basePath.verbruiksobject.uren").isEqualTo(30)
+        }
+
+    @Test
+    @WithBurgerUser("569312864")
+    fun `get product is not allowed`() =
+        runTest {
+            val basePath = "$.data.getOpenProduct"
+            webTestClient
+                .post()
+                .uri { builder ->
+                    builder
+                        .path("/graphql")
+                        .build()
+                }
+                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProduct.gql")))
+                .exchange()
+                .expectBody()
+                .jsonPath(
+                    "errors[0].message",
+                ).isEqualTo("Exception while fetching data (/getOpenProduct) : 401 UNAUTHORIZED \"Not authorized\"")
         }
 
     private fun setupMockServer() {

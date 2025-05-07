@@ -7,7 +7,7 @@ import nl.nlportal.zakenapi.domain.Zaak
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 import org.springframework.web.reactive.function.client.awaitBody
-import java.util.UUID
+import java.util.*
 
 class ZakenImpl(val zakenApiClient: ZakenApiClient) : Zaken {
     override fun search(): SearchZaken {
