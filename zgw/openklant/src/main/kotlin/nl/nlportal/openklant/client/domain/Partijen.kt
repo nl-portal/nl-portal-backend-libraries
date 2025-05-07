@@ -47,7 +47,7 @@ data class OpenKlant2Partij(
     @JsonInclude(JsonInclude.Include.NON_NULL)
     val nummer: String? = null,
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    val partijIdentificatoren: List<OpenKlant2ForeignKey>? = null,
+    val partijIdentificatoren: List<OpenKlant2PartijIdentificator>? = null,
     val rekeningnummers: List<OpenKlant2ForeignKey>? = null,
     val soortPartij: SoortPartij,
     @JsonInclude(JsonInclude.Include.NON_NULL)

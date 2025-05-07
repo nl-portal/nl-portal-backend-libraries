@@ -30,6 +30,8 @@ open class ZaakQuery(val zakenApiService: ZakenApiService) : Query {
         isOpen is optional, when not available, all zaken will be returned
         isOpen is true, only zaken without enddate will be returned
         isOpen is false, only zaken with an enddate will be returned
+        omschrijving: partial search of this property. Since OpenZaak 1.18.0
+        identificatieContains: partial search of this property. Since OpenZaak 1.18.0
     """,
     )
     open suspend fun getZaken(
@@ -39,6 +41,8 @@ open class ZaakQuery(val zakenApiService: ZakenApiService) : Query {
         zaakTypeUrl: String? = null,
         isOpen: Boolean? = null,
         identificatie: String? = null,
+        omschrijving: String? = null,
+        identificatieContains: String? = null,
     ): ZaakPage {
         return zakenApiService.getZaken(
             page = page ?: 1,
@@ -47,6 +51,8 @@ open class ZaakQuery(val zakenApiService: ZakenApiService) : Query {
             zaakTypeUrl = zaakTypeUrl,
             isOpen = isOpen,
             identificatie = identificatie,
+            omschrijving = omschrijving,
+            identificatieContains = identificatieContains,
         )
     }
 

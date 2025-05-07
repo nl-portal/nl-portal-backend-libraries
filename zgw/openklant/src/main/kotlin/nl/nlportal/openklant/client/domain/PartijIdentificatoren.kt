@@ -28,6 +28,7 @@ data class OpenKlant2PartijIdentificator(
     val anderePartijIdentificator: String? = null,
     val identificeerdePartij: OpenKlant2IdentificeerdePartij? = null,
     val partijIdentificator: OpenKlant2Identificator? = null,
+    val subIdentificatorVan: OpenKlant2SubIdentificatorVan? = null,
 ) {
     init {
         require(anderePartijIdentificator == null || anderePartijIdentificator.length <= 200) {
@@ -37,6 +38,10 @@ data class OpenKlant2PartijIdentificator(
 }
 
 data class OpenKlant2IdentificeerdePartij(
+    val uuid: UUID,
+)
+
+data class OpenKlant2SubIdentificatorVan(
     val uuid: UUID,
 )
 

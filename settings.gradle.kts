@@ -26,7 +26,7 @@ pluginManagement {
     }
 }
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.10.0"
 }
 
 include(
@@ -49,6 +49,7 @@ include(
     "product",
     "portal-authentication",
     "payment",
+    "payment-direct",
     "zgw:berichten",
     "zgw:catalogi-api",
     "zgw:common-ground-authentication",
