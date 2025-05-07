@@ -76,6 +76,29 @@ data class OpenKlant2Adres(
 @GraphQLIgnore
 interface OpenKlant2Filters
 
+enum class PartijIdentificatorCodeRegister(
+    val register: String,
+) {
+    HR("hr"),
+    BRP("brp"),
+}
+
+enum class PartijIdentificatorCodeSoort(
+    val soort: String,
+) {
+    BSN("bsn"),
+    KVKNUMMER("kvk_nummer"),
+    VESTIGINGSNUMMER("vestigingsnummer"),
+}
+
+enum class PartijIdentificatorCodeType(
+    val type: String,
+) {
+    NATUURLIJKPERSOON("natuurlijk_persoon"),
+    NIETNATUURLIJKPERSOON("niet_natuurlijk_persoon"),
+    VESTIGING("vestiging"),
+}
+
 enum class OpenKlant2Landcode(
     @JsonValue val landcode: String,
     val landnaam: String,

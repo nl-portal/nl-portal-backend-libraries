@@ -1,0 +1,17 @@
+mutation {
+    createUserPartij(partijRequest: {
+        type: ORGANISATIE,
+        indicatieActief: true,
+        indicatieGeheimhouding: true,
+        organisatieIdentificatie: {
+            naam: "Gemeente Den Haag"
+        }
+    }) {
+        type
+        indicatieActief
+        indicatieGeheimhouding
+        organisatieIdentificatie {
+            naam
+        }
+    }
+}
