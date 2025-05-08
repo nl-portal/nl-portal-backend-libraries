@@ -17,6 +17,7 @@ package nl.nlportal.openklant.client.path
 
 import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
 import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdres
+import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdresUpdate
 import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdressenFilters
 import nl.nlportal.openklant.client.domain.ResultPage
 import org.springframework.http.MediaType
@@ -73,7 +74,7 @@ class DigitaleAdressen(val client: OpenKlant2KlantinteractiesClient) : KlantInte
             .awaitBodyOrNull()
     }
 
-    suspend fun put(digitaleAdres: OpenKlant2DigitaleAdres): OpenKlant2DigitaleAdres? {
+    suspend fun patch(digitaleAdres: OpenKlant2DigitaleAdresUpdate): OpenKlant2DigitaleAdres? {
         return client
             .webClient()
             .put()

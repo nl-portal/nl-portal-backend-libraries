@@ -22,6 +22,7 @@ import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.openklant.autoconfigure.OpenKlantModuleConfiguration.OpenKlantConfigurationProperties
 import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
 import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdres
+import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdresUpdate
 import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdressenFilters
 import nl.nlportal.openklant.client.domain.OpenKlant2Identificator
 import nl.nlportal.openklant.client.domain.OpenKlant2IdentificeerdePartij
@@ -212,7 +213,7 @@ class OpenKlant2Service(
                             ),
                     )
             } catch (ex: WebClientResponseException) {
-                logger.debug(ex) { "Failed to create DigitaleAdres: ${ex.responseBodyAsString}" }
+                logger.error(ex) { "Failed to create DigitaleAdres: ${ex.responseBodyAsString}" }
                 return null
             }
 
@@ -221,33 +222,29 @@ class OpenKlant2Service(
 
     suspend fun updateDigitaleAdresById(
         authentication: CommonGroundAuthentication,
-        digitaleAdresId: UUID,
-        digitaleAdres: OpenKlant2DigitaleAdres,
+        digitaleAdres: OpenKlant2DigitaleAdresUpdate,
     ): OpenKlant2DigitaleAdres? {
-        val previousDigitaleAdres = openKlant2Client.path<DigitaleAdressen>().get(digitaleAdresId)
-        if (previousDigitaleAdres == null) {
-            logger.debug { "Failed to update DigitaleAdres: No DigitaleAdres exists with provided Id" }
-            return null
-        }
-
-        val updatedDigitaleAdres =
-            previousDigitaleAdres.copy(
-                adres = digitaleAdres.adres,
-                omschrijving = digitaleAdres.omschrijving,
-                referentie = openKlantConfigurationProperties.digitalAdressenReferentie ?: "",
-            )
-
-        val digitaleAdresResponse =
-            try {
-                openKlant2Client
-                    .path<DigitaleAdressen>()
-                    .put(updatedDigitaleAdres)
-            } catch (ex: WebClientResponseException) {
-                logger.debug(ex) { "Failed to update DigitaleAdres: ${ex.responseBodyAsString}" }
+        try {
+            val previousDigitaleAdres = findDigitaleAdressen(authentication).singleOrNull { it.uuid == digitaleAdres.uuid }
+            if (previousDigitaleAdres == null) {
+                logger.debug { "Failed to update DigitaleAdres: No DigitaleAdres exists with provided Id" }
                 return null
             }
+            val digitaleAdresResponse =
+                try {
+                    openKlant2Client
+                        .path<DigitaleAdressen>()
+                        .patch(digitaleAdres = digitaleAdres)
+                } catch (ex: WebClientResponseException) {
+                    logger.debug(ex) { "Failed to update DigitaleAdres: ${ex.responseBodyAsString}" }
+                    return null
+                }
 
-        return digitaleAdresResponse
+            return digitaleAdresResponse
+        } catch (ex: WebClientResponseException) {
+            logger.error(ex) { "Failed to update DigitaleAdres for uuid - ${digitaleAdres.uuid}: ${ex.responseBodyAsString}" }
+            return null
+        }
     }
 
     suspend fun deleteDigitaleAdresById(

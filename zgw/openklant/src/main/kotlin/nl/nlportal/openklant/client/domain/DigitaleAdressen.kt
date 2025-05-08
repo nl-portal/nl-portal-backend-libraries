@@ -46,6 +46,13 @@ data class OpenKlant2DigitaleAdres(
     }
 }
 
+data class OpenKlant2DigitaleAdresUpdate(
+    val uuid: UUID,
+    val adres: String,
+    val omschrijving: String,
+    val soortDigitaalAdres: String,
+)
+
 enum class OpenKlant2DigitaleAdressenFilters(
     @JsonValue val value: String,
 ) : OpenKlant2Filters {
