@@ -84,7 +84,7 @@ class OpenKlant2DigitaleAdresQueryIT(
         }
 
     @Test
-    @WithBurgerUser("296648875")
+    @WithBurgerUser("569312863")
     fun `should find DigitaleAdressen for authenticated user`() =
         runTest {
             // when
@@ -115,7 +115,7 @@ class OpenKlant2DigitaleAdresQueryIT(
             verify(openKlant2Service, times(1)).findDigitaleAdressen(any())
 
             assertNotNull(response)
-            assertEquals("OVERIG", response?.get(0)?.get("type")?.textValue())
+            assertEquals("EMAIL", response?.get(0)?.get("type")?.textValue())
         }
 
     @Test

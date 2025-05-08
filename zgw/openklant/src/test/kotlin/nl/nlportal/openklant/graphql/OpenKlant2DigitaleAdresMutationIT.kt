@@ -99,7 +99,8 @@ class OpenKlant2DigitaleAdresMutationIT(
             testdigitaleAdresUUID = createResult.get("uuid").textValue()
         }
 
-    @Test
+    // DISABLED: because of issue when update digital adres, see https://github.com/maykinmedia/open-klant/issues/411
+    // @Test
     @Order(2)
     @WithBurgerUser("296648875")
     fun `should update existing DigitaleAdres for burger`() =

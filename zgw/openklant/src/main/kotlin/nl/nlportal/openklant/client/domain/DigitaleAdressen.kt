@@ -25,6 +25,7 @@ data class OpenKlant2DigitaleAdres(
     val adres: String,
     val omschrijving: String,
     val soortDigitaalAdres: String,
+    val referentie: String? = null,
     @JsonInclude(JsonInclude.Include.NON_NULL)
     val url: String? = null,
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -49,6 +50,9 @@ enum class OpenKlant2DigitaleAdressenFilters(
     @JsonValue val value: String,
 ) : OpenKlant2Filters {
     PAGE("page"),
+    PAGE_SIZE("pageSize"),
+    VERSTREKTDOORPARTIJ_PARTIJ_IDENTIFICATOR_CODE_OBJECTID("verstrektDoorPartij__partijIdentificator__objectId"),
+    REFERENTIE("referentie"),
     ;
 
     override fun toString() = this.value
