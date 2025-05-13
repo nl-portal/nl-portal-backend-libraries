@@ -23,19 +23,31 @@ import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.openproduct.client.OpenProductClient
 import nl.nlportal.openproduct.client.OpenProductTypeClient
+import nl.nlportal.openproduct.client.domain.OpenProductActie
+import nl.nlportal.openproduct.client.domain.OpenProductActiesFilters
+import nl.nlportal.openproduct.client.domain.OpenProductContact
+import nl.nlportal.openproduct.client.domain.OpenProductContactenFilters
+import nl.nlportal.openproduct.client.domain.OpenProductLink
+import nl.nlportal.openproduct.client.domain.OpenProductLinksFilters
+import nl.nlportal.openproduct.client.domain.OpenProductLocatie
+import nl.nlportal.openproduct.client.domain.OpenProductLocatiesFilters
+import nl.nlportal.openproduct.client.domain.OpenProductOrganisatie
+import nl.nlportal.openproduct.client.domain.OpenProductOrganisatiesFilters
+import nl.nlportal.openproduct.client.domain.OpenProductPrijs
+import nl.nlportal.openproduct.client.domain.OpenProductPrijzenFilters
 import nl.nlportal.openproduct.client.domain.OpenProductProduct
 import nl.nlportal.openproduct.client.domain.OpenProductProductType
 import nl.nlportal.openproduct.client.domain.OpenProductProductTypeContent
 import nl.nlportal.openproduct.client.domain.OpenProductProductTypesFilters
 import nl.nlportal.openproduct.client.domain.OpenProductProductenFilters
+import nl.nlportal.openproduct.client.domain.OpenProductSchema
+import nl.nlportal.openproduct.client.domain.OpenProductSchemasFilters
 import nl.nlportal.openproduct.client.domain.OpenProductThema
 import nl.nlportal.openproduct.client.domain.OpenProductThemasFilters
+import nl.nlportal.openproduct.client.path.Acties
 import nl.nlportal.openproduct.client.path.ProductTypes
 import nl.nlportal.openproduct.client.path.Producten
 import nl.nlportal.openproduct.client.path.Themas
-import nl.nlportal.openproduct.graphql.ProductTypesPage
-import nl.nlportal.openproduct.graphql.ProductenPage
-import nl.nlportal.openproduct.graphql.ThemasPage
 import nl.nlportal.openproduct.graphql.domain.OpenProductThemaHierarchy
 import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.domain.Zaak
@@ -43,7 +55,13 @@ import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
-import nl.nlportal.zgw.objectenapi.domain.ResultPage
+import nl.nlportal.openproduct.client.domain.ResultPage
+import nl.nlportal.openproduct.client.path.Contacten
+import nl.nlportal.openproduct.client.path.Links
+import nl.nlportal.openproduct.client.path.Locaties
+import nl.nlportal.openproduct.client.path.Organisaties
+import nl.nlportal.openproduct.client.path.Prijzen
+import nl.nlportal.openproduct.client.path.Schemas
 import nl.nlportal.zgw.taak.autoconfigure.TaakConfig.TaakConfigProperties
 import nl.nlportal.zgw.taak.domain.TaakObjectV2
 import nl.nlportal.zgw.taak.domain.TaakV2
@@ -63,27 +81,23 @@ class OpenProductService(
     suspend fun getThemas(
         pageNumber: Int,
         pageSize: Int,
-    ): ThemasPage {
+    ): ResultPage<OpenProductThema> {
         val searchVariables =
             listOf(
                 OpenProductThemasFilters.PAGE to pageNumber.toString(),
                 OpenProductThemasFilters.PAGE_SIZE to pageSize.toString(),
                 OpenProductThemasFilters.GEPUBLICEERD to true,
             )
-        return ThemasPage.fromResultPage(
-            pageNumber = pageNumber,
-            pageSize = pageSize,
-            resultPage = openProductTypeClient.path<Themas>().get(searchVariables),
-        )
+        return openProductTypeClient.path<Themas>().get(searchVariables)
     }
 
     suspend fun getHoofdThemas(): List<OpenProductThema> {
-        return getThemas(1, 999).content.filter { it.hoofdThema == null }
+        return getThemas(1, 999).results.filter { it.hoofdThema == null }
     }
 
     suspend fun getThemasHierarchy(): List<OpenProductThemaHierarchy> {
         val themasHierarchy = mutableListOf<OpenProductThemaHierarchy>()
-        val themas = getThemas(1, 999).content
+        val themas = getThemas(1, 999).results
         val hoofdThemas = themas.toList().filter { it.hoofdThema == null }
 
         hoofdThemas.forEach {
@@ -111,21 +125,16 @@ class OpenProductService(
         pageNumber: Int,
         pageSize: Int,
         language: String,
-    ): ProductTypesPage {
+    ): ResultPage<OpenProductProductType> {
         val searchVariables =
             listOf(
                 OpenProductProductTypesFilters.PAGE to pageNumber.toString(),
                 OpenProductProductTypesFilters.PAGE_SIZE to pageSize.toString(),
                 OpenProductProductTypesFilters.GEPUBLICEERD to true,
             )
-        return ProductTypesPage.fromResultPage(
-            pageNumber = pageNumber,
-            pageSize = pageSize,
-            resultPage =
-                openProductTypeClient.path<ProductTypes>().get(
-                    searchFilters = searchVariables,
-                    language = language,
-                ),
+        return openProductTypeClient.path<ProductTypes>().get(
+            searchFilters = searchVariables,
+            language = language,
         )
     }
 
@@ -140,6 +149,187 @@ class OpenProductService(
             )
         } catch (e: Exception) {
             logger.error(e) { "Error getting producttype with id: $productTypeId" }
+        }
+        return null
+    }
+
+    suspend fun getActies(
+        pageNumber: Int,
+        pageSize: Int,
+        naam: String? = null,
+    ): ResultPage<OpenProductActie> {
+        val searchVariables =
+            mutableListOf(
+                OpenProductActiesFilters.PAGE to pageNumber.toString(),
+                OpenProductActiesFilters.PAGE_SIZE to pageSize.toString(),
+            )
+
+        naam?.let {
+            searchVariables.add(OpenProductActiesFilters.NAAM_CONTAINS to it)
+        }
+        return openProductClient.path<Acties>().get(searchVariables)
+    }
+
+    suspend fun getActie(id: UUID): OpenProductActie? {
+        try {
+            return openProductTypeClient.path<Acties>().get(
+                id = id,
+            )
+        } catch (e: Exception) {
+            logger.error(e) { "Error getting actie with id: $id" }
+        }
+        return null
+    }
+
+    suspend fun getContacten(
+        pageNumber: Int,
+        pageSize: Int,
+        achternaam: String? = null,
+    ): ResultPage<OpenProductContact> {
+        val searchVariables =
+            mutableListOf(
+                OpenProductContactenFilters.PAGE to pageNumber.toString(),
+                OpenProductContactenFilters.PAGE_SIZE to pageSize.toString(),
+            )
+
+        achternaam?.let {
+            searchVariables.add(OpenProductContactenFilters.ACHTERNAAM to it)
+        }
+        return openProductClient.path<Contacten>().get(searchVariables)
+    }
+
+    suspend fun getContact(id: UUID): OpenProductContact? {
+        try {
+            return openProductTypeClient.path<Contacten>().get(
+                id = id,
+            )
+        } catch (e: Exception) {
+            logger.error(e) { "Error getting contact with id: $id" }
+        }
+        return null
+    }
+
+    suspend fun getLocaties(
+        pageNumber: Int,
+        pageSize: Int,
+        naam: String? = null,
+    ): ResultPage<OpenProductLocatie> {
+        val searchVariables =
+            mutableListOf(
+                OpenProductLocatiesFilters.PAGE to pageNumber.toString(),
+                OpenProductLocatiesFilters.PAGE_SIZE to pageSize.toString(),
+            )
+
+        naam?.let {
+            searchVariables.add(OpenProductLocatiesFilters.NAAM_EXACT to it)
+        }
+        return openProductClient.path<Locaties>().get(searchVariables)
+    }
+
+    suspend fun getLocatie(id: UUID): OpenProductLocatie? {
+        try {
+            return openProductTypeClient.path<Locaties>().get(
+                id = id,
+            )
+        } catch (e: Exception) {
+            logger.error(e) { "Error getting locatie with id: $id" }
+        }
+        return null
+    }
+
+    suspend fun getOrganisaties(
+        pageNumber: Int,
+        pageSize: Int,
+        naam: String? = null,
+    ): ResultPage<OpenProductOrganisatie> {
+        val searchVariables =
+            mutableListOf(
+                OpenProductOrganisatiesFilters.PAGE to pageNumber.toString(),
+                OpenProductOrganisatiesFilters.PAGE_SIZE to pageSize.toString(),
+            )
+
+        naam?.let {
+            searchVariables.add(OpenProductOrganisatiesFilters.NAAM_EXACT to it)
+        }
+        return openProductClient.path<Organisaties>().get(searchVariables)
+    }
+
+    suspend fun getOrganisatie(id: UUID): OpenProductOrganisatie? {
+        try {
+            return openProductTypeClient.path<Organisaties>().get(
+                id = id,
+            )
+        } catch (e: Exception) {
+            logger.error(e) { "Error getting organisatie with id: $id" }
+        }
+        return null
+    }
+
+    suspend fun getPrijzen(
+        pageNumber: Int,
+        pageSize: Int,
+    ): ResultPage<OpenProductPrijs> {
+        val searchVariables =
+            listOf(
+                OpenProductPrijzenFilters.PAGE to pageNumber.toString(),
+                OpenProductPrijzenFilters.PAGE_SIZE to pageSize.toString(),
+            )
+        return openProductClient.path<Prijzen>().get(searchVariables)
+    }
+
+    suspend fun getPrijs(id: UUID): OpenProductPrijs? {
+        try {
+            return openProductTypeClient.path<Prijzen>().get(
+                id = id,
+            )
+        } catch (e: Exception) {
+            logger.error(e) { "Error getting prijs with id: $id" }
+        }
+        return null
+    }
+
+    suspend fun getSchemas(
+        pageNumber: Int,
+        pageSize: Int,
+    ): ResultPage<OpenProductSchema> {
+        val searchVariables =
+            listOf(
+                OpenProductSchemasFilters.PAGE to pageNumber.toString(),
+                OpenProductSchemasFilters.PAGE_SIZE to pageSize.toString(),
+            )
+        return openProductClient.path<Schemas>().get(searchVariables)
+    }
+
+    suspend fun getSchema(id: UUID): OpenProductSchema? {
+        try {
+            return openProductTypeClient.path<Schemas>().get(
+                id = id,
+            )
+        } catch (e: Exception) {
+            logger.error(e) { "Error getting schema with id: $id" }
+        }
+        return null
+    }
+
+    suspend fun getLinks(
+        pageNumber: Int,
+        pageSize: Int,
+    ): ResultPage<OpenProductLink> {
+        val searchVariables =
+            listOf(
+                OpenProductLinksFilters.PAGE to pageNumber.toString(),
+                OpenProductLinksFilters.PAGE_SIZE to pageSize.toString(),
+            )
+        return openProductClient.path<Links>().get(searchVariables)
+    }
+
+    suspend fun getLinks(id: UUID): OpenProductLink? {
+        try {
+            return openProductTypeClient.path<Links>().get(
+                id = id,
+            )
+        } catch (e: Exception) {
+            logger.error(e) { "Error getting link with id: $id" }
         }
         return null
     }
@@ -159,7 +349,7 @@ class OpenProductService(
         authentication: CommonGroundAuthentication,
         pageNumber: Int,
         pageSize: Int,
-    ): ProductenPage {
+    ): ResultPage<OpenProductProduct> {
         val searchVariables =
             mutableListOf(
                 OpenProductProductenFilters.PAGE to pageNumber.toString(),
@@ -169,13 +359,8 @@ class OpenProductService(
 
         searchVariables.addAll(getEigenaarFilter(authentication))
 
-        return ProductenPage.fromResultPage(
-            pageNumber = pageNumber,
-            pageSize = pageSize,
-            resultPage =
-                openProductClient.path<Producten>().get(
-                    searchFilters = searchVariables,
-                ),
+        return openProductClient.path<Producten>().get(
+            searchFilters = searchVariables,
         )
     }
 
@@ -351,7 +536,7 @@ class OpenProductService(
         searchParameters: List<ObjectSearchParameter>,
         pageNumber: Int,
         pageSize: Int,
-    ): ResultPage<ObjectsApiObject<T>> {
+    ): nl.nlportal.zgw.objectenapi.domain.ResultPage<ObjectsApiObject<T>> {
         return objectsApiClient.getObjects<T>(
             objectSearchParameters = searchParameters,
             objectTypeUrl = objectTypeUrl,

@@ -33,10 +33,15 @@ class OpenProductTypeQuery(
         pageSize: Int? = null,
         language: String,
     ): ProductTypesPage {
-        return openProductService.getProductTypes(
+        return ProductTypesPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
-            language = language,
+            resultPage =
+                openProductService.getProductTypes(
+                    pageNumber = pageNumber ?: 1,
+                    pageSize = pageSize ?: 20,
+                    language = language,
+                ),
         )
     }
 

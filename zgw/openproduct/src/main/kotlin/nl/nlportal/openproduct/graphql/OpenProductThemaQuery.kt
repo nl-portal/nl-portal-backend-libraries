@@ -36,9 +36,14 @@ class OpenProductThemaQuery(
         pageNumber: Int? = null,
         pageSize: Int? = null,
     ): ThemasPage {
-        return openProductService.getThemas(
+        return ThemasPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
+            resultPage =
+                openProductService.getThemas(
+                    pageNumber = pageNumber ?: 1,
+                    pageSize = pageSize ?: 20,
+                ),
         )
     }
 

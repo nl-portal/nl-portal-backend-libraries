@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
 import nl.nlportal.openproduct.service.OpenProductService
 import org.springframework.beans.factory.annotation.Autowired
-import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.util.UUID
 
@@ -43,12 +42,12 @@ data class OpenProductProductType(
     @JsonProperty("update_datum")
     val updateDatum: ZonedDateTime,
     val themas: List<OpenProductProductTypeThema> = emptyList(),
-    val locaties: List<OpenProductProductTypeLocatie> = emptyList(),
-    val organisaties: List<OpenProductProductTypeOrganisatie> = emptyList(),
-    val contacten: List<OpenProductProductTypeContact> = emptyList(),
-    val prijzen: List<OpenProductProductTypePrijs> = emptyList(),
-    val links: List<OpenProductNaamUrl> = emptyList(),
-    val acties: List<OpenProductNaamUrl> = emptyList(),
+    val locaties: List<OpenProductLocatie> = emptyList(),
+    val organisaties: List<OpenProductOrganisatie> = emptyList(),
+    val contacten: List<OpenProductContact> = emptyList(),
+    val prijzen: List<OpenProductPrijs> = emptyList(),
+    val links: List<OpenProductLink> = emptyList(),
+    val acties: List<OpenProductActie> = emptyList(),
     val bestanden: List<OpenProductProductTypeBestand> = emptyList(),
     @JsonProperty("externe_codes")
     val externCodes: List<OpenProductProductTypeExterneCode> = emptyList(),
@@ -89,59 +88,6 @@ data class OpenProductProductTypeThema(
     val aanmaakDatum: ZonedDateTime,
     @JsonProperty("update_datum")
     val updateDatum: ZonedDateTime,
-)
-
-data class OpenProductProductTypeLocatie(
-    val uuid: UUID,
-    val naam: String,
-    val email: String? = null,
-    val telefoonnummer: String? = null,
-    val straat: String? = null,
-    val huisnummer: String? = null,
-    val postcode: String? = null,
-    val stad: String? = null,
-)
-
-data class OpenProductProductTypeOrganisatie(
-    val uuid: UUID,
-    val naam: String,
-    val code: String,
-    val email: String? = null,
-    val telefoonnummer: String? = null,
-    val straat: String? = null,
-    val huisnummer: String? = null,
-    val postcode: String? = null,
-    val stad: String? = null,
-)
-
-data class OpenProductProductTypeContact(
-    val uuid: UUID,
-    val voornaam: String,
-    val achternaam: String,
-    val email: String? = null,
-    val telefoonnummer: String? = null,
-    val rol: String? = null,
-    val organisatie: OpenProductProductTypeOrganisatie,
-)
-
-data class OpenProductProductTypePrijs(
-    val uuid: UUID,
-    val prijsopties: List<OpenProductProductTypePrijsOptie> = emptyList(),
-    val prijsregels: List<OpenProductProductTypePrijsRegel> = emptyList(),
-    @JsonProperty("actief_vanaf")
-    val actiefVanaf: LocalDate,
-)
-
-data class OpenProductProductTypePrijsOptie(
-    val uuid: UUID,
-    val bedrag: Float,
-    val beschrijving: String,
-)
-
-data class OpenProductProductTypePrijsRegel(
-    val uuid: UUID,
-    val url: String,
-    val beschrijving: String,
 )
 
 data class OpenProductProductTypeBestand(

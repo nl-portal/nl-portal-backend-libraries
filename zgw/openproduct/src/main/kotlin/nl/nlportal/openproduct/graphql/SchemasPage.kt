@@ -16,23 +16,23 @@
 package nl.nlportal.openproduct.graphql
 
 import nl.nlportal.graphql.Page
-import nl.nlportal.openproduct.client.domain.OpenProductProduct
+import nl.nlportal.openproduct.client.domain.OpenProductSchema
 import nl.nlportal.openproduct.client.domain.ResultPage
 
-class ProductenPage(
+class SchemasPage(
     number: Int,
     size: Int,
-    content: List<OpenProductProduct>,
+    content: List<OpenProductSchema>,
     totalElements: Int,
-) : Page<OpenProductProduct>(number, size, content, totalElements) {
+) : Page<OpenProductSchema>(number, size, content, totalElements) {
     companion object {
         fun fromResultPage(
             pageNumber: Int,
             pageSize: Int,
-            resultPage: ResultPage<OpenProductProduct>,
-        ): ProductenPage {
+            resultPage: ResultPage<OpenProductSchema>,
+        ): SchemasPage {
             val content = resultPage.results.map { it }
-            return ProductenPage(
+            return SchemasPage(
                 number = pageNumber,
                 size = pageSize,
                 content = content,

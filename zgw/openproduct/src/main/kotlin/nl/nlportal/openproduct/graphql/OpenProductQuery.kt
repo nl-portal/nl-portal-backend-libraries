@@ -34,10 +34,15 @@ class OpenProductQuery(
         pageNumber: Int? = null,
         pageSize: Int? = null,
     ): ProductenPage {
-        return openProductService.getProducten(
-            authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+        return ProductenPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
+            resultPage =
+                openProductService.getProducten(
+                    authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+                    pageNumber = pageNumber ?: 1,
+                    pageSize = pageSize ?: 20,
+                ),
         )
     }
 

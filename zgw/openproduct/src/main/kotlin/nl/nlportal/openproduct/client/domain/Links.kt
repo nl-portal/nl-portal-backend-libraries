@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,30 +15,28 @@
  */
 package nl.nlportal.openproduct.client.domain
 
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonValue
+import java.util.UUID
 
-@GraphQLIgnore
-interface OpenProductFilters
-
-data class OpenProductUrl(
+data class OpenProductLink(
+    val uuid: UUID,
     val url: String,
+    val naam: String,
 )
 
-enum class OpenProductToegestaneStatus(
-    @JsonValue val status: String,
-) {
-    GEREED("gereed"),
-    ACTIEF("actief"),
-    INGETROKKEN("ingetrokken"),
-    GEWEIGERD("geweigerd"),
-    VERLOPEN("verlopen"),
-}
+enum class OpenProductLinksFilters(
+    @JsonValue val value: String,
+) : OpenProductFilters {
+    PAGE("page"),
+    PAGE_SIZE("page_size"),
+    NAAM_CONTAINS("naam__contains"),
+    PRODUCTTYPE_CODE("producttype__code"),
+    PRODUCTTYPE_NAAM("producttype__naam"),
+    PRODUCTTYPE_UUID("producttype__uuid"),
+    UNIFORM_PRODUCT_NAAM("uniforme_product_naam"),
+    URL("url"),
+    URL_CONTAINS("url__contains"),
+    ;
 
-enum class OpenProductFrequentie(
-    @JsonValue val frequentie: String,
-) {
-    GEREED("eenmalig"),
-    ACTIEF("maandelijks"),
-    INGETROKKEN("jaarlijks"),
+    override fun toString() = this.value
 }
