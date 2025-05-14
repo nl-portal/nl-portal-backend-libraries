@@ -15,11 +15,13 @@
  */
 package nl.nlportal.openproduct.autoconfigure
 
+import com.expediagroup.graphql.server.operations.Mutation
 import com.expediagroup.graphql.server.operations.Query
 import nl.nlportal.openproduct.graphql.OpenProductActieQuery
 import nl.nlportal.openproduct.graphql.OpenProductContactQuery
 import nl.nlportal.openproduct.graphql.OpenProductLinkQuery
 import nl.nlportal.openproduct.graphql.OpenProductLocatieQuery
+import nl.nlportal.openproduct.graphql.OpenProductMutation
 import nl.nlportal.openproduct.graphql.OpenProductOrganisatieQuery
 import nl.nlportal.openproduct.graphql.OpenProductPrijsQuery
 import nl.nlportal.openproduct.graphql.OpenProductQuery
@@ -90,5 +92,13 @@ class OpenProductGraphqlAutoConfiguration {
     @ConditionalOnMissingBean(OpenProductPrijsQuery::class)
     fun openProductPrijsQuery(openProductService: OpenProductService): Query {
         return OpenProductPrijsQuery(openProductService = openProductService)
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(OpenProductMutation::class)
+    fun openProductMutation(openProductService: OpenProductService): Mutation {
+        return OpenProductMutation(
+            openProductService = openProductService,
+        )
     }
 }

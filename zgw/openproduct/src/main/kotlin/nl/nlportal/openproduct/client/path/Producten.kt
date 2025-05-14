@@ -17,10 +17,13 @@ package nl.nlportal.openproduct.client.path
 
 import nl.nlportal.openproduct.client.OpenProductClient
 import nl.nlportal.openproduct.client.domain.OpenProductProduct
+import nl.nlportal.openproduct.client.domain.OpenProductProductUpdate
 import nl.nlportal.openproduct.client.domain.OpenProductProductenFilters
 import nl.nlportal.openproduct.client.domain.ResultPage
 import org.springframework.http.MediaType
+import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.awaitBody
+import org.springframework.web.reactive.function.client.awaitBodyOrNull
 import java.util.*
 
 class Producten(
@@ -55,5 +58,23 @@ class Producten(
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody()
+    }
+
+    suspend fun patch(productUpdate: OpenProductProductUpdate): OpenProductProduct? {
+        val response: OpenProductProduct? =
+            client
+                .webClient
+                .patch()
+                .uri { uriBuilder ->
+                    uriBuilder
+                        .path("$path/${productUpdate.uuid}/")
+                        .build()
+                }
+                .body(BodyInserters.fromValue(productUpdate))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .awaitBodyOrNull()
+
+        return response
     }
 }

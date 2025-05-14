@@ -24,7 +24,7 @@ import java.util.UUID
 
 data class OpenProductProduct(
     val uuid: UUID,
-    val url: String,
+    val url: String? = null,
     @JsonProperty("start_datum")
     val startDatum: LocalDate,
     @JsonProperty("eind_datum")
@@ -40,6 +40,12 @@ data class OpenProductProduct(
     val status: OpenProductToegestaneStatus,
     val prijs: Float,
     val frequentie: OpenProductFrequentie,
+    val verbruiksobject: ObjectNode? = null,
+    val dataobject: ObjectNode? = null,
+)
+
+data class OpenProductProductUpdate(
+    val uuid: UUID,
     val verbruiksobject: ObjectNode? = null,
     val dataobject: ObjectNode? = null,
 )

@@ -39,6 +39,7 @@ import nl.nlportal.openproduct.client.domain.OpenProductProduct
 import nl.nlportal.openproduct.client.domain.OpenProductProductType
 import nl.nlportal.openproduct.client.domain.OpenProductProductTypeContent
 import nl.nlportal.openproduct.client.domain.OpenProductProductTypesFilters
+import nl.nlportal.openproduct.client.domain.OpenProductProductUpdate
 import nl.nlportal.openproduct.client.domain.OpenProductProductenFilters
 import nl.nlportal.openproduct.client.domain.OpenProductSchema
 import nl.nlportal.openproduct.client.domain.OpenProductSchemasFilters
@@ -396,6 +397,20 @@ class OpenProductService(
             }
         }
         return null
+    }
+
+    suspend fun updateProduct(
+        authentication: CommonGroundAuthentication,
+        productUpdate: OpenProductProductUpdate,
+    ): OpenProductProduct? {
+        // get product, only to check if user authorized to perform this update
+        val product =
+            getProduct(
+                authentication = authentication,
+                id = productUpdate.uuid,
+            )
+
+        return openProductClient.path<Producten>().patch(productUpdate = productUpdate)
     }
 
     suspend fun getThemaZaken(
