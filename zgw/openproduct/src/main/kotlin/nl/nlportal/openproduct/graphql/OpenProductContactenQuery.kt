@@ -18,41 +18,35 @@ package nl.nlportal.openproduct.graphql
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
 import com.expediagroup.graphql.server.operations.Query
-import graphql.schema.DataFetchingEnvironment
-import nl.nlportal.graphql.security.SecurityConstants
-import nl.nlportal.openproduct.client.domain.OpenProductProduct
+import nl.nlportal.openproduct.client.domain.OpenProductContact
 import nl.nlportal.openproduct.service.OpenProductService
 import java.util.*
 
 @AuthenticatedDirective
-class OpenProductQuery(
+class OpenProductContactenQuery(
     val openProductService: OpenProductService,
 ) : Query {
-    @GraphQLDescription("Get all Open producten")
-    suspend fun getOpenProducten(
-        dfe: DataFetchingEnvironment,
+    @GraphQLDescription("Get all contacten")
+    suspend fun getOpenProductContacten(
         pageNumber: Int? = null,
         pageSize: Int? = null,
-    ): ProductenPage {
-        return ProductenPage.fromResultPage(
+        achternaam: String? = null,
+    ): ContactenPage {
+        return ContactenPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             resultPage =
-                openProductService.getProducten(
-                    authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+                openProductService.getContacten(
                     pageNumber = pageNumber ?: 1,
                     pageSize = pageSize ?: 20,
+                    achternaam = achternaam,
                 ),
         )
     }
 
-    @GraphQLDescription("Get a Open product type by id")
-    suspend fun getOpenProduct(
-        dfe: DataFetchingEnvironment,
-        id: UUID,
-    ): OpenProductProduct? {
-        return openProductService.getProduct(
-            authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+    @GraphQLDescription("Get a contact")
+    suspend fun getOpenProductContact(id: UUID): OpenProductContact? {
+        return openProductService.getContact(
             id = id,
         )
     }

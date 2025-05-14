@@ -48,11 +48,11 @@ class OpenProductTypeQuery(
     @GraphQLDescription("Get a Open product type by id")
     suspend fun getOpenProductType(
         dfe: DataFetchingEnvironment,
-        productTypeId: UUID,
+        id: UUID,
         language: String,
     ): OpenProductProductType? {
         return openProductService.getProductType(
-            productTypeId = productTypeId,
+            id = id,
             language = language,
         )
     }

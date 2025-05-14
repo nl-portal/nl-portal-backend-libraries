@@ -1,0 +1,18 @@
+{
+  "count": 1,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "uuid": "ac1ee933-8f9a-414b-bf0c-11adc969ed2c",
+      "naam": "Ritense",
+      "code": "RIT",
+      "email": "info@ritsense.nl",
+      "telefoonnummer": "0201234567",
+      "straat": "straat",
+      "huisnummer": "1",
+      "postcode": "1000AB",
+      "stad": "Amsterdam"
+    }
+  ]
+}

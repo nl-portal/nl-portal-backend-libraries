@@ -1,0 +1,26 @@
+query {
+    getOpenProductContacten(
+        pageNumber: 1,
+        pageSize: 20
+     ){
+        number
+         size
+         totalElements
+         numberOfElements
+         content {
+            uuid,
+            achternaam,
+            voornaam,
+            organisatie {
+                naam,
+                email,
+                code,
+                telefoonnummer,
+                straat,
+                huisnummer,
+                postcode,
+                stad
+            }
+        }
+    }
+}

@@ -43,13 +43,13 @@ class Producten(
             .awaitBody()
     }
 
-    suspend fun get(productId: UUID): OpenProductProduct? {
+    suspend fun get(id: UUID): OpenProductProduct? {
         return client
             .webClient
             .get()
             .uri { uriBuilder ->
                 uriBuilder
-                    .path("$path$productId/")
+                    .path("$path$id/")
                     .build()
             }
             .accept(MediaType.APPLICATION_JSON)

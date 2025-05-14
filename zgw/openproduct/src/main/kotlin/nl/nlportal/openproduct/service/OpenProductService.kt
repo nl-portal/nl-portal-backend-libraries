@@ -112,11 +112,13 @@ class OpenProductService(
         return themasHierarchy
     }
 
-    suspend fun getThema(themaId: UUID): OpenProductThema? {
+    suspend fun getThema(id: UUID): OpenProductThema? {
         try {
-            return openProductTypeClient.path<Themas>().get(themaId)
+            return openProductTypeClient.path<Themas>().get(
+                id = id,
+            )
         } catch (e: Exception) {
-            logger.error(e) { "Error getting thema with id: $themaId" }
+            logger.error(e) { "Error getting thema with id: $id" }
         }
         return null
     }
@@ -139,16 +141,16 @@ class OpenProductService(
     }
 
     suspend fun getProductType(
-        productTypeId: UUID,
+        id: UUID,
         language: String,
     ): OpenProductProductType? {
         try {
             return openProductTypeClient.path<ProductTypes>().get(
-                productTypeId = productTypeId,
+                id = id,
                 language = language,
             )
         } catch (e: Exception) {
-            logger.error(e) { "Error getting producttype with id: $productTypeId" }
+            logger.error(e) { "Error getting producttype with id: $id" }
         }
         return null
     }
@@ -323,7 +325,7 @@ class OpenProductService(
         return openProductClient.path<Links>().get(searchVariables)
     }
 
-    suspend fun getLinks(id: UUID): OpenProductLink? {
+    suspend fun getLink(id: UUID): OpenProductLink? {
         try {
             return openProductTypeClient.path<Links>().get(
                 id = id,
@@ -337,7 +339,7 @@ class OpenProductService(
     suspend fun getProductTypeContent(productTypeId: UUID): List<OpenProductProductTypeContent>? {
         try {
             return openProductTypeClient.path<ProductTypes>().get(
-                productTypeId = productTypeId,
+                id = productTypeId,
             )
         } catch (e: Exception) {
             logger.error(e) { "Error getting producttype content with id: $productTypeId" }
@@ -366,12 +368,12 @@ class OpenProductService(
 
     suspend fun getProduct(
         authentication: CommonGroundAuthentication,
-        productId: UUID,
+        id: UUID,
     ): OpenProductProduct? {
         try {
             val product =
                 openProductClient.path<Producten>().get(
-                    productId = productId,
+                    id = id,
                 )
 
             if (isAuthorizedForProduct(
@@ -390,7 +392,7 @@ class OpenProductService(
             if (e is ResponseStatusException) {
                 throw e
             } else {
-                logger.error(e) { "Error getting product with id: $productId" }
+                logger.error(e) { "Error getting product with id: $id" }
             }
         }
         return null
@@ -401,7 +403,7 @@ class OpenProductService(
         pageNumber: Int,
         pageSize: Int,
         isOpen: Boolean? = null,
-        themaId: UUID,
+        id: UUID,
         language: String,
     ): List<Zaak> {
         // 1. get themas, including the hoofdthema and may be their hoofdthema
@@ -409,7 +411,7 @@ class OpenProductService(
 
         val thema =
             getThema(
-                themaId = themaId,
+                id = id,
             )
 
         if (thema == null) {
@@ -427,7 +429,7 @@ class OpenProductService(
         themas.forEach { thema ->
             thema.producttypen.forEach {
                 getProductType(
-                    productTypeId = it.uuid,
+                    id = it.uuid,
                     language = language,
                 )?.zaaktypen?.forEach { zaakType ->
                     zaakTypes.add(CoreUtils.extractId(zaakType.url))
@@ -464,7 +466,7 @@ class OpenProductService(
         authentication: CommonGroundAuthentication,
         pageNumber: Int,
         pageSize: Int,
-        themaId: UUID,
+        id: UUID,
         language: String,
     ): List<TaakV2> {
         val taken =
@@ -484,7 +486,7 @@ class OpenProductService(
                 authentication = authentication,
                 pageNumber = pageNumber,
                 pageSize = pageSize,
-                themaId = themaId,
+                id = id,
                 language = language,
             )
 
@@ -551,7 +553,7 @@ class OpenProductService(
         if (thema.hoofdThema != null) {
             val hoofdThema =
                 getThema(
-                    themaId = thema.hoofdThema,
+                    id = thema.hoofdThema,
                 )
             if (hoofdThema != null) {
                 hoofdThemas.add(hoofdThema)

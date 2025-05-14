@@ -58,10 +58,10 @@ class OpenProductThemaQuery(
     }
 
     @GraphQLDescription("Get a thema")
-    suspend fun getOpenProductThema(themaId: UUID): OpenProductThema? {
+    suspend fun getOpenProductThema(id: UUID): OpenProductThema? {
         val response =
             openProductService.getThema(
-                themaId = themaId,
+                id = id,
             )
         return response
     }
@@ -71,13 +71,13 @@ class OpenProductThemaQuery(
         dfe: DataFetchingEnvironment,
         pageNumber: Int? = null,
         pageSize: Int? = null,
-        themaId: UUID,
+        id: UUID,
         language: String,
         isOpen: Boolean? = null,
     ): List<Zaak> {
         return openProductService.getThemaZaken(
             authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
-            themaId = themaId,
+            id = id,
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             language = language,
@@ -90,12 +90,12 @@ class OpenProductThemaQuery(
         dfe: DataFetchingEnvironment,
         pageNumber: Int? = null,
         pageSize: Int? = null,
-        themaId: UUID,
+        id: UUID,
         language: String,
     ): List<TaakV2> {
         return openProductService.getThemaTaken(
             authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
-            themaId = themaId,
+            id = id,
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             language = language,

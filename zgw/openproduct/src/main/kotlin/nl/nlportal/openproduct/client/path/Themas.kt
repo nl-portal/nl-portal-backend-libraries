@@ -43,13 +43,13 @@ class Themas(
             .awaitBody()
     }
 
-    suspend fun get(themaId: UUID): OpenProductThema? {
+    suspend fun get(id: UUID): OpenProductThema? {
         return client
             .webClient
             .get()
             .uri { uriBuilder ->
                 uriBuilder
-                    .path("$path$themaId/")
+                    .path("$path$id/")
                     .build()
             }
             .accept(MediaType.APPLICATION_JSON)

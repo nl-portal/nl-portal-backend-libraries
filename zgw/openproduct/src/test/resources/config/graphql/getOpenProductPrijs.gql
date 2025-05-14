@@ -1,0 +1,15 @@
+query {
+    getOpenProductPrijs(
+        id: "317ab929-5cb4-4dde-ae4a-489f4d388699"
+     ){
+        uuid,
+        prijsopties {
+            bedrag,
+            beschrijving
+        },
+        prijsregels {
+            url,
+            beschrijving
+        }
+    }
+}

@@ -1,6 +1,6 @@
 query {
     getOpenProductType(
-        productTypeId: "dee273e9-2aa8-40ae-84b7-cb7da3c075ba",
+        id: "dee273e9-2aa8-40ae-84b7-cb7da3c075ba",
         language: "nl"
      ){
         uuid,

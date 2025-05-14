@@ -1,0 +1,16 @@
+query {
+    getOpenProductLinks(
+        pageNumber: 1,
+        pageSize: 20
+     ){
+        number
+         size
+         totalElements
+         numberOfElements
+         content {
+            uuid,
+            url,
+            naam
+        }
+    }
+}

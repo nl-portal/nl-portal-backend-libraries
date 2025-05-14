@@ -49,7 +49,7 @@ class ProductTypes(
     }
 
     suspend fun get(
-        productTypeId: UUID,
+        id: UUID,
         language: String,
     ): OpenProductProductType? {
         return client
@@ -57,7 +57,7 @@ class ProductTypes(
             .get()
             .uri { uriBuilder ->
                 uriBuilder
-                    .path("$path$productTypeId/")
+                    .path("$path$id/")
                     .build()
             }
             .header("Accept-Language", language)
@@ -66,13 +66,13 @@ class ProductTypes(
             .awaitBody()
     }
 
-    suspend fun get(productTypeId: UUID): List<OpenProductProductTypeContent>? {
+    suspend fun get(id: UUID): List<OpenProductProductTypeContent>? {
         return client
             .webClient
             .get()
             .uri { uriBuilder ->
                 uriBuilder
-                    .path("$path$productTypeId/content/")
+                    .path("$path$id/content/")
                     .build()
             }
             .accept(MediaType.APPLICATION_JSON)

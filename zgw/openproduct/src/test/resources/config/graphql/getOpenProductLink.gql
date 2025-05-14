@@ -1,0 +1,9 @@
+query {
+    getOpenProductLink(
+        id: "2435b986-7742-4cef-91f2-e1162c2f19c9"
+     ){
+        uuid,
+        url,
+        naam
+    }
+}

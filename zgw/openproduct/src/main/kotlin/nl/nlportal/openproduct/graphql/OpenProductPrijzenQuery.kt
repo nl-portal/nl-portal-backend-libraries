@@ -18,41 +18,33 @@ package nl.nlportal.openproduct.graphql
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
 import com.expediagroup.graphql.server.operations.Query
-import graphql.schema.DataFetchingEnvironment
-import nl.nlportal.graphql.security.SecurityConstants
-import nl.nlportal.openproduct.client.domain.OpenProductProduct
+import nl.nlportal.openproduct.client.domain.OpenProductPrijs
 import nl.nlportal.openproduct.service.OpenProductService
 import java.util.*
 
 @AuthenticatedDirective
-class OpenProductQuery(
+class OpenProductPrijzenQuery(
     val openProductService: OpenProductService,
 ) : Query {
-    @GraphQLDescription("Get all Open producten")
-    suspend fun getOpenProducten(
-        dfe: DataFetchingEnvironment,
+    @GraphQLDescription("Get all prijzen")
+    suspend fun getOpenProductPrijzen(
         pageNumber: Int? = null,
         pageSize: Int? = null,
-    ): ProductenPage {
-        return ProductenPage.fromResultPage(
+    ): PrijzenPage {
+        return PrijzenPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             resultPage =
-                openProductService.getProducten(
-                    authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+                openProductService.getPrijzen(
                     pageNumber = pageNumber ?: 1,
                     pageSize = pageSize ?: 20,
                 ),
         )
     }
 
-    @GraphQLDescription("Get a Open product type by id")
-    suspend fun getOpenProduct(
-        dfe: DataFetchingEnvironment,
-        id: UUID,
-    ): OpenProductProduct? {
-        return openProductService.getProduct(
-            authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+    @GraphQLDescription("Get a prijs")
+    suspend fun getOpenProductPrijs(id: UUID): OpenProductPrijs? {
+        return openProductService.getPrijs(
             id = id,
         )
     }
