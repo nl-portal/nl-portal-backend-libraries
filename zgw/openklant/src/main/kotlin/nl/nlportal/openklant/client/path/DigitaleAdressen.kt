@@ -25,7 +25,7 @@ import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.awaitBodilessEntity
 import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.awaitBodyOrNull
-import java.util.*
+import java.util.UUID
 
 class DigitaleAdressen(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesPath() {
     override val path: String = "/digitaleadressen"

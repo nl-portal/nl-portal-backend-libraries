@@ -43,7 +43,7 @@ import nl.nlportal.openklant.client.path.KlantContacten
 import nl.nlportal.openklant.client.path.PartijIdentificatoren
 import nl.nlportal.openklant.client.path.Partijen
 import org.springframework.web.reactive.function.client.WebClientResponseException
-import java.util.*
+import java.util.UUID
 
 class OpenKlant2Service(
     private val openKlant2Client: OpenKlant2KlantinteractiesClient,
