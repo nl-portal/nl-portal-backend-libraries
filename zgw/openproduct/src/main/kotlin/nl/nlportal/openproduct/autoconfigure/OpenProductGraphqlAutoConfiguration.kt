@@ -16,6 +16,12 @@
 package nl.nlportal.openproduct.autoconfigure
 
 import com.expediagroup.graphql.server.operations.Query
+import nl.nlportal.openproduct.graphql.OpenProductActieQuery
+import nl.nlportal.openproduct.graphql.OpenProductContactQuery
+import nl.nlportal.openproduct.graphql.OpenProductLinkQuery
+import nl.nlportal.openproduct.graphql.OpenProductLocatieQuery
+import nl.nlportal.openproduct.graphql.OpenProductOrganisatieQuery
+import nl.nlportal.openproduct.graphql.OpenProductPrijsQuery
 import nl.nlportal.openproduct.graphql.OpenProductQuery
 import nl.nlportal.openproduct.graphql.OpenProductThemaQuery
 import nl.nlportal.openproduct.graphql.OpenProductTypeQuery
@@ -48,5 +54,41 @@ class OpenProductGraphqlAutoConfiguration {
         return OpenProductQuery(
             openProductService = openProductService,
         )
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(OpenProductActieQuery::class)
+    fun openProductActieQuery(openProductService: OpenProductService): Query {
+        return OpenProductActieQuery(openProductService = openProductService)
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(OpenProductContactQuery::class)
+    fun openProductContactQuery(openProductService: OpenProductService): Query {
+        return OpenProductContactQuery(openProductService = openProductService)
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(OpenProductLocatieQuery::class)
+    fun openProductLocatieQuery(openProductService: OpenProductService): Query {
+        return OpenProductLocatieQuery(openProductService = openProductService)
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(OpenProductLinkQuery::class)
+    fun openProductLinkQuery(openProductService: OpenProductService): Query {
+        return OpenProductLinkQuery(openProductService = openProductService)
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(OpenProductOrganisatieQuery::class)
+    fun openProductOrganisatieQuery(openProductService: OpenProductService): Query {
+        return OpenProductOrganisatieQuery(openProductService = openProductService)
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(OpenProductPrijsQuery::class)
+    fun openProductPrijsQuery(openProductService: OpenProductService): Query {
+        return OpenProductPrijsQuery(openProductService = openProductService)
     }
 }

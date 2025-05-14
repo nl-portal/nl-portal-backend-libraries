@@ -18,33 +18,35 @@ package nl.nlportal.openproduct.graphql
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
 import com.expediagroup.graphql.server.operations.Query
-import nl.nlportal.openproduct.client.domain.OpenProductActie
+import nl.nlportal.openproduct.client.domain.OpenProductOrganisatie
 import nl.nlportal.openproduct.service.OpenProductService
 import java.util.*
 
 @AuthenticatedDirective
-class OpenProductActiesQuery(
+class OpenProductOrganisatieQuery(
     val openProductService: OpenProductService,
 ) : Query {
-    @GraphQLDescription("Get all acties")
-    suspend fun getOpenProductActies(
+    @GraphQLDescription("Get all organisaties")
+    suspend fun getOpenProductOrganisaties(
         pageNumber: Int? = null,
         pageSize: Int? = null,
-    ): ActiesPage {
-        return ActiesPage.fromResultPage(
+        naam: String? = null,
+    ): OrganisatiesPage {
+        return OrganisatiesPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             resultPage =
-                openProductService.getActies(
+                openProductService.getOrganisaties(
                     pageNumber = pageNumber ?: 1,
                     pageSize = pageSize ?: 20,
+                    naam = naam,
                 ),
         )
     }
 
-    @GraphQLDescription("Get a actie")
-    suspend fun getOpenProductActie(id: UUID): OpenProductActie? {
-        return openProductService.getActie(
+    @GraphQLDescription("Get a organisatie")
+    suspend fun getOpenProductOrganisatie(id: UUID): OpenProductOrganisatie? {
+        return openProductService.getOrganisatie(
             id = id,
         )
     }

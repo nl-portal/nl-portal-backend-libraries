@@ -20,13 +20,15 @@ import java.util.UUID
 
 data class OpenProductContact(
     val uuid: UUID,
-    val naam: String,
+    val achternaam: String,
+    val voornaam: String,
     val email: String? = null,
     val telefoonnummer: String? = null,
     val straat: String? = null,
     val huisnummer: String? = null,
     val postcode: String? = null,
     val stad: String? = null,
+    val organisatie: OpenProductOrganisatie? = null,
 )
 
 enum class OpenProductContactenFilters(

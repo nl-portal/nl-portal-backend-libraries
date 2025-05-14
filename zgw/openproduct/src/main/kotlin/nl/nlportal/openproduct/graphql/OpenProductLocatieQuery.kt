@@ -23,7 +23,7 @@ import nl.nlportal.openproduct.service.OpenProductService
 import java.util.*
 
 @AuthenticatedDirective
-class OpenProductLocatiesQuery(
+class OpenProductLocatieQuery(
     val openProductService: OpenProductService,
 ) : Query {
     @GraphQLDescription("Get all locaties")

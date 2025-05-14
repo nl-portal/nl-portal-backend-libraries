@@ -18,33 +18,33 @@ package nl.nlportal.openproduct.graphql
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
 import com.expediagroup.graphql.server.operations.Query
-import nl.nlportal.openproduct.client.domain.OpenProductLink
+import nl.nlportal.openproduct.client.domain.OpenProductPrijs
 import nl.nlportal.openproduct.service.OpenProductService
 import java.util.*
 
 @AuthenticatedDirective
-class OpenProductLinksQuery(
+class OpenProductPrijsQuery(
     val openProductService: OpenProductService,
 ) : Query {
-    @GraphQLDescription("Get all links")
-    suspend fun getOpenProductLinks(
+    @GraphQLDescription("Get all prijzen")
+    suspend fun getOpenProductPrijzen(
         pageNumber: Int? = null,
         pageSize: Int? = null,
-    ): LinksPage {
-        return LinksPage.fromResultPage(
+    ): PrijzenPage {
+        return PrijzenPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             resultPage =
-                openProductService.getLinks(
+                openProductService.getPrijzen(
                     pageNumber = pageNumber ?: 1,
                     pageSize = pageSize ?: 20,
                 ),
         )
     }
 
-    @GraphQLDescription("Get a link")
-    suspend fun getOpenProductLink(id: UUID): OpenProductLink? {
-        return openProductService.getLink(
+    @GraphQLDescription("Get a prijs")
+    suspend fun getOpenProductPrijs(id: UUID): OpenProductPrijs? {
+        return openProductService.getPrijs(
             id = id,
         )
     }

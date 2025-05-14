@@ -169,7 +169,7 @@ class OpenProductService(
         naam?.let {
             searchVariables.add(OpenProductActiesFilters.NAAM_CONTAINS to it)
         }
-        return openProductClient.path<Acties>().get(searchVariables)
+        return openProductTypeClient.path<Acties>().get(searchVariables)
     }
 
     suspend fun getActie(id: UUID): OpenProductActie? {
@@ -197,7 +197,7 @@ class OpenProductService(
         achternaam?.let {
             searchVariables.add(OpenProductContactenFilters.ACHTERNAAM to it)
         }
-        return openProductClient.path<Contacten>().get(searchVariables)
+        return openProductTypeClient.path<Contacten>().get(searchVariables)
     }
 
     suspend fun getContact(id: UUID): OpenProductContact? {
@@ -225,7 +225,7 @@ class OpenProductService(
         naam?.let {
             searchVariables.add(OpenProductLocatiesFilters.NAAM_EXACT to it)
         }
-        return openProductClient.path<Locaties>().get(searchVariables)
+        return openProductTypeClient.path<Locaties>().get(searchVariables)
     }
 
     suspend fun getLocatie(id: UUID): OpenProductLocatie? {
@@ -253,7 +253,7 @@ class OpenProductService(
         naam?.let {
             searchVariables.add(OpenProductOrganisatiesFilters.NAAM_EXACT to it)
         }
-        return openProductClient.path<Organisaties>().get(searchVariables)
+        return openProductTypeClient.path<Organisaties>().get(searchVariables)
     }
 
     suspend fun getOrganisatie(id: UUID): OpenProductOrganisatie? {
@@ -276,7 +276,7 @@ class OpenProductService(
                 OpenProductPrijzenFilters.PAGE to pageNumber.toString(),
                 OpenProductPrijzenFilters.PAGE_SIZE to pageSize.toString(),
             )
-        return openProductClient.path<Prijzen>().get(searchVariables)
+        return openProductTypeClient.path<Prijzen>().get(searchVariables)
     }
 
     suspend fun getPrijs(id: UUID): OpenProductPrijs? {
@@ -299,7 +299,7 @@ class OpenProductService(
                 OpenProductSchemasFilters.PAGE to pageNumber.toString(),
                 OpenProductSchemasFilters.PAGE_SIZE to pageSize.toString(),
             )
-        return openProductClient.path<Schemas>().get(searchVariables)
+        return openProductTypeClient.path<Schemas>().get(searchVariables)
     }
 
     suspend fun getSchema(id: UUID): OpenProductSchema? {
@@ -322,7 +322,7 @@ class OpenProductService(
                 OpenProductLinksFilters.PAGE to pageNumber.toString(),
                 OpenProductLinksFilters.PAGE_SIZE to pageSize.toString(),
             )
-        return openProductClient.path<Links>().get(searchVariables)
+        return openProductTypeClient.path<Links>().get(searchVariables)
     }
 
     suspend fun getLink(id: UUID): OpenProductLink? {

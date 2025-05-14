@@ -21,7 +21,6 @@ import java.util.UUID
 data class OpenProductLocatie(
     val uuid: UUID,
     val naam: String,
-    val code: String,
     val email: String? = null,
     val telefoonnummer: String? = null,
     val straat: String? = null,
