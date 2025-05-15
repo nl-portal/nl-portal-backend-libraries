@@ -46,7 +46,7 @@ class SearchZoekenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
     }
 
     override fun withKvk(kvk: String): SearchZaken {
-        bodyValue.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__annIdentificatie", kvk)
+        bodyValue.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__kvkNummer", kvk)
         return this
     }
 
@@ -95,7 +95,7 @@ class SearchZoekenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
         vestigingsNummer: String,
     ): SearchZaken {
         bodyValue.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__vestigingsNummer", vestigingsNummer)
-        bodyValue.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__annIdentificatie", kvkNummer)
+        bodyValue.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__kvkNummer", kvkNummer)
         return this
     }
 
