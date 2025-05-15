@@ -15,6 +15,9 @@
  */
 package nl.nlportal.openklant.client.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonValue
+
 data class HadKlantcontact(
     val gingOverOnderwerpobjecten: List<OpenKlant2ForeignKey>,
     val hadBetrokkenActoren: List<HadBetrokkenActoren>,
@@ -41,3 +44,33 @@ data class HadBetrokkenActoren(
     val url: String,
     val uuid: String,
 )
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class OpenKlant2Klantcontact(
+    val gingOverOnderwerpobjecten: List<OpenKlant2ForeignKey>,
+    val hadBetrokkenActoren: List<HadBetrokkenActoren>,
+    val hadBetrokkenen: List<OpenKlant2ForeignKey>,
+    val indicatieContactGelukt: Boolean,
+    val inhoud: String,
+    val kanaal: String,
+    val leiddeTotInterneTaken: List<OpenKlant2ForeignKey>,
+    val nummer: String,
+    val omvatteBijlagen: List<OpenKlant2ForeignKey>,
+    val onderwerp: String,
+    val plaatsgevondenOp: String,
+    val taal: String,
+    val url: String,
+    val uuid: String,
+    val vertrouwelijk: Boolean,
+)
+
+enum class OpenKlant2KlantcontactenFilters(
+    @JsonValue val value: String,
+) : OpenKlant2Filters {
+    PAGE("page"),
+    PAGE_SIZE("pageSize"),
+    HADBETROKKENE_PARTIJ_IDENTIFICATOR_CODE_OBJECTID("hadBetrokkene__wasPartij__partijIdentificator__objectId"),
+    ;
+
+    override fun toString() = this.value
+}

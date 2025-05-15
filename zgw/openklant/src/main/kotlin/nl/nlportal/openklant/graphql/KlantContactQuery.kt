@@ -20,7 +20,7 @@ import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDir
 import com.expediagroup.graphql.server.operations.Query
 import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
-import nl.nlportal.openklant.graphql.domain.KlantContactResponse
+import nl.nlportal.openklant.client.domain.OpenKlant2Klantcontact
 import nl.nlportal.openklant.service.OpenKlant2Service
 import java.util.UUID
 
@@ -29,14 +29,14 @@ class KlantContactQuery(
     private val openklant2Service: OpenKlant2Service,
 ) : Query {
     @GraphQLDescription("Get KlantContacten of authenticated user.")
-    suspend fun getUserKlantContacten(dfe: DataFetchingEnvironment): List<KlantContactResponse> {
+    suspend fun getUserKlantContacten(dfe: DataFetchingEnvironment): List<OpenKlant2Klantcontact> {
         return openklant2Service.findKlantContacten(
             authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
         )
     }
 
     @GraphQLDescription("Get KlantContact by id of authenticated user.")
-    suspend fun getUserKlantContact(klantContactId: UUID): KlantContactResponse? {
+    suspend fun getUserKlantContact(klantContactId: UUID): OpenKlant2Klantcontact? {
         return openklant2Service.findKlantContact(
             klantContactId = klantContactId,
         )
