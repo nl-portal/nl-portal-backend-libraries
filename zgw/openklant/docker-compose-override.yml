@@ -41,5 +41,5 @@ services:
           - ./imports/openklant-2/database:/docker-entrypoint-initdb.d/
 
   redis:
-      image: redis:7.4.3
+      image: redis:8.0.1
       container_name: redis-test
