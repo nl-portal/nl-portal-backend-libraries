@@ -24,6 +24,7 @@ services:
             - openproduct-database
             - openproduct-redis
         volumes:
+            - ./imports/openproduct/fixtures:/app/src/openproduct/fixtures
             - ./imports/openproduct/init/UPL-actueel.csv:/app/UPL-actueel.csv
             - ./imports/openproduct/init:/app/init
         command: sh /app/init/init.sh

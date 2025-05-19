@@ -33,10 +33,10 @@ VALUES (1, '694242af-d906-470b-b7e1-eb3527886854', true, now(), now(), now(),  n
   },
   "soort":"milieuzoneOldtimerPeriodes",
   "productInstantie":"62aa1bbb-4055-4df9-91e6-1c6171348044"
-}', null, 3),
-       (2, '55633677-fef4-4ed2-99a4-13efc3360448', true, now(), now(), now(),  now()+ INTERVAL '365 DAYS', 'actief', '20.20', 'eenmalig', null, null, 3),
-       (3, '55515634-bf7d-4f2e-8b30-6bbcc0f8bfdc', true, now(), now(), now(),  now()+ INTERVAL '365 DAYS', 'actief', '20.20', 'eenmalig', null, null, 3),
-       (4, 'b4addadd-71df-45a9-8559-fca53fc79339', true, now(), now(), now(),  now()+ INTERVAL '365 DAYS', 'actief', '20.20', 'eenmalig', null, null, 3);
+}', null, 1),
+       (2, '55633677-fef4-4ed2-99a4-13efc3360448', true, now(), now(), now(),  now()+ INTERVAL '365 DAYS', 'actief', '20.20', 'eenmalig', null, null, 1),
+       (3, '55515634-bf7d-4f2e-8b30-6bbcc0f8bfdc', true, now(), now(), now(),  now()+ INTERVAL '365 DAYS', 'actief', '20.20', 'eenmalig', null, null, 1),
+       (4, 'b4addadd-71df-45a9-8559-fca53fc79339', true, now(), now(), now(),  now()+ INTERVAL '365 DAYS', 'actief', '20.20', 'eenmalig', null, null, 1);
 /* add eigenaar */
 INSERT INTO public.producten_eigenaar(id, uuid, bsn, kvk_nummer, vestigingsnummer, klantnummer, product_id)
 VALUES (1, '104dd54c-4464-45f2-9781-9df2c59a35ed', '569312863', '', '', '', 1),

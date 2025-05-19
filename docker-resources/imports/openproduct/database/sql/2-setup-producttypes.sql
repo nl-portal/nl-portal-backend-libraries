@@ -87,12 +87,12 @@ VALUES (1,'dee273e9-2aa8-40ae-84b7-cb7da3c075ba', true, now(), now(), 'PARKEREN'
 
 /* add zaaktype */
 INSERT INTO public.producttypen_zaaktype(id, uuid, producttype_id)
-VALUES (1, '744ca059-f412-49d4-8963-5800e4afd486', 3);
+VALUES (1, '744ca059-f412-49d4-8963-5800e4afd486', 1);
 
 /* add externe code */
 INSERT INTO public.producttypen_externecode(id, uuid, naam, code, producttype_id)
-VALUES (1, '418317dc-c5b8-4690-b309-846bdb13e680', 'ISO', '123', 3),
-       (2, '3e3bf0f6-a3f5-469e-8693-c7665d97ba05', 'taak_eigenaar', 'RMWA', 3);
+VALUES (1, '418317dc-c5b8-4690-b309-846bdb13e680', 'ISO', '123', 1),
+       (2, '3e3bf0f6-a3f5-469e-8693-c7665d97ba05', 'taak_eigenaar', 'RMWA', 1);
 
 /* add producttype translation*/
 INSERT INTO public.producttypen_producttypetranslation(id, language_code, naam, samenvatting, master_id)
@@ -101,16 +101,16 @@ VALUES (1, 'nl', 'Parkeren', 'samenvatting translatie', 1),
 
 /* add actie*/
 INSERT INTO public.producttypen_actie(id, uuid, naam, dmn_tabel_id, dmn_config_id, producttype_id)
-VALUES ( 1,'082d143f-6a53-4e08-bc3c-0488b3b490e4', 'watkanikregelen-parkeren', 'alg-parkeren', 1, 3),
-       ( 2,'2435b986-7742-4cef-91f2-e1162c2f19c9', 'watkanikregelen-belastingen', 'alg-belastingen', 1, 3);;
+VALUES ( 1,'082d143f-6a53-4e08-bc3c-0488b3b490e4', 'watkanikregelen-parkeren', 'alg-parkeren', 1, 1),
+       ( 2,'2435b986-7742-4cef-91f2-e1162c2f19c9', 'watkanikregelen-belastingen', 'alg-belastingen', 1, 1);
 
 /* add parameter */
 INSERT INTO public.producttypen_parameter(id, uuid, naam, waarde, producttype_id)
-VALUES (1, '023ea1f2-8e8c-42d8-9bed-a4ad4edc03c2', 'paymentcategorie', 'parkeren', 3);
+VALUES (1, '023ea1f2-8e8c-42d8-9bed-a4ad4edc03c2', 'paymentcategorie', 'parkeren', 1);
 
 /* add contentelement */
 INSERT INTO public.producttypen_contentelement(id, "order", uuid, producttype_id)
-VALUES (1, 1, 'bcc4ba4e-8022-447f-8ffd-d65781a51d24', 3);
+VALUES (1, 1, 'bcc4ba4e-8022-447f-8ffd-d65781a51d24', 1);
 
 /* add contentlabel */
 INSERT INTO public.producttypen_contentlabel(id, uuid, naam)
@@ -127,8 +127,8 @@ VALUES (1, 1);
 
 /* add links */
 INSERT INTO public.producttypen_link(id, uuid, naam, url, producttype_id)
-VALUES (1, '1a619662-9b0d-4219-81f4-d738fe76850d', 'link naar website', 'https://www.google.com/', 3),
-       (2, '7506562c-9a2a-4931-85cd-2c752cbabaf0', 'link naar Ritense website', 'https://ritense.com/', 3);
+VALUES (1, '1a619662-9b0d-4219-81f4-d738fe76850d', 'link naar website', 'https://www.google.com/', 1),
+       (2, '7506562c-9a2a-4931-85cd-2c752cbabaf0', 'link naar Ritense website', 'https://ritense.com/', 1);
 
 
 /* add prijs */
