@@ -33,7 +33,13 @@ class OpenKlantAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(OpenKlant2Service::class)
-    fun openKlant2Service(openklant2Client: OpenKlant2KlantinteractiesClient): OpenKlant2Service {
-        return OpenKlant2Service(openklant2Client)
+    fun openKlant2Service(
+        openklant2Client: OpenKlant2KlantinteractiesClient,
+        openKlantModuleConfiguration: OpenKlantModuleConfiguration,
+    ): OpenKlant2Service {
+        return OpenKlant2Service(
+            openKlant2Client = openklant2Client,
+            openKlantConfigurationProperties = openKlantModuleConfiguration.properties,
+        )
     }
 }

@@ -45,15 +45,13 @@ class DigitaleAdresMutation(
     @GraphQLDescription("Update DigitaleAdres of User")
     suspend fun updateUserDigitaleAdres(
         dfe: DataFetchingEnvironment,
-        digitaleAdresId: UUID,
         digitaleAdresRequest: DigitaleAdresRequest,
     ): DigitaleAdresResponse? {
         val digitaleAdres =
             openklant2Service
                 .updateDigitaleAdresById(
                     authentication = dfe.graphQlContext.get(AUTHENTICATION_KEY),
-                    digitaleAdresId = digitaleAdresId,
-                    digitaleAdres = digitaleAdresRequest.asOpenKlant2DigitaleAdres(),
+                    digitaleAdres = digitaleAdresRequest.asOpenKlant2DigitaleAdresUpdate(),
                 )
 
         return digitaleAdres?.let { DigitaleAdresResponse.fromOpenKlant2DigitaleAdres(digitaleAdres) }

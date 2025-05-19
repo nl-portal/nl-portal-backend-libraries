@@ -118,9 +118,8 @@ class OpenKlant2DigitaleAdresMutationIT(
                         """
                         mutation {
                             updateUserDigitaleAdres(
-                                digitaleAdresId: "$testdigitaleAdresUUID",
                                 digitaleAdresRequest: {
-                                    waarde: "0611111112", type: TELEFOONNUMMER, omschrijving: "Modified"
+                                    waarde: "0611111112", type: TELEFOONNUMMER, omschrijving: "Modified", uuid: "$testdigitaleAdresUUID"
                                 }
                             ) {
                                 uuid
@@ -145,7 +144,7 @@ class OpenKlant2DigitaleAdresMutationIT(
                     ?.get("updateUserDigitaleAdres")
 
             // then
-            verify(openKlant2Service, times(1)).updateDigitaleAdresById(any(), any(), any())
+            verify(openKlant2Service, times(1)).updateDigitaleAdresById(any(), any())
 
             assertTrue(createResult is ObjectNode)
             assertTrue(createResult is ObjectNode)
