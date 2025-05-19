@@ -1,6 +1,6 @@
 
 query {
-    getUserDigitaleAdresen {
+    getUserDigitaleAdressen {
         uuid
         waarde
         type

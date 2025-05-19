@@ -20,6 +20,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.core.util.Mapper
+import nl.nlportal.openklant.TestHelper.verifyOnlyDataExists
 import nl.nlportal.openklant.service.OpenKlant2Service
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -84,9 +85,10 @@ class OpenKlant2DigitaleAdresQueryIT(
         }
 
     @Test
-    @WithBurgerUser("296648875")
+    @WithBurgerUser("569312863")
     fun `should find DigitaleAdressen for authenticated user`() =
         runTest {
+            val basePath = "$.data.getUserDigitaleAdressen"
             // when
             val responseBody =
                 webTestClient
@@ -97,10 +99,9 @@ class OpenKlant2DigitaleAdresQueryIT(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserDigitaleAdresen.gql")))
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserDigitaleAdressen.gql")))
                     .exchange()
-                    .expectStatus().isOk
-                    .expectBody()
+                    .verifyOnlyDataExists(basePath)
                     .returnResult()
                     .responseBodyContent
                     ?.toString(Charset.defaultCharset())
@@ -109,18 +110,18 @@ class OpenKlant2DigitaleAdresQueryIT(
                 objectMapper
                     .readValue<JsonNode>(responseBody!!)
                     .get("data")
-                    ?.get("getUserDigitaleAdresen")
+                    ?.get("getUserDigitaleAdressen")
 
             // then
             verify(openKlant2Service, times(1)).findDigitaleAdressen(any())
 
             assertNotNull(response)
-            assertEquals("OVERIG", response?.get(0)?.get("type")?.textValue())
+            assertEquals("TELEFOONNUMMER", response?.get(0)?.get("type")?.textValue())
         }
 
     @Test
     @WithBurgerUser("111111110")
-    fun `should return empty list when no DigitaleAdres was found for authenticated user`() =
+    fun `should return empty list when no DigitaleAdressen was found for authenticated user`() =
         runTest {
             // when
             val responseBody =
@@ -132,7 +133,7 @@ class OpenKlant2DigitaleAdresQueryIT(
                             .build()
                     }
                     .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserDigitaleAdresen.gql")))
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserDigitaleAdressen.gql")))
                     .exchange()
                     .expectStatus().isOk
                     .expectBody()
@@ -144,7 +145,7 @@ class OpenKlant2DigitaleAdresQueryIT(
                 objectMapper
                     .readValue<JsonNode>(responseBody!!)
                     .get("data")
-                    ?.get("getUserDigitaleAdresen")
+                    ?.get("getUserDigitaleAdressen")
 
             // then
             verify(openKlant2Service, times(1)).findDigitaleAdressen(any())
