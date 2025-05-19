@@ -18,6 +18,12 @@ plugins {
     kotlin("jvm")
 }
 
+dockerCompose {
+    setProjectName("$name-test")
+    isRequiredBy(tasks.getByName("integrationTest"))
+    useComposeFiles.addAll("../../docker-resources/docker-compose-base-test.yml", "docker-compose-override.yml")
+}
+
 dependencies {
     api(project(":graphql"))
     api(project(":portal-authentication"))
