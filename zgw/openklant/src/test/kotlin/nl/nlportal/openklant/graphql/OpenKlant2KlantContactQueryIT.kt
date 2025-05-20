@@ -29,6 +29,7 @@ import org.junit.jupiter.api.TestInstance
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
@@ -79,7 +80,7 @@ class OpenKlant2KlantContactQueryIT(
                     ?.get("getUserKlantContacten")
 
             // then
-            verify(openKlant2Service, times(1)).findKlantContacten(any())
+            verify(openKlant2Service, times(1)).findKlantContacten(any(), anyOrNull())
 
             assertNotNull(response)
             assertEquals("E-mail", response?.get(0)?.get("kanaal")?.textValue())

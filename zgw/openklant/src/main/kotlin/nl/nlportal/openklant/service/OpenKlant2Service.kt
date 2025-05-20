@@ -282,10 +282,13 @@ class OpenKlant2Service(
     }
 
     suspend fun findKlantContacten(
-        authentication: CommonGroundAuthentication
+        authentication: CommonGroundAuthentication,
+        kanaal: String? = null,
     ): List<OpenKlant2Klantcontact> {
-        val searchVariables = searchVariablesKlantcontacten(authentication)
-
+        val searchVariables = searchVariablesKlantcontacten(authentication).toMutableList()
+        kanaal?.let {
+            searchVariables.add(OpenKlant2KlantcontactenFilters.KANAAL to it)
+        }
         return try {
             openKlant2Client.path<KlantContacten>().get(searchVariables)
         } catch (ex: WebClientResponseException) {

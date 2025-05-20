@@ -70,6 +70,7 @@ enum class OpenKlant2KlantcontactenFilters(
     PAGE("page"),
     PAGE_SIZE("pageSize"),
     HADBETROKKENE_PARTIJ_IDENTIFICATOR_CODE_OBJECTID("hadBetrokkene__wasPartij__partijIdentificator__objectId"),
+    KANAAL("kanaal"),
     ;
 
     override fun toString() = this.value

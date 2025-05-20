@@ -1,6 +1,8 @@
 
 query {
-    getUserKlantContacten {
+    getUserKlantContacten(
+        kanaal: "E-mail"
+     ){
         uuid
         inhoud
         kanaal
