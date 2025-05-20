@@ -31,6 +31,7 @@ import org.junit.jupiter.api.TestInstance
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
@@ -113,7 +114,42 @@ class OpenKlant2DigitaleAdresQueryIT(
                     ?.get("getUserDigitaleAdressen")
 
             // then
-            verify(openKlant2Service, times(1)).findDigitaleAdressen(any())
+            verify(openKlant2Service, times(1)).findDigitaleAdressen(any(), anyOrNull())
+
+            assertNotNull(response)
+            assertEquals("TELEFOONNUMMER", response?.get(0)?.get("type")?.textValue())
+        }
+
+    @Test
+    @WithBurgerUser("569312863")
+    fun `should find DigitaleAdressen for authenticated user with soortDigitaalAdres`() =
+        runTest {
+            val basePath = "$.data.getUserDigitaleAdressen"
+            // when
+            val responseBody =
+                webTestClient
+                    .post()
+                    .uri { builder ->
+                        builder
+                            .path("/graphql")
+                            .build()
+                    }
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserDigitaleAdressenWithSoortAdres.gql")))
+                    .exchange()
+                    .verifyOnlyDataExists(basePath)
+                    .returnResult()
+                    .responseBodyContent
+                    ?.toString(Charset.defaultCharset())
+
+            val response =
+                objectMapper
+                    .readValue<JsonNode>(responseBody!!)
+                    .get("data")
+                    ?.get("getUserDigitaleAdressen")
+
+            // then
+            verify(openKlant2Service, times(1)).findDigitaleAdressen(any(), anyOrNull())
 
             assertNotNull(response)
             assertEquals("TELEFOONNUMMER", response?.get(0)?.get("type")?.textValue())
@@ -148,7 +184,7 @@ class OpenKlant2DigitaleAdresQueryIT(
                     ?.get("getUserDigitaleAdressen")
 
             // then
-            verify(openKlant2Service, times(1)).findDigitaleAdressen(any())
+            verify(openKlant2Service, times(1)).findDigitaleAdressen(any(), anyOrNull())
             assertTrue(responsePartij!!.isEmpty)
         }
 

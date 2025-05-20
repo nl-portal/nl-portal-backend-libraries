@@ -168,11 +168,18 @@ class OpenKlant2Service(
         }
     }
 
-    suspend fun findDigitaleAdressen(authentication: CommonGroundAuthentication): List<OpenKlant2DigitaleAdres> {
+    suspend fun findDigitaleAdressen(
+        authentication: CommonGroundAuthentication,
+        soortDigitaalAdres: String? = null,
+    ): List<OpenKlant2DigitaleAdres> {
         val searchVariables = searchVariablesDigitaleAdressen(authentication).toMutableList()
 
         openKlantConfigurationProperties.digitalAdressenReferentie?.let {
             searchVariables.add(OpenKlant2DigitaleAdressenFilters.REFERENTIE to it)
+        }
+
+        soortDigitaalAdres?.let {
+            searchVariables.add(OpenKlant2DigitaleAdressenFilters.SOORT_DIGITAALADRES to it)
         }
 
         val response =
@@ -274,7 +281,9 @@ class OpenKlant2Service(
         return
     }
 
-    suspend fun findKlantContacten(authentication: CommonGroundAuthentication): List<OpenKlant2Klantcontact> {
+    suspend fun findKlantContacten(
+        authentication: CommonGroundAuthentication
+    ): List<OpenKlant2Klantcontact> {
         val searchVariables = searchVariablesKlantcontacten(authentication)
 
         return try {

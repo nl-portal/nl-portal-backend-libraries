@@ -28,11 +28,23 @@ import nl.nlportal.openklant.service.OpenKlant2Service
 class DigitaleAdresQuery(
     private val openklant2Service: OpenKlant2Service,
 ) : Query {
-    @GraphQLDescription("Get DigitaleAdressen of authenticated user.")
-    suspend fun getUserDigitaleAdressen(dfe: DataFetchingEnvironment): List<DigitaleAdresResponse>? {
+    @GraphQLDescription(
+        """
+        Get DigitaleAdressen of authenticated user.
+        soortDigitaalAdres: "email" "telefoonnummer" "overig"
+    """,
+    )
+    suspend fun getUserDigitaleAdressen(
+        dfe: DataFetchingEnvironment,
+        soortDigitaalAdres: String? = null,
+    ): List<DigitaleAdresResponse>? {
         val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
-        val userDigitaleAdressen = openklant2Service.findDigitaleAdressen(authentication)
+        val userDigitaleAdressen =
+            openklant2Service.findDigitaleAdressen(
+                authentication = authentication,
+                soortDigitaalAdres = soortDigitaalAdres,
+            )
 
-        return userDigitaleAdressen?.map { DigitaleAdresResponse.fromOpenKlant2DigitaleAdres(it) }
+        return userDigitaleAdressen.map { DigitaleAdresResponse.fromOpenKlant2DigitaleAdres(it) }
     }
 }

@@ -1,0 +1,12 @@
+
+query {
+    getUserDigitaleAdressen(
+        soortDigitaalAdres: "telefoonnummer"
+     ){
+        uuid
+        waarde
+        type
+        omschrijving
+        referentie
+    }
+}
