@@ -19,7 +19,7 @@ pluginManagement {
         id("org.springframework.boot") version springBootVersion apply false
         id("io.spring.dependency-management") version springDependencyManagementVersion apply false
         id("com.github.ben-manes.versions") version benManesVersionsVersion apply false
-        id("org.jlleitschuh.gradle.ktlint") version ktlintVersion apply false
+        //id("org.jlleitschuh.gradle.ktlint") version ktlintVersion apply false
         id("com.diffplug.spotless") version spotlessVersion apply false
         id("com.avast.gradle.docker-compose") version gradleDockerComposeVersion apply false
         id("org.jetbrains.dokka") version dokkaVersion apply false

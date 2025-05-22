@@ -36,7 +36,7 @@ plugins {
     id("com.github.ben-manes.versions")
 
     // Checkstyle
-    id("org.jlleitschuh.gradle.ktlint")
+    //id("org.jlleitschuh.gradle.ktlint")
     id("com.diffplug.spotless")
 
     // Docker-compose plugin
@@ -51,6 +51,10 @@ plugins {
     `maven-publish`
     signing
 }
+
+/*ktlint {
+    version.set("1.5.0")
+}*/
 
 allprojects {
     repositories {
@@ -67,8 +71,8 @@ subprojects {
     println("Enabling com.avast.gradle.docker-compose plugin in project ${project.name}...")
     apply(plugin = "com.avast.gradle.docker-compose")
 
-    println("Enabling org.jlleitschuh.gradle.ktlint plugin in project ${project.name}...")
-    apply(plugin = "org.jlleitschuh.gradle.ktlint")
+    /*println("Enabling org.jlleitschuh.gradle.ktlint plugin in project ${project.name}...")
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")*/
 
     println("Enabling com.diffplug.spotless plugin in project ${project.name}...")
     apply(plugin = "com.diffplug.spotless")
@@ -124,10 +128,10 @@ subprojects {
             freeCompilerArgs.add("-Xjsr305=strict")
             freeCompilerArgs.add("-Xemit-jvm-type-annotations")
         }
-        val ktlintFormat: Task? by tasks
+        /*val ktlintFormat: Task? by tasks
         if (ktlintFormat != null) {
             dependsOn(ktlintFormat)
-        }
+        }*/
     }
 
     println("Enabling Spring Boot Dependency Management in project ${project.name}...")

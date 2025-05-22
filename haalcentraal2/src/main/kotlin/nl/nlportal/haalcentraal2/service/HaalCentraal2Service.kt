@@ -22,8 +22,8 @@ import nl.nlportal.haalcentraal2.autoconfiguration.HaalCentraal2ModuleConfigurat
 import nl.nlportal.haalcentraal2.client.HaalCentraal2Client
 import nl.nlportal.haalcentraal2.client.path.Bewoning
 import nl.nlportal.haalcentraal2.client.path.Personen
-import nl.nlportal.haalcentraal2.domain.bewoning.BewoningenApiResponse
 import nl.nlportal.haalcentraal2.domain.bewoning.BewoningenApiRequest
+import nl.nlportal.haalcentraal2.domain.bewoning.BewoningenApiResponse
 import nl.nlportal.haalcentraal2.domain.brp.BrpApiRequest
 import nl.nlportal.haalcentraal2.domain.brp.BrpPersoon
 import java.time.LocalDate
