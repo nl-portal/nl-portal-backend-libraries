@@ -62,9 +62,7 @@ class FormDefinitionDeploymentService(
         }
 
     @Throws(JsonProcessingException::class)
-    private fun getJson(jsonString: String): ObjectNode {
-        return Mapper.get().readValue(jsonString, ObjectNode::class.java)
-    }
+    private fun getJson(jsonString: String): ObjectNode = Mapper.get().readValue(jsonString, ObjectNode::class.java)
 
     private fun getFormName(resource: Resource): String {
         var formName = resource.filename
@@ -75,11 +73,10 @@ class FormDefinitionDeploymentService(
     }
 
     @Throws(IOException::class)
-    private fun loadResources(): Array<Resource> {
-        return ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources(
+    private fun loadResources(): Array<Resource> =
+        ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources(
             PATH,
         )
-    }
 
     companion object {
         const val PATH = "classpath*:config/form/*.json"

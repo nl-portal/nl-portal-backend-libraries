@@ -41,7 +41,5 @@ class AuthenticationConfiguration {
     fun commonGroundAuthenticationConverter(
         reactiveJwtDecoder: ReactiveJwtDecoder,
         keycloakConfig: KeycloakConfig,
-    ): PortalAuthenticationConverter {
-        return CommonGroundAuthenticationConverter(reactiveJwtDecoder, keycloakConfig)
-    }
+    ): PortalAuthenticationConverter = CommonGroundAuthenticationConverter(reactiveJwtDecoder, keycloakConfig)
 }

@@ -42,7 +42,5 @@ object MetaJsonSchemaV7Draft {
         this.schema.validate(subject)
     }
 
-    fun getResourceAsStream(resource: String): InputStream {
-        return Thread.currentThread().contextClassLoader.getResourceAsStream(resource)!!
-    }
+    fun getResourceAsStream(resource: String): InputStream = Thread.currentThread().contextClassLoader.getResourceAsStream(resource)!!
 }

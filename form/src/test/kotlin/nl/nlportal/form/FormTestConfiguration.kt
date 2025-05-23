@@ -57,7 +57,11 @@ class FormTestConfiguration {
         password: String,
     ): UserDetails {
         val roles: List<String> = user.getRoles()
-        return User.withUsername(user.getName()).password(password).roles(StringUtils.join(roles)).build()
+        return User
+            .withUsername(user.getName())
+            .password(password)
+            .roles(StringUtils.join(roles))
+            .build()
     }
 
     private fun getOrDeducePassword(

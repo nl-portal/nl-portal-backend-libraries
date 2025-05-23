@@ -35,9 +35,7 @@ data class FormDefinitionId(
     }
 
     companion object {
-        fun existingId(value: UUID): FormDefinitionId {
-            return FormDefinitionId(value)
-        }
+        fun existingId(value: UUID): FormDefinitionId = FormDefinitionId(value)
 
         fun newId(value: UUID): FormDefinitionId {
             val formDefinitionId = FormDefinitionId(value)

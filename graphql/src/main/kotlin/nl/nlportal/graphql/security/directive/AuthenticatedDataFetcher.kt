@@ -21,7 +21,9 @@ import graphql.schema.DataFetcher
 import graphql.schema.DataFetchingEnvironment
 import org.springframework.security.core.Authentication
 
-class AuthenticatedDataFetcher(private val originalDataFetcher: DataFetcher<Any?>) : DataFetcher<Any?> {
+class AuthenticatedDataFetcher(
+    private val originalDataFetcher: DataFetcher<Any?>,
+) : DataFetcher<Any?> {
     override fun get(environment: DataFetchingEnvironment): Any? {
         val authentication = environment.graphQlContext?.get<Authentication>(AUTHENTICATION_KEY)
         if (authentication == null || !authentication.isAuthenticated) {

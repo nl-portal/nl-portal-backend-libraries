@@ -23,15 +23,16 @@ data class ObjectSearchParameter(
     fun toQueryParameter() = attribute + "__" + comparator.value + "__" + value
 
     companion object {
-        fun toQueryParameter(objectSearchParameters: List<ObjectSearchParameter>): String {
-            return objectSearchParameters.joinToString(separator = ",") {
+        fun toQueryParameter(objectSearchParameters: List<ObjectSearchParameter>): String =
+            objectSearchParameters.joinToString(separator = ",") {
                 it.toQueryParameter()
             }
-        }
     }
 }
 
-enum class Comparator(val value: String) {
+enum class Comparator(
+    val value: String,
+) {
     EQUAL_TO("exact"),
     GREATER_THAN("gt"),
     GREATER_THAN_OR_EQUAL_TO("gte"),

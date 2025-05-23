@@ -52,8 +52,8 @@ class ProductQuery(
         subProductType: String? = null,
         pageNumber: Int? = 1,
         pageSize: Int? = 20,
-    ): ProductPage {
-        return productService.getProducten(
+    ): ProductPage =
+        productService.getProducten(
             dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
             productTypeId,
             productName,
@@ -61,18 +61,16 @@ class ProductQuery(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
         )
-    }
 
     @GraphQLDescription("Get product by id")
     suspend fun getProduct(
         dfe: DataFetchingEnvironment,
         id: UUID,
-    ): Product? {
-        return productService.getProduct(
+    ): Product? =
+        productService.getProduct(
             dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
             id,
         )
-    }
 
     @GraphQLDescription(
         """
@@ -88,8 +86,8 @@ class ProductQuery(
         productName: String,
         pageSize: Int? = null,
         isOpen: Boolean? = null,
-    ): List<Zaak> {
-        return productService.getProductZaken(
+    ): List<Zaak> =
+        productService.getProductZaken(
             authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
             productTypeId = productTypeId,
             productName = productName,
@@ -97,7 +95,6 @@ class ProductQuery(
             isOpen = isOpen,
             pageSize = pageSize,
         )
-    }
 
     @GraphQLDescription("Get list of taken by product name ")
     suspend fun getProductTaken(
@@ -106,43 +103,40 @@ class ProductQuery(
         productName: String,
         productSubType: String? = null,
         pageSize: Int? = 20,
-    ): List<TaakV2> {
-        return productService.getProductTaken(
-            dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
-            productTypeId,
-            productName,
-            productSubType,
-            pageNumber = 1,
-            pageSize = pageSize ?: 20,
-        ).take(pageSize ?: 20)
-    }
+    ): List<TaakV2> =
+        productService
+            .getProductTaken(
+                dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+                productTypeId,
+                productName,
+                productSubType,
+                pageNumber = 1,
+                pageSize = pageSize ?: 20,
+            ).take(pageSize ?: 20)
 
     @GraphQLDescription("Get list of verbruiksobjecten of product")
-    suspend fun getProductVerbruiksObjecten(productId: UUID): List<ProductVerbruiksObject> {
-        return productService.getProductVerbruiksObjecten(
+    suspend fun getProductVerbruiksObjecten(productId: UUID): List<ProductVerbruiksObject> =
+        productService.getProductVerbruiksObjecten(
             productId.toString(),
             pageNumber = 1,
             pageSize = 20,
         )
-    }
 
     @GraphQLDescription("Get productType by name")
     suspend fun getProductType(
         productTypeId: UUID? = null,
         productName: String,
-    ): ProductType? {
-        return productService.getProductType(
+    ): ProductType? =
+        productService.getProductType(
             productTypeId,
             productName,
         )
-    }
 
     @GraphQLDescription("Get productTypes where the user has products")
-    suspend fun getProductTypes(dfe: DataFetchingEnvironment): List<ProductType> {
-        return productService.getProductTypes(
+    suspend fun getProductTypes(dfe: DataFetchingEnvironment): List<ProductType> =
+        productService.getProductTypes(
             dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
         )
-    }
 
     @GraphQLDescription(
         """
@@ -217,8 +211,8 @@ class ProductQuery(
         productName: String,
         key: String,
         dfe: DataFetchingEnvironment,
-    ): PrefillResponse {
-        return prefillService.prefill(
+    ): PrefillResponse =
+        prefillService.prefill(
             sources = sources?.let { Mapper.get().convertValue(it, object : TypeReference<Map<String, UUID>>() {}) },
             staticData = staticData?.let { Mapper.get().convertValue(it, object : TypeReference<Map<String, Any>>() {}) },
             productTypeId = productTypeId,
@@ -226,5 +220,4 @@ class ProductQuery(
             key = key,
             dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
         )
-    }
 }

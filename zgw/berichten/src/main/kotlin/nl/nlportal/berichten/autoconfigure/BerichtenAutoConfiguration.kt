@@ -32,13 +32,9 @@ class BerichtenAutoConfiguration {
     fun berichtenService(
         objectenApiService: ObjectenApiService,
         berichtenConfigurationProperties: BerichtenConfiguration,
-    ): BerichtenService {
-        return BerichtenService(objectenApiService, berichtenConfigurationProperties.properties)
-    }
+    ): BerichtenService = BerichtenService(objectenApiService, berichtenConfigurationProperties.properties)
 
     @Bean
     @ConditionalOnMissingBean(BerichtenQuery::class)
-    fun berichtenQuery(berichtenService: BerichtenService): BerichtenQuery {
-        return BerichtenQuery(berichtenService)
-    }
+    fun berichtenQuery(berichtenService: BerichtenService): BerichtenQuery = BerichtenQuery(berichtenService)
 }

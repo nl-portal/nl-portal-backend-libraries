@@ -23,8 +23,8 @@ data class ResultPage<T>(
     val previous: URI? = null,
     val results: List<T>,
 ) {
-    fun getNextPageNumber(): Int? {
-        return next
+    fun getNextPageNumber(): Int? =
+        next
             ?.query
             ?.split("&")
             ?.map { Pair(it.substringBefore("="), it.substringAfter("=")) }
@@ -32,5 +32,4 @@ data class ResultPage<T>(
             ?.map { it.second }
             ?.map { it.toInt() }
             ?.single()
-    }
 }

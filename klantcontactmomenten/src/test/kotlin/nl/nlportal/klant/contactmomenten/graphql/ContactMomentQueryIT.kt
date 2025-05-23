@@ -74,7 +74,8 @@ internal class ContactMomentQueryIT(
         val resultPath = "$basePath.content[0]"
 
         val response =
-            testClient.post()
+            testClient
+                .post()
                 .uri("/graphql")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType("application", "graphql"))
@@ -84,10 +85,14 @@ internal class ContactMomentQueryIT(
                 .consumeWith(System.out::println)
 
         response
-            .jsonPath(basePath).exists()
-            .jsonPath("$resultPath.tekst").isEqualTo("Contact moment")
-            .jsonPath("$resultPath.kanaal").isEqualTo("mail")
-            .jsonPath("$resultPath.registratiedatum").isEqualTo("2019-08-24T14:15:22Z")
+            .jsonPath(basePath)
+            .exists()
+            .jsonPath("$resultPath.tekst")
+            .isEqualTo("Contact moment")
+            .jsonPath("$resultPath.kanaal")
+            .isEqualTo("mail")
+            .jsonPath("$resultPath.registratiedatum")
+            .isEqualTo("2019-08-24T14:15:22Z")
     }
 
     @Test
@@ -110,7 +115,8 @@ internal class ContactMomentQueryIT(
         val resultPath = "$basePath.content[0]"
 
         val response =
-            testClient.post()
+            testClient
+                .post()
                 .uri("/graphql")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType("application", "graphql"))
@@ -120,10 +126,14 @@ internal class ContactMomentQueryIT(
                 .consumeWith(System.out::println)
 
         response
-            .jsonPath(basePath).exists()
-            .jsonPath("$resultPath.tekst").isEqualTo("Contact moment")
-            .jsonPath("$resultPath.kanaal").isEqualTo("mail")
-            .jsonPath("$resultPath.registratiedatum").isEqualTo("2019-08-24T14:15:22Z")
+            .jsonPath(basePath)
+            .exists()
+            .jsonPath("$resultPath.tekst")
+            .isEqualTo("Contact moment")
+            .jsonPath("$resultPath.kanaal")
+            .isEqualTo("mail")
+            .jsonPath("$resultPath.registratiedatum")
+            .isEqualTo("2019-08-24T14:15:22Z")
     }
 
     fun setupMockOpenKlantServer() {

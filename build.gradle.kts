@@ -94,6 +94,8 @@ subprojects {
     if (project.properties.containsKey("isLib") || project.properties.containsKey("isApp")) {
         configure<com.diffplug.gradle.spotless.SpotlessExtension> {
             kotlin {
+                ktlint()
+
                 // by default the target is every '.kt' and '.kts` file in the java sourcesets
                 licenseHeaderFile("licenseHeaderFile.template") // or licenseHeaderFile.template
             }

@@ -26,8 +26,8 @@ import reactor.core.publisher.Mono
 open class PortalAuthenticationConverter : Converter<Jwt, Mono<PortalAuthentication>> {
     private val jwtGrantedAuthoritiesConverter = JwtGrantedAuthoritiesConverter()
 
-    override fun convert(jwt: Jwt): Mono<PortalAuthentication> {
-        return jwt.claims[SUB_KEY]?.let {
+    override fun convert(jwt: Jwt): Mono<PortalAuthentication> =
+        jwt.claims[SUB_KEY]?.let {
             Mono.just(
                 PortalAuthentication(
                     jwt,
@@ -37,5 +37,4 @@ open class PortalAuthenticationConverter : Converter<Jwt, Mono<PortalAuthenticat
                 ),
             )
         } ?: throw UserTypeUnsupportedException("User type not supported")
-    }
 }

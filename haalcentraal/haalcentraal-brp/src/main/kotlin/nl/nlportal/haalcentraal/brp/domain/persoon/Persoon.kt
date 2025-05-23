@@ -40,9 +40,8 @@ data class Persoon(
         @Autowired
         haalCentraalBrpService: HaalCentraalBrpService,
         dfe: DataFetchingEnvironment,
-    ): Int? {
-        return verblijfplaats?.adresseerbaarObjectIdentificatie?.let {
+    ): Int? =
+        verblijfplaats?.adresseerbaarObjectIdentificatie?.let {
             haalCentraalBrpService.getBewonersAantal(dfe.graphQlContext[AUTHENTICATION_KEY], it)
         }
-    }
 }

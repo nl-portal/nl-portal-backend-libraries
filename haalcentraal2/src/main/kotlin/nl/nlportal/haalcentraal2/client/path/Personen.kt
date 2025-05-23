@@ -31,19 +31,17 @@ class Personen(
     suspend fun post(
         brpApiRequest: BrpApiRequest,
         authentication: Authentication,
-    ): BrpApiResponse {
-        return client.webClient
+    ): BrpApiResponse =
+        client.webClient
             .post()
             .uri("/brp/personen")
             .headers {
                 if (it[HttpHeaders.AUTHORIZATION].isNullOrEmpty()) {
                     it.setBearerAuth((authentication as CommonGroundAuthentication).token.tokenValue)
                 }
-            }
-            .contentType(MediaType.APPLICATION_JSON)
+            }.contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
             .bodyValue(brpApiRequest)
             .retrieve()
             .awaitBody<BrpApiResponse>()
-    }
 }

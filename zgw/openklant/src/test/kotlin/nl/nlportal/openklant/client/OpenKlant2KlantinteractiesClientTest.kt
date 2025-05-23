@@ -64,7 +64,12 @@ class OpenKlant2KlantinteractiesClientTest {
             mockServer.enqueue(MockResponse().setResponseCode(200))
 
             // given
-            openKlant2Client.webClient().get().uri("mypath").retrieve().awaitBodilessEntity()
+            openKlant2Client
+                .webClient()
+                .get()
+                .uri("mypath")
+                .retrieve()
+                .awaitBodilessEntity()
             val request = mockServer.takeRequest()
 
             // then

@@ -37,7 +37,8 @@ class OpenKlantClientProvider(
                 authentication.getUserRepresentation(),
             )
 
-        return WebClient.builder()
+        return WebClient
+            .builder()
             .clientConnector(
                 ReactorClientHttpConnector(
                     HttpClient.create().wiretap(
@@ -46,8 +47,7 @@ class OpenKlantClientProvider(
                         AdvancedByteBufFormat.TEXTUAL,
                     ),
                 ),
-            )
-            .baseUrl(openKlantClientConfig.url)
+            ).baseUrl(openKlantClientConfig.url)
             .defaultHeader("Accept-Crs", "EPSG:4326")
             .defaultHeader("Content-Crs", "EPSG:4326")
             .defaultHeader("Authorization", "Bearer $token")

@@ -25,20 +25,22 @@ object TestHelper {
     val EXTENSIONS_JSON_PATH = "$.extensions"
     private val logger = KotlinLogging.logger {}
 
-    fun mockResponseFromFile(fileName: String): MockResponse {
-        return MockResponse()
+    fun mockResponseFromFile(fileName: String): MockResponse =
+        MockResponse()
             .addHeader("Content-Type", "application/json; charset=utf-8")
             .setResponseCode(200)
             .setBody(readFileAsString(fileName))
-    }
 
     private fun readFileAsString(fileName: String): String = this::class.java.getResource(fileName)!!.readText(Charsets.UTF_8)
 
-    fun WebTestClient.ResponseSpec.verifyOnlyDataExists(basePath: String): WebTestClient.BodyContentSpec {
-        return this.expectBody()
+    fun WebTestClient.ResponseSpec.verifyOnlyDataExists(basePath: String): WebTestClient.BodyContentSpec =
+        this
+            .expectBody()
             .consumeWith(Consumer { t -> logger.info { t } })
-            .jsonPath(basePath).exists()
-            .jsonPath(ERRORS_JSON_PATH).doesNotExist()
-            .jsonPath(EXTENSIONS_JSON_PATH).doesNotExist()
-    }
+            .jsonPath(basePath)
+            .exists()
+            .jsonPath(ERRORS_JSON_PATH)
+            .doesNotExist()
+            .jsonPath(EXTENSIONS_JSON_PATH)
+            .doesNotExist()
 }

@@ -73,11 +73,11 @@ class OpenKlant2DigitaleAdresMutationIT(
                         builder
                             .path("/graphql")
                             .build()
-                    }
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                     .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/createUserDigitaleAdres.gql")))
                     .exchange()
-                    .expectStatus().isOk
+                    .expectStatus()
+                    .isOk
                     .expectBody()
                     .returnResult()
                     .responseBodyContent
@@ -112,8 +112,7 @@ class OpenKlant2DigitaleAdresMutationIT(
                         builder
                             .path("/graphql")
                             .build()
-                    }
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                     .bodyValue(
                         """
                         mutation {
@@ -129,9 +128,9 @@ class OpenKlant2DigitaleAdresMutationIT(
                             }
                         }
                         """.trimIndent(),
-                    )
-                    .exchange()
-                    .expectStatus().isOk
+                    ).exchange()
+                    .expectStatus()
+                    .isOk
                     .expectBody()
                     .returnResult()
                     .responseBodyContent
@@ -166,17 +165,16 @@ class OpenKlant2DigitaleAdresMutationIT(
                         builder
                             .path("/graphql")
                             .build()
-                    }
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                     .bodyValue(
                         """
                         mutation {
                             deleteUserDigitaleAdres(digitaleAdresId: "$testdigitaleAdresUUID")
                         }
                         """.trimIndent(),
-                    )
-                    .exchange()
-                    .expectStatus().isOk
+                    ).exchange()
+                    .expectStatus()
+                    .isOk
                     .expectBody()
                     .returnResult()
                     .responseBodyContent
@@ -194,23 +192,23 @@ class OpenKlant2DigitaleAdresMutationIT(
             assertTrue(createResult is NullNode)
 
             val userAdressen =
-                objectMapper.readTree(
-                    webTestClient
-                        .post()
-                        .uri { builder ->
-                            builder
-                                .path("/graphql")
-                                .build()
-                        }
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                        .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserDigitaleAdresen.gql")))
-                        .exchange()
-                        .expectStatus().isOk
-                        .expectBody()
-                        .returnResult()
-                        .responseBodyContent,
-                )
-                    .get("data")
+                objectMapper
+                    .readTree(
+                        webTestClient
+                            .post()
+                            .uri { builder ->
+                                builder
+                                    .path("/graphql")
+                                    .build()
+                            }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                            .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserDigitaleAdresen.gql")))
+                            .exchange()
+                            .expectStatus()
+                            .isOk
+                            .expectBody()
+                            .returnResult()
+                            .responseBodyContent,
+                    ).get("data")
                     ?.get("getUserDigitaleAdresen")
 
             assertFalse(testdigitaleAdresUUID in userAdressen!!.mapNotNull { it?.get("uuid")?.textValue() })

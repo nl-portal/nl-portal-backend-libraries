@@ -34,21 +34,16 @@ class DirectPaymentAutoConfiguration {
     fun directPaymentService(
         directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
         objectsApiClient: ObjectsApiClient,
-    ): DirectPaymentService {
-        return DirectPaymentService(
+    ): DirectPaymentService =
+        DirectPaymentService(
             directPaymentModuleConfiguration,
             objectsApiClient,
         )
-    }
 
     @Bean
-    fun directPaymentMutation(directPaymentService: DirectPaymentService): DirectPaymentMutation {
-        return DirectPaymentMutation(directPaymentService)
-    }
+    fun directPaymentMutation(directPaymentService: DirectPaymentService): DirectPaymentMutation = DirectPaymentMutation(directPaymentService)
 
     @Bean
     @ConditionalOnMissingBean(DirectPaymentController::class)
-    fun directPaymentController(directPaymentService: DirectPaymentService): DirectPaymentController {
-        return DirectPaymentController(directPaymentService)
-    }
+    fun directPaymentController(directPaymentService: DirectPaymentService): DirectPaymentController = DirectPaymentController(directPaymentService)
 }

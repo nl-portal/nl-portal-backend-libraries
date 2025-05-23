@@ -28,35 +28,35 @@ class KlantContactMomentenClient(
         authentication: CommonGroundAuthentication,
         klant: String,
         page: Int,
-    ): ResultPage<ContactMoment> {
-        return openKlantClientProvider.webClient(authentication)
+    ): ResultPage<ContactMoment> =
+        openKlantClientProvider
+            .webClient(authentication)
             .get()
             .uri {
                 val uriBuilder =
-                    it.path("/contactmomenten/api/v1/contactmomenten")
+                    it
+                        .path("/contactmomenten/api/v1/contactmomenten")
                         .queryParam("page", page)
                         .queryParam("klant", klant)
                 uriBuilder.build()
-            }
-            .retrieve()
+            }.retrieve()
             .awaitBody<ResultPage<ContactMoment>>()
-    }
 
     suspend fun getObjectContactMomenten(
         authentication: CommonGroundAuthentication,
         objectUrl: String,
         page: Int,
-    ): ResultPage<ContactMoment> {
-        return openKlantClientProvider.webClient(authentication)
+    ): ResultPage<ContactMoment> =
+        openKlantClientProvider
+            .webClient(authentication)
             .get()
             .uri {
                 val uriBuilder =
-                    it.path("/contactmomenten/api/v1/contactmomenten")
+                    it
+                        .path("/contactmomenten/api/v1/contactmomenten")
                         .queryParam("page", page)
                         .queryParam("object", objectUrl)
                 uriBuilder.build()
-            }
-            .retrieve()
+            }.retrieve()
             .awaitBody<ResultPage<ContactMoment>>()
-    }
 }
