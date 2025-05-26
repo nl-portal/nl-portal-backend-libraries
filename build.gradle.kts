@@ -51,10 +51,6 @@ plugins {
     signing
 }
 
-/*ktlint {
-    version.set("1.5.0")
-}*/
-
 allprojects {
     repositories {
         mavenCentral()
