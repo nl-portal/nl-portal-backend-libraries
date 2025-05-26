@@ -5,7 +5,6 @@ pluginManagement {
     val springBootVersion: String by settings
     val springDependencyManagementVersion: String by settings
     val benManesVersionsVersion: String by settings
-    val ktlintVersion: String by settings
     val spotlessVersion: String by settings
     val gradleDockerComposeVersion: String by settings
     val dokkaVersion: String by settings
