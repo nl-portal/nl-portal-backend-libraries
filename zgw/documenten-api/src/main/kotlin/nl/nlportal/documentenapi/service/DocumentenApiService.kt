@@ -9,10 +9,19 @@ import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.domain.DocumentContent
 import nl.nlportal.documentenapi.domain.DocumentStatus
 import nl.nlportal.documentenapi.domain.PostEnkelvoudiginformatieobjectRequest
+import nl.nlportal.documentenapi.exceptions.MimeTypeDeniedException
 import nl.nlportal.portal.authentication.domain.PortalAuthentication
+import org.apache.tika.Tika
 import org.springframework.core.io.buffer.DataBuffer
+import org.springframework.core.io.buffer.DataBufferUtils
 import org.springframework.http.codec.multipart.FilePart
 import org.springframework.security.core.context.ReactiveSecurityContextHolder
+import reactor.core.publisher.Flux
+import reactor.core.scheduler.Schedulers
+import java.io.IOException
+import java.io.InputStream
+import java.io.PipedInputStream
+import java.io.PipedOutputStream
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Base64
@@ -69,6 +78,15 @@ class DocumentenApiService(
                 .awaitSingleOrNull() ?: "valtimo"
         val documentenApiConfig = documentenApisConfigProperties.getConfig(documentApi)
 
+        if (documentenApisConfigProperties.acceptedMimeTypes.isNotEmpty()) {
+            getInputStreamFromFluxDataBuffer(file.content()).use {
+                val mediaType = Tika().detect(it).split(";")[0].trim()
+                if (!documentenApisConfigProperties.acceptedMimeTypes.contains(mediaType)) {
+                    throw MimeTypeDeniedException("$mediaType is not whitelisted for uploads.")
+                }
+            }
+        }
+
         return documentenApiClient.postDocument(
             PostEnkelvoudiginformatieobjectRequest(
                 bronorganisatie = documentenApiConfig.rsin!!,
@@ -89,5 +107,18 @@ class DocumentenApiService(
             file.content(),
             documentApi,
         )
+    }
+
+    @Throws(IOException::class)
+    private fun getInputStreamFromFluxDataBuffer(content: Flux<DataBuffer>): InputStream {
+        val osPipe = PipedOutputStream()
+        val isPipe = PipedInputStream(osPipe)
+        DataBufferUtils.write(content, osPipe)
+            .subscribeOn(Schedulers.boundedElastic())
+            .doOnComplete {
+                osPipe.close()
+            }
+            .subscribe(DataBufferUtils.releaseConsumer())
+        return isPipe
     }
 }

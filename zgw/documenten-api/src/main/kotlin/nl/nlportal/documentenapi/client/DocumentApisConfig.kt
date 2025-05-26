@@ -25,6 +25,7 @@ data class DocumentApisConfig(
 ) {
     data class DocumentenApisConfigProperties(
         var defaultDocumentApi: String = "",
+        val acceptedMimeTypes: Set<String> = setOf(),
         var configurations: Map<String, DocumentApiConfig> = emptyMap(),
     ) {
         fun getConfig(documentApi: String): DocumentApiConfig {
