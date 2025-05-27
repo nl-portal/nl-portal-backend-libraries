@@ -62,7 +62,7 @@ class CaseDefinitionService(
     }
 
     fun deployAll() {
-        logger.info("Deploying all case definition's")
+        logger.info { "Deploying all case definition's" }
         val resources: Array<Resource> = loadCaseResources()
         for (resource in resources) {
             val resourcePath = resource.url.path.split('/')
@@ -88,7 +88,7 @@ class CaseDefinitionService(
                         ),
                     )
                 } catch (ex: Exception) {
-                    logger.error("Error deploying case definition's", ex)
+                    logger.error(ex) { "Error deploying case definition's" }
                 }
             }
         }
