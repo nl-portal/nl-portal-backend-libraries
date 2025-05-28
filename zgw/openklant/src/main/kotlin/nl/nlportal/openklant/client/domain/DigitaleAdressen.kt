@@ -60,6 +60,7 @@ enum class OpenKlant2DigitaleAdressenFilters(
     PAGE_SIZE("pageSize"),
     VERSTREKTDOORPARTIJ_PARTIJ_IDENTIFICATOR_CODE_OBJECTID("verstrektDoorPartij__partijIdentificator__objectId"),
     REFERENTIE("referentie"),
+    REFERENTIE_IN("referentie_in"),
     SOORT_DIGITAALADRES("soortDigitaalAdres"),
     ;
 

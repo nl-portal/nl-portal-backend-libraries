@@ -174,8 +174,10 @@ class OpenKlant2Service(
     ): List<OpenKlant2DigitaleAdres> {
         val searchVariables = searchVariablesDigitaleAdressen(authentication).toMutableList()
 
-        openKlantConfigurationProperties.digitalAdressenReferentie?.let {
-            searchVariables.add(OpenKlant2DigitaleAdressenFilters.REFERENTIE to it)
+        openKlantConfigurationProperties.digitalAdressenReferenties.isNotEmpty().let {
+            searchVariables.add(
+                OpenKlant2DigitaleAdressenFilters.REFERENTIE_IN to openKlantConfigurationProperties.digitalAdressenReferenties.values.toList().joinToString("|"),
+            )
         }
 
         soortDigitaalAdres?.let {
@@ -216,7 +218,7 @@ class OpenKlant2Service(
                         digitaleAdres
                             .copy(
                                 verstrektDoorPartij = OpenKlant2UUID(userPartijId),
-                                referentie = openKlantConfigurationProperties.digitalAdressenReferentie ?: "",
+                                referentie = openKlantConfigurationProperties.digitalAdressenReferenties[digitaleAdres.soortDigitaalAdres.lowercase()] ?: "",
                             ),
                     )
             } catch (ex: WebClientResponseException) {
