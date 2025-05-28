@@ -117,7 +117,7 @@ class OpenKlant2DigitaleAdresQueryIT(
             verify(openKlant2Service, times(1)).findDigitaleAdressen(any(), anyOrNull())
 
             assertNotNull(response)
-            assertEquals("TELEFOONNUMMER", response?.get(0)?.get("type")?.textValue())
+            assertEquals("EMAIL", response?.get(0)?.get("type")?.textValue())
         }
 
     @Test
@@ -152,7 +152,7 @@ class OpenKlant2DigitaleAdresQueryIT(
             verify(openKlant2Service, times(1)).findDigitaleAdressen(any(), anyOrNull())
 
             assertNotNull(response)
-            assertEquals("TELEFOONNUMMER", response?.get(0)?.get("type")?.textValue())
+            assertEquals("EMAIL", response?.get(0)?.get("type")?.textValue())
         }
 
     @Test

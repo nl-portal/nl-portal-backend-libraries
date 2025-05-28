@@ -1,7 +1,7 @@
 
 query {
     getUserDigitaleAdressen(
-        soortDigitaalAdres: "telefoonnummer"
+        soortDigitaalAdres: "email"
      ){
         uuid
         waarde
