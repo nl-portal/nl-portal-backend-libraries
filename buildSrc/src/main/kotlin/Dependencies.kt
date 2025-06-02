@@ -23,4 +23,7 @@ object Dependencies {
     val kotlinCoroutines by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlinCoroutines}" }
     val springCloudConfig by lazy { "org.springframework.cloud:spring-cloud-starter-config:${Versions.springCloudVersion}" }
     val springCloudBootstrap by lazy { "org.springframework.cloud:spring-cloud-starter-bootstrap:${Versions.springCloudVersion}" }
+
+    val clamAv by lazy { "xyz.capybara:clamav-client:${Versions.clamAvVersion}" }
+    val tikaCore by lazy { "org.apache.tika:tika-core:${Versions.apacheTikaVersion}" }
 }
