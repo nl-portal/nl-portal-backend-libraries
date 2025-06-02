@@ -36,7 +36,6 @@ plugins {
     id("com.github.ben-manes.versions")
 
     // Checkstyle
-    id("org.jlleitschuh.gradle.ktlint")
     id("com.diffplug.spotless")
 
     // Docker-compose plugin
@@ -67,9 +66,6 @@ subprojects {
     println("Enabling com.avast.gradle.docker-compose plugin in project ${project.name}...")
     apply(plugin = "com.avast.gradle.docker-compose")
 
-    println("Enabling org.jlleitschuh.gradle.ktlint plugin in project ${project.name}...")
-    apply(plugin = "org.jlleitschuh.gradle.ktlint")
-
     println("Enabling com.diffplug.spotless plugin in project ${project.name}...")
     apply(plugin = "com.diffplug.spotless")
 
@@ -90,6 +86,7 @@ subprojects {
     if (project.properties.containsKey("isLib") || project.properties.containsKey("isApp")) {
         configure<com.diffplug.gradle.spotless.SpotlessExtension> {
             kotlin {
+                ktlint()
                 // by default the target is every '.kt' and '.kts` file in the java sourcesets
                 licenseHeaderFile("licenseHeaderFile.template") // or licenseHeaderFile.template
             }
@@ -123,10 +120,6 @@ subprojects {
             jvmTarget.set(JvmTarget.JVM_21)
             freeCompilerArgs.add("-Xjsr305=strict")
             freeCompilerArgs.add("-Xemit-jvm-type-annotations")
-        }
-        val ktlintFormat: Task? by tasks
-        if (ktlintFormat != null) {
-            dependsOn(ktlintFormat)
         }
     }
 

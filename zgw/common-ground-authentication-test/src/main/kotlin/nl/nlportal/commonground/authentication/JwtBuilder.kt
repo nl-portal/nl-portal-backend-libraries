@@ -120,9 +120,7 @@ class JwtBuilder {
         return jwtBuilder.build()
     }
 
-    fun randomClaimes(): Jwt.Builder? {
-        return jwtBuilder.claim("claim", "value")
-    }
+    fun randomClaimes(): Jwt.Builder? = jwtBuilder.claim("claim", "value")
 
     fun buildJwtString(): String {
         val jwt = randomClaimes()!!.build()
@@ -130,7 +128,8 @@ class JwtBuilder {
         val key = Keys.secretKeyFor(SignatureAlgorithm.HS512)
         val base64 = Encoders.BASE64.encode(key.getEncoded())
 
-        return Jwts.builder()
+        return Jwts
+            .builder()
             .setClaims(jwt.claims)
             .setSubject(jwt.subject)
             .setExpiration(Date(System.currentTimeMillis() + 20000))

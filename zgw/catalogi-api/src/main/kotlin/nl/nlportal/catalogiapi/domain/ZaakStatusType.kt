@@ -17,5 +17,6 @@ package nl.nlportal.catalogiapi.domain
 
 data class ZaakStatusType(
     val omschrijving: String,
+    val omschrijvingGeneriek: String? = null,
     val isEindstatus: Boolean,
 )

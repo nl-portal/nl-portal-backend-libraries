@@ -20,12 +20,11 @@ data class UpdateObjectsApiObjectRequest<T>(
     val record: UpdateObjectsApiObjectRequestRecord<T>,
 ) {
     companion object {
-        fun <T> fromObjectsApiObject(objectsApiObject: ObjectsApiObject<T>): UpdateObjectsApiObjectRequest<T> {
-            return UpdateObjectsApiObjectRequest(
+        fun <T> fromObjectsApiObject(objectsApiObject: ObjectsApiObject<T>): UpdateObjectsApiObjectRequest<T> =
+            UpdateObjectsApiObjectRequest(
                 objectsApiObject.type,
                 UpdateObjectsApiObjectRequestRecord.fromObjectsApiObjectRecord(objectsApiObject.record),
             )
-        }
     }
 }
 
@@ -37,12 +36,11 @@ data class UpdateObjectsApiObjectRequestRecord<T>(
     var correctedBy: String? = null,
 ) {
     companion object {
-        fun <T> fromObjectsApiObjectRecord(objectsApiObjectRecord: ObjectsApiObjectRecord<T>): UpdateObjectsApiObjectRequestRecord<T> {
-            return UpdateObjectsApiObjectRequestRecord(
+        fun <T> fromObjectsApiObjectRecord(objectsApiObjectRecord: ObjectsApiObjectRecord<T>): UpdateObjectsApiObjectRequestRecord<T> =
+            UpdateObjectsApiObjectRequestRecord(
                 objectsApiObjectRecord.typeVersion,
                 objectsApiObjectRecord.data,
                 objectsApiObjectRecord.startAt,
             )
-        }
     }
 }

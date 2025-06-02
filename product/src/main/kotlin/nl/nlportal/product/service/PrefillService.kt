@@ -48,9 +48,7 @@ class PrefillService(
         formulierUrl: String,
         key: String,
         identification: String,
-    ): PrefillResponse {
-        return hashAndCreatObject(json, key, formulierUrl, identification)
-    }
+    ): PrefillResponse = hashAndCreatObject(json, key, formulierUrl, identification)
 
     /*
      This method is called from elsewhere,

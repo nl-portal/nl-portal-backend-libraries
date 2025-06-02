@@ -32,9 +32,7 @@ class HaalCentraal2Client(
     private val clientSslContextResolver: ClientSslContextResolver? = null,
     webClientBuilder: WebClient.Builder,
 ) {
-    inline fun <reified P : HaalCentraal2Path> path(): P {
-        return P::class.primaryConstructor!!.call(this)
-    }
+    inline fun <reified P : HaalCentraal2Path> path(): P = P::class.primaryConstructor!!.call(this)
 
     val webClient: WebClient
 
@@ -44,37 +42,37 @@ class HaalCentraal2Client(
                 .clone()
                 .clientConnector(
                     ReactorClientHttpConnector(
-                        HttpClient.create().wiretap(
-                            "reactor.netty.http.client.HttpClient",
-                            LogLevel.DEBUG,
-                            AdvancedByteBufFormat.TEXTUAL,
-                        ).let { client ->
-                            var result = client
-                            if (clientSslContextResolver != null) {
-                                haalCentraal2ConfigurationProperties.ssl?.let {
-                                    val sslContext =
-                                        clientSslContextResolver.resolve(
-                                            it.key,
-                                            it.trustedCertificate,
-                                        )
+                        HttpClient
+                            .create()
+                            .wiretap(
+                                "reactor.netty.http.client.HttpClient",
+                                LogLevel.DEBUG,
+                                AdvancedByteBufFormat.TEXTUAL,
+                            ).let { client ->
+                                var result = client
+                                if (clientSslContextResolver != null) {
+                                    haalCentraal2ConfigurationProperties.ssl?.let {
+                                        val sslContext =
+                                            clientSslContextResolver.resolve(
+                                                it.key,
+                                                it.trustedCertificate,
+                                            )
 
-                                    result = client.secure { builder -> builder.sslContext(sslContext) }
+                                        result = client.secure { builder -> builder.sslContext(sslContext) }
 
-                                    logger.debug { "Client SSL context was set: private key=${it.key != null}, trusted certificate=${it.trustedCertificate != null}." }
+                                        logger.debug { "Client SSL context was set: private key=${it.key != null}, trusted certificate=${it.trustedCertificate != null}." }
+                                    }
                                 }
-                            }
-                            result
-                        },
+                                result
+                            },
                     ),
-                )
-                .baseUrl(haalCentraal2ConfigurationProperties.url)
+                ).baseUrl(haalCentraal2ConfigurationProperties.url)
                 .apply {
                     if (!haalCentraal2ConfigurationProperties.apiKey.isNullOrBlank()) {
                         it.defaultHeader("X-API-KEY", haalCentraal2ConfigurationProperties.apiKey)
                         logger.debug { "X-API-KEY was set for client" }
                     }
-                }
-                .build()
+                }.build()
     }
 
     companion object {

@@ -26,13 +26,12 @@ data class BrpNaam(
     val inOnderzoek: BrpNaamInOnderzoek? = null,
     var officialLastName: String? = null,
 ) {
-    fun lastName(): String {
-        return if (voorvoegsel != null && geslachtsnaam != null) {
+    fun lastName(): String =
+        if (voorvoegsel != null && geslachtsnaam != null) {
             "$voorvoegsel $geslachtsnaam"
         } else {
             geslachtsnaam ?: ""
         }
-    }
 }
 
 data class BrpAdellijkeTitelPredicaat(
