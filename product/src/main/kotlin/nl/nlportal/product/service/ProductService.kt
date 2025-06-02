@@ -55,9 +55,11 @@ class ProductService(
         id: UUID,
     ): Product? {
         val product =
-            getObjectsApiObjectById<Product>(id.toString())?.apply {
-                this.record.data.id = this.uuid
-            }?.record?.data
+            getObjectsApiObjectById<Product>(id.toString())
+                ?.apply {
+                    this.record.data.id = this.uuid
+                }?.record
+                ?.data
 
         if (isAuthorized(authentication, product?.rollen)) {
             return product
@@ -155,7 +157,8 @@ class ProductService(
 
         val zaakTypes = productType.zaaktypen
         val request =
-            zakenApiClient.zoeken()
+            zakenApiClient
+                .zoeken()
                 .search()
                 .page(pageNumber)
                 .withAuthentication(authentication)
@@ -214,16 +217,14 @@ class ProductService(
                 productSubType,
                 pageNumber,
                 999,
-            )
-                .content
+            ).content
 
         // filter out the taak which is not connected to a zaak or product
         return taken
             .filterNot { task ->
                 !zaken.any { it.uuid.toString() == task.koppeling.value } &&
                     !producten.any { it.id.toString() == task.koppeling.value }
-            }
-            .sortedBy { it.verloopdatum }
+            }.sortedBy { it.verloopdatum }
     }
 
     suspend fun updateVerbruiksObject(
@@ -239,13 +240,15 @@ class ProductService(
         updateRequest.record.correctedBy = authentication.getUserRepresentation()
         updateRequest.record.correctionFor = objectsApiVerbruiksObject.record.index.toString()
 
-        return objectsApiClient.updateObject(objectsApiVerbruiksObject.uuid, updateRequest).apply {
-            this.record.data.id = this.uuid
-        }.record.data
+        return objectsApiClient
+            .updateObject(objectsApiVerbruiksObject.uuid, updateRequest)
+            .apply {
+                this.record.data.id = this.uuid
+            }.record.data
     }
 
-    suspend fun getProductDetails(productInstantieId: UUID): ProductDetails? {
-        return try {
+    suspend fun getProductDetails(productInstantieId: UUID): ProductDetails? =
+        try {
             val objectSearchParameters =
                 listOf(
                     ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_INSTANTIE, Comparator.EQUAL_TO, productInstantieId.toString()),
@@ -261,7 +264,6 @@ class ProductService(
             logger.error { "Something went wrong with get ProductDetails by productInstantieId $productInstantieId with error: ${ex.message}" }
             null
         }
-    }
 
     suspend fun getProductType(
         productTypeId: UUID?,
@@ -269,9 +271,11 @@ class ProductService(
     ): ProductType? {
         try {
             if (productTypeId != null) {
-                return getObjectsApiObjectById<ProductType>(productTypeId.toString())?.apply {
-                    this.record.data.id = this.uuid
-                }?.record?.data
+                return getObjectsApiObjectById<ProductType>(productTypeId.toString())
+                    ?.apply {
+                        this.record.data.id = this.uuid
+                    }?.record
+                    ?.data
             }
             val objectSearchParameters =
                 listOf(
@@ -331,18 +335,16 @@ class ProductService(
             .filterNot { task ->
                 !zaakIds.any { it.toString() == task.koppeling.value } &&
                     (productId.toString() != task.koppeling.value)
-            }
-            .sortedBy { it.verloopdatum }
+            }.sortedBy { it.verloopdatum }
     }
 
-    suspend inline fun <reified T> getObjectsApiObjectById(id: String): ObjectsApiObject<T>? {
-        return try {
+    suspend inline fun <reified T> getObjectsApiObjectById(id: String): ObjectsApiObject<T>? =
+        try {
             objectsApiClient.getObjectById<T>(id = id)
         } catch (ex: Exception) {
             logger.warn { "Something went wrong with getObjectsApiObjectById by id $id with error: ${ex.message}" }
             null
         }
-    }
 
     private suspend fun findTakenByIdentification(
         authentication: CommonGroundAuthentication,
@@ -367,40 +369,35 @@ class ProductService(
             pageSize,
         ).let { resultPage ->
             TaakPageV2.fromResultPage(pageNumber, pageSize, resultPage)
-        }
-            .content
+        }.content
     }
 
     private suspend inline fun <reified T> getObjectsApiObject(
         objectTypeUrl: String,
         searchParameters: List<ObjectSearchParameter>,
-    ): ObjectsApiObject<T> {
-        return getObjectsApiObjectResultPage<T>(
+    ): ObjectsApiObject<T> =
+        getObjectsApiObjectResultPage<T>(
             objectTypeUrl,
             searchParameters,
             1,
             2,
         ).results.single()
-    }
 
     private suspend inline fun <reified T> getObjectsApiObjectResultPage(
         objectTypeUrl: String,
         searchParameters: List<ObjectSearchParameter>,
         pageNumber: Int,
         pageSize: Int,
-    ): ResultPage<ObjectsApiObject<T>> {
-        return objectsApiClient.getObjects<T>(
+    ): ResultPage<ObjectsApiObject<T>> =
+        objectsApiClient.getObjects<T>(
             objectSearchParameters = searchParameters,
             objectTypeUrl = objectTypeUrl,
             page = pageNumber,
             pageSize = pageSize,
             ordering = "-record__startAt",
         )
-    }
 
-    suspend fun getZaak(zaakUUID: UUID): Zaak {
-        return zakenApiClient.zaken().get(zaakUUID).retrieve()
-    }
+    suspend fun getZaak(zaakUUID: UUID): Zaak = zakenApiClient.zaken().get(zaakUUID).retrieve()
 
     private fun isAuthorized(
         authentication: CommonGroundAuthentication,
@@ -417,29 +414,31 @@ class ProductService(
     suspend fun getSourceAsJson(
         key: String,
         value: UUID,
-    ): String? {
-        return when (key) {
+    ): String? =
+        when (key) {
             "product" ->
-                getObjectsApiObjectById<Product>(value.toString())?.apply {
-                    this.record.data.id = this.uuid
-                }?.let {
-                    Mapper.get().writeValueAsString(it.record.data)
-                }
+                getObjectsApiObjectById<Product>(value.toString())
+                    ?.apply {
+                        this.record.data.id = this.uuid
+                    }?.let {
+                        Mapper.get().writeValueAsString(it.record.data)
+                    }
             "productverbruiksobject" ->
-                getObjectsApiObjectById<ProductVerbruiksObject>(value.toString())?.apply {
-                    this.record.data.id = this.uuid
-                }?.let {
-                    Mapper.get().writeValueAsString(it.record.data)
-                }
+                getObjectsApiObjectById<ProductVerbruiksObject>(value.toString())
+                    ?.apply {
+                        this.record.data.id = this.uuid
+                    }?.let {
+                        Mapper.get().writeValueAsString(it.record.data)
+                    }
             "productdetails" ->
-                getObjectsApiObjectById<ProductDetails>(value.toString())?.apply {
-                    this.record.data.id = this.uuid
-                }?.let {
-                    Mapper.get().writeValueAsString(it.record.data)
-                }
+                getObjectsApiObjectById<ProductDetails>(value.toString())
+                    ?.apply {
+                        this.record.data.id = this.uuid
+                    }?.let {
+                        Mapper.get().writeValueAsString(it.record.data)
+                    }
             else -> null
         }
-    }
 
     companion object {
         const val OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE = "rollen__initiator__identificatie"

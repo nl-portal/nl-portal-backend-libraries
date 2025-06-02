@@ -75,8 +75,9 @@ class CommonGroundAuthenticationConverter(
         }
     }
 
-    fun tokenExchange(jwt: Jwt): Mono<TokenResponse> {
-        return webClient.post()
+    fun tokenExchange(jwt: Jwt): Mono<TokenResponse> =
+        webClient
+            .post()
             .uri(URI.create("${jwt.issuer.toString().trimEnd('/')}/protocol/openid-connect/token"))
             .body(
                 BodyInserters.fromFormData(
@@ -91,10 +92,8 @@ class CommonGroundAuthenticationConverter(
                         ).mapValues { listOf(it.value) },
                     ),
                 ),
-            )
-            .retrieve()
+            ).retrieve()
             .bodyToMono<TokenResponse>()
-    }
 
     data class TokenResponse(
         @JsonValue

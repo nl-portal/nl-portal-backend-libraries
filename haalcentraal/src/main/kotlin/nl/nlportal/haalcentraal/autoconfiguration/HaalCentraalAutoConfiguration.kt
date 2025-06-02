@@ -37,16 +37,12 @@ class HaalCentraalAutoConfiguration {
         havingValue = "true",
     )
     @ConditionalOnMissingBean(ClientSslContextResolver::class)
-    fun clientSslContextResolver(resourceLoader: ResourceLoader): ClientSslContextResolver {
-        return ResourceClientSslContextResolver(resourceLoader)
-    }
+    fun clientSslContextResolver(resourceLoader: ResourceLoader): ClientSslContextResolver = ResourceClientSslContextResolver(resourceLoader)
 
     @Bean
     @ConditionalOnMissingBean(HaalCentraalClientProvider::class)
     fun haalCentraalClientProvider(
         haalCentraalClientConfig: HaalCentraalBrpConfig,
         @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
-    ): HaalCentraalClientProvider {
-        return HaalCentraalClientProvider(haalCentraalClientConfig, clientSslContextResolver)
-    }
+    ): HaalCentraalClientProvider = HaalCentraalClientProvider(haalCentraalClientConfig, clientSslContextResolver)
 }

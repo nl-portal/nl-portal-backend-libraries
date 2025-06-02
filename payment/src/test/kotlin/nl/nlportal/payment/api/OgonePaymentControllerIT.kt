@@ -66,16 +66,19 @@ internal class OgonePaymentControllerIT(
             )
 
         val shaSign =
-            OgonePaymentService.hashParameters(
-                parameterList,
-                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaOutKey,
-                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaVersion,
-            ).uppercase()
+            OgonePaymentService
+                .hashParameters(
+                    parameterList,
+                    paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaOutKey,
+                    paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaVersion,
+                ).uppercase()
 
-        webTestClient.get()
+        webTestClient
+            .get()
             .uri("/api/public/payment/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&STATUS=91&SHASIGN=$shaSign")
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .expectBody()
             .returnResult()
             .responseBody
@@ -92,16 +95,19 @@ internal class OgonePaymentControllerIT(
             )
 
         val shaSign =
-            OgonePaymentService.hashParameters(
-                parameterList,
-                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaOutKey,
-                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaVersion,
-            ).uppercase()
+            OgonePaymentService
+                .hashParameters(
+                    parameterList,
+                    paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaOutKey,
+                    paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaVersion,
+                ).uppercase()
 
-        webTestClient.get()
+        webTestClient
+            .get()
             .uri("/api/public/payment/ogone/postsale?orderID=58fad5ab&STATUS=91&SHASIGN=$shaSign")
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .expectBody()
             .returnResult()
             .responseBody
@@ -118,16 +124,19 @@ internal class OgonePaymentControllerIT(
             )
 
         val shaSign =
-            OgonePaymentService.hashParameters(
-                parameterList,
-                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaOutKey,
-                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaVersion,
-            ).uppercase()
+            OgonePaymentService
+                .hashParameters(
+                    parameterList,
+                    paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaOutKey,
+                    paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaVersion,
+                ).uppercase()
 
-        webTestClient.get()
+        webTestClient
+            .get()
             .uri("/api/public/payment/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&STATUS=1&AMOUNT=200&SHASIGN=$shaSign")
             .exchange()
-            .expectStatus().isBadRequest
+            .expectStatus()
+            .isBadRequest
             .expectBody()
             .returnResult()
             .responseBody
@@ -137,10 +146,12 @@ internal class OgonePaymentControllerIT(
 
     @Test
     fun postSaleTestNotFromPaymentProvider() {
-        webTestClient.get()
+        webTestClient
+            .get()
             .uri("/api/public/payment/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&PSPID=TAX&STATUS=91")
             .exchange()
-            .expectStatus().isBadRequest
+            .expectStatus()
+            .isBadRequest
             .expectBody()
             .returnResult()
             .responseBody
@@ -150,10 +161,12 @@ internal class OgonePaymentControllerIT(
 
     @Test
     fun postSaleTestIncorrectOgoneStatus() {
-        webTestClient.get()
+        webTestClient
+            .get()
             .uri("/api/public/payment/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&PSPID=TAX&STATUS=1")
             .exchange()
-            .expectStatus().isBadRequest
+            .expectStatus()
+            .isBadRequest
             .expectBody()
             .returnResult()
             .responseBody

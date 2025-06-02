@@ -123,7 +123,11 @@ class CaseServiceUnitTest : BaseTest() {
         assertThat(case.caseId).isNotNull
         assertThat(case.userId).isEqualTo(user)
         assertThat(case.status.name).isEqualTo(initialStatus)
-        assertThat(case.submission.value.path("firstName").textValue()).isEqualTo("myName")
+        assertThat(
+            case.submission.value
+                .path("firstName")
+                .textValue(),
+        ).isEqualTo("myName")
     }
 
     @Test

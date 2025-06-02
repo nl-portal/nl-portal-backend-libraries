@@ -77,7 +77,8 @@ internal class BurgerMutationIT(
 
         val basePath = "$.data.updateBurgerProfiel"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
@@ -85,9 +86,12 @@ internal class BurgerMutationIT(
             .exchange()
             .expectBody()
             .consumeWith(Consumer { t -> logger.info { t } })
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.telefoonnummer").isEqualTo("0611111111")
-            .jsonPath("$basePath.emailadres").isEqualTo("updated@email.nl")
+            .jsonPath(basePath)
+            .exists()
+            .jsonPath("$basePath.telefoonnummer")
+            .isEqualTo("0611111111")
+            .jsonPath("$basePath.emailadres")
+            .isEqualTo("updated@email.nl")
     }
 
     @Test
@@ -107,16 +111,20 @@ internal class BurgerMutationIT(
 
         val basePath = "$.data.updateBurgerProfiel"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(mutation)
             .exchange()
             .expectBody()
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.telefoonnummer").isEqualTo("0622222222")
-            .jsonPath("$basePath.emailadres").isEqualTo("created@email.nl")
+            .jsonPath(basePath)
+            .exists()
+            .jsonPath("$basePath.telefoonnummer")
+            .isEqualTo("0622222222")
+            .jsonPath("$basePath.emailadres")
+            .isEqualTo("created@email.nl")
     }
 
     fun setupMockOpenKlantServer() {

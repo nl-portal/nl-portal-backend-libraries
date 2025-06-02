@@ -91,14 +91,16 @@ internal class BewoningenQueryIT(
 
         val basePath = "$.data.getBewonersAantalV2"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath(basePath).isEqualTo(4)
+            .jsonPath(basePath)
+            .isEqualTo(4)
     }
 
     private fun setupMockServer() {

@@ -34,17 +34,13 @@ class TestApplication {
     }
 
     @Bean
-    fun springSecurityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
-        return http
+    fun springSecurityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain =
+        http
             .csrf { it.disable() }
             .authorizeExchange {
                 it.anyExchange().permitAll()
-            }
-            .build()
-    }
+            }.build()
 
     @Bean
-    fun dummyQuery(): DummyQuery {
-        return DummyQuery()
-    }
+    fun dummyQuery(): DummyQuery = DummyQuery()
 }

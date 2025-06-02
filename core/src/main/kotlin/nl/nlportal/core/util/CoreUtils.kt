@@ -21,17 +21,15 @@ import org.apache.commons.codec.digest.DigestUtils
 
 object CoreUtils {
     @JvmStatic
-    fun extractId(url: String): UUID {
-        return UUID.fromString(url.substringAfterLast("/"))
-    }
+    fun extractId(url: String): UUID = UUID.fromString(url.substringAfterLast("/"))
 
     @JvmStatic
     @Throws(NoSuchAlgorithmException::class)
     fun createHash(
         input: String,
         shaVersion: String,
-    ): String {
-        return when (shaVersion) {
+    ): String =
+        when (shaVersion) {
             ShaVersion.SHA256.version -> {
                 DigestUtils.sha512Hex(input)
             }
@@ -42,5 +40,4 @@ object CoreUtils {
                 DigestUtils.sha1Hex(input)
             }
         }
-    }
 }

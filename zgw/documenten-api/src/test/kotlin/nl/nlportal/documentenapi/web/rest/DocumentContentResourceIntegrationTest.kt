@@ -29,6 +29,7 @@ import okio.Buffer
 import okio.source
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.RepeatedTest
@@ -44,6 +45,7 @@ import org.springframework.http.client.MultipartBodyBuilder
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.BodyInserters
 import java.io.InputStream
+import java.nio.charset.Charset
 import java.util.Base64
 import java.util.UUID
 
@@ -192,6 +194,27 @@ class DocumentContentResourceIntegrationTest(
         assertThat(
             requestBody.informatieobjecttype,
         ).isEqualTo("http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000")
+    }
+
+    @Test
+    @WithBurgerUser("569312863")
+    fun `should not allowed mimetype for upload using data streams`() {
+        val bodyBuilder = MultipartBodyBuilder()
+        bodyBuilder.part("file", ClassPathResource("/data/not-accepted-mimetype.pdf", this::class.java.classLoader))
+
+        val response =
+            webTestClient.post()
+                .uri("/api/documentapi/openzaak/document/content")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
+                .exchange()
+                .expectStatus().isBadRequest
+                .expectBody()
+                .returnResult()
+                .responseBodyContent
+                ?.toString(Charset.defaultCharset())
+
+        assertEquals("application/pdf is not allowed for uploads.", response)
     }
 
     fun setupMockDocumentServer() {

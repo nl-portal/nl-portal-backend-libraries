@@ -105,17 +105,22 @@ internal class GemachtigdeQueryIT(
 
         val basePath = "$.data.getGemachtigdeV2"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.persoon.naam.volledigeNaam").isEqualTo("Pieter Jan de Vries")
-            .jsonPath("$basePath.persoon.naam.geslachtsnaam").isEqualTo("Vries")
-            .jsonPath("$basePath.bedrijf.naam").doesNotExist()
+            .jsonPath("$basePath.persoon.naam.volledigeNaam")
+            .isEqualTo("Pieter Jan de Vries")
+            .jsonPath("$basePath.persoon.naam.geslachtsnaam")
+            .isEqualTo("Vries")
+            .jsonPath("$basePath.bedrijf.naam")
+            .doesNotExist()
     }
 
     @Test
@@ -141,17 +146,22 @@ internal class GemachtigdeQueryIT(
 
         val basePath = "$.data.getGemachtigdeV2"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .expectBody()
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.bedrijf.naam").isEqualTo("Test bedrijf")
-            .jsonPath("$basePath.persoon.volledigeNaam").doesNotExist()
+            .jsonPath(basePath)
+            .exists()
+            .jsonPath("$basePath.bedrijf.naam")
+            .isEqualTo("Test bedrijf")
+            .jsonPath("$basePath.persoon.volledigeNaam")
+            .doesNotExist()
     }
 
     private fun setupMockServer() {

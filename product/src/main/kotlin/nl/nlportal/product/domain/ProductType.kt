@@ -40,9 +40,7 @@ data class ProductType(
     val prefillmapping: Map<String, PrefillConfiguration>?,
 ) {
     @GraphQLDescription("Get list of available beslistabellen, with their object configurations")
-    fun beslistabelMappings(): List<String>? {
-        return beslistabelmapping?.map { it.key }
-    }
+    fun beslistabelMappings(): List<String>? = beslistabelmapping?.map { it.key }
 
     @GraphQLDescription("Get list of available forms to prefill, with their object configurations")
     fun prefillMappings(): ObjectNode? {

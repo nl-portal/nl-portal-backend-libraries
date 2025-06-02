@@ -28,19 +28,13 @@ import org.springframework.context.annotation.Configuration
 class GraphqlAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(CreateCaseMutation::class)
-    fun createCaseMutation(caseService: CaseService): CreateCaseMutation {
-        return CreateCaseMutation(caseService)
-    }
+    fun createCaseMutation(caseService: CaseService): CreateCaseMutation = CreateCaseMutation(caseService)
 
     @Bean
     @ConditionalOnMissingBean(CaseDefinitionQuery::class)
-    fun caseDefinitionQuery(caseDefinitionService: CaseDefinitionService): CaseDefinitionQuery {
-        return CaseDefinitionQuery(caseDefinitionService)
-    }
+    fun caseDefinitionQuery(caseDefinitionService: CaseDefinitionService): CaseDefinitionQuery = CaseDefinitionQuery(caseDefinitionService)
 
     @Bean
     @ConditionalOnMissingBean(CaseInstanceQuery::class)
-    fun caseInstanceQuery(caseService: CaseService): CaseInstanceQuery {
-        return CaseInstanceQuery(caseService)
-    }
+    fun caseInstanceQuery(caseService: CaseService): CaseInstanceQuery = CaseInstanceQuery(caseService)
 }

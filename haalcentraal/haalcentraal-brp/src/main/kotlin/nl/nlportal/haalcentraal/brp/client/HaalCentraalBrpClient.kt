@@ -29,23 +29,23 @@ class HaalCentraalBrpClient(
     suspend fun getPersoon(
         bsn: String,
         authentication: Authentication,
-    ): Persoon? {
-        return haalCentraalClientProvider.webClient(authentication)
+    ): Persoon? =
+        haalCentraalClientProvider
+            .webClient(authentication)
             .get()
             .uri {
                 val uriBuilder =
                     it.path("/brp/ingeschrevenpersonen/$bsn")
                 uriBuilder.build()
-            }
-            .retrieve()
+            }.retrieve()
             .awaitBody<Persoon>()
-    }
 
     suspend fun getBewoningen(
         bewoningenApiRequest: BewoningenApiRequest,
         authentication: Authentication,
-    ): Bewoning {
-        return haalCentraalClientProvider.webClient(authentication)
+    ): Bewoning =
+        haalCentraalClientProvider
+            .webClient(authentication)
             .post()
             .uri("/bewoning/bewoningen")
             .contentType(MediaType.APPLICATION_JSON)
@@ -53,5 +53,4 @@ class HaalCentraalBrpClient(
             .bodyValue(bewoningenApiRequest)
             .retrieve()
             .awaitBody()
-    }
 }

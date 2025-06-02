@@ -33,7 +33,13 @@ data class Submission(
         val submission = this.value
         properties.entries.stream().forEach {
             val containerNode = submission.at(it.key.head()) as ObjectNode
-            containerNode.replace(it.key.last().toString().removePrefix("/"), it.value)
+            containerNode.replace(
+                it.key
+                    .last()
+                    .toString()
+                    .removePrefix("/"),
+                it.value,
+            )
         }
         return Submission(submission)
     }

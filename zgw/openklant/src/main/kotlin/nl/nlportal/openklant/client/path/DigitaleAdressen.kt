@@ -27,11 +27,13 @@ import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.awaitBodyOrNull
 import java.util.UUID
 
-class DigitaleAdressen(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesPath() {
+class DigitaleAdressen(
+    val client: OpenKlant2KlantinteractiesClient,
+) : KlantInteractiesPath() {
     override val path: String = "/digitaleadressen"
 
-    suspend fun get(searchFilters: List<Pair<OpenKlant2DigitaleAdressenFilters, Any>>? = null): List<OpenKlant2DigitaleAdres> {
-        return client
+    suspend fun get(searchFilters: List<Pair<OpenKlant2DigitaleAdressenFilters, Any>>? = null): List<OpenKlant2DigitaleAdres> =
+        client
             .webClient()
             .get()
             .uri { uriBuilder ->
@@ -39,55 +41,48 @@ class DigitaleAdressen(val client: OpenKlant2KlantinteractiesClient) : KlantInte
                     .path(path)
                     .applyFilters(searchFilters)
                 uriBuilder.build()
-            }
-            .accept(MediaType.APPLICATION_JSON)
+            }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
-            .awaitBody<ResultPage<OpenKlant2DigitaleAdres>>().results
-    }
+            .awaitBody<ResultPage<OpenKlant2DigitaleAdres>>()
+            .results
 
-    suspend fun get(uuid: UUID): OpenKlant2DigitaleAdres? {
-        return client
+    suspend fun get(uuid: UUID): OpenKlant2DigitaleAdres? =
+        client
             .webClient()
             .get()
             .uri { uriBuilder ->
                 uriBuilder
                     .path("$path/$uuid")
                     .build()
-            }
-            .accept(MediaType.APPLICATION_JSON)
+            }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody<OpenKlant2DigitaleAdres>()
-    }
 
-    suspend fun create(digitaleAdres: OpenKlant2DigitaleAdres): OpenKlant2DigitaleAdres? {
-        return client
+    suspend fun create(digitaleAdres: OpenKlant2DigitaleAdres): OpenKlant2DigitaleAdres? =
+        client
             .webClient()
             .post()
             .uri { uriBuilder ->
                 uriBuilder
                     .path(path)
                     .build()
-            }
-            .body(BodyInserters.fromValue(digitaleAdres))
+            }.body(BodyInserters.fromValue(digitaleAdres))
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBodyOrNull()
-    }
 
-    suspend fun patch(digitaleAdres: OpenKlant2DigitaleAdresUpdate): OpenKlant2DigitaleAdres? {
-        return client
+    suspend fun patch(digitaleAdres: OpenKlant2DigitaleAdresUpdate): OpenKlant2DigitaleAdres? =
+        client
             .webClient()
             .put()
             .uri { uriBuilder ->
                 uriBuilder
                     .path("$path/${digitaleAdres.uuid}")
                     .build()
-            }
-            .body(BodyInserters.fromValue(digitaleAdres))
+            }.body(BodyInserters.fromValue(digitaleAdres))
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBodyOrNull()
-    }
 
     suspend fun delete(uuid: UUID) {
         client
@@ -97,8 +92,7 @@ class DigitaleAdressen(val client: OpenKlant2KlantinteractiesClient) : KlantInte
                 uriBuilder
                     .path("$path/$uuid")
                     .build()
-            }
-            .accept(MediaType.APPLICATION_JSON)
+            }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBodilessEntity()
     }

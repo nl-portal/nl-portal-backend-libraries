@@ -38,26 +38,18 @@ class KlantAutoConfiguration {
     fun burgerService(
         openKlantClientConfig: OpenKlantClientConfig,
         openKlantClient: OpenKlantClient,
-    ): BurgerService {
-        return BurgerServiceImpl(openKlantClientConfig.properties, openKlantClient)
-    }
+    ): BurgerService = BurgerServiceImpl(openKlantClientConfig.properties, openKlantClient)
 
     @Bean
     @ConditionalOnMissingBean(OpenKlantClient::class)
-    fun openKlantClient(openKlantClientProvider: OpenKlantClientProvider): OpenKlantClient {
-        return OpenKlantClient(openKlantClientProvider)
-    }
+    fun openKlantClient(openKlantClientProvider: OpenKlantClientProvider): OpenKlantClient = OpenKlantClient(openKlantClientProvider)
 
     @Bean
-    fun burgerQuery(burgerService: BurgerService): BurgerQuery {
-        return BurgerQuery(burgerService)
-    }
+    fun burgerQuery(burgerService: BurgerService): BurgerQuery = BurgerQuery(burgerService)
 
     @Bean
     fun burgerMutation(
         burgerService: BurgerService,
         graphQlValidator: GraphQlValidator,
-    ): BurgerMutation {
-        return BurgerMutation(burgerService, graphQlValidator)
-    }
+    ): BurgerMutation = BurgerMutation(burgerService, graphQlValidator)
 }
