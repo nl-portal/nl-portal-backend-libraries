@@ -30,19 +30,17 @@ class Bewoning(
     suspend fun post(
         bewoningenApiRequest: BewoningenApiRequest,
         authentication: Authentication,
-    ): BewoningenApiResponse {
-        return client.webClient
+    ): BewoningenApiResponse =
+        client.webClient
             .post()
             .uri("/bewoning/bewoningen")
             .headers {
                 if (it[HttpHeaders.AUTHORIZATION].isNullOrEmpty()) {
                     it.setBearerAuth((authentication as CommonGroundAuthentication).token.tokenValue)
                 }
-            }
-            .contentType(MediaType.APPLICATION_JSON)
+            }.contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
             .bodyValue(bewoningenApiRequest)
             .retrieve()
             .awaitBody<BewoningenApiResponse>()
-    }
 }

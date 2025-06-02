@@ -25,18 +25,22 @@ object TestHelper {
     val EXTENSIONS_JSON_PATH = "$.extensions"
     private val logger = KotlinLogging.logger {}
 
-    fun WebTestClient.ResponseSpec.verifyOnlyDataExists(basePath: String): WebTestClient.BodyContentSpec {
-        return this.expectBody()
+    fun WebTestClient.ResponseSpec.verifyOnlyDataExists(basePath: String): WebTestClient.BodyContentSpec =
+        this
+            .expectBody()
             .consumeWith(Consumer { t -> logger.info { t } })
-            .jsonPath(basePath).exists()
-            .jsonPath(ERRORS_JSON_PATH).doesNotExist()
-            .jsonPath(EXTENSIONS_JSON_PATH).doesNotExist()
-    }
+            .jsonPath(basePath)
+            .exists()
+            .jsonPath(ERRORS_JSON_PATH)
+            .doesNotExist()
+            .jsonPath(EXTENSIONS_JSON_PATH)
+            .doesNotExist()
 
-    fun mockResponse(body: String): MockResponse {
-        return MockResponse().addHeader("Content-Type", "application/json; charset=utf-8").setResponseCode(200)
+    fun mockResponse(body: String): MockResponse =
+        MockResponse()
+            .addHeader("Content-Type", "application/json; charset=utf-8")
+            .setResponseCode(200)
             .setBody(body)
-    }
 
     val graphqlUnopenedBerichtenCountRequest =
         """

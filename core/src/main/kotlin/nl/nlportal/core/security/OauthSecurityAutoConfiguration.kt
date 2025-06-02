@@ -76,25 +76,24 @@ class OauthSecurityAutoConfiguration {
                 h.referrerPolicy { c ->
                     c.policy(ReferrerPolicyServerHttpHeadersWriter.ReferrerPolicy.SAME_ORIGIN)
                 }
-            }
-            .authorizeExchange {
+            }.authorizeExchange {
                 it.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 it.pathMatchers("/playground").permitAll()
                 it.pathMatchers("/graphql").permitAll()
-                it.pathMatchers("/actuator/**").permitAll()
+                it
+                    .pathMatchers("/actuator/**")
+                    .permitAll()
                     .apply {
                         securityEndpointsConfig.unsecured.forEach { endpoint ->
                             it.pathMatchers(endpoint).permitAll()
                         }
                     }
                 it.anyExchange().authenticated()
-            }
-            .oauth2ResourceServer {
+            }.oauth2ResourceServer {
                 it.jwt { t ->
                     t.jwtAuthenticationConverter(converter)
                 }
-            }
-            .build()
+            }.build()
     }
 
     @Bean

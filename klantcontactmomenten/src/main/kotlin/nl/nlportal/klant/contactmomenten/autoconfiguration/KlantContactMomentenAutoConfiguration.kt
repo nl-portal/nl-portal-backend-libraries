@@ -36,21 +36,16 @@ class KlantContactMomentenAutoConfiguration {
     fun klantContactMomentenService(
         klantContactMomentenClient: KlantContactMomentenClient,
         klantClient: OpenKlantClient,
-    ): KlantContactMomentenService {
-        return nl.nlportal.klant.contactmomenten.service.impl.KlantContactMomentenServiceImpl(
+    ): KlantContactMomentenService =
+        nl.nlportal.klant.contactmomenten.service.impl.KlantContactMomentenServiceImpl(
             klantContactMomentenClient,
             klantClient,
         )
-    }
 
     @Bean
     @ConditionalOnMissingBean(KlantContactMomentenClient::class)
-    fun openKlantContactMomentenClient(openKlantClientProvider: OpenKlantClientProvider): KlantContactMomentenClient {
-        return KlantContactMomentenClient(openKlantClientProvider)
-    }
+    fun openKlantContactMomentenClient(openKlantClientProvider: OpenKlantClientProvider): KlantContactMomentenClient = KlantContactMomentenClient(openKlantClientProvider)
 
     @Bean
-    fun contactMomentenQuery(klantContactMomentenService: KlantContactMomentenService): ContactMomentQuery {
-        return ContactMomentQuery(klantContactMomentenService)
-    }
+    fun contactMomentenQuery(klantContactMomentenService: KlantContactMomentenService): ContactMomentQuery = ContactMomentQuery(klantContactMomentenService)
 }

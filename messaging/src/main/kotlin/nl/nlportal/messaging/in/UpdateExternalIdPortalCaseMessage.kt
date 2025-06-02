@@ -17,4 +17,7 @@ package nl.nlportal.messaging.`in`
 
 import java.util.UUID
 
-data class UpdateExternalIdPortalCaseMessage(val caseId: UUID, val externalId: String)
+data class UpdateExternalIdPortalCaseMessage(
+    val caseId: UUID,
+    val externalId: String,
+)

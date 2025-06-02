@@ -54,50 +54,42 @@ class Product(
         @GraphQLIgnore
         @Autowired
         productService: ProductService,
-    ): ProductType? {
-        return productService.getObjectsApiObjectById<ProductType>(productTypeId)?.record?.data
-    }
+    ): ProductType? = productService.getObjectsApiObjectById<ProductType>(productTypeId)?.record?.data
 
     suspend fun productDetails(
         @GraphQLIgnore
         @Autowired
         productService: ProductService,
-    ): ProductDetails? {
-        return id?.let { productService.getProductDetails(it) }
-    }
+    ): ProductDetails? = id?.let { productService.getProductDetails(it) }
 
     suspend fun zaken(
         @GraphQLIgnore
         @Autowired
         productService: ProductService,
-    ): List<Zaak> {
-        return zaken.map { productService.getZaak(it) }
-    }
+    ): List<Zaak> = zaken.map { productService.getZaak(it) }
 
     suspend fun taken(
         @GraphQLIgnore
         @Autowired
         productService: ProductService,
         dfe: DataFetchingEnvironment,
-    ): List<TaakV2> {
-        return productService.getTaken(
+    ): List<TaakV2> =
+        productService.getTaken(
             dfe.graphQlContext[AUTHENTICATION_KEY],
             id!!,
             zaken,
         )
-    }
 
     suspend fun verbruiksobjecten(
         @GraphQLIgnore
         @Autowired
         productService: ProductService,
-    ): List<ProductVerbruiksObject> {
-        return productService.getProductVerbruiksObjecten(
+    ): List<ProductVerbruiksObject> =
+        productService.getProductVerbruiksObjecten(
             productId = id.toString(),
             pageNumber = 1,
             pageSize = 20,
         )
-    }
 
     companion object {
         fun fromObjectsApiProduct(objectsApiTask: ObjectsApiObject<Product>): Product {

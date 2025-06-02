@@ -23,14 +23,13 @@ object SchemaLoaderBuilder {
     private val DEFAULT_REFERENCE_PATH_LOCATION = "classpath://config/case/definition/reference/"
 
     private val schemaLoaderBuilder =
-        SchemaLoader.builder()
+        SchemaLoader
+            .builder()
             .schemaClient(SchemaClient.classPathAwareClient())
             .resolutionScope(DEFAULT_REFERENCE_PATH_LOCATION)
             .useDefaults(true)
             .draftV7Support()
             .addFormatValidator(UuidFormatValidator())
 
-    fun get(): SchemaLoader.SchemaLoaderBuilder {
-        return schemaLoaderBuilder
-    }
+    fun get(): SchemaLoader.SchemaLoaderBuilder = schemaLoaderBuilder
 }

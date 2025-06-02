@@ -15,4 +15,6 @@
  */
 package nl.nlportal.portal.authentication.exception
 
-class UserTypeUnsupportedException(msg: String) : RuntimeException(msg)
+class UserTypeUnsupportedException(
+    msg: String,
+) : RuntimeException(msg)

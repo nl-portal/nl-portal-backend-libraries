@@ -70,16 +70,20 @@ internal class HandelsregisterQueryIT(
 
         val basePath = "$.data.getBedrijf"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .expectBody()
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.naam").isEqualTo("Test bedrijf")
+            .jsonPath(basePath)
+            .exists()
+            .jsonPath("$basePath.naam")
+            .isEqualTo("Test bedrijf")
     }
 
     private fun setupMockServer() {

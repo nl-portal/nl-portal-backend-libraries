@@ -64,106 +64,93 @@ class ProductTestConfiguration {
     private lateinit var getDecision: Resource
 
     @Bean
-    fun graphqlGetProducten(): String {
-        return StreamUtils.copyToString(
+    fun graphqlGetProducten(): String =
+        StreamUtils.copyToString(
             getProducten.inputStream,
             StandardCharsets.UTF_8,
         )
-    }
 
     @Bean
-    fun graphqlGetProduct(): String {
-        return StreamUtils.copyToString(
+    fun graphqlGetProduct(): String =
+        StreamUtils.copyToString(
             getProduct.inputStream,
             StandardCharsets.UTF_8,
         )
-    }
 
     @Bean
-    fun graphqlUpdateProductVerbruiksObject(): String {
-        return StreamUtils.copyToString(
+    fun graphqlUpdateProductVerbruiksObject(): String =
+        StreamUtils.copyToString(
             updateProductVerbruiksObject.inputStream,
             StandardCharsets.UTF_8,
         )
-    }
 
     @Bean
-    fun graphqlGetProductZaken(): String {
-        return StreamUtils.copyToString(
+    fun graphqlGetProductZaken(): String =
+        StreamUtils.copyToString(
             getProductZaken.inputStream,
             StandardCharsets.UTF_8,
         )
-    }
 
     @Bean
-    fun graphqlGetProductZakenNoZaakTypes(): String {
-        return StreamUtils.copyToString(
+    fun graphqlGetProductZakenNoZaakTypes(): String =
+        StreamUtils.copyToString(
             getProductZakenNoZaakTypes.inputStream,
             StandardCharsets.UTF_8,
         )
-    }
 
     @Bean
-    fun graphqlGetProductTaken(): String {
-        return StreamUtils.copyToString(
+    fun graphqlGetProductTaken(): String =
+        StreamUtils.copyToString(
             getProductTaken.inputStream,
             StandardCharsets.UTF_8,
         )
-    }
 
     @Bean
-    fun graphqlGetProductZakenNotFound(): String {
-        return StreamUtils.copyToString(
+    fun graphqlGetProductZakenNotFound(): String =
+        StreamUtils.copyToString(
             getProductZakenNotFound.inputStream,
             StandardCharsets.UTF_8,
         )
-    }
 
     @Bean
-    fun graphqlGetProductVerbruiksObjecten(): String {
-        return StreamUtils.copyToString(
+    fun graphqlGetProductVerbruiksObjecten(): String =
+        StreamUtils.copyToString(
             getProductVerbruiksObjecten.inputStream,
             StandardCharsets.UTF_8,
         )
-    }
 
     @Bean
-    fun graphqlGetProductType(): String {
-        return StreamUtils.copyToString(
+    fun graphqlGetProductType(): String =
+        StreamUtils.copyToString(
             getProductType.inputStream,
             StandardCharsets.UTF_8,
         )
-    }
 
     @Bean
-    fun graphqlGetProductTypes(): String {
-        return StreamUtils.copyToString(
+    fun graphqlGetProductTypes(): String =
+        StreamUtils.copyToString(
             getProductTypes.inputStream,
             StandardCharsets.UTF_8,
         )
-    }
 
     @Bean
-    fun graphqlProductPrefill(): String {
-        return StreamUtils.copyToString(
+    fun graphqlProductPrefill(): String =
+        StreamUtils.copyToString(
             productPrefill.inputStream,
             StandardCharsets.UTF_8,
         )
-    }
 
     @Bean
-    fun graphqlGetProductDecision(): String {
-        return StreamUtils.copyToString(
+    fun graphqlGetProductDecision(): String =
+        StreamUtils.copyToString(
             getProductDecision.inputStream,
             StandardCharsets.UTF_8,
         )
-    }
 
     @Bean
-    fun graphqlGetDecision(): String {
-        return StreamUtils.copyToString(
+    fun graphqlGetDecision(): String =
+        StreamUtils.copyToString(
             getDecision.inputStream,
             StandardCharsets.UTF_8,
         )
-    }
 }

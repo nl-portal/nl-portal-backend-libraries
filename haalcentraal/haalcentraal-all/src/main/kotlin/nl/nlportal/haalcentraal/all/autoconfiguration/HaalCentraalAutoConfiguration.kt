@@ -34,7 +34,5 @@ class HaalCentraalAutoConfiguration {
     fun gemachtigdeQuery(
         haalCentraalBrpService: HaalCentraalBrpService,
         handelsregisterService: HandelsregisterService,
-    ): GemachtigdeQuery {
-        return GemachtigdeQuery(haalCentraalBrpService, handelsregisterService)
-    }
+    ): GemachtigdeQuery = GemachtigdeQuery(haalCentraalBrpService, handelsregisterService)
 }

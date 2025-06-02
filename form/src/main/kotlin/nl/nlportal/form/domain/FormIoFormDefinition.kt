@@ -37,13 +37,9 @@ data class FormIoFormDefinition(
     @Column(name = "read_only", columnDefinition = "BOOLEAN")
     var readOnly: Boolean,
 ) : Persistable<FormDefinitionId> {
-    override fun getId(): FormDefinitionId {
-        return formDefinitionId
-    }
+    override fun getId(): FormDefinitionId = formDefinitionId
 
-    override fun isNew(): Boolean {
-        return formDefinitionId.isNew()
-    }
+    override fun isNew(): Boolean = formDefinitionId.isNew()
 
     fun modifyFormDefinition(formDefinition: ObjectNode) {
         this.formDefinition = formDefinition

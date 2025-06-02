@@ -41,8 +41,8 @@ import java.util.UUID
 open class ObjectsApiClient(
     private val objectsApiClientConfig: ObjectsApiClientConfigProperties,
 ) {
-    suspend inline fun <reified T> getObjectById(id: String): ObjectsApiObject<T>? {
-        return webClient()
+    suspend inline fun <reified T> getObjectById(id: String): ObjectsApiObject<T>? =
+        webClient()
             .get()
             .uri("/api/v2/objects/$id")
             .accept(MediaType.APPLICATION_JSON)
@@ -52,18 +52,15 @@ open class ObjectsApiClient(
                     response.statusCode(),
                     "Failed to ${response.request().method.name()} ${T::class.java.simpleName}",
                 )
-            }
-            .awaitBodyOrNull()
-    }
+            }.awaitBodyOrNull()
 
-    suspend inline fun <reified T> getObjectByUrl(url: String): ObjectsApiObject<T>? {
-        return webClientWithoutBaseUrl()
+    suspend inline fun <reified T> getObjectByUrl(url: String): ObjectsApiObject<T>? =
+        webClientWithoutBaseUrl()
             .get()
             .uri(url)
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBodyOrNull()
-    }
 
     suspend inline fun <reified T> getObjects(
         objectSearchParameters: List<ObjectSearchParameter>,
@@ -71,28 +68,27 @@ open class ObjectsApiClient(
         page: Int,
         pageSize: Int,
         ordering: String? = null,
-    ): ResultPage<ObjectsApiObject<T>> {
-        return webClient()
+    ): ResultPage<ObjectsApiObject<T>> =
+        webClient()
             .get()
             .uri { uriBuilder ->
-                uriBuilder.path("/api/v2/objects")
+                uriBuilder
+                    .path("/api/v2/objects")
                     .queryParam("page", page)
                     .queryParam("pageSize", pageSize)
                 objectTypeUrl?.let { uriBuilder.queryParam("type", it) }
                 uriBuilder.queryParam("data_attrs", ObjectSearchParameter.toQueryParameter(objectSearchParameters))
                 ordering?.let { uriBuilder.queryParam("ordering", ordering) }
                 uriBuilder.build()
-            }
-            .accept(MediaType.APPLICATION_JSON)
+            }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody()
-    }
 
     suspend inline fun <reified T> updateObject(
         objectUuid: UUID,
         objectsApiObject: UpdateObjectsApiObjectRequest<T>,
-    ): ObjectsApiObject<T> {
-        return webClient()
+    ): ObjectsApiObject<T> =
+        webClient()
             .put()
             .uri("/api/v2/objects/$objectUuid")
             .contentType(MediaType.APPLICATION_JSON)
@@ -100,10 +96,9 @@ open class ObjectsApiClient(
             .bodyValue(objectsApiObject)
             .retrieve()
             .awaitBody()
-    }
 
-    suspend inline fun <reified T> createObject(objectsApiObject: CreateObjectsApiObjectRequest<T>): ObjectsApiObject<T> {
-        return webClient()
+    suspend inline fun <reified T> createObject(objectsApiObject: CreateObjectsApiObjectRequest<T>): ObjectsApiObject<T> =
+        webClient()
             .post()
             .uri("/api/v2/objects")
             .contentType(MediaType.APPLICATION_JSON)
@@ -111,7 +106,6 @@ open class ObjectsApiClient(
             .bodyValue(objectsApiObject)
             .retrieve()
             .awaitBody()
-    }
 
     suspend fun deleteObjectById(id: UUID) {
         webClient()
@@ -122,25 +116,24 @@ open class ObjectsApiClient(
             .awaitBodilessEntity()
     }
 
-    fun webClient(): WebClient {
-        return webclientBuilder
+    fun webClient(): WebClient =
+        webclientBuilder
             .baseUrl(objectsApiClientConfig.url.toString())
             .defaultHeader("Accept-Crs", "EPSG:4326")
             .defaultHeader("Content-Crs", "EPSG:4326")
             .defaultHeader("Authorization", "Token ${objectsApiClientConfig.token}")
             .build()
-    }
 
-    fun webClientWithoutBaseUrl(): WebClient {
-        return webclientBuilder
+    fun webClientWithoutBaseUrl(): WebClient =
+        webclientBuilder
             .defaultHeader("Accept-Crs", "EPSG:4326")
             .defaultHeader("Content-Crs", "EPSG:4326")
             .defaultHeader("Authorization", "Token ${objectsApiClientConfig.token}")
             .build()
-    }
 
     private val webclientBuilder =
-        WebClient.builder()
+        WebClient
+            .builder()
             .clientConnector(
                 ReactorClientHttpConnector(
                     HttpClient.create().wiretap(
@@ -149,9 +142,9 @@ open class ObjectsApiClient(
                         TEXTUAL,
                     ),
                 ),
-            )
-            .exchangeStrategies(
-                ExchangeStrategies.builder()
+            ).exchangeStrategies(
+                ExchangeStrategies
+                    .builder()
                     .codecs { configurer ->
                         with(configurer.defaultCodecs()) {
                             maxInMemorySize(16 * 1024 * 1024)
@@ -162,7 +155,6 @@ open class ObjectsApiClient(
                                 Jackson2JsonDecoder(Mapper.get()),
                             )
                         }
-                    }
-                    .build(),
+                    }.build(),
             )
 }

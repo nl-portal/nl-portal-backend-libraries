@@ -93,14 +93,12 @@ open class DirectPaymentService(
                                 AmountOfMoney()
                                     .withAmount((paymentRequest.amount * 100).toLong())
                                     .withCurrencyCode(paymentDirectProfile.currency),
-                            )
-                            .withReferences(
+                            ).withReferences(
                                 OrderReferences()
                                     .withDescriptor(paymentRequest.reference)
                                     .withMerchantReference(paymentRequest.orderId),
                             ),
-                    )
-                    .withHostedCheckoutSpecificInput(
+                    ).withHostedCheckoutSpecificInput(
                         HostedCheckoutSpecificInput()
                             .withLocale(paymentRequest.langId ?: paymentDirectProfile.language)
                             .withReturnUrl(paymentRequest.returnUrl ?: paymentDirectProfile.returnUrl),
@@ -201,13 +199,12 @@ open class DirectPaymentService(
     companion object {
         private val logger: KLogger = KotlinLogging.logger {}
 
-        fun isUUID(orderId: String?): Boolean {
-            return try {
+        fun isUUID(orderId: String?): Boolean =
+            try {
                 UUID.fromString(orderId) != null
             } catch (e: IllegalArgumentException) {
                 false
             }
-        }
 
         fun checkAndRemovePath(url: String): String {
             if (url.endsWith("/")) {

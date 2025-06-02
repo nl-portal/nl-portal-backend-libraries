@@ -204,32 +204,28 @@ class DmnService(
         return filterEmptyDecisionRules(dmnClient.getDecision(dmnRequest))
     }
 
-    private fun filterEmptyDecisionRules(decisions: List<Map<String, DmnResponse>>): List<Map<String, DmnResponse>> {
-        return decisions.filter { it.isNotEmpty() }
-    }
+    private fun filterEmptyDecisionRules(decisions: List<Map<String, DmnResponse>>): List<Map<String, DmnResponse>> = decisions.filter { it.isNotEmpty() }
 
     private fun findBeslisTabelConfiguration(
         key: String,
         productType: ProductType?,
-    ): BeslisTabelConfiguration {
-        return productType?.beslistabelmapping?.get(key) ?: throw ResponseStatusException(
+    ): BeslisTabelConfiguration =
+        productType?.beslistabelmapping?.get(key) ?: throw ResponseStatusException(
             HttpStatus.BAD_REQUEST,
             "Could not find a beslisTabelVariable configuration for $key",
         )
-    }
 
     private fun createDmnRequest(
         key: String,
         variablesMapping: Map<String, DmnVariable>,
-    ): DmnRequest {
-        return DmnRequest(
+    ): DmnRequest =
+        DmnRequest(
             key = key,
             mapping =
                 DmnRequestMapping(
                     variables = variablesMapping,
                 ),
         )
-    }
 
     private fun mapBeslisTabelStaticVariables(beslisTabelVariables: List<BeslisTabelVariable>): Map<String, DmnVariable> {
         val variablesMapping = mutableMapOf<String, DmnVariable>()

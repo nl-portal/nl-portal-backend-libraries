@@ -51,9 +51,7 @@ abstract class BaseTest {
         MockitoAnnotations.openMocks(this)
     }
 
-    fun getResourceAsStream(resource: String): InputStream {
-        return Thread.currentThread().contextClassLoader.getResourceAsStream(resource)!!
-    }
+    fun getResourceAsStream(resource: String): InputStream = Thread.currentThread().contextClassLoader.getResourceAsStream(resource)!!
 
     fun personCaseDefinition(): CaseDefinition {
         val caseDefinitionId = CaseDefinitionId.existingId("person")
@@ -80,8 +78,8 @@ abstract class BaseTest {
         return caseDefinition
     }
 
-    fun case(createdOn: LocalDateTime): Case {
-        return Case(
+    fun case(createdOn: LocalDateTime): Case =
+        Case(
             createdOn = createdOn,
             caseId = CaseId.existingId(UUID.randomUUID()),
             userId = "aUserName",
@@ -90,5 +88,4 @@ abstract class BaseTest {
             caseDefinitionId = CaseDefinitionId.existingId("person"),
             submission = Submission(JsonNodeFactory.instance.objectNode()),
         )
-    }
 }

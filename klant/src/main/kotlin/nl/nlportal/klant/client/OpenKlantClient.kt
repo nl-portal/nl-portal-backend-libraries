@@ -30,27 +30,28 @@ class OpenKlantClient(
         authentication: CommonGroundAuthentication,
         page: Int,
         bsn: String?,
-    ): List<Klant> {
-        return openKlantClientProvider.webClient(authentication)
+    ): List<Klant> =
+        openKlantClientProvider
+            .webClient(authentication)
             .get()
             .uri {
                 val uriBuilder =
-                    it.path("/klanten/api/v1/klanten")
+                    it
+                        .path("/klanten/api/v1/klanten")
                         .queryParam("page", page)
                 bsn?.let { uriBuilder.queryParam("subjectNatuurlijkPersoon__inpBsn", it) }
                 uriBuilder.build()
-            }
-            .retrieve()
+            }.retrieve()
             .awaitBody<ResultPage<Klant>>()
             .results
-    }
 
     suspend fun patchKlant(
         authentication: CommonGroundAuthentication,
         klantUrl: String,
         klant: Klant,
-    ): Klant {
-        return openKlantClientProvider.webClient(authentication)
+    ): Klant =
+        openKlantClientProvider
+            .webClient(authentication)
             .patch()
             .uri(klantUrl)
             .contentType(MediaType.APPLICATION_JSON)
@@ -58,13 +59,13 @@ class OpenKlantClient(
             .bodyValue(klant)
             .retrieve()
             .awaitBody()
-    }
 
     suspend fun postKlant(
         authentication: CommonGroundAuthentication,
         klant: KlantCreationRequest,
-    ): Klant {
-        return openKlantClientProvider.webClient(authentication)
+    ): Klant =
+        openKlantClientProvider
+            .webClient(authentication)
             .post()
             .uri("/klanten/api/v1/klanten")
             .contentType(MediaType.APPLICATION_JSON)
@@ -72,5 +73,4 @@ class OpenKlantClient(
             .bodyValue(klant)
             .retrieve()
             .awaitBody()
-    }
 }

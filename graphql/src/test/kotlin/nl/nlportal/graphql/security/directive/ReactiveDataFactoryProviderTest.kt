@@ -42,11 +42,7 @@ internal class ReactiveDataFactoryProviderTest {
     }
 
     @IsUnauthenticated
-    fun unauthenticatedTestMethod(): String {
-        return "123"
-    }
+    fun unauthenticatedTestMethod(): String = "123"
 
-    fun authenticatedTestMethod(): String {
-        return "123"
-    }
+    fun authenticatedTestMethod(): String = "123"
 }

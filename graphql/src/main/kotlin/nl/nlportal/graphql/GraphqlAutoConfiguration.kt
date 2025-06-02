@@ -30,7 +30,5 @@ class GraphqlAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(Query::class)
-    fun defaultQuery(): Query {
-        return DefaultQuery()
-    }
+    fun defaultQuery(): Query = DefaultQuery()
 }

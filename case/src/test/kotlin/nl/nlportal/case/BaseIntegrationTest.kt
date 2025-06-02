@@ -44,7 +44,5 @@ abstract class BaseIntegrationTest {
         }
     }
 
-    fun getResourceAsStream(resource: String): InputStream {
-        return Thread.currentThread().contextClassLoader.getResourceAsStream(resource)!!
-    }
+    fun getResourceAsStream(resource: String): InputStream = Thread.currentThread().contextClassLoader.getResourceAsStream(resource)!!
 }

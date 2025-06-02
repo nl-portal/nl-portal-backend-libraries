@@ -37,11 +37,12 @@ class KlantContactMomentenServiceImpl(
                 return if (klanten.isEmpty()) {
                     null
                 } else if (klanten.size == 1) {
-                    return klantContactMomentenClient.getKlantContactMomenten(
-                        authentication,
-                        klanten[0].url,
-                        page,
-                    ).let { ContactMomentPage.fromResultPage(page, it) }
+                    return klantContactMomentenClient
+                        .getKlantContactMomenten(
+                            authentication,
+                            klanten[0].url,
+                            page,
+                        ).let { ContactMomentPage.fromResultPage(page, it) }
                 } else {
                     throw IllegalStateException("Multiple klanten found for BSN: ${authentication.getBsn()}")
                 }
@@ -59,11 +60,11 @@ class KlantContactMomentenServiceImpl(
         authentication: CommonGroundAuthentication,
         objectUrl: String,
         page: Int,
-    ): ContactMomentPage {
-        return klantContactMomentenClient.getObjectContactMomenten(
-            authentication,
-            objectUrl,
-            page,
-        ).let { ContactMomentPage.fromResultPage(page, it) }
-    }
+    ): ContactMomentPage =
+        klantContactMomentenClient
+            .getObjectContactMomenten(
+                authentication,
+                objectUrl,
+                page,
+            ).let { ContactMomentPage.fromResultPage(page, it) }
 }

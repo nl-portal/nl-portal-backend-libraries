@@ -21,11 +21,10 @@ import org.springframework.web.util.UriBuilder
 open class HaalCentraal2Path {
     open val path: String = "/"
 
-    fun UriBuilder.applyFilters(filters: List<Pair<HaalCentraal2Filters, Any>>? = null): UriBuilder {
-        return apply {
+    fun UriBuilder.applyFilters(filters: List<Pair<HaalCentraal2Filters, Any>>? = null): UriBuilder =
+        apply {
             filters?.forEach { queryParam(it.first.toString(), it.second.toString()) }
         }
-    }
 }
 
 @GraphQLIgnore

@@ -63,7 +63,8 @@ object ZonedDateTimeCoercing : Coercing<ZonedDateTime, String> {
 }
 
 internal val graphqlZonedDateTimeType =
-    GraphQLScalarType.newScalar()
+    GraphQLScalarType
+        .newScalar()
         .name("ZonedDateTime")
         .description("A zoned date time")
         .coercing(ZonedDateTimeCoercing)

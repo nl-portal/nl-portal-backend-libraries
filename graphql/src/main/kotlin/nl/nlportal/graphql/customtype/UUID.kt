@@ -66,7 +66,8 @@ object UUIDCoercing : Coercing<UUID, String> {
 }
 
 internal val graphqlUUIDType =
-    GraphQLScalarType.newScalar()
+    GraphQLScalarType
+        .newScalar()
         .name("UUID")
         .description("A type representing a formatted java.util.UUID")
         .coercing(UUIDCoercing)
