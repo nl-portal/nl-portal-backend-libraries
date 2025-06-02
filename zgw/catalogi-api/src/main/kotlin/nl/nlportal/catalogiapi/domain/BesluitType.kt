@@ -19,6 +19,7 @@ data class BesluitType(
     val url: String,
     val zaaktypen: List<String>,
     val omschrijving: String?,
+    val omschrijvingGeneriek: String? = null,
     val besluitcategorie: String,
     val reactietermijn: String?,
     val publicatieIndicatie: Boolean,
