@@ -28,23 +28,21 @@ class ContactMomentQuery(
     suspend fun getKlantContactMomenten(
         dfe: DataFetchingEnvironment,
         pageNumber: Int? = 1,
-    ): ContactMomentPage? {
-        return klantContactMomentenService.getKlantContactMomenten(
+    ): ContactMomentPage? =
+        klantContactMomentenService.getKlantContactMomenten(
             dfe.graphQlContext.get(AUTHENTICATION_KEY),
             pageNumber ?: 1,
         )
-    }
 
     @GraphQLDescription("Gets the contactmomenten of a object(zaak)")
     suspend fun getObjectContactMomenten(
         dfe: DataFetchingEnvironment,
         objectUrl: String,
         pageNumber: Int? = 1,
-    ): ContactMomentPage? {
-        return klantContactMomentenService.getObjectContactMomenten(
+    ): ContactMomentPage? =
+        klantContactMomentenService.getObjectContactMomenten(
             dfe.graphQlContext.get(AUTHENTICATION_KEY),
             objectUrl,
             pageNumber ?: 1,
         )
-    }
 }

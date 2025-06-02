@@ -25,7 +25,5 @@ import org.springframework.context.annotation.Bean
 class CoreAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(name = ["objectMapper"])
-    fun objectMapper(): ObjectMapper {
-        return Mapper.get()
-    }
+    fun objectMapper(): ObjectMapper = Mapper.get()
 }

@@ -35,9 +35,7 @@ data class CaseId(
     }
 
     companion object {
-        fun existingId(value: UUID): CaseId {
-            return CaseId(value)
-        }
+        fun existingId(value: UUID): CaseId = CaseId(value)
 
         fun newId(value: UUID): CaseId {
             val caseId = CaseId(value)

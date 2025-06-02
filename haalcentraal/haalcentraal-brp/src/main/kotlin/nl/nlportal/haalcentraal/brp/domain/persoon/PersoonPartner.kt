@@ -30,11 +30,10 @@ data class Naam(
     val voorvoegsel: String? = null,
     val geslachtsnaam: String? = null,
 ) {
-    fun lastName(): String {
-        return if (voorvoegsel != null && geslachtsnaam != null) {
+    fun lastName(): String =
+        if (voorvoegsel != null && geslachtsnaam != null) {
             "$voorvoegsel $geslachtsnaam"
         } else {
             geslachtsnaam ?: ""
         }
-    }
 }

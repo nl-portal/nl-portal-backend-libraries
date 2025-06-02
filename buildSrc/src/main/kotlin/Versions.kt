@@ -20,6 +20,8 @@ internal object Versions {
     const val jsonWebTokens = "0.12.6"
     const val kotlinCoroutines = "1.8.1"
     const val springCloudVersion = "4.2.0"
+    const val apacheTikaVersion="3.1.0"
+    const val clamAvVersion="2.1.2"
 }
 
 internal object TestVersions {

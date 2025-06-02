@@ -40,9 +40,8 @@ class KlantContactQuery(
     }
 
     @GraphQLDescription("Get KlantContact by id of authenticated user.")
-    suspend fun getUserKlantContact(klantContactId: UUID): OpenKlant2Klantcontact? {
-        return openklant2Service.findKlantContact(
+    suspend fun getUserKlantContact(klantContactId: UUID): OpenKlant2Klantcontact? =
+        openklant2Service.findKlantContact(
             klantContactId = klantContactId,
         )
-    }
 }

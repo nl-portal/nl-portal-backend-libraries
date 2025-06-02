@@ -22,12 +22,8 @@ import nl.nlportal.graphql.security.directive.IsUnauthenticated
 class DummyQuery : Query {
     @IsUnauthenticated
     @GraphQLDescription("unauthenticated test method")
-    fun getUnauthenticated(): String {
-        return "unauthenticated"
-    }
+    fun getUnauthenticated(): String = "unauthenticated"
 
     @GraphQLDescription("authenticated test method")
-    fun getAuthenticated(): String {
-        return "authenticated"
-    }
+    fun getAuthenticated(): String = "authenticated"
 }

@@ -18,7 +18,9 @@ package nl.nlportal.data.liquibase
 import org.springframework.boot.context.event.ApplicationStartedEvent
 import org.springframework.context.event.EventListener
 
-class LiquibaseInitializationEventListener(private val liquibaseRunner: LiquibaseRunner) {
+class LiquibaseInitializationEventListener(
+    private val liquibaseRunner: LiquibaseRunner,
+) {
     @EventListener(ApplicationStartedEvent::class)
     fun handle() {
         liquibaseRunner.run()

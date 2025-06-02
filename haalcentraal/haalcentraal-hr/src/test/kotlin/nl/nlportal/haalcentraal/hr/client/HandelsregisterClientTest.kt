@@ -57,8 +57,7 @@ internal class HandelsregisterClientTest {
                             null,
                         ),
                     ),
-                )
-                .addHeader("Content-Type", "application/json"),
+                ).addHeader("Content-Type", "application/json"),
         )
         haalCentraalHrClientConfigProperties = HaalCentraalHrConfigProperties(url = server.url("/").toString())
         client = HandelsregisterClient(haalCentraalHrClientConfigProperties)

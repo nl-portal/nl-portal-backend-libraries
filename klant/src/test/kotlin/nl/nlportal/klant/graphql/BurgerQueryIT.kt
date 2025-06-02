@@ -71,16 +71,20 @@ internal class BurgerQueryIT(
 
         val basePath = "$.data.getBurgerProfiel"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
             .expectBody()
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.telefoonnummer").isEqualTo("0600000000")
-            .jsonPath("$basePath.emailadres").isEqualTo("peter@example.com")
+            .jsonPath(basePath)
+            .exists()
+            .jsonPath("$basePath.telefoonnummer")
+            .isEqualTo("0600000000")
+            .jsonPath("$basePath.emailadres")
+            .isEqualTo("peter@example.com")
     }
 
     fun setupMockOpenKlantServer() {

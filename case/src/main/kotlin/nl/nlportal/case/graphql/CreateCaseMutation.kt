@@ -22,7 +22,9 @@ import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.case.service.CaseService
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 
-class CreateCaseMutation(private val caseService: CaseService) : Mutation {
+class CreateCaseMutation(
+    private val caseService: CaseService,
+) : Mutation {
     @GraphQLDescription("Convert submission to json return resulting data")
     fun processSubmission(
         submission: ObjectNode,

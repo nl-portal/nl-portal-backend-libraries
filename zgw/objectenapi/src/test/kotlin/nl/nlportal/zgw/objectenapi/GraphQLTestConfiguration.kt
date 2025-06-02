@@ -31,18 +31,16 @@ class GraphQLTestConfiguration {
     private lateinit var getTaskByIdFile: Resource
 
     @Bean
-    fun getTasksPayload(): String {
-        return StreamUtils.copyToString(
+    fun getTasksPayload(): String =
+        StreamUtils.copyToString(
             getTasksFile.inputStream,
             StandardCharsets.UTF_8,
         )
-    }
 
     @Bean
-    fun getTaskByIdPayload(): String {
-        return StreamUtils.copyToString(
+    fun getTaskByIdPayload(): String =
+        StreamUtils.copyToString(
             getTaskByIdFile.inputStream,
             StandardCharsets.UTF_8,
         )
-    }
 }

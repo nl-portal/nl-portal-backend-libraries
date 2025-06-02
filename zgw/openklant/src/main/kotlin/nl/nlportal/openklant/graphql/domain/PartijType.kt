@@ -23,7 +23,5 @@ enum class PartijType {
     CONTACTPERSOON,
     ;
 
-    fun asSoortPartij(): SoortPartij {
-        return SoortPartij.valueOf(name)
-    }
+    fun asSoortPartij(): SoortPartij = SoortPartij.valueOf(name)
 }

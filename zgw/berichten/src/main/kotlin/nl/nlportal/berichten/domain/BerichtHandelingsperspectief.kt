@@ -25,7 +25,5 @@ enum class BerichtHandelingsperspectief(
     INFORMATIE_ONTVANGEN("informatie ontvangen"),
     ;
 
-    override fun toString(): String {
-        return this.value
-    }
+    override fun toString(): String = this.value
 }

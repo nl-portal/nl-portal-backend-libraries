@@ -495,7 +495,5 @@ enum class OpenKlant2Landcode(
     NONE("", ""),
     ;
 
-    override fun toString(): String {
-        return "$landcode: $landnaam"
-    }
+    override fun toString(): String = "$landcode: $landnaam"
 }

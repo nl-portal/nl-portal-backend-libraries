@@ -28,9 +28,7 @@ data class OgonePaymentConfig(
         var shaOutParameters: List<String> = emptyList(),
         var configurations: Map<String, OgonePaymentProfile> = mapOf(),
     ) {
-        fun getPaymentProfile(profileIdentifier: String): OgonePaymentProfile? {
-            return configurations[profileIdentifier]
-        }
+        fun getPaymentProfile(profileIdentifier: String): OgonePaymentProfile? = configurations[profileIdentifier]
 
         fun getPaymentProfileByPspPid(pspId: String?): OgonePaymentProfile? {
             configurations.forEach {

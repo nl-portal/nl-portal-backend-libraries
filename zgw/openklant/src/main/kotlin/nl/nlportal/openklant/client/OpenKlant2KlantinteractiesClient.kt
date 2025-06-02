@@ -28,22 +28,22 @@ import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
 import kotlin.reflect.full.primaryConstructor
 
-class OpenKlant2KlantinteractiesClient(private val openKlantConfigurationProperties: OpenKlantConfigurationProperties) {
-    inline fun <reified P : KlantInteractiesPath> path(): P {
-        return P::class.primaryConstructor!!.call(this)
-    }
+class OpenKlant2KlantinteractiesClient(
+    private val openKlantConfigurationProperties: OpenKlantConfigurationProperties,
+) {
+    inline fun <reified P : KlantInteractiesPath> path(): P = P::class.primaryConstructor!!.call(this)
 
-    fun webClient(): WebClient {
-        return webclientBuilder
+    fun webClient(): WebClient =
+        webclientBuilder
             .baseUrl(openKlantConfigurationProperties.klantinteractiesApiUrl.toString())
             .defaultHeader("Accept-Crs", "EPSG:4326")
             .defaultHeader("Content-Crs", "EPSG:4326")
             .defaultHeader("Authorization", "Token ${openKlantConfigurationProperties.token}")
             .build()
-    }
 
     private val webclientBuilder =
-        WebClient.builder()
+        WebClient
+            .builder()
             .clientConnector(
                 ReactorClientHttpConnector(
                     HttpClient.create().wiretap(
@@ -52,9 +52,9 @@ class OpenKlant2KlantinteractiesClient(private val openKlantConfigurationPropert
                         TEXTUAL,
                     ),
                 ),
-            )
-            .exchangeStrategies(
-                ExchangeStrategies.builder()
+            ).exchangeStrategies(
+                ExchangeStrategies
+                    .builder()
                     .codecs { configurer ->
                         with(configurer.defaultCodecs()) {
                             maxInMemorySize(16 * 1024 * 1024)
@@ -65,7 +65,6 @@ class OpenKlant2KlantinteractiesClient(private val openKlantConfigurationPropert
                                 Jackson2JsonDecoder(Mapper.get()),
                             )
                         }
-                    }
-                    .build(),
+                    }.build(),
             )
 }

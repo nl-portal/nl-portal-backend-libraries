@@ -22,20 +22,19 @@ import nl.nlportal.haalcentraal.brp.domain.persoon.Persoon
 import nl.nlportal.haalcentraal.brp.service.HaalCentraalBrpService
 import graphql.schema.DataFetchingEnvironment
 
-class HaalCentraalBrpQuery(val haalCentraalBrpService: HaalCentraalBrpService) : Query {
+class HaalCentraalBrpQuery(
+    val haalCentraalBrpService: HaalCentraalBrpService,
+) : Query {
     @GraphQLDescription("Gets the persoon data")
-    suspend fun getPersoon(dfe: DataFetchingEnvironment): Persoon? {
-        return haalCentraalBrpService.getPersoon(dfe.graphQlContext[AUTHENTICATION_KEY])
-    }
+    suspend fun getPersoon(dfe: DataFetchingEnvironment): Persoon? = haalCentraalBrpService.getPersoon(dfe.graphQlContext[AUTHENTICATION_KEY])
 
     @GraphQLDescription("Gets the number of people living in the same house of the adresseerbaarObjectIdentificatie")
     suspend fun getBewonersAantal(
         dfe: DataFetchingEnvironment,
         adresseerbaarObjectIdentificatie: String,
-    ): Int? {
-        return haalCentraalBrpService.getBewonersAantal(
+    ): Int? =
+        haalCentraalBrpService.getBewonersAantal(
             dfe.graphQlContext[AUTHENTICATION_KEY],
             adresseerbaarObjectIdentificatie,
         )
-    }
 }

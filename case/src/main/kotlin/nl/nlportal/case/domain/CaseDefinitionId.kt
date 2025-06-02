@@ -32,9 +32,7 @@ data class CaseDefinitionId(
     }
 
     companion object {
-        fun existingId(id: String): CaseDefinitionId {
-            return CaseDefinitionId(id)
-        }
+        fun existingId(id: String): CaseDefinitionId = CaseDefinitionId(id)
 
         fun newId(id: String): CaseDefinitionId {
             val caseDefinitionId = CaseDefinitionId(id)

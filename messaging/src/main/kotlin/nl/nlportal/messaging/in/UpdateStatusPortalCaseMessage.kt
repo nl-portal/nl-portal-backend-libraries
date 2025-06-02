@@ -15,4 +15,7 @@
  */
 package nl.nlportal.messaging.`in`
 
-data class UpdateStatusPortalCaseMessage(val externalId: String, val status: String)
+data class UpdateStatusPortalCaseMessage(
+    val externalId: String,
+    val status: String,
+)

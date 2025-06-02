@@ -27,19 +27,16 @@ import org.springframework.context.annotation.Bean
 class OpenKlantAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(OpenKlant2KlantinteractiesClient::class)
-    fun openKlant2Client(openklantModuleConfiguration: OpenKlantModuleConfiguration): OpenKlant2KlantinteractiesClient {
-        return OpenKlant2KlantinteractiesClient(openKlantConfigurationProperties = openklantModuleConfiguration.properties)
-    }
+    fun openKlant2Client(openklantModuleConfiguration: OpenKlantModuleConfiguration): OpenKlant2KlantinteractiesClient = OpenKlant2KlantinteractiesClient(openKlantConfigurationProperties = openklantModuleConfiguration.properties)
 
     @Bean
     @ConditionalOnMissingBean(OpenKlant2Service::class)
     fun openKlant2Service(
         openklant2Client: OpenKlant2KlantinteractiesClient,
         openKlantModuleConfiguration: OpenKlantModuleConfiguration,
-    ): OpenKlant2Service {
-        return OpenKlant2Service(
+    ): OpenKlant2Service =
+        OpenKlant2Service(
             openKlant2Client = openklant2Client,
             openKlantConfigurationProperties = openKlantModuleConfiguration.properties,
         )
-    }
 }

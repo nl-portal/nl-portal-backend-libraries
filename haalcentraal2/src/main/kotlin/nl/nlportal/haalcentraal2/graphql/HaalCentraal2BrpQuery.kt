@@ -23,20 +23,19 @@ import nl.nlportal.haalcentraal2.domain.brp.BrpPersoon
 import nl.nlportal.haalcentraal2.service.HaalCentraal2Service
 import kotlin.text.get
 
-class HaalCentraal2BrpQuery(val haalCentraal2Service: HaalCentraal2Service) : Query {
+class HaalCentraal2BrpQuery(
+    val haalCentraal2Service: HaalCentraal2Service,
+) : Query {
     @GraphQLDescription("Gets the persoon data")
-    suspend fun getPersoonV2(dfe: DataFetchingEnvironment): BrpPersoon? {
-        return haalCentraal2Service.getPersoon(dfe.graphQlContext[AUTHENTICATION_KEY])
-    }
+    suspend fun getPersoonV2(dfe: DataFetchingEnvironment): BrpPersoon? = haalCentraal2Service.getPersoon(dfe.graphQlContext[AUTHENTICATION_KEY])
 
     @GraphQLDescription("Gets the number of people living in the same house of the adresseerbaarObjectIdentificatie")
     suspend fun getBewonersAantalV2(
         dfe: DataFetchingEnvironment,
         adresseerbaarObjectIdentificatie: String,
-    ): Int? {
-        return haalCentraal2Service.getBewonersAantal(
+    ): Int? =
+        haalCentraal2Service.getBewonersAantal(
             dfe.graphQlContext[AUTHENTICATION_KEY],
             adresseerbaarObjectIdentificatie,
         )
-    }
 }

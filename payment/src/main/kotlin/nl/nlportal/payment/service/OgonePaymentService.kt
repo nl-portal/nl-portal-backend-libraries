@@ -93,7 +93,8 @@ open class OgonePaymentService(
 
             // validate ogone request
             val pspIdFromTask =
-                objectsApiTask.record.data.ogonebetaling?.pspid
+                objectsApiTask.record.data.ogonebetaling
+                    ?.pspid
                     ?: return "Task does not have a pspId"
 
             if (!isValidOgoneRequest(serverHttpRequest, pspIdFromTask)) {
@@ -163,12 +164,11 @@ open class OgonePaymentService(
             return CoreUtils.createHash(parametersConcatenation.toString(), shaVersion)
         }
 
-        fun isUUID(orderId: String?): Boolean {
-            return try {
+        fun isUUID(orderId: String?): Boolean =
+            try {
                 UUID.fromString(orderId) != null
             } catch (e: IllegalArgumentException) {
                 false
             }
-        }
     }
 }

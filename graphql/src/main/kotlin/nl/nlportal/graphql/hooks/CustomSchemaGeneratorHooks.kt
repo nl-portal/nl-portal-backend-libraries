@@ -39,7 +39,9 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
 
-class CustomSchemaGeneratorHooks(override val wiringFactory: KotlinDirectiveWiringFactory) : SchemaGeneratorHooks {
+class CustomSchemaGeneratorHooks(
+    override val wiringFactory: KotlinDirectiveWiringFactory,
+) : SchemaGeneratorHooks {
     /**
      * Register additional GraphQL scalar types.
      */
@@ -68,10 +70,9 @@ class CustomSchemaGeneratorHooks(override val wiringFactory: KotlinDirectiveWiri
     /**
      * Exclude the Spring bean factory interface
      */
-    override fun isValidSuperclass(kClass: KClass<*>): Boolean {
-        return when {
+    override fun isValidSuperclass(kClass: KClass<*>): Boolean =
+        when {
             kClass.isSubclassOf(BeanFactoryAware::class) -> false
             else -> super.isValidSuperclass(kClass)
         }
-    }
 }

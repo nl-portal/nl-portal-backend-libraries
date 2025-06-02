@@ -67,14 +67,16 @@ class BerichtenQueryIT(
                 builder
                     .path("/graphql")
                     .build()
-            }
-            .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+            }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
             .body(BodyInserters.fromValue(TestHelper.graphqlBerichtenPageRequest))
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.content[0].berichtType").isEqualTo("NOTIFICATIE")
-            .jsonPath("$basePath.content[0].geopend").isEqualTo("false")
-            .jsonPath("$basePath.content[0].publicatiedatum").isEqualTo("2024-07-18T18:25:43.524")
+            .jsonPath("$basePath.content[0].berichtType")
+            .isEqualTo("NOTIFICATIE")
+            .jsonPath("$basePath.content[0].geopend")
+            .isEqualTo("false")
+            .jsonPath("$basePath.content[0].publicatiedatum")
+            .isEqualTo("2024-07-18T18:25:43.524")
     }
 
     @WithBurgerUser("999990755")
@@ -87,13 +89,14 @@ class BerichtenQueryIT(
                 builder
                     .path("/graphql")
                     .build()
-            }
-            .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+            }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
             .body(BodyInserters.fromValue(TestHelper.graphqlValidBerichtRequest))
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.berichtType").isEqualTo("NOTIFICATIE")
-            .jsonPath("$basePath.geopend").isEqualTo("true")
+            .jsonPath("$basePath.berichtType")
+            .isEqualTo("NOTIFICATIE")
+            .jsonPath("$basePath.geopend")
+            .isEqualTo("true")
     }
 
     @WithBurgerUser("999990755")
@@ -106,13 +109,14 @@ class BerichtenQueryIT(
                 builder
                     .path("/graphql")
                     .build()
-            }
-            .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+            }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
             .body(BodyInserters.fromValue(TestHelper.graphqlValidBerichtReadRequest))
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.berichtType").isEqualTo("NOTIFICATIE")
-            .jsonPath("$basePath.geopend").isEqualTo("true")
+            .jsonPath("$basePath.berichtType")
+            .isEqualTo("NOTIFICATIE")
+            .jsonPath("$basePath.geopend")
+            .isEqualTo("true")
     }
 
     @WithBurgerUser("111111110")
@@ -125,8 +129,7 @@ class BerichtenQueryIT(
                 builder
                     .path("/graphql")
                     .build()
-            }
-            .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+            }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
             .body(BodyInserters.fromValue(TestHelper.graphqlValidBerichtReadRequest))
             .exchange()
             .expectBody()
@@ -143,8 +146,7 @@ class BerichtenQueryIT(
                 builder
                     .path("/graphql")
                     .build()
-            }
-            .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+            }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
             .body(BodyInserters.fromValue(TestHelper.graphqlInvalidBerichtRequest))
             .exchange()
             .expectBody()
@@ -161,12 +163,12 @@ class BerichtenQueryIT(
                 builder
                     .path("/graphql")
                     .build()
-            }
-            .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+            }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
             .body(BodyInserters.fromValue(TestHelper.graphqlUnopenedBerichtenCountRequest))
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath(basePath).isEqualTo(11)
+            .jsonPath(basePath)
+            .isEqualTo(11)
     }
 
     fun setupMockObjectsApiServer() {

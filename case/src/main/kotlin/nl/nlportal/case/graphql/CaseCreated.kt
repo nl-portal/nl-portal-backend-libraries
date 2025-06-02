@@ -17,4 +17,6 @@ package nl.nlportal.case.graphql
 
 import java.util.UUID
 
-data class CaseCreated(val caseId: UUID)
+data class CaseCreated(
+    val caseId: UUID,
+)

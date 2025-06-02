@@ -80,7 +80,9 @@ class OpenKlant2Service(
             )
         val partijResponse =
             try {
-                openKlant2Client.path<Partijen>().create(partij)
+                openKlant2Client
+                    .path<Partijen>()
+                    .create(partij)
                     .also {
                         try {
                             openKlant2Client
@@ -297,14 +299,13 @@ class OpenKlant2Service(
         }
     }
 
-    suspend fun findKlantContact(klantContactId: UUID): OpenKlant2Klantcontact? {
-        return openKlant2Client
+    suspend fun findKlantContact(klantContactId: UUID): OpenKlant2Klantcontact? =
+        openKlant2Client
             .path<KlantContacten>()
             .get(klantContactId)
-    }
 
-    private fun createPartijIndicator(authentication: CommonGroundAuthentication): OpenKlant2Identificator {
-        return when (authentication) {
+    private fun createPartijIndicator(authentication: CommonGroundAuthentication): OpenKlant2Identificator =
+        when (authentication) {
             is BurgerAuthentication -> {
                 OpenKlant2Identificator(
                     objectId = authentication.userId,
@@ -323,10 +324,9 @@ class OpenKlant2Service(
             }
             else -> throw IllegalArgumentException("Unsupported authentication type: ${authentication::class.qualifiedName}")
         }
-    }
 
-    private fun searchVariablesPartij(authentication: CommonGroundAuthentication): List<Pair<OpenKlant2PartijenFilters, String>> {
-        return when (authentication) {
+    private fun searchVariablesPartij(authentication: CommonGroundAuthentication): List<Pair<OpenKlant2PartijenFilters, String>> =
+        when (authentication) {
             is BurgerAuthentication -> {
                 listOf(
                     OpenKlant2PartijenFilters.SOORT_PARTIJ to authentication.asSoortPartij(),
@@ -351,12 +351,11 @@ class OpenKlant2Service(
 
             else -> throw IllegalArgumentException("Unsupported authentication type: ${authentication::class.qualifiedName}")
         }
-    }
 
     private fun searchVariablesDigitaleAdressen(
         authentication: CommonGroundAuthentication,
-    ): List<Pair<OpenKlant2DigitaleAdressenFilters, Any>> {
-        return when (authentication) {
+    ): List<Pair<OpenKlant2DigitaleAdressenFilters, Any>> =
+        when (authentication) {
             is BurgerAuthentication -> {
                 listOf(
                     OpenKlant2DigitaleAdressenFilters.PAGE to 1,
@@ -381,12 +380,11 @@ class OpenKlant2Service(
 
             else -> throw IllegalArgumentException("Unsupported authentication type: ${authentication::class.qualifiedName}")
         }
-    }
 
     private fun searchVariablesKlantcontacten(
         authentication: CommonGroundAuthentication,
-    ): List<Pair<OpenKlant2KlantcontactenFilters, Any>> {
-        return when (authentication) {
+    ): List<Pair<OpenKlant2KlantcontactenFilters, Any>> =
+        when (authentication) {
             is BurgerAuthentication -> {
                 listOf(
                     OpenKlant2KlantcontactenFilters.PAGE to 1,
@@ -411,7 +409,6 @@ class OpenKlant2Service(
 
             else -> throw IllegalArgumentException("Unsupported authentication type: ${authentication::class.qualifiedName}")
         }
-    }
 
     companion object {
         private val logger = KotlinLogging.logger {}
