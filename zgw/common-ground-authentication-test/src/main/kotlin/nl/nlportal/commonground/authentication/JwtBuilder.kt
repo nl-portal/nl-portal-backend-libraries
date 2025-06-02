@@ -16,11 +16,10 @@
 package nl.nlportal.commonground.authentication
 
 import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
-import io.jsonwebtoken.io.Encoders
 import io.jsonwebtoken.security.Keys
 import nl.nlportal.portal.authentication.domain.SUB_KEY
 import org.springframework.security.oauth2.jwt.Jwt
+import java.nio.charset.StandardCharsets
 import java.util.Date
 import java.util.UUID
 
@@ -122,18 +121,17 @@ class JwtBuilder {
 
     fun randomClaimes(): Jwt.Builder? = jwtBuilder.claim("claim", "value")
 
-    fun buildJwtString(): String {
+    fun buildJwtString(secretString: String): String {
         val jwt = randomClaimes()!!.build()
 
-        val key = Keys.secretKeyFor(SignatureAlgorithm.HS512)
-        val base64 = Encoders.BASE64.encode(key.getEncoded())
+        val key = Keys.hmacShaKeyFor(secretString.toByteArray(StandardCharsets.UTF_8))
 
         return Jwts
             .builder()
-            .setClaims(jwt.claims)
-            .setSubject(jwt.subject)
-            .setExpiration(Date(System.currentTimeMillis() + 20000))
-            .signWith(SignatureAlgorithm.HS512, base64)
+            .claims(jwt.claims)
+            .subject(jwt.subject)
+            .expiration(Date(System.currentTimeMillis() + 20000))
+            .signWith(key)
             .compact()
     }
 
