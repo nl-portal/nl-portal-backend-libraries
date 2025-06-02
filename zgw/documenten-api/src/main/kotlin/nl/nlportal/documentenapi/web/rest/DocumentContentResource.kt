@@ -76,7 +76,11 @@ class DocumentContentResource(
         if (VirusScanStatus.VIRUS_FOUND == virusScanResult?.status) {
             return ResponseEntity(virusScanResult, HttpStatus.BAD_REQUEST)
         }
-        return ResponseEntity.ok(documentenApiService.uploadDocument(file, documentapi, informatieobjecttype))
+        try {
+            return ResponseEntity.ok(documentenApiService.uploadDocument(file, documentapi, informatieobjecttype))
+        } catch (e: Exception) {
+            return ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
+        }
     }
 
     @PostMapping(value = ["/document/content"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
@@ -91,6 +95,10 @@ class DocumentContentResource(
         if (VirusScanStatus.VIRUS_FOUND == virusScanResult?.status) {
             return ResponseEntity(virusScanResult, HttpStatus.BAD_REQUEST)
         }
-        return ResponseEntity.ok(documentenApiService.uploadDocument(file, documentapi, informatieobjecttype))
+        try {
+            return ResponseEntity.ok(documentenApiService.uploadDocument(file, documentapi, informatieobjecttype))
+        } catch (e: Exception) {
+            return ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
+        }
     }
 }
