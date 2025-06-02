@@ -98,8 +98,7 @@ class OpenKlant2DigitaleAdresQueryIT(
                         builder
                             .path("/graphql")
                             .build()
-                    }
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                     .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserDigitaleAdressen.gql")))
                     .exchange()
                     .verifyOnlyDataExists(basePath)
@@ -133,8 +132,7 @@ class OpenKlant2DigitaleAdresQueryIT(
                         builder
                             .path("/graphql")
                             .build()
-                    }
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                     .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserDigitaleAdressenWithSoortAdres.gql")))
                     .exchange()
                     .verifyOnlyDataExists(basePath)
@@ -167,8 +165,7 @@ class OpenKlant2DigitaleAdresQueryIT(
                         builder
                             .path("/graphql")
                             .build()
-                    }
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                     .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserDigitaleAdressen.gql")))
                     .exchange()
                     .expectStatus()

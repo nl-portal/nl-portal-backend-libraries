@@ -32,12 +32,11 @@ class KlantContactQuery(
     suspend fun getUserKlantContacten(
         dfe: DataFetchingEnvironment,
         kanaal: String? = null,
-    ): List<OpenKlant2Klantcontact> {
-        return openklant2Service.findKlantContacten(
+    ): List<OpenKlant2Klantcontact> =
+        openklant2Service.findKlantContacten(
             authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
             kanaal = kanaal,
         )
-    }
 
     @GraphQLDescription("Get KlantContact by id of authenticated user.")
     suspend fun getUserKlantContact(klantContactId: UUID): OpenKlant2Klantcontact? =

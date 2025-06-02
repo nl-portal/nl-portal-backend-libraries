@@ -24,13 +24,16 @@ object TestHelper {
     val EXTENSIONS_JSON_PATH = "$.extensions"
     val logger = KotlinLogging.logger {}
 
-    fun WebTestClient.ResponseSpec.verifyOnlyDataExists(basePath: String): WebTestClient.BodyContentSpec {
-        return this.expectBody()
+    fun WebTestClient.ResponseSpec.verifyOnlyDataExists(basePath: String): WebTestClient.BodyContentSpec =
+        this
+            .expectBody()
             .consumeWith(Consumer { t -> logger.info { t } })
-            .jsonPath(basePath).exists()
-            .jsonPath(ERRORS_JSON_PATH).doesNotExist()
-            .jsonPath(EXTENSIONS_JSON_PATH).doesNotExist()
-    }
+            .jsonPath(basePath)
+            .exists()
+            .jsonPath(ERRORS_JSON_PATH)
+            .doesNotExist()
+            .jsonPath(EXTENSIONS_JSON_PATH)
+            .doesNotExist()
 
     val emptyPage =
         """
