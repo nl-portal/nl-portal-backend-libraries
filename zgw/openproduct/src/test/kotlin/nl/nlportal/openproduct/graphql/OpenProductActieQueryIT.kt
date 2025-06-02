@@ -59,13 +59,14 @@ class OpenProductActieQueryIT(
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
             propsRegistry.add("nl-portal.config.openproduct.properties.product-type-api-url") { url }
+            propsRegistry.add("nl-portal.config.openproduct.properties.product-api-url") { url }
         }
 
         @JvmStatic
         @BeforeAll
         fun beforeAll() {
             server = MockWebServer()
-            server?.start()
+            server?.start(9000)
             url = server?.url("/").toString()
         }
 
@@ -81,6 +82,7 @@ class OpenProductActieQueryIT(
         setupMockServer()
         url = server?.url("/").toString()
         openProductModuleConfiguration.properties.productTypeApiUrl = URI(url)
+        openProductModuleConfiguration.properties.productApiUrl = URI(url)
     }
 
     @Test
@@ -125,6 +127,27 @@ class OpenProductActieQueryIT(
                 .jsonPath("$basePath.url").isEqualTo("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen")
         }
 
+    @Test
+    @WithBurgerUser("569312863")
+    fun `get actie decisions`() =
+        runTest {
+            val basePath = "$.data.getOpenProductActieDecision"
+            webTestClient
+                .post()
+                .uri { builder ->
+                    builder
+                        .path("/graphql")
+                        .build()
+                }
+                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductActieDecision.gql")))
+                .exchange()
+                .verifyOnlyDataExists(basePath)
+                .jsonPath(
+                    "$basePath[0].action.value",
+                ).isEqualTo("https://formulier.denhaag.nl/Tripleforms/formulier/nl-NL/DefaultEnvironment/scNaheffingsAanslagParkeren.aspx")
+        }
+
     private fun setupMockServer() {
         val dispatcher: Dispatcher =
             object : Dispatcher() {
@@ -138,6 +161,12 @@ class OpenProductActieQueryIT(
                             }
                             "GET /acties/" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-acties.json")
+                            }
+                            "GET /producten/694242af-d906-470b-b7e1-eb3527886854/" -> {
+                                TestHelper.mockResponseFromFile("/config/data/get-product.json")
+                            }
+                            "POST /engine-rest/decision-definition/key/alg-belastingen/evaluate" -> {
+                                TestHelper.mockResponseFromFile("/config/data/get-dmn-decision.json")
                             }
                             else -> MockResponse().setResponseCode(404)
                         }

@@ -27,6 +27,7 @@ import nl.nlportal.openproduct.graphql.OpenProductPrijsQuery
 import nl.nlportal.openproduct.graphql.OpenProductQuery
 import nl.nlportal.openproduct.graphql.OpenProductThemaQuery
 import nl.nlportal.openproduct.graphql.OpenProductTypeQuery
+import nl.nlportal.openproduct.service.OpenProductDmnService
 import nl.nlportal.openproduct.service.OpenProductService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -60,8 +61,14 @@ class OpenProductGraphqlAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(OpenProductActieQuery::class)
-    fun openProductActieQuery(openProductService: OpenProductService): Query {
-        return OpenProductActieQuery(openProductService = openProductService)
+    fun openProductActieQuery(
+        openProductService: OpenProductService,
+        openProductDmnService: OpenProductDmnService,
+    ): Query {
+        return OpenProductActieQuery(
+            openProductService = openProductService,
+            openProductDmnService = openProductDmnService,
+        )
     }
 
     @Bean

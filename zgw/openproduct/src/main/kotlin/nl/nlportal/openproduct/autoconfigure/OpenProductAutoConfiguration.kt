@@ -16,21 +16,27 @@
 package nl.nlportal.openproduct.autoconfigure
 
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
+import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.openproduct.client.OpenProductClient
+import nl.nlportal.openproduct.client.OpenProductDmnClient
 import nl.nlportal.openproduct.client.OpenProductTypeClient
+import nl.nlportal.openproduct.service.OpenProductDmnService
 import nl.nlportal.openproduct.service.OpenProductService
 import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.taak.autoconfigure.TaakConfig
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
+import org.springframework.web.reactive.function.client.WebClient
 
 @AutoConfiguration
 @EnableConfigurationProperties(
     OpenProductModuleConfiguration::class,
+    OpenProductDmnConfiguration::class,
 )
 @ConditionalOnProperty(prefix = "nl-portal.config.openproduct", name = ["enabled"], havingValue = "true")
 class OpenProductAutoConfiguration {
@@ -67,6 +73,31 @@ class OpenProductAutoConfiguration {
             zakenApiClient = zakenApiClient,
             objectsApiClient = objectsApiClient,
             authenticationMachtigingsDienstService = authenticationMachtigingsDienstService,
+        )
+    }
+
+    @Bean("openProductDmnClient")
+    @ConditionalOnProperty(prefix = "nl-portal.config.openproduct.dmn", name = ["enabled"], havingValue = "true")
+    fun openProductDmnClient(
+        dmnConfiguration: OpenProductDmnConfiguration,
+        @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
+        webClientBuilder: WebClient.Builder,
+    ): OpenProductDmnClient {
+        return OpenProductDmnClient(
+            dmnConfiguration.properties,
+            clientSslContextResolver,
+            webClientBuilder,
+        )
+    }
+
+    @Bean
+    fun openProductDmnService(
+        openProductDmnClient: OpenProductDmnClient,
+        openProductService: OpenProductService,
+    ): OpenProductDmnService {
+        return OpenProductDmnService(
+            openProductDmnClient = openProductDmnClient,
+            openProductService = openProductService,
         )
     }
 }

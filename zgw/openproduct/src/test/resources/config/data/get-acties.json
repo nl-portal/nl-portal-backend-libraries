@@ -7,7 +7,33 @@
       "uuid": "2435b986-7742-4cef-91f2-e1162c2f19c9",
       "naam": "watkanikregelen-belastingen",
       "url": "http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen",
-      "producttype_uuid": "dee273e9-2aa8-40ae-84b7-cb7da3c075ba"
+      "producttype_uuid": "dee273e9-2aa8-40ae-84b7-cb7da3c075ba",
+      "mapping": {
+        "product": [
+          {
+            "name": "pid",
+            "regex": "$.uuid",
+            "classType": "String"
+          },
+          {
+            "name": "geldigheideinddatum",
+            "regex": "$.eind_datum",
+            "classType": "String"
+          },
+          {
+            "name": "aantaluren",
+            "regex": "$.verbruiksobject.uren",
+            "classType": "String"
+          }
+        ],
+        "static": [
+          {
+            "name": "formulieren",
+            "classType": "String",
+            "value": "https://openformulieren-zgw.test.denhaag.nl"
+          }
+        ]
+      }
     }
   ]
 }

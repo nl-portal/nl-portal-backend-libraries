@@ -18,13 +18,20 @@ package nl.nlportal.openproduct.graphql
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
 import com.expediagroup.graphql.server.operations.Query
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.node.ObjectNode
+import graphql.schema.DataFetchingEnvironment
+import nl.nlportal.core.util.Mapper
+import nl.nlportal.graphql.security.SecurityConstants
 import nl.nlportal.openproduct.client.domain.OpenProductActie
+import nl.nlportal.openproduct.service.OpenProductDmnService
 import nl.nlportal.openproduct.service.OpenProductService
 import java.util.*
 
 @AuthenticatedDirective
 class OpenProductActieQuery(
     val openProductService: OpenProductService,
+    val openProductDmnService: OpenProductDmnService,
 ) : Query {
     @GraphQLDescription("Get all acties")
     suspend fun getOpenProductActies(
@@ -47,5 +54,21 @@ class OpenProductActieQuery(
         return openProductService.getActie(
             id = id,
         )
+    }
+
+    @GraphQLDescription("Get decision by actie naam")
+    suspend fun getOpenProductActieDecision(
+        dfe: DataFetchingEnvironment,
+        productId: UUID,
+        naam: String,
+    ): List<ObjectNode> {
+        val result =
+            openProductDmnService.getDecision(
+                authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+                naam = naam,
+                productId = productId,
+            )
+
+        return Mapper.get().convertValue(result, object : TypeReference<List<ObjectNode>>() {})
     }
 }
