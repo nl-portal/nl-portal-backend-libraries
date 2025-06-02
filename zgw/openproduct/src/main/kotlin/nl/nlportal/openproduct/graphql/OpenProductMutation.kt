@@ -32,10 +32,9 @@ class OpenProductMutation(
     suspend fun updateProduct(
         dfe: DataFetchingEnvironment,
         productUpdateRequest: UpdateProductRequest,
-    ): OpenProductProduct? {
-        return openProductService.updateProduct(
+    ): OpenProductProduct? =
+        openProductService.updateProduct(
             authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
             productUpdate = productUpdateRequest.asOpenProductProductUpdate(),
         )
-    }
 }

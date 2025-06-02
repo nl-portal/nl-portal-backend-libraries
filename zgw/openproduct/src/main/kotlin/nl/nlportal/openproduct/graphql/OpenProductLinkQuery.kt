@@ -30,8 +30,8 @@ class OpenProductLinkQuery(
     suspend fun getOpenProductLinks(
         pageNumber: Int? = null,
         pageSize: Int? = null,
-    ): LinksPage {
-        return LinksPage.fromResultPage(
+    ): LinksPage =
+        LinksPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             resultPage =
@@ -40,12 +40,10 @@ class OpenProductLinkQuery(
                     pageSize = pageSize ?: 20,
                 ),
         )
-    }
 
     @GraphQLDescription("Get a link")
-    suspend fun getOpenProductLink(id: UUID): OpenProductLink? {
-        return openProductService.getLink(
+    suspend fun getOpenProductLink(id: UUID): OpenProductLink? =
+        openProductService.getLink(
             id = id,
         )
-    }
 }

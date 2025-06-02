@@ -28,8 +28,8 @@ class Prijzen(
 ) : OpenProductPath() {
     override val path: String = "/prijzen/"
 
-    suspend fun get(searchFilters: List<Pair<OpenProductPrijzenFilters, Any>>? = null): ResultPage<OpenProductPrijs> {
-        return client
+    suspend fun get(searchFilters: List<Pair<OpenProductPrijzenFilters, Any>>? = null): ResultPage<OpenProductPrijs> =
+        client
             .webClient
             .get()
             .uri { uriBuilder ->
@@ -37,23 +37,19 @@ class Prijzen(
                     .path(path)
                     .applyFilters(searchFilters)
                 uriBuilder.build()
-            }
-            .accept(MediaType.APPLICATION_JSON)
+            }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody()
-    }
 
-    suspend fun get(id: UUID): OpenProductPrijs? {
-        return client
+    suspend fun get(id: UUID): OpenProductPrijs? =
+        client
             .webClient
             .get()
             .uri { uriBuilder ->
                 uriBuilder
                     .path("$path$id/")
                     .build()
-            }
-            .accept(MediaType.APPLICATION_JSON)
+            }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody()
-    }
 }

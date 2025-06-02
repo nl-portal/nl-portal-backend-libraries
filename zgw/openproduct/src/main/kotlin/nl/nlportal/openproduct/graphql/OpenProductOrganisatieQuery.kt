@@ -31,8 +31,8 @@ class OpenProductOrganisatieQuery(
         pageNumber: Int? = null,
         pageSize: Int? = null,
         naam: String? = null,
-    ): OrganisatiesPage {
-        return OrganisatiesPage.fromResultPage(
+    ): OrganisatiesPage =
+        OrganisatiesPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             resultPage =
@@ -42,12 +42,10 @@ class OpenProductOrganisatieQuery(
                     naam = naam,
                 ),
         )
-    }
 
     @GraphQLDescription("Get a organisatie")
-    suspend fun getOpenProductOrganisatie(id: UUID): OpenProductOrganisatie? {
-        return openProductService.getOrganisatie(
+    suspend fun getOpenProductOrganisatie(id: UUID): OpenProductOrganisatie? =
+        openProductService.getOrganisatie(
             id = id,
         )
-    }
 }

@@ -42,19 +42,17 @@ import org.springframework.web.reactive.function.client.WebClient
 class OpenProductAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(OpenProductClient::class)
-    fun openProductClient(openProductModuleConfiguration: OpenProductModuleConfiguration): OpenProductClient {
-        return OpenProductClient(
+    fun openProductClient(openProductModuleConfiguration: OpenProductModuleConfiguration): OpenProductClient =
+        OpenProductClient(
             openProductConfigurationProperties = openProductModuleConfiguration.properties,
         )
-    }
 
     @Bean
     @ConditionalOnMissingBean(OpenProductTypeClient::class)
-    fun openProductTypeClient(openProductModuleConfiguration: OpenProductModuleConfiguration): OpenProductTypeClient {
-        return OpenProductTypeClient(
+    fun openProductTypeClient(openProductModuleConfiguration: OpenProductModuleConfiguration): OpenProductTypeClient =
+        OpenProductTypeClient(
             openProductConfigurationProperties = openProductModuleConfiguration.properties,
         )
-    }
 
     @Bean
     @ConditionalOnMissingBean(OpenProductService::class)
@@ -65,8 +63,8 @@ class OpenProductAutoConfiguration {
         objectsApiClient: ObjectsApiClient,
         taakObjectConfig: TaakConfig,
         authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
-    ): OpenProductService {
-        return OpenProductService(
+    ): OpenProductService =
+        OpenProductService(
             openProductClient = openProductClient,
             openProductTypeClient = openProductTypeClient,
             objectsApiTaskConfigProperties = taakObjectConfig.properties,
@@ -74,7 +72,6 @@ class OpenProductAutoConfiguration {
             objectsApiClient = objectsApiClient,
             authenticationMachtigingsDienstService = authenticationMachtigingsDienstService,
         )
-    }
 
     @Bean("openProductDmnClient")
     @ConditionalOnProperty(prefix = "nl-portal.config.openproduct.dmn", name = ["enabled"], havingValue = "true")
@@ -82,22 +79,20 @@ class OpenProductAutoConfiguration {
         dmnConfiguration: OpenProductDmnConfiguration,
         @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
         webClientBuilder: WebClient.Builder,
-    ): OpenProductDmnClient {
-        return OpenProductDmnClient(
+    ): OpenProductDmnClient =
+        OpenProductDmnClient(
             dmnConfiguration.properties,
             clientSslContextResolver,
             webClientBuilder,
         )
-    }
 
     @Bean
     fun openProductDmnService(
         openProductDmnClient: OpenProductDmnClient,
         openProductService: OpenProductService,
-    ): OpenProductDmnService {
-        return OpenProductDmnService(
+    ): OpenProductDmnService =
+        OpenProductDmnService(
             openProductDmnClient = openProductDmnClient,
             openProductService = openProductService,
         )
-    }
 }

@@ -37,75 +37,60 @@ import org.springframework.context.annotation.Bean
 class OpenProductGraphqlAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(OpenProductThemaQuery::class)
-    fun openProductthemaQuery(openProductService: OpenProductService): Query {
-        return OpenProductThemaQuery(
+    fun openProductthemaQuery(openProductService: OpenProductService): Query =
+        OpenProductThemaQuery(
             openProductService = openProductService,
         )
-    }
 
     @Bean
     @ConditionalOnMissingBean(OpenProductTypeQuery::class)
-    fun openProductTypeQuery(openProductService: OpenProductService): Query {
-        return OpenProductTypeQuery(
+    fun openProductTypeQuery(openProductService: OpenProductService): Query =
+        OpenProductTypeQuery(
             openProductService = openProductService,
         )
-    }
 
     @Bean
     @ConditionalOnMissingBean(OpenProductQuery::class)
-    fun openProductQuery(openProductService: OpenProductService): Query {
-        return OpenProductQuery(
+    fun openProductQuery(openProductService: OpenProductService): Query =
+        OpenProductQuery(
             openProductService = openProductService,
         )
-    }
 
     @Bean
     @ConditionalOnMissingBean(OpenProductActieQuery::class)
     fun openProductActieQuery(
         openProductService: OpenProductService,
         openProductDmnService: OpenProductDmnService,
-    ): Query {
-        return OpenProductActieQuery(
+    ): Query =
+        OpenProductActieQuery(
             openProductService = openProductService,
             openProductDmnService = openProductDmnService,
         )
-    }
 
     @Bean
     @ConditionalOnMissingBean(OpenProductContactQuery::class)
-    fun openProductContactQuery(openProductService: OpenProductService): Query {
-        return OpenProductContactQuery(openProductService = openProductService)
-    }
+    fun openProductContactQuery(openProductService: OpenProductService): Query = OpenProductContactQuery(openProductService = openProductService)
 
     @Bean
     @ConditionalOnMissingBean(OpenProductLocatieQuery::class)
-    fun openProductLocatieQuery(openProductService: OpenProductService): Query {
-        return OpenProductLocatieQuery(openProductService = openProductService)
-    }
+    fun openProductLocatieQuery(openProductService: OpenProductService): Query = OpenProductLocatieQuery(openProductService = openProductService)
 
     @Bean
     @ConditionalOnMissingBean(OpenProductLinkQuery::class)
-    fun openProductLinkQuery(openProductService: OpenProductService): Query {
-        return OpenProductLinkQuery(openProductService = openProductService)
-    }
+    fun openProductLinkQuery(openProductService: OpenProductService): Query = OpenProductLinkQuery(openProductService = openProductService)
 
     @Bean
     @ConditionalOnMissingBean(OpenProductOrganisatieQuery::class)
-    fun openProductOrganisatieQuery(openProductService: OpenProductService): Query {
-        return OpenProductOrganisatieQuery(openProductService = openProductService)
-    }
+    fun openProductOrganisatieQuery(openProductService: OpenProductService): Query = OpenProductOrganisatieQuery(openProductService = openProductService)
 
     @Bean
     @ConditionalOnMissingBean(OpenProductPrijsQuery::class)
-    fun openProductPrijsQuery(openProductService: OpenProductService): Query {
-        return OpenProductPrijsQuery(openProductService = openProductService)
-    }
+    fun openProductPrijsQuery(openProductService: OpenProductService): Query = OpenProductPrijsQuery(openProductService = openProductService)
 
     @Bean
     @ConditionalOnMissingBean(OpenProductMutation::class)
-    fun openProductMutation(openProductService: OpenProductService): Mutation {
-        return OpenProductMutation(
+    fun openProductMutation(openProductService: OpenProductService): Mutation =
+        OpenProductMutation(
             openProductService = openProductService,
         )
-    }
 }

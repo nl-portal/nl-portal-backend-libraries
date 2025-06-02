@@ -95,14 +95,16 @@ class OpenProductLinkQueryIT(
                     builder
                         .path("/graphql")
                         .build()
-                }
-                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductLinks.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.numberOfElements").isEqualTo(2)
-                .jsonPath("$resultPath.naam").isEqualTo("link naar Ritense website")
-                .jsonPath("$resultPath.url").isEqualTo("https://ritense.com/")
+                .jsonPath("$basePath.numberOfElements")
+                .isEqualTo(2)
+                .jsonPath("$resultPath.naam")
+                .isEqualTo("link naar Ritense website")
+                .jsonPath("$resultPath.url")
+                .isEqualTo("https://ritense.com/")
         }
 
     @Test
@@ -116,13 +118,14 @@ class OpenProductLinkQueryIT(
                     builder
                         .path("/graphql")
                         .build()
-                }
-                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductLink.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.naam").isEqualTo("link naar Ritense website")
-                .jsonPath("$basePath.url").isEqualTo("https://ritense.com/")
+                .jsonPath("$basePath.naam")
+                .isEqualTo("link naar Ritense website")
+                .jsonPath("$basePath.url")
+                .isEqualTo("https://ritense.com/")
         }
 
     private fun setupMockServer() {

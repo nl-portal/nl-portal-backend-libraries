@@ -95,14 +95,16 @@ class OpenProductPrijsQueryIT(
                     builder
                         .path("/graphql")
                         .build()
-                }
-                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductPrijzen.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.numberOfElements").isEqualTo(1)
-                .jsonPath("$resultPath.prijsopties[0].bedrag").isEqualTo(100.0)
-                .jsonPath("$resultPath.prijsregels[0].beschrijving").isEqualTo("prijs optie regel 2")
+                .jsonPath("$basePath.numberOfElements")
+                .isEqualTo(1)
+                .jsonPath("$resultPath.prijsopties[0].bedrag")
+                .isEqualTo(100.0)
+                .jsonPath("$resultPath.prijsregels[0].beschrijving")
+                .isEqualTo("prijs optie regel 2")
         }
 
     @Test
@@ -116,13 +118,14 @@ class OpenProductPrijsQueryIT(
                     builder
                         .path("/graphql")
                         .build()
-                }
-                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductPrijs.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.prijsopties[0].bedrag").isEqualTo(100.0)
-                .jsonPath("$basePath.prijsregels[0].beschrijving").isEqualTo("prijs optie regel 2")
+                .jsonPath("$basePath.prijsopties[0].bedrag")
+                .isEqualTo(100.0)
+                .jsonPath("$basePath.prijsregels[0].beschrijving")
+                .isEqualTo("prijs optie regel 2")
         }
 
     private fun setupMockServer() {

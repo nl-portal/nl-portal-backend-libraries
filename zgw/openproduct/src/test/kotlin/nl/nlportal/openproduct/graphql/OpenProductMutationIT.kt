@@ -94,17 +94,19 @@ class OpenProductMutationIT(
                     builder
                         .path("/graphql")
                         .build()
-                }
-                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/updateProduct.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
                 .jsonPath(
                     "$basePath.url",
                 ).isEqualTo("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/")
-                .jsonPath("$basePath.startDatum").isEqualTo("2025-04-30")
-                .jsonPath("$basePath.producttype.code").isEqualTo("PARKEREN")
-                .jsonPath("$basePath.verbruiksobject.uren").isEqualTo(30)
+                .jsonPath("$basePath.startDatum")
+                .isEqualTo("2025-04-30")
+                .jsonPath("$basePath.producttype.code")
+                .isEqualTo("PARKEREN")
+                .jsonPath("$basePath.verbruiksobject.uren")
+                .isEqualTo(30)
         }
 
     @Test
@@ -118,8 +120,7 @@ class OpenProductMutationIT(
                     builder
                         .path("/graphql")
                         .build()
-                }
-                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/updateProduct.gql")))
                 .exchange()
                 .expectBody()

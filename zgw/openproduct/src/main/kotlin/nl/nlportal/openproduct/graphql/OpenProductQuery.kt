@@ -33,8 +33,8 @@ class OpenProductQuery(
         dfe: DataFetchingEnvironment,
         pageNumber: Int? = null,
         pageSize: Int? = null,
-    ): ProductenPage {
-        return ProductenPage.fromResultPage(
+    ): ProductenPage =
+        ProductenPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             resultPage =
@@ -44,16 +44,14 @@ class OpenProductQuery(
                     pageSize = pageSize ?: 20,
                 ),
         )
-    }
 
     @GraphQLDescription("Get a Open product type by id")
     suspend fun getOpenProduct(
         dfe: DataFetchingEnvironment,
         id: UUID,
-    ): OpenProductProduct? {
-        return openProductService.getProduct(
+    ): OpenProductProduct? =
+        openProductService.getProduct(
             authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
             id = id,
         )
-    }
 }

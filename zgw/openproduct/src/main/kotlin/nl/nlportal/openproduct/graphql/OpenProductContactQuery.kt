@@ -31,8 +31,8 @@ class OpenProductContactQuery(
         pageNumber: Int? = null,
         pageSize: Int? = null,
         achternaam: String? = null,
-    ): ContactenPage {
-        return ContactenPage.fromResultPage(
+    ): ContactenPage =
+        ContactenPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             resultPage =
@@ -42,12 +42,10 @@ class OpenProductContactQuery(
                     achternaam = achternaam,
                 ),
         )
-    }
 
     @GraphQLDescription("Get a contact")
-    suspend fun getOpenProductContact(id: UUID): OpenProductContact? {
-        return openProductService.getContact(
+    suspend fun getOpenProductContact(id: UUID): OpenProductContact? =
+        openProductService.getContact(
             id = id,
         )
-    }
 }

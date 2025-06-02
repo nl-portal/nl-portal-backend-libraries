@@ -23,13 +23,13 @@ data class ResultPage<T>(
     val previous: URI? = null,
     val results: List<T>,
 ) {
-    fun getNextPageNumber(): Int? {
-        return next
+    fun getNextPageNumber(): Int? =
+        next
             ?.query
             ?.split("&")
             ?.asSequence()
             ?.map { Pair(it.substringBefore("="), it.substringAfter("=")) }
             ?.firstOrNull { it.first == "page" }
-            ?.second?.toIntOrNull()
-    }
+            ?.second
+            ?.toIntOrNull()
 }

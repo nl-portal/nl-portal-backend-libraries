@@ -97,14 +97,16 @@ class OpenProductActieQueryIT(
                     builder
                         .path("/graphql")
                         .build()
-                }
-                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductActies.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.number").isEqualTo(1)
-                .jsonPath("$resultPath.naam").isEqualTo("watkanikregelen-belastingen")
-                .jsonPath("$resultPath.url").isEqualTo("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen")
+                .jsonPath("$basePath.number")
+                .isEqualTo(1)
+                .jsonPath("$resultPath.naam")
+                .isEqualTo("watkanikregelen-belastingen")
+                .jsonPath("$resultPath.url")
+                .isEqualTo("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen")
         }
 
     @Test
@@ -118,13 +120,14 @@ class OpenProductActieQueryIT(
                     builder
                         .path("/graphql")
                         .build()
-                }
-                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductActie.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.naam").isEqualTo("watkanikregelen-belastingen")
-                .jsonPath("$basePath.url").isEqualTo("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen")
+                .jsonPath("$basePath.naam")
+                .isEqualTo("watkanikregelen-belastingen")
+                .jsonPath("$basePath.url")
+                .isEqualTo("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen")
         }
 
     @Test
@@ -138,8 +141,7 @@ class OpenProductActieQueryIT(
                     builder
                         .path("/graphql")
                         .build()
-                }
-                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductActieDecision.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)

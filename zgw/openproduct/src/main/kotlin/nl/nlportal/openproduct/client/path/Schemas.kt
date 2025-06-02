@@ -28,8 +28,8 @@ class Schemas(
 ) : OpenProductPath() {
     override val path: String = "/schemas/"
 
-    suspend fun get(searchFilters: List<Pair<OpenProductSchemasFilters, Any>>? = null): ResultPage<OpenProductSchema> {
-        return client
+    suspend fun get(searchFilters: List<Pair<OpenProductSchemasFilters, Any>>? = null): ResultPage<OpenProductSchema> =
+        client
             .webClient
             .get()
             .uri { uriBuilder ->
@@ -37,23 +37,19 @@ class Schemas(
                     .path(path)
                     .applyFilters(searchFilters)
                 uriBuilder.build()
-            }
-            .accept(MediaType.APPLICATION_JSON)
+            }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody()
-    }
 
-    suspend fun get(id: UUID): OpenProductSchema? {
-        return client
+    suspend fun get(id: UUID): OpenProductSchema? =
+        client
             .webClient
             .get()
             .uri { uriBuilder ->
                 uriBuilder
                     .path("$path$id/")
                     .build()
-            }
-            .accept(MediaType.APPLICATION_JSON)
+            }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody()
-    }
 }

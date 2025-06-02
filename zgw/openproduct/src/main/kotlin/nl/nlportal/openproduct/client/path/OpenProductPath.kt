@@ -21,9 +21,8 @@ import org.springframework.web.util.UriBuilder
 open class OpenProductPath {
     open val path: String = "/"
 
-    fun UriBuilder.applyFilters(filters: List<Pair<OpenProductFilters, Any>>? = null): UriBuilder {
-        return apply {
+    fun UriBuilder.applyFilters(filters: List<Pair<OpenProductFilters, Any>>? = null): UriBuilder =
+        apply {
             filters?.forEach { queryParam(it.first.toString(), it.second.toString()) }
         }
-    }
 }

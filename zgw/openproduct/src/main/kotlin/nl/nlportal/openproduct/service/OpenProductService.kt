@@ -93,9 +93,7 @@ class OpenProductService(
         return openProductTypeClient.path<Themas>().get(searchVariables)
     }
 
-    suspend fun getHoofdThemas(): List<OpenProductThema> {
-        return getThemas(1, 999).results.filter { it.hoofdThema == null }
-    }
+    suspend fun getHoofdThemas(): List<OpenProductThema> = getThemas(1, 999).results.filter { it.hoofdThema == null }
 
     suspend fun getThemasHierarchy(): List<OpenProductThemaHierarchy> {
         val themasHierarchy = mutableListOf<OpenProductThemaHierarchy>()
@@ -455,7 +453,8 @@ class OpenProductService(
 
         // 3. get Zaken with filters
         val request =
-            zakenApiClient.zoeken()
+            zakenApiClient
+                .zoeken()
                 .search()
                 .page(pageNumber)
                 .withAuthentication(authentication)
@@ -510,8 +509,7 @@ class OpenProductService(
         return taken
             .filterNot { task ->
                 !zaken.any { it.uuid.toString() == task.koppeling.value }
-            }
-            .sortedBy { it.verloopdatum }
+            }.sortedBy { it.verloopdatum }
     }
 
     private suspend fun findTakenByIdentification(
@@ -545,8 +543,7 @@ class OpenProductService(
             pageSize,
         ).let { resultPage ->
             TaakPageV2.fromResultPage(pageNumber, pageSize, resultPage)
-        }
-            .content
+        }.content
     }
 
     private suspend inline fun <reified T> getObjectsApiObjectResultPage(
@@ -554,15 +551,14 @@ class OpenProductService(
         searchParameters: List<ObjectSearchParameter>,
         pageNumber: Int,
         pageSize: Int,
-    ): nl.nlportal.zgw.objectenapi.domain.ResultPage<ObjectsApiObject<T>> {
-        return objectsApiClient.getObjects<T>(
+    ): nl.nlportal.zgw.objectenapi.domain.ResultPage<ObjectsApiObject<T>> =
+        objectsApiClient.getObjects<T>(
             objectSearchParameters = searchParameters,
             objectTypeUrl = objectTypeUrl,
             page = pageNumber,
             pageSize = pageSize,
             ordering = "-record__startAt",
         )
-    }
 
     private suspend fun searchHoofdThemasFromSubThema(thema: OpenProductThema): List<OpenProductThema> {
         val hoofdThemas = mutableListOf<OpenProductThema>()
@@ -604,8 +600,8 @@ class OpenProductService(
         )
     }
 
-    private fun getEigenaarFilter(authentication: CommonGroundAuthentication): List<Pair<OpenProductProductenFilters, String>> {
-        return when (authentication) {
+    private fun getEigenaarFilter(authentication: CommonGroundAuthentication): List<Pair<OpenProductProductenFilters, String>> =
+        when (authentication) {
             is BurgerAuthentication -> {
                 listOf(
                     Pair(
@@ -639,13 +635,12 @@ class OpenProductService(
 
             else -> throw IllegalArgumentException("Authentication not supported")
         }
-    }
 
     private fun isAuthorizedForProduct(
         authentication: CommonGroundAuthentication,
         product: OpenProductProduct,
-    ): Boolean {
-        return when (authentication) {
+    ): Boolean =
+        when (authentication) {
             is BurgerAuthentication -> {
                 product.eigenaren.firstOrNull { it.bsn == authentication.userId } != null
             }
@@ -663,7 +658,6 @@ class OpenProductService(
 
             else -> false
         }
-    }
 
     companion object {
         val logger = KotlinLogging.logger {}

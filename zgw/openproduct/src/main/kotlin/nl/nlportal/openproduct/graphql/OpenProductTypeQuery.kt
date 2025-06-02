@@ -32,8 +32,8 @@ class OpenProductTypeQuery(
         pageNumber: Int? = null,
         pageSize: Int? = null,
         language: String,
-    ): ProductTypesPage {
-        return ProductTypesPage.fromResultPage(
+    ): ProductTypesPage =
+        ProductTypesPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             resultPage =
@@ -43,17 +43,15 @@ class OpenProductTypeQuery(
                     language = language,
                 ),
         )
-    }
 
     @GraphQLDescription("Get a Open product type by id")
     suspend fun getOpenProductType(
         dfe: DataFetchingEnvironment,
         id: UUID,
         language: String,
-    ): OpenProductProductType? {
-        return openProductService.getProductType(
+    ): OpenProductProductType? =
+        openProductService.getProductType(
             id = id,
             language = language,
         )
-    }
 }

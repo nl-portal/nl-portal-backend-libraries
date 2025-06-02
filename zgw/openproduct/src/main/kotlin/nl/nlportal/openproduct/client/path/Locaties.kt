@@ -28,8 +28,8 @@ class Locaties(
 ) : OpenProductPath() {
     override val path: String = "/locaties/"
 
-    suspend fun get(searchFilters: List<Pair<OpenProductLocatiesFilters, Any>>? = null): ResultPage<OpenProductLocatie> {
-        return client
+    suspend fun get(searchFilters: List<Pair<OpenProductLocatiesFilters, Any>>? = null): ResultPage<OpenProductLocatie> =
+        client
             .webClient
             .get()
             .uri { uriBuilder ->
@@ -37,23 +37,19 @@ class Locaties(
                     .path(path)
                     .applyFilters(searchFilters)
                 uriBuilder.build()
-            }
-            .accept(MediaType.APPLICATION_JSON)
+            }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody()
-    }
 
-    suspend fun get(id: UUID): OpenProductLocatie? {
-        return client
+    suspend fun get(id: UUID): OpenProductLocatie? =
+        client
             .webClient
             .get()
             .uri { uriBuilder ->
                 uriBuilder
                     .path("$path$id/")
                     .build()
-            }
-            .accept(MediaType.APPLICATION_JSON)
+            }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody()
-    }
 }

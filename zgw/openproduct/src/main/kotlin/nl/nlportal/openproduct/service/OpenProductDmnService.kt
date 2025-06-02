@@ -83,10 +83,11 @@ class OpenProductDmnService(
                     ),
             )
 
-        return openProductDmnClient.getDecision(
-            url = actie.url,
-            dmnRequest = dmnRequest,
-        ).filter { it.isNotEmpty() }
+        return openProductDmnClient
+            .getDecision(
+                url = actie.url,
+                dmnRequest = dmnRequest,
+            ).filter { it.isNotEmpty() }
     }
 
     private fun mapActieMappingVariables(

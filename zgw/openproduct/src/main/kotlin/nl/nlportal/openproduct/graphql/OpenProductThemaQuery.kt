@@ -35,8 +35,8 @@ class OpenProductThemaQuery(
     suspend fun getOpenProductThemas(
         pageNumber: Int? = null,
         pageSize: Int? = null,
-    ): ThemasPage {
-        return ThemasPage.fromResultPage(
+    ): ThemasPage =
+        ThemasPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             resultPage =
@@ -45,17 +45,12 @@ class OpenProductThemaQuery(
                     pageSize = pageSize ?: 20,
                 ),
         )
-    }
 
     @GraphQLDescription("Get all hoofd themas")
-    suspend fun getOpenProductHoofdThemas(): List<OpenProductThema> {
-        return openProductService.getHoofdThemas()
-    }
+    suspend fun getOpenProductHoofdThemas(): List<OpenProductThema> = openProductService.getHoofdThemas()
 
     @GraphQLDescription("Get all themas hierarchy")
-    suspend fun getOpenProductThemasHierarchy(): List<OpenProductThemaHierarchy> {
-        return openProductService.getThemasHierarchy()
-    }
+    suspend fun getOpenProductThemasHierarchy(): List<OpenProductThemaHierarchy> = openProductService.getThemasHierarchy()
 
     @GraphQLDescription("Get a thema")
     suspend fun getOpenProductThema(id: UUID): OpenProductThema? {
@@ -74,8 +69,8 @@ class OpenProductThemaQuery(
         id: UUID,
         language: String,
         isOpen: Boolean? = null,
-    ): List<Zaak> {
-        return openProductService.getThemaZaken(
+    ): List<Zaak> =
+        openProductService.getThemaZaken(
             authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
             id = id,
             pageNumber = pageNumber ?: 1,
@@ -83,7 +78,6 @@ class OpenProductThemaQuery(
             language = language,
             isOpen = isOpen,
         )
-    }
 
     @GraphQLDescription("Get taken of a thema, including their hoofd themas")
     suspend fun getOpenProductThemaTaken(
@@ -92,13 +86,12 @@ class OpenProductThemaQuery(
         pageSize: Int? = null,
         id: UUID,
         language: String,
-    ): List<TaakV2> {
-        return openProductService.getThemaTaken(
+    ): List<TaakV2> =
+        openProductService.getThemaTaken(
             authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
             id = id,
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             language = language,
         )
-    }
 }

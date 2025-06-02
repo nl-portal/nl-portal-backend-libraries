@@ -28,8 +28,8 @@ class Themas(
 ) : OpenProductPath() {
     override val path: String = "/themas/"
 
-    suspend fun get(searchFilters: List<Pair<OpenProductThemasFilters, Any>>? = null): ResultPage<OpenProductThema> {
-        return client
+    suspend fun get(searchFilters: List<Pair<OpenProductThemasFilters, Any>>? = null): ResultPage<OpenProductThema> =
+        client
             .webClient
             .get()
             .uri { uriBuilder ->
@@ -37,23 +37,19 @@ class Themas(
                     .path(path)
                     .applyFilters(searchFilters)
                 uriBuilder.build()
-            }
-            .accept(MediaType.APPLICATION_JSON)
+            }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody()
-    }
 
-    suspend fun get(id: UUID): OpenProductThema? {
-        return client
+    suspend fun get(id: UUID): OpenProductThema? =
+        client
             .webClient
             .get()
             .uri { uriBuilder ->
                 uriBuilder
                     .path("$path$id/")
                     .build()
-            }
-            .accept(MediaType.APPLICATION_JSON)
+            }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody()
-    }
 }

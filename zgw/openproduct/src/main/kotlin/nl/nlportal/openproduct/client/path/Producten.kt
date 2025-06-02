@@ -31,8 +31,8 @@ class Producten(
 ) : OpenProductPath() {
     override val path: String = "/producten/"
 
-    suspend fun get(searchFilters: List<Pair<OpenProductProductenFilters, Any>>? = null): ResultPage<OpenProductProduct> {
-        return client
+    suspend fun get(searchFilters: List<Pair<OpenProductProductenFilters, Any>>? = null): ResultPage<OpenProductProduct> =
+        client
             .webClient
             .get()
             .uri { uriBuilder ->
@@ -40,25 +40,21 @@ class Producten(
                     .path(path)
                     .applyFilters(searchFilters)
                 uriBuilder.build()
-            }
-            .accept(MediaType.APPLICATION_JSON)
+            }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody()
-    }
 
-    suspend fun get(id: UUID): OpenProductProduct? {
-        return client
+    suspend fun get(id: UUID): OpenProductProduct? =
+        client
             .webClient
             .get()
             .uri { uriBuilder ->
                 uriBuilder
                     .path("$path$id/")
                     .build()
-            }
-            .accept(MediaType.APPLICATION_JSON)
+            }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody()
-    }
 
     suspend fun patch(productUpdate: OpenProductProductUpdate): OpenProductProduct? {
         val response: OpenProductProduct? =
@@ -69,8 +65,7 @@ class Producten(
                     uriBuilder
                         .path("$path/${productUpdate.uuid}/")
                         .build()
-                }
-                .body(BodyInserters.fromValue(productUpdate))
+                }.body(BodyInserters.fromValue(productUpdate))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .awaitBodyOrNull()

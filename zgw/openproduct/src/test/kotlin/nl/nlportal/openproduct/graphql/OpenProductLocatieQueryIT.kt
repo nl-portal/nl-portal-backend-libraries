@@ -95,14 +95,16 @@ class OpenProductLocatieQueryIT(
                     builder
                         .path("/graphql")
                         .build()
-                }
-                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductLocaties.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.numberOfElements").isEqualTo(1)
-                .jsonPath("$resultPath.naam").isEqualTo("Ritense")
-                .jsonPath("$resultPath.email").isEqualTo("info@ritsense.nl")
+                .jsonPath("$basePath.numberOfElements")
+                .isEqualTo(1)
+                .jsonPath("$resultPath.naam")
+                .isEqualTo("Ritense")
+                .jsonPath("$resultPath.email")
+                .isEqualTo("info@ritsense.nl")
         }
 
     @Test
@@ -116,13 +118,14 @@ class OpenProductLocatieQueryIT(
                     builder
                         .path("/graphql")
                         .build()
-                }
-                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductLocatie.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.naam").isEqualTo("Ritense")
-                .jsonPath("$basePath.email").isEqualTo("info@ritsense.nl")
+                .jsonPath("$basePath.naam")
+                .isEqualTo("Ritense")
+                .jsonPath("$basePath.email")
+                .isEqualTo("info@ritsense.nl")
         }
 
     private fun setupMockServer() {

@@ -95,15 +95,18 @@ class OpenProductContactQueryIT(
                     builder
                         .path("/graphql")
                         .build()
-                }
-                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductContacten.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.numberOfElements").isEqualTo(1)
-                .jsonPath("$resultPath.achternaam").isEqualTo("van Beek")
-                .jsonPath("$resultPath.voornaam").isEqualTo("Vincent")
-                .jsonPath("$resultPath.organisatie.naam").isEqualTo("Ritense")
+                .jsonPath("$basePath.numberOfElements")
+                .isEqualTo(1)
+                .jsonPath("$resultPath.achternaam")
+                .isEqualTo("van Beek")
+                .jsonPath("$resultPath.voornaam")
+                .isEqualTo("Vincent")
+                .jsonPath("$resultPath.organisatie.naam")
+                .isEqualTo("Ritense")
         }
 
     @Test
@@ -117,13 +120,14 @@ class OpenProductContactQueryIT(
                     builder
                         .path("/graphql")
                         .build()
-                }
-                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductContact.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.achternaam").isEqualTo("van Beek")
-                .jsonPath("$basePath.voornaam").isEqualTo("Vincent")
+                .jsonPath("$basePath.achternaam")
+                .isEqualTo("van Beek")
+                .jsonPath("$basePath.voornaam")
+                .isEqualTo("Vincent")
         }
 
     private fun setupMockServer() {

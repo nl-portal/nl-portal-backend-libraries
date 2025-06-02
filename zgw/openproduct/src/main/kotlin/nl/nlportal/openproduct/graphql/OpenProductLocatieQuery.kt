@@ -31,8 +31,8 @@ class OpenProductLocatieQuery(
         pageNumber: Int? = null,
         pageSize: Int? = null,
         naam: String? = null,
-    ): LocatiesPage {
-        return LocatiesPage.fromResultPage(
+    ): LocatiesPage =
+        LocatiesPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             resultPage =
@@ -42,12 +42,10 @@ class OpenProductLocatieQuery(
                     naam = naam,
                 ),
         )
-    }
 
     @GraphQLDescription("Get a locatie")
-    suspend fun getOpenProductLocatie(id: UUID): OpenProductLocatie? {
-        return openProductService.getLocatie(
+    suspend fun getOpenProductLocatie(id: UUID): OpenProductLocatie? =
+        openProductService.getLocatie(
             id = id,
         )
-    }
 }

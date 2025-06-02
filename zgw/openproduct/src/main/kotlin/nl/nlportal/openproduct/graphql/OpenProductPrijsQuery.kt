@@ -30,8 +30,8 @@ class OpenProductPrijsQuery(
     suspend fun getOpenProductPrijzen(
         pageNumber: Int? = null,
         pageSize: Int? = null,
-    ): PrijzenPage {
-        return PrijzenPage.fromResultPage(
+    ): PrijzenPage =
+        PrijzenPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             resultPage =
@@ -40,12 +40,10 @@ class OpenProductPrijsQuery(
                     pageSize = pageSize ?: 20,
                 ),
         )
-    }
 
     @GraphQLDescription("Get a prijs")
-    suspend fun getOpenProductPrijs(id: UUID): OpenProductPrijs? {
-        return openProductService.getPrijs(
+    suspend fun getOpenProductPrijs(id: UUID): OpenProductPrijs? =
+        openProductService.getPrijs(
             id = id,
         )
-    }
 }

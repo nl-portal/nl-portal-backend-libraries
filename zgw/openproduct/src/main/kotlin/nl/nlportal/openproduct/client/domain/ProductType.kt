@@ -64,9 +64,7 @@ data class OpenProductProductType(
         @GraphQLIgnore
         @Autowired
         openProductService: OpenProductService,
-    ): List<OpenProductProductTypeContent>? {
-        return openProductService.getProductTypeContent(productTypeId = uuid)
-    }
+    ): List<OpenProductProductTypeContent>? = openProductService.getProductTypeContent(productTypeId = uuid)
 }
 
 data class OpenProductProductTypeContent(

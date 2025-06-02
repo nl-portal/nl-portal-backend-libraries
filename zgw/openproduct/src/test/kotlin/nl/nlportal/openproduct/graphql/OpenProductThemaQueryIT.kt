@@ -103,15 +103,18 @@ class OpenProductThemaQueryIT(
                     builder
                         .path("/graphql")
                         .build()
-                }
-                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductThemas.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.totalElements").isEqualTo(4)
-                .jsonPath("$resultPath.naam").isEqualTo("Parkeren")
-                .jsonPath("$resultPath.producttypen[0].uniformeProductNaam").isEqualTo("Parkeervergunning")
-                .jsonPath("$resultPath.producttypen[0].code").isEqualTo("PARKEREN")
+                .jsonPath("$basePath.totalElements")
+                .isEqualTo(4)
+                .jsonPath("$resultPath.naam")
+                .isEqualTo("Parkeren")
+                .jsonPath("$resultPath.producttypen[0].uniformeProductNaam")
+                .isEqualTo("Parkeervergunning")
+                .jsonPath("$resultPath.producttypen[0].code")
+                .isEqualTo("PARKEREN")
         }
 
     @Test
@@ -125,15 +128,18 @@ class OpenProductThemaQueryIT(
                     builder
                         .path("/graphql")
                         .build()
-                }
-                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductHoofdThemas.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.size()").isEqualTo(2)
-                .jsonPath("$basePath[0].naam").isEqualTo("Belastingzaken")
-                .jsonPath("$basePath[0].producttypen[0].uniformeProductNaam").isEqualTo("toeristenbelasting")
-                .jsonPath("$basePath[0].producttypen[0].code").isEqualTo("BELASTINGZAKEN")
+                .jsonPath("$basePath.size()")
+                .isEqualTo(2)
+                .jsonPath("$basePath[0].naam")
+                .isEqualTo("Belastingzaken")
+                .jsonPath("$basePath[0].producttypen[0].uniformeProductNaam")
+                .isEqualTo("toeristenbelasting")
+                .jsonPath("$basePath[0].producttypen[0].code")
+                .isEqualTo("BELASTINGZAKEN")
         }
 
     @Test
@@ -147,15 +153,18 @@ class OpenProductThemaQueryIT(
                     builder
                         .path("/graphql")
                         .build()
-                }
-                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductThemasHierarchy.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.size()").isEqualTo(2)
-                .jsonPath("$basePath[0].thema.naam").isEqualTo("Belastingzaken")
-                .jsonPath("$basePath[0].thema.producttypen[0].uniformeProductNaam").isEqualTo("toeristenbelasting")
-                .jsonPath("$basePath[0].thema.producttypen[0].code").isEqualTo("BELASTINGZAKEN")
+                .jsonPath("$basePath.size()")
+                .isEqualTo(2)
+                .jsonPath("$basePath[0].thema.naam")
+                .isEqualTo("Belastingzaken")
+                .jsonPath("$basePath[0].thema.producttypen[0].uniformeProductNaam")
+                .isEqualTo("toeristenbelasting")
+                .jsonPath("$basePath[0].thema.producttypen[0].code")
+                .isEqualTo("BELASTINGZAKEN")
         }
 
     @Test
@@ -169,13 +178,14 @@ class OpenProductThemaQueryIT(
                     builder
                         .path("/graphql")
                         .build()
-                }
-                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductThemaZaken.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.size()").isEqualTo(1)
-                .jsonPath("$basePath[0].omschrijving").isEqualTo("Lopende zaak")
+                .jsonPath("$basePath.size()")
+                .isEqualTo(1)
+                .jsonPath("$basePath[0].omschrijving")
+                .isEqualTo("Lopende zaak")
         }
 
     @Test
@@ -189,14 +199,16 @@ class OpenProductThemaQueryIT(
                     builder
                         .path("/graphql")
                         .build()
-                }
-                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductThemaTaken.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.size()").isEqualTo(1)
-                .jsonPath("$basePath[0].id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
-                .jsonPath("$basePath[0].titel").isEqualTo("Taak linked to Zaak")
+                .jsonPath("$basePath.size()")
+                .isEqualTo(1)
+                .jsonPath("$basePath[0].id")
+                .isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
+                .jsonPath("$basePath[0].titel")
+                .isEqualTo("Taak linked to Zaak")
         }
 
     @Test
@@ -210,14 +222,16 @@ class OpenProductThemaQueryIT(
                     builder
                         .path("/graphql")
                         .build()
-                }
-                .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductThema.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.naam").isEqualTo("Parkeren")
-                .jsonPath("$basePath.producttypen[0].uniformeProductNaam").isEqualTo("Parkeervergunning")
-                .jsonPath("$basePath.producttypen[0].code").isEqualTo("PARKEREN")
+                .jsonPath("$basePath.naam")
+                .isEqualTo("Parkeren")
+                .jsonPath("$basePath.producttypen[0].uniformeProductNaam")
+                .isEqualTo("Parkeervergunning")
+                .jsonPath("$basePath.producttypen[0].code")
+                .isEqualTo("PARKEREN")
         }
 
     private fun setupMockServer() {

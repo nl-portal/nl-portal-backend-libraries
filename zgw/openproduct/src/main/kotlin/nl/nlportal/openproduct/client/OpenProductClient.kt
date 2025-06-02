@@ -31,15 +31,14 @@ import kotlin.reflect.full.primaryConstructor
 class OpenProductClient(
     val openProductConfigurationProperties: OpenProductConfigurationProperties,
 ) {
-    inline fun <reified P : OpenProductPath> path(): P {
-        return P::class.primaryConstructor!!.call(this)
-    }
+    inline fun <reified P : OpenProductPath> path(): P = P::class.primaryConstructor!!.call(this)
 
     val webClient: WebClient
 
     init {
         this.webClient =
-            WebClient.builder()
+            WebClient
+                .builder()
                 .clone()
                 .clientConnector(
                     ReactorClientHttpConnector(
@@ -49,14 +48,14 @@ class OpenProductClient(
                             AdvancedByteBufFormat.TEXTUAL,
                         ),
                     ),
-                )
-                .baseUrl(openProductConfigurationProperties.productApiUrl.toString())
+                ).baseUrl(openProductConfigurationProperties.productApiUrl.toString())
                 .apply {
                     it.defaultHeader("Authorization", "Token ${openProductConfigurationProperties.token}")
                     it.defaultHeader("Accept-Crs", "EPSG:4326")
                     it.defaultHeader("Content-Crs", "EPSG:4326")
                 }.exchangeStrategies(
-                    ExchangeStrategies.builder()
+                    ExchangeStrategies
+                        .builder()
                         .codecs { configurer ->
                             with(configurer.defaultCodecs()) {
                                 maxInMemorySize(16 * 1024 * 1024)
@@ -67,9 +66,7 @@ class OpenProductClient(
                                     Jackson2JsonDecoder(Mapper.get()),
                                 )
                             }
-                        }
-                        .build(),
-                )
-                .build()
+                        }.build(),
+                ).build()
     }
 }

@@ -37,8 +37,8 @@ class OpenProductActieQuery(
     suspend fun getOpenProductActies(
         pageNumber: Int? = null,
         pageSize: Int? = null,
-    ): ActiesPage {
-        return ActiesPage.fromResultPage(
+    ): ActiesPage =
+        ActiesPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             resultPage =
@@ -47,14 +47,12 @@ class OpenProductActieQuery(
                     pageSize = pageSize ?: 20,
                 ),
         )
-    }
 
     @GraphQLDescription("Get a actie")
-    suspend fun getOpenProductActie(id: UUID): OpenProductActie? {
-        return openProductService.getActie(
+    suspend fun getOpenProductActie(id: UUID): OpenProductActie? =
+        openProductService.getActie(
             id = id,
         )
-    }
 
     @GraphQLDescription("Get decision by actie naam")
     suspend fun getOpenProductActieDecision(
