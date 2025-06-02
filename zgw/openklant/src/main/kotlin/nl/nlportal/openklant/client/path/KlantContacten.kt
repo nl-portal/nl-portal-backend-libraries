@@ -24,11 +24,13 @@ import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.awaitBodyOrNull
 import java.util.UUID
 
-class KlantContacten(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesPath() {
+class KlantContacten(
+    val client: OpenKlant2KlantinteractiesClient,
+) : KlantInteractiesPath() {
     override val path: String = "/klantcontacten"
 
-    suspend fun get(searchFilters: List<Pair<OpenKlant2KlantcontactenFilters, Any>>? = null): List<OpenKlant2Klantcontact> {
-        return client
+    suspend fun get(searchFilters: List<Pair<OpenKlant2KlantcontactenFilters, Any>>? = null): List<OpenKlant2Klantcontact> =
+        client
             .webClient()
             .get()
             .uri { uriBuilder ->
@@ -36,23 +38,20 @@ class KlantContacten(val client: OpenKlant2KlantinteractiesClient) : KlantIntera
                     .path(path)
                     .applyFilters(searchFilters)
                 uriBuilder.build()
-            }
-            .accept(MediaType.APPLICATION_JSON)
+            }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
-            .awaitBody<ResultPage<OpenKlant2Klantcontact>>().results
-    }
+            .awaitBody<ResultPage<OpenKlant2Klantcontact>>()
+            .results
 
-    suspend fun get(klantContactId: UUID): OpenKlant2Klantcontact? {
-        return client
+    suspend fun get(klantContactId: UUID): OpenKlant2Klantcontact? =
+        client
             .webClient()
             .get()
             .uri { uriBuilder ->
                 uriBuilder
                     .path("$path/$klantContactId")
                     .build()
-            }
-            .accept(MediaType.APPLICATION_JSON)
+            }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBodyOrNull()
-    }
 }

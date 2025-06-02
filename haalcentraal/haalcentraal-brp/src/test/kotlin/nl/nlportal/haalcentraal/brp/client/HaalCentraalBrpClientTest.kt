@@ -82,20 +82,23 @@ internal class HaalCentraalBrpClientTest {
     fun `should get person by with certificate`() {
         // Create the root for client and server to trust. We could also use different roots for each!
         val rootCertificate: HeldCertificate =
-            HeldCertificate.Builder()
+            HeldCertificate
+                .Builder()
                 .commonName("myRoot")
                 .certificateAuthority(0)
                 .build()
 
         // Create a server certificate and a server that uses it.
         val serverCertificate: HeldCertificate =
-            HeldCertificate.Builder()
+            HeldCertificate
+                .Builder()
                 .commonName("myServer")
                 .addSubjectAlternativeName(server.hostName)
                 .signedBy(rootCertificate)
                 .build()
         val serverCertificates: HandshakeCertificates =
-            HandshakeCertificates.Builder()
+            HandshakeCertificates
+                .Builder()
                 .addTrustedCertificate(rootCertificate.certificate)
                 .heldCertificate(serverCertificate)
                 .build()
@@ -104,7 +107,8 @@ internal class HaalCentraalBrpClientTest {
 
         // Create a client certificate and a client that uses it.
         val clientCertificate: HeldCertificate =
-            HeldCertificate.Builder()
+            HeldCertificate
+                .Builder()
                 .commonName("myClient")
                 .organizationalUnit("myOrganisation")
                 .signedBy(rootCertificate)

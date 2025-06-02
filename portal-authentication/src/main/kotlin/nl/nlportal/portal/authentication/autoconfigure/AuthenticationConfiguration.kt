@@ -26,7 +26,5 @@ class AuthenticationConfiguration {
     @Order
     @Bean
     @ConditionalOnMissingBean(PortalAuthenticationConverter::class)
-    fun portalAuthenticationConverter(): PortalAuthenticationConverter {
-        return PortalAuthenticationConverter()
-    }
+    fun portalAuthenticationConverter(): PortalAuthenticationConverter = PortalAuthenticationConverter()
 }

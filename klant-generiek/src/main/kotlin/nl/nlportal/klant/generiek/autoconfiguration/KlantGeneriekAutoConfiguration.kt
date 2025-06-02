@@ -31,19 +31,16 @@ import org.springframework.context.annotation.Configuration
 class KlantGeneriekAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(GraphQlValidator::class)
-    fun graphqlValidator(): GraphQlValidator {
-        return GraphQlValidator()
-    }
+    fun graphqlValidator(): GraphQlValidator = GraphQlValidator()
 
     @Bean
     @ConditionalOnMissingBean(OpenKlantClientProvider::class)
     fun openKlantClientProvider(
         openKlantClientConfig: OpenKlantClientConfig,
         idTokenGenerator: IdTokenGenerator,
-    ): OpenKlantClientProvider {
-        return OpenKlantClientProvider(
+    ): OpenKlantClientProvider =
+        OpenKlantClientProvider(
             openKlantClientConfig.properties,
             idTokenGenerator,
         )
-    }
 }

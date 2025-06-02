@@ -20,7 +20,8 @@ import io.jsonwebtoken.security.Keys
 import nl.nlportal.portal.authentication.domain.SUB_KEY
 import org.springframework.security.oauth2.jwt.Jwt
 import java.nio.charset.StandardCharsets
-import java.util.*
+import java.util.Date
+import java.util.UUID
 
 class JwtBuilder {
     private var aanvragerBsn: String? = null
@@ -118,9 +119,7 @@ class JwtBuilder {
         return jwtBuilder.build()
     }
 
-    fun randomClaimes(): Jwt.Builder? {
-        return jwtBuilder.claim("claim", "value")
-    }
+    fun randomClaimes(): Jwt.Builder? = jwtBuilder.claim("claim", "value")
 
     fun buildJwtString(secretString: String): String {
         val jwt = randomClaimes()!!.build()

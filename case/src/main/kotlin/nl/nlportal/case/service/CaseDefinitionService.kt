@@ -37,9 +37,7 @@ class CaseDefinitionService(
     private val caseDefinitionRepository: CaseDefinitionRepository,
     private val resourceLoader: ResourceLoader,
 ) {
-    fun findById(caseDefinitionId: CaseDefinitionId): CaseDefinition? {
-        return caseDefinitionRepository.findByCaseDefinitionId(caseDefinitionId)
-    }
+    fun findById(caseDefinitionId: CaseDefinitionId): CaseDefinition? = caseDefinitionRepository.findByCaseDefinitionId(caseDefinitionId)
 
     fun deploy(
         caseSchema: ObjectNode,
@@ -94,28 +92,21 @@ class CaseDefinitionService(
         }
     }
 
-    private fun loadCaseResources(): Array<Resource> {
-        return getResources(CASE_PATH)
-    }
+    private fun loadCaseResources(): Array<Resource> = getResources(CASE_PATH)
 
-    private fun loadCaseStatusResource(caseDir: String): Resource {
-        return getResources("classpath*:config/case/definition/$caseDir/status.json")[0]
-    }
+    private fun loadCaseStatusResource(caseDir: String): Resource = getResources("classpath*:config/case/definition/$caseDir/status.json")[0]
 
-    private fun getResources(path: String): Array<Resource> {
-        return ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources(
+    private fun getResources(path: String): Array<Resource> =
+        ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources(
             path,
         )
-    }
 
     private fun retrieveIdFrom(schema: ObjectNode): CaseDefinitionId {
         val id = StringUtils.substringBefore(schema.get("\$id").asText(), ".schema").lowercase()
         return CaseDefinitionId.newId(id)
     }
 
-    fun getAllCaseDefinitions(): List<CaseDefinition> {
-        return caseDefinitionRepository.findAll()
-    }
+    fun getAllCaseDefinitions(): List<CaseDefinition> = caseDefinitionRepository.findAll()
 
     companion object {
         const val CASE_PATH = "classpath*:config/case/definition/*/*.schema.json"

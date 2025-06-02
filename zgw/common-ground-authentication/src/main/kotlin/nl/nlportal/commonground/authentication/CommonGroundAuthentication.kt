@@ -51,9 +51,7 @@ abstract class CommonGroundAuthentication(
      *
      * @return VestigingsNummer
      */
-    fun getVestigingsNummer(): String? {
-        return ((token.claims[AANVRAGER_KEY] as Map<*, *>?) ?: token.claims)[VESTIGINGNUMMER_KEY]?.toString()
-    }
+    fun getVestigingsNummer(): String? = ((token.claims[AANVRAGER_KEY] as Map<*, *>?) ?: token.claims)[VESTIGINGNUMMER_KEY]?.toString()
 
     /**
      * Gets MachtingsDienst UUIDs property from the JWT
@@ -99,9 +97,7 @@ abstract class CommonGroundAuthentication(
             Use machtigingsDienstUUIDs which has support for multiple machtigingen  
         """,
     )
-    fun machtigingsDienstUUID(): UUID? {
-        return machtigingsDienstUUIDs()?.get(0)
-    }
+    fun machtigingsDienstUUID(): UUID? = machtigingsDienstUUIDs()?.get(0)
 
     override fun getUserRepresentation() = "${this.userType.uppercase()}:${this.userId}"
 }

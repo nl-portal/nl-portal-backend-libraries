@@ -80,7 +80,8 @@ internal class DirectPaymentMutationIT(
 
         val basePath = "$.data.doDirectPayment"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
@@ -88,7 +89,8 @@ internal class DirectPaymentMutationIT(
             .exchange()
             .expectBody()
             .consumeWith(Consumer { t -> logger.info { t } })
-            .jsonPath(basePath).exists()
+            .jsonPath(basePath)
+            .exists()
             .jsonPath(
                 "$basePath.redirectUrl",
             ).isEqualTo(
@@ -117,7 +119,8 @@ internal class DirectPaymentMutationIT(
 
         val basePath = "$.errors"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
@@ -125,7 +128,8 @@ internal class DirectPaymentMutationIT(
             .exchange()
             .expectBody()
             .consumeWith(Consumer { t -> logger.info { t } })
-            .jsonPath(basePath).exists()
+            .jsonPath(basePath)
+            .exists()
             .jsonPath(
                 "$basePath[0].message",
             ).isEqualTo(

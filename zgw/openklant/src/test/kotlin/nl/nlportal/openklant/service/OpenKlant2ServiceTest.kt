@@ -22,7 +22,7 @@ import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 
-class OpenKlant2ServiceTest() {
+class OpenKlant2ServiceTest {
     private lateinit var openklantModuleConfiguration: OpenKlantModuleConfiguration
     private lateinit var mockServer: MockWebServer
     private lateinit var openKlant2Client: OpenKlant2KlantinteractiesClient

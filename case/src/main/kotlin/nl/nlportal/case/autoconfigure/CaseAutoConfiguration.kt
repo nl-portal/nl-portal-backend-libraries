@@ -44,9 +44,7 @@ class CaseAutoConfiguration {
     fun caseDefinitionService(
         caseDefinitionRepository: CaseDefinitionRepository,
         resourceLoader: ResourceLoader,
-    ): CaseDefinitionService {
-        return CaseDefinitionService(caseDefinitionRepository, resourceLoader)
-    }
+    ): CaseDefinitionService = CaseDefinitionService(caseDefinitionRepository, resourceLoader)
 
     @Bean
     @ConditionalOnMissingBean(CaseService::class)
@@ -54,53 +52,44 @@ class CaseAutoConfiguration {
         caseRepository: CaseRepository,
         caseDefinitionService: CaseDefinitionService,
         sink: Sinks.Many<PortalMessage>,
-    ): CaseService {
-        return CaseService(caseRepository, caseDefinitionService, sink)
-    }
+    ): CaseService = CaseService(caseRepository, caseDefinitionService, sink)
 
     @Bean
     @ConditionalOnMissingBean(CaseDefinitionApplicationReadyEventListener::class)
     fun caseDefinitionApplicationReadyEventListener(
         caseDefinitionService: CaseDefinitionService,
-    ): CaseDefinitionApplicationReadyEventListener {
-        return CaseDefinitionApplicationReadyEventListener(caseDefinitionService)
-    }
+    ): CaseDefinitionApplicationReadyEventListener = CaseDefinitionApplicationReadyEventListener(caseDefinitionService)
 
     // Consumers
     @Bean
-    fun updateExternalIdPortalCaseConsumer(caseService: CaseService): Consumer<UpdateExternalIdPortalCaseMessage>? {
-        return Consumer<UpdateExternalIdPortalCaseMessage> { message: UpdateExternalIdPortalCaseMessage ->
+    fun updateExternalIdPortalCaseConsumer(caseService: CaseService): Consumer<UpdateExternalIdPortalCaseMessage>? =
+        Consumer<UpdateExternalIdPortalCaseMessage> { message: UpdateExternalIdPortalCaseMessage ->
             run {
                 logger.info { "Received case id: ${message.caseId} with external id: ${message.externalId}" }
                 caseService.updateExternalId(message)
             }
         }
-    }
 
     @Bean
-    fun updateStatusPortalCaseConsumer(caseService: CaseService): Consumer<UpdateStatusPortalCaseMessage>? {
-        return Consumer<UpdateStatusPortalCaseMessage> { message: UpdateStatusPortalCaseMessage ->
+    fun updateStatusPortalCaseConsumer(caseService: CaseService): Consumer<UpdateStatusPortalCaseMessage>? =
+        Consumer<UpdateStatusPortalCaseMessage> { message: UpdateStatusPortalCaseMessage ->
             run {
                 logger.info { "Received status update with status: ${message.status} with external id: ${message.externalId}" }
                 caseService.updateStatus(message)
             }
         }
-    }
 
     @Bean
-    fun updatePortalCaseConsumer(caseService: CaseService): Consumer<UpdatePortalCaseMessage>? {
-        return Consumer<UpdatePortalCaseMessage> { message: UpdatePortalCaseMessage ->
+    fun updatePortalCaseConsumer(caseService: CaseService): Consumer<UpdatePortalCaseMessage>? =
+        Consumer<UpdatePortalCaseMessage> { message: UpdatePortalCaseMessage ->
             run {
                 logger.info { "Received case update with external id: ${message.externalId}" }
                 caseService.updateCase(message)
             }
         }
-    }
 
     @Bean
-    fun caseLiquibaseConfig(): LiquibaseMasterChangeLogLocation {
-        return LiquibaseMasterChangeLogLocation("config/liquibase/case-master.xml")
-    }
+    fun caseLiquibaseConfig(): LiquibaseMasterChangeLogLocation = LiquibaseMasterChangeLogLocation("config/liquibase/case-master.xml")
 
     companion object {
         private val logger = KotlinLogging.logger {}

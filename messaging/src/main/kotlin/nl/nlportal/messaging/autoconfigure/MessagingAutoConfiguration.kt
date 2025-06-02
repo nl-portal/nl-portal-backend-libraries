@@ -27,9 +27,7 @@ import java.util.function.Supplier
 @AutoConfiguration
 class MessagingAutoConfiguration {
     @Bean
-    fun sink(): Sinks.Many<PortalMessage> {
-        return Sinks.many().multicast().onBackpressureBuffer()
-    }
+    fun sink(): Sinks.Many<PortalMessage> = Sinks.many().multicast().onBackpressureBuffer()
 
     // Supplier
     @Bean

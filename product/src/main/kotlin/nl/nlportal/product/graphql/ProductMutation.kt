@@ -32,11 +32,10 @@ class ProductMutation(
         dfe: DataFetchingEnvironment,
         id: UUID,
         submission: ObjectNode,
-    ): ProductVerbruiksObject {
-        return productService.updateVerbruiksObject(
+    ): ProductVerbruiksObject =
+        productService.updateVerbruiksObject(
             id,
             submission,
             dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
         )
-    }
 }
