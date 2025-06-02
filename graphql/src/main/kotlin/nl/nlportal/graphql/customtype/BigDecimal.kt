@@ -66,7 +66,8 @@ object BigDecimalCoercing : Coercing<BigDecimal, String> {
 }
 
 internal val graphqlBigDecimalType =
-    GraphQLScalarType.newScalar()
+    GraphQLScalarType
+        .newScalar()
         .name("BigDecimal")
         .description("A BigDecimal")
         .coercing(BigDecimalCoercing)

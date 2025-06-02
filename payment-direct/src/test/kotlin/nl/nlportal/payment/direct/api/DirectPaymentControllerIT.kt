@@ -98,20 +98,24 @@ internal class DirectPaymentControllerIT(
         val signature =
             createSignature(
                 body = body,
-                secretKey = directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiSecret.toString(),
+                secretKey =
+                    directPaymentModuleConfiguration.properties.configurations["belastingzaken"]
+                        ?.webhookApiSecret
+                        .toString(),
             )
         val headers = HttpHeaders()
         headers.add("X-GCS-Signature", signature)
         headers.add("X-GCS-KeyId", directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
-        webTestClient.post()
+        webTestClient
+            .post()
             .uri(PAYMENT_DIRECT_POSTSALE_ENDPOINT)
             .headers {
                 it.addAll(headers)
-            }
-            .contentType(MediaType.APPLICATION_JSON)
+            }.contentType(MediaType.APPLICATION_JSON)
             .bodyValue(body)
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .expectBody()
             .returnResult()
             .responseBody
@@ -157,20 +161,24 @@ internal class DirectPaymentControllerIT(
         val signature =
             createSignature(
                 body = body,
-                secretKey = directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiSecret.toString(),
+                secretKey =
+                    directPaymentModuleConfiguration.properties.configurations["belastingzaken"]
+                        ?.webhookApiSecret
+                        .toString(),
             )
         val headers = HttpHeaders()
         headers.add("X-GCS-Signature", signature)
         headers.add("X-GCS-KeyId", directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
-        webTestClient.post()
+        webTestClient
+            .post()
             .uri(PAYMENT_DIRECT_POSTSALE_ENDPOINT)
             .headers {
                 it.addAll(headers)
-            }
-            .contentType(MediaType.APPLICATION_JSON)
+            }.contentType(MediaType.APPLICATION_JSON)
             .bodyValue(body)
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .expectBody()
             .returnResult()
             .responseBody
@@ -213,19 +221,23 @@ internal class DirectPaymentControllerIT(
 
             """.trimIndent()
 
-        val signature = directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiSecret.toString()
+        val signature =
+            directPaymentModuleConfiguration.properties.configurations["belastingzaken"]
+                ?.webhookApiSecret
+                .toString()
         val headers = HttpHeaders()
         headers.add("X-GCS-Signature", signature)
         headers.add("X-GCS-KeyId", directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
-        webTestClient.post()
+        webTestClient
+            .post()
             .uri(PAYMENT_DIRECT_POSTSALE_ENDPOINT)
             .headers {
                 it.addAll(headers)
-            }
-            .contentType(MediaType.APPLICATION_JSON)
+            }.contentType(MediaType.APPLICATION_JSON)
             .bodyValue(body)
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .expectBody()
             .returnResult()
             .responseBody
@@ -271,20 +283,24 @@ internal class DirectPaymentControllerIT(
         val signature =
             createSignature(
                 body = body,
-                secretKey = directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiSecret.toString(),
+                secretKey =
+                    directPaymentModuleConfiguration.properties.configurations["belastingzaken"]
+                        ?.webhookApiSecret
+                        .toString(),
             )
         val headers = HttpHeaders()
         headers.add("X-GCS-Signature", signature)
         headers.add("X-GCS-KeyId", directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
-        webTestClient.post()
+        webTestClient
+            .post()
             .uri(PAYMENT_DIRECT_POSTSALE_ENDPOINT)
             .headers {
                 it.addAll(headers)
-            }
-            .contentType(MediaType.APPLICATION_JSON)
+            }.contentType(MediaType.APPLICATION_JSON)
             .bodyValue(body)
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .expectBody()
             .returnResult()
             .responseBody

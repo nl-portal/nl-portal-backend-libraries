@@ -24,7 +24,9 @@ import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import org.springframework.security.core.Authentication
 import java.util.UUID
 
-class CaseInstanceQuery(private val caseService: CaseService) : Query {
+class CaseInstanceQuery(
+    private val caseService: CaseService,
+) : Query {
     @GraphQLDescription("retrieves all available case instances")
     fun allCaseInstances(
         @GraphQLDescription("The case instance orderBy ")

@@ -15,7 +15,7 @@
  */
 package nl.nlportal.openklant.graphql.domain
 
-enum class DigitaleAdresType() {
+enum class DigitaleAdresType {
     TELEFOONNUMMER,
     EMAIL,
     OVERIG,

@@ -31,51 +31,50 @@ class HaalCentraalClientProvider(
     private val haalCentraalClientConfig: HaalCentraalBrpConfig,
     private val clientSslContextResolver: ClientSslContextResolver? = null,
 ) {
-    fun webClient(authentication: Authentication): WebClient {
-        return WebClient.builder()
+    fun webClient(authentication: Authentication): WebClient =
+        WebClient
+            .builder()
             .defaultHeaders {
                 // only set jwt from token exchange as bearer token if not available,
                 if (it[HttpHeaders.AUTHORIZATION].isNullOrEmpty()) {
                     it.setBearerAuth((authentication as CommonGroundAuthentication).token.tokenValue)
                 }
-            }
-            .clientConnector(
+            }.clientConnector(
                 ReactorClientHttpConnector(
-                    HttpClient.create().wiretap(
-                        "reactor.netty.http.client.HttpClient",
-                        LogLevel.DEBUG,
-                        AdvancedByteBufFormat.TEXTUAL,
-                    ).let { client ->
-                        var result = client
-                        if (clientSslContextResolver != null) {
-                            haalCentraalClientConfig.properties.ssl?.let {
-                                val sslContext =
-                                    clientSslContextResolver.resolve(
-                                        it.key,
-                                        it.trustedCertificate,
-                                    )
+                    HttpClient
+                        .create()
+                        .wiretap(
+                            "reactor.netty.http.client.HttpClient",
+                            LogLevel.DEBUG,
+                            AdvancedByteBufFormat.TEXTUAL,
+                        ).let { client ->
+                            var result = client
+                            if (clientSslContextResolver != null) {
+                                haalCentraalClientConfig.properties.ssl?.let {
+                                    val sslContext =
+                                        clientSslContextResolver.resolve(
+                                            it.key,
+                                            it.trustedCertificate,
+                                        )
 
-                                result = client.secure { builder -> builder.sslContext(sslContext) }
+                                    result = client.secure { builder -> builder.sslContext(sslContext) }
 
-                                logger.debug {
-                                    "Client SSL context was set: private key=${it.key != null}, " +
-                                        "trusted certificate=${it.trustedCertificate != null}."
+                                    logger.debug {
+                                        "Client SSL context was set: private key=${it.key != null}, " +
+                                            "trusted certificate=${it.trustedCertificate != null}."
+                                    }
                                 }
                             }
-                        }
-                        result
-                    },
+                            result
+                        },
                 ),
-            )
-            .baseUrl(haalCentraalClientConfig.properties.url)
+            ).baseUrl(haalCentraalClientConfig.properties.url)
             .apply {
                 if (!haalCentraalClientConfig.properties.apiKey.isNullOrBlank()) {
                     it.defaultHeader("X-API-KEY", haalCentraalClientConfig.properties.apiKey)
                     logger.debug { "X-API-KEY was set for client" }
                 }
-            }
-            .build()
-    }
+            }.build()
 
     companion object {
         private val logger: KLogger = KotlinLogging.logger {}

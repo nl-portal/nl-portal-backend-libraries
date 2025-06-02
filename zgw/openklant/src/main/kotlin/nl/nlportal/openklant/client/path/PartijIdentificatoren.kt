@@ -26,7 +26,9 @@ import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.awaitBodyOrNull
 import java.util.UUID
 
-class PartijIdentificatoren(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesPath() {
+class PartijIdentificatoren(
+    val client: OpenKlant2KlantinteractiesClient,
+) : KlantInteractiesPath() {
     override val path: String = "/partij-identificatoren"
 
     suspend fun get(searchFilters: List<Pair<OpenKlant2PartijIdentificatorenFilters, Any>>? = null): List<OpenKlant2PartijIdentificator> {
@@ -39,8 +41,7 @@ class PartijIdentificatoren(val client: OpenKlant2KlantinteractiesClient) : Klan
                         .path(path)
                         .applyFilters(searchFilters)
                     uriBuilder.build()
-                }
-                .accept(MediaType.APPLICATION_JSON)
+                }.accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .awaitBody()
 
@@ -56,8 +57,7 @@ class PartijIdentificatoren(val client: OpenKlant2KlantinteractiesClient) : Klan
                     uriBuilder
                         .path(path)
                         .build()
-                }
-                .body(BodyInserters.fromValue(partijIdentificatorRequest))
+                }.body(BodyInserters.fromValue(partijIdentificatorRequest))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .awaitBody()
@@ -74,8 +74,7 @@ class PartijIdentificatoren(val client: OpenKlant2KlantinteractiesClient) : Klan
                     uriBuilder
                         .path("$path/${partijIdentificatorRequest.uuid}")
                         .build()
-                }
-                .body(BodyInserters.fromValue(partijIdentificatorRequest))
+                }.body(BodyInserters.fromValue(partijIdentificatorRequest))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .awaitBodyOrNull()
@@ -91,8 +90,7 @@ class PartijIdentificatoren(val client: OpenKlant2KlantinteractiesClient) : Klan
                 uriBuilder
                     .path("$path/$uuid")
                     .build()
-            }
-            .accept(MediaType.APPLICATION_JSON)
+            }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBodilessEntity()
     }

@@ -30,12 +30,11 @@ class BerichtenQuery(
     suspend fun getBericht(
         dfe: DataFetchingEnvironment,
         id: UUID,
-    ): Bericht? {
-        return berichtenService.getBericht(
+    ): Bericht? =
+        berichtenService.getBericht(
             authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
             id = id,
         )
-    }
 
     @GraphQLDescription(
         """
@@ -48,20 +47,18 @@ class BerichtenQuery(
         pageNumber: Int? = 1,
         pageSize: Int? = 20,
         onderwerp: String? = null,
-    ): BerichtenPage {
-        return berichtenService.getBerichtenPage(
+    ): BerichtenPage =
+        berichtenService.getBerichtenPage(
             authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             onderwerp = onderwerp,
         )
-    }
 
     @GraphQLDescription("Returns the total amount of unopened Berichten")
-    suspend fun getUnopenedBerichtenCount(dfe: DataFetchingEnvironment): Int {
-        return berichtenService
+    suspend fun getUnopenedBerichtenCount(dfe: DataFetchingEnvironment): Int =
+        berichtenService
             .getUnopenedBerichtenCount(
                 authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
             )
-    }
 }

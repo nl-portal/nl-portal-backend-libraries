@@ -90,19 +90,26 @@ internal class GemachtigdeQueryIT(
 
         val basePath = "$.data.getGemachtigde"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.persoon.naam.voorletters").isEqualTo("M.")
-            .jsonPath("$basePath.persoon.naam.voornamen").isEqualTo("Merel")
-            .jsonPath("$basePath.persoon.naam.voorvoegsel").isEqualTo("de")
-            .jsonPath("$basePath.persoon.naam.geslachtsnaam").isEqualTo("Kooyman")
-            .jsonPath("$basePath.bedrijf.naam").doesNotExist()
+            .jsonPath("$basePath.persoon.naam.voorletters")
+            .isEqualTo("M.")
+            .jsonPath("$basePath.persoon.naam.voornamen")
+            .isEqualTo("Merel")
+            .jsonPath("$basePath.persoon.naam.voorvoegsel")
+            .isEqualTo("de")
+            .jsonPath("$basePath.persoon.naam.geslachtsnaam")
+            .isEqualTo("Kooyman")
+            .jsonPath("$basePath.bedrijf.naam")
+            .doesNotExist()
     }
 
     @Test
@@ -130,17 +137,22 @@ internal class GemachtigdeQueryIT(
 
         val basePath = "$.data.getGemachtigde"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .expectBody()
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.bedrijf.naam").isEqualTo("Test bedrijf")
-            .jsonPath("$basePath.persoon.aanhef").doesNotExist()
+            .jsonPath(basePath)
+            .exists()
+            .jsonPath("$basePath.bedrijf.naam")
+            .isEqualTo("Test bedrijf")
+            .jsonPath("$basePath.persoon.aanhef")
+            .doesNotExist()
     }
 
     private fun setupMockServer() {

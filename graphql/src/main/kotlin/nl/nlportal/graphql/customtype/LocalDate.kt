@@ -66,7 +66,8 @@ object LocalDateCoercing : Coercing<LocalDate, String> {
 }
 
 internal val graphqlLocalDateType =
-    GraphQLScalarType.newScalar()
+    GraphQLScalarType
+        .newScalar()
         .name("Date")
         .description("A date")
         .coercing(LocalDateCoercing)

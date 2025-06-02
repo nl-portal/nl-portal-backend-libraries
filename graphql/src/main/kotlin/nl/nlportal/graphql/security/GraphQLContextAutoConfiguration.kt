@@ -35,9 +35,7 @@ class GraphQLContextAutoConfiguration {
     @ExperimentalCoroutinesApi
     @Bean
     @ConditionalOnMissingBean
-    fun authenticationGraphQLContextFactory(): SpringGraphQLContextFactory {
-        return AuthenticationGraphQLContextFactory()
-    }
+    fun authenticationGraphQLContextFactory(): SpringGraphQLContextFactory = AuthenticationGraphQLContextFactory()
 
     @Bean
     @ConditionalOnMissingBean
@@ -45,7 +43,5 @@ class GraphQLContextAutoConfiguration {
     fun reactiveDataFactoryProvider(
         objectMapper: ObjectMapper,
         applicationContext: ApplicationContext,
-    ): KotlinDataFetcherFactoryProvider {
-        return ReactiveDataFactoryProvider(objectMapper, applicationContext)
-    }
+    ): KotlinDataFetcherFactoryProvider = ReactiveDataFactoryProvider(objectMapper, applicationContext)
 }

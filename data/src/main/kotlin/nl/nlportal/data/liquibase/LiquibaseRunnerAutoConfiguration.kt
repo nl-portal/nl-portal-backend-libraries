@@ -38,13 +38,9 @@ class LiquibaseRunnerAutoConfiguration {
         liquibaseMasterChangeLogLocations: List<LiquibaseMasterChangeLogLocation>,
         liquibaseProperties: LiquibaseProperties,
         datasource: DataSource,
-    ): LiquibaseRunner {
-        return LiquibaseRunner(liquibaseMasterChangeLogLocations, liquibaseProperties, datasource)
-    }
+    ): LiquibaseRunner = LiquibaseRunner(liquibaseMasterChangeLogLocations, liquibaseProperties, datasource)
 
     @Bean
     @ConditionalOnMissingBean(LiquibaseInitializationEventListener::class)
-    fun liquibaseInitializationEventListener(liquibaseRunner: LiquibaseRunner): LiquibaseInitializationEventListener {
-        return LiquibaseInitializationEventListener(liquibaseRunner)
-    }
+    fun liquibaseInitializationEventListener(liquibaseRunner: LiquibaseRunner): LiquibaseInitializationEventListener = LiquibaseInitializationEventListener(liquibaseRunner)
 }

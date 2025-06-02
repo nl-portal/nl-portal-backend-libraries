@@ -29,16 +29,14 @@ class KlantContactQuery(
     private val openklant2Service: OpenKlant2Service,
 ) : Query {
     @GraphQLDescription("Get KlantContacten of authenticated user.")
-    suspend fun getUserKlantContacten(dfe: DataFetchingEnvironment): List<OpenKlant2Klantcontact> {
-        return openklant2Service.findKlantContacten(
+    suspend fun getUserKlantContacten(dfe: DataFetchingEnvironment): List<OpenKlant2Klantcontact> =
+        openklant2Service.findKlantContacten(
             authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
         )
-    }
 
     @GraphQLDescription("Get KlantContact by id of authenticated user.")
-    suspend fun getUserKlantContact(klantContactId: UUID): OpenKlant2Klantcontact? {
-        return openklant2Service.findKlantContact(
+    suspend fun getUserKlantContact(klantContactId: UUID): OpenKlant2Klantcontact? =
+        openklant2Service.findKlantContact(
             klantContactId = klantContactId,
         )
-    }
 }

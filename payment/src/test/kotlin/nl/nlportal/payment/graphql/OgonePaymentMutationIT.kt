@@ -84,7 +84,8 @@ internal class OgonePaymentMutationIT(
 
         val basePath = "$.data.generateOgonePayment"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
@@ -92,10 +93,14 @@ internal class OgonePaymentMutationIT(
             .exchange()
             .expectBody()
             .consumeWith(Consumer { t -> logger.info { t } })
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.formFields[0].value").isEqualTo("http://localhost:3000")
-            .jsonPath("$basePath.formFields[9].value").isEqualTo("10025")
-            .jsonPath("$basePath.formFields[11].value").isEqualTo(shaSign)
+            .jsonPath(basePath)
+            .exists()
+            .jsonPath("$basePath.formFields[0].value")
+            .isEqualTo("http://localhost:3000")
+            .jsonPath("$basePath.formFields[9].value")
+            .isEqualTo("10025")
+            .jsonPath("$basePath.formFields[11].value")
+            .isEqualTo(shaSign)
     }
 
     @Test
@@ -142,7 +147,8 @@ internal class OgonePaymentMutationIT(
 
         val basePath = "$.data.generateOgonePayment"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
@@ -150,10 +156,14 @@ internal class OgonePaymentMutationIT(
             .exchange()
             .expectBody()
             .consumeWith(Consumer { t -> logger.info { t } })
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.formFields[0].value").isEqualTo("http://localhost:3000")
-            .jsonPath("$basePath.formFields[9].value").isEqualTo("10025")
-            .jsonPath("$basePath.formFields[11].value").isEqualTo(shaSign)
+            .jsonPath(basePath)
+            .exists()
+            .jsonPath("$basePath.formFields[0].value")
+            .isEqualTo("http://localhost:3000")
+            .jsonPath("$basePath.formFields[9].value")
+            .isEqualTo("10025")
+            .jsonPath("$basePath.formFields[11].value")
+            .isEqualTo(shaSign)
     }
 
     companion object {

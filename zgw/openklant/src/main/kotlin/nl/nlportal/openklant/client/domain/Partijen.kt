@@ -172,9 +172,7 @@ enum class OpenKlant2PartijenFilters(
     CORRESPONDENTIEADRES_LAND("correspondentieadres_land"),
     ;
 
-    override fun toString(): String {
-        return this.value
-    }
+    override fun toString(): String = this.value
 }
 
 enum class SoortPartij(
@@ -185,15 +183,12 @@ enum class SoortPartij(
     CONTACTPERSOON("contactpersoon"),
     ;
 
-    override fun toString(): String {
-        return this.value
-    }
+    override fun toString(): String = this.value
 }
 
-fun CommonGroundAuthentication.asSoortPartij(): String {
-    return when (this) {
+fun CommonGroundAuthentication.asSoortPartij(): String =
+    when (this) {
         is BurgerAuthentication -> "persoon"
         is BedrijfAuthentication -> "organisatie"
         else -> "contactpersoon"
     }
-}
