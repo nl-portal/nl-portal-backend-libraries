@@ -126,7 +126,8 @@ class JwtBuilder {
 
         val key = Keys.hmacShaKeyFor(secretString.toByteArray(StandardCharsets.UTF_8))
 
-        return Jwts.builder()
+        return Jwts
+            .builder()
             .claims(jwt.claims)
             .subject(jwt.subject)
             .expiration(Date(System.currentTimeMillis() + 20000))
