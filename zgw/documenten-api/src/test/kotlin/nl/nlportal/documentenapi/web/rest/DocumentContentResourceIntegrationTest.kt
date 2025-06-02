@@ -198,7 +198,7 @@ class DocumentContentResourceIntegrationTest(
 
     @Test
     @WithBurgerUser("569312863")
-    fun `should not accept mimetype for upload using data streams`() {
+    fun `should not allowed mimetype for upload using data streams`() {
         val bodyBuilder = MultipartBodyBuilder()
         bodyBuilder.part("file", ClassPathResource("/data/not-accepted-mimetype.pdf", this::class.java.classLoader))
 
@@ -214,7 +214,7 @@ class DocumentContentResourceIntegrationTest(
                 .responseBodyContent
                 ?.toString(Charset.defaultCharset())
 
-        assertEquals("application/pdf is not whitelisted for uploads.", response)
+        assertEquals("application/pdf is not allowed for uploads.", response)
     }
 
     fun setupMockDocumentServer() {

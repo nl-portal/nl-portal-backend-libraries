@@ -78,11 +78,11 @@ class DocumentenApiService(
                 .awaitSingleOrNull() ?: "valtimo"
         val documentenApiConfig = documentenApisConfigProperties.getConfig(documentApi)
 
-        if (documentenApisConfigProperties.acceptedMimeTypes.isNotEmpty()) {
+        if (documentenApisConfigProperties.allowedMimeTypes.isNotEmpty()) {
             getInputStreamFromFluxDataBuffer(file.content()).use {
                 val mediaType = Tika().detect(it).split(";")[0].trim()
-                if (!documentenApisConfigProperties.acceptedMimeTypes.contains(mediaType)) {
-                    throw MimeTypeDeniedException("$mediaType is not whitelisted for uploads.")
+                if (!documentenApisConfigProperties.allowedMimeTypes.contains(mediaType)) {
+                    throw MimeTypeDeniedException("$mediaType is not allowed for uploads.")
                 }
             }
         }

@@ -30,6 +30,6 @@ nl-portal:
                         url: https://example.org/documenten/api/v1
                         clientId: valtimo_client
                         secret: e09b8bc5-5831-4618-ab28-111111111111
-                accepted-mime-types:
+                allowed-mime-types:
                     - application/txt
                     - text/plain
