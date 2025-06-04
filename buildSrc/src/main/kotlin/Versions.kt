@@ -19,7 +19,7 @@ internal object Versions {
     const val jsonPath = "2.9.0"
     const val jsonWebTokens = "0.12.6"
     const val kotlinCoroutines = "1.8.1"
-    const val springCloudVersion = "4.2.0"
+    const val springCloudVersion = "4.3.0"
     const val apacheTikaVersion="3.1.0"
     const val clamAvVersion="2.1.2"
 }
@@ -40,5 +40,5 @@ object ApiVersions {
     const val graphqlKotlin = "8.3.0"
     const val jacksonBom = "2.18.2"
     const val kotlinLogging = "7.0.4"
-    const val springCloud = "4.2.0"
+    const val springCloud = "4.3.0"
 }
