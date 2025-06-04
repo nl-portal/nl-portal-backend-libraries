@@ -52,6 +52,9 @@ class OpenProductThemaQuery(
     @GraphQLDescription("Get all themas hierarchy")
     suspend fun getOpenProductThemasHierarchy(): List<OpenProductThemaHierarchy> = openProductService.getThemasHierarchy()
 
+    @GraphQLDescription("Get thema hierarchy")
+    suspend fun getOpenProductThemaHierarchy(id: UUID): List<OpenProductThemaHierarchy> = openProductService.getThemaHierarchy(id = id)
+
     @GraphQLDescription("Get a thema")
     suspend fun getOpenProductThema(id: UUID): OpenProductThema? {
         val response =

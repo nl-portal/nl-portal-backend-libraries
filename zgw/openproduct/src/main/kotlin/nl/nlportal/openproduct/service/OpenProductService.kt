@@ -98,12 +98,12 @@ class OpenProductService(
     suspend fun getThemasHierarchy(): List<OpenProductThemaHierarchy> {
         val themasHierarchy = mutableListOf<OpenProductThemaHierarchy>()
         val themas = getThemas(1, 999).results
-        val hoofdThemas = themas.toList().filter { it.hoofdThema == null }
+        val hoofdThemas = themas.filter { it.hoofdThema == null }
 
         hoofdThemas.forEach {
             themasHierarchy.add(
                 searchSubThemasHierarchy(
-                    hoofdThema = it,
+                    thema = it,
                     themas = themas,
                 ),
             )
@@ -121,6 +121,21 @@ class OpenProductService(
             logger.error(e) { "Error getting thema with id: $id" }
         }
         return null
+    }
+
+    suspend fun getThemaHierarchy(id: UUID): List<OpenProductThemaHierarchy> {
+        try {
+            val thema =
+                openProductTypeClient.path<Themas>().get(
+                    id = id,
+                )
+            if (thema != null) {
+                return buildThemaHierachy(thema = thema)
+            }
+        } catch (e: Exception) {
+            logger.error(e) { "Error building thema hierarchy id: $id" }
+        }
+        return emptyList()
     }
 
     suspend fun getProductTypes(
@@ -577,25 +592,25 @@ class OpenProductService(
     }
 
     private fun searchSubThemasHierarchy(
-        hoofdThema: OpenProductThema,
+        thema: OpenProductThema,
         themas: List<OpenProductThema>,
     ): OpenProductThemaHierarchy {
         val themasHierarchy = mutableListOf<OpenProductThemaHierarchy>()
 
         val subThemas =
-            themas.toList().filter { it.hoofdThema == hoofdThema.uuid }
+            themas.toList().filter { it.hoofdThema == thema.uuid }
 
         subThemas.forEach {
             themasHierarchy.add(
                 searchSubThemasHierarchy(
-                    hoofdThema = it,
+                    thema = it,
                     themas = themas,
                 ),
             )
         }
 
         return OpenProductThemaHierarchy(
-            thema = hoofdThema,
+            thema = thema,
             subThemas = themasHierarchy,
         )
     }
@@ -658,6 +673,20 @@ class OpenProductService(
 
             else -> false
         }
+
+    private suspend fun buildThemaHierachy(thema: OpenProductThema): List<OpenProductThemaHierarchy> {
+        val themasHierarchy = mutableListOf<OpenProductThemaHierarchy>()
+        val themas = getThemas(1, 999).results
+
+        themasHierarchy.add(
+            searchSubThemasHierarchy(
+                thema = thema,
+                themas = themas,
+            ),
+        )
+
+        return themasHierarchy
+    }
 
     companion object {
         val logger = KotlinLogging.logger {}

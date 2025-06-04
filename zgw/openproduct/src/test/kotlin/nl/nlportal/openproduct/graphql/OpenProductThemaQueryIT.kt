@@ -234,6 +234,29 @@ class OpenProductThemaQueryIT(
                 .isEqualTo("PARKEREN")
         }
 
+    @Test
+    @WithBurgerUser("569312863")
+    fun `get thema hierarchy`() =
+        runTest {
+            val basePath = "$.data.getOpenProductThemaHierarchy"
+            webTestClient
+                .post()
+                .uri { builder ->
+                    builder
+                        .path("/graphql")
+                        .build()
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductThemaHierarchy.gql")))
+                .exchange()
+                .verifyOnlyDataExists(basePath)
+                .jsonPath("$basePath.size()")
+                .isEqualTo(1)
+                .jsonPath("$basePath[0].thema.naam")
+                .isEqualTo("HoofdThema")
+                .jsonPath("$basePath[0].subThemas[0].thema.naam")
+                .isEqualTo("Sub thema")
+        }
+
     private fun setupMockServer() {
         val dispatcher: Dispatcher =
             object : Dispatcher() {
