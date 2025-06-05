@@ -654,7 +654,7 @@ class OpenProductService(
             is BurgerAuthentication -> {
                 listOf(
                     Pair(
-                        OpenProductProductenFilters.PAGE,
+                        OpenProductProductenFilters.EIGENAREN_BSN,
                         authentication.userId,
                     ),
                 )
