@@ -366,6 +366,7 @@ class OpenProductService(
         authentication: CommonGroundAuthentication,
         pageNumber: Int,
         pageSize: Int,
+        extraSearchVariables: List<Pair<OpenProductProductenFilters, String>> = emptyList(),
     ): ResultPage<OpenProductProduct> {
         val searchVariables =
             mutableListOf(
@@ -375,6 +376,10 @@ class OpenProductService(
             )
 
         searchVariables.addAll(getEigenaarFilter(authentication))
+
+        if (extraSearchVariables.isNotEmpty()) {
+            searchVariables.addAll(extraSearchVariables)
+        }
 
         return openProductClient.path<Producten>().get(
             searchFilters = searchVariables,
@@ -411,6 +416,35 @@ class OpenProductService(
             }
         }
         return null
+    }
+
+    suspend fun getProductenByThema(
+        authentication: CommonGroundAuthentication,
+        themaId: UUID,
+    ): List<OpenProductProduct> {
+        try {
+            val thema = getThema(id = themaId)
+            if (thema == null) {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find thema with id: $themaId")
+            }
+
+            if (thema.producttypen.isNotEmpty()) {
+                val searchVariables =
+                    listOf(
+                        OpenProductProductenFilters.PRODUCTTYPE_UUID_IN to thema.producttypen.joinToString(",") { it.uuid.toString() },
+                    )
+                return getProducten(
+                    authentication = authentication,
+                    pageNumber = 1,
+                    pageSize = 999,
+                    extraSearchVariables = searchVariables,
+                ).results
+            }
+        } catch (e: Exception) {
+            logger.error(e) { "Error getting products with thema id: $themaId" }
+        }
+
+        return emptyList()
     }
 
     suspend fun updateProduct(

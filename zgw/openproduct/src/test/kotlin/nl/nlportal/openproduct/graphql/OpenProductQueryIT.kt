@@ -63,6 +63,7 @@ class OpenProductQueryIT(
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
             propsRegistry.add("nl-portal.config.openproduct.properties.product-api-url") { url }
+            propsRegistry.add("nl-portal.config.openproduct.properties.product-type-api-url") { url }
             propsRegistry.add("nl-portal.config.zakenapi.properties.url") { url }
             propsRegistry.add("nl-portal.config.objectenapi.properties.url") { url }
         }
@@ -87,6 +88,7 @@ class OpenProductQueryIT(
         setupMockServer()
         url = server?.url("/").toString()
         openProductModuleConfiguration.properties.productApiUrl = URI(url)
+        openProductModuleConfiguration.properties.productTypeApiUrl = URI(url)
         objectsApiClientConfig.properties.url = URI(url)
         zakenApiConfig.properties.url = url
     }
@@ -166,6 +168,32 @@ class OpenProductQueryIT(
                 ).isEqualTo("Exception while fetching data (/getOpenProduct) : 401 UNAUTHORIZED \"Not authorized\"")
         }
 
+    @Test
+    @WithBurgerUser("569312864")
+    fun `get producten by thema id`() =
+        runTest {
+            val basePath = "$.data.getOpenProductenByThema"
+            webTestClient
+                .post()
+                .uri { builder ->
+                    builder
+                        .path("/graphql")
+                        .build()
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductenByThema.gql")))
+                .exchange()
+                .verifyOnlyDataExists(basePath)
+                .jsonPath(
+                    "$basePath[0].url",
+                ).isEqualTo("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/")
+                .jsonPath("$basePath[0].startDatum")
+                .isEqualTo("2025-04-30")
+                .jsonPath("$basePath[0].producttype.code")
+                .isEqualTo("PARKEREN")
+                .jsonPath("$basePath[0].verbruiksobject.uren")
+                .isEqualTo(30)
+        }
+
     private fun setupMockServer() {
         val dispatcher: Dispatcher =
             object : Dispatcher() {
@@ -176,6 +204,9 @@ class OpenProductQueryIT(
                         when (request.method + " " + path) {
                             "GET /producten/694242af-d906-470b-b7e1-eb3527886854/" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-product.json")
+                            }
+                            "GET /themas/41f71c2e-9e0c-4a1b-8d39-709669b256c2/" -> {
+                                TestHelper.mockResponseFromFile("/config/data/get-thema.json")
                             }
                             "GET /producten/" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-producten.json")

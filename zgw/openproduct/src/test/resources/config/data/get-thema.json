@@ -21,6 +21,21 @@
       "gepubliceerd": true,
       "aanmaak_datum": "2025-04-30T13:51:32.736333+02:00",
       "update_datum": "2025-04-30T13:51:32.736333+02:00"
+    },
+    {
+      "uuid": "73014953-3b86-465d-9128-1673703fcd72",
+      "code": "PARKEREN",
+      "keywords": [
+        "parkeren",
+        "ibs"
+      ],
+      "uniforme_product_naam": "Parkeervergunning",
+      "toegestane_statussen": [
+        "gereed"
+      ],
+      "gepubliceerd": true,
+      "aanmaak_datum": "2025-04-30T13:51:32.736333+02:00",
+      "update_datum": "2025-04-30T13:51:32.736333+02:00"
     }
   ]
 }

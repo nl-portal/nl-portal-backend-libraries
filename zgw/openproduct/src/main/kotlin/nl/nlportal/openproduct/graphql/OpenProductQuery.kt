@@ -54,4 +54,14 @@ class OpenProductQuery(
             authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
             id = id,
         )
+
+    @GraphQLDescription("Get a Open producten type by thema id")
+    suspend fun getOpenProductenByThema(
+        dfe: DataFetchingEnvironment,
+        themaId: UUID,
+    ): List<OpenProductProduct> =
+        openProductService.getProductenByThema(
+            authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+            themaId = themaId,
+        )
 }

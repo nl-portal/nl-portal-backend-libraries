@@ -25,6 +25,7 @@ import java.util.UUID
 data class OpenProductProduct(
     val uuid: UUID,
     val url: String? = null,
+    val naam: String? = null,
     @JsonProperty("start_datum")
     val startDatum: LocalDate,
     @JsonProperty("eind_datum")
