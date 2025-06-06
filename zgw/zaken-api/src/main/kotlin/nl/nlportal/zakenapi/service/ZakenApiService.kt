@@ -40,7 +40,7 @@ import java.util.UUID
 
 class ZakenApiService(
     private val zakenApiClient: ZakenApiClient,
-    private val zaakDocumentenConfig: ZakenApiConfigProperties.ZaakDocumentenConfig,
+    private val zakenApiConfigProperties: ZakenApiConfigProperties,
     private val documentenApiService: DocumentenApiService,
     private val objectsApiClient: ObjectsApiClient,
     private val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
@@ -82,6 +82,10 @@ class ZakenApiService(
 
         authenticationMachtigingsDienstService.zaakTypes(authentication)?.let {
             request.ofZaakTypes(it)
+        }
+
+        if(zakenApiConfigProperties.zaakTypesIdsExcluded.isNotEmpty()) {
+            request.notInZaakTypes(zakenApiConfigProperties.zaakTypesIdsExcluded)
         }
 
         return request.retrieve().let {
@@ -135,8 +139,8 @@ class ZakenApiService(
                     .copy(identificatie = zaakDocument.uuid)
             }
             .filter { document ->
-                document.status in zaakDocumentenConfig.statusWhitelist &&
-                    document.vertrouwelijkheidaanduiding in zaakDocumentenConfig.vertrouwelijkheidsaanduidingWhitelist
+                document.status in zakenApiConfigProperties.zaakDocumentenConfig.statusWhitelist &&
+                    document.vertrouwelijkheidaanduiding in zakenApiConfigProperties.zaakDocumentenConfig.vertrouwelijkheidsaanduidingWhitelist
             }
     }
 

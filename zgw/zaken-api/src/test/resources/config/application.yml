@@ -41,6 +41,7 @@ nl-portal:
                 url: http://localhost:8001
                 clientId: valtimo_client
                 secret: e09b8bc5-5831-4618-ab28-41411304309d
+                zaak-types-ids-excluded: c2d3e114-bbe4-478d-80de-e8a8c8f8a948, 4d69cf3c-68b3-43f5-881e-d4984b7649cb
         objectenapi:
             enabled: true
             properties:
