@@ -15,7 +15,7 @@
  */
 
 internal object Versions {
-    const val everitJsonSchema = "1.14.2"
+    const val everitJsonSchema = "1.14.6"
     const val jsonPath = "2.9.0"
     const val jsonWebTokens = "0.12.6"
     const val kotlinCoroutines = "1.8.1"
