@@ -58,9 +58,14 @@ class SearchZakenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
         return this
     }
 
-    override fun ofZaakTypes(zaakTypes: List<UUID>): SearchZaken {
+    override fun ofZaakTypes(zaakTypeIds: List<UUID>): SearchZaken {
         throw NotImplementedError("List of zaak types are not supported")
     }
+
+    override fun notInZaakTypes(zaakTypeIds: List<UUID>): SearchZaken {
+        throw NotImplementedError("List of zaak types are not supported")
+    }
+
 
     override fun ofIdentificatie(identificatie: String): SearchZaken {
         queryParams.add("identificatie", identificatie)
