@@ -1,54 +1,48 @@
 [
   {
-    "action": {
-      "type": "String",
-      "value": "https://formulier.denhaag.nl/Tripleforms/formulier/nl-NL/DefaultEnvironment/scNaheffingsAanslagParkeren.aspx",
-      "valueInfo": {}
+    "action":{
+      "type":"String",
+      "value":"https://openformulieren-zgw.test.denhaag.nl/bezwaarschrift-overige-gemeentelijke-belastingen/startpagina",
+      "valueInfo":{
+
+      }
     },
-    "text": {
-      "type": "String",
-      "value": "Bezwaar maken tegen parkeerbon",
-      "valueInfo": {}
+    "text":{
+      "type":"String",
+      "value":"Bezwaar maken tegen andere belastingaanslag of legesnota",
+      "valueInfo":{
+
+      }
     },
-    "type": {
-      "type": "String",
-      "value": "LINK",
-      "valueInfo": {}
+    "type":{
+      "type":"String",
+      "value":"LINK",
+      "valueInfo":{
+
+      }
     }
   },
   {
-    "action": {
-      "type": "String",
-      "value": "https://formulier.denhaag.nl/Tripleforms/formulier/nl-NL/DefaultEnvironment/scAanvragenBetalingsregeling.aspx",
-      "valueInfo": {}
+    "action":{
+      "type":"String",
+      "value":"https://openformulieren-zgw.test.denhaag.nl/bericht-of-antwoord-voor-de-directeur-gemeentebelastingen",
+      "valueInfo":{
+
+      }
     },
-    "text": {
-      "type": "String",
-      "value": "In termijnen betalen via een betalingsregeling",
-      "valueInfo": {}
+    "text":{
+      "type":"String",
+      "value":"Ik heb een andere vraag of verzoek",
+      "valueInfo":{
+
+      }
     },
-    "type": {
-      "type": "String",
-      "value": "LINK",
-      "valueInfo": {}
+    "type":{
+      "type":"String",
+      "value":"LINK",
+      "valueInfo":{
+
+      }
     }
-  },
-  {
-    "action": {
-      "type": "String",
-      "value": "https://formulieren.denhaag.nl/bericht-of-antwoord-voor-de-directeur-gemeentebelastingen",
-      "valueInfo": {}
-    },
-    "text": {
-      "type": "String",
-      "value": "Ik heb een andere vraag of verzoek",
-      "valueInfo": {}
-    },
-    "type": {
-      "type": "String",
-      "value": "LINK",
-      "valueInfo": {}
-    }
-  },
-  {}
+  }
 ]

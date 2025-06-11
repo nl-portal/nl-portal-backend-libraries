@@ -147,7 +147,7 @@ class OpenProductActieQueryIT(
                 .verifyOnlyDataExists(basePath)
                 .jsonPath(
                     "$basePath[0].action.value",
-                ).isEqualTo("https://formulier.denhaag.nl/Tripleforms/formulier/nl-NL/DefaultEnvironment/scNaheffingsAanslagParkeren.aspx")
+                ).isEqualTo("https://openformulieren-zgw.test.denhaag.nl/bezwaarschrift-overige-gemeentelijke-belastingen/startpagina")
         }
 
     private fun setupMockServer() {
