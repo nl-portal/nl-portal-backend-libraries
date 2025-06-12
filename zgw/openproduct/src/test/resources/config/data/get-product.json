@@ -1,6 +1,7 @@
 {
   "uuid": "694242af-d906-470b-b7e1-eb3527886854",
   "url": "http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/",
+  "naam": "parkeren",
   "start_datum": "2025-04-30",
   "eind_datum": "2026-04-30",
   "aanmaak_datum": "2025-04-30T13:51:32.757301+02:00",

@@ -6,6 +6,7 @@
     {
       "uuid": "694242af-d906-470b-b7e1-eb3527886854",
       "url": "http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/",
+      "naam": "parkeren",
       "start_datum": "2025-04-30",
       "eind_datum": "2026-04-30",
       "aanmaak_datum": "2025-04-30T13:51:32.757301+02:00",
@@ -49,6 +50,7 @@
     {
       "uuid": "55633677-fef4-4ed2-99a4-13efc3360448",
       "url": "http://localhost:8070/producten/api/v1/producten/55633677-fef4-4ed2-99a4-13efc3360448/",
+      "naam": "parkeren 2tact",
       "start_datum": "2025-04-30",
       "eind_datum": "2026-04-30",
       "aanmaak_datum": "2025-04-30T13:51:32.757301+02:00",
@@ -88,6 +90,7 @@
     {
       "uuid": "55515634-bf7d-4f2e-8b30-6bbcc0f8bfdc",
       "url": "http://localhost:8070/producten/api/v1/producten/55515634-bf7d-4f2e-8b30-6bbcc0f8bfdc/",
+      "naam": "parkeren 3tact",
       "start_datum": "2025-04-30",
       "eind_datum": "2026-04-30",
       "aanmaak_datum": "2025-04-30T13:51:32.757301+02:00",
@@ -127,6 +130,7 @@
     {
       "uuid": "b4addadd-71df-45a9-8559-fca53fc79339",
       "url": "http://localhost:8070/producten/api/v1/producten/b4addadd-71df-45a9-8559-fca53fc79339/",
+      "naam": "belastingzaken",
       "start_datum": "2025-04-30",
       "eind_datum": "2026-04-30",
       "aanmaak_datum": "2025-04-30T13:51:32.757301+02:00",
