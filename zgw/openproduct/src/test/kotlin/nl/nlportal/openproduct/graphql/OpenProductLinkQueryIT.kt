@@ -136,10 +136,10 @@ class OpenProductLinkQueryIT(
                     val path = request.path?.substringBefore('?')
                     val response =
                         when (request.method + " " + path) {
-                            "GET /links/7506562c-9a2a-4931-85cd-2c752cbabaf0/" -> {
+                            "GET /links/7506562c-9a2a-4931-85cd-2c752cbabaf0" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-link.json")
                             }
-                            "GET /links/" -> {
+                            "GET /links" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-links.json")
                             }
                             else -> MockResponse().setResponseCode(404)

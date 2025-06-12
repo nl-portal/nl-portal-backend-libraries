@@ -158,13 +158,13 @@ class OpenProductActieQueryIT(
                     val path = request.path?.substringBefore('?')
                     val response =
                         when (request.method + " " + path) {
-                            "GET /acties/2435b986-7742-4cef-91f2-e1162c2f19c9/" -> {
+                            "GET /acties/2435b986-7742-4cef-91f2-e1162c2f19c9" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-actie.json")
                             }
-                            "GET /acties/" -> {
+                            "GET /acties" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-acties.json")
                             }
-                            "GET /producten/694242af-d906-470b-b7e1-eb3527886854/" -> {
+                            "GET /producten/694242af-d906-470b-b7e1-eb3527886854" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-product.json")
                             }
                             "POST /engine-rest/decision-definition/key/alg-belastingen/evaluate" -> {

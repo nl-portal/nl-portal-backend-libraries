@@ -26,7 +26,7 @@ import java.util.*
 class Schemas(
     val client: OpenProductTypeClient,
 ) : OpenProductPath() {
-    override val path: String = "/schemas/"
+    override val path: String = "/schemas"
 
     suspend fun get(searchFilters: List<Pair<OpenProductSchemasFilters, Any>>? = null): ResultPage<OpenProductSchema> =
         client
@@ -47,7 +47,7 @@ class Schemas(
             .get()
             .uri { uriBuilder ->
                 uriBuilder
-                    .path("$path$id/")
+                    .path("$path/$id")
                     .build()
             }.accept(MediaType.APPLICATION_JSON)
             .retrieve()

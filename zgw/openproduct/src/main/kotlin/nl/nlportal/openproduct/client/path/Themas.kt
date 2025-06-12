@@ -26,7 +26,7 @@ import java.util.*
 class Themas(
     val client: OpenProductTypeClient,
 ) : OpenProductPath() {
-    override val path: String = "/themas/"
+    override val path: String = "/themas"
 
     suspend fun get(searchFilters: List<Pair<OpenProductThemasFilters, Any>>? = null): ResultPage<OpenProductThema> =
         client
@@ -47,7 +47,7 @@ class Themas(
             .get()
             .uri { uriBuilder ->
                 uriBuilder
-                    .path("$path$id/")
+                    .path("$path/$id")
                     .build()
             }.accept(MediaType.APPLICATION_JSON)
             .retrieve()

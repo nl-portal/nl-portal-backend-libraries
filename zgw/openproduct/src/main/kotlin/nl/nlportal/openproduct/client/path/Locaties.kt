@@ -26,7 +26,7 @@ import java.util.*
 class Locaties(
     val client: OpenProductTypeClient,
 ) : OpenProductPath() {
-    override val path: String = "/locaties/"
+    override val path: String = "/locaties"
 
     suspend fun get(searchFilters: List<Pair<OpenProductLocatiesFilters, Any>>? = null): ResultPage<OpenProductLocatie> =
         client
@@ -47,7 +47,7 @@ class Locaties(
             .get()
             .uri { uriBuilder ->
                 uriBuilder
-                    .path("$path$id/")
+                    .path("$path/$id")
                     .build()
             }.accept(MediaType.APPLICATION_JSON)
             .retrieve()

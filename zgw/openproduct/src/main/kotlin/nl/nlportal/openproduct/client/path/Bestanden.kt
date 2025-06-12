@@ -16,19 +16,19 @@
 package nl.nlportal.openproduct.client.path
 
 import nl.nlportal.openproduct.client.OpenProductTypeClient
-import nl.nlportal.openproduct.client.domain.OpenProductLink
-import nl.nlportal.openproduct.client.domain.OpenProductLinksFilters
+import nl.nlportal.openproduct.client.domain.OpenProductBestand
+import nl.nlportal.openproduct.client.domain.OpenProductBestandenFilters
 import nl.nlportal.openproduct.client.domain.ResultPage
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.client.awaitBody
 import java.util.*
 
-class Links(
+class Bestanden(
     val client: OpenProductTypeClient,
 ) : OpenProductPath() {
-    override val path: String = "/links"
+    override val path: String = "/bestanden"
 
-    suspend fun get(searchFilters: List<Pair<OpenProductLinksFilters, Any>>? = null): ResultPage<OpenProductLink> =
+    suspend fun get(searchFilters: List<Pair<OpenProductBestandenFilters, Any>>? = null): ResultPage<OpenProductBestand> =
         client
             .webClient
             .get()
@@ -41,7 +41,7 @@ class Links(
             .retrieve()
             .awaitBody()
 
-    suspend fun get(id: UUID): OpenProductLink? =
+    suspend fun get(id: UUID): OpenProductBestand? =
         client
             .webClient
             .get()

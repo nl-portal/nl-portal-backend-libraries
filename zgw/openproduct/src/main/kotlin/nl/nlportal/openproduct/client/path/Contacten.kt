@@ -26,7 +26,7 @@ import java.util.*
 class Contacten(
     val client: OpenProductTypeClient,
 ) : OpenProductPath() {
-    override val path: String = "/contacten/"
+    override val path: String = "/contacten"
 
     suspend fun get(searchFilters: List<Pair<OpenProductContactenFilters, Any>>? = null): ResultPage<OpenProductContact> =
         client
@@ -47,7 +47,7 @@ class Contacten(
             .get()
             .uri { uriBuilder ->
                 uriBuilder
-                    .path("$path$id/")
+                    .path("$path/$id")
                     .build()
             }.accept(MediaType.APPLICATION_JSON)
             .retrieve()

@@ -26,7 +26,7 @@ import java.util.*
 class Prijzen(
     val client: OpenProductTypeClient,
 ) : OpenProductPath() {
-    override val path: String = "/prijzen/"
+    override val path: String = "/prijzen"
 
     suspend fun get(searchFilters: List<Pair<OpenProductPrijzenFilters, Any>>? = null): ResultPage<OpenProductPrijs> =
         client
@@ -47,7 +47,7 @@ class Prijzen(
             .get()
             .uri { uriBuilder ->
                 uriBuilder
-                    .path("$path$id/")
+                    .path("$path/$id")
                     .build()
             }.accept(MediaType.APPLICATION_JSON)
             .retrieve()

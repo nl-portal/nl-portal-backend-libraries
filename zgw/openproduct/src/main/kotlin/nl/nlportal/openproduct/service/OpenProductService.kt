@@ -25,6 +25,8 @@ import nl.nlportal.openproduct.client.OpenProductClient
 import nl.nlportal.openproduct.client.OpenProductTypeClient
 import nl.nlportal.openproduct.client.domain.OpenProductActie
 import nl.nlportal.openproduct.client.domain.OpenProductActiesFilters
+import nl.nlportal.openproduct.client.domain.OpenProductBestand
+import nl.nlportal.openproduct.client.domain.OpenProductBestandenFilters
 import nl.nlportal.openproduct.client.domain.OpenProductContact
 import nl.nlportal.openproduct.client.domain.OpenProductContactenFilters
 import nl.nlportal.openproduct.client.domain.OpenProductLink
@@ -57,6 +59,7 @@ import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.openproduct.client.domain.ResultPage
+import nl.nlportal.openproduct.client.path.Bestanden
 import nl.nlportal.openproduct.client.path.Contacten
 import nl.nlportal.openproduct.client.path.Links
 import nl.nlportal.openproduct.client.path.Locaties
@@ -237,6 +240,48 @@ class OpenProductService(
             )
         } catch (e: Exception) {
             logger.error { "Error getting actie with id: $id with cause: $e.message" }
+        }
+        return null
+    }
+
+    suspend fun getBestanden(
+        pageNumber: Int,
+        pageSize: Int,
+        naam: String? = null,
+        extraSearchVariables: List<Pair<OpenProductBestandenFilters, Any>> = emptyList(),
+    ): ResultPage<OpenProductBestand> {
+        try {
+            val searchVariables =
+                mutableListOf<Pair<OpenProductBestandenFilters, Any>>(
+                    OpenProductBestandenFilters.PAGE to pageNumber.toString(),
+                    OpenProductBestandenFilters.PAGE_SIZE to pageSize.toString(),
+                )
+
+            naam?.let {
+                searchVariables.add(OpenProductBestandenFilters.NAAM_CONTAINS to it)
+            }
+
+            if (extraSearchVariables.isNotEmpty()) {
+                searchVariables.addAll(extraSearchVariables)
+            }
+            return openProductTypeClient.path<Bestanden>().get(searchVariables)
+        } catch (e: Exception) {
+            logger.error { "Error getting bestanden with cause: $e.message" }
+        }
+
+        return ResultPage(
+            count = 0,
+            results = emptyList(),
+        )
+    }
+
+    suspend fun getBestand(id: UUID): OpenProductBestand? {
+        try {
+            return openProductTypeClient.path<Bestanden>().get(
+                id = id,
+            )
+        } catch (e: Exception) {
+            logger.error { "Error getting bestand with id: $id with cause: $e.message" }
         }
         return null
     }

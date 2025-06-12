@@ -266,22 +266,22 @@ class OpenProductThemaQueryIT(
                     val queryParams = request.path?.substringAfter('?')?.split('&') ?: emptyList()
                     val response =
                         when (request.method + " " + path) {
-                            "GET /themas/41f71c2e-9e0c-4a1b-8d39-709669b256c2/" -> {
+                            "GET /themas/41f71c2e-9e0c-4a1b-8d39-709669b256c2" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-thema.json")
                             }
-                            "GET /themas/5422b0e4-18ae-4017-bcea-fb03446a8136/" -> {
+                            "GET /themas/5422b0e4-18ae-4017-bcea-fb03446a8136" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-subthema.json")
                             }
-                            "GET /themas/c111ce6f-308f-4e6d-9460-ffe6a07e283a/" -> {
+                            "GET /themas/c111ce6f-308f-4e6d-9460-ffe6a07e283a" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-hoofdthema.json")
                             }
-                            "GET /themas/" -> {
+                            "GET /themas" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-themas.json")
                             }
                             "POST /zaken/api/v1/zaken/_zoek" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-zaken.json")
                             }
-                            "GET /producttypen/dee273e9-2aa8-40ae-84b7-cb7da3c075ba/" -> {
+                            "GET /producttypen/dee273e9-2aa8-40ae-84b7-cb7da3c075ba" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-producttype.json")
                             }
                             "GET /api/v2/objects" -> {

@@ -29,7 +29,7 @@ import java.util.*
 class Producten(
     val client: OpenProductClient,
 ) : OpenProductPath() {
-    override val path: String = "/producten/"
+    override val path: String = "/producten"
 
     suspend fun get(searchFilters: List<Pair<OpenProductProductenFilters, Any>>? = null): ResultPage<OpenProductProduct> =
         client
@@ -50,7 +50,7 @@ class Producten(
             .get()
             .uri { uriBuilder ->
                 uriBuilder
-                    .path("$path$id/")
+                    .path("$path/$id")
                     .build()
             }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
@@ -63,7 +63,7 @@ class Producten(
                 .patch()
                 .uri { uriBuilder ->
                     uriBuilder
-                        .path("$path/${productUpdate.uuid}/")
+                        .path("$path/${productUpdate.uuid}")
                         .build()
                 }.body(BodyInserters.fromValue(productUpdate))
                 .accept(MediaType.APPLICATION_JSON)

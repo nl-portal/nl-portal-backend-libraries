@@ -137,10 +137,10 @@ class OpenProductMutationIT(
                     val path = request.path?.substringBefore('?')
                     val response =
                         when (request.method + " " + path) {
-                            "GET /producten/694242af-d906-470b-b7e1-eb3527886854/" -> {
+                            "GET /producten/694242af-d906-470b-b7e1-eb3527886854" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-product.json")
                             }
-                            "PATCH /producten/694242af-d906-470b-b7e1-eb3527886854/" -> {
+                            "PATCH /producten/694242af-d906-470b-b7e1-eb3527886854" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-product.json")
                             }
                             else -> MockResponse().setResponseCode(404)

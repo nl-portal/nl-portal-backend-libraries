@@ -190,13 +190,13 @@ class OpenProductTypeQueryIT(
                     val path = request.path?.substringBefore('?')
                     val response =
                         when (request.method + " " + path) {
-                            "GET /producttypen/dee273e9-2aa8-40ae-84b7-cb7da3c075ba/content/" -> {
+                            "GET /producttypen/dee273e9-2aa8-40ae-84b7-cb7da3c075ba/content" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-producttype-content.json")
                             }
-                            "GET /producttypen/dee273e9-2aa8-40ae-84b7-cb7da3c075ba/" -> {
+                            "GET /producttypen/dee273e9-2aa8-40ae-84b7-cb7da3c075ba" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-producttype.json")
                             }
-                            "GET /producttypen/" -> {
+                            "GET /producttypen" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-producttypes.json")
                             }
                             else -> MockResponse().setResponseCode(404)

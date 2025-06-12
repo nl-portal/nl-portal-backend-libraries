@@ -136,10 +136,10 @@ class OpenProductPrijsQueryIT(
                     val path = request.path?.substringBefore('?')
                     val response =
                         when (request.method + " " + path) {
-                            "GET /prijzen/317ab929-5cb4-4dde-ae4a-489f4d388699/" -> {
+                            "GET /prijzen/317ab929-5cb4-4dde-ae4a-489f4d388699" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-prijs.json")
                             }
-                            "GET /prijzen/" -> {
+                            "GET /prijzen" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-prijzen.json")
                             }
                             else -> MockResponse().setResponseCode(404)

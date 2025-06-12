@@ -27,7 +27,7 @@ import java.util.*
 class ProductTypes(
     val client: OpenProductTypeClient,
 ) : OpenProductPath() {
-    override val path: String = "/producttypen/"
+    override val path: String = "/producttypen"
 
     suspend fun get(
         searchFilters: List<Pair<OpenProductProductTypesFilters, Any>>? = null,
@@ -55,7 +55,7 @@ class ProductTypes(
             .get()
             .uri { uriBuilder ->
                 uriBuilder
-                    .path("$path$id/")
+                    .path("$path/$id")
                     .build()
             }.header("Accept-Language", language)
             .accept(MediaType.APPLICATION_JSON)
@@ -68,7 +68,7 @@ class ProductTypes(
             .get()
             .uri { uriBuilder ->
                 uriBuilder
-                    .path("$path$id/content/")
+                    .path("$path/$id/content/")
                     .build()
             }.accept(MediaType.APPLICATION_JSON)
             .retrieve()

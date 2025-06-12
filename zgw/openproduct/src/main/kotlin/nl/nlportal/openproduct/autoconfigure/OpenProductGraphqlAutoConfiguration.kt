@@ -18,6 +18,7 @@ package nl.nlportal.openproduct.autoconfigure
 import com.expediagroup.graphql.server.operations.Mutation
 import com.expediagroup.graphql.server.operations.Query
 import nl.nlportal.openproduct.graphql.OpenProductActieQuery
+import nl.nlportal.openproduct.graphql.OpenProductBestandQuery
 import nl.nlportal.openproduct.graphql.OpenProductContactQuery
 import nl.nlportal.openproduct.graphql.OpenProductLinkQuery
 import nl.nlportal.openproduct.graphql.OpenProductLocatieQuery
@@ -66,6 +67,10 @@ class OpenProductGraphqlAutoConfiguration {
             openProductService = openProductService,
             openProductDmnService = openProductDmnService,
         )
+
+    @Bean
+    @ConditionalOnMissingBean(OpenProductBestandQuery::class)
+    fun openProductBestandQuery(openProductService: OpenProductService): Query = OpenProductBestandQuery(openProductService = openProductService)
 
     @Bean
     @ConditionalOnMissingBean(OpenProductContactQuery::class)
