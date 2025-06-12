@@ -16,8 +16,7 @@
         "postcode": "1000AB",
         "stad": "Amsterdam"
       },
-      "voornaam": "Vincent",
-      "achternaam": "van Beek",
+      "naam": "Vincent van Beek",
       "email": "test@test.nl",
       "telefoonnummer": "0201234567",
       "rol": "owner"

@@ -30,7 +30,7 @@ class OpenProductContactQuery(
     suspend fun getOpenProductContacten(
         pageNumber: Int? = null,
         pageSize: Int? = null,
-        achternaam: String? = null,
+        naam: String? = null,
     ): ContactenPage =
         ContactenPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
@@ -39,7 +39,7 @@ class OpenProductContactQuery(
                 openProductService.getContacten(
                     pageNumber = pageNumber ?: 1,
                     pageSize = pageSize ?: 20,
-                    achternaam = achternaam,
+                    naam = naam,
                 ),
         )
 

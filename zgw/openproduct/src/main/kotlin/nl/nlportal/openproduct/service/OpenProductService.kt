@@ -290,7 +290,7 @@ class OpenProductService(
     suspend fun getContacten(
         pageNumber: Int,
         pageSize: Int,
-        achternaam: String? = null,
+        naam: String? = null,
         extraSearchVariables: List<Pair<OpenProductContactenFilters, Any>> = emptyList(),
     ): ResultPage<OpenProductContact> {
         try {
@@ -300,8 +300,8 @@ class OpenProductService(
                     OpenProductContactenFilters.PAGE_SIZE to pageSize.toString(),
                 )
 
-            achternaam?.let {
-                searchVariables.add(OpenProductContactenFilters.ACHTERNAAM to it)
+            naam?.let {
+                searchVariables.add(OpenProductContactenFilters.NAAM to it)
             }
 
             if (extraSearchVariables.isNotEmpty()) {

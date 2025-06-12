@@ -101,10 +101,8 @@ class OpenProductContactQueryIT(
                 .verifyOnlyDataExists(basePath)
                 .jsonPath("$basePath.numberOfElements")
                 .isEqualTo(1)
-                .jsonPath("$resultPath.achternaam")
-                .isEqualTo("van Beek")
-                .jsonPath("$resultPath.voornaam")
-                .isEqualTo("Vincent")
+                .jsonPath("$resultPath.naam")
+                .isEqualTo("Vincent van Beek")
                 .jsonPath("$resultPath.organisatie.naam")
                 .isEqualTo("Ritense")
         }
@@ -124,10 +122,8 @@ class OpenProductContactQueryIT(
                 .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductContact.gql")))
                 .exchange()
                 .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.achternaam")
-                .isEqualTo("van Beek")
-                .jsonPath("$basePath.voornaam")
-                .isEqualTo("Vincent")
+                .jsonPath("$basePath.naam")
+                .isEqualTo("Vincent van Beek")
         }
 
     private fun setupMockServer() {

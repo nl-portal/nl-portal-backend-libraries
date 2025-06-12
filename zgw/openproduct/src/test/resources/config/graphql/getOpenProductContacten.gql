@@ -9,8 +9,7 @@ query {
          numberOfElements
          content {
             uuid,
-            achternaam,
-            voornaam,
+            naam,
             organisatie {
                 naam,
                 email,

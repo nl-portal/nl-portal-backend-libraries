@@ -20,8 +20,7 @@ import java.util.UUID
 
 data class OpenProductContact(
     val uuid: UUID,
-    val achternaam: String,
-    val voornaam: String,
+    val naam: String,
     val email: String? = null,
     val telefoonnummer: String? = null,
     val straat: String? = null,
@@ -36,7 +35,7 @@ enum class OpenProductContactenFilters(
 ) : OpenProductFilters {
     PAGE("page"),
     PAGE_SIZE("page_size"),
-    ACHTERNAAM("achternaam"),
+    NAAM("naam"),
     EMAIL_EXACT("email__iexact"),
     ORGANISATIE_NAAM("organisatie__naam"),
     ORGANISATIE_UUID("organisatie__uui"),
