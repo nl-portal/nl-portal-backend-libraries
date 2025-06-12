@@ -15,6 +15,8 @@
  */
 package nl.nlportal.haalcentraal2.domain.brp
 
+import com.fasterxml.jackson.annotation.JsonValue
+
 data class BrpNaam(
     val voornamen: String? = null,
     val adellijkeTitelPredicaat: BrpAdellijkeTitelPredicaat? = null,
@@ -50,3 +52,12 @@ data class BrpNaamInOnderzoek(
     val aanduidingNaamgebruik: Boolean? = false,
     val volledigeNaam: Boolean? = false,
 )
+
+enum class AanduidingNaamGebruikBrpNaam(
+    @JsonValue val value: String,
+) {
+    EIGEN("E"),
+    EIGEN_PARTNER("N"),
+    PARTNER("P"),
+    PARTNER_EIGEN("V"),
+}
