@@ -49,33 +49,31 @@ data class OpenProductProduct(
     val verbruiksobject: ObjectNode? = null,
     val dataobject: ObjectNode? = null,
     @GraphQLIgnore
-    val zaken: List<String>? = emptyList(),
+    val zaken: List<OpenProductUrl>? = emptyList(),
     @GraphQLIgnore
-    val taken: List<String>? = emptyList()
+    val taken: List<OpenProductUrl>? = emptyList(),
 ) {
     suspend fun zaken(
         @GraphQLIgnore
         @Autowired
-        openProductService: OpenProductService
-    ): List<Zaak>? {
-        return zaken?.let {
+        openProductService: OpenProductService,
+    ): List<Zaak>? =
+        zaken?.let {
             openProductService.getProductZaken(
-                zaken
+                zaken,
             )
         }
-    }
 
     suspend fun taken(
         @GraphQLIgnore
         @Autowired
-        openProductService: OpenProductService
-    ): List<TaakV2>? {
-        return taken?.let {
+        openProductService: OpenProductService,
+    ): List<TaakV2>? =
+        taken?.let {
             openProductService.getProductTaken(
-                taken
+                taken,
             )
         }
-    }
 }
 
 data class OpenProductProductUpdate(

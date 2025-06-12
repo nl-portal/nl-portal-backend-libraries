@@ -47,6 +47,7 @@ import nl.nlportal.openproduct.client.domain.OpenProductSchema
 import nl.nlportal.openproduct.client.domain.OpenProductSchemasFilters
 import nl.nlportal.openproduct.client.domain.OpenProductThema
 import nl.nlportal.openproduct.client.domain.OpenProductThemasFilters
+import nl.nlportal.openproduct.client.domain.OpenProductUrl
 import nl.nlportal.openproduct.client.path.Acties
 import nl.nlportal.openproduct.client.path.ProductTypes
 import nl.nlportal.openproduct.client.path.Producten
@@ -726,30 +727,29 @@ class OpenProductService(
             }.sortedBy { it.verloopdatum }
     }
 
-    suspend fun getProductZaken(zaken: List<String>): List<Zaak> {
-        return zaken.map {
-            zakenApiClient.zaken().get(CoreUtils.extractId(it)).retrieve()
+    suspend fun getProductZaken(zaken: List<OpenProductUrl>): List<Zaak> =
+        zaken.map {
+            zakenApiClient.zaken().get(CoreUtils.extractId(it.url)).retrieve()
         }
-    }
 
     suspend fun getProductTaken(
-        taken: List<String>,
-        ): List<TaakV2> {
+        taken: List<OpenProductUrl>,
+    ): List<TaakV2> {
         try {
             val takenList = mutableListOf<TaakV2>()
 
             taken.forEach {
-                val taakObject = objectsApiClient.getObjectById<TaakV2>(CoreUtils.extractId(it).toString())
-                if(taakObject != null) {
+                val taakObject = objectsApiClient.getObjectById<TaakV2>(CoreUtils.extractId(it.url).toString())
+                if (taakObject != null) {
                     takenList.add(taakObject.record.data)
                 }
             }
 
             return takenList
         } catch (e: Exception) {
-                logger.error { "Error getting product taken: $e.message" }
-            }
-            return emptyList()
+            logger.error { "Error getting product taken: $e.message" }
+        }
+        return emptyList()
     }
 
     private suspend fun collectThemaHierarchyUpFromSubThema(id: UUID): List<OpenProductThema> {

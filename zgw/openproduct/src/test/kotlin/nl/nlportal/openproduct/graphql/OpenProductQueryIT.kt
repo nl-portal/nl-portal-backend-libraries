@@ -211,6 +211,12 @@ class OpenProductQueryIT(
                             "GET /producten" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-producten.json")
                             }
+                            "GET /api/v2/objects/4b5f4fba-0746-11ed-b939-0242ac120023" -> {
+                                TestHelper.mockResponseFromFile("/config/data/get-taak.json")
+                            }
+                            "GET /zaken/api/v1/zaken/703af290-abe0-418c-b9c3-10a65e662788" -> {
+                                TestHelper.mockResponseFromFile("/config/data/get-zaak.json")
+                            }
                             else -> MockResponse().setResponseCode(404)
                         }
                     return response
