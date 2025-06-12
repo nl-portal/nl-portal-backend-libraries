@@ -73,6 +73,7 @@ import nl.nlportal.zgw.taak.graphql.TaakPageV2
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
+import kotlin.collections.any
 import kotlin.collections.forEach
 
 class OpenProductService(
@@ -635,23 +636,9 @@ class OpenProductService(
         isOpen: Boolean? = null,
         id: UUID,
         language: String,
+        themasList: List<OpenProductThema>? = null,
     ): List<Zaak> {
-        // 1. get themas, including the hoofdthema and may be their hoofdthema
-        val themas = mutableSetOf<OpenProductThema>()
-
-        val thema =
-            getThema(
-                id = id,
-            )
-
-        if (thema == null) {
-            return emptyList()
-        } else {
-            themas.add(thema)
-        }
-
-        // 1.5 get all the hoofdthema's
-        themas.addAll(searchHoofdThemasFromSubThema(thema))
+        val themas = themasList ?: collectThemaHierarchyUpFromSubThema(id)
 
         // 2. loop through productTypes and get zaakTypes
         val zaakTypes = mutableListOf<UUID>()
@@ -700,6 +687,7 @@ class OpenProductService(
         id: UUID,
         language: String,
     ): List<TaakV2> {
+        val themas = collectThemaHierarchyUpFromSubThema(id)
         val taken =
             findTakenByIdentification(
                 authentication = authentication,
@@ -719,13 +707,44 @@ class OpenProductService(
                 pageSize = pageSize,
                 id = id,
                 language = language,
+                themasList = themas,
             )
+
+        // get producten, TODO add filter of all the related thema's
+        val producten =
+            getProducten(
+                authentication = authentication,
+                pageNumber = pageNumber,
+                pageSize = pageSize,
+            ).results
 
         // filter out the taak which is not connected to a zaak
         return taken
             .filterNot { task ->
-                !zaken.any { it.uuid.toString() == task.koppeling.value }
+                !zaken.any { it.uuid.toString() == task.koppeling.value } &&
+                    !producten.any { it.uuid.toString() == task.koppeling.value }
             }.sortedBy { it.verloopdatum }
+    }
+
+    private suspend fun collectThemaHierarchyUpFromSubThema(id: UUID): List<OpenProductThema> {
+        // 1. get themas, including the hoofdthema and may be their hoofdthema
+        val themas = mutableSetOf<OpenProductThema>()
+
+        val thema =
+            getThema(
+                id = id,
+            )
+
+        if (thema == null) {
+            return emptyList()
+        } else {
+            themas.add(thema)
+        }
+
+        // 1.5 get all the hoofdthema's
+        themas.addAll(searchFromSubThemaUpToHoofdThema(thema))
+
+        return themas.toList()
     }
 
     private suspend fun findTakenByIdentification(
@@ -776,7 +795,7 @@ class OpenProductService(
             ordering = "-record__startAt",
         )
 
-    private suspend fun searchHoofdThemasFromSubThema(thema: OpenProductThema): List<OpenProductThema> {
+    private suspend fun searchFromSubThemaUpToHoofdThema(thema: OpenProductThema): List<OpenProductThema> {
         val hoofdThemas = mutableListOf<OpenProductThema>()
         if (thema.hoofdThema != null) {
             val hoofdThema =
@@ -785,7 +804,7 @@ class OpenProductService(
                 )
             if (hoofdThema != null) {
                 hoofdThemas.add(hoofdThema)
-                hoofdThemas.addAll(searchHoofdThemasFromSubThema(hoofdThema))
+                hoofdThemas.addAll(searchFromSubThemaUpToHoofdThema(hoofdThema))
             }
         }
 

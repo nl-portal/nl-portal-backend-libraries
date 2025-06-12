@@ -63,6 +63,7 @@ class OpenProductThemaQueryIT(
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
             propsRegistry.add("nl-portal.config.openproduct.properties.product-type-api-url") { url }
+            propsRegistry.add("nl-portal.config.openproduct.properties.product-api-url") { url }
             propsRegistry.add("nl-portal.config.zakenapi.properties.url") { url }
             propsRegistry.add("nl-portal.config.objectenapi.properties.url") { url }
         }
@@ -87,6 +88,7 @@ class OpenProductThemaQueryIT(
         setupMockServer()
         url = server?.url("/").toString()
         openProductModuleConfiguration.properties.productTypeApiUrl = URI(url)
+        openProductModuleConfiguration.properties.productApiUrl = URI(url)
         objectsApiClientConfig.properties.url = URI(url)
         zakenApiConfig.properties.url = url
     }
@@ -204,7 +206,7 @@ class OpenProductThemaQueryIT(
                 .exchange()
                 .verifyOnlyDataExists(basePath)
                 .jsonPath("$basePath.size()")
-                .isEqualTo(1)
+                .isEqualTo(2)
                 .jsonPath("$basePath[0].id")
                 .isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
                 .jsonPath("$basePath[0].titel")
@@ -283,6 +285,9 @@ class OpenProductThemaQueryIT(
                             }
                             "GET /producttypen/dee273e9-2aa8-40ae-84b7-cb7da3c075ba" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-producttype.json")
+                            }
+                            "GET /producten" -> {
+                                TestHelper.mockResponseFromFile("/config/data/get-producten.json")
                             }
                             "GET /api/v2/objects" -> {
                                 if (queryParams.any { it.contains("identificatie__value__exact__569312863") }

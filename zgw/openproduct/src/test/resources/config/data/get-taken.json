@@ -51,7 +51,7 @@
             }
         },
         {
-            "url": "http://localhost:8010/api/v2/objects/2d725c07-2f26-4705-8637-438a42b5ac2d",
+            "url": "http://localhost:8010/api/v2/objects/694242af-d906-470b-b7e1-eb3527886854",
             "uuid": "2d725c07-2f26-4705-8637-438a42b5ac2e",
             "type": "http://localhost:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb35",
             "record": {
@@ -70,7 +70,7 @@
                     "eigenaar": "erfpacht",
                     "koppeling": {
                         "registratie": "product",
-                        "value": "2d725c07-2f26-4705-8637-438a42b5ac2d"
+                        "value": "694242af-d906-470b-b7e1-eb3527886854"
                     },
                     "portaalformulier": {
                         "formulier": {
