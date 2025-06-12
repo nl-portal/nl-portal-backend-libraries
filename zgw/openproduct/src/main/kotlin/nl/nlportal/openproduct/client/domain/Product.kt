@@ -15,9 +15,14 @@
  */
 package nl.nlportal.openproduct.client.domain
 
+import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
 import com.fasterxml.jackson.databind.node.ObjectNode
+import nl.nlportal.openproduct.service.OpenProductService
+import nl.nlportal.zakenapi.domain.Zaak
+import nl.nlportal.zgw.taak.domain.TaakV2
+import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -43,7 +48,35 @@ data class OpenProductProduct(
     val frequentie: OpenProductFrequentie,
     val verbruiksobject: ObjectNode? = null,
     val dataobject: ObjectNode? = null,
-)
+    @GraphQLIgnore
+    val zaken: List<String>? = emptyList(),
+    @GraphQLIgnore
+    val taken: List<String>? = emptyList()
+) {
+    suspend fun zaken(
+        @GraphQLIgnore
+        @Autowired
+        openProductService: OpenProductService
+    ): List<Zaak>? {
+        return zaken?.let {
+            openProductService.getProductZaken(
+                zaken
+            )
+        }
+    }
+
+    suspend fun taken(
+        @GraphQLIgnore
+        @Autowired
+        openProductService: OpenProductService
+    ): List<TaakV2>? {
+        return taken?.let {
+            openProductService.getProductTaken(
+                taken
+            )
+        }
+    }
+}
 
 data class OpenProductProductUpdate(
     val uuid: UUID,

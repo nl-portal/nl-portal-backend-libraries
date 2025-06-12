@@ -32,6 +32,16 @@
     }
   ],
   "documenten": [],
+  "zaken": [
+    {
+      "url": "http://localhost:8001/zaken/api/v1/zaken/703af290-abe0-418c-b9c3-10a65e662788"
+    }
+  ],
+  "taken": [
+    {
+      "url": "http://localhost:8010/api/v2/objects/4b5f4fba-0746-11ed-b939-0242ac120023"
+    }
+  ],
   "status": "actief",
   "prijs": "20.20",
   "frequentie": "eenmalig",

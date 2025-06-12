@@ -4,6 +4,7 @@ query {
      ){
         uuid,
         url,
+        naam,
         startDatum,
         gepubliceerd,
         aanmaakDatum,
@@ -20,6 +21,13 @@ query {
         },
         frequentie,
         verbruiksobject,
-        dataobject
+        dataobject,
+        zaken {
+            uuid,
+            omschrijving
+        },
+        taken {
+            titel
+        },
     }
 }
