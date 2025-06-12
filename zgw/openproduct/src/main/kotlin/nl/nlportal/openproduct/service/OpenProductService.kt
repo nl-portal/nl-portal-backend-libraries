@@ -83,14 +83,29 @@ class OpenProductService(
     suspend fun getThemas(
         pageNumber: Int,
         pageSize: Int,
+        extraSearchVariables: List<Pair<OpenProductThemasFilters, Any>> = emptyList(),
     ): ResultPage<OpenProductThema> {
-        val searchVariables =
-            listOf(
-                OpenProductThemasFilters.PAGE to pageNumber.toString(),
-                OpenProductThemasFilters.PAGE_SIZE to pageSize.toString(),
-                OpenProductThemasFilters.GEPUBLICEERD to true,
-            )
-        return openProductTypeClient.path<Themas>().get(searchVariables)
+        try {
+            val searchVariables =
+                mutableListOf<Pair<OpenProductThemasFilters, Any>>(
+                    OpenProductThemasFilters.PAGE to pageNumber.toString(),
+                    OpenProductThemasFilters.PAGE_SIZE to pageSize.toString(),
+                    OpenProductThemasFilters.GEPUBLICEERD to true,
+                )
+
+            if (extraSearchVariables.isNotEmpty()) {
+                searchVariables.addAll(extraSearchVariables)
+            }
+
+            return openProductTypeClient.path<Themas>().get(searchVariables)
+        } catch (e: Exception) {
+            logger.error { "Error getting themas with cause: $e.message" }
+        }
+
+        return ResultPage(
+            count = 0,
+            results = emptyList(),
+        )
     }
 
     suspend fun getHoofdThemas(): List<OpenProductThema> = getThemas(1, 999).results.filter { it.hoofdThema == null }
@@ -118,7 +133,7 @@ class OpenProductService(
                 id = id,
             )
         } catch (e: Exception) {
-            logger.error(e) { "Error getting thema with id: $id" }
+            logger.error { "Error getting thema with id: $id with cause: $e.message" }
         }
         return null
     }
@@ -133,7 +148,7 @@ class OpenProductService(
                 return buildThemaHierachy(thema = thema)
             }
         } catch (e: Exception) {
-            logger.error(e) { "Error building thema hierarchy id: $id" }
+            logger.error { "Error building thema hierarchy id: $id with cause: $e.message" }
         }
         return emptyList()
     }
@@ -142,16 +157,30 @@ class OpenProductService(
         pageNumber: Int,
         pageSize: Int,
         language: String,
+        extraSearchVariables: List<Pair<OpenProductProductTypesFilters, Any>> = emptyList(),
     ): ResultPage<OpenProductProductType> {
-        val searchVariables =
-            listOf(
-                OpenProductProductTypesFilters.PAGE to pageNumber.toString(),
-                OpenProductProductTypesFilters.PAGE_SIZE to pageSize.toString(),
-                OpenProductProductTypesFilters.GEPUBLICEERD to true,
+        try {
+            val searchVariables =
+                mutableListOf<Pair<OpenProductProductTypesFilters, Any>>(
+                    OpenProductProductTypesFilters.PAGE to pageNumber.toString(),
+                    OpenProductProductTypesFilters.PAGE_SIZE to pageSize.toString(),
+                    OpenProductProductTypesFilters.GEPUBLICEERD to true,
+                )
+
+            if (extraSearchVariables.isNotEmpty()) {
+                searchVariables.addAll(extraSearchVariables)
+            }
+            return openProductTypeClient.path<ProductTypes>().get(
+                searchFilters = searchVariables,
+                language = language,
             )
-        return openProductTypeClient.path<ProductTypes>().get(
-            searchFilters = searchVariables,
-            language = language,
+        } catch (e: Exception) {
+            logger.error { "Error getting productTypes with cause: $e.message" }
+        }
+
+        return ResultPage(
+            count = 0,
+            results = emptyList(),
         )
     }
 
@@ -165,7 +194,7 @@ class OpenProductService(
                 language = language,
             )
         } catch (e: Exception) {
-            logger.error(e) { "Error getting producttype with id: $id" }
+            logger.error { "Error getting producttype with id: $id with cause: $e.message" }
         }
         return null
     }
@@ -174,17 +203,31 @@ class OpenProductService(
         pageNumber: Int,
         pageSize: Int,
         naam: String? = null,
+        extraSearchVariables: List<Pair<OpenProductActiesFilters, Any>> = emptyList(),
     ): ResultPage<OpenProductActie> {
-        val searchVariables =
-            mutableListOf(
-                OpenProductActiesFilters.PAGE to pageNumber.toString(),
-                OpenProductActiesFilters.PAGE_SIZE to pageSize.toString(),
-            )
+        try {
+            val searchVariables =
+                mutableListOf<Pair<OpenProductActiesFilters, Any>>(
+                    OpenProductActiesFilters.PAGE to pageNumber.toString(),
+                    OpenProductActiesFilters.PAGE_SIZE to pageSize.toString(),
+                )
 
-        naam?.let {
-            searchVariables.add(OpenProductActiesFilters.NAAM_CONTAINS to it)
+            naam?.let {
+                searchVariables.add(OpenProductActiesFilters.NAAM_CONTAINS to it)
+            }
+
+            if (extraSearchVariables.isNotEmpty()) {
+                searchVariables.addAll(extraSearchVariables)
+            }
+            return openProductTypeClient.path<Acties>().get(searchVariables)
+        } catch (e: Exception) {
+            logger.error { "Error getting acties with cause: $e.message" }
         }
-        return openProductTypeClient.path<Acties>().get(searchVariables)
+
+        return ResultPage(
+            count = 0,
+            results = emptyList(),
+        )
     }
 
     suspend fun getActie(id: UUID): OpenProductActie? {
@@ -193,7 +236,7 @@ class OpenProductService(
                 id = id,
             )
         } catch (e: Exception) {
-            logger.error(e) { "Error getting actie with id: $id" }
+            logger.error { "Error getting actie with id: $id with cause: $e.message" }
         }
         return null
     }
@@ -202,17 +245,31 @@ class OpenProductService(
         pageNumber: Int,
         pageSize: Int,
         achternaam: String? = null,
+        extraSearchVariables: List<Pair<OpenProductContactenFilters, Any>> = emptyList(),
     ): ResultPage<OpenProductContact> {
-        val searchVariables =
-            mutableListOf(
-                OpenProductContactenFilters.PAGE to pageNumber.toString(),
-                OpenProductContactenFilters.PAGE_SIZE to pageSize.toString(),
-            )
+        try {
+            val searchVariables =
+                mutableListOf<Pair<OpenProductContactenFilters, Any>>(
+                    OpenProductContactenFilters.PAGE to pageNumber.toString(),
+                    OpenProductContactenFilters.PAGE_SIZE to pageSize.toString(),
+                )
 
-        achternaam?.let {
-            searchVariables.add(OpenProductContactenFilters.ACHTERNAAM to it)
+            achternaam?.let {
+                searchVariables.add(OpenProductContactenFilters.ACHTERNAAM to it)
+            }
+
+            if (extraSearchVariables.isNotEmpty()) {
+                searchVariables.addAll(extraSearchVariables)
+            }
+            return openProductTypeClient.path<Contacten>().get(searchVariables)
+        } catch (e: Exception) {
+            logger.error { "Error getting contacten with cause: $e.message" }
         }
-        return openProductTypeClient.path<Contacten>().get(searchVariables)
+
+        return ResultPage(
+            count = 0,
+            results = emptyList(),
+        )
     }
 
     suspend fun getContact(id: UUID): OpenProductContact? {
@@ -221,7 +278,7 @@ class OpenProductService(
                 id = id,
             )
         } catch (e: Exception) {
-            logger.error(e) { "Error getting contact with id: $id" }
+            logger.error { "Error getting contact with id: $id with cause: $e.message" }
         }
         return null
     }
@@ -230,17 +287,30 @@ class OpenProductService(
         pageNumber: Int,
         pageSize: Int,
         naam: String? = null,
+        extraSearchVariables: List<Pair<OpenProductLocatiesFilters, Any>> = emptyList(),
     ): ResultPage<OpenProductLocatie> {
-        val searchVariables =
-            mutableListOf(
-                OpenProductLocatiesFilters.PAGE to pageNumber.toString(),
-                OpenProductLocatiesFilters.PAGE_SIZE to pageSize.toString(),
-            )
+        try {
+            val searchVariables =
+                mutableListOf<Pair<OpenProductLocatiesFilters, Any>>(
+                    OpenProductLocatiesFilters.PAGE to pageNumber.toString(),
+                    OpenProductLocatiesFilters.PAGE_SIZE to pageSize.toString(),
+                )
 
-        naam?.let {
-            searchVariables.add(OpenProductLocatiesFilters.NAAM_EXACT to it)
+            naam?.let {
+                searchVariables.add(OpenProductLocatiesFilters.NAAM_EXACT to it)
+            }
+            if (extraSearchVariables.isNotEmpty()) {
+                searchVariables.addAll(extraSearchVariables)
+            }
+            return openProductTypeClient.path<Locaties>().get(searchVariables)
+        } catch (e: Exception) {
+            logger.error { "Error getting locaties with cause: $e.message" }
         }
-        return openProductTypeClient.path<Locaties>().get(searchVariables)
+
+        return ResultPage(
+            count = 0,
+            results = emptyList(),
+        )
     }
 
     suspend fun getLocatie(id: UUID): OpenProductLocatie? {
@@ -249,7 +319,7 @@ class OpenProductService(
                 id = id,
             )
         } catch (e: Exception) {
-            logger.error(e) { "Error getting locatie with id: $id" }
+            logger.error { "Error getting locatie with id: $id with cause: $e.message" }
         }
         return null
     }
@@ -258,17 +328,30 @@ class OpenProductService(
         pageNumber: Int,
         pageSize: Int,
         naam: String? = null,
+        extraSearchVariables: List<Pair<OpenProductOrganisatiesFilters, Any>> = emptyList(),
     ): ResultPage<OpenProductOrganisatie> {
-        val searchVariables =
-            mutableListOf(
-                OpenProductOrganisatiesFilters.PAGE to pageNumber.toString(),
-                OpenProductOrganisatiesFilters.PAGE_SIZE to pageSize.toString(),
-            )
+        try {
+            val searchVariables =
+                mutableListOf<Pair<OpenProductOrganisatiesFilters, Any>>(
+                    OpenProductOrganisatiesFilters.PAGE to pageNumber.toString(),
+                    OpenProductOrganisatiesFilters.PAGE_SIZE to pageSize.toString(),
+                )
 
-        naam?.let {
-            searchVariables.add(OpenProductOrganisatiesFilters.NAAM_EXACT to it)
+            naam?.let {
+                searchVariables.add(OpenProductOrganisatiesFilters.NAAM_EXACT to it)
+            }
+            if (extraSearchVariables.isNotEmpty()) {
+                searchVariables.addAll(extraSearchVariables)
+            }
+            return openProductTypeClient.path<Organisaties>().get(searchVariables)
+        } catch (e: Exception) {
+            logger.error { "Error getting organisaties with cause: $e.message" }
         }
-        return openProductTypeClient.path<Organisaties>().get(searchVariables)
+
+        return ResultPage(
+            count = 0,
+            results = emptyList(),
+        )
     }
 
     suspend fun getOrganisatie(id: UUID): OpenProductOrganisatie? {
@@ -277,7 +360,7 @@ class OpenProductService(
                 id = id,
             )
         } catch (e: Exception) {
-            logger.error(e) { "Error getting organisatie with id: $id" }
+            logger.error { "Error getting organisatie with id: $id with cause: $e.message" }
         }
         return null
     }
@@ -285,13 +368,26 @@ class OpenProductService(
     suspend fun getPrijzen(
         pageNumber: Int,
         pageSize: Int,
+        extraSearchVariables: List<Pair<OpenProductPrijzenFilters, Any>> = emptyList(),
     ): ResultPage<OpenProductPrijs> {
-        val searchVariables =
-            listOf(
-                OpenProductPrijzenFilters.PAGE to pageNumber.toString(),
-                OpenProductPrijzenFilters.PAGE_SIZE to pageSize.toString(),
-            )
-        return openProductTypeClient.path<Prijzen>().get(searchVariables)
+        try {
+            val searchVariables =
+                mutableListOf<Pair<OpenProductPrijzenFilters, Any>>(
+                    OpenProductPrijzenFilters.PAGE to pageNumber.toString(),
+                    OpenProductPrijzenFilters.PAGE_SIZE to pageSize.toString(),
+                )
+            if (extraSearchVariables.isNotEmpty()) {
+                searchVariables.addAll(extraSearchVariables)
+            }
+            return openProductTypeClient.path<Prijzen>().get(searchVariables)
+        } catch (e: Exception) {
+            logger.error { "Error getting prijzen with cause: $e.message" }
+        }
+
+        return ResultPage(
+            count = 0,
+            results = emptyList(),
+        )
     }
 
     suspend fun getPrijs(id: UUID): OpenProductPrijs? {
@@ -300,7 +396,7 @@ class OpenProductService(
                 id = id,
             )
         } catch (e: Exception) {
-            logger.error(e) { "Error getting prijs with id: $id" }
+            logger.error { "Error getting prijs with id: $id with cause: $e.message" }
         }
         return null
     }
@@ -308,13 +404,26 @@ class OpenProductService(
     suspend fun getSchemas(
         pageNumber: Int,
         pageSize: Int,
+        extraSearchVariables: List<Pair<OpenProductSchemasFilters, Any>> = emptyList(),
     ): ResultPage<OpenProductSchema> {
-        val searchVariables =
-            listOf(
-                OpenProductSchemasFilters.PAGE to pageNumber.toString(),
-                OpenProductSchemasFilters.PAGE_SIZE to pageSize.toString(),
-            )
-        return openProductTypeClient.path<Schemas>().get(searchVariables)
+        try {
+            val searchVariables =
+                mutableListOf<Pair<OpenProductSchemasFilters, Any>>(
+                    OpenProductSchemasFilters.PAGE to pageNumber.toString(),
+                    OpenProductSchemasFilters.PAGE_SIZE to pageSize.toString(),
+                )
+            if (extraSearchVariables.isNotEmpty()) {
+                searchVariables.addAll(extraSearchVariables)
+            }
+            return openProductTypeClient.path<Schemas>().get(searchVariables)
+        } catch (e: Exception) {
+            logger.error { "Error getting schemas with cause: $e.message" }
+        }
+
+        return ResultPage(
+            count = 0,
+            results = emptyList(),
+        )
     }
 
     suspend fun getSchema(id: UUID): OpenProductSchema? {
@@ -323,7 +432,7 @@ class OpenProductService(
                 id = id,
             )
         } catch (e: Exception) {
-            logger.error(e) { "Error getting schema with id: $id" }
+            logger.error { "Error getting schema with id: $id with cause: $e.message" }
         }
         return null
     }
@@ -331,13 +440,26 @@ class OpenProductService(
     suspend fun getLinks(
         pageNumber: Int,
         pageSize: Int,
+        extraSearchVariables: List<Pair<OpenProductLinksFilters, Any>> = emptyList(),
     ): ResultPage<OpenProductLink> {
-        val searchVariables =
-            listOf(
-                OpenProductLinksFilters.PAGE to pageNumber.toString(),
-                OpenProductLinksFilters.PAGE_SIZE to pageSize.toString(),
-            )
-        return openProductTypeClient.path<Links>().get(searchVariables)
+        try {
+            val searchVariables =
+                mutableListOf<Pair<OpenProductLinksFilters, Any>>(
+                    OpenProductLinksFilters.PAGE to pageNumber.toString(),
+                    OpenProductLinksFilters.PAGE_SIZE to pageSize.toString(),
+                )
+            if (extraSearchVariables.isNotEmpty()) {
+                searchVariables.addAll(extraSearchVariables)
+            }
+            return openProductTypeClient.path<Links>().get(searchVariables)
+        } catch (e: Exception) {
+            logger.error { "Error getting links with cause: $e.message" }
+        }
+
+        return ResultPage(
+            count = 0,
+            results = emptyList(),
+        )
     }
 
     suspend fun getLink(id: UUID): OpenProductLink? {
@@ -346,7 +468,7 @@ class OpenProductService(
                 id = id,
             )
         } catch (e: Exception) {
-            logger.error(e) { "Error getting link with id: $id" }
+            logger.error { "Error getting link with id: $id with cause: $e.message" }
         }
         return null
     }
@@ -357,7 +479,7 @@ class OpenProductService(
                 id = productTypeId,
             )
         } catch (e: Exception) {
-            logger.error(e) { "Error getting producttype content with id: $productTypeId" }
+            logger.error { "Error getting producttype content with id: $productTypeId with cause: $e.message" }
         }
         return null
     }
@@ -412,7 +534,7 @@ class OpenProductService(
             if (e is ResponseStatusException) {
                 throw e
             } else {
-                logger.error(e) { "Error getting product with id: $id" }
+                logger.error { "Error getting product with id: $id with cause: $e.message" }
             }
         }
         return null
@@ -441,7 +563,7 @@ class OpenProductService(
                 ).results
             }
         } catch (e: Exception) {
-            logger.error(e) { "Error getting products with thema id: $themaId" }
+            logger.error { "Error getting products with thema id: $themaId with cause: $e.message" }
         }
 
         return emptyList()
