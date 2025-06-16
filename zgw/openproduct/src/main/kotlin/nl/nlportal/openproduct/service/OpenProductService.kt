@@ -713,12 +713,17 @@ class OpenProductService(
                 themasList = themas,
             )
 
-        // get producten, TODO add filter of all the related thema's
+        val searchVariables =
+            listOf(
+                OpenProductProductenFilters.THEMA_UUID_IN to themas.joinToString { it.uuid.toString() },
+            )
+
         val producten =
             getProducten(
                 authentication = authentication,
                 pageNumber = pageNumber,
                 pageSize = pageSize,
+                extraSearchVariables = searchVariables,
             ).resultaten
 
         // filter out the taak which is not connected to a zaak
