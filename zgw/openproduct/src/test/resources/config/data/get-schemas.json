@@ -1,8 +1,8 @@
 {
-  "count": 2,
-  "next": null,
-  "previous": null,
-  "results": [
+  "aantal": 2,
+  "volgende": null,
+  "vorige": null,
+  "resultaten": [
     {
       "naam": "parkeervergunning-dataobject",
       "schema": {

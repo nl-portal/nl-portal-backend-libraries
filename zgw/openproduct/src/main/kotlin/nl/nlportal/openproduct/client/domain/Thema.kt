@@ -15,6 +15,7 @@
  */
 package nl.nlportal.openproduct.client.domain
 
+import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
 import java.time.ZonedDateTime
@@ -25,6 +26,7 @@ data class OpenProductThema(
     val naam: String,
     val beschrijving: String? = null,
     val gepubliceerd: Boolean? = false,
+    @GraphQLDescription("UUID of the hoofdthema, which is this thema is related to.")
     @JsonProperty("hoofd_thema")
     val hoofdThema: UUID? = null,
     val producttypen: List<OpenProductThemaProductType> = emptyList(),

@@ -39,7 +39,7 @@ class OpenProductDmnService(
         productId: UUID,
     ): List<Map<String, OpenProductDmnResponse>> {
         val variablesMapping = mutableMapOf<String, OpenProductDmnVariable>()
-        val actie = openProductService.getActies(pageNumber = 1, pageSize = 20, naam = naam).results.firstOrNull()
+        val actie = openProductService.getActies(pageNumber = 1, pageSize = 20, naam = naam).resultaten.firstOrNull()
         if (actie == null) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, NO_ACTIES_FOUND_BY_NAME + naam)
         }

@@ -31,12 +31,12 @@ class PrijzenPage(
             pageSize: Int,
             resultPage: ResultPage<OpenProductPrijs>,
         ): PrijzenPage {
-            val content = resultPage.results.map { it }
+            val content = resultPage.resultaten.map { it }
             return PrijzenPage(
                 number = pageNumber,
                 size = pageSize,
                 content = content,
-                totalElements = resultPage.count,
+                totalElements = resultPage.aantal,
             )
         }
     }

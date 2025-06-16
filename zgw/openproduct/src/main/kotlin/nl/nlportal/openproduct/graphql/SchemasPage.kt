@@ -31,12 +31,12 @@ class SchemasPage(
             pageSize: Int,
             resultPage: ResultPage<OpenProductSchema>,
         ): SchemasPage {
-            val content = resultPage.results.map { it }
+            val content = resultPage.resultaten.map { it }
             return SchemasPage(
                 number = pageNumber,
                 size = pageSize,
                 content = content,
-                totalElements = resultPage.count,
+                totalElements = resultPage.aantal,
             )
         }
     }

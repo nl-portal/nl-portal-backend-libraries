@@ -31,12 +31,12 @@ class OrganisatiesPage(
             pageSize: Int,
             resultPage: ResultPage<OpenProductOrganisatie>,
         ): OrganisatiesPage {
-            val content = resultPage.results.map { it }
+            val content = resultPage.resultaten.map { it }
             return OrganisatiesPage(
                 number = pageNumber,
                 size = pageSize,
                 content = content,
-                totalElements = resultPage.count,
+                totalElements = resultPage.aantal,
             )
         }
     }

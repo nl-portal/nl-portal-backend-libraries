@@ -1,8 +1,8 @@
 {
-  "count": 1,
-  "next": null,
-  "previous": null,
-  "results": [
+  "aantal": 1,
+  "volgende": null,
+  "vorige": null,
+  "resultaten": [
     {
       "uuid": "317ab929-5cb4-4dde-ae4a-489f4d388699",
       "producttype_uuid": "dee273e9-2aa8-40ae-84b7-cb7da3c075ba",

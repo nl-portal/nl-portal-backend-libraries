@@ -31,12 +31,12 @@ class ContactenPage(
             pageSize: Int,
             resultPage: ResultPage<OpenProductContact>,
         ): ContactenPage {
-            val content = resultPage.results.map { it }
+            val content = resultPage.resultaten.map { it }
             return ContactenPage(
                 number = pageNumber,
                 size = pageSize,
                 content = content,
-                totalElements = resultPage.count,
+                totalElements = resultPage.aantal,
             )
         }
     }

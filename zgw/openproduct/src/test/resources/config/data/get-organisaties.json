@@ -1,8 +1,8 @@
 {
-  "count": 1,
-  "next": null,
-  "previous": null,
-  "results": [
+  "aantal": 1,
+  "volgende": null,
+  "vorige": null,
+  "resultaten": [
     {
       "uuid": "ac1ee933-8f9a-414b-bf0c-11adc969ed2c",
       "naam": "Ritense",

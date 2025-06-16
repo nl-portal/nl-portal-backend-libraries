@@ -31,12 +31,12 @@ class BestandenPage(
             pageSize: Int,
             resultPage: ResultPage<OpenProductBestand>,
         ): BestandenPage {
-            val content = resultPage.results.map { it }
+            val content = resultPage.resultaten.map { it }
             return BestandenPage(
                 number = pageNumber,
                 size = pageSize,
                 content = content,
-                totalElements = resultPage.count,
+                totalElements = resultPage.aantal,
             )
         }
     }

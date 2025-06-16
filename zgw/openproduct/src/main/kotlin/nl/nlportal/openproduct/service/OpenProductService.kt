@@ -48,9 +48,17 @@ import nl.nlportal.openproduct.client.domain.OpenProductSchemasFilters
 import nl.nlportal.openproduct.client.domain.OpenProductThema
 import nl.nlportal.openproduct.client.domain.OpenProductThemasFilters
 import nl.nlportal.openproduct.client.domain.OpenProductUrl
+import nl.nlportal.openproduct.client.domain.ResultPage
 import nl.nlportal.openproduct.client.path.Acties
+import nl.nlportal.openproduct.client.path.Bestanden
+import nl.nlportal.openproduct.client.path.Contacten
+import nl.nlportal.openproduct.client.path.Links
+import nl.nlportal.openproduct.client.path.Locaties
+import nl.nlportal.openproduct.client.path.Organisaties
+import nl.nlportal.openproduct.client.path.Prijzen
 import nl.nlportal.openproduct.client.path.ProductTypes
 import nl.nlportal.openproduct.client.path.Producten
+import nl.nlportal.openproduct.client.path.Schemas
 import nl.nlportal.openproduct.client.path.Themas
 import nl.nlportal.openproduct.graphql.domain.OpenProductThemaHierarchy
 import nl.nlportal.zakenapi.client.ZakenApiClient
@@ -59,14 +67,6 @@ import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
-import nl.nlportal.openproduct.client.domain.ResultPage
-import nl.nlportal.openproduct.client.path.Bestanden
-import nl.nlportal.openproduct.client.path.Contacten
-import nl.nlportal.openproduct.client.path.Links
-import nl.nlportal.openproduct.client.path.Locaties
-import nl.nlportal.openproduct.client.path.Organisaties
-import nl.nlportal.openproduct.client.path.Prijzen
-import nl.nlportal.openproduct.client.path.Schemas
 import nl.nlportal.zgw.taak.autoconfigure.TaakConfig.TaakConfigProperties
 import nl.nlportal.zgw.taak.domain.TaakObjectV2
 import nl.nlportal.zgw.taak.domain.TaakV2
@@ -74,8 +74,6 @@ import nl.nlportal.zgw.taak.graphql.TaakPageV2
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
-import kotlin.collections.any
-import kotlin.collections.forEach
 
 class OpenProductService(
     private val openProductClient: OpenProductClient,
@@ -108,16 +106,16 @@ class OpenProductService(
         }
 
         return ResultPage(
-            count = 0,
-            results = emptyList(),
+            aantal = 0,
+            resultaten = emptyList(),
         )
     }
 
-    suspend fun getHoofdThemas(): List<OpenProductThema> = getThemas(1, 999).results.filter { it.hoofdThema == null }
+    suspend fun getHoofdThemas(): List<OpenProductThema> = getThemas(1, 999).resultaten.filter { it.hoofdThema == null }
 
     suspend fun getThemasHierarchy(): List<OpenProductThemaHierarchy> {
         val themasHierarchy = mutableListOf<OpenProductThemaHierarchy>()
-        val themas = getThemas(1, 999).results
+        val themas = getThemas(1, 999).resultaten
         val hoofdThemas = themas.filter { it.hoofdThema == null }
 
         hoofdThemas.forEach {
@@ -184,8 +182,8 @@ class OpenProductService(
         }
 
         return ResultPage(
-            count = 0,
-            results = emptyList(),
+            aantal = 0,
+            resultaten = emptyList(),
         )
     }
 
@@ -230,8 +228,8 @@ class OpenProductService(
         }
 
         return ResultPage(
-            count = 0,
-            results = emptyList(),
+            aantal = 0,
+            resultaten = emptyList(),
         )
     }
 
@@ -272,8 +270,8 @@ class OpenProductService(
         }
 
         return ResultPage(
-            count = 0,
-            results = emptyList(),
+            aantal = 0,
+            resultaten = emptyList(),
         )
     }
 
@@ -314,8 +312,8 @@ class OpenProductService(
         }
 
         return ResultPage(
-            count = 0,
-            results = emptyList(),
+            aantal = 0,
+            resultaten = emptyList(),
         )
     }
 
@@ -355,8 +353,8 @@ class OpenProductService(
         }
 
         return ResultPage(
-            count = 0,
-            results = emptyList(),
+            aantal = 0,
+            resultaten = emptyList(),
         )
     }
 
@@ -396,8 +394,8 @@ class OpenProductService(
         }
 
         return ResultPage(
-            count = 0,
-            results = emptyList(),
+            aantal = 0,
+            resultaten = emptyList(),
         )
     }
 
@@ -432,8 +430,8 @@ class OpenProductService(
         }
 
         return ResultPage(
-            count = 0,
-            results = emptyList(),
+            aantal = 0,
+            resultaten = emptyList(),
         )
     }
 
@@ -468,8 +466,8 @@ class OpenProductService(
         }
 
         return ResultPage(
-            count = 0,
-            results = emptyList(),
+            aantal = 0,
+            resultaten = emptyList(),
         )
     }
 
@@ -504,8 +502,8 @@ class OpenProductService(
         }
 
         return ResultPage(
-            count = 0,
-            results = emptyList(),
+            aantal = 0,
+            resultaten = emptyList(),
         )
     }
 
@@ -597,20 +595,18 @@ class OpenProductService(
                 throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find thema with id: $themaId")
             }
 
-            if (thema.producttypen.isNotEmpty()) {
-                val searchVariables =
-                    listOf(
-                        OpenProductProductenFilters.PRODUCTTYPE_UUID_IN to thema.producttypen.joinToString(",") { it.uuid.toString() },
-                    )
-                return getProducten(
-                    authentication = authentication,
-                    pageNumber = 1,
-                    pageSize = 999,
-                    extraSearchVariables = searchVariables,
-                ).results
-            }
+            val searchVariables =
+                listOf(
+                    OpenProductProductenFilters.THEMA_UUID to thema.uuid.toString(),
+                )
+            return getProducten(
+                authentication = authentication,
+                pageNumber = 1,
+                pageSize = 999,
+                extraSearchVariables = searchVariables,
+            ).resultaten
         } catch (e: Exception) {
-            logger.error { "Error getting products with thema id: $themaId with cause: $e.message" }
+            logger.error { "Error getting products by thema id: $themaId with cause: $e.message" }
         }
 
         return emptyList()
@@ -717,7 +713,7 @@ class OpenProductService(
                 authentication = authentication,
                 pageNumber = pageNumber,
                 pageSize = pageSize,
-            ).results
+            ).resultaten
 
         // filter out the taak which is not connected to a zaak
         return taken
@@ -922,7 +918,7 @@ class OpenProductService(
 
     private suspend fun buildThemaHierachy(thema: OpenProductThema): List<OpenProductThemaHierarchy> {
         val themasHierarchy = mutableListOf<OpenProductThemaHierarchy>()
-        val themas = getThemas(1, 999).results
+        val themas = getThemas(1, 999).resultaten
 
         themasHierarchy.add(
             searchSubThemasHierarchy(

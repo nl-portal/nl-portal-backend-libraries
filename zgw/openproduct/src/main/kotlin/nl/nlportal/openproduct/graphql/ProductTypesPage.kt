@@ -31,12 +31,12 @@ class ProductTypesPage(
             pageSize: Int,
             resultPage: ResultPage<OpenProductProductType>,
         ): ProductTypesPage {
-            val products = resultPage.results.map { it }
+            val products = resultPage.resultaten.map { it }
             return ProductTypesPage(
                 number = pageNumber,
                 size = pageSize,
                 content = products,
-                totalElements = resultPage.count,
+                totalElements = resultPage.aantal,
             )
         }
     }

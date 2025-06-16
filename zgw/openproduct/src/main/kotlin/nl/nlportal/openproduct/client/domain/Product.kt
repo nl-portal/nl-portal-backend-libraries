@@ -144,6 +144,10 @@ enum class OpenProductProductenFilters(
     START_DATUM_LTE("start_datum__lte"),
     STATUS("status"),
     UNIFORM_PRODUCT_NAAM("uniforme_product_naam"),
+    THEMA_NAAM("producttype__themas__naam"),
+    THEMA_NAAM_IN("producttype__themas__naam__in"),
+    THEMA_UUID("producttype__themas__uuid"),
+    THEMA_UUID_IN("producttype__themas__uuid__in"),
     ;
 
     override fun toString() = this.value

@@ -1,8 +1,8 @@
 {
-  "count": 1,
-  "next": null,
-  "previous": null,
-  "results": [
+  "aantal": 1,
+  "volgende": null,
+  "vorige": null,
+  "resultaten": [
     {
       "uuid": "0a9ff804-d151-477b-81aa-09e16f3064d9",
       "bestand": "http://localhost:8070/media/https%3A/gemeente.open-product.nl/media/test.txt",

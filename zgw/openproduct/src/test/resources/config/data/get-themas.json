@@ -1,8 +1,8 @@
 {
-  "count": 4,
-  "next": null,
-  "previous": null,
-  "results": [
+  "aantal": 4,
+  "volgende": null,
+  "vorige": null,
+  "resultaten": [
     {
       "uuid": "41f71c2e-9e0c-4a1b-8d39-709669b256c2",
       "naam": "Parkeren",

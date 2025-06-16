@@ -31,12 +31,12 @@ class LocatiesPage(
             pageSize: Int,
             resultPage: ResultPage<OpenProductLocatie>,
         ): LocatiesPage {
-            val content = resultPage.results.map { it }
+            val content = resultPage.resultaten.map { it }
             return LocatiesPage(
                 number = pageNumber,
                 size = pageSize,
                 content = content,
-                totalElements = resultPage.count,
+                totalElements = resultPage.aantal,
             )
         }
     }

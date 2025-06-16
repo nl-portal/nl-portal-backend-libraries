@@ -1,8 +1,8 @@
 {
-  "count": 4,
-  "next": null,
-  "previous": null,
-  "results": [
+  "aantal": 4,
+  "volgende": null,
+  "vorige": null,
+  "resultaten": [
     {
       "uuid": "694242af-d906-470b-b7e1-eb3527886854",
       "url": "http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/",

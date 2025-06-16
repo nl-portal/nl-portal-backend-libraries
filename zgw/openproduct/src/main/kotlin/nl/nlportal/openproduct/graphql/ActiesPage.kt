@@ -31,12 +31,12 @@ class ActiesPage(
             pageSize: Int,
             resultPage: ResultPage<OpenProductActie>,
         ): ActiesPage {
-            val content = resultPage.results.map { it }
+            val content = resultPage.resultaten.map { it }
             return ActiesPage(
                 number = pageNumber,
                 size = pageSize,
                 content = content,
-                totalElements = resultPage.count,
+                totalElements = resultPage.aantal,
             )
         }
     }
