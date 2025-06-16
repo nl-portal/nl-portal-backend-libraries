@@ -70,7 +70,7 @@ class OpenProductThemaQuery(
         pageNumber: Int? = null,
         pageSize: Int? = null,
         id: UUID,
-        language: String,
+        language: String? = null,
         isOpen: Boolean? = null,
     ): List<Zaak> =
         openProductService.getThemaZaken(
@@ -88,7 +88,7 @@ class OpenProductThemaQuery(
         pageNumber: Int? = null,
         pageSize: Int? = null,
         id: UUID,
-        language: String,
+        language: String? = null,
     ): List<TaakV2> =
         openProductService.getThemaTaken(
             authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],

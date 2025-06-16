@@ -31,7 +31,7 @@ class ProductTypes(
 
     suspend fun get(
         searchFilters: List<Pair<OpenProductProductTypesFilters, Any>>? = null,
-        language: String,
+        language: String? = null,
     ): ResultPage<OpenProductProductType> =
         client
             .webClient
@@ -48,7 +48,7 @@ class ProductTypes(
 
     suspend fun get(
         id: UUID,
-        language: String,
+        language: String? = null,
     ): OpenProductProductType? =
         client
             .webClient
@@ -57,8 +57,10 @@ class ProductTypes(
                 uriBuilder
                     .path("$path/$id")
                     .build()
-            }.header("Accept-Language", language)
-            .accept(MediaType.APPLICATION_JSON)
+            }.header(
+                "Accept-Language",
+                language,
+            ).accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody()
 

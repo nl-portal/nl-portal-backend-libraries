@@ -160,7 +160,7 @@ class OpenProductService(
     suspend fun getProductTypes(
         pageNumber: Int,
         pageSize: Int,
-        language: String,
+        language: String? = null,
         extraSearchVariables: List<Pair<OpenProductProductTypesFilters, Any>> = emptyList(),
     ): ResultPage<OpenProductProductType> {
         try {
@@ -190,7 +190,7 @@ class OpenProductService(
 
     suspend fun getProductType(
         id: UUID,
-        language: String,
+        language: String? = null,
     ): OpenProductProductType? {
         try {
             return openProductTypeClient.path<ProductTypes>().get(
@@ -638,7 +638,7 @@ class OpenProductService(
         pageSize: Int,
         isOpen: Boolean? = null,
         id: UUID,
-        language: String,
+        language: String? = null,
         themasList: List<OpenProductThema>? = null,
     ): List<Zaak> {
         val themas = themasList ?: collectThemaHierarchyUpFromSubThema(id)
@@ -688,7 +688,7 @@ class OpenProductService(
         pageNumber: Int,
         pageSize: Int,
         id: UUID,
-        language: String,
+        language: String? = null,
     ): List<TaakV2> {
         val themas = collectThemaHierarchyUpFromSubThema(id)
         val taken =

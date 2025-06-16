@@ -31,7 +31,7 @@ class OpenProductTypeQuery(
     suspend fun getOpenProductTypes(
         pageNumber: Int? = null,
         pageSize: Int? = null,
-        language: String,
+        language: String? = null,
     ): ProductTypesPage =
         ProductTypesPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
@@ -48,7 +48,7 @@ class OpenProductTypeQuery(
     suspend fun getOpenProductType(
         dfe: DataFetchingEnvironment,
         id: UUID,
-        language: String,
+        language: String? = null,
     ): OpenProductProductType? =
         openProductService.getProductType(
             id = id,
