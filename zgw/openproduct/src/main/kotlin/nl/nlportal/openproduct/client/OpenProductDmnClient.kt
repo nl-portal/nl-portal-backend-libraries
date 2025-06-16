@@ -20,7 +20,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.netty.handler.logging.LogLevel
 import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
-import nl.nlportal.openproduct.autoconfigure.OpenProductDmnConfiguration.OpenProductDmnConfigurationProperties
+import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration.OpenProductConfigurationProperties.OpenProductDmnConfigurationProperties
 import nl.nlportal.openproduct.client.domain.OpenProductDmnRequest
 import nl.nlportal.openproduct.client.domain.OpenProductDmnResponse
 import org.springframework.http.HttpStatus

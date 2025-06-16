@@ -36,7 +36,6 @@ import org.springframework.web.reactive.function.client.WebClient
 @AutoConfiguration
 @EnableConfigurationProperties(
     OpenProductModuleConfiguration::class,
-    OpenProductDmnConfiguration::class,
 )
 @ConditionalOnProperty(prefix = "nl-portal.config.openproduct", name = ["enabled"], havingValue = "true")
 class OpenProductAutoConfiguration {
@@ -74,14 +73,13 @@ class OpenProductAutoConfiguration {
         )
 
     @Bean("openProductDmnClient")
-    @ConditionalOnProperty(prefix = "nl-portal.config.openproduct.dmn", name = ["enabled"], havingValue = "true")
     fun openProductDmnClient(
-        dmnConfiguration: OpenProductDmnConfiguration,
+        openProductModuleConfiguration: OpenProductModuleConfiguration,
         @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
         webClientBuilder: WebClient.Builder,
     ): OpenProductDmnClient =
         OpenProductDmnClient(
-            dmnConfiguration.properties,
+            openProductModuleConfiguration.properties.dmn,
             clientSslContextResolver,
             webClientBuilder,
         )

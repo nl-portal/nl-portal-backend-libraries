@@ -15,6 +15,7 @@
  */
 package nl.nlportal.openproduct.autoconfigure
 
+import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 import java.net.URI
 
@@ -41,5 +42,14 @@ data class OpenProductModuleConfiguration(
         var productApiUrl: URI? = null,
         var productTypeApiUrl: URI? = null,
         var token: String? = null,
-    )
+        val dmn: OpenProductDmnConfigurationProperties = OpenProductDmnConfigurationProperties(),
+    ) {
+        data class OpenProductDmnConfigurationProperties(
+            var clientId: String = "",
+            var secret: String = "",
+            var username: String = "",
+            var password: String = "",
+            var ssl: Ssl? = null,
+        )
+    }
 }
