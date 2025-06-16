@@ -24,6 +24,7 @@ import nl.nlportal.haalcentraal2.client.path.Bewoning
 import nl.nlportal.haalcentraal2.client.path.Personen
 import nl.nlportal.haalcentraal2.domain.bewoning.BewoningenApiRequest
 import nl.nlportal.haalcentraal2.domain.bewoning.BewoningenApiResponse
+import nl.nlportal.haalcentraal2.domain.brp.AanduidingNaamGebruikBrpNaam
 import nl.nlportal.haalcentraal2.domain.brp.BrpApiRequest
 import nl.nlportal.haalcentraal2.domain.brp.BrpPersoon
 import java.time.LocalDate
@@ -47,6 +48,9 @@ class HaalCentraal2Service(
                     authentication,
                 ).personen
                 .singleOrNull()
+                ?.apply {
+                    naam.officialLastName = determineOfficialLastName(this)
+                }
         } else {
             null
         }
@@ -100,6 +104,36 @@ class HaalCentraal2Service(
                     authentication,
                 ).personen
                 .singleOrNull()
+                ?.apply {
+                    naam.officialLastName = determineOfficialLastName(this)
+                }
+        }
+    }
+
+    private fun determineOfficialLastName(persoon: BrpPersoon): String {
+        if (persoon.naam.aanduidingNaamgebruik?.code == null) {
+            return persoon.naam.lastName()
+        }
+        val lastNamePartner =
+            persoon.partners
+                ?.firstOrNull { it.naam != null }
+                ?.naam
+                ?.lastName()
+                ?.trim() ?: ""
+
+        return when (persoon.naam.aanduidingNaamgebruik.code) {
+            AanduidingNaamGebruikBrpNaam.PARTNER.value -> {
+                lastNamePartner
+            }
+            AanduidingNaamGebruikBrpNaam.PARTNER_EIGEN.value -> {
+                "$lastNamePartner - ${persoon.naam.lastName()}"
+            }
+            AanduidingNaamGebruikBrpNaam.EIGEN_PARTNER.value -> {
+                "${persoon.naam.lastName()} - $lastNamePartner"
+            }
+            else -> {
+                persoon.naam.lastName()
+            }
         }
     }
 
