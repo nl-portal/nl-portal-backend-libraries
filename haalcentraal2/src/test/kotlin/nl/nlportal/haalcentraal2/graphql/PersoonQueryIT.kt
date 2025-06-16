@@ -90,6 +90,8 @@ internal class PersoonQueryIT(
                     naam {
                         geslachtsnaam,
                         volledigeNaam,
+                        lastName,
+                        officialLastName,
                     }
                 }
             }

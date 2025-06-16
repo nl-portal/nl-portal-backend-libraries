@@ -70,7 +70,7 @@
                 "voorletters": "P.J.",
                 "volledigeNaam": "Pieter Jan de Vries",
                 "aanduidingNaamgebruik": {
-                    "code": "6030",
+                    "code": "E",
                     "omschrijving": "Nederland"
                 },
                 "inOnderzoek": {
@@ -439,14 +439,14 @@
                         "omschrijving": "Nederland"
                     },
                     "naam": {
-                        "voornamen": "Pieter Jan",
+                        "voornamen": "Isa",
                         "adellijkeTitelPredicaat": {
                             "code": "JV",
                             "omschrijving": "jonkvrouw",
                             "soort": "predicaat"
                         },
-                        "voorvoegsel": "de",
-                        "geslachtsnaam": "Vries",
+                        "voorvoegsel": "",
+                        "geslachtsnaam": "Beerepoot",
                         "voorletters": "P.J.",
                         "inOnderzoek": {
                             "datumIngangOnderzoek": {
