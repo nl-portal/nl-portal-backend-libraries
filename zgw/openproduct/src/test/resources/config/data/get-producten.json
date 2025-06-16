@@ -53,7 +53,7 @@
       "naam": "parkeren 2tact",
       "start_datum": "2025-04-30",
       "eind_datum": "2026-04-30",
-      "aanmaak_datum": "2025-04-30T13:51:32.757301+02:00",
+      "aanmaak_datum": "2025-02-28T13:51:32.757301+02:00",
       "update_datum": "2025-04-30T13:51:32.757301+02:00",
       "producttype": {
         "uuid": "dee273e9-2aa8-40ae-84b7-cb7da3c075ba",
@@ -67,7 +67,7 @@
           "gereed"
         ],
         "gepubliceerd": true,
-        "aanmaak_datum": "2025-04-30T13:51:32.736333+02:00",
+        "aanmaak_datum": "2025-02-28T13:51:32.736333+02:00",
         "update_datum": "2025-05-06T08:53:00.078716+02:00"
       },
       "gepubliceerd": true,
@@ -93,7 +93,7 @@
       "naam": "parkeren 3tact",
       "start_datum": "2025-04-30",
       "eind_datum": "2026-04-30",
-      "aanmaak_datum": "2025-04-30T13:51:32.757301+02:00",
+      "aanmaak_datum": "2025-01-30T13:51:32.757301+02:00",
       "update_datum": "2025-04-30T13:51:32.757301+02:00",
       "producttype": {
         "uuid": "dee273e9-2aa8-40ae-84b7-cb7da3c075ba",
@@ -107,7 +107,7 @@
           "gereed"
         ],
         "gepubliceerd": true,
-        "aanmaak_datum": "2025-04-30T13:51:32.736333+02:00",
+        "aanmaak_datum": "2025-01-30T13:51:32.736333+02:00",
         "update_datum": "2025-05-06T08:53:00.078716+02:00"
       },
       "gepubliceerd": true,
@@ -133,7 +133,7 @@
       "naam": "belastingzaken",
       "start_datum": "2025-04-30",
       "eind_datum": "2026-04-30",
-      "aanmaak_datum": "2025-04-30T13:51:32.757301+02:00",
+      "aanmaak_datum": "2025-04-29T13:51:32.757301+02:00",
       "update_datum": "2025-04-30T13:51:32.757301+02:00",
       "producttype": {
         "uuid": "dee273e9-2aa8-40ae-84b7-cb7da3c075ba",
@@ -147,7 +147,7 @@
           "gereed"
         ],
         "gepubliceerd": true,
-        "aanmaak_datum": "2025-04-30T13:51:32.736333+02:00",
+        "aanmaak_datum": "2025-04-29T13:51:32.736333+02:00",
         "update_datum": "2025-05-06T08:53:00.078716+02:00"
       },
       "gepubliceerd": true,

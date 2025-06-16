@@ -1,7 +1,8 @@
 query {
     getOpenProducten(
         pageNumber: 1,
-        pageSize: 20
+        pageSize: 20,
+        status: "actief",
      ){
         number
          size

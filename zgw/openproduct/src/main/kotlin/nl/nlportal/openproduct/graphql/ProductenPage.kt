@@ -31,7 +31,7 @@ class ProductenPage(
             pageSize: Int,
             resultPage: ResultPage<OpenProductProduct>,
         ): ProductenPage {
-            val content = resultPage.resultaten.map { it }
+            val content = resultPage.resultaten.map { it }.sortedByDescending { it.aanmaakDatum }
             return ProductenPage(
                 number = pageNumber,
                 size = pageSize,

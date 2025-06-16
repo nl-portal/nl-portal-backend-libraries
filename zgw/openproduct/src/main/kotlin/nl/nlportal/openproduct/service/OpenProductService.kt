@@ -47,6 +47,7 @@ import nl.nlportal.openproduct.client.domain.OpenProductSchema
 import nl.nlportal.openproduct.client.domain.OpenProductSchemasFilters
 import nl.nlportal.openproduct.client.domain.OpenProductThema
 import nl.nlportal.openproduct.client.domain.OpenProductThemasFilters
+import nl.nlportal.openproduct.client.domain.OpenProductToegestaneStatus
 import nl.nlportal.openproduct.client.domain.OpenProductUrl
 import nl.nlportal.openproduct.client.domain.ResultPage
 import nl.nlportal.openproduct.client.path.Acties
@@ -534,6 +535,7 @@ class OpenProductService(
         pageNumber: Int,
         pageSize: Int,
         extraSearchVariables: List<Pair<OpenProductProductenFilters, String>> = emptyList(),
+        status: OpenProductToegestaneStatus? = null,
     ): ResultPage<OpenProductProduct> {
         val searchVariables =
             mutableListOf(
@@ -546,6 +548,10 @@ class OpenProductService(
 
         if (extraSearchVariables.isNotEmpty()) {
             searchVariables.addAll(extraSearchVariables)
+        }
+
+        if (status != null) {
+            searchVariables.add(OpenProductProductenFilters.STATUS to status.toString().lowercase())
         }
 
         return openProductClient.path<Producten>().get(

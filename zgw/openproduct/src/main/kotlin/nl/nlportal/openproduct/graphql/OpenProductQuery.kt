@@ -21,6 +21,7 @@ import com.expediagroup.graphql.server.operations.Query
 import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.graphql.security.SecurityConstants
 import nl.nlportal.openproduct.client.domain.OpenProductProduct
+import nl.nlportal.openproduct.client.domain.OpenProductToegestaneStatus
 import nl.nlportal.openproduct.service.OpenProductService
 import java.util.*
 
@@ -28,11 +29,23 @@ import java.util.*
 class OpenProductQuery(
     val openProductService: OpenProductService,
 ) : Query {
-    @GraphQLDescription("Get all Open producten")
+    @GraphQLDescription(
+        """
+        Get all Open producten
+        The allowed statussen:
+        - initieel
+        - gereed
+        - actief
+        - ingetrokken
+        - geweigerd
+        - verlopen
+    """,
+    )
     suspend fun getOpenProducten(
         dfe: DataFetchingEnvironment,
         pageNumber: Int? = null,
         pageSize: Int? = null,
+        status: String? = null,
     ): ProductenPage =
         ProductenPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
@@ -42,6 +55,7 @@ class OpenProductQuery(
                     authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
                     pageNumber = pageNumber ?: 1,
                     pageSize = pageSize ?: 20,
+                    status = status?.let { OpenProductToegestaneStatus.valueOf(status.uppercase()) },
                 ),
         )
 

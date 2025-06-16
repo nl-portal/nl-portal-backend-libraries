@@ -42,3 +42,10 @@ enum class OpenProductFrequentie(
     ACTIEF("maandelijks"),
     INGETROKKEN("jaarlijks"),
 }
+
+enum class SortList(
+    @JsonValue val sort: String,
+) {
+    ASCENDING("ascending"),
+    DESCENDING("descending"),
+}
