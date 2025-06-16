@@ -26,7 +26,7 @@ data class OpenProductThema(
     val naam: String,
     val beschrijving: String? = null,
     val gepubliceerd: Boolean? = false,
-    @GraphQLDescription("UUID of the hoofdthema, which is this thema is related to.")
+    @GraphQLDescription("UUID of the hoofdthema, which this thema is related to.")
     @JsonProperty("hoofd_thema")
     val hoofdThema: UUID? = null,
     val producttypen: List<OpenProductThemaProductType> = emptyList(),
