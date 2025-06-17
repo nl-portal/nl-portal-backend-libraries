@@ -840,6 +840,20 @@ class OpenProductService(
 
     suspend fun getProductActies(
         productTypeId: UUID,
+    ): List<OpenProductActie>? {
+        try {
+            val productType = getProductType(id = productTypeId)
+            if (productType != null && productType.acties.isNotEmpty()) {
+                return productType.acties
+            }
+        } catch (e: Exception) {
+            logger.error { "Error getting product acties: $e.message" }
+        }
+        return null
+    }
+
+    suspend fun getProductDecisions(
+        productTypeId: UUID,
     ): List<OpenProductActie> {
         try {
             val productType = getProductType(id = productTypeId)

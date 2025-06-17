@@ -72,7 +72,7 @@ class OpenProductQueryIT(
         @BeforeAll
         fun beforeAll() {
             server = MockWebServer()
-            server?.start()
+            server?.start(9000)
             url = server?.url("/").toString()
         }
 
@@ -223,6 +223,12 @@ class OpenProductQueryIT(
                             }
                             "GET /zaken/api/v1/zaken/703af290-abe0-418c-b9c3-10a65e662788" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-zaak.json")
+                            }
+                            "POST /engine-rest/decision-definition/key/alg-belastingen/evaluate" -> {
+                                TestHelper.mockResponseFromFile("/config/data/get-dmn-decision.json")
+                            }
+                            "GET /acties" -> {
+                                TestHelper.mockResponseFromFile("/config/data/get-acties.json")
                             }
                             else -> MockResponse().setResponseCode(404)
                         }

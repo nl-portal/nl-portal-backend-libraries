@@ -18,7 +18,10 @@ package nl.nlportal.openproduct.client.domain
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.node.ObjectNode
+import nl.nlportal.core.util.Mapper
+import nl.nlportal.openproduct.service.OpenProductDmnService
 import nl.nlportal.openproduct.service.OpenProductService
 import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zgw.taak.domain.TaakV2
@@ -32,9 +35,9 @@ data class OpenProductProduct(
     val url: String? = null,
     val naam: String,
     @JsonProperty("start_datum")
-    val startDatum: LocalDate,
+    val startDatum: LocalDate? = null,
     @JsonProperty("eind_datum")
-    val eindDatum: LocalDate,
+    val eindDatum: LocalDate? = null,
     @JsonProperty("aanmaak_datum")
     val aanmaakDatum: ZonedDateTime,
     @JsonProperty("update_datum")
@@ -80,7 +83,20 @@ data class OpenProductProduct(
         @GraphQLIgnore
         @Autowired
         openProductService: OpenProductService,
-    ): List<OpenProductActie> = openProductService.getProductActies(producttype.uuid)
+    ): List<OpenProductActie>? = openProductService.getProductActies(producttype.uuid)
+
+    suspend fun decisions(
+        @GraphQLIgnore
+        @Autowired
+        openProductDmnService: OpenProductDmnService,
+    ): List<ObjectNode> {
+        val result =
+            openProductDmnService.getDecision(
+                product = this,
+            )
+
+        return Mapper.get().convertValue(result, object : TypeReference<List<ObjectNode>>() {})
+    }
 }
 
 data class OpenProductProductUpdate(
