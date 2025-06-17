@@ -146,6 +146,31 @@ class OpenProductThemaQueryIT(
 
     @Test
     @WithBurgerUser("569312863")
+    fun `get hoofd themas by producten`() =
+        runTest {
+            val basePath = "$.data.getOpenProductHoofdThemasByProducten"
+            webTestClient
+                .post()
+                .uri { builder ->
+                    builder
+                        .path("/graphql")
+                        .build()
+                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductHoofdThemasByProducten.gql")))
+                .exchange()
+                .verifyOnlyDataExists(basePath)
+                .jsonPath("$basePath.size()")
+                .isEqualTo(2)
+                .jsonPath("$basePath[0].naam")
+                .isEqualTo("Belastingzaken")
+                .jsonPath("$basePath[0].producttypen[0].uniformeProductNaam")
+                .isEqualTo("toeristenbelasting")
+                .jsonPath("$basePath[0].producttypen[0].code")
+                .isEqualTo("BELASTINGZAKEN")
+        }
+
+    @Test
+    @WithBurgerUser("569312863")
     fun `get themas hierarchy`() =
         runTest {
             val basePath = "$.data.getOpenProductThemasHierarchy"

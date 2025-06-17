@@ -15,6 +15,7 @@
  */
 package nl.nlportal.openproduct.service
 
+import com.sun.tools.javac.util.List.filter
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.commonground.authentication.BedrijfAuthentication
@@ -113,6 +114,51 @@ class OpenProductService(
     }
 
     suspend fun getHoofdThemas(): List<OpenProductThema> = getThemas(1, 999).resultaten.filter { it.hoofdThema == null }
+
+    suspend fun getHoofdThemasByProducten(
+        authentication: CommonGroundAuthentication,
+    ): List<OpenProductThema> {
+        try {
+            val producten =
+                getProducten(
+                    authentication = authentication,
+                    pageNumber = 1,
+                    pageSize = 999,
+                ).resultaten
+
+            if (producten.isNotEmpty()) {
+                val hoofdThemas = mutableSetOf<OpenProductThema>()
+                val themas =
+                    getThemas(
+                        pageNumber = 1,
+                        pageSize = 999,
+                    ).resultaten
+
+                // loop through producten to get via the producttypes the hoofdthemas
+                producten.forEach { product ->
+                    themas
+                        .filter { thema ->
+                            thema.producttypen.any { productType ->
+                                productType.uuid == product.producttype.uuid
+                            }
+                        }.forEach { thema ->
+                            collectThemaHierarchyUpFromSubThema(
+                                themaId = thema.uuid,
+                                themas = themas,
+                            ).filter { collectThemaHierarchyUpFromSubThema -> collectThemaHierarchyUpFromSubThema.hoofdThema == null }
+                                .let { hoofdThemaList ->
+                                    hoofdThemas.addAll(hoofdThemaList)
+                                }
+                        }
+                }
+
+                return hoofdThemas.toList()
+            }
+        } catch (e: Exception) {
+            logger.error { "Error getting hoofdthemas by producten with cause: $e.message" }
+        }
+        return emptyList()
+    }
 
     suspend fun getThemasHierarchy(): List<OpenProductThemaHierarchy> {
         val themasHierarchy = mutableListOf<OpenProductThemaHierarchy>()

@@ -49,6 +49,14 @@ class OpenProductThemaQuery(
     @GraphQLDescription("Get all hoofd themas")
     suspend fun getOpenProductHoofdThemas(): List<OpenProductThema> = openProductService.getHoofdThemas()
 
+    @GraphQLDescription("Get all hoofd themas by producten")
+    suspend fun getOpenProductHoofdThemasByProducten(
+        dfe: DataFetchingEnvironment,
+    ): List<OpenProductThema> =
+        openProductService.getHoofdThemasByProducten(
+            authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+        )
+
     @GraphQLDescription("Get all themas hierarchy")
     suspend fun getOpenProductThemasHierarchy(): List<OpenProductThemaHierarchy> = openProductService.getThemasHierarchy()
 
