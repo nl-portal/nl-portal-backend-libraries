@@ -41,7 +41,7 @@ class OpenProductDmnService(
 
         val decisions = mutableListOf<Map<String, OpenProductDmnResponse>>()
 
-        acties?.forEach {
+        acties.forEach {
             decisions.addAll(getDecision(product = product, naam = it.naam))
         }
 
@@ -73,47 +73,55 @@ class OpenProductDmnService(
         product: OpenProductProduct,
         naam: String,
     ): List<Map<String, OpenProductDmnResponse>> {
-        val variablesMapping = mutableMapOf<String, OpenProductDmnVariable>()
-        val actie = openProductService.getActies(pageNumber = 1, pageSize = 20, naam = naam).resultaten.firstOrNull()
-        if (actie == null) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, NO_ACTIES_FOUND_BY_NAME + naam)
-        }
+        try {
+            val variablesMapping = mutableMapOf<String, OpenProductDmnVariable>()
+            val actie =
+                openProductService.getActies(pageNumber = 1, pageSize = 20, naam = naam).resultaten.firstOrNull()
+            if (actie == null) {
+                logger.warn { NO_ACTIES_FOUND_BY_NAME + naam }
+                return emptyList()
+            }
 
-        // add the product mapping
-        variablesMapping.putAll(
-            mapActieMappingVariables(
-                actieMappingVariables = actie.mapping[ACTIE_MAPPING_KEY_PRODUCT]!!,
-                source = Mapper.get().writeValueAsString(product),
-            ),
-        )
-
-        // add the static mapping
-        // handle the configured static variables
-        actie.mapping[ACTIE_MAPPING_KEY_STATIC]?.let {
+            // add the product mapping
             variablesMapping.putAll(
                 mapActieMappingVariables(
-                    it,
+                    actieMappingVariables = actie.mapping[ACTIE_MAPPING_KEY_PRODUCT]!!,
+                    source = Mapper.get().writeValueAsString(product),
                 ),
             )
-        }
 
-        if (variablesMapping.isEmpty()) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, SOURCE_MAPPING_FAILED + naam)
-        }
-        val dmnRequest =
-            OpenProductDmnRequest(
-                key = naam,
-                mapping =
-                    OpenProductDmnRequestMapping(
-                        variables = variablesMapping,
+            // add the static mapping
+            // handle the configured static variables
+            actie.mapping[ACTIE_MAPPING_KEY_STATIC]?.let {
+                variablesMapping.putAll(
+                    mapActieMappingVariables(
+                        it,
                     ),
-            )
+                )
+            }
 
-        return openProductDmnClient
-            .getDecision(
-                url = actie.url,
-                dmnRequest = dmnRequest,
-            ).filter { it.isNotEmpty() }
+            if (variablesMapping.isEmpty()) {
+                logger.warn { SOURCE_MAPPING_FAILED + naam }
+                return emptyList()
+            }
+            val dmnRequest =
+                OpenProductDmnRequest(
+                    key = naam,
+                    mapping =
+                        OpenProductDmnRequestMapping(
+                            variables = variablesMapping,
+                        ),
+                )
+
+            return openProductDmnClient
+                .getDecision(
+                    url = actie.url,
+                    dmnRequest = dmnRequest,
+                ).filter { it.isNotEmpty() }
+        } catch (ex: Exception) {
+            logger.warn { "Problem with getting decision: ${ex.message}" }
+        }
+        return emptyList()
     }
 
     private fun mapActieMappingVariables(
@@ -154,7 +162,7 @@ class OpenProductDmnService(
             val inputJsonPath = JsonPath.parse(source)
             return inputJsonPath.read<Any>(regex)
         } catch (ex: Exception) {
-            OpenProductService.Companion.logger.warn { "Problem with parsing variable: ${ex.message}" }
+            logger.warn { "Problem with parsing variable: ${ex.message}" }
         }
         return ""
     }

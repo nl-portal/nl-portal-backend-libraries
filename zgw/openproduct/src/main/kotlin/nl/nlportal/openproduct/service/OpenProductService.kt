@@ -821,26 +821,24 @@ class OpenProductService(
     suspend fun getProductTaken(
         taken: List<OpenProductUrl>,
     ): List<TaakV2> {
-        try {
-            val takenList = mutableListOf<TaakV2>()
-
-            taken.forEach {
+        val takenList = mutableListOf<TaakV2>()
+        taken.forEach {
+            try {
                 val taakObject = objectsApiClient.getObjectById<TaakObjectV2>(CoreUtils.extractId(it.url).toString())
                 if (taakObject != null) {
                     takenList.add(TaakV2.fromObjectsApi(taakObject))
                 }
+            } catch (e: Exception) {
+                logger.error { "Error getting product taken: $e.message" }
             }
-
-            return takenList
-        } catch (e: Exception) {
-            logger.error { "Error getting product taken: $e.message" }
         }
-        return emptyList()
+
+        return takenList
     }
 
     suspend fun getProductActies(
         productTypeId: UUID,
-    ): List<OpenProductActie>? {
+    ): List<OpenProductActie> {
         try {
             val productType = getProductType(id = productTypeId)
             if (productType != null && productType.acties.isNotEmpty()) {
@@ -849,7 +847,7 @@ class OpenProductService(
         } catch (e: Exception) {
             logger.error { "Error getting product acties: $e.message" }
         }
-        return null
+        return emptyList()
     }
 
     suspend fun getProductDecisions(

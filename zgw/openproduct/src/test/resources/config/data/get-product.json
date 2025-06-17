@@ -40,6 +40,9 @@
   "taken": [
     {
       "url": "http://localhost:8010/api/v2/objects/4b5f4fba-0746-11ed-b939-0242ac120023"
+    },
+    {
+      "url": "http://localhost:8010/api/v2/objects/29ce0eea-2125-4446-9945-f109ec6bd906"
     }
   ],
   "status": "actief",
