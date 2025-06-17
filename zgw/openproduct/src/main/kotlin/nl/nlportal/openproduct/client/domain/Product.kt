@@ -41,6 +41,7 @@ data class OpenProductProduct(
     val updateDatum: ZonedDateTime,
     val producttype: OpenProductProductProductType,
     val gepubliceerd: Boolean? = false,
+    @GraphQLIgnore
     val eigenaren: List<OpenProductProductEigenaar> = emptyList(),
     val documenten: List<OpenProductUrl> = emptyList(),
     val status: OpenProductToegestaneStatus,
@@ -74,6 +75,12 @@ data class OpenProductProduct(
                 taken,
             )
         }
+
+    suspend fun acties(
+        @GraphQLIgnore
+        @Autowired
+        openProductService: OpenProductService,
+    ): List<OpenProductActie> = openProductService.getProductActies(producttype.uuid)
 }
 
 data class OpenProductProductUpdate(

@@ -838,6 +838,20 @@ class OpenProductService(
         return emptyList()
     }
 
+    suspend fun getProductActies(
+        productTypeId: UUID,
+    ): List<OpenProductActie> {
+        try {
+            val productType = getProductType(id = productTypeId)
+            if (productType != null) {
+                return productType.acties
+            }
+        } catch (e: Exception) {
+            logger.error { "Error getting product acties: $e.message" }
+        }
+        return emptyList()
+    }
+
     private suspend fun collectThemaHierarchyUpFromSubThema(
         themaId: UUID,
         themas: List<OpenProductThema>? = emptyList(),

@@ -29,5 +29,10 @@ query {
         taken {
             titel
         },
+        acties {
+            uuid,
+            naam,
+            url
+        }
     }
 }
