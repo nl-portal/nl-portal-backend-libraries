@@ -286,6 +286,9 @@ class OpenProductThemaQueryIT(
                             "GET /producttypen/dee273e9-2aa8-40ae-84b7-cb7da3c075ba" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-producttype.json")
                             }
+                            "GET /producttypen/202fef9d-4594-45c5-86e4-4bccb06a2679" -> {
+                                TestHelper.mockResponseFromFile("/config/data/get-producttype.json")
+                            }
                             "GET /producten" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-producten.json")
                             }

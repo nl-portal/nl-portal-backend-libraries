@@ -640,13 +640,36 @@ class OpenProductService(
         id: UUID,
         language: String? = null,
         themasList: List<OpenProductThema>? = null,
+        themas: List<OpenProductThema> = emptyList(),
     ): List<Zaak> {
-        val themas = themasList ?: collectThemaHierarchyUpFromSubThema(id)
+        val themasAll = mutableListOf<OpenProductThema>()
+        val collectedThemaList = mutableListOf<OpenProductThema>()
+        // only do get the collectThemaHierarchyUpFromSubThema if themasList == null otherwise it is unnecessary
+        if (themasList == null) {
+            if (themas.isEmpty()) {
+                themasAll.addAll(
+                    getThemas(
+                        pageNumber = 1,
+                        pageSize = 999,
+                    ).resultaten,
+                )
+            } else {
+                themasAll.addAll(themas)
+            }
 
+            collectedThemaList.addAll(
+                collectThemaHierarchyUpFromSubThema(
+                    themaId = id,
+                    themas = themasAll,
+                ),
+            )
+        } else {
+            collectedThemaList.addAll(themasList)
+        }
         // 2. loop through productTypes and get zaakTypes
         val zaakTypes = mutableListOf<UUID>()
 
-        themas.forEach { thema ->
+        collectedThemaList.forEach { thema ->
             thema.producttypen.forEach {
                 getProductType(
                     id = it.uuid,
@@ -664,7 +687,7 @@ class OpenProductService(
                 .search()
                 .page(pageNumber)
                 .withAuthentication(authentication)
-        pageSize?.let { request.pageSize(it) }
+        pageSize.let { request.pageSize(it) }
         isOpen?.let {
             request.isOpen(isOpen)
         }
@@ -690,7 +713,16 @@ class OpenProductService(
         id: UUID,
         language: String? = null,
     ): List<TaakV2> {
-        val themas = collectThemaHierarchyUpFromSubThema(id)
+        val themas =
+            getThemas(
+                pageNumber = 1,
+                pageSize = 999,
+            ).resultaten
+        val collectedThemas =
+            collectThemaHierarchyUpFromSubThema(
+                themaId = id,
+                themas = themas,
+            )
         val taken =
             findTakenByIdentification(
                 authentication = authentication,
@@ -710,7 +742,8 @@ class OpenProductService(
                 pageSize = pageSize,
                 id = id,
                 language = language,
-                themasList = themas,
+                themasList = collectedThemas,
+                themas = themas,
             )
 
         val searchVariables =
@@ -759,23 +792,29 @@ class OpenProductService(
         return emptyList()
     }
 
-    private suspend fun collectThemaHierarchyUpFromSubThema(id: UUID): List<OpenProductThema> {
+    private suspend fun collectThemaHierarchyUpFromSubThema(
+        themaId: UUID,
+        themas: List<OpenProductThema>? = emptyList(),
+    ): List<OpenProductThema> {
         // 1. get themas, including the hoofdthema and may be their hoofdthema
-        val themas = mutableSetOf<OpenProductThema>()
+        val collectedThemas = mutableSetOf<OpenProductThema>()
 
         val thema =
-            getThema(
-                id = id,
-            )
+            themas?.find { it.uuid == themaId }
 
         if (thema == null) {
             return emptyList()
         } else {
-            themas.add(thema)
+            collectedThemas.add(thema)
         }
 
         // 1.5 get all the hoofdthema's
-        themas.addAll(searchFromSubThemaUpToHoofdThema(thema))
+        collectedThemas.addAll(
+            searchFromSubThemaUpToHoofdThema(
+                thema = thema,
+                themas = themas,
+            ),
+        )
 
         return themas.toList()
     }
@@ -828,13 +867,14 @@ class OpenProductService(
             ordering = "-record__startAt",
         )
 
-    private suspend fun searchFromSubThemaUpToHoofdThema(thema: OpenProductThema): List<OpenProductThema> {
+    private fun searchFromSubThemaUpToHoofdThema(
+        thema: OpenProductThema,
+        themas: List<OpenProductThema>? = emptyList(),
+    ): List<OpenProductThema> {
         val hoofdThemas = mutableListOf<OpenProductThema>()
         if (thema.hoofdThema != null) {
             val hoofdThema =
-                getThema(
-                    id = thema.hoofdThema,
-                )
+                themas?.find { it.uuid == thema.uuid }
             if (hoofdThema != null) {
                 hoofdThemas.add(hoofdThema)
                 hoofdThemas.addAll(searchFromSubThemaUpToHoofdThema(hoofdThema))
