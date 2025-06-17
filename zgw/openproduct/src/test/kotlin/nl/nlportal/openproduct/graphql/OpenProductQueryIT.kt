@@ -146,6 +146,10 @@ class OpenProductQueryIT(
                 .isEqualTo("PARKEREN")
                 .jsonPath("$basePath.verbruiksobject.uren")
                 .isEqualTo(30)
+                .jsonPath("$basePath.zaken[0].omschrijving")
+                .isEqualTo("Lopende zaak")
+                .jsonPath("$basePath.taken[0].titel")
+                .isEqualTo("Very important task")
         }
 
     @Test

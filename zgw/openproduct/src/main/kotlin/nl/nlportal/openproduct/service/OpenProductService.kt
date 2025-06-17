@@ -825,9 +825,9 @@ class OpenProductService(
             val takenList = mutableListOf<TaakV2>()
 
             taken.forEach {
-                val taakObject = objectsApiClient.getObjectById<TaakV2>(CoreUtils.extractId(it.url).toString())
+                val taakObject = objectsApiClient.getObjectById<TaakObjectV2>(CoreUtils.extractId(it.url).toString())
                 if (taakObject != null) {
-                    takenList.add(taakObject.record.data)
+                    takenList.add(TaakV2.fromObjectsApi(taakObject))
                 }
             }
 
