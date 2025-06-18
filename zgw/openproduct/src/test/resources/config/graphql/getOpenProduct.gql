@@ -32,7 +32,8 @@ query {
         acties {
             uuid,
             naam,
-            url
+            url,
+            mapping,
         },
         decisions
     }

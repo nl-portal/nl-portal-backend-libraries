@@ -252,7 +252,6 @@ class OpenProductService(
     suspend fun getActies(
         pageNumber: Int,
         pageSize: Int,
-        naam: String? = null,
         extraSearchVariables: List<Pair<OpenProductActiesFilters, Any>> = emptyList(),
     ): ResultPage<OpenProductActie> {
         try {
@@ -261,10 +260,6 @@ class OpenProductService(
                     OpenProductActiesFilters.PAGE to pageNumber.toString(),
                     OpenProductActiesFilters.PAGE_SIZE to pageSize.toString(),
                 )
-
-            naam?.let {
-                searchVariables.add(OpenProductActiesFilters.NAAM_CONTAINS to it)
-            }
 
             if (extraSearchVariables.isNotEmpty()) {
                 searchVariables.addAll(extraSearchVariables)
@@ -838,26 +833,24 @@ class OpenProductService(
 
     suspend fun getProductActies(
         productTypeId: UUID,
+        naam: String? = null,
     ): List<OpenProductActie> {
         try {
-            val productType = getProductType(id = productTypeId)
-            if (productType != null && productType.acties.isNotEmpty()) {
-                return productType.acties
-            }
-        } catch (e: Exception) {
-            logger.error { "Error getting product acties: " + e.message }
-        }
-        return emptyList()
-    }
+            val extraSearchVariables =
+                mutableListOf<Pair<OpenProductActiesFilters, Any>>(
+                    OpenProductActiesFilters.PRODUCTTYPE_UUID to productTypeId.toString(),
+                )
 
-    suspend fun getProductDecisions(
-        productTypeId: UUID,
-    ): List<OpenProductActie> {
-        try {
-            val productType = getProductType(id = productTypeId)
-            if (productType != null) {
-                return productType.acties
+            naam?.let {
+                extraSearchVariables.add(
+                    OpenProductActiesFilters.NAAM to naam,
+                )
             }
+            return getActies(
+                pageNumber = 1,
+                pageSize = 999,
+                extraSearchVariables = extraSearchVariables,
+            ).resultaten
         } catch (e: Exception) {
             logger.error { "Error getting product acties: " + e.message }
         }

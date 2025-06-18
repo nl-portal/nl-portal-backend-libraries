@@ -61,7 +61,7 @@ class OpenProductActieQuery(
         naam: String,
     ): List<ObjectNode> {
         val result =
-            openProductDmnService.getDecision(
+            openProductDmnService.getActieDecision(
                 authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
                 naam = naam,
                 productId = productId,

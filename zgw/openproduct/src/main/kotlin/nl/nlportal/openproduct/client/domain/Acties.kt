@@ -32,7 +32,7 @@ data class OpenProductActie(
     @GraphQLIgnore
     val mapping: Map<String, List<OpenProductActieMappingVariable>> = emptyMap(),
 ) {
-    fun mapping(): List<ObjectNode> = Mapper.get().convertValue(mapping, object : TypeReference<List<ObjectNode>>() {})
+    fun mapping(): ObjectNode = Mapper.get().convertValue(mapping, object : TypeReference<ObjectNode>() {})
 }
 
 data class OpenProductActieMappingVariable(

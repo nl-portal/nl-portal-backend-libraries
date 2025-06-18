@@ -91,7 +91,7 @@ data class OpenProductProduct(
         openProductDmnService: OpenProductDmnService,
     ): List<ObjectNode> {
         val result =
-            openProductDmnService.getDecision(
+            openProductDmnService.getProductDecision(
                 product = this,
             )
 

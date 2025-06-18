@@ -20,6 +20,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.openproduct.client.OpenProductDmnClient
+import nl.nlportal.openproduct.client.domain.OpenProductActie
 import nl.nlportal.openproduct.client.domain.OpenProductActieMappingVariable
 import nl.nlportal.openproduct.client.domain.OpenProductDmnRequest
 import nl.nlportal.openproduct.client.domain.OpenProductDmnRequestMapping
@@ -34,7 +35,7 @@ class OpenProductDmnService(
     val openProductDmnClient: OpenProductDmnClient,
     val openProductService: OpenProductService,
 ) {
-    suspend fun getDecision(
+    suspend fun getProductDecision(
         product: OpenProductProduct,
     ): List<Map<String, OpenProductDmnResponse>> {
         val acties = openProductService.getProductActies(product.producttype.uuid)
@@ -42,13 +43,18 @@ class OpenProductDmnService(
         val decisions = mutableListOf<Map<String, OpenProductDmnResponse>>()
 
         acties.forEach {
-            decisions.addAll(getDecision(product = product, naam = it.naam))
+            decisions.addAll(
+                getDecision(
+                    product = product,
+                    actie = it,
+                ),
+            )
         }
 
         return decisions
     }
 
-    suspend fun getDecision(
+    suspend fun getActieDecision(
         authentication: CommonGroundAuthentication,
         naam: String,
         productId: UUID,
@@ -63,25 +69,27 @@ class OpenProductDmnService(
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, NO_PRODUCT_FOUND_BY_ID + productId)
         }
 
+        val actie =
+            openProductService.getProductActies(
+                productTypeId = product.producttype.uuid,
+                naam = naam,
+            )
+        if (actie.isEmpty()) {
+            logger.warn { NO_ACTIES_FOUND_BY_NAME + naam }
+            return emptyList()
+        }
         return getDecision(
             product = product,
-            naam = naam,
+            actie = actie[0],
         )
     }
 
     suspend fun getDecision(
         product: OpenProductProduct,
-        naam: String,
+        actie: OpenProductActie,
     ): List<Map<String, OpenProductDmnResponse>> {
         try {
             val variablesMapping = mutableMapOf<String, OpenProductDmnVariable>()
-            val actie =
-                openProductService.getActies(pageNumber = 1, pageSize = 20, naam = naam).resultaten.firstOrNull()
-            if (actie == null) {
-                logger.warn { NO_ACTIES_FOUND_BY_NAME + naam }
-                return emptyList()
-            }
-
             // add the product mapping
             variablesMapping.putAll(
                 mapActieMappingVariables(
@@ -101,12 +109,12 @@ class OpenProductDmnService(
             }
 
             if (variablesMapping.isEmpty()) {
-                logger.warn { SOURCE_MAPPING_FAILED + naam }
+                logger.warn { SOURCE_MAPPING_FAILED + actie.naam }
                 return emptyList()
             }
             val dmnRequest =
                 OpenProductDmnRequest(
-                    key = naam,
+                    key = actie.naam,
                     mapping =
                         OpenProductDmnRequestMapping(
                             variables = variablesMapping,
