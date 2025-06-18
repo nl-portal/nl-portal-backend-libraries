@@ -857,7 +857,7 @@ class OpenProductService(
         return emptyList()
     }
 
-    private suspend fun collectThemaHierarchyUpFromSubThema(
+    private fun collectThemaHierarchyUpFromSubThema(
         themaId: UUID,
         themas: List<OpenProductThema>? = emptyList(),
     ): List<OpenProductThema> {
@@ -949,30 +949,6 @@ class OpenProductService(
         return hoofdThemas
     }
 
-    private fun searchSubThemasHierarchy(
-        thema: OpenProductThema,
-        themas: List<OpenProductThema>,
-    ): OpenProductThemaHierarchy {
-        val themasHierarchy = mutableListOf<OpenProductThemaHierarchy>()
-
-        val subThemas =
-            themas.toList().filter { it.hoofdThema == thema.uuid }
-
-        subThemas.forEach {
-            themasHierarchy.add(
-                searchSubThemasHierarchy(
-                    thema = it,
-                    themas = themas,
-                ),
-            )
-        }
-
-        return OpenProductThemaHierarchy(
-            thema = thema,
-            subThemas = themasHierarchy,
-        )
-    }
-
     private fun getEigenaarFilter(authentication: CommonGroundAuthentication): List<Pair<OpenProductProductenFilters, String>> =
         when (authentication) {
             is BurgerAuthentication -> {
@@ -1044,6 +1020,30 @@ class OpenProductService(
         )
 
         return themasHierarchy
+    }
+
+    private fun searchSubThemasHierarchy(
+        thema: OpenProductThema,
+        themas: List<OpenProductThema>,
+    ): OpenProductThemaHierarchy {
+        val themasHierarchy = mutableListOf<OpenProductThemaHierarchy>()
+
+        val subThemas =
+            themas.toList().filter { it.hoofdThema == thema.uuid }
+
+        subThemas.forEach {
+            themasHierarchy.add(
+                searchSubThemasHierarchy(
+                    thema = it,
+                    themas = themas,
+                ),
+            )
+        }
+
+        return OpenProductThemaHierarchy(
+            thema = thema,
+            subThemas = themasHierarchy,
+        )
     }
 
     companion object {
