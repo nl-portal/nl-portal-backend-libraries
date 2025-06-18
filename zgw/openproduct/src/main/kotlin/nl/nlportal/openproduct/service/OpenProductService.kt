@@ -104,7 +104,7 @@ class OpenProductService(
 
             return openProductTypeClient.path<Themas>().get(searchVariables)
         } catch (e: Exception) {
-            logger.error { "Error getting themas with cause: $e.message" }
+            logger.error { "Error getting themas with cause: " + e.message }
         }
 
         return ResultPage(
@@ -155,7 +155,7 @@ class OpenProductService(
                 return hoofdThemas.toList()
             }
         } catch (e: Exception) {
-            logger.error { "Error getting hoofdthemas by producten with cause: $e.message" }
+            logger.error { "Error getting hoofdthemas by producten with cause: " + e.message }
         }
         return emptyList()
     }
@@ -183,7 +183,7 @@ class OpenProductService(
                 id = id,
             )
         } catch (e: Exception) {
-            logger.error { "Error getting thema with id: $id with cause: $e.message" }
+            logger.error { "Error getting thema with id: $id with cause: " + e.message }
         }
         return null
     }
@@ -198,7 +198,7 @@ class OpenProductService(
                 return buildThemaHierachy(thema = thema)
             }
         } catch (e: Exception) {
-            logger.error { "Error building thema hierarchy id: $id with cause: $e.message" }
+            logger.error { "Error building thema hierarchy id: $id with cause: " + e.message }
         }
         return emptyList()
     }
@@ -225,7 +225,7 @@ class OpenProductService(
                 language = language,
             )
         } catch (e: Exception) {
-            logger.error { "Error getting productTypes with cause: $e.message" }
+            logger.error { "Error getting productTypes with cause: " + e.message }
         }
 
         return ResultPage(
@@ -244,7 +244,7 @@ class OpenProductService(
                 language = language,
             )
         } catch (e: Exception) {
-            logger.error { "Error getting producttype with id: $id with cause: $e.message" }
+            logger.error { "Error getting producttype with id: $id with cause: " + e.message }
         }
         return null
     }
@@ -286,7 +286,7 @@ class OpenProductService(
                 id = id,
             )
         } catch (e: Exception) {
-            logger.error { "Error getting actie with id: $id with cause: $e.message" }
+            logger.error { "Error getting actie with id: $id with cause: " + e.message }
         }
         return null
     }
@@ -313,7 +313,7 @@ class OpenProductService(
             }
             return openProductTypeClient.path<Bestanden>().get(searchVariables)
         } catch (e: Exception) {
-            logger.error { "Error getting bestanden with cause: $e.message" }
+            logger.error { "Error getting bestanden with cause: " + e.message }
         }
 
         return ResultPage(
@@ -328,7 +328,7 @@ class OpenProductService(
                 id = id,
             )
         } catch (e: Exception) {
-            logger.error { "Error getting bestand with id: $id with cause: $e.message" }
+            logger.error { "Error getting bestand with id: $id with cause: " + e.message }
         }
         return null
     }
@@ -355,7 +355,7 @@ class OpenProductService(
             }
             return openProductTypeClient.path<Contacten>().get(searchVariables)
         } catch (e: Exception) {
-            logger.error { "Error getting contacten with cause: $e.message" }
+            logger.error { "Error getting contacten with cause: " + e.message }
         }
 
         return ResultPage(
@@ -370,7 +370,7 @@ class OpenProductService(
                 id = id,
             )
         } catch (e: Exception) {
-            logger.error { "Error getting contact with id: $id with cause: $e.message" }
+            logger.error { "Error getting contact with id: $id with cause: " + e.message }
         }
         return null
     }
@@ -396,7 +396,7 @@ class OpenProductService(
             }
             return openProductTypeClient.path<Locaties>().get(searchVariables)
         } catch (e: Exception) {
-            logger.error { "Error getting locaties with cause: $e.message" }
+            logger.error { "Error getting locaties with cause: " + e.message }
         }
 
         return ResultPage(
@@ -411,7 +411,7 @@ class OpenProductService(
                 id = id,
             )
         } catch (e: Exception) {
-            logger.error { "Error getting locatie with id: $id with cause: $e.message" }
+            logger.error { "Error getting locatie with id: $id with cause: " + e.message }
         }
         return null
     }
@@ -437,7 +437,7 @@ class OpenProductService(
             }
             return openProductTypeClient.path<Organisaties>().get(searchVariables)
         } catch (e: Exception) {
-            logger.error { "Error getting organisaties with cause: $e.message" }
+            logger.error { "Error getting organisaties with cause: " + e.message }
         }
 
         return ResultPage(
@@ -452,7 +452,7 @@ class OpenProductService(
                 id = id,
             )
         } catch (e: Exception) {
-            logger.error { "Error getting organisatie with id: $id with cause: $e.message" }
+            logger.error { "Error getting organisatie with id: $id with cause: " + e.message }
         }
         return null
     }
@@ -473,7 +473,7 @@ class OpenProductService(
             }
             return openProductTypeClient.path<Prijzen>().get(searchVariables)
         } catch (e: Exception) {
-            logger.error { "Error getting prijzen with cause: $e.message" }
+            logger.error { "Error getting prijzen with cause: " + e.message }
         }
 
         return ResultPage(
@@ -488,7 +488,7 @@ class OpenProductService(
                 id = id,
             )
         } catch (e: Exception) {
-            logger.error { "Error getting prijs with id: $id with cause: $e.message" }
+            logger.error { "Error getting prijs with id: $id with cause: " + e.message }
         }
         return null
     }
@@ -509,7 +509,7 @@ class OpenProductService(
             }
             return openProductTypeClient.path<Schemas>().get(searchVariables)
         } catch (e: Exception) {
-            logger.error { "Error getting schemas with cause: $e.message" }
+            logger.error { "Error getting schemas with cause: " + e.message }
         }
 
         return ResultPage(
@@ -524,7 +524,7 @@ class OpenProductService(
                 id = id,
             )
         } catch (e: Exception) {
-            logger.error { "Error getting schema with id: $id with cause: $e.message" }
+            logger.error { "Error getting schema with id: $id with cause: " + e.message }
         }
         return null
     }
@@ -545,7 +545,7 @@ class OpenProductService(
             }
             return openProductTypeClient.path<Links>().get(searchVariables)
         } catch (e: Exception) {
-            logger.error { "Error getting links with cause: $e.message" }
+            logger.error { "Error getting links with cause: " + e.message }
         }
 
         return ResultPage(
@@ -560,7 +560,7 @@ class OpenProductService(
                 id = id,
             )
         } catch (e: Exception) {
-            logger.error { "Error getting link with id: $id with cause: $e.message" }
+            logger.error { "Error getting link with id: $id with cause: " + e.message }
         }
         return null
     }
@@ -571,7 +571,7 @@ class OpenProductService(
                 id = productTypeId,
             )
         } catch (e: Exception) {
-            logger.error { "Error getting producttype content with id: $productTypeId with cause: $e.message" }
+            logger.error { "Error getting producttype content with id: $productTypeId with cause: " + e.message }
         }
         return null
     }
@@ -631,7 +631,7 @@ class OpenProductService(
             if (e is ResponseStatusException) {
                 throw e
             } else {
-                logger.error { "Error getting product with id: $id with cause: $e.message" }
+                logger.error { "Error getting product with id: $id with cause: " + e.message }
             }
         }
         return null
@@ -658,7 +658,7 @@ class OpenProductService(
                 extraSearchVariables = searchVariables,
             ).resultaten
         } catch (e: Exception) {
-            logger.error { "Error getting products by thema id: $themaId with cause: $e.message" }
+            logger.error { "Error getting products by thema id: $themaId with cause: " + e.message }
         }
 
         return emptyList()
@@ -829,7 +829,7 @@ class OpenProductService(
                     takenList.add(TaakV2.fromObjectsApi(taakObject))
                 }
             } catch (e: Exception) {
-                logger.error { "Error getting product taken: $e.message" }
+                logger.error { "Error getting product taken: " + e.message }
             }
         }
 
@@ -845,7 +845,7 @@ class OpenProductService(
                 return productType.acties
             }
         } catch (e: Exception) {
-            logger.error { "Error getting product acties: $e.message" }
+            logger.error { "Error getting product acties: " + e.message }
         }
         return emptyList()
     }
@@ -859,7 +859,7 @@ class OpenProductService(
                 return productType.acties
             }
         } catch (e: Exception) {
-            logger.error { "Error getting product acties: $e.message" }
+            logger.error { "Error getting product acties: " + e.message }
         }
         return emptyList()
     }
