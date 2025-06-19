@@ -4,6 +4,7 @@ query {
      ){
         uuid,
         url,
+        naam,
         startDatum,
         gepubliceerd,
         aanmaakDatum,

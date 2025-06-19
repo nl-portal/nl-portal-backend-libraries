@@ -63,6 +63,17 @@ data class OpenProductThema(
             authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
             id = uuid,
         )
+
+    suspend fun producten(
+        @GraphQLIgnore
+        @Autowired
+        openProductService: OpenProductService,
+        dfe: DataFetchingEnvironment,
+    ): List<OpenProductProduct>? =
+        openProductService.getThemaProducten(
+            authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
+            thema = this,
+        )
 }
 
 data class OpenProductThemaProductType(

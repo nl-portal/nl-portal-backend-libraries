@@ -22,6 +22,28 @@ query {
               registratie,
               value
           }
+        },
+        producten {
+            uuid,
+            url,
+            naam,
+            startDatum,
+            gepubliceerd,
+            aanmaakDatum,
+            producttype {
+                code,
+                uniformeProductNaam,
+                toegestaneStatussen,
+            }
+            prijs,
+            gepubliceerd,
+            status,
+            documenten {
+                url
+            },
+            frequentie,
+            verbruiksobject,
+            dataobject
         }
     }
 }

@@ -5,6 +5,7 @@ query {
         uuid,
         url,
         naam,
+        naam,
         startDatum,
         gepubliceerd,
         aanmaakDatum,

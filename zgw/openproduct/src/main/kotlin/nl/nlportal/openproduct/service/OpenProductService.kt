@@ -642,6 +642,22 @@ class OpenProductService(
                 throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find thema with id: $themaId")
             }
 
+            return getThemaProducten(
+                authentication = authentication,
+                thema = thema,
+            )
+        } catch (e: Exception) {
+            logger.error { "Error getting products by thema id: $themaId with cause: " + e.message }
+        }
+
+        return emptyList()
+    }
+
+    suspend fun getThemaProducten(
+        authentication: CommonGroundAuthentication,
+        thema: OpenProductThema,
+    ): List<OpenProductProduct> {
+        try {
             val searchVariables =
                 listOf(
                     OpenProductProductenFilters.THEMA_UUID to thema.uuid.toString(),
@@ -653,7 +669,7 @@ class OpenProductService(
                 extraSearchVariables = searchVariables,
             ).resultaten
         } catch (e: Exception) {
-            logger.error { "Error getting products by thema id: $themaId with cause: " + e.message }
+            logger.error { "Error getting products by thema id: ${thema.uuid} with cause: " + e.message }
         }
 
         return emptyList()
