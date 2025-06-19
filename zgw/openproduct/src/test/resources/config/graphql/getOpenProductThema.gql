@@ -10,6 +10,18 @@ query {
             uniformeProductNaam
         },
         aanmaakDatum,
-        updateDatum
+        updateDatum,
+        zaken {
+            uuid,
+            omschrijving
+        },
+        taken {
+          id,
+          titel,
+          koppeling {
+              registratie,
+              value
+          }
+        }
     }
 }

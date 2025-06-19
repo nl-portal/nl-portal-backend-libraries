@@ -16,8 +16,15 @@
 package nl.nlportal.openproduct.client.domain
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
+import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
+import graphql.schema.DataFetchingEnvironment
+import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
+import nl.nlportal.openproduct.service.OpenProductService
+import nl.nlportal.zakenapi.domain.Zaak
+import nl.nlportal.zgw.taak.domain.TaakV2
+import org.springframework.beans.factory.annotation.Autowired
 import java.time.ZonedDateTime
 import java.util.UUID
 
@@ -34,7 +41,29 @@ data class OpenProductThema(
     val aanmaakDatum: ZonedDateTime,
     @JsonProperty("update_datum")
     val updateDatum: ZonedDateTime,
-)
+) {
+    suspend fun zaken(
+        @GraphQLIgnore
+        @Autowired
+        openProductService: OpenProductService,
+        dfe: DataFetchingEnvironment,
+    ): List<Zaak>? =
+        openProductService.getThemaZaken(
+            authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
+            id = uuid,
+        )
+
+    suspend fun taken(
+        @GraphQLIgnore
+        @Autowired
+        openProductService: OpenProductService,
+        dfe: DataFetchingEnvironment,
+    ): List<TaakV2>? =
+        openProductService.getThemaTaken(
+            authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
+            id = uuid,
+        )
+}
 
 data class OpenProductThemaProductType(
     val uuid: UUID,

@@ -75,8 +75,6 @@ class OpenProductThemaQuery(
     @GraphQLDescription("Get zaken of a thema, including their hoofd themas")
     suspend fun getOpenProductThemaZaken(
         dfe: DataFetchingEnvironment,
-        pageNumber: Int? = null,
-        pageSize: Int? = null,
         id: UUID,
         language: String? = null,
         isOpen: Boolean? = null,
@@ -84,8 +82,6 @@ class OpenProductThemaQuery(
         openProductService.getThemaZaken(
             authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
             id = id,
-            pageNumber = pageNumber ?: 1,
-            pageSize = pageSize ?: 20,
             language = language,
             isOpen = isOpen,
         )
@@ -93,16 +89,12 @@ class OpenProductThemaQuery(
     @GraphQLDescription("Get taken of a thema, including their hoofd themas")
     suspend fun getOpenProductThemaTaken(
         dfe: DataFetchingEnvironment,
-        pageNumber: Int? = null,
-        pageSize: Int? = null,
         id: UUID,
         language: String? = null,
     ): List<TaakV2> =
         openProductService.getThemaTaken(
             authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
             id = id,
-            pageNumber = pageNumber ?: 1,
-            pageSize = pageSize ?: 20,
             language = language,
         )
 }
