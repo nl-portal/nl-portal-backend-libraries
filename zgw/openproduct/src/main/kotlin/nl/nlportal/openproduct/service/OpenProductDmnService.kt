@@ -35,6 +35,11 @@ class OpenProductDmnService(
     val openProductDmnClient: OpenProductDmnClient,
     val openProductService: OpenProductService,
 ) {
+    /**
+     * Get decision of a product
+     * @param: product
+     * @return: List of decisions
+     */
     suspend fun getProductDecision(
         product: OpenProductProduct,
     ): List<Map<String, OpenProductDmnResponse>> {
@@ -54,6 +59,13 @@ class OpenProductDmnService(
         return decisions
     }
 
+    /**
+     * Get decision directly of a product from an action
+     * @param: authentication, authenticated user
+     * @param: naam of the action
+     * @param: productId, id of the product
+     * @return: List of decisions
+     */
     suspend fun getActieDecision(
         authentication: CommonGroundAuthentication,
         naam: String,
@@ -84,6 +96,12 @@ class OpenProductDmnService(
         )
     }
 
+    /**
+     * Get decision from Camunda
+     * @param: product, the source for the mapping
+     * @param: actie, with the mapping of to construct the dmn variables
+     * @return: List of decisions
+     */
     suspend fun getDecision(
         product: OpenProductProduct,
         actie: OpenProductActie,

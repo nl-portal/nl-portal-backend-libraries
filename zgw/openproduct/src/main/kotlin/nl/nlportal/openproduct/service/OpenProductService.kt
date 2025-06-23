@@ -15,7 +15,6 @@
  */
 package nl.nlportal.openproduct.service
 
-import com.sun.tools.javac.util.List.filter
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.commonground.authentication.BedrijfAuthentication
@@ -85,6 +84,13 @@ class OpenProductService(
     private val zakenApiClient: ZakenApiClient,
     private val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
 ) {
+    /**
+     * Get published themas
+     * @param: pageNumber, number for pagination
+     * @param: pageSize, size for pagination
+     * @param: extraSearchVariables, extra search variables to extend the search
+     * @return: Result of themas
+     */
     suspend fun getThemas(
         pageNumber: Int,
         pageSize: Int,
@@ -113,8 +119,17 @@ class OpenProductService(
         )
     }
 
+    /**
+     * Get only published hoofd themas
+     * @return: List of hoofd themas
+     */
     suspend fun getHoofdThemas(): List<OpenProductThema> = getThemas(1, 999).resultaten.filter { it.hoofdThema == null }
 
+    /**
+     * Get published hoofd themas based of the products of the authenticated user
+     * @param: authentication, authenticated user
+     * @return: List of themas
+     */
     suspend fun getHoofdThemasByProducten(
         authentication: CommonGroundAuthentication,
     ): List<OpenProductThema> {
@@ -160,6 +175,10 @@ class OpenProductService(
         return emptyList()
     }
 
+    /**
+     * Get hierarchy of all published themas
+     * @return: List of thema hierarchy
+     */
     suspend fun getThemasHierarchy(): List<OpenProductThemaHierarchy> {
         val themasHierarchy = mutableListOf<OpenProductThemaHierarchy>()
         val themas = getThemas(1, 999).resultaten
@@ -177,6 +196,11 @@ class OpenProductService(
         return themasHierarchy
     }
 
+    /**
+     * Get thema
+     * @param: id, uuid of the thema
+     * @return: thema of null
+     */
     suspend fun getThema(id: UUID): OpenProductThema? {
         try {
             return openProductTypeClient.path<Themas>().get(
@@ -188,6 +212,11 @@ class OpenProductService(
         return null
     }
 
+    /**
+     * Get thema hierarchy only for the requested thema
+     * @param: id, uuid of thema
+     * @return: List of thema hierarchy
+     */
     suspend fun getThemaHierarchy(id: UUID): List<OpenProductThemaHierarchy> {
         try {
             val thema =
@@ -203,6 +232,14 @@ class OpenProductService(
         return emptyList()
     }
 
+    /**
+     * Get productTypes
+     * @param: pageNumber, number for pagination
+     * @param: pageSize, size for pagination
+     * @param: language, language of the producttype, default is NL
+     * @param: extraSearchVariables, extra search variables to extend the search
+     * @return: Result of productTypes
+     */
     suspend fun getProductTypes(
         pageNumber: Int,
         pageSize: Int,
@@ -234,6 +271,12 @@ class OpenProductService(
         )
     }
 
+    /**
+     * Get producttype
+     * @param: id, uuid of the producttype
+     * @param: language, language of productype, is optional
+     * @return: Producttype or null
+     */
     suspend fun getProductType(
         id: UUID,
         language: String? = null,
@@ -249,6 +292,13 @@ class OpenProductService(
         return null
     }
 
+    /**
+     * Get acties
+     * @param: pageNumber, number for pagination
+     * @param: pageSize, size for pagination
+     * @param: extraSearchVariables, extra search variables to extend the search
+     * @return: Result of acties
+     */
     suspend fun getActies(
         pageNumber: Int,
         pageSize: Int,
@@ -275,6 +325,11 @@ class OpenProductService(
         )
     }
 
+    /**
+     * Get actie
+     * @param: id, uuid of actie
+     * @return: actie or null
+     */
     suspend fun getActie(id: UUID): OpenProductActie? {
         try {
             return openProductTypeClient.path<Acties>().get(
@@ -286,6 +341,14 @@ class OpenProductService(
         return null
     }
 
+    /**
+     * Get bestanden
+     * @param: pageNumber, number for pagination
+     * @param: pageSize, size for pagination
+     * @param: naam, naam of bestand, is optional
+     * @param: extraSearchVariables, extra search variables to extend the search
+     * @return: Result of bestanden
+     */
     suspend fun getBestanden(
         pageNumber: Int,
         pageSize: Int,
@@ -317,6 +380,11 @@ class OpenProductService(
         )
     }
 
+    /**
+     * Get bestand
+     * @param: id, uuid of bestand
+     * @return: bestand or null
+     */
     suspend fun getBestand(id: UUID): OpenProductBestand? {
         try {
             return openProductTypeClient.path<Bestanden>().get(
@@ -328,6 +396,14 @@ class OpenProductService(
         return null
     }
 
+    /**
+     * Get conatcten
+     * @param: pageNumber, number for pagination
+     * @param: pageSize, size for pagination
+     * @param: naam, naam of contact, is optional
+     * @param: extraSearchVariables, extra search variables to extend the search
+     * @return: Result of contacten
+     */
     suspend fun getContacten(
         pageNumber: Int,
         pageSize: Int,
@@ -359,6 +435,11 @@ class OpenProductService(
         )
     }
 
+    /**
+     * Get contact
+     * @param: id, uuid of contact
+     * @return: contact or null
+     */
     suspend fun getContact(id: UUID): OpenProductContact? {
         try {
             return openProductTypeClient.path<Contacten>().get(
@@ -370,6 +451,14 @@ class OpenProductService(
         return null
     }
 
+    /**
+     * Get locaties
+     * @param: pageNumber, number for pagination
+     * @param: pageSize, size for pagination
+     * @param: naam, naam of locatie, is optional
+     * @param: extraSearchVariables, extra search variables to extend the search
+     * @return: Result of locaties
+     */
     suspend fun getLocaties(
         pageNumber: Int,
         pageSize: Int,
@@ -400,6 +489,11 @@ class OpenProductService(
         )
     }
 
+    /**
+     * Get locatie
+     * @param: id, uuid of locatie
+     * @return: locatie or null
+     */
     suspend fun getLocatie(id: UUID): OpenProductLocatie? {
         try {
             return openProductTypeClient.path<Locaties>().get(
@@ -411,6 +505,14 @@ class OpenProductService(
         return null
     }
 
+    /**
+     * Get organisaties
+     * @param: pageNumber, number for pagination
+     * @param: pageSize, size for pagination
+     * @param: naam, naam of organisatie, is optional
+     * @param: extraSearchVariables, extra search variables to extend the search
+     * @return: Result of organisaties
+     */
     suspend fun getOrganisaties(
         pageNumber: Int,
         pageSize: Int,
@@ -441,6 +543,11 @@ class OpenProductService(
         )
     }
 
+    /**
+     * Get organisatie
+     * @param: id, uuid of organisatie
+     * @return: organisatie or null
+     */
     suspend fun getOrganisatie(id: UUID): OpenProductOrganisatie? {
         try {
             return openProductTypeClient.path<Organisaties>().get(
@@ -452,6 +559,13 @@ class OpenProductService(
         return null
     }
 
+    /**
+     * Get prijzen
+     * @param: pageNumber, number for pagination
+     * @param: pageSize, size for pagination
+     * @param: extraSearchVariables, extra search variables to extend the search
+     * @return: Result of prijzen
+     */
     suspend fun getPrijzen(
         pageNumber: Int,
         pageSize: Int,
@@ -477,6 +591,11 @@ class OpenProductService(
         )
     }
 
+    /**
+     * Get prijs
+     * @param: id, uuid if prijs
+     * @return: prijs or null
+     */
     suspend fun getPrijs(id: UUID): OpenProductPrijs? {
         try {
             return openProductTypeClient.path<Prijzen>().get(
@@ -488,6 +607,13 @@ class OpenProductService(
         return null
     }
 
+    /**
+     * Get schemas
+     * @param: pageNumber, number for pagination
+     * @param: pageSize, size for pagination
+     * @param: extraSearchVariables, extra search variables to extend the search
+     * @return: Result of schemas
+     */
     suspend fun getSchemas(
         pageNumber: Int,
         pageSize: Int,
@@ -513,6 +639,11 @@ class OpenProductService(
         )
     }
 
+    /**
+     * Get schema
+     * @param: id, uuid of schema
+     * @return: schema or null
+     */
     suspend fun getSchema(id: UUID): OpenProductSchema? {
         try {
             return openProductTypeClient.path<Schemas>().get(
@@ -524,6 +655,13 @@ class OpenProductService(
         return null
     }
 
+    /**
+     * Get links
+     * @param: pageNumber, number for pagination
+     * @param: pageSize, size for pagination
+     * @param: extraSearchVariables, extra search variables to extend the search
+     * @return: Result of links
+     */
     suspend fun getLinks(
         pageNumber: Int,
         pageSize: Int,
@@ -549,6 +687,11 @@ class OpenProductService(
         )
     }
 
+    /**
+     * Get link
+     * @param: id, uuid of link
+     * @return: link or null
+     */
     suspend fun getLink(id: UUID): OpenProductLink? {
         try {
             return openProductTypeClient.path<Links>().get(
@@ -560,6 +703,11 @@ class OpenProductService(
         return null
     }
 
+    /**
+     * Get content of producttype
+     * @param: productTypeId, producttype id
+     * @return: List of producttype content
+     */
     suspend fun getProductTypeContent(productTypeId: UUID): List<OpenProductProductTypeContent>? {
         try {
             return openProductTypeClient.path<ProductTypes>().get(
@@ -571,6 +719,14 @@ class OpenProductService(
         return null
     }
 
+    /**
+     * Get producten
+     * @param: pageNumber, number for pagination
+     * @param: pageSize, size for pagination
+     * @param: extraSearchVariables, extra search variables to extend the search
+     * @param: status, status of product
+     * @return: Result of producten
+     */
     suspend fun getProducten(
         authentication: CommonGroundAuthentication,
         pageNumber: Int,
@@ -600,6 +756,11 @@ class OpenProductService(
         )
     }
 
+    /**
+     * Get product
+     * @param: id, uuid of product
+     * @return: product or null
+     */
     suspend fun getProduct(
         authentication: CommonGroundAuthentication,
         id: UUID,
@@ -632,6 +793,12 @@ class OpenProductService(
         return null
     }
 
+    /**
+     * Get producten by thema
+     * @param: authentication, authenticated user
+     * @param: themaId, uuid of the thema
+     * @return: producten list of thema
+     */
     suspend fun getProductenByThema(
         authentication: CommonGroundAuthentication,
         themaId: UUID,
@@ -653,6 +820,12 @@ class OpenProductService(
         return emptyList()
     }
 
+    /**
+     * Get producten by thema
+     * @param: authentication, authenticated user
+     * @param: thema
+     * @return: producten list of thema
+     */
     suspend fun getThemaProducten(
         authentication: CommonGroundAuthentication,
         thema: OpenProductThema,
@@ -675,6 +848,12 @@ class OpenProductService(
         return emptyList()
     }
 
+    /**
+     * Update product verbruiksobject or dataobject
+     * @param: authentication, authenticated user
+     * @param: productUpdate, product to update
+     * @return: updated product
+     */
     suspend fun updateProduct(
         authentication: CommonGroundAuthentication,
         productUpdate: OpenProductProductUpdate,
@@ -689,6 +868,16 @@ class OpenProductService(
         return openProductClient.path<Producten>().patch(productUpdate = productUpdate)
     }
 
+    /**
+     * Get zaken of a thema
+     * @param: authentication, authenticated user
+     * @param: isOpen, boolean if a zaak is still open
+     * @param: id, uuid of thema,
+     * @param: language, language of the producttype, default is NL
+     * @param: themaList, list of parent themas
+     * @param: themas: all published themas
+     * @return: list of zaken
+     */
     suspend fun getThemaZaken(
         authentication: CommonGroundAuthentication,
         isOpen: Boolean? = null,
@@ -761,6 +950,13 @@ class OpenProductService(
             .sortedBy { it.startdatum }
     }
 
+    /**
+     * Get taken of a thema
+     * @param: authentication, authenticated user
+     * @param: id, uuid of thema,
+     * @param: language, language of the producttype, default is NL
+     * @return: list of taken
+     */
     suspend fun getThemaTaken(
         authentication: CommonGroundAuthentication,
         id: UUID,
@@ -818,11 +1014,21 @@ class OpenProductService(
             }.sortedBy { it.verloopdatum }
     }
 
+    /**
+     * Get zaken of a product
+     * @param: zaken, list of zaken
+     * @return: list of zaken
+     */
     suspend fun getProductZaken(zaken: List<OpenProductUrl>): List<Zaak> =
         zaken.map {
             zakenApiClient.zaken().get(CoreUtils.extractId(it.url)).retrieve()
         }
 
+    /**
+     * Get taken of a product
+     * @param: taken, list of taken
+     * @return: list of taken
+     */
     suspend fun getProductTaken(
         taken: List<OpenProductUrl>,
     ): List<TaakV2> {
@@ -841,6 +1047,12 @@ class OpenProductService(
         return takenList
     }
 
+    /**
+     * Get acties of a product
+     * @param: productTypeId, uuid of producttype
+     * @param: naam, naam of the acties
+     * @return: list of acties
+     */
     suspend fun getProductActies(
         productTypeId: UUID,
         naam: String? = null,
@@ -867,6 +1079,12 @@ class OpenProductService(
         return emptyList()
     }
 
+    /**
+     * Collect thema hierarchy up from subthema
+     * @param: themaId, uuid of thema
+     * @param: themas, all published themas
+     * @return: list of themas
+     */
     private fun collectThemaHierarchyUpFromSubThema(
         themaId: UUID,
         themas: List<OpenProductThema>? = emptyList(),
@@ -894,6 +1112,13 @@ class OpenProductService(
         return themas.toList()
     }
 
+    /**
+     * Find taken by authentication, get the taken of the authenticated user
+     * @param: productTypeId, uuid of producttype
+     * @param: pageNumber, page number for pagination
+     * @param: pageSize, page size for pagination
+     * @return: list of taken
+     */
     private suspend fun findTakenByIdentification(
         authentication: CommonGroundAuthentication,
         pageNumber: Int,
@@ -933,6 +1158,14 @@ class OpenProductService(
         return emptyList()
     }
 
+    /**
+     * Get objecten from Objects API
+     * @param: objectTypeUrl, url of the objecttype
+     * @param: searchParameters, the query search parameter
+     * @param: pageNumber, page number for pagination
+     * @param: pageSize, page size for pagination
+     * @return: Results of objects
+     */
     private suspend inline fun <reified T> getObjectsApiObjectResultPage(
         objectTypeUrl: String,
         searchParameters: List<ObjectSearchParameter>,
@@ -947,6 +1180,12 @@ class OpenProductService(
             ordering = "-record__startAt",
         )
 
+    /**
+     * Search themas from subthema all the way up to the hoofd thema
+     * @param: thema
+     * @param: themas, all published themas
+     * @return: Results of themas
+     */
     private fun searchFromSubThemaUpToHoofdThema(
         thema: OpenProductThema,
         themas: List<OpenProductThema>? = emptyList(),
@@ -964,6 +1203,12 @@ class OpenProductService(
         return hoofdThemas
     }
 
+    /**
+     * Get the eigenaar filter used for producten
+     * @param: authentication, authenticated user
+     * @param: themas, all published themas
+     * @return: list of filters
+     */
     private fun getEigenaarFilter(authentication: CommonGroundAuthentication): List<Pair<OpenProductProductenFilters, String>> =
         when (authentication) {
             is BurgerAuthentication -> {
@@ -1000,6 +1245,12 @@ class OpenProductService(
             else -> throw IllegalArgumentException("Authentication not supported")
         }
 
+    /**
+     * Is user authorized to view the product
+     * @param: authentication, authenticated user
+     * @param: product, the product to be checked
+     * @return: true or fale
+     */
     private fun isAuthorizedForProduct(
         authentication: CommonGroundAuthentication,
         product: OpenProductProduct,
@@ -1023,6 +1274,11 @@ class OpenProductService(
             else -> false
         }
 
+    /**
+     * Build a thema hierarchy from a specific thema
+     * @param: thema
+     * @return: list of thema hierarchy
+     */
     private suspend fun buildThemaHierachy(thema: OpenProductThema): List<OpenProductThemaHierarchy> {
         val themasHierarchy = mutableListOf<OpenProductThemaHierarchy>()
         val themas = getThemas(1, 999).resultaten
@@ -1037,6 +1293,12 @@ class OpenProductService(
         return themasHierarchy
     }
 
+    /**
+     * Search
+     * @param: thema
+     * @param: themas
+     * @return: thema hierarchy
+     */
     private fun searchSubThemasHierarchy(
         thema: OpenProductThema,
         themas: List<OpenProductThema>,

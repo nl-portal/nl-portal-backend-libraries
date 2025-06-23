@@ -72,7 +72,7 @@ class OpenProductThemaQuery(
         return response
     }
 
-    @GraphQLDescription("Get zaken of a thema, including their hoofd themas")
+    @GraphQLDescription("Get zaken of a thema, including their parent themas")
     suspend fun getOpenProductThemaZaken(
         dfe: DataFetchingEnvironment,
         id: UUID,
@@ -86,7 +86,7 @@ class OpenProductThemaQuery(
             isOpen = isOpen,
         )
 
-    @GraphQLDescription("Get taken of a thema, including their hoofd themas")
+    @GraphQLDescription("Get taken of a thema, including their parent themas")
     suspend fun getOpenProductThemaTaken(
         dfe: DataFetchingEnvironment,
         id: UUID,
