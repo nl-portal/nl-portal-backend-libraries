@@ -120,6 +120,7 @@ subprojects {
             jvmTarget.set(JvmTarget.JVM_21)
             freeCompilerArgs.add("-Xjsr305=strict")
             freeCompilerArgs.add("-Xemit-jvm-type-annotations")
+            freeCompilerArgs.add("-Xannotation-default-target=param-property")
         }
     }
 
