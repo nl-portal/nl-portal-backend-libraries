@@ -48,7 +48,7 @@ data class OpenProductProduct(
     val eigenaren: List<OpenProductProductEigenaar> = emptyList(),
     val documenten: List<OpenProductUrl> = emptyList(),
     val status: OpenProductToegestaneStatus,
-    val prijs: Float,
+    val prijs: Float? = null,
     val frequentie: OpenProductFrequentie,
     val verbruiksobject: ObjectNode? = null,
     val dataobject: ObjectNode? = null,

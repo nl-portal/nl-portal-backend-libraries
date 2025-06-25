@@ -116,6 +116,7 @@ enum class OpenProductProductTypesFilters(
     UPDATE_DATUM_GTE("update_datum__gte"),
     UPDATE_DATUM_LTE("update_datum__lte"),
     CODE("code"),
+    NAAM("naam"),
     EXTERNE_CODE("externe_code"),
     KEYWORDS("keywords"),
     LETTERS("letter"),
