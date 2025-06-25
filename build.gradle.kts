@@ -43,8 +43,6 @@ plugins {
 
     id("com.github.jk1.dependency-license-report") version "2.9"
 
-    id("org.jetbrains.dokka")
-
     id("org.owasp.dependencycheck") version "12.1.3"
 
     `maven-publish`
@@ -68,8 +66,6 @@ subprojects {
 
     println("Enabling com.diffplug.spotless plugin in project ${project.name}...")
     apply(plugin = "com.diffplug.spotless")
-
-    apply(plugin = "org.jetbrains.dokka")
 
     apply(plugin = "java")
 
