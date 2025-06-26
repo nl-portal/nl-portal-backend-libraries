@@ -36,6 +36,7 @@ import org.springframework.web.reactive.function.client.WebClient
 @AutoConfiguration
 @EnableConfigurationProperties(
     OpenProductModuleConfiguration::class,
+    TaakConfig::class,
 )
 @ConditionalOnProperty(prefix = "nl-portal.config.openproduct", name = ["enabled"], havingValue = "true")
 class OpenProductAutoConfiguration {
