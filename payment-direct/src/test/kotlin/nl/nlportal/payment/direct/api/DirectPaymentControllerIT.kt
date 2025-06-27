@@ -17,6 +17,7 @@ package nl.nlportal.payment.direct.api
 
 import nl.nlportal.payment.direct.TestHelper
 import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration
+import nl.nlportal.payment.direct.service.DirectPaymentService
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -104,14 +105,17 @@ internal class DirectPaymentControllerIT(
                         .toString(),
             )
         val headers = HttpHeaders()
-        headers.add("X-GCS-Signature", signature)
-        headers.add("X-GCS-KeyId", directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
-        webTestClient
-            .post()
+        headers.add(DirectPaymentService.HEADER_X_GCS_SIGNATURE, signature)
+        headers.add(
+            DirectPaymentService.HEADER_X_GCS_KEYID,
+            directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey,
+        )
+        webTestClient.post()
             .uri(PAYMENT_DIRECT_POSTSALE_ENDPOINT)
             .headers {
                 it.addAll(headers)
-            }.contentType(MediaType.APPLICATION_JSON)
+            }
+            .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(body)
             .exchange()
             .expectStatus()
@@ -167,10 +171,12 @@ internal class DirectPaymentControllerIT(
                         .toString(),
             )
         val headers = HttpHeaders()
-        headers.add("X-GCS-Signature", signature)
-        headers.add("X-GCS-KeyId", directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
-        webTestClient
-            .post()
+        headers.add(DirectPaymentService.HEADER_X_GCS_SIGNATURE, signature)
+        headers.add(
+            DirectPaymentService.HEADER_X_GCS_KEYID,
+            directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey,
+        )
+        webTestClient.post()
             .uri(PAYMENT_DIRECT_POSTSALE_ENDPOINT)
             .headers {
                 it.addAll(headers)
@@ -226,10 +232,12 @@ internal class DirectPaymentControllerIT(
                 ?.webhookApiSecret
                 .toString()
         val headers = HttpHeaders()
-        headers.add("X-GCS-Signature", signature)
-        headers.add("X-GCS-KeyId", directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
-        webTestClient
-            .post()
+        headers.add(DirectPaymentService.HEADER_X_GCS_SIGNATURE, signature)
+        headers.add(
+            DirectPaymentService.HEADER_X_GCS_KEYID,
+            directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey,
+        )
+        webTestClient.post()
             .uri(PAYMENT_DIRECT_POSTSALE_ENDPOINT)
             .headers {
                 it.addAll(headers)
@@ -289,10 +297,12 @@ internal class DirectPaymentControllerIT(
                         .toString(),
             )
         val headers = HttpHeaders()
-        headers.add("X-GCS-Signature", signature)
-        headers.add("X-GCS-KeyId", directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey)
-        webTestClient
-            .post()
+        headers.add(DirectPaymentService.HEADER_X_GCS_SIGNATURE, signature)
+        headers.add(
+            DirectPaymentService.HEADER_X_GCS_KEYID,
+            directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey,
+        )
+        webTestClient.post()
             .uri(PAYMENT_DIRECT_POSTSALE_ENDPOINT)
             .headers {
                 it.addAll(headers)
