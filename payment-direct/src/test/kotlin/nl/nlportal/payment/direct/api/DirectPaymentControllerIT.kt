@@ -110,12 +110,12 @@ internal class DirectPaymentControllerIT(
             DirectPaymentService.HEADER_X_GCS_KEYID,
             directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey,
         )
-        webTestClient.post()
+        webTestClient
+            .post()
             .uri(PAYMENT_DIRECT_POSTSALE_ENDPOINT)
             .headers {
                 it.addAll(headers)
-            }
-            .contentType(MediaType.APPLICATION_JSON)
+            }.contentType(MediaType.APPLICATION_JSON)
             .bodyValue(body)
             .exchange()
             .expectStatus()
@@ -176,7 +176,8 @@ internal class DirectPaymentControllerIT(
             DirectPaymentService.HEADER_X_GCS_KEYID,
             directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey,
         )
-        webTestClient.post()
+        webTestClient
+            .post()
             .uri(PAYMENT_DIRECT_POSTSALE_ENDPOINT)
             .headers {
                 it.addAll(headers)
@@ -237,7 +238,8 @@ internal class DirectPaymentControllerIT(
             DirectPaymentService.HEADER_X_GCS_KEYID,
             directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey,
         )
-        webTestClient.post()
+        webTestClient
+            .post()
             .uri(PAYMENT_DIRECT_POSTSALE_ENDPOINT)
             .headers {
                 it.addAll(headers)
@@ -302,7 +304,8 @@ internal class DirectPaymentControllerIT(
             DirectPaymentService.HEADER_X_GCS_KEYID,
             directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey,
         )
-        webTestClient.post()
+        webTestClient
+            .post()
             .uri(PAYMENT_DIRECT_POSTSALE_ENDPOINT)
             .headers {
                 it.addAll(headers)
