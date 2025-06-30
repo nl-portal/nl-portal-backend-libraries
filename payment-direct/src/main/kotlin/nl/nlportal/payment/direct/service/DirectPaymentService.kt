@@ -181,12 +181,11 @@ open class DirectPaymentService(
         httpHeaders: HttpHeaders,
         bodyOfRequest: String,
     ): Boolean {
-        val requestHeaders = mutableListOf<RequestHeader>()
-        httpHeaders.forEach {
-            if (directPaymentModuleConfiguration.properties.webhookHeaders.contains(it.key)) {
-                requestHeaders.add(RequestHeader(it.key, it.value[0]))
-            }
-        }
+        val requestHeaders =
+            listOf<RequestHeader>(
+                RequestHeader(HEADER_X_GCS_SIGNATURE, httpHeaders[HEADER_X_GCS_SIGNATURE]?.get(0)),
+                RequestHeader(HEADER_X_GCS_KEYID, httpHeaders[HEADER_X_GCS_KEYID]?.get(0)),
+            )
 
         try {
             webhookHelper.unmarshal(bodyOfRequest, requestHeaders)
@@ -198,6 +197,8 @@ open class DirectPaymentService(
 
     companion object {
         private val logger: KLogger = KotlinLogging.logger {}
+        const val HEADER_X_GCS_SIGNATURE: String = "X-GCS-Signature"
+        const val HEADER_X_GCS_KEYID: String = "X-GCS-KeyId"
 
         fun isUUID(orderId: String?): Boolean =
             try {
