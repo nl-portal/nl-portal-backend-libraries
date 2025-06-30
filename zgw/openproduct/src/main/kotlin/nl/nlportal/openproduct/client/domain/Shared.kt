@@ -28,6 +28,7 @@ data class OpenProductUrl(
 enum class OpenProductToegestaneStatus(
     @JsonValue val status: String,
 ) {
+    INITIEEL("initieel"),
     GEREED("gereed"),
     ACTIEF("actief"),
     INGETROKKEN("ingetrokken"),
