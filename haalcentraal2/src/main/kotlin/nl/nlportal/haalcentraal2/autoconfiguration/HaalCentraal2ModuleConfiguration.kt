@@ -28,9 +28,6 @@ data class HaalCentraal2ModuleConfiguration(
             requireNotNull(properties.url) {
                 "HaalCentraal2 API URL not configured"
             }
-            requireNotNull(properties.apiKey) {
-                "HaalCentraal2 APIkey not configured"
-            }
         }
     }
 
