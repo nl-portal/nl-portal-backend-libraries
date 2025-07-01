@@ -24,6 +24,7 @@ import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.INTERN
 import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.OPENBAAR
 import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.ZAAKVERTROUWELIJK
 import org.springframework.boot.context.properties.ConfigurationProperties
+import java.util.UUID
 
 @ConfigurationProperties(prefix = "nl-portal.config.zakenapi")
 data class ZakenApiConfig(
@@ -34,6 +35,7 @@ data class ZakenApiConfig(
         var url: String = "",
         var clientId: String = "",
         var secret: String = "",
+        var zaakTypesIdsExcluded: List<UUID> = emptyList(),
         var zaakDocumentenConfig: ZaakDocumentenConfig = ZaakDocumentenConfig(),
     ) {
         data class ZaakDocumentenConfig(

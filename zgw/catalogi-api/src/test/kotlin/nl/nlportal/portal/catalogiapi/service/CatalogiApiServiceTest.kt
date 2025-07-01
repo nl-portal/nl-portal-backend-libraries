@@ -57,9 +57,9 @@ internal class CatalogiApiServiceTest {
 
             `when`(catalogiApiClient.getStatusTypes(zaakUrl)).thenReturn(
                 listOf(
-                    StatusType("desc2", false, 2),
-                    StatusType("desc1", false, 1),
-                    StatusType("desc3", true, 3),
+                    StatusType("desc2", "", false, 2),
+                    StatusType("desc1", "", false, 1),
+                    StatusType("desc3", "", true, 3),
                 ),
             )
 
@@ -93,6 +93,7 @@ internal class CatalogiApiServiceTest {
                         "besluittype 1",
                         listOf("zaaktypen"),
                         "omschrijving 1",
+                        "",
                         "besluitcategorie 1",
                         null,
                         true,
@@ -104,6 +105,7 @@ internal class CatalogiApiServiceTest {
                         "besluittype 2",
                         listOf("zaaktypen"),
                         "omschrijving 2",
+                        "",
                         "besluitcategorie 2",
                         null,
                         true,
@@ -115,6 +117,7 @@ internal class CatalogiApiServiceTest {
                         "besluittype 3",
                         listOf("zaaktypen"),
                         "omschrijving 3",
+                        "",
                         "besluitcategorie 3",
                         null,
                         true,

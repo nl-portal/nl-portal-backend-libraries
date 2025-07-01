@@ -44,7 +44,5 @@ enum class SoortActor(
     ORGANISATORISCHE_EENHEID("organisatorischeEenheid"),
     ;
 
-    override fun toString(): String {
-        return this.value
-    }
+    override fun toString(): String = this.value
 }

@@ -29,9 +29,7 @@ data class DirectPaymentModuleConfiguration(
         val webhookUrl: String? = null,
         val configurations: Map<String, DirectPaymentProfile> = emptyMap(),
     ) {
-        fun getPaymentProfile(profileIdentifier: String): DirectPaymentProfile? {
-            return configurations[profileIdentifier]
-        }
+        fun getPaymentProfile(profileIdentifier: String): DirectPaymentProfile? = configurations[profileIdentifier]
 
         fun getPaymentProfileByPspPid(pspId: String?): DirectPaymentProfile? {
             configurations.forEach {

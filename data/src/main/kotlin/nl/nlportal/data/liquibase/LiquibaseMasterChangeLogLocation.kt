@@ -15,7 +15,9 @@
  */
 package nl.nlportal.data.liquibase
 
-class LiquibaseMasterChangeLogLocation(filePath: String) {
+class LiquibaseMasterChangeLogLocation(
+    filePath: String,
+) {
     val filePath: String
 
     init {

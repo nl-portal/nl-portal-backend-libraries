@@ -46,37 +46,37 @@ class DmnClient(
                 .clone()
                 .clientConnector(
                     ReactorClientHttpConnector(
-                        HttpClient.create().wiretap(
-                            "reactor.netty.http.client.HttpClient",
-                            LogLevel.DEBUG,
-                            AdvancedByteBufFormat.TEXTUAL,
-                        ).let { client ->
-                            var result = client
-                            if (clientSslContextResolver != null) {
-                                dmnConfigProperties.ssl?.let {
-                                    val sslContext =
-                                        clientSslContextResolver.resolve(
-                                            it.key,
-                                            it.trustedCertificate,
-                                        )
+                        HttpClient
+                            .create()
+                            .wiretap(
+                                "reactor.netty.http.client.HttpClient",
+                                LogLevel.DEBUG,
+                                AdvancedByteBufFormat.TEXTUAL,
+                            ).let { client ->
+                                var result = client
+                                if (clientSslContextResolver != null) {
+                                    dmnConfigProperties.ssl?.let {
+                                        val sslContext =
+                                            clientSslContextResolver.resolve(
+                                                it.key,
+                                                it.trustedCertificate,
+                                            )
 
-                                    result = client.secure { builder -> builder.sslContext(sslContext) }
+                                        result = client.secure { builder -> builder.sslContext(sslContext) }
 
-                                    logger.debug { "Client SSL context was set: private key=${it.key != null}, trusted certificate=${it.trustedCertificate != null}." }
+                                        logger.debug { "Client SSL context was set: private key=${it.key != null}, trusted certificate=${it.trustedCertificate != null}." }
+                                    }
                                 }
-                            }
-                            result
-                        },
+                                result
+                            },
                     ),
-                )
-                .baseUrl(dmnConfigProperties.url)
+                ).baseUrl(dmnConfigProperties.url)
                 .apply {
                     val token = getToken()
                     if (token != null) {
                         it.defaultHeader("Authorization", "Bearer $token")
                     }
-                }
-                .apply {
+                }.apply {
                     if (dmnConfigProperties.username.isNotEmpty() && dmnConfigProperties.password.isNotEmpty()) {
                         it.defaultHeaders { header ->
                             header.setBasicAuth(
@@ -85,23 +85,20 @@ class DmnClient(
                             )
                         }
                     }
-                }
-                .build()
+                }.build()
     }
 
-    suspend fun getDecision(dmnRequest: DmnRequest): List<Map<String, DmnResponse>> {
-        return webClient
+    suspend fun getDecision(dmnRequest: DmnRequest): List<Map<String, DmnResponse>> =
+        webClient
             .post()
             .uri("/decision-definition/key/${dmnRequest.key}/evaluate")
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
             .body(
                 BodyInserters.fromValue(dmnRequest.mapping),
-            )
-            .retrieve()
+            ).retrieve()
             .handleStatus()
             .awaitBody<List<Map<String, DmnResponse>>>()
-    }
 
     private fun getToken(): String? {
         if (dmnConfigProperties.clientId.isNotEmpty() && dmnConfigProperties.secret.isNotEmpty()) {
@@ -118,8 +115,7 @@ class DmnClient(
             .onStatus(
                 { httpStatus -> HttpStatus.NOT_FOUND == httpStatus },
                 { throw ResponseStatusException(HttpStatus.NOT_FOUND) },
-            )
-            .onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, {
+            ).onStatus({ httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus }, {
                 throw ResponseStatusException(
                     HttpStatus.UNAUTHORIZED,
                 )

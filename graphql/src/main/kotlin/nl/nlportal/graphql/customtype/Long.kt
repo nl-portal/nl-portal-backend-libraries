@@ -66,7 +66,8 @@ object LongCoercing : Coercing<Long, String> {
 }
 
 internal val graphqlLongType =
-    GraphQLScalarType.newScalar()
+    GraphQLScalarType
+        .newScalar()
         .name("Long")
         .description("A long")
         .coercing(LongCoercing)

@@ -26,7 +26,9 @@ import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.awaitBodyOrNull
 import java.util.UUID
 
-class Partijen(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesPath() {
+class Partijen(
+    val client: OpenKlant2KlantinteractiesClient,
+) : KlantInteractiesPath() {
     override val path = "/partijen"
 
     suspend fun get(searchFilters: List<Pair<OpenKlant2PartijenFilters, Any>>? = null): List<OpenKlant2Partij>? {
@@ -39,8 +41,7 @@ class Partijen(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesP
                         .path(path)
                         .applyFilters(filters = searchFilters)
                         .build()
-                }
-                .accept(MediaType.APPLICATION_JSON)
+                }.accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .awaitBodyOrNull()
 
@@ -56,8 +57,7 @@ class Partijen(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesP
                     uriBuilder
                         .path("$path/$partijId")
                         .build()
-                }
-                .accept(MediaType.APPLICATION_JSON)
+                }.accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .awaitBodyOrNull()
 
@@ -73,8 +73,7 @@ class Partijen(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesP
                     uriBuilder
                         .path(path)
                         .build()
-                }
-                .body(BodyInserters.fromValue(partijRequest))
+                }.body(BodyInserters.fromValue(partijRequest))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .awaitBody()
@@ -91,8 +90,7 @@ class Partijen(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesP
                     uriBuilder
                         .path("$path/${partij.uuid}")
                         .build()
-                }
-                .body(BodyInserters.fromValue(partij))
+                }.body(BodyInserters.fromValue(partij))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .awaitBodyOrNull()
@@ -108,8 +106,7 @@ class Partijen(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesP
                 uriBuilder
                     .path("$path/$uuid")
                     .build()
-            }
-            .accept(MediaType.APPLICATION_JSON)
+            }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBodilessEntity()
     }

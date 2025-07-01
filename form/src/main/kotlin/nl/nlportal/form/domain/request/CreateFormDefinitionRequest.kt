@@ -22,15 +22,9 @@ data class CreateFormDefinitionRequest(
     private val formDefinition: ObjectNode,
     private val isReadOnly: Boolean,
 ) {
-    fun getName(): String {
-        return name
-    }
+    fun getName(): String = name
 
-    fun getFormDefinition(): ObjectNode {
-        return formDefinition
-    }
+    fun getFormDefinition(): ObjectNode = formDefinition
 
-    fun isReadOnly(): Boolean {
-        return isReadOnly
-    }
+    fun isReadOnly(): Boolean = isReadOnly
 }

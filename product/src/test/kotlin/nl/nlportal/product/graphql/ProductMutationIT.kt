@@ -64,7 +64,8 @@ internal class ProductMutationIT(
     fun updateVerbruikdObjectTestUnauthorized() {
         val basePath = "$.data.updateProductVerbruiksObject[0]"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
@@ -79,7 +80,8 @@ internal class ProductMutationIT(
     fun updateVerbruikdObjectTestNotFound() {
         val basePath = "$.data.updateProductVerbruiksObject"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
@@ -94,14 +96,16 @@ internal class ProductMutationIT(
     fun updateVerbruikdObjectTestBurger() {
         val basePath = "$.data.updateProductVerbruiksObject"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(graphqlUpdateProductVerbruiksObject)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5a800")
+            .jsonPath("$basePath.id")
+            .isEqualTo("2d725c07-2f26-4705-8637-438a42b5a800")
     }
 
     fun setupMockOpenZaakServer() {

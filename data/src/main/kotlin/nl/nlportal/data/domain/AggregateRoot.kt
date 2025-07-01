@@ -30,9 +30,7 @@ abstract class AggregateRoot<EventType> {
      * All domain events currently captured by the aggregate.
      */
     @DomainEvents
-    fun domainEvents(): Collection<EventType> {
-        return Collections.unmodifiableList(domainEvents)
-    }
+    fun domainEvents(): Collection<EventType> = Collections.unmodifiableList(domainEvents)
 
     /**
      * Registers the given event object for publication on a call to a Spring Data repository's save methods.

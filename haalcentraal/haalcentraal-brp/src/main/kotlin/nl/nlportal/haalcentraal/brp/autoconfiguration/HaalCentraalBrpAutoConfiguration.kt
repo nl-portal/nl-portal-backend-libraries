@@ -35,19 +35,13 @@ import org.springframework.context.annotation.Import
 class HaalCentraalBrpAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(HaalCentraalBrpClient::class)
-    fun haalCentraalBrpClient(haalCentraalClientProvider: HaalCentraalClientProvider): HaalCentraalBrpClient {
-        return HaalCentraalBrpClient(haalCentraalClientProvider)
-    }
+    fun haalCentraalBrpClient(haalCentraalClientProvider: HaalCentraalClientProvider): HaalCentraalBrpClient = HaalCentraalBrpClient(haalCentraalClientProvider)
 
     @Bean
     @ConditionalOnMissingBean(HaalCentraalBrpService::class)
-    fun haalCentraalBrpServiceImpl(haalCentraalBrpClient: HaalCentraalBrpClient): HaalCentraalBrpService {
-        return HaalCentraalBrpServiceImpl(haalCentraalBrpClient)
-    }
+    fun haalCentraalBrpServiceImpl(haalCentraalBrpClient: HaalCentraalBrpClient): HaalCentraalBrpService = HaalCentraalBrpServiceImpl(haalCentraalBrpClient)
 
     @Bean
     @ConditionalOnMissingBean(HaalCentraalBrpQuery::class)
-    fun haalCentraalBrpQuery(haalCentraalBrpService: HaalCentraalBrpService): HaalCentraalBrpQuery {
-        return HaalCentraalBrpQuery(haalCentraalBrpService)
-    }
+    fun haalCentraalBrpQuery(haalCentraalBrpService: HaalCentraalBrpService): HaalCentraalBrpQuery = HaalCentraalBrpQuery(haalCentraalBrpService)
 }

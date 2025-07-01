@@ -32,12 +32,11 @@ class DirectPaymentController(
     suspend fun postSale(
         httpServletRequest: ServerHttpRequest,
         @RequestBody ogoneDirectPaymentWebhookRequest: String,
-    ): ResponseEntity<String> {
-        return ResponseEntity.ok(
+    ): ResponseEntity<String> =
+        ResponseEntity.ok(
             directPaymentService.handlePostSale(
                 httpServletRequest.headers,
                 ogoneDirectPaymentWebhookRequest,
             ),
         )
-    }
 }

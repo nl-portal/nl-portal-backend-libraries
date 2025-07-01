@@ -29,9 +29,7 @@ class BurgerAuthentication(
     }
 
     companion object {
-        private fun getUserId(jwt: Jwt): String {
-            return ((jwt.claims[AANVRAGER_KEY] as Map<*, *>?) ?: jwt.claims)[BSN_KEY].toString()
-        }
+        private fun getUserId(jwt: Jwt): String = ((jwt.claims[AANVRAGER_KEY] as Map<*, *>?) ?: jwt.claims)[BSN_KEY].toString()
     }
 
     fun getBsn() = this.userId

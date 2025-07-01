@@ -49,7 +49,7 @@ internal class CommonGroundAuthenticationConverterTest {
     @Test
     fun `converter returns BurgerAuthentication when JWT has BSN`() {
         val jwt = JwtBuilder().aanvragerBsn("1234").buildJwt()
-        val jwtString = JwtBuilder().aanvragerBsn("1234").buildJwtString()
+        val jwtString = JwtBuilder().buildJwtString("123422222222222222222233333333333")
         val tokenResponse = CommonGroundAuthenticationConverter.TokenResponse(jwtString)
 
         doReturn(Mono.just(jwt)).whenever(decoder).decode(tokenResponse.accessToken)
@@ -63,7 +63,7 @@ internal class CommonGroundAuthenticationConverterTest {
     @Test
     fun `converter returns BedrijfAuthentication when JWT has KvK nummer`() {
         val jwt = JwtBuilder().aanvragerKvk("1234").buildJwt()
-        val jwtString = JwtBuilder().aanvragerKvk("1234").buildJwtString()
+        val jwtString = JwtBuilder().buildJwtString("123422222222222222222233333333333")
         val tokenResponse = CommonGroundAuthenticationConverter.TokenResponse(jwtString)
 
         doReturn(Mono.just(jwt)).whenever(decoder).decode(tokenResponse.accessToken)
@@ -82,7 +82,7 @@ internal class CommonGroundAuthenticationConverterTest {
                 .header("alg", "none")
                 .claim("random", "1234")
                 .build()
-        val jwtString = JwtBuilder().buildJwtString()
+        val jwtString = JwtBuilder().buildJwtString("123422222222222222222233333333333")
         val tokenResponse = CommonGroundAuthenticationConverter.TokenResponse(jwtString)
 
         doReturn(Mono.just(jwt)).whenever(decoder).decode(tokenResponse.accessToken)

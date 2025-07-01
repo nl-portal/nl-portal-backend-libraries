@@ -27,21 +27,19 @@ import org.springframework.context.annotation.Bean
 class HaalCentraal2GraphQLConfiguration {
     @Bean
     @ConditionalOnMissingBean(HaalCentraal2BrpQuery::class)
-    fun haalCentraal2BrpQuery(haalCentraal2Service: HaalCentraal2Service): HaalCentraal2BrpQuery {
-        return HaalCentraal2BrpQuery(
+    fun haalCentraal2BrpQuery(haalCentraal2Service: HaalCentraal2Service): HaalCentraal2BrpQuery =
+        HaalCentraal2BrpQuery(
             haalCentraal2Service = haalCentraal2Service,
         )
-    }
 
     @Bean
     @ConditionalOnMissingBean(HaalCentraal2GemachtigdeQuery::class)
     fun haalCentraal2GemachtigdeQuery(
         haalCentraal2Service: HaalCentraal2Service,
         handelsregisterService: HandelsregisterService,
-    ): HaalCentraal2GemachtigdeQuery {
-        return HaalCentraal2GemachtigdeQuery(
+    ): HaalCentraal2GemachtigdeQuery =
+        HaalCentraal2GemachtigdeQuery(
             haalCentraal2Service = haalCentraal2Service,
             handelsregisterService = handelsregisterService,
         )
-    }
 }

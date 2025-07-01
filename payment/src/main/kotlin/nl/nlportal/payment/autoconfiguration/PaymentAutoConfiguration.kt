@@ -34,21 +34,16 @@ class PaymentAutoConfiguration {
     fun ogonePaymentService(
         ogonePaymentConfig: OgonePaymentConfig,
         objectsApiClient: ObjectsApiClient,
-    ): OgonePaymentService {
-        return OgonePaymentService(
+    ): OgonePaymentService =
+        OgonePaymentService(
             ogonePaymentConfig.properties,
             objectsApiClient,
         )
-    }
 
     @Bean
-    fun ogonePaymentMutation(ogonePaymentService: OgonePaymentService): OgonePaymentMutation {
-        return OgonePaymentMutation(ogonePaymentService)
-    }
+    fun ogonePaymentMutation(ogonePaymentService: OgonePaymentService): OgonePaymentMutation = OgonePaymentMutation(ogonePaymentService)
 
     @Bean
     @ConditionalOnMissingBean(OgonePaymentController::class)
-    fun ogonePaymentController(ogonePaymentService: OgonePaymentService): OgonePaymentController {
-        return OgonePaymentController(ogonePaymentService)
-    }
+    fun ogonePaymentController(ogonePaymentService: OgonePaymentService): OgonePaymentController = OgonePaymentController(ogonePaymentService)
 }

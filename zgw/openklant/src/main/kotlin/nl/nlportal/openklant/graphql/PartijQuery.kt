@@ -30,9 +30,7 @@ class PartijQuery(
     private val openklant2Service: OpenKlant2Service,
 ) : Query {
     @GraphQLDescription("Find the Partij of the authenticated user.")
-    suspend fun findUserPartij(dfe: DataFetchingEnvironment): OpenKlant2Partij? {
-        return openklant2Service.findPartijByAuthentication(dfe.graphQlContext.get(AUTHENTICATION_KEY))
-    }
+    suspend fun findUserPartij(dfe: DataFetchingEnvironment): OpenKlant2Partij? = openklant2Service.findPartijByAuthentication(dfe.graphQlContext.get(AUTHENTICATION_KEY))
 
     @GraphQLDescription("Get Partij by Id for authenticated user.")
     suspend fun getUserPartij(

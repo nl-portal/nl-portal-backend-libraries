@@ -22,8 +22,9 @@ import nl.nlportal.haalcentraal2.autoconfiguration.HaalCentraal2ModuleConfigurat
 import nl.nlportal.haalcentraal2.client.HaalCentraal2Client
 import nl.nlportal.haalcentraal2.client.path.Bewoning
 import nl.nlportal.haalcentraal2.client.path.Personen
-import nl.nlportal.haalcentraal2.domain.bewoning.BewoningenApiResponse
 import nl.nlportal.haalcentraal2.domain.bewoning.BewoningenApiRequest
+import nl.nlportal.haalcentraal2.domain.bewoning.BewoningenApiResponse
+import nl.nlportal.haalcentraal2.domain.brp.AanduidingNaamGebruikBrpNaam
 import nl.nlportal.haalcentraal2.domain.brp.BrpApiRequest
 import nl.nlportal.haalcentraal2.domain.brp.BrpPersoon
 import java.time.LocalDate
@@ -33,27 +34,32 @@ class HaalCentraal2Service(
     val haalCentraal2ConfigurationProperties: HaalCentraal2ConfigurationProperties,
     val haalCentraal2Client: HaalCentraal2Client,
 ) {
-    suspend fun getPersoon(authentication: CommonGroundAuthentication): BrpPersoon? {
-        return if (authentication is BurgerAuthentication) {
+    suspend fun getPersoon(authentication: CommonGroundAuthentication): BrpPersoon? =
+        if (authentication is BurgerAuthentication) {
             val brpApiRequest =
                 BrpApiRequest(
                     burgerservicenummer = authentication.userId,
                     fields = haalCentraal2ConfigurationProperties.brpFields,
                 )
-            haalCentraal2Client.path<Personen>().post(
-                brpApiRequest,
-                authentication,
-            ).personen.singleOrNull()
+            haalCentraal2Client
+                .path<Personen>()
+                .post(
+                    brpApiRequest,
+                    authentication,
+                ).personen
+                .singleOrNull()
+                ?.apply {
+                    naam.officialLastName = determineOfficialLastName(this)
+                }
         } else {
             null
         }
-    }
 
     suspend fun getBewoningen(
         authentication: CommonGroundAuthentication,
         adresseerbaarObjectIdentificatie: String,
-    ): BewoningenApiResponse? {
-        return try {
+    ): BewoningenApiResponse? =
+        try {
             if (authentication is BurgerAuthentication) {
                 val bewoningenApiRequest =
                     BewoningenApiRequest(
@@ -63,14 +69,13 @@ class HaalCentraal2Service(
                     )
                 haalCentraal2Client.path<Bewoning>().post(bewoningenApiRequest, authentication)
             } else {
-                logger.warn("Authentication is not supported")
+                logger.warn { "Authentication is not supported" }
                 null
             }
         } catch (ex: Exception) {
-            logger.error("Something went wrong with 'getBewoningen' - error: {}", ex.message, ex)
+            logger.error(ex) { "Something went wrong with 'getBewoningen' - error: ${ex.message}" }
             null
         }
-    }
 
     suspend fun getBewonersAantal(
         authentication: CommonGroundAuthentication,
@@ -92,10 +97,43 @@ class HaalCentraal2Service(
                     burgerservicenummer = it,
                     fields = haalCentraal2ConfigurationProperties.brpFields,
                 )
-            haalCentraal2Client.path<Personen>().post(
-                brpApiRequest,
-                authentication,
-            ).personen.singleOrNull()
+            haalCentraal2Client
+                .path<Personen>()
+                .post(
+                    brpApiRequest,
+                    authentication,
+                ).personen
+                .singleOrNull()
+                ?.apply {
+                    naam.officialLastName = determineOfficialLastName(this)
+                }
+        }
+    }
+
+    private fun determineOfficialLastName(persoon: BrpPersoon): String {
+        if (persoon.naam.aanduidingNaamgebruik?.code == null) {
+            return persoon.naam.lastName()
+        }
+        val lastNamePartner =
+            persoon.partners
+                ?.firstOrNull { it.naam != null }
+                ?.naam
+                ?.lastName()
+                ?.trim() ?: ""
+
+        return when (persoon.naam.aanduidingNaamgebruik.code) {
+            AanduidingNaamGebruikBrpNaam.PARTNER.value -> {
+                lastNamePartner
+            }
+            AanduidingNaamGebruikBrpNaam.PARTNER_EIGEN.value -> {
+                "$lastNamePartner - ${persoon.naam.lastName()}"
+            }
+            AanduidingNaamGebruikBrpNaam.EIGEN_PARTNER.value -> {
+                "${persoon.naam.lastName()} - $lastNamePartner"
+            }
+            else -> {
+                persoon.naam.lastName()
+            }
         }
     }
 

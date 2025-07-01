@@ -36,23 +36,21 @@ class HaalCentraal2AutoConfiguration {
         haalCentraal2ModuleConfiguration: HaalCentraal2ModuleConfiguration,
         @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
         webClientBuilder: WebClient.Builder,
-    ): HaalCentraal2Client {
-        return HaalCentraal2Client(
+    ): HaalCentraal2Client =
+        HaalCentraal2Client(
             haalCentraal2ConfigurationProperties = haalCentraal2ModuleConfiguration.properties,
             clientSslContextResolver = clientSslContextResolver,
             webClientBuilder = webClientBuilder,
         )
-    }
 
     @Bean
     @ConditionalOnMissingBean(HaalCentraal2Service::class)
     fun haalCentraal2Service(
         haalCentraal2ModuleConfiguration: HaalCentraal2ModuleConfiguration,
         haalCentraal2BrpClient: HaalCentraal2Client,
-    ): HaalCentraal2Service {
-        return HaalCentraal2Service(
+    ): HaalCentraal2Service =
+        HaalCentraal2Service(
             haalCentraal2ConfigurationProperties = haalCentraal2ModuleConfiguration.properties,
             haalCentraal2Client = haalCentraal2BrpClient,
         )
-    }
 }

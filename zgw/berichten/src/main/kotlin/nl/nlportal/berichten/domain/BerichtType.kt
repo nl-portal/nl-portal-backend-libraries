@@ -26,7 +26,5 @@ enum class BerichtType(
     VERZOEK("verzoek"),
     ;
 
-    override fun toString(): String {
-        return this.value
-    }
+    override fun toString(): String = this.value
 }

@@ -45,7 +45,5 @@ class TestApplication {
     }
 
     @Bean
-    fun reactiveJwtDecoder(): ReactiveJwtDecoder {
-        return Mockito.mock(ReactiveJwtDecoder::class.java)
-    }
+    fun reactiveJwtDecoder(): ReactiveJwtDecoder = Mockito.mock(ReactiveJwtDecoder::class.java)
 }

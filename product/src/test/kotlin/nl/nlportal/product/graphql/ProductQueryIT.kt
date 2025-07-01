@@ -101,7 +101,8 @@ internal class ProductQueryIT(
     fun getProductenTestUnauthorized() {
         val basePath = "$.data.getProducten[0]"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
@@ -116,7 +117,8 @@ internal class ProductQueryIT(
     fun getProductenTestNotFound() {
         val basePath = "$.data.getProducten"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
@@ -132,15 +134,18 @@ internal class ProductQueryIT(
         val basePath = "$.data.getProducten"
         val resultPath = "$basePath.content[0]"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(graphqlGetProducten)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$resultPath.id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
-            .jsonPath("$resultPath.naam").isEqualTo("erfpacht")
+            .jsonPath("$resultPath.id")
+            .isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
+            .jsonPath("$resultPath.naam")
+            .isEqualTo("erfpacht")
     }
 
     @Test
@@ -148,18 +153,24 @@ internal class ProductQueryIT(
     fun getProductTestBurger() {
         val basePath = "$.data.getProduct"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(graphqlGetProduct)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.naam").isEqualTo("erfpacht")
-            .jsonPath("$basePath.zaken[0].uuid").isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c202")
-            .jsonPath("$basePath.zaken[0].omschrijving").isEqualTo("Lopende zaak")
-            .jsonPath("$basePath.taken[0].titel").isEqualTo("Taak linked to Zaak")
-            .jsonPath("$basePath.productDetails.id").isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c500")
+            .jsonPath("$basePath.naam")
+            .isEqualTo("erfpacht")
+            .jsonPath("$basePath.zaken[0].uuid")
+            .isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c202")
+            .jsonPath("$basePath.zaken[0].omschrijving")
+            .isEqualTo("Lopende zaak")
+            .jsonPath("$basePath.taken[0].titel")
+            .isEqualTo("Taak linked to Zaak")
+            .jsonPath("$basePath.productDetails.id")
+            .isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c500")
     }
 
     @Test
@@ -167,7 +178,8 @@ internal class ProductQueryIT(
     fun getProductTestBurgerUnauthorized() {
         val basePath = "$.data.getProduct"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
@@ -182,14 +194,16 @@ internal class ProductQueryIT(
     fun getProductZakenTestBurger() {
         val basePath = "$.data.getProductZaken"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(graphqlGetProductZaken)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath[0].omschrijving").isEqualTo("Lopende zaak")
+            .jsonPath("$basePath[0].omschrijving")
+            .isEqualTo("Lopende zaak")
     }
 
     @Test
@@ -200,14 +214,16 @@ internal class ProductQueryIT(
     fun getProductZakenTestBedrijf() {
         val basePath = "$.data.getProductZaken"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(graphqlGetProductZaken)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath[0].omschrijving").isEqualTo("Lopende zaak")
+            .jsonPath("$basePath[0].omschrijving")
+            .isEqualTo("Lopende zaak")
     }
 
     @Test
@@ -215,7 +231,8 @@ internal class ProductQueryIT(
     fun getProductZakenTestBurgerNoZaakTypes() {
         val basePath = "$.data.getProductZaken"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
@@ -230,7 +247,8 @@ internal class ProductQueryIT(
     fun getProductZakenTestBurgerNotFound() {
         val basePath = "$.data.getProductZaken"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
@@ -245,15 +263,18 @@ internal class ProductQueryIT(
     fun getProductVerbruiksObjectenTestBurger() {
         val basePath = "$.data.getProductVerbruiksObjecten"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(graphqlGetProductVerbruiksObjecten)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath[0].id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5a800")
-            .jsonPath("$basePath[0].soort").isEqualTo("test verbruiksobject")
+            .jsonPath("$basePath[0].id")
+            .isEqualTo("2d725c07-2f26-4705-8637-438a42b5a800")
+            .jsonPath("$basePath[0].soort")
+            .isEqualTo("test verbruiksobject")
     }
 
     @Test
@@ -261,15 +282,18 @@ internal class ProductQueryIT(
     fun getProductTypeTestBurger() {
         val basePath = "$.data.getProductType"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(graphqlGetProductType)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.id").isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c200")
-            .jsonPath("$basePath.naam").isEqualTo("erfpacht")
+            .jsonPath("$basePath.id")
+            .isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c200")
+            .jsonPath("$basePath.naam")
+            .isEqualTo("erfpacht")
     }
 
     @Test
@@ -277,16 +301,20 @@ internal class ProductQueryIT(
     fun getProductTypesTestBurger() {
         val basePath = "$.data.getProductTypes"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(graphqlGetProductTypes)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.size()").isEqualTo(1)
-            .jsonPath("$basePath[0].id").isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c200")
-            .jsonPath("$basePath[0].naam").isEqualTo("erfpacht")
+            .jsonPath("$basePath.size()")
+            .isEqualTo(1)
+            .jsonPath("$basePath[0].id")
+            .isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c200")
+            .jsonPath("$basePath[0].naam")
+            .isEqualTo("erfpacht")
     }
 
     @Test
@@ -294,16 +322,20 @@ internal class ProductQueryIT(
     fun getProductTakenTestBurger() {
         val basePath = "$.data.getProductTaken"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(graphqlGetProductTaken)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.size()").isEqualTo(2)
-            .jsonPath("$basePath[0].id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
-            .jsonPath("$basePath[0].titel").isEqualTo("Taak linked to Zaak")
+            .jsonPath("$basePath.size()")
+            .isEqualTo(2)
+            .jsonPath("$basePath[0].id")
+            .isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
+            .jsonPath("$basePath[0].titel")
+            .isEqualTo("Taak linked to Zaak")
     }
 
     @Test
@@ -314,16 +346,20 @@ internal class ProductQueryIT(
     fun getProductTakenTestBedrijf() {
         val basePath = "$.data.getProductTaken"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(graphqlGetProductTaken)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.size()").isEqualTo(2)
-            .jsonPath("$basePath[0].id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
-            .jsonPath("$basePath[0].titel").isEqualTo("Taak linked to Zaak")
+            .jsonPath("$basePath.size()")
+            .isEqualTo(2)
+            .jsonPath("$basePath[0].id")
+            .isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
+            .jsonPath("$basePath[0].titel")
+            .isEqualTo("Taak linked to Zaak")
     }
 
     @Test
@@ -331,14 +367,16 @@ internal class ProductQueryIT(
     fun getProductTakenTestBurgerNoTaken() {
         val basePath = "$.data.getProductTaken"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(graphqlGetProductTaken)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.size()").isEqualTo(0)
+            .jsonPath("$basePath.size()")
+            .isEqualTo(0)
     }
 
     @Test
@@ -346,7 +384,8 @@ internal class ProductQueryIT(
     fun getProductDescisionTest() {
         val basePath = "$.data.getProductDecision"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
@@ -363,7 +402,8 @@ internal class ProductQueryIT(
     fun getDescisionTest() {
         val basePath = "$.data.getDecision"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
@@ -380,15 +420,18 @@ internal class ProductQueryIT(
     fun productPrefillTestBurger() {
         val basePath = "$.data.productPrefill"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(graphqlProductPrefill)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.objectId").isEqualTo("f9d7f166-bcea-4448-a984-4e717e558458")
-            .jsonPath("$basePath.formulierUrl").isEqualTo("http://localhost:8080/formuliernaam")
+            .jsonPath("$basePath.objectId")
+            .isEqualTo("f9d7f166-bcea-4448-a984-4e717e558458")
+            .jsonPath("$basePath.formulierUrl")
+            .isEqualTo("http://localhost:8080/formuliernaam")
     }
 
     fun setupMockServer() {

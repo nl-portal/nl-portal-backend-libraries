@@ -37,33 +37,23 @@ class FormAutoConfiguration {
     @ConditionalOnMissingBean(FormApplicationReadyEventListener::class)
     fun formApplicationReadyEventListener(
         formDefinitionDeploymentService: FormDefinitionDeploymentService,
-    ): FormApplicationReadyEventListener {
-        return FormApplicationReadyEventListener(formDefinitionDeploymentService)
-    }
+    ): FormApplicationReadyEventListener = FormApplicationReadyEventListener(formDefinitionDeploymentService)
 
     @Bean
     @ConditionalOnMissingBean(FormIoFormDefinitionService::class)
-    fun formIoFormDefinitionService(formIoFormDefinitionRepository: FormIoFormDefinitionRepository): FormIoFormDefinitionService {
-        return FormIoFormDefinitionService(formIoFormDefinitionRepository)
-    }
+    fun formIoFormDefinitionService(formIoFormDefinitionRepository: FormIoFormDefinitionRepository): FormIoFormDefinitionService = FormIoFormDefinitionService(formIoFormDefinitionRepository)
 
     @Bean
     @ConditionalOnMissingBean(ObjectsApiFormDefinitionService::class)
-    fun objectsApiFormDefinitionService(objectenApiService: ObjectenApiService): ObjectsApiFormDefinitionService {
-        return ObjectsApiFormDefinitionService(objectenApiService)
-    }
+    fun objectsApiFormDefinitionService(objectenApiService: ObjectenApiService): ObjectsApiFormDefinitionService = ObjectsApiFormDefinitionService(objectenApiService)
 
     @Bean
     @ConditionalOnMissingBean(FormDefinitionDeploymentService::class)
     fun formDefinitionDeploymentService(
         formIoFormDefinitionService: FormIoFormDefinitionService,
         resourceLoader: ResourceLoader,
-    ): FormDefinitionDeploymentService {
-        return FormDefinitionDeploymentService(formIoFormDefinitionService, resourceLoader)
-    }
+    ): FormDefinitionDeploymentService = FormDefinitionDeploymentService(formIoFormDefinitionService, resourceLoader)
 
     @Bean
-    fun formLiquibaseConfig(): LiquibaseMasterChangeLogLocation {
-        return LiquibaseMasterChangeLogLocation("config/liquibase/form-master.xml")
-    }
+    fun formLiquibaseConfig(): LiquibaseMasterChangeLogLocation = LiquibaseMasterChangeLogLocation("config/liquibase/form-master.xml")
 }

@@ -90,6 +90,8 @@ internal class PersoonQueryIT(
                     naam {
                         geslachtsnaam,
                         volledigeNaam,
+                        lastName,
+                        officialLastName,
                     }
                 }
             }
@@ -97,16 +99,20 @@ internal class PersoonQueryIT(
 
         val basePath = "$.data.getPersoonV2"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.burgerservicenummer").isEqualTo("999993847")
-            .jsonPath("$basePath.naam.volledigeNaam").isEqualTo("Pieter Jan de Vries")
-            .jsonPath("$basePath.naam.geslachtsnaam").isEqualTo("Vries")
+            .jsonPath("$basePath.burgerservicenummer")
+            .isEqualTo("999993847")
+            .jsonPath("$basePath.naam.volledigeNaam")
+            .isEqualTo("Pieter Jan de Vries")
+            .jsonPath("$basePath.naam.geslachtsnaam")
+            .isEqualTo("Vries")
     }
 
     @Test
@@ -128,15 +134,18 @@ internal class PersoonQueryIT(
 
         val basePath = "$.data.getPersoonV2"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.burgerservicenummer").isEqualTo("999993847")
-            .jsonPath("$basePath.bewonersAantal").isEqualTo(4)
+            .jsonPath("$basePath.burgerservicenummer")
+            .isEqualTo("999993847")
+            .jsonPath("$basePath.bewonersAantal")
+            .isEqualTo(4)
     }
 
     @Test
@@ -224,22 +233,31 @@ internal class PersoonQueryIT(
 
         val basePath = "$.data.getPersoonV2"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .expectBody()
             .consumeWith(System.out::println)
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.burgerservicenummer").isEqualTo("999993847")
-            .jsonPath("$basePath.geheimhoudingPersoonsgegevens").isEqualTo(true)
-            .jsonPath("$basePath.nationaliteiten").isArray()
-            .jsonPath("$basePath.nationaliteiten[0].nationaliteit.omschrijving").isEqualTo("Nederlands")
-            .jsonPath("$basePath.verblijfplaats.verblijfadres.officieleStraatnaam").isEqualTo("Het Spui 1")
-            .jsonPath("$basePath.verblijfplaats.adresseerbaarObjectIdentificatie").isEqualTo("226010000038820")
+            .jsonPath(basePath)
+            .exists()
+            .jsonPath("$basePath.burgerservicenummer")
+            .isEqualTo("999993847")
+            .jsonPath("$basePath.geheimhoudingPersoonsgegevens")
+            .isEqualTo(true)
+            .jsonPath("$basePath.nationaliteiten")
+            .isArray()
+            .jsonPath("$basePath.nationaliteiten[0].nationaliteit.omschrijving")
+            .isEqualTo("Nederlands")
+            .jsonPath("$basePath.verblijfplaats.verblijfadres.officieleStraatnaam")
+            .isEqualTo("Het Spui 1")
+            .jsonPath("$basePath.verblijfplaats.adresseerbaarObjectIdentificatie")
+            .isEqualTo("226010000038820")
     }
 
     private fun setupMockServer() {

@@ -18,4 +18,5 @@ package nl.nlportal.catalogiapi.domain
 data class ZaakType(
     val identificatie: String,
     val omschrijving: String,
+    val omschrijvingGeneriek: String? = null,
 )
