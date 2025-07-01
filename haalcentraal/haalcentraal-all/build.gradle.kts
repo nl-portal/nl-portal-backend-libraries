@@ -23,7 +23,7 @@ dependencies {
     api(project(":haalcentraal:haalcentraal-brp"))
     api(project(":haalcentraal:haalcentraal-hr"))
 
-    api(ApiDependencies.kotlinLogging)
+    api(Dependencies.kotlinLogging)
 
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
