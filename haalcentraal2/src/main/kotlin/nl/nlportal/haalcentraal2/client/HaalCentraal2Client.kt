@@ -46,7 +46,7 @@ class HaalCentraal2Client(
                             .create()
                             .wiretap(
                                 "reactor.netty.http.client.HttpClient",
-                                LogLevel.DEBUG,
+                                LogLevel.TRACE,
                                 AdvancedByteBufFormat.TEXTUAL,
                             ).let { client ->
                                 var result = client
