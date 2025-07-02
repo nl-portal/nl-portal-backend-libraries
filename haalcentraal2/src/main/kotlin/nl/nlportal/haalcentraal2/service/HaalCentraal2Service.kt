@@ -38,7 +38,7 @@ class HaalCentraal2Service(
         if (authentication is BurgerAuthentication) {
             val brpApiRequest =
                 BrpApiRequest(
-                    burgerservicenummer = authentication.userId,
+                    burgerservicenummer = listOf(authentication.userId),
                     fields = haalCentraal2ConfigurationProperties.brpFields,
                 )
             haalCentraal2Client
@@ -94,7 +94,7 @@ class HaalCentraal2Service(
         return authenticationGemachtigde?.bsn?.let {
             val brpApiRequest =
                 BrpApiRequest(
-                    burgerservicenummer = it,
+                    burgerservicenummer = listOf(it),
                     fields = haalCentraal2ConfigurationProperties.brpFields,
                 )
             haalCentraal2Client
