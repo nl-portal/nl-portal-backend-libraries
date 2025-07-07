@@ -19,16 +19,16 @@ import nl.nlportal.commonground.authentication.BedrijfAuthentication
 import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.klant.client.OpenKlantClient
-import nl.nlportal.klant.generiek.client.OpenKlantClientConfig
 import nl.nlportal.klant.domain.klanten.Klant
 import nl.nlportal.klant.domain.klanten.KlantCreationRequest
 import nl.nlportal.klant.domain.klanten.KlantUpdate
 import nl.nlportal.klant.domain.klanten.SubjectIdentificatie
+import nl.nlportal.klant.generiek.client.OpenKlantClientConfig.OpenKlantClientConfigProperties
 import nl.nlportal.klant.service.BurgerService
 import kotlin.random.Random
 
-class BurgerService(
-    val openKlantClientConfig: OpenKlantClientConfig,
+class BurgerServiceImpl(
+    val openKlantClientConfigProperties: OpenKlantClientConfigProperties,
     val openKlantClient: OpenKlantClient,
 ) : BurgerService {
     override suspend fun getBurgerProfiel(authentication: CommonGroundAuthentication): Klant? {
@@ -43,9 +43,11 @@ class BurgerService(
                     throw IllegalStateException("Multiple klanten found for BSN: ${authentication.getBsn()}")
                 }
             }
+
             is BedrijfAuthentication -> {
                 throw IllegalArgumentException("Cannot get klant by KVK")
             }
+
             else -> {
                 throw IllegalArgumentException("Cannot get klant for this user")
             }
@@ -82,7 +84,7 @@ class BurgerService(
 
         val klantRequest =
             KlantCreationRequest(
-                openKlantClientConfig.rsin,
+                openKlantClientConfigProperties.rsin,
                 generateKlantNummer(),
                 websiteUrl,
                 telefoonnummer,

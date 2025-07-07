@@ -59,7 +59,11 @@ class CaseTestConfiguration {
         password: String,
     ): UserDetails {
         val roles: List<String> = user.getRoles()
-        return User.withUsername(user.getName()).password(password).roles(StringUtils.join(roles)).build()
+        return User
+            .withUsername(user.getName())
+            .password(password)
+            .roles(StringUtils.join(roles))
+            .build()
     }
 
     private fun getOrDeducePassword(
@@ -76,7 +80,5 @@ class CaseTestConfiguration {
     }
 
     @Bean
-    fun caseDefinitionApplicationReadyEventListener(): CaseDefinitionApplicationReadyEventListener {
-        return Mockito.mock(CaseDefinitionApplicationReadyEventListener::class.java)
-    }
+    fun caseDefinitionApplicationReadyEventListener(): CaseDefinitionApplicationReadyEventListener = Mockito.mock(CaseDefinitionApplicationReadyEventListener::class.java)
 }

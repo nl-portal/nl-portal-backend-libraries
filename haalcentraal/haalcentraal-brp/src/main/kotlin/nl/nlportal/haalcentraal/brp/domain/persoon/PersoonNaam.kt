@@ -26,13 +26,12 @@ data class PersoonNaam(
     val aanduidingNaamgebruik: AanduidingNaamGebruik?,
     var officialLastName: String? = null,
 ) {
-    fun lastName(): String {
-        return if (voorvoegsel != null && geslachtsnaam != null) {
+    fun lastName(): String =
+        if (voorvoegsel != null && geslachtsnaam != null) {
             "$voorvoegsel $geslachtsnaam"
         } else {
             geslachtsnaam ?: ""
         }
-    }
 }
 
 enum class AanduidingNaamGebruik(

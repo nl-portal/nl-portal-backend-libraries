@@ -13,14 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.haalcentraal.hr.client
+package nl.nlportal.haalcentraal2.domain.brp
 
-import nl.nlportal.core.ssl.Ssl
-import org.springframework.boot.context.properties.ConfigurationProperties
-
-@ConfigurationProperties(prefix = "nl-portal.haalcentraal.hr", ignoreUnknownFields = true)
-data class HaalCentraalHrClientConfig(
-    var url: String = "",
-    val apiKey: String? = null,
-    val ssl: Ssl? = null,
+data class BrpUitsluitingKiesrecht(
+    val uitgeslotenVanKiesrecht: Boolean,
+    val einddatum: BrpDatum,
 )

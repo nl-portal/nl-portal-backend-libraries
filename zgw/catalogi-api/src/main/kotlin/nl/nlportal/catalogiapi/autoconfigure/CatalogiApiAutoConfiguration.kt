@@ -21,11 +21,13 @@ import nl.nlportal.catalogiapi.service.CatalogiApiService
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
 @EnableConfigurationProperties(CatalogiApiConfig::class)
+@ConditionalOnProperty(prefix = "nl-portal.config.catalogiapi", name = ["enabled"], havingValue = "true")
 class CatalogiApiAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(CatalogiApiService::class)
@@ -34,15 +36,10 @@ class CatalogiApiAutoConfiguration {
     }
 
     @Bean
-    fun catalogiApiConfig(): CatalogiApiConfig {
-        return CatalogiApiConfig()
-    }
-
-    @Bean
     fun catalogiApiClient(
         catalogiApiConfig: CatalogiApiConfig,
         idTokenGenerator: IdTokenGenerator,
     ): CatalogiApiClient {
-        return CatalogiApiClient(catalogiApiConfig, idTokenGenerator)
+        return CatalogiApiClient(catalogiApiConfig.properties, idTokenGenerator)
     }
 }

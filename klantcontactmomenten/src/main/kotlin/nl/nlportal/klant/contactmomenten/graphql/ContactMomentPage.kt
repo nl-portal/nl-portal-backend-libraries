@@ -29,13 +29,12 @@ class ContactMomentPage(
         fun fromResultPage(
             pageNumber: Int,
             resultPage: ResultPage<ContactMoment>,
-        ): ContactMomentPage {
-            return ContactMomentPage(
+        ): ContactMomentPage =
+            ContactMomentPage(
                 number = pageNumber,
                 size = 100,
                 content = resultPage.results,
                 totalElements = resultPage.count,
             )
-        }
     }
 }

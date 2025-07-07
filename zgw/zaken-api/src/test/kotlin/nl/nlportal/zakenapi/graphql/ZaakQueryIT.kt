@@ -64,8 +64,8 @@ internal class ZaakQueryIT(
         @JvmStatic
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
-            propsRegistry.add("nl-portal.zgw.zakenapi.url") { url }
-            propsRegistry.add("nl-portal.zgw.besluiten.url") { url }
+            propsRegistry.add("nl-portal.config.zakenapi.properties.url") { url }
+            propsRegistry.add("nl-portal.config.besluitenapi.properties.url") { url }
         }
 
         @JvmStatic
@@ -88,10 +88,10 @@ internal class ZaakQueryIT(
         setupMockOpenZaakServer()
         url = server?.url("/").toString()
 
-        zakenApiConfig.url = url
-        catalogiApiConfig.url = url
-        besluitenApiConfig.url = url
-        documentApisConfig.getConfig("openzaak").url = url
+        zakenApiConfig.properties.url = url
+        catalogiApiConfig.properties.url = url
+        besluitenApiConfig.properties.url = url
+        documentApisConfig.properties.getConfig("openzaak").url = url
     }
 
     @Test
@@ -588,7 +588,7 @@ internal class ZaakQueryIT(
 
     @Test
     fun getZakenUnAuthorized() {
-        zakenApiConfig.clientId = ""
+        zakenApiConfig.properties.clientId = ""
 
         val query =
             """

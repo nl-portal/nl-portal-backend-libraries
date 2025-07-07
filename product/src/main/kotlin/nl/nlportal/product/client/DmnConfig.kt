@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2025 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,17 @@ package nl.nlportal.product.client
 import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.dmn", ignoreUnknownFields = true)
+@ConfigurationProperties(prefix = "nl-portal.config.dmn", ignoreUnknownFields = true)
 data class DmnConfig(
-    val url: String,
-    val clientId: String? = null,
-    val secret: String? = null,
-    val username: String? = null,
-    val password: String? = null,
-    val ssl: Ssl? = null,
-)
+    var enabled: Boolean = false,
+    var properties: DmnConfigProperties = DmnConfigProperties(),
+) {
+    data class DmnConfigProperties(
+        var url: String = "",
+        var clientId: String = "",
+        var secret: String = "",
+        var username: String = "",
+        var password: String = "",
+        var ssl: Ssl? = null,
+    )
+}

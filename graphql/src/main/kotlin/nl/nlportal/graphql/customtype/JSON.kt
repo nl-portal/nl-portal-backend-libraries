@@ -99,7 +99,8 @@ object JSONCoercing : Coercing<ObjectNode, ObjectNode> {
 }
 
 internal val graphqlJSONType =
-    GraphQLScalarType.newScalar()
+    GraphQLScalarType
+        .newScalar()
         .name("JSON")
         .description("A type representing a formatted JSON")
         .coercing(JSONCoercing)

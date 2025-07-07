@@ -24,6 +24,7 @@ data class DigitaleAdresResponse(
     val waarde: String,
     val type: DigitaleAdresType,
     val omschrijving: String,
+    val referentie: String,
 ) {
     companion object {
         fun fromOpenKlant2DigitaleAdres(openKlant2DigitaleAdres: OpenKlant2DigitaleAdres): DigitaleAdresResponse =
@@ -36,6 +37,7 @@ data class DigitaleAdresResponse(
                         .entries
                         .singleOrNull { it.name.lowercase() == openKlant2DigitaleAdres.soortDigitaalAdres }
                         ?: OVERIG,
+                referentie = openKlant2DigitaleAdres.referentie ?: "",
             )
     }
 }

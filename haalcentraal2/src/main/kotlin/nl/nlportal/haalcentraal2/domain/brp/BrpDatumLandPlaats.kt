@@ -13,13 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.zgw.taak.autoconfigure
+package nl.nlportal.haalcentraal2.domain.brp
 
-import org.springframework.boot.context.properties.ConfigurationProperties
+data class BrpDatumLandPlaats(
+    val datum: BrpDatum? = null,
+    val land: BrpCodeOmschrijving? = null,
+    val plaats: BrpCodeOmschrijving? = null,
+    val inOnderzoek: BrpDatumLandPlaatsInOnderzoek,
+)
 
-@ConfigurationProperties(prefix = "nl-portal.zgw.taak.taakobject")
-class TaakObjectConfig(
-    @Deprecated("Use version 2")
-    var typeUrl: String = "",
-    var typeUrlV2: String = "",
+data class BrpDatumLandPlaatsInOnderzoek(
+    val datum: Boolean? = false,
+    val land: Boolean? = false,
+    val plaats: Boolean? = false,
+    val datumIngangOnderzoek: BrpDatum? = null,
 )

@@ -20,36 +20,35 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties(prefix = "nl-portal.config.payment.direct", ignoreUnknownFields = true)
 data class DirectPaymentModuleConfiguration(
     var enabled: Boolean = false,
-    var properties: DirectPaymentProperties,
-)
-
-data class DirectPaymentProperties(
-    var url: String,
-    val shaOutParameters: List<String>,
-    val webhookUrl: String? = null,
-    val configurations: Map<String, DirectPaymentProfile> = mapOf(),
+    var properties: DirectPaymentProperties = DirectPaymentProperties(),
 ) {
-    fun getPaymentProfile(profileIdentifier: String): DirectPaymentProfile? {
-        return configurations[profileIdentifier]
-    }
+    data class DirectPaymentProperties(
+        var url: String = "",
+        val shaOutParameters: List<String> = emptyList(),
+        val webhookHeaders: List<String> = emptyList(),
+        val webhookUrl: String? = null,
+        val configurations: Map<String, DirectPaymentProfile> = emptyMap(),
+    ) {
+        fun getPaymentProfile(profileIdentifier: String): DirectPaymentProfile? = configurations[profileIdentifier]
 
-    fun getPaymentProfileByPspPid(pspId: String?): DirectPaymentProfile? {
-        configurations.forEach {
-            if (it.value.pspId == pspId) {
-                return it.value
+        fun getPaymentProfileByPspPid(pspId: String?): DirectPaymentProfile? {
+            configurations.forEach {
+                if (it.value.pspId == pspId) {
+                    return it.value
+                }
             }
+            return null
         }
-        return null
     }
-}
 
-data class DirectPaymentProfile(
-    val pspId: String = "",
-    val language: String = "nl_NL",
-    val currency: String = "EUR",
-    val apiKey: String = "",
-    val apiSecret: String = "",
-    val returnUrl: String = "",
-    val webhookApiKey: String = "",
-    val webhookApiSecret: String = "",
-)
+    data class DirectPaymentProfile(
+        val pspId: String = "",
+        val language: String = "nl_NL",
+        val currency: String = "EUR",
+        val apiKey: String = "",
+        val apiSecret: String = "",
+        val returnUrl: String = "",
+        val webhookApiKey: String = "",
+        val webhookApiSecret: String = "",
+    )
+}

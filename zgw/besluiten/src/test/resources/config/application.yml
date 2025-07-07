@@ -9,11 +9,13 @@ spring:
                 jwt:
                     issuer-uri: http://localhost:8082/auth/realms/nlportal
 nl-portal:
-    zgw:
-        besluiten:
-            url: http://localhost:8001
-            clientId: valtimo_client
-            secret: e09b8bc5-5831-4618-ab28-41411304309d
+    config:
+        besluitenapi:
+            enabled: true
+            properties:
+                url: http://localhost:8001
+                clientId: valtimo_client
+                secret: e09b8bc5-5831-4618-ab28-41411304309d
 
 logging:
     level:

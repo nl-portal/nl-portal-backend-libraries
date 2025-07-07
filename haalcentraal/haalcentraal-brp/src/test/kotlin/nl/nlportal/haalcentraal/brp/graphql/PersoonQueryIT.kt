@@ -18,12 +18,11 @@ package nl.nlportal.haalcentraal.brp.graphql
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.haalcentraal.brp.TestHelper
 import nl.nlportal.haalcentraal.brp.TestHelper.verifyOnlyDataExists
-import nl.nlportal.haalcentraal.client.HaalCentraalClientConfig
+import nl.nlportal.haalcentraal.client.HaalCentraalBrpConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
-import org.hamcrest.Matchers.contains
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -40,7 +39,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class PersoonQueryIT(
     @Autowired private val testClient: WebTestClient,
-    @Autowired private val haalCentraalClientConfig: HaalCentraalClientConfig,
+    @Autowired private val haalCentraalClientConfig: HaalCentraalBrpConfig,
 ) {
     lateinit var server: MockWebServer
 
@@ -50,7 +49,7 @@ internal class PersoonQueryIT(
         setupMockServer()
         server.start()
 
-        haalCentraalClientConfig.url = server.url("/").toString()
+        haalCentraalClientConfig.properties.url = server.url("/").toString()
     }
 
     @AfterEach
@@ -81,18 +80,24 @@ internal class PersoonQueryIT(
 
         val basePath = "$.data.getPersoon"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.naam.aanhef").isEqualTo("Geachte mevrouw Kooyman")
-            .jsonPath("$basePath.naam.voorletters").isEqualTo("M.")
-            .jsonPath("$basePath.naam.voornamen").isEqualTo("Merel")
-            .jsonPath("$basePath.naam.voorvoegsel").isEqualTo("de")
-            .jsonPath("$basePath.naam.geslachtsnaam").isEqualTo("Kooyman")
+            .jsonPath("$basePath.naam.aanhef")
+            .isEqualTo("Geachte mevrouw Kooyman")
+            .jsonPath("$basePath.naam.voorletters")
+            .isEqualTo("M.")
+            .jsonPath("$basePath.naam.voornamen")
+            .isEqualTo("Merel")
+            .jsonPath("$basePath.naam.voorvoegsel")
+            .isEqualTo("de")
+            .jsonPath("$basePath.naam.geslachtsnaam")
+            .isEqualTo("Kooyman")
     }
 
     @Test
@@ -116,14 +121,16 @@ internal class PersoonQueryIT(
 
         val basePath = "$.data.getPersoon"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.bewonersAantal").isEqualTo(4)
+            .jsonPath("$basePath.bewonersAantal")
+            .isEqualTo(4)
     }
 
     @Test
@@ -186,37 +193,61 @@ internal class PersoonQueryIT(
 
         val basePath = "$.data.getPersoon"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .expectBody()
             .consumeWith(System.out::println)
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.burgerservicenummer").isEqualTo("999993847")
-            .jsonPath("$basePath.geslachtsaanduiding").isEqualTo("vrouw")
-            .jsonPath("$basePath.naam.voornamen").isEqualTo("Merel")
-            .jsonPath("$basePath.naam.geslachtsnaam").isEqualTo("Kooyman")
-            .jsonPath("$basePath.geboorte.datum.datum").isEqualTo("1982-04-10")
-            .jsonPath("$basePath.geboorte.datum.jaar").isEqualTo(1982)
-            .jsonPath("$basePath.geboorte.datum.maand").isEqualTo(4)
-            .jsonPath("$basePath.geboorte.datum.dag").isEqualTo(10)
-            .jsonPath("$basePath.geboorte.land.omschrijving").isEqualTo("Nederland")
-            .jsonPath("$basePath.verblijfplaats.straat").isEqualTo("Hector Berliozplantsoen")
-            .jsonPath("$basePath.verblijfplaats.huisnummer").isEqualTo("31")
-            .jsonPath("$basePath.verblijfplaats.huisletter").isEqualTo("H")
-            .jsonPath("$basePath.verblijfplaats.huisnummertoevoeging").isEqualTo("Achter")
-            .jsonPath("$basePath.verblijfplaats.postcode").isEqualTo("2551XS")
-            .jsonPath("$basePath.verblijfplaats.woonplaats").isEqualTo("'s-Gravenhage")
-            .jsonPath("$basePath.partners[0].naam.geslachtsnaam").isEqualTo("Maassen")
-            .jsonPath("$basePath.ouders[0].naam.geslachtsnaam").isEqualTo("Holthuizen")
-            .jsonPath("$basePath.kinderen[0].naam.geslachtsnaam").isEqualTo("Maassen")
-            .jsonPath("$basePath.kinderen[0].leeftijd").isEqualTo(18)
-            .jsonPath("$basePath.geheimhoudingPersoonsgegevens").isEqualTo(false)
-            .jsonPath("$basePath.nationaliteiten").isArray()
+            .jsonPath(basePath)
+            .exists()
+            .jsonPath("$basePath.burgerservicenummer")
+            .isEqualTo("999993847")
+            .jsonPath("$basePath.geslachtsaanduiding")
+            .isEqualTo("vrouw")
+            .jsonPath("$basePath.naam.voornamen")
+            .isEqualTo("Merel")
+            .jsonPath("$basePath.naam.geslachtsnaam")
+            .isEqualTo("Kooyman")
+            .jsonPath("$basePath.geboorte.datum.datum")
+            .isEqualTo("1982-04-10")
+            .jsonPath("$basePath.geboorte.datum.jaar")
+            .isEqualTo(1982)
+            .jsonPath("$basePath.geboorte.datum.maand")
+            .isEqualTo(4)
+            .jsonPath("$basePath.geboorte.datum.dag")
+            .isEqualTo(10)
+            .jsonPath("$basePath.geboorte.land.omschrijving")
+            .isEqualTo("Nederland")
+            .jsonPath("$basePath.verblijfplaats.straat")
+            .isEqualTo("Hector Berliozplantsoen")
+            .jsonPath("$basePath.verblijfplaats.huisnummer")
+            .isEqualTo("31")
+            .jsonPath("$basePath.verblijfplaats.huisletter")
+            .isEqualTo("H")
+            .jsonPath("$basePath.verblijfplaats.huisnummertoevoeging")
+            .isEqualTo("Achter")
+            .jsonPath("$basePath.verblijfplaats.postcode")
+            .isEqualTo("2551XS")
+            .jsonPath("$basePath.verblijfplaats.woonplaats")
+            .isEqualTo("'s-Gravenhage")
+            .jsonPath("$basePath.partners[0].naam.geslachtsnaam")
+            .isEqualTo("Maassen")
+            .jsonPath("$basePath.ouders[0].naam.geslachtsnaam")
+            .isEqualTo("Holthuizen")
+            .jsonPath("$basePath.kinderen[0].naam.geslachtsnaam")
+            .isEqualTo("Maassen")
+            .jsonPath("$basePath.kinderen[0].leeftijd")
+            .isEqualTo(18)
+            .jsonPath("$basePath.geheimhoudingPersoonsgegevens")
+            .isEqualTo(false)
+            .jsonPath("$basePath.nationaliteiten")
+            .isArray()
     }
 
     private fun setupMockServer() {

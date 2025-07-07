@@ -4,11 +4,12 @@ graphql:
 
 nl-portal:
     config:
-      openklant:
+      openklant2:
           enabled: true
           properties:
               klantinteracties-api-url: http://localhost:9007/klantinteracties/api/v1
               token: ba9d233e95e04c4a8a661a27daffe7c9bd019067
+              #digital-adressen-referentie: portaal
 
 logging:
     level:
@@ -30,7 +31,7 @@ spring:
 
 nl-portal:
     config:
-        openklant:
+        openklant2:
             enabled: false
 
 ---
@@ -42,7 +43,7 @@ spring:
 
 nl-portal:
     config:
-        openklant:
+        openklant2:
             enabled: true
             properties:
                 klantinteracties-api-url:

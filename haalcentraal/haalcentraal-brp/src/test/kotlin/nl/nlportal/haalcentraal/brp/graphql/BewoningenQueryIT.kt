@@ -18,7 +18,7 @@ package nl.nlportal.haalcentraal.brp.graphql
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.haalcentraal.brp.TestHelper
 import nl.nlportal.haalcentraal.brp.TestHelper.verifyOnlyDataExists
-import nl.nlportal.haalcentraal.client.HaalCentraalClientConfig
+import nl.nlportal.haalcentraal.client.HaalCentraalBrpConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -39,7 +39,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class BewoningenQueryIT(
     @Autowired private val testClient: WebTestClient,
-    @Autowired private val haalCentraalClientConfig: HaalCentraalClientConfig,
+    @Autowired private val haalCentraalClientConfig: HaalCentraalBrpConfig,
 ) {
     lateinit var server: MockWebServer
 
@@ -49,7 +49,7 @@ internal class BewoningenQueryIT(
         setupMockServer()
         server.start()
 
-        haalCentraalClientConfig.url = server.url("/").toString()
+        haalCentraalClientConfig.properties.url = server.url("/").toString()
     }
 
     @AfterEach
@@ -69,14 +69,16 @@ internal class BewoningenQueryIT(
 
         val basePath = "$.data.getBewonersAantal"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
             .verifyOnlyDataExists(basePath)
-            .jsonPath(basePath).isEqualTo(4)
+            .jsonPath(basePath)
+            .isEqualTo(4)
     }
 
     private fun setupMockServer() {

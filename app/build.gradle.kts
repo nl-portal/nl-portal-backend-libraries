@@ -20,6 +20,7 @@ plugins {
 
 dependencies {
     implementation(project(":haalcentraal:haalcentraal-all"))
+    implementation(project(":haalcentraal2"))
     implementation(project(":klant"))
     implementation(project(":klantcontactmomenten"))
     implementation(project(":product"))

@@ -17,6 +17,7 @@ package nl.nlportal.haalcentraal.hr.client
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import kotlinx.coroutines.runBlocking
+import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrConfig.HaalCentraalHrConfigProperties
 import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 import nl.nlportal.haalcentraal.hr.domain.MaterieleRegistratie
 import okhttp3.mockwebserver.MockResponse
@@ -29,7 +30,7 @@ import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class HandelsregisterClientTest {
-    private lateinit var haalCentraalHrClientConfig: HaalCentraalHrClientConfig
+    private lateinit var haalCentraalHrClientConfigProperties: HaalCentraalHrConfigProperties
     private lateinit var client: HandelsregisterClient
     private lateinit var server: MockWebServer
     private val kvkNummer = "90012768"
@@ -56,12 +57,10 @@ internal class HandelsregisterClientTest {
                             null,
                         ),
                     ),
-                )
-                .addHeader("Content-Type", "application/json"),
+                ).addHeader("Content-Type", "application/json"),
         )
-
-        haalCentraalHrClientConfig = HaalCentraalHrClientConfig(url = server.url("/").toString())
-        client = HandelsregisterClient(haalCentraalHrClientConfig)
+        haalCentraalHrClientConfigProperties = HaalCentraalHrConfigProperties(url = server.url("/").toString())
+        client = HandelsregisterClient(haalCentraalHrClientConfigProperties)
     }
 
     @AfterEach

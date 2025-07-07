@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2025 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,32 +21,29 @@ import nl.nlportal.payment.service.OgonePaymentService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
 @EnableConfigurationProperties(OgonePaymentConfig::class)
+@ConditionalOnProperty(prefix = "nl-portal.config.payment.ogone", name = ["enabled"], havingValue = "true")
 class PaymentAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(OgonePaymentService::class)
     fun ogonePaymentService(
         ogonePaymentConfig: OgonePaymentConfig,
         objectsApiClient: ObjectsApiClient,
-    ): OgonePaymentService {
-        return OgonePaymentService(
-            ogonePaymentConfig,
+    ): OgonePaymentService =
+        OgonePaymentService(
+            ogonePaymentConfig.properties,
             objectsApiClient,
         )
-    }
 
     @Bean
-    fun ogonePaymentMutation(ogonePaymentService: OgonePaymentService): OgonePaymentMutation {
-        return OgonePaymentMutation(ogonePaymentService)
-    }
+    fun ogonePaymentMutation(ogonePaymentService: OgonePaymentService): OgonePaymentMutation = OgonePaymentMutation(ogonePaymentService)
 
     @Bean
     @ConditionalOnMissingBean(OgonePaymentController::class)
-    fun ogonePaymentController(ogonePaymentService: OgonePaymentService): OgonePaymentController {
-        return OgonePaymentController(ogonePaymentService)
-    }
+    fun ogonePaymentController(ogonePaymentService: OgonePaymentService): OgonePaymentController = OgonePaymentController(ogonePaymentService)
 }

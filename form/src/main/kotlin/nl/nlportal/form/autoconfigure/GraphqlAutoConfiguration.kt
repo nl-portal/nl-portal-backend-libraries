@@ -27,7 +27,5 @@ class GraphqlAutoConfiguration {
     fun formDefinitionQuery(
         formIoFormDefinitionService: FormIoFormDefinitionService,
         objectenApiFormDefinitionService: ObjectsApiFormDefinitionService,
-    ): FormDefinitionQuery {
-        return FormDefinitionQuery(formIoFormDefinitionService, objectenApiFormDefinitionService)
-    }
+    ): FormDefinitionQuery = FormDefinitionQuery(formIoFormDefinitionService, objectenApiFormDefinitionService)
 }
