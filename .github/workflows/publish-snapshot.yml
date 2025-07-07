@@ -30,15 +30,20 @@ jobs:
                 uses: gradle/actions/setup-gradle@v4
             -   name: Gradle publish Snapshot to Github
                 if: ${{ contains(fromJSON(inputs.targets),'github-packages') }}
-                run: ./gradlew publishDefaultPublicationToGitHubPackagesRepository -Pversion=${{env.ARTIFACT_VERSION}}
+                run: echo 'GitHub Package snapshots have not been migrated over to our new JReleaser-based worfklow. Skipping.'
                 env:
                     USER: ${{ secrets.USER }}
                     TOKEN: ${{ secrets.TOKEN }}
-            -   name: Gradle Publish Snapshot to OSS
-                if: ${{ contains(fromJSON(inputs.targets),'sonatype-snapshots') }}
-                run: ./gradlew publishDefaultPublicationToSonatypeSnapshotRepository -Pversion=${{env.ARTIFACT_VERSION}}
+            -   name: Gradle deploy snapshot to Sonatype Central (maven-snapshots)
+                if: ${{ contains(fromJSON(inputs.targets), 'sonatype-snapshots') }}
+                # Must be two separate gradle invocations or it can fail with a race condition. 
+                # Most likely because JReleaser does not declare a Gradle dependency from `jreleaserdeploy` to `publish`
+                run: ./gradlew publish -Pversion=${{env.ARTIFACT_VERSION}} --stacktrace && ./gradlew jreleaserPublish -Pversion=${{env.ARTIFACT_VERSION}} --stacktrace
                 env:
-                    OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-                    OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
-                    SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-                    SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+                    JRELEASER_GPG_SECRET_KEY: ${{ secrets.SIGNING_KEY }}
+                    JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.SIGNING_KEY_PUBLIC_KEY }}
+                    JRELEASER_DEPLOY_MAVEN_NEXUS2_USERNAME: ${{ secrets.SONATYPE_USR }}
+                    JRELEASER_DEPLOY_MAVEN_NEXUS2_PASSWORD: ${{ secrets.SONATYPE_PSW }}
+                    JRELEASER_GPG_PASSPHRASE: ${{ secrets.SIGNING_KEY_PASSWORD }}
+                    JRELEASER_GITHUB_TOKEN: "..." # intentionally an ellipsis
+                    

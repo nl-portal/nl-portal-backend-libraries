@@ -7,6 +7,9 @@ import java.net.URI
 import kotlin.io.encoding.Base64.Default.decode
 import kotlin.io.encoding.ExperimentalEncodingApi
 
+val sonatypeCentralStagingDir = "sonatypeCentralStaging"
+val projectsExcludedFromPublish = setOf("app", "gradle", "cve-report", "license-report", "zgw")
+
 plugins {
     java
 
@@ -48,6 +51,8 @@ plugins {
 
     id("org.owasp.dependencycheck") version "12.1.1"
 
+    id("org.jreleaser") version "1.19.0"
+
     `maven-publish`
     signing
 }
@@ -60,6 +65,54 @@ allprojects {
         maven(URI("https://app.camunda.com/nexus/content/groups/public"))
         maven(URI("https://s01.oss.sonatype.org/content/groups/staging/"))
         maven(URI("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+    }
+}
+
+jreleaser {
+    project {
+        java {
+            groupId.set("nl.nl-portal")
+        }
+    }
+    signing {
+        active.set(org.jreleaser.model.Active.ALWAYS)
+        armored.set(true)
+    }
+
+    release {
+        // At least one releaser must be configured, but we only want to /deploy/ to Maven Central for now
+        github {
+            skipTag.set(true)
+            skipRelease.set(true)
+        }
+    }
+
+    deploy {
+        maven {
+            mavenCentral {
+                register("sonatype") {
+                    active.set(org.jreleaser.model.Active.RELEASE)
+                    url.set("https://central.sonatype.com/api/v1/publisher")
+                    subprojects.filter { it.name !in projectsExcludedFromPublish }.forEach { project ->
+                        stagingRepository(project.layout.buildDirectory.dir(sonatypeCentralStagingDir).get().asFile.path)
+                    }
+                }
+            }
+
+            nexus2 {
+                register("snapshot-deploy") {
+                    active.set(org.jreleaser.model.Active.SNAPSHOT)
+                    snapshotUrl.set("https://central.sonatype.com/repository/maven-snapshots/")
+                    applyMavenCentralRules.set(true)
+                    snapshotSupported.set(true)
+                    closeRepository.set(true)
+                    releaseRepository.set(true)
+                    subprojects.filter { it.name !in projectsExcludedFromPublish }.forEach { project ->
+                        stagingRepository(project.layout.buildDirectory.dir(sonatypeCentralStagingDir).get().asFile.path)
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -143,34 +196,8 @@ subprojects {
     publishing {
         repositories {
             maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/nl-portal/nl-portal-backend-libraries")
-                credentials {
-                    username = System.getenv("USER")
-                    password = System.getenv("TOKEN")
-                }
-            }
-            maven {
-                name = "SonatypeSnapshot"
-                credentials {
-                    username = System.getenv("OSSRH_USERNAME")
-                    password = System.getenv("OSSRH_TOKEN")
-                }
-
-                if (version.toString().endsWith("-SNAPSHOT")) {
-                    url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-                }
-            }
-            maven {
                 name = "Sonatype"
-                credentials {
-                    username = System.getenv("OSSRH_USERNAME")
-                    password = System.getenv("OSSRH_TOKEN")
-                }
-
-                if (version.toString().matches("^(\\d+\\.)?(\\d+\\.)?(\\d+)\$".toRegex())) {
-                    url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                }
+                url = uri(project.layout.buildDirectory.dir(sonatypeCentralStagingDir).get().asFile.path)
             }
         }
 
@@ -193,18 +220,6 @@ subprojects {
                 }
                 from(components["java"])
             }
-        }
-    }
-
-    if (signingConfigSet) {
-        signing {
-            val signingKeyBase64: String? = System.getenv("SIGNING_KEY")
-            val signingKeyBytes: ByteArray = getSigningKey(signingKeyBase64!!)
-            val signingKey: String = signingKeyBytes.toString(Charsets.UTF_8)
-            val signingKeyPassword: String? = System.getenv("SIGNING_KEY_PASSWORD")
-
-            useInMemoryPgpKeys(signingKey, signingKeyPassword)
-            sign(publishing.publications["default"])
         }
     }
 
@@ -241,5 +256,3 @@ tasks.withType<PublishToMavenRepository> {
 tasks.withType<PublishToMavenLocal> {
     enabled = false
 }
-// println("Apply deployment script")
-// apply(from = "gradle/deployment.gradle")
