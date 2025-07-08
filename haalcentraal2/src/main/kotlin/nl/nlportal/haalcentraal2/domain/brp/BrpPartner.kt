@@ -38,7 +38,7 @@ data class BrpPartnerHuwelijkAangaan(
     val land: BrpCodeOmschrijving? = null,
     val plaats: BrpCodeOmschrijving? = null,
     val soortVerbintenis: BrpCodeOmschrijving? = null,
-    val inOnderzoek: BrpPartnerHuwelijkAangaanInOnderzoek,
+    val inOnderzoek: BrpPartnerHuwelijkAangaanInOnderzoek? = null,
 )
 
 data class BrpPartnerHuwelijkAangaanInOnderzoek(
@@ -51,7 +51,7 @@ data class BrpPartnerHuwelijkAangaanInOnderzoek(
 
 data class BrpPartnerHuwelijkOntbinding(
     val datum: BrpDatum? = null,
-    val inOnderzoek: BrpPartnerHuwelijkOntbindingInOnderzoek,
+    val inOnderzoek: BrpPartnerHuwelijkOntbindingInOnderzoek? = null,
 )
 
 data class BrpPartnerHuwelijkOntbindingInOnderzoek(

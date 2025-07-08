@@ -19,7 +19,7 @@ data class BrpDatumLandPlaats(
     val datum: BrpDatum? = null,
     val land: BrpCodeOmschrijving? = null,
     val plaats: BrpCodeOmschrijving? = null,
-    val inOnderzoek: BrpDatumLandPlaatsInOnderzoek,
+    val inOnderzoek: BrpDatumLandPlaatsInOnderzoek? = null,
 )
 
 data class BrpDatumLandPlaatsInOnderzoek(
