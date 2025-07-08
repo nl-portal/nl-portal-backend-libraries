@@ -96,6 +96,14 @@ class CatalogiApiClient(
             .awaitBody()
     }
 
+    suspend fun getResultaatType(resultaatTypeId: UUID): BesluitType {
+        return webClient()
+            .get()
+            .uri("/catalogi/api/v1/resultaattypen/$resultaatTypeId")
+            .retrieve()
+            .awaitBody()
+    }
+
     private fun webClient(): WebClient {
         val token =
             idTokenGenerator.generateToken(
