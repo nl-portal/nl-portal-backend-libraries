@@ -3,6 +3,7 @@ package nl.nlportal.besluiten.graphql
 import nl.nlportal.besluiten.TestHelper
 import nl.nlportal.besluiten.TestHelper.verifyOnlyDataExists
 import nl.nlportal.besluiten.client.BesluitenApiConfig
+import nl.nlportal.catalogiapi.client.CatalogiApiConfig
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -29,6 +30,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 class BesluitenQueryIT(
     @Autowired private val testClient: WebTestClient,
     @Autowired private val besluitenApiConfig: BesluitenApiConfig,
+    @Autowired private val catalogiApiConfig: CatalogiApiConfig,
     @Autowired private val graphqlGetBesluiten: String,
     @Autowired private val graphqlGetBesluit: String,
     @Autowired private val graphqlGetBesluitAuditTrails: String,
@@ -47,6 +49,7 @@ class BesluitenQueryIT(
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
             propsRegistry.add("nl-portal.config.besluitenapi.properties.url") { url }
+            propsRegistry.add("nl-portal.config.catalogiapi.properties.url") { url }
         }
 
         @JvmStatic
@@ -69,6 +72,7 @@ class BesluitenQueryIT(
         setupMockObjectsApiServer()
         url = server?.url("/").toString()
         besluitenApiConfig.properties.url = url
+        catalogiApiConfig.properties.url = url
     }
 
     @Test
@@ -209,6 +213,9 @@ class BesluitenQueryIT(
                             }
                             "GET /besluiten/api/v1/besluiten" -> {
                                 TestHelper.mockResponseFromFile("/data/get-besluiten.json")
+                            }
+                            "GET /catalogi/api/v1/besluittypen/496f51fd-ccdb-406e-805a-e7602ae78a2b" -> {
+                                TestHelper.mockResponseFromFile("/data/get-besluittype.json")
                             }
                             else -> MockResponse().setResponseCode(404)
                         }
