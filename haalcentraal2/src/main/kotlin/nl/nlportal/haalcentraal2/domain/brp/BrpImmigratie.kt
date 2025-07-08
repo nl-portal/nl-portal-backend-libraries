@@ -20,7 +20,7 @@ data class BrpImigratie(
     val landVanwaarIngeschreven: BrpCodeOmschrijving? = null,
     val vanuitVerblijfplaatsOnbekend: Boolean? = false,
     val indicatieVestigingVanuitBuitenland: Boolean? = false,
-    val inOnderzoek: BrpImigratieInOnderzoek,
+    val inOnderzoek: BrpImigratieInOnderzoek? = null,
 )
 
 data class BrpImigratieInOnderzoek(
