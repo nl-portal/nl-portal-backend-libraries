@@ -38,6 +38,8 @@ data class Zaak(
     val einddatum: LocalDate?,
     @GraphQLIgnore
     val status: String?,
+    @GraphQLIgnore
+    val resultaat: String? = null,
 ) {
     suspend fun status(
         @GraphQLIgnore
@@ -95,5 +97,15 @@ data class Zaak(
         return besluitenService.getBesluiten(
             zaak = url,
         )
+    }
+
+    suspend fun resultaat(
+        @GraphQLIgnore
+        @Autowired
+        zakenApiService: ZakenApiService,
+    ): ZaakResultaat? {
+        return resultaat?.let {
+            zakenApiService.getZaakResultaat(it)
+        }
     }
 }

@@ -19,6 +19,7 @@ import io.netty.handler.logging.LogLevel
 import nl.nlportal.catalogiapi.client.CatalogiApiConfig.CatalogiApiConfigProperties
 import nl.nlportal.catalogiapi.domain.BesluitType
 import nl.nlportal.catalogiapi.domain.ResultPage
+import nl.nlportal.catalogiapi.domain.ResultaatType
 import nl.nlportal.catalogiapi.domain.StatusType
 import nl.nlportal.catalogiapi.domain.ZaakStatusType
 import nl.nlportal.catalogiapi.domain.ZaakType
@@ -96,7 +97,7 @@ class CatalogiApiClient(
             .awaitBody()
     }
 
-    suspend fun getResultaatType(resultaatTypeId: UUID): BesluitType {
+    suspend fun getResultaatType(resultaatTypeId: UUID): ResultaatType {
         return webClient()
             .get()
             .uri("/catalogi/api/v1/resultaattypen/$resultaatTypeId")
