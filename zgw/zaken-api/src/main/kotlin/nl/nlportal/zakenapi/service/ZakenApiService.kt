@@ -15,6 +15,7 @@
  */
 package nl.nlportal.zakenapi.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.flow.Flow
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
@@ -29,6 +30,7 @@ import nl.nlportal.zakenapi.domain.ZaakDetailsObject
 import nl.nlportal.zakenapi.domain.ZaakDocument
 import nl.nlportal.zakenapi.domain.ZaakRol
 import nl.nlportal.zakenapi.domain.ZaakStatus
+import nl.nlportal.zakenapi.domain.ZaakSubStatus
 import nl.nlportal.zakenapi.graphql.ZaakPage
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
@@ -131,6 +133,22 @@ class ZakenApiService(
         return zakenApiClient.zaakStatussen().get(extractId(statusUrl)).retrieve()
     }
 
+    suspend fun getZaakSubStatussen(zaakUrl: String, statusUrl: String): List<ZaakSubStatus> {
+        try {
+            return zakenApiClient
+                .zaakSubStatussen()
+                .search()
+                .page(1)
+                .forZaak(zaakUrl)
+                .forStatus(statusUrl)
+                .retrieve().results
+
+        } catch (ex: Exception) {
+            logger.warn { "Could not get zak sub statussen for $zaakUrl and $statusUrl: $ex" }
+        }
+        return emptyList()
+    }
+
     suspend fun getDocumenten(zaakUrl: String): List<Document> {
         return getZaakDocumenten(zaakUrl)
             .map { zaakDocument ->
@@ -197,5 +215,9 @@ class ZakenApiService(
 
             else -> null to null
         }
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger {}
     }
 }
