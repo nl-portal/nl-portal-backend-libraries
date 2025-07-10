@@ -92,7 +92,7 @@ data class Zaak(
         @Autowired
         besluitenService: BesluitenService,
     ): List<Besluit> {
-        return return besluitenService.getBesluiten(
+        return besluitenService.getBesluiten(
             zaak = url,
         )
     }
