@@ -29,6 +29,7 @@ enum class OpenProductToegestaneStatus(
     @JsonValue val status: String,
 ) {
     INITIEEL("initieel"),
+    IN_AANVRAAG("in aanvraag"),
     GEREED("gereed"),
     ACTIEF("actief"),
     INGETROKKEN("ingetrokken"),
