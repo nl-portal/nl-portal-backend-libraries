@@ -214,6 +214,43 @@ class OpenKlant2DigitaleAdresMutationIT(
             assertFalse(testdigitaleAdresUUID in userAdressen!!.mapNotNull { it?.get("uuid")?.textValue() })
         }
 
+    @Test
+    @Order(4)
+    @WithBurgerUser("395823511")
+    fun `should create DigitaleAdres for burger zonder partij`() =
+        runTest {
+            // when
+            val createResponse =
+                webTestClient
+                    .post()
+                    .uri { builder ->
+                        builder
+                            .path("/graphql")
+                            .build()
+                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/createUserDigitaleAdres.gql")))
+                    .exchange()
+                    .expectStatus()
+                    .isOk
+                    .expectBody()
+                    .returnResult()
+                    .responseBodyContent
+                    ?.toString(Charset.defaultCharset())
+
+            val createResult =
+                objectMapper
+                    .readValue<JsonNode>(createResponse!!)
+                    .get("data")
+                    ?.get("createUserDigitaleAdres")
+            // then
+            verify(openKlant2Service, times(1)).createDigitaleAdres(any(), any())
+
+            assertTrue(createResult is ObjectNode)
+            assertEquals(DigitaleAdresType.TELEFOONNUMMER.name, createResult!!.get("type").textValue())
+            assertEquals("0611111111", createResult.get("waarde").textValue())
+            assertEquals("Privè telefoonnummer", createResult.get("omschrijving").textValue())
+        }
+
     companion object {
         private val objectMapper = Mapper.get()
     }
