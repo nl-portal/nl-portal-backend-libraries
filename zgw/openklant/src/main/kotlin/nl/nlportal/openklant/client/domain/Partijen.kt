@@ -41,7 +41,7 @@ data class OpenKlant2Partij(
     val correspondentieadres: OpenKlant2Adres? = null,
     val digitaleAdressen: List<OpenKlant2ForeignKey>? = null,
     val indicatieActief: Boolean,
-    val indicatieGeheimhouding: Boolean,
+    val indicatieGeheimhouding: Boolean? = null,
     @JsonInclude(JsonInclude.Include.NON_NULL)
     val interneNotitie: String? = null,
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -191,4 +191,11 @@ fun CommonGroundAuthentication.asSoortPartij(): String =
         is BurgerAuthentication -> "persoon"
         is BedrijfAuthentication -> "organisatie"
         else -> "contactpersoon"
+    }
+
+fun CommonGroundAuthentication.asSoortPartijEnum(): SoortPartij =
+    when (this) {
+        is BurgerAuthentication -> SoortPartij.PERSOON
+        is BedrijfAuthentication -> SoortPartij.ORGANISATIE
+        else -> SoortPartij.CONTACTPERSOON
     }
