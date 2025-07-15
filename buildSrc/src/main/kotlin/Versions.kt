@@ -14,25 +14,13 @@
  * limitations under the License.
  */
 
-internal object Versions {
+object Versions {
     const val everitJsonSchema = "1.14.6"
     const val jsonPath = "2.9.0"
     const val jsonWebTokens = "0.12.6"
-    const val kotlinCoroutines = "1.8.1"
-    const val springCloudVersion = "4.3.0"
+    const val kotlinCoroutines = "1.10.1"
     const val apacheTikaVersion="3.1.0"
     const val clamAvVersion="2.1.2"
-}
-
-internal object TestVersions {
-    const val hamcrest = "3.0"
-    const val kotlinCoroutines = "1.10.1"
-    const val mockitoKotlin = "5.4.0"
-    const val okHttp3 = "4.12.0"
-    const val postgresql = "42.7.5"
-}
-
-object ApiVersions {
     const val apacheCommons = "3.17.0"
     const val commonsIo = "2.17.0"
     const val commonsCodec = "1.18.0"
@@ -41,4 +29,10 @@ object ApiVersions {
     const val jacksonBom = "2.18.2"
     const val kotlinLogging = "7.0.4"
     const val springCloud = "4.3.0"
+
+    //Test versions
+    const val hamcrest = "3.0"
+    const val mockitoKotlin = "5.4.0"
+    const val okHttp3 = "4.12.0"
+    const val postgresql = "42.7.5"
 }

@@ -28,13 +28,18 @@ jobs:
                 run: ./gradlew checkLicense
             -   name: Gradle htmlDependencyReport
                 run: ./gradlew htmlDependencyReport
-            -   name: Publish to Sonatype with Gradle
-                run: ./gradlew publishDefaultPublicationToSonatypeRepository
+            -   name: Publish to Sonatype Central with Gradle
+                # Must be two separate gradle invocations or it can fail with a race condition. 
+                # Most likely because JReleaser does not declare a Gradle dependency from `jreleaserdeploy` to `publish`
+                run: ./gradlew publish -Pversion=${{env.ARTIFACT_VERSION}} --stacktrace && ./gradlew jreleaserDeploy -Pversion=${{env.ARTIFACT_VERSION}} --stacktrace
                 env:
-                    OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-                    OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
-                    SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-                    SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+                    JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_STAGE: 'UPLOAD' # don't wait for confirmation in the web UI
+                    JRELEASER_GPG_SECRET_KEY: ${{ secrets.SIGNING_KEY }}
+                    JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.SIGNING_KEY_PUBLIC_KEY }}
+                    JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_USERNAME: ${{ secrets.SONATYPE_USR }}
+                    JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_PASSWORD: ${{ secrets.SONATYPE_PSW }}
+                    JRELEASER_GPG_PASSPHRASE: ${{ secrets.SIGNING_KEY_PASSWORD }}
+                    JRELEASER_GITHUB_TOKEN: "..." # intentionally an ellipsis
             -   name: Upload licence report to S3
                 run: |
                     mkdir ./build/reports/dependency-license/${ARTIFACT_VERSION}
@@ -53,3 +58,8 @@ jobs:
                     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
                     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                     AWS_DEFAULT_REGION: 'eu-central-1'
+            -   name: Summary
+                env:
+                    VERSION: ${{ inputs.artifactVersion }}
+                run: |
+                    echo "Successfully staged version ${VERSION}. Confirm its publication manually at: https://central.sonatype.com/publishing"

@@ -18,5 +18,5 @@ package nl.nlportal.haalcentraal2.domain.brp
 data class BrpApiRequest(
     val type: String = "RaadpleegMetBurgerservicenummer",
     val fields: List<String>,
-    val burgerservicenummer: String,
+    val burgerservicenummer: List<String>,
 )

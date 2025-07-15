@@ -108,7 +108,7 @@ open class TaakService(
             ).let { TaakPage.fromResultPage(pageNumber, pageSize, it) }
         } catch (ex: Exception) {
             logger.info { "Something went wrong with getTakenV1: ${ex.message}" }
-            return return TaakPage(
+            return TaakPage(
                 number = pageNumber,
                 size = pageSize,
                 content = listOf(),
@@ -137,7 +137,7 @@ open class TaakService(
             ).let { TaakPageV2.fromResultPage(pageNumber, pageSize, it) }
         } catch (ex: Exception) {
             logger.info { "Something went wrong with getTakenV2: ${ex.message}" }
-            return return TaakPageV2(
+            return TaakPageV2(
                 number = pageNumber,
                 size = pageSize,
                 content = listOf(),
