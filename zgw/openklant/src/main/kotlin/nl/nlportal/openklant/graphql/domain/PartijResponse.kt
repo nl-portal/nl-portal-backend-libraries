@@ -23,7 +23,7 @@ import nl.nlportal.openklant.client.domain.OrganisatieIdentificatie
 import nl.nlportal.openklant.client.domain.PersoonsIdentificatie
 
 data class PartijResponse(
-    val indicatieGeheimhouding: Boolean,
+    val indicatieGeheimhouding: Boolean? = null,
     val indicatieActief: Boolean,
     val type: PartijType,
     val persoonsIdentificatie: PersoonsIdentificatie? = null,
