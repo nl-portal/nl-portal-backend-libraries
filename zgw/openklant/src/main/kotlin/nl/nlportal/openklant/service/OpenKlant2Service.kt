@@ -21,6 +21,8 @@ import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.openklant.autoconfigure.OpenKlantModuleConfiguration.OpenKlantConfigurationProperties
 import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
+import nl.nlportal.openklant.client.domain.Contactnaam
+import nl.nlportal.openklant.client.domain.ContactpersoonIdentificatie
 import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdres
 import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdresUpdate
 import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdressenFilters
@@ -34,10 +36,14 @@ import nl.nlportal.openklant.client.domain.OpenKlant2PartijIdentificatorenFilter
 import nl.nlportal.openklant.client.domain.OpenKlant2PartijenFilters
 import nl.nlportal.openklant.client.domain.OpenKlant2SubIdentificatorVan
 import nl.nlportal.openklant.client.domain.OpenKlant2UUID
+import nl.nlportal.openklant.client.domain.OrganisatieIdentificatie
+import nl.nlportal.openklant.client.domain.PartijIdentificatie
 import nl.nlportal.openklant.client.domain.PartijIdentificatorCodeRegister
 import nl.nlportal.openklant.client.domain.PartijIdentificatorCodeSoort
 import nl.nlportal.openklant.client.domain.PartijIdentificatorCodeType
+import nl.nlportal.openklant.client.domain.PersoonsIdentificatie
 import nl.nlportal.openklant.client.domain.asSoortPartij
+import nl.nlportal.openklant.client.domain.asSoortPartijEnum
 import nl.nlportal.openklant.client.path.DigitaleAdressen
 import nl.nlportal.openklant.client.path.KlantContacten
 import nl.nlportal.openklant.client.path.PartijIdentificatoren
@@ -192,15 +198,34 @@ class OpenKlant2Service(
         authentication: CommonGroundAuthentication,
         digitaleAdres: OpenKlant2DigitaleAdres,
     ): OpenKlant2DigitaleAdres? {
-        val userPartijId =
+        var userPartijId =
             findPartijIdentificatoren(authentication)
                 ?.singleOrNull { it.partijIdentificator?.objectId == authentication.userId }
                 ?.identificeerdePartij
                 ?.uuid
 
         if (userPartijId == null) {
-            logger.debug { "Failed to create Digitale Adres: Authenticated User does not have a Partij" }
-            return null
+            logger.debug { "Authenticated User does not have a Partij, let's create a new partij" }
+            val partij =
+                createPartijWithIdentificator(
+                    authentication = authentication,
+                    partij =
+                        OpenKlant2Partij(
+                            indicatieActief = true,
+                            soortPartij = authentication.asSoortPartijEnum(),
+                            partijIdentificatie =
+                                createPartijIdentificatie(
+                                    authentication = authentication,
+                                ),
+                        ),
+                )
+
+            if (partij == null) {
+                logger.debug { "Creating new partij failed for digitale adressen" }
+                return null
+            }
+
+            userPartijId = partij.uuid
         }
 
         val digitaleAdresResponse =
@@ -210,7 +235,7 @@ class OpenKlant2Service(
                     .create(
                         digitaleAdres
                             .copy(
-                                verstrektDoorPartij = OpenKlant2UUID(userPartijId),
+                                verstrektDoorPartij = OpenKlant2UUID(userPartijId!!),
                                 referentie = openKlantConfigurationProperties.digitalAdressenReferentie ?: "",
                             ),
                     )
@@ -396,6 +421,26 @@ class OpenKlant2Service(
             }
 
             else -> throw IllegalArgumentException("Unsupported authentication type: ${authentication::class.qualifiedName}")
+        }
+
+    private fun createPartijIdentificatie(authentication: CommonGroundAuthentication): PartijIdentificatie =
+        when (authentication) {
+            is BurgerAuthentication -> {
+                PersoonsIdentificatie(
+                    contactnaam = Contactnaam(),
+                )
+            }
+
+            is BedrijfAuthentication -> {
+                OrganisatieIdentificatie(
+                    naam = authentication.userId,
+                )
+            }
+
+            else ->
+                ContactpersoonIdentificatie(
+                    uuid = UUID.randomUUID(),
+                )
         }
 
     companion object {
