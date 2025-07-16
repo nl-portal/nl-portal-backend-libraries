@@ -16,7 +16,8 @@
 package nl.nlportal.haalcentraal2.autoconfiguration
 
 import nl.nlportal.core.ssl.ClientSslContextResolver
-import nl.nlportal.haalcentraal2.client.HaalCentraal2Client
+import nl.nlportal.haalcentraal2.client.HaalCentraal2BewoningClient
+import nl.nlportal.haalcentraal2.client.HaalCentraal2BrpClient
 import nl.nlportal.haalcentraal2.service.HaalCentraal2Service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfiguration
@@ -31,13 +32,26 @@ import org.springframework.web.reactive.function.client.WebClient
 @ConditionalOnProperty(prefix = "nl-portal.config.haalcentraal2", name = ["enabled"], havingValue = "true")
 class HaalCentraal2AutoConfiguration {
     @Bean
-    @ConditionalOnMissingBean(HaalCentraal2Client::class)
-    fun haalCentraal2Client(
+    @ConditionalOnMissingBean(HaalCentraal2BewoningClient::class)
+    fun haalCentraalBewoning2Client(
         haalCentraal2ModuleConfiguration: HaalCentraal2ModuleConfiguration,
         @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
         webClientBuilder: WebClient.Builder,
-    ): HaalCentraal2Client =
-        HaalCentraal2Client(
+    ): HaalCentraal2BewoningClient =
+        HaalCentraal2BewoningClient(
+            haalCentraal2ConfigurationProperties = haalCentraal2ModuleConfiguration.properties,
+            clientSslContextResolver = clientSslContextResolver,
+            webClientBuilder = webClientBuilder,
+        )
+
+    @Bean
+    @ConditionalOnMissingBean(HaalCentraal2BrpClient::class)
+    fun haalCentraal2BrpClient(
+        haalCentraal2ModuleConfiguration: HaalCentraal2ModuleConfiguration,
+        @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
+        webClientBuilder: WebClient.Builder,
+    ): HaalCentraal2BrpClient =
+        HaalCentraal2BrpClient(
             haalCentraal2ConfigurationProperties = haalCentraal2ModuleConfiguration.properties,
             clientSslContextResolver = clientSslContextResolver,
             webClientBuilder = webClientBuilder,
@@ -47,10 +61,12 @@ class HaalCentraal2AutoConfiguration {
     @ConditionalOnMissingBean(HaalCentraal2Service::class)
     fun haalCentraal2Service(
         haalCentraal2ModuleConfiguration: HaalCentraal2ModuleConfiguration,
-        haalCentraal2BrpClient: HaalCentraal2Client,
+        haalCentraal2BrpClient: HaalCentraal2BrpClient,
+        haalCentraal2BewoningClient: HaalCentraal2BewoningClient,
     ): HaalCentraal2Service =
         HaalCentraal2Service(
             haalCentraal2ConfigurationProperties = haalCentraal2ModuleConfiguration.properties,
-            haalCentraal2Client = haalCentraal2BrpClient,
+            haalCentraal2BrpClient = haalCentraal2BrpClient,
+            haalCentraal2BewoningClient = haalCentraal2BewoningClient,
         )
 }
