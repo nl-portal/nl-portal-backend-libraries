@@ -54,7 +54,8 @@ internal class PersoonQueryIT(
         @JvmStatic
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
-            propsRegistry.add("nl-portal.config.haalcentraal2.properties.url") { url }
+            propsRegistry.add("nl-portal.config.haalcentraal2.properties.brp-api-url") { url }
+            propsRegistry.add("nl-portal.config.haalcentraal2.properties.bewoning-api-url") { url }
         }
 
         @JvmStatic
@@ -76,7 +77,8 @@ internal class PersoonQueryIT(
     internal fun setUp() {
         setupMockServer()
         url = server?.url("/").toString()
-        haalCentraal2ModuleConfiguration.properties.url = url
+        haalCentraal2ModuleConfiguration.properties.brpApiurl = url
+        haalCentraal2ModuleConfiguration.properties.bewoningApiUrl = url
     }
 
     @Test

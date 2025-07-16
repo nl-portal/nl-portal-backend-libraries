@@ -55,7 +55,7 @@ internal class GemachtigdeQueryIT(
         @JvmStatic
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
-            propsRegistry.add("nl-portal.config.haalcentraal2.properties.url") { url }
+            propsRegistry.add("nl-portal.config.haalcentraal2.properties.brp-api-url") { url }
             propsRegistry.add("nl-portal.config.haalcentraal.hr.properties.url") { url }
         }
 
@@ -78,7 +78,7 @@ internal class GemachtigdeQueryIT(
     internal fun setUp() {
         setupMockServer()
         url = server?.url("/").toString()
-        haalCentraal2ModuleConfiguration.properties.url = url
+        haalCentraal2ModuleConfiguration.properties.brpApiurl = url
         haalCentraalHrClientConfig.properties.url = url
     }
 

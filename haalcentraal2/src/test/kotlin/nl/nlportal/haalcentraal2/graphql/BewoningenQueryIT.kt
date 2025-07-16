@@ -54,7 +54,7 @@ internal class BewoningenQueryIT(
         @JvmStatic
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
-            propsRegistry.add("nl-portal.config.haalcentraal2.properties.url") { url }
+            propsRegistry.add("nl-portal.config.haalcentraal2.properties.bewoning-api-url") { url }
         }
 
         @JvmStatic
@@ -76,7 +76,7 @@ internal class BewoningenQueryIT(
     internal fun setUp() {
         setupMockServer()
         url = server?.url("/").toString()
-        haalCentraal2ModuleConfiguration.properties.url = url
+        haalCentraal2ModuleConfiguration.properties.bewoningApiUrl = url
     }
 
     @Test

@@ -11,8 +11,8 @@ nl-portal:
         haalcentraal2:
             enabled: true
             properties:
-                url: #filled in test
-                apiKey: "some-api-key"
+                brp-api-url: "some-api-key"
+                bewoning-api-url: "some-api-key"
         haalcentraal:
             hr:
                 enabled: true
