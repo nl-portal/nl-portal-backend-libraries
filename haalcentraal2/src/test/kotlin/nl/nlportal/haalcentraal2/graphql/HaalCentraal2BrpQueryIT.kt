@@ -40,7 +40,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-internal class PersoonQueryIT(
+internal class HaalCentraal2BrpQueryIT(
     @Autowired private val testClient: WebTestClient,
     @Autowired private val haalCentraal2ModuleConfiguration: HaalCentraal2ModuleConfiguration,
 ) {

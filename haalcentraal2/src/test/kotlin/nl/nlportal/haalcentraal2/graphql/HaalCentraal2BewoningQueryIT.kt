@@ -18,7 +18,6 @@ package nl.nlportal.haalcentraal2.graphql
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.haalcentraal2.TestHelper
 import nl.nlportal.haalcentraal2.TestHelper.verifyOnlyDataExists
-import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrConfig
 import nl.nlportal.haalcentraal2.autoconfiguration.HaalCentraal2ModuleConfiguration
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -33,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
+import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.web.reactive.server.WebTestClient
@@ -40,10 +40,9 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-internal class GemachtigdeQueryIT(
+internal class HaalCentraal2BewoningQueryIT(
     @Autowired private val testClient: WebTestClient,
     @Autowired private val haalCentraal2ModuleConfiguration: HaalCentraal2ModuleConfiguration,
-    @Autowired private val haalCentraalHrClientConfig: HaalCentraalHrConfig,
 ) {
     companion object {
         @JvmStatic
@@ -55,8 +54,7 @@ internal class GemachtigdeQueryIT(
         @JvmStatic
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
-            propsRegistry.add("nl-portal.config.haalcentraal2.properties.brp-api-url") { url }
-            propsRegistry.add("nl-portal.config.haalcentraal.hr.properties.url") { url }
+            propsRegistry.add("nl-portal.config.haalcentraal2.properties.bewoning-api-url") { url }
         }
 
         @JvmStatic
@@ -78,90 +76,31 @@ internal class GemachtigdeQueryIT(
     internal fun setUp() {
         setupMockServer()
         url = server?.url("/").toString()
-        haalCentraal2ModuleConfiguration.properties.brpApiurl = url
-        haalCentraalHrClientConfig.properties.url = url
+        haalCentraal2ModuleConfiguration.properties.bewoningApiUrl = url
     }
 
     @Test
-    @WithBurgerUser("318634776", gemachtigdeBsn = "999993847")
-    fun `getGemachtigde with bsn`() {
+    @WithBurgerUser("999993872")
+    fun getBewonersAantal() {
         val query =
             """
             query {
-                getGemachtigdeV2 {
-                    persoon {
-                        burgerservicenummer,
-                        naam {
-                            geslachtsnaam,
-                            volledigeNaam,
-                        }
-                    },
-                    bedrijf {
-                        naam
-                    }
-                }
+                getBewonersAantalV2(adresseerbaarObjectIdentificatie: "0226010000038820")
             }
             """.trimIndent()
 
-        val basePath = "$.data.getGemachtigdeV2"
+        val basePath = "$.data.getBewonersAantalV2"
 
         testClient
             .post()
             .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
-            .expectStatus()
-            .isOk
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.persoon.naam.volledigeNaam")
-            .isEqualTo("Pieter Jan de Vries")
-            .jsonPath("$basePath.persoon.naam.geslachtsnaam")
-            .isEqualTo("Vries")
-            .jsonPath("$basePath.bedrijf.naam")
-            .doesNotExist()
-    }
-
-    @Test
-    @WithBurgerUser("318634776", gemachtigdeKvk = "90012768")
-    fun `getGemachtigde with kvk`() {
-        val query =
-            """
-            query {
-                getGemachtigdeV2 {
-                    persoon {
-                        burgerservicenummer,
-                        naam {
-                            geslachtsnaam,
-                            volledigeNaam,
-                        },
-                    },
-                    bedrijf {
-                        naam
-                    }
-                }
-            }
-            """.trimIndent()
-
-        val basePath = "$.data.getGemachtigdeV2"
-
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
-            .exchange()
-            .expectStatus()
-            .isOk
-            .expectBody()
             .jsonPath(basePath)
-            .exists()
-            .jsonPath("$basePath.bedrijf.naam")
-            .isEqualTo("Test bedrijf")
-            .jsonPath("$basePath.persoon.volledigeNaam")
-            .doesNotExist()
+            .isEqualTo(4)
     }
 
     private fun setupMockServer() {
@@ -172,13 +111,7 @@ internal class GemachtigdeQueryIT(
                     val path = request.path?.substringBefore('?')
                     val response =
                         when (request.method + " " + path) {
-                            "POST /brp/personen" -> {
-                                TestHelper.mockResponseFromFile("/data/get-personen.json")
-                            }
-                            "GET /basisprofielen/90012768" ->
-                                TestHelper.mockResponseFromFile(
-                                    "/data/get-maatschappelijke-activiteiten.json",
-                                )
+                            "POST /bewoning/bewoningen" -> TestHelper.mockResponseFromFile("/data/get-bewoningen.json")
                             else -> MockResponse().setResponseCode(404)
                         }
                     return response

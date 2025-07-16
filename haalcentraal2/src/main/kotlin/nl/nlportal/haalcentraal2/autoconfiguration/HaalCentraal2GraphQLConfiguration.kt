@@ -16,6 +16,7 @@
 package nl.nlportal.haalcentraal2.autoconfiguration
 
 import nl.nlportal.haalcentraal.hr.service.HandelsregisterService
+import nl.nlportal.haalcentraal2.graphql.HaalCentraal2BewoningQuery
 import nl.nlportal.haalcentraal2.graphql.HaalCentraal2BrpQuery
 import nl.nlportal.haalcentraal2.graphql.HaalCentraal2GemachtigdeQuery
 import nl.nlportal.haalcentraal2.service.HaalCentraal2Service
@@ -29,6 +30,13 @@ class HaalCentraal2GraphQLConfiguration {
     @ConditionalOnMissingBean(HaalCentraal2BrpQuery::class)
     fun haalCentraal2BrpQuery(haalCentraal2Service: HaalCentraal2Service): HaalCentraal2BrpQuery =
         HaalCentraal2BrpQuery(
+            haalCentraal2Service = haalCentraal2Service,
+        )
+
+    @Bean
+    @ConditionalOnMissingBean(HaalCentraal2BewoningQuery::class)
+    fun haalCentraal2BewoningQuery(haalCentraal2Service: HaalCentraal2Service): HaalCentraal2BewoningQuery =
+        HaalCentraal2BewoningQuery(
             haalCentraal2Service = haalCentraal2Service,
         )
 
