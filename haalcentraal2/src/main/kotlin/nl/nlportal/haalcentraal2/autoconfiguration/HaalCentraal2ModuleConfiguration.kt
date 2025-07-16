@@ -25,14 +25,14 @@ data class HaalCentraal2ModuleConfiguration(
 ) {
     init {
         if (enabled) {
-            requireNotNull(properties.brpApiurl) {
-                "HaalCentraal2 API URL not configured"
+            requireNotNull(properties.brpApiUrl) {
+                "HaalCentraal2 BRP API URL not configured"
             }
         }
     }
 
     data class HaalCentraal2ConfigurationProperties(
-        var brpApiurl: String = "",
+        var brpApiUrl: String = "",
         var bewoningApiUrl: String = "",
         var apiKey: String? = null,
         var ssl: Ssl? = null,

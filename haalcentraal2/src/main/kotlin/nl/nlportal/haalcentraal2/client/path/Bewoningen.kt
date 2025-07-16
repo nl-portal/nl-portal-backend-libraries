@@ -24,7 +24,7 @@ import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.web.reactive.function.client.awaitBody
 
-class Bewoning(
+class Bewoningen(
     val client: HaalCentraal2BewoningClient,
 ) : HaalCentraal2Path() {
     suspend fun post(
@@ -33,7 +33,7 @@ class Bewoning(
     ): BewoningenApiResponse =
         client.webClient
             .post()
-            .uri("/bewoning/bewoningen")
+            .uri("/bewoningen")
             .headers {
                 if (it[HttpHeaders.AUTHORIZATION].isNullOrEmpty()) {
                     it.setBearerAuth((authentication as CommonGroundAuthentication).token.tokenValue)

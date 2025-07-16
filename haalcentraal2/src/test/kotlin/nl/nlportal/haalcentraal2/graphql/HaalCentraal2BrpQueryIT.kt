@@ -52,10 +52,13 @@ internal class HaalCentraal2BrpQueryIT(
         var url: String = ""
 
         @JvmStatic
+        var url2: String = ""
+
+        @JvmStatic
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
             propsRegistry.add("nl-portal.config.haalcentraal2.properties.brp-api-url") { url }
-            propsRegistry.add("nl-portal.config.haalcentraal2.properties.bewoning-api-url") { url }
+            propsRegistry.add("nl-portal.config.haalcentraal2.properties.bewoning-api-url") { url2 }
         }
 
         @JvmStatic
@@ -63,7 +66,8 @@ internal class HaalCentraal2BrpQueryIT(
         fun beforeAll() {
             server = MockWebServer()
             server?.start()
-            url = server?.url("/").toString()
+            url = server?.url("/brp").toString()
+            url2 = server?.url("/bewoning").toString()
         }
 
         @JvmStatic
@@ -77,8 +81,9 @@ internal class HaalCentraal2BrpQueryIT(
     internal fun setUp() {
         setupMockServer()
         url = server?.url("/").toString()
-        haalCentraal2ModuleConfiguration.properties.brpApiurl = url
-        haalCentraal2ModuleConfiguration.properties.bewoningApiUrl = url
+        url2 = server?.url("/").toString()
+        haalCentraal2ModuleConfiguration.properties.brpApiUrl = url
+        haalCentraal2ModuleConfiguration.properties.bewoningApiUrl = url2
     }
 
     @Test

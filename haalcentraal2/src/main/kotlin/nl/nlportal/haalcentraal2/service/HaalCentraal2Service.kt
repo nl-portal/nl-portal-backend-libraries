@@ -21,7 +21,7 @@ import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.haalcentraal2.autoconfiguration.HaalCentraal2ModuleConfiguration.HaalCentraal2ConfigurationProperties
 import nl.nlportal.haalcentraal2.client.HaalCentraal2BewoningClient
 import nl.nlportal.haalcentraal2.client.HaalCentraal2BrpClient
-import nl.nlportal.haalcentraal2.client.path.Bewoning
+import nl.nlportal.haalcentraal2.client.path.Bewoningen
 import nl.nlportal.haalcentraal2.client.path.Personen
 import nl.nlportal.haalcentraal2.domain.bewoning.BewoningenApiRequest
 import nl.nlportal.haalcentraal2.domain.bewoning.BewoningenApiResponse
@@ -69,7 +69,7 @@ class HaalCentraal2Service(
                         peildatum = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                         adresseerbaarObjectIdentificatie = adresseerbaarObjectIdentificatie,
                     )
-                haalCentraal2BewoningClient.path<Bewoning>().post(bewoningenApiRequest, authentication)
+                haalCentraal2BewoningClient.path<Bewoningen>().post(bewoningenApiRequest, authentication)
             } else {
                 logger.warn { "Authentication is not supported" }
                 null

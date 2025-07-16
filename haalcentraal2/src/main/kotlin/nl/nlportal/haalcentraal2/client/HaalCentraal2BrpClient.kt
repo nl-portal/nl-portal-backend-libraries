@@ -66,7 +66,7 @@ class HaalCentraal2BrpClient(
                                 result
                             },
                     ),
-                ).baseUrl(haalCentraal2ConfigurationProperties.brpApiurl)
+                ).baseUrl(haalCentraal2ConfigurationProperties.brpApiUrl)
                 .apply {
                     if (!haalCentraal2ConfigurationProperties.apiKey.isNullOrBlank()) {
                         it.defaultHeader("X-API-KEY", haalCentraal2ConfigurationProperties.apiKey)

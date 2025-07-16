@@ -64,7 +64,7 @@ internal class HaalCentraal2GemachtigdeQueryIT(
         fun beforeAll() {
             server = MockWebServer()
             server?.start()
-            url = server?.url("/").toString()
+            url = server?.url("/brp").toString()
         }
 
         @JvmStatic
@@ -78,7 +78,7 @@ internal class HaalCentraal2GemachtigdeQueryIT(
     internal fun setUp() {
         setupMockServer()
         url = server?.url("/").toString()
-        haalCentraal2ModuleConfiguration.properties.brpApiurl = url
+        haalCentraal2ModuleConfiguration.properties.brpApiUrl = url
         haalCentraalHrClientConfig.properties.url = url
     }
 

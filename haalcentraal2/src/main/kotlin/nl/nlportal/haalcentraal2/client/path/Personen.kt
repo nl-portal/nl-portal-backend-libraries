@@ -34,7 +34,7 @@ class Personen(
     ): BrpApiResponse =
         client.webClient
             .post()
-            .uri("/brp/personen")
+            .uri("/personen")
             .headers {
                 if (it[HttpHeaders.AUTHORIZATION].isNullOrEmpty()) {
                     it.setBearerAuth((authentication as CommonGroundAuthentication).token.tokenValue)

@@ -40,7 +40,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-internal class HaalCentraal2BewoningQueryIT(
+internal class HaalCentraal2BewoningenQueryIT(
     @Autowired private val testClient: WebTestClient,
     @Autowired private val haalCentraal2ModuleConfiguration: HaalCentraal2ModuleConfiguration,
 ) {
@@ -62,7 +62,7 @@ internal class HaalCentraal2BewoningQueryIT(
         fun beforeAll() {
             server = MockWebServer()
             server?.start()
-            url = server?.url("/").toString()
+            url = server?.url("/bewoning").toString()
         }
 
         @JvmStatic
