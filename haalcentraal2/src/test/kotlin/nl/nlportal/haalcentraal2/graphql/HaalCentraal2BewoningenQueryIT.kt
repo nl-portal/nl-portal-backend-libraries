@@ -40,7 +40,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-internal class BewoningenQueryIT(
+internal class HaalCentraal2BewoningenQueryIT(
     @Autowired private val testClient: WebTestClient,
     @Autowired private val haalCentraal2ModuleConfiguration: HaalCentraal2ModuleConfiguration,
 ) {
@@ -54,7 +54,7 @@ internal class BewoningenQueryIT(
         @JvmStatic
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
-            propsRegistry.add("nl-portal.config.haalcentraal2.properties.url") { url }
+            propsRegistry.add("nl-portal.config.haalcentraal2.properties.bewoning-api-url") { url }
         }
 
         @JvmStatic
@@ -62,7 +62,7 @@ internal class BewoningenQueryIT(
         fun beforeAll() {
             server = MockWebServer()
             server?.start()
-            url = server?.url("/").toString()
+            url = server?.url("/bewoning").toString()
         }
 
         @JvmStatic
@@ -76,7 +76,7 @@ internal class BewoningenQueryIT(
     internal fun setUp() {
         setupMockServer()
         url = server?.url("/").toString()
-        haalCentraal2ModuleConfiguration.properties.url = url
+        haalCentraal2ModuleConfiguration.properties.bewoningApiUrl = url
     }
 
     @Test

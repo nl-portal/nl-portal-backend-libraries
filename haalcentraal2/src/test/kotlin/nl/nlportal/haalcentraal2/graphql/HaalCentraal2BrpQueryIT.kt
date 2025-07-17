@@ -40,7 +40,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-internal class PersoonQueryIT(
+internal class HaalCentraal2BrpQueryIT(
     @Autowired private val testClient: WebTestClient,
     @Autowired private val haalCentraal2ModuleConfiguration: HaalCentraal2ModuleConfiguration,
 ) {
@@ -52,9 +52,13 @@ internal class PersoonQueryIT(
         var url: String = ""
 
         @JvmStatic
+        var url2: String = ""
+
+        @JvmStatic
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
-            propsRegistry.add("nl-portal.config.haalcentraal2.properties.url") { url }
+            propsRegistry.add("nl-portal.config.haalcentraal2.properties.brp-api-url") { url }
+            propsRegistry.add("nl-portal.config.haalcentraal2.properties.bewoning-api-url") { url2 }
         }
 
         @JvmStatic
@@ -62,7 +66,8 @@ internal class PersoonQueryIT(
         fun beforeAll() {
             server = MockWebServer()
             server?.start()
-            url = server?.url("/").toString()
+            url = server?.url("/brp").toString()
+            url2 = server?.url("/bewoning").toString()
         }
 
         @JvmStatic
@@ -76,7 +81,9 @@ internal class PersoonQueryIT(
     internal fun setUp() {
         setupMockServer()
         url = server?.url("/").toString()
-        haalCentraal2ModuleConfiguration.properties.url = url
+        url2 = server?.url("/").toString()
+        haalCentraal2ModuleConfiguration.properties.brpApiUrl = url
+        haalCentraal2ModuleConfiguration.properties.bewoningApiUrl = url2
     }
 
     @Test
