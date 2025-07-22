@@ -1,8 +1,8 @@
 # NL Portal Backend Libraries #
 
 ![Java 21](https://img.shields.io/badge/Java-21-green)
-![Kotlin 1.9.23](https://img.shields.io/badge/Kotlin-1.9.23-green)
-![Spring boot 3.2.4](https://img.shields.io/badge/Spring%20boot-3.2.3-green)
+![Kotlin 2.0.21](https://img.shields.io/badge/Kotlin-2.0.21-green)
+![Spring boot 3.4.5](https://img.shields.io/badge/Spring%20boot-3.4.5-green)
 
 ## NL Portal
 
