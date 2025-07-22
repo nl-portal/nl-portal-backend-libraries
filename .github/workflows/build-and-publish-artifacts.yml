@@ -46,17 +46,15 @@ jobs:
             targets: "['sonatype-snapshots']"
             artifactVersion: ${{ needs.detect-variables.outputs.version }}
         secrets: inherit
-
-    # Disabled for now
-    # publish-release:
-    #     needs:
-    #         - detect-variables
-    #         - validate-build
-    #     if: ${{ needs.detect-variables.outputs.scope == 'RELEASE' }}
-    #     uses: ./.github/workflows/publish-release.yml
-    #     with:
-    #         artifactVersion: ${{ needs.detect-variables.outputs.version }}
-    #     secrets: inherit
+    publish-release:
+        needs:
+            - detect-variables
+            - validate-build
+        if: ${{ needs.detect-variables.outputs.scope == 'RELEASE' }}
+        uses: ./.github/workflows/publish-release.yml
+        with:
+            artifactVersion: ${{ needs.detect-variables.outputs.version }}
+        secrets: inherit
     unknown-scope:
         needs:
             - detect-variables
