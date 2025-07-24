@@ -16,7 +16,7 @@
 package nl.nlportal.haalcentraal2.client.path
 
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.haalcentraal2.client.HaalCentraal2Client
+import nl.nlportal.haalcentraal2.client.HaalCentraal2BrpClient
 import nl.nlportal.haalcentraal2.domain.brp.BrpApiRequest
 import nl.nlportal.haalcentraal2.domain.brp.BrpApiResponse
 import org.springframework.http.HttpHeaders
@@ -26,7 +26,7 @@ import org.springframework.web.reactive.function.client.awaitBody
 import kotlin.collections.isNullOrEmpty
 
 class Personen(
-    val client: HaalCentraal2Client,
+    val client: HaalCentraal2BrpClient,
 ) : HaalCentraal2Path() {
     suspend fun post(
         brpApiRequest: BrpApiRequest,
@@ -34,7 +34,7 @@ class Personen(
     ): BrpApiResponse =
         client.webClient
             .post()
-            .uri("/brp/personen")
+            .uri("/personen")
             .headers {
                 if (it[HttpHeaders.AUTHORIZATION].isNullOrEmpty()) {
                     it.setBearerAuth((authentication as CommonGroundAuthentication).token.tokenValue)
