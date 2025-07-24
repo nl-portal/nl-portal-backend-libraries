@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2025 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,14 @@ package nl.nlportal.catalogiapi.client
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.zgw.catalogiapi")
+@ConfigurationProperties(prefix = "nl-portal.config.catalogiapi")
 data class CatalogiApiConfig(
-    var url: String = "",
-    var clientId: String = "",
-    var secret: String = "",
-)
+    var enabled: Boolean = false,
+    var properties: CatalogiApiConfigProperties = CatalogiApiConfigProperties(),
+) {
+    data class CatalogiApiConfigProperties(
+        var url: String = "",
+        var clientId: String = "",
+        var secret: String = "",
+    )
+}

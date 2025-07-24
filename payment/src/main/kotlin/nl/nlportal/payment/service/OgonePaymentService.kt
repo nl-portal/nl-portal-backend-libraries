@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2025 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package nl.nlportal.payment.service
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.core.util.CoreUtils
-import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig
+import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig.OgonePaymentConfigProperties
 import nl.nlportal.payment.constants.OgoneState
 import nl.nlportal.payment.domain.OgonePayment
 import nl.nlportal.payment.domain.OgonePaymentRequest
@@ -36,7 +36,7 @@ import java.util.Locale
 import java.util.UUID
 
 open class OgonePaymentService(
-    private val paymentConfig: OgonePaymentConfig,
+    private val paymentConfig: OgonePaymentConfigProperties,
     private val objectsApiClient: ObjectsApiClient,
 ) {
     open fun createPayment(paymentRequest: OgonePaymentRequest): OgonePayment {
@@ -93,7 +93,8 @@ open class OgonePaymentService(
 
             // validate ogone request
             val pspIdFromTask =
-                objectsApiTask.record.data.ogonebetaling?.pspid
+                objectsApiTask.record.data.ogonebetaling
+                    ?.pspid
                     ?: return "Task does not have a pspId"
 
             if (!isValidOgoneRequest(serverHttpRequest, pspIdFromTask)) {
@@ -163,12 +164,11 @@ open class OgonePaymentService(
             return CoreUtils.createHash(parametersConcatenation.toString(), shaVersion)
         }
 
-        fun isUUID(orderId: String?): Boolean {
-            return try {
+        fun isUUID(orderId: String?): Boolean =
+            try {
                 UUID.fromString(orderId) != null
             } catch (e: IllegalArgumentException) {
                 false
             }
-        }
     }
 }

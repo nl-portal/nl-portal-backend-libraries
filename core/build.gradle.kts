@@ -37,20 +37,20 @@ dependencies {
     api(Dependencies.springCloudBootstrap)
 
     // Jackson
-    api(ApiDependencies.jacksonBom)
+    api(Dependencies.jacksonBom)
     api("com.fasterxml.jackson.module", "jackson-module-kotlin")
 
-    api(ApiDependencies.commonsCodec)
+    api(Dependencies.commonsCodec)
 
     // Liquibase
     api("org.liquibase", "liquibase-core")
 
     // Apache Commons
-    api(ApiDependencies.commonsIo)
-    api(ApiDependencies.apacheCommons)
+    api(Dependencies.commonsIo)
+    api(Dependencies.apacheCommons)
 
     // Logging for Kotlin
-    api(ApiDependencies.kotlinLogging)
+    api(Dependencies.kotlinLogging)
 
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation(TestDependencies.kotlinCoroutines)

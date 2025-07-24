@@ -1,0 +1,561 @@
+{
+    "type": "RaadpleegMetBurgerservicenummer",
+    "personen": [
+        {
+            "aNummer": "2352984859",
+            "burgerservicenummer": "999993847",
+            "datumEersteInschrijvingGBA": {
+                "type": "Datum",
+                "datum": "2018-07-01",
+                "langFormaat": "1 juli 2018"
+            },
+            "geheimhoudingPersoonsgegevens": true,
+            "geslacht": {
+                "code": "6030",
+                "omschrijving": "Nederland"
+            },
+            "inOnderzoek": {
+                "datumIngangOnderzoekPersoon": {
+                    "type": "Datum",
+                    "datum": "2018-07-01",
+                    "langFormaat": "1 juli 2018"
+                },
+                "datumIngangOnderzoekGemeente": {
+                    "type": "Datum",
+                    "datum": "2018-07-01",
+                    "langFormaat": "1 juli 2018"
+                },
+                "datumIngangOnderzoekGezag": {
+                    "type": "Datum",
+                    "datum": "2018-07-01",
+                    "langFormaat": "1 juli 2018"
+                },
+                "burgerservicenummer": true,
+                "geslacht": true,
+                "leeftijd": true,
+                "gemeenteVanInschrijving": true,
+                "datumInschrijvingInGemeente": true,
+                "indicatieCurateleRegister": true,
+                "indicatieGezagMinderjarige": true
+            },
+            "uitsluitingKiesrecht": {
+                "uitgeslotenVanKiesrecht": true,
+                "einddatum": {
+                    "type": "Datum",
+                    "datum": "2018-07-01",
+                    "langFormaat": "1 juli 2018"
+                }
+            },
+            "europeesKiesrecht": {
+                "aanduiding": {
+                    "code": "6030",
+                    "omschrijving": "Nederland"
+                },
+                "einddatumUitsluiting": {
+                    "type": "Datum",
+                    "datum": "2018-07-01",
+                    "langFormaat": "1 juli 2018"
+                }
+            },
+            "leeftijd": 34,
+            "naam": {
+                "voornamen": "Pieter Jan",
+                "adellijkeTitelPredicaat": {
+                    "code": "JV",
+                    "omschrijving": "jonkvrouw",
+                    "soort": "predicaat"
+                },
+                "voorvoegsel": "de",
+                "geslachtsnaam": "Vries",
+                "voorletters": "P.J.",
+                "volledigeNaam": "Pieter Jan de Vries",
+                "aanduidingNaamgebruik": {
+                    "code": "E",
+                    "omschrijving": "Nederland"
+                },
+                "inOnderzoek": {
+                    "datumIngangOnderzoek": {
+                        "type": "Datum",
+                        "datum": "2018-07-01",
+                        "langFormaat": "1 juli 2018"
+                    },
+                    "voornamen": true,
+                    "adellijkeTitelPredicaat": true,
+                    "voorvoegsel": true,
+                    "geslachtsnaam": true,
+                    "voorletters": true,
+                    "aanduidingNaamgebruik": true,
+                    "volledigeNaam": true
+                }
+            },
+            "nationaliteiten": [
+                {
+                    "type": "string",
+                    "redenOpname": {
+                        "code": "6030",
+                        "omschrijving": "Nederland"
+                    },
+                    "nationaliteit": {
+                        "code": "1000",
+                        "omschrijving": "Nederlands"
+                    }
+                }
+            ],
+            "geboorte": {
+                "datum": {
+                    "type": "Datum",
+                    "datum": "2018-07-01",
+                    "langFormaat": "1 juli 2018"
+                },
+                "land": {
+                    "code": "6030",
+                    "omschrijving": "Nederland"
+                },
+                "plaats": {
+                    "code": "6030",
+                    "omschrijving": "Nederland"
+                },
+                "inOnderzoek": {
+                    "datumIngangOnderzoek": {
+                        "type": "Datum",
+                        "datum": "2018-07-01",
+                        "langFormaat": "1 juli 2018"
+                    },
+                    "datum": true,
+                    "land": true,
+                    "plaats": true
+                }
+            },
+            "opschortingBijhouding": {
+                "reden": {
+                    "code": "6030",
+                    "omschrijving": "Nederland"
+                },
+                "datum": {
+                    "type": "Datum",
+                    "datum": "2018-07-01",
+                    "langFormaat": "1 juli 2018"
+                }
+            },
+            "overlijden": {
+                "datum": {
+                    "type": "Datum",
+                    "datum": "2018-07-01",
+                    "langFormaat": "1 juli 2018"
+                },
+                "land": {
+                    "code": "6030",
+                    "omschrijving": "Nederland"
+                },
+                "plaats": {
+                    "code": "6030",
+                    "omschrijving": "Nederland"
+                },
+                "inOnderzoek": {
+                    "datumIngangOnderzoek": {
+                        "type": "Datum",
+                        "datum": "2018-07-01",
+                        "langFormaat": "1 juli 2018"
+                    },
+                    "datum": true,
+                    "land": true,
+                    "plaats": true
+                }
+            },
+            "verblijfplaats": {
+                "type": "Adres",
+                "functieAdres": {
+                    "code": "W",
+                    "omschrijving": "woonadres"
+                },
+                "verblijfadres": {
+                    "officieleStraatnaam": "Het Spui 1"
+                },
+                "adresseerbaarObjectIdentificatie": 226010000038820
+            },
+            "immigratie": {
+                "datumVestigingInNederland": {
+                    "type": "Datum",
+                    "datum": "2018-07-01",
+                    "langFormaat": "1 juli 2018"
+                },
+                "landVanwaarIngeschreven": {
+                    "code": "6030",
+                    "omschrijving": "Nederland"
+                },
+                "vanuitVerblijfplaatsOnbekend": true,
+                "indicatieVestigingVanuitBuitenland": true,
+                "inOnderzoek": {
+                    "datumIngangOnderzoek": {
+                        "type": "Datum",
+                        "datum": "2018-07-01",
+                        "langFormaat": "1 juli 2018"
+                    },
+                    "datumVestigingInNederland": true,
+                    "landVanwaarIngeschreven": true,
+                    "vanuitVerblijfplaatsOnbekend": true,
+                    "indicatieVestigingVanuitBuitenland": true
+                }
+            },
+            "gemeenteVanInschrijving": {
+                "code": "6030",
+                "omschrijving": "Nederland"
+            },
+            "datumInschrijvingInGemeente": {
+                "type": "Datum",
+                "datum": "2018-07-01",
+                "langFormaat": "1 juli 2018"
+            },
+            "adressering": {
+                "adresregel1": "Kappeyne v d Cappellostr 26A-3",
+                "adresregel2": "1234AA Nootdorp",
+                "adresregel3": "Selangor",
+                "land": {
+                    "code": "6030",
+                    "omschrijving": "Nederland"
+                },
+                "indicatieVastgesteldVerblijftNietOpAdres": true,
+                "aanhef": "Hoogwelgeboren heer",
+                "aanschrijfwijze": {
+                    "naam": "H.W. baron van den Aedel",
+                    "aanspreekvorm": "De hoogwelgeboren heer"
+                },
+                "gebruikInLopendeTekst": "baron Van den Aedel",
+                "inOnderzoek": {
+                    "aanhef": true,
+                    "adresregel1": true,
+                    "adresregel2": true,
+                    "adresregel3": true,
+                    "land": true,
+                    "aanschrijfwijze": true,
+                    "gebruikInLopendeTekst": true,
+                    "datumIngangOnderzoekPersoon": {
+                        "type": "Datum",
+                        "datum": "2018-07-01",
+                        "langFormaat": "1 juli 2018"
+                    },
+                    "datumIngangOnderzoekPartner": {
+                        "type": "Datum",
+                        "datum": "2018-07-01",
+                        "langFormaat": "1 juli 2018"
+                    },
+                    "datumIngangOnderzoekVerblijfplaats": {
+                        "type": "Datum",
+                        "datum": "2018-07-01",
+                        "langFormaat": "1 juli 2018"
+                    }
+                }
+            },
+            "indicatieCurateleRegister": true,
+            "indicatieGezagMinderjarige": {
+                "code": "6030",
+                "omschrijving": "Nederland"
+            },
+            "gezag": [
+                {
+                    "type": "TweehoofdigOuderlijkGezag",
+                    "ouders": [
+                        {
+                            "burgerservicenummer": "999998870"
+                        },
+                        {
+                            "burgerservicenummer": "999998882"
+                        }
+                    ],
+                    "minderjarige": {
+                        "burgerservicenummer": "999998894"
+                    }
+                }
+            ],
+            "verblijfstitel": {
+                "aanduiding": {
+                    "code": "6030",
+                    "omschrijving": "Nederland"
+                },
+                "datumEinde": {
+                    "type": "Datum",
+                    "datum": "2018-07-01",
+                    "langFormaat": "1 juli 2018"
+                },
+                "datumIngang": {
+                    "type": "Datum",
+                    "datum": "2018-07-01",
+                    "langFormaat": "1 juli 2018"
+                },
+                "inOnderzoek": {
+                    "datumIngangOnderzoek": {
+                        "type": "Datum",
+                        "datum": "2018-07-01",
+                        "langFormaat": "1 juli 2018"
+                    },
+                    "aanduiding": true,
+                    "datumEinde": true,
+                    "datumIngang": true
+                }
+            },
+            "kinderen": [
+                {
+                    "burgerservicenummer": "555555021",
+                    "inOnderzoek": {
+                        "datumIngangOnderzoek": {
+                            "type": "Datum",
+                            "datum": "2018-07-01",
+                            "langFormaat": "1 juli 2018"
+                        },
+                        "burgerservicenummer": true
+                    },
+                    "naam": {
+                        "voornamen": "Pieter Jan",
+                        "adellijkeTitelPredicaat": {
+                            "code": "JV",
+                            "omschrijving": "jonkvrouw",
+                            "soort": "predicaat"
+                        },
+                        "voorvoegsel": "de",
+                        "geslachtsnaam": "Vries",
+                        "voorletters": "P.J.",
+                        "inOnderzoek": {
+                            "datumIngangOnderzoek": {
+                                "type": "Datum",
+                                "datum": "2018-07-01",
+                                "langFormaat": "1 juli 2018"
+                            },
+                            "voornamen": true,
+                            "adellijkeTitelPredicaat": true,
+                            "voorvoegsel": true,
+                            "geslachtsnaam": true,
+                            "voorletters": true
+                        }
+                    },
+                    "geboorte": {
+                        "datum": {
+                            "type": "Datum",
+                            "datum": "2018-07-01",
+                            "langFormaat": "1 juli 2018"
+                        },
+                        "land": {
+                            "code": "6030",
+                            "omschrijving": "Nederland"
+                        },
+                        "plaats": {
+                            "code": "6030",
+                            "omschrijving": "Nederland"
+                        },
+                        "inOnderzoek": {
+                            "datumIngangOnderzoek": {
+                                "type": "Datum",
+                                "datum": "2018-07-01",
+                                "langFormaat": "1 juli 2018"
+                            },
+                            "datum": true,
+                            "land": true,
+                            "plaats": true
+                        }
+                    }
+                }
+            ],
+            "ouders": [
+                {
+                    "burgerservicenummer": "555555021",
+                    "geslacht": {
+                        "code": "6030",
+                        "omschrijving": "Nederland"
+                    },
+                    "ouderAanduiding": "1",
+                    "datumIngangFamilierechtelijkeBetrekking": {
+                        "type": "Datum",
+                        "datum": "2018-07-01",
+                        "langFormaat": "1 juli 2018"
+                    },
+                    "naam": {
+                        "voornamen": "Pieter Jan",
+                        "adellijkeTitelPredicaat": {
+                            "code": "JV",
+                            "omschrijving": "jonkvrouw",
+                            "soort": "predicaat"
+                        },
+                        "voorvoegsel": "de",
+                        "geslachtsnaam": "Vries",
+                        "voorletters": "P.J.",
+                        "inOnderzoek": {
+                            "datumIngangOnderzoek": {
+                                "type": "Datum",
+                                "datum": "2018-07-01",
+                                "langFormaat": "1 juli 2018"
+                            },
+                            "voornamen": true,
+                            "adellijkeTitelPredicaat": true,
+                            "voorvoegsel": true,
+                            "geslachtsnaam": true,
+                            "voorletters": true
+                        }
+                    },
+                    "inOnderzoek": {
+                        "datumIngangOnderzoek": {
+                            "type": "Datum",
+                            "datum": "2018-07-01",
+                            "langFormaat": "1 juli 2018"
+                        },
+                        "burgerservicenummer": true,
+                        "datumIngangFamilierechtelijkeBetrekking": true,
+                        "geslacht": true
+                    },
+                    "geboorte": {
+                        "datum": {
+                            "type": "Datum",
+                            "datum": "2018-07-01",
+                            "langFormaat": "1 juli 2018"
+                        },
+                        "land": {
+                            "code": "6030",
+                            "omschrijving": "Nederland"
+                        },
+                        "plaats": {
+                            "code": "6030",
+                            "omschrijving": "Nederland"
+                        },
+                        "inOnderzoek": {
+                            "datumIngangOnderzoek": {
+                                "type": "Datum",
+                                "datum": "2018-07-01",
+                                "langFormaat": "1 juli 2018"
+                            },
+                            "datum": true,
+                            "land": true,
+                            "plaats": true
+                        }
+                    }
+                }
+            ],
+            "partners": [
+                {
+                    "burgerservicenummer": "555555021",
+                    "geslacht": {
+                        "code": "6030",
+                        "omschrijving": "Nederland"
+                    },
+                    "soortVerbintenis": {
+                        "code": "6030",
+                        "omschrijving": "Nederland"
+                    },
+                    "naam": {
+                        "voornamen": "Isa",
+                        "adellijkeTitelPredicaat": {
+                            "code": "JV",
+                            "omschrijving": "jonkvrouw",
+                            "soort": "predicaat"
+                        },
+                        "voorvoegsel": "",
+                        "geslachtsnaam": "Beerepoot",
+                        "voorletters": "P.J.",
+                        "inOnderzoek": {
+                            "datumIngangOnderzoek": {
+                                "type": "Datum",
+                                "datum": "2018-07-01",
+                                "langFormaat": "1 juli 2018"
+                            },
+                            "voornamen": true,
+                            "adellijkeTitelPredicaat": true,
+                            "voorvoegsel": true,
+                            "geslachtsnaam": true,
+                            "voorletters": true
+                        }
+                    },
+                    "geboorte": {
+                        "datum": {
+                            "type": "Datum",
+                            "datum": "2018-07-01",
+                            "langFormaat": "1 juli 2018"
+                        },
+                        "land": {
+                            "code": "6030",
+                            "omschrijving": "Nederland"
+                        },
+                        "plaats": {
+                            "code": "6030",
+                            "omschrijving": "Nederland"
+                        },
+                        "inOnderzoek": {
+                            "datumIngangOnderzoek": {
+                                "type": "Datum",
+                                "datum": "2018-07-01",
+                                "langFormaat": "1 juli 2018"
+                            },
+                            "datum": true,
+                            "land": true,
+                            "plaats": true
+                        }
+                    },
+                    "inOnderzoek": {
+                        "datumIngangOnderzoek": {
+                            "type": "Datum",
+                            "datum": "2018-07-01",
+                            "langFormaat": "1 juli 2018"
+                        },
+                        "burgerservicenummer": true,
+                        "geslacht": true,
+                        "soortVerbintenis": true
+                    },
+                    "aangaanHuwelijkPartnerschap": {
+                        "datum": {
+                            "type": "Datum",
+                            "datum": "2018-07-01",
+                            "langFormaat": "1 juli 2018"
+                        },
+                        "land": {
+                            "code": "6030",
+                            "omschrijving": "Nederland"
+                        },
+                        "plaats": {
+                            "code": "6030",
+                            "omschrijving": "Nederland"
+                        },
+                        "inOnderzoek": {
+                            "datumIngangOnderzoek": {
+                                "type": "Datum",
+                                "datum": "2018-07-01",
+                                "langFormaat": "1 juli 2018"
+                            },
+                            "datum": true,
+                            "land": true,
+                            "plaats": true
+                        }
+                    },
+                    "ontbindingHuwelijkPartnerschap": {
+                        "datum": {
+                            "type": "Datum",
+                            "datum": "2018-07-01",
+                            "langFormaat": "1 juli 2018"
+                        },
+                        "inOnderzoek": {
+                            "datumIngangOnderzoek": {
+                                "type": "Datum",
+                                "datum": "2018-07-01",
+                                "langFormaat": "1 juli 2018"
+                            },
+                            "datum": true
+                        }
+                    }
+                }
+            ],
+            "rni": [
+                {
+                    "deelnemer": {
+                        "code": "6030",
+                        "omschrijving": "Nederland"
+                    },
+                    "omschrijvingVerdrag": "^a$",
+                    "categorie": "Verblijfplaats"
+                }
+            ],
+            "verificatie": {
+                "datum": {
+                    "type": "Datum",
+                    "datum": "2018-07-01",
+                    "langFormaat": "1 juli 2018"
+                },
+                "omschrijving": "^a$"
+            }
+        }
+    ]
+}

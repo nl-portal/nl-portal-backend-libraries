@@ -18,8 +18,8 @@ package nl.nlportal.haalcentraal.all.graphql
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.haalcentraal.all.TestHelper
 import nl.nlportal.haalcentraal.all.TestHelper.verifyOnlyDataExists
-import nl.nlportal.haalcentraal.client.HaalCentraalClientConfig
-import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrClientConfig
+import nl.nlportal.haalcentraal.client.HaalCentraalBrpConfig
+import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -28,19 +28,22 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
 
 @SpringBootTest
+@ExtendWith(SpringExtension::class)
 @AutoConfigureWebTestClient
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class GemachtigdeQueryIT(
     @Autowired private val testClient: WebTestClient,
-    @Autowired private val haalCentraalClientConfig: HaalCentraalClientConfig,
-    @Autowired private val haalCentraalHrClientConfig: HaalCentraalHrClientConfig,
+    @Autowired private val haalCentraalClientConfig: HaalCentraalBrpConfig,
+    @Autowired private val haalCentraalHrClientConfig: HaalCentraalHrConfig,
 ) {
     lateinit var server: MockWebServer
 
@@ -50,8 +53,8 @@ internal class GemachtigdeQueryIT(
         setupMockServer()
         server.start()
 
-        haalCentraalClientConfig.url = server.url("/").toString()
-        haalCentraalHrClientConfig.url = server.url("/").toString()
+        haalCentraalClientConfig.properties.url = server.url("/").toString()
+        haalCentraalHrClientConfig.properties.url = server.url("/").toString()
     }
 
     @AfterEach
@@ -87,19 +90,26 @@ internal class GemachtigdeQueryIT(
 
         val basePath = "$.data.getGemachtigde"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.persoon.naam.voorletters").isEqualTo("M.")
-            .jsonPath("$basePath.persoon.naam.voornamen").isEqualTo("Merel")
-            .jsonPath("$basePath.persoon.naam.voorvoegsel").isEqualTo("de")
-            .jsonPath("$basePath.persoon.naam.geslachtsnaam").isEqualTo("Kooyman")
-            .jsonPath("$basePath.bedrijf.naam").doesNotExist()
+            .jsonPath("$basePath.persoon.naam.voorletters")
+            .isEqualTo("M.")
+            .jsonPath("$basePath.persoon.naam.voornamen")
+            .isEqualTo("Merel")
+            .jsonPath("$basePath.persoon.naam.voorvoegsel")
+            .isEqualTo("de")
+            .jsonPath("$basePath.persoon.naam.geslachtsnaam")
+            .isEqualTo("Kooyman")
+            .jsonPath("$basePath.bedrijf.naam")
+            .doesNotExist()
     }
 
     @Test
@@ -127,17 +137,22 @@ internal class GemachtigdeQueryIT(
 
         val basePath = "$.data.getGemachtigde"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .expectBody()
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.bedrijf.naam").isEqualTo("Test bedrijf")
-            .jsonPath("$basePath.persoon.aanhef").doesNotExist()
+            .jsonPath(basePath)
+            .exists()
+            .jsonPath("$basePath.bedrijf.naam")
+            .isEqualTo("Test bedrijf")
+            .jsonPath("$basePath.persoon.aanhef")
+            .doesNotExist()
     }
 
     private fun setupMockServer() {

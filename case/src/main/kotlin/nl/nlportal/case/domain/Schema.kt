@@ -42,7 +42,8 @@ data class Schema(
         // If there are some properties missing from input which have "default" values in the schema,
         // then they will be set by the validator during validation.
         val schema =
-            SchemaLoaderBuilder.get()
+            SchemaLoaderBuilder
+                .get()
                 .schemaJson(JSONObject(value.toString()))
                 .build()
                 .load()

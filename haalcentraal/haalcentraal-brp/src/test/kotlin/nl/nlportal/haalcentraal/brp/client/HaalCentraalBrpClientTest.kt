@@ -24,7 +24,8 @@ import nl.nlportal.core.ssl.StringClientSslContextResolver
 import nl.nlportal.haalcentraal.brp.domain.persoon.AanduidingNaamGebruik
 import nl.nlportal.haalcentraal.brp.domain.persoon.Persoon
 import nl.nlportal.haalcentraal.brp.domain.persoon.PersoonNaam
-import nl.nlportal.haalcentraal.client.HaalCentraalClientConfig
+import nl.nlportal.haalcentraal.client.HaalCentraalBrpConfig
+import nl.nlportal.haalcentraal.client.HaalCentraalBrpConfig.HaalCentraalBrpConfigProperties
 import nl.nlportal.haalcentraal.client.HaalCentraalClientProvider
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -38,7 +39,7 @@ import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class HaalCentraalBrpClientTest {
-    private lateinit var haalCentraalClientConfig: HaalCentraalClientConfig
+    private lateinit var haalCentraalClientConfig: HaalCentraalBrpConfig
     private lateinit var server: MockWebServer
     private val bsn = "0123456789"
     private val persoon =
@@ -58,7 +59,7 @@ internal class HaalCentraalBrpClientTest {
                 .addHeader("Content-Type", "application/json"),
         )
 
-        haalCentraalClientConfig = HaalCentraalClientConfig(url = server.url("/").toString())
+        haalCentraalClientConfig = HaalCentraalBrpConfig(true, HaalCentraalBrpConfigProperties(url = server.url("/").toString()))
     }
 
     @AfterEach
@@ -81,20 +82,23 @@ internal class HaalCentraalBrpClientTest {
     fun `should get person by with certificate`() {
         // Create the root for client and server to trust. We could also use different roots for each!
         val rootCertificate: HeldCertificate =
-            HeldCertificate.Builder()
+            HeldCertificate
+                .Builder()
                 .commonName("myRoot")
                 .certificateAuthority(0)
                 .build()
 
         // Create a server certificate and a server that uses it.
         val serverCertificate: HeldCertificate =
-            HeldCertificate.Builder()
+            HeldCertificate
+                .Builder()
                 .commonName("myServer")
                 .addSubjectAlternativeName(server.hostName)
                 .signedBy(rootCertificate)
                 .build()
         val serverCertificates: HandshakeCertificates =
-            HandshakeCertificates.Builder()
+            HandshakeCertificates
+                .Builder()
                 .addTrustedCertificate(rootCertificate.certificate)
                 .heldCertificate(serverCertificate)
                 .build()
@@ -103,14 +107,15 @@ internal class HaalCentraalBrpClientTest {
 
         // Create a client certificate and a client that uses it.
         val clientCertificate: HeldCertificate =
-            HeldCertificate.Builder()
+            HeldCertificate
+                .Builder()
                 .commonName("myClient")
                 .organizationalUnit("myOrganisation")
                 .signedBy(rootCertificate)
                 .build()
 
-        val haalCentraalClientConfig =
-            haalCentraalClientConfig.copy(
+        val haalCentraalClientConfigProperties =
+            HaalCentraalBrpConfigProperties(
                 url = server.url("/").toString(),
                 ssl =
                     Ssl(
@@ -123,7 +128,11 @@ internal class HaalCentraalBrpClientTest {
                     ),
             )
 
-        val provider = HaalCentraalClientProvider(haalCentraalClientConfig, StringClientSslContextResolver())
+        val provider =
+            HaalCentraalClientProvider(
+                haalCentraalClientConfig.copy(properties = haalCentraalClientConfigProperties),
+                StringClientSslContextResolver(),
+            )
         val client = HaalCentraalBrpClient(provider)
         val authentication = JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication()
         runBlocking {

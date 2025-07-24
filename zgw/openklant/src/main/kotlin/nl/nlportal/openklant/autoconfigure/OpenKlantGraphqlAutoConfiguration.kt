@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Ritense BV, the Netherlands.
+ * Copyright 2024-2025 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,35 +27,25 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 
-@ConditionalOnProperty(prefix = "nl-portal.config.openklant", name = ["enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config.openklant2", name = ["enabled"], havingValue = "true")
 class OpenKlantGraphqlAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(PartijQuery::class)
-    fun partijQuery(openKlant2Service: OpenKlant2Service): Query {
-        return PartijQuery(openKlant2Service)
-    }
+    fun partijQuery(openKlant2Service: OpenKlant2Service): Query = PartijQuery(openKlant2Service)
 
     @Bean
     @ConditionalOnMissingBean(PartijMutation::class)
-    fun partijMutation(openKlant2Service: OpenKlant2Service): Mutation {
-        return PartijMutation(openKlant2Service)
-    }
+    fun partijMutation(openKlant2Service: OpenKlant2Service): Mutation = PartijMutation(openKlant2Service)
 
     @Bean
     @ConditionalOnMissingBean(DigitaleAdresQuery::class)
-    fun digitaleAdresQuery(openKlant2Service: OpenKlant2Service): Query {
-        return DigitaleAdresQuery(openKlant2Service)
-    }
+    fun digitaleAdresQuery(openKlant2Service: OpenKlant2Service): Query = DigitaleAdresQuery(openKlant2Service)
 
     @Bean
     @ConditionalOnMissingBean(DigitaleAdresMutation::class)
-    fun digitaleAdresMutation(openKlant2Service: OpenKlant2Service): Mutation {
-        return DigitaleAdresMutation(openKlant2Service)
-    }
+    fun digitaleAdresMutation(openKlant2Service: OpenKlant2Service): Mutation = DigitaleAdresMutation(openKlant2Service)
 
     @Bean
     @ConditionalOnMissingBean(KlantContactQuery::class)
-    fun klantContactQuery(openKlant2Service: OpenKlant2Service): Query {
-        return KlantContactQuery(openKlant2Service)
-    }
+    fun klantContactQuery(openKlant2Service: OpenKlant2Service): Query = KlantContactQuery(openKlant2Service)
 }

@@ -68,11 +68,11 @@ class OpenKlant2PartijQueryIT(
                         builder
                             .path("/graphql")
                             .build()
-                    }
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                     .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/partijIntrospection.gql")))
                     .exchange()
-                    .expectStatus().isOk
+                    .expectStatus()
+                    .isOk
                     .expectBody()
                     .returnResult()
                     .responseBodyContent
@@ -101,11 +101,11 @@ class OpenKlant2PartijQueryIT(
                         builder
                             .path("/graphql")
                             .build()
-                    }
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                     .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/findUserPartij.gql")))
                     .exchange()
-                    .expectStatus().isOk
+                    .expectStatus()
+                    .isOk
                     .expectBody()
                     .returnResult()
                     .responseBodyContent
@@ -140,11 +140,11 @@ class OpenKlant2PartijQueryIT(
                         builder
                             .path("/graphql")
                             .build()
-                    }
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                     .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/findUserPartij.gql")))
                     .exchange()
-                    .expectStatus().isOk
+                    .expectStatus()
+                    .isOk
                     .expectBody()
                     .returnResult()
                     .responseBodyContent
@@ -177,11 +177,11 @@ class OpenKlant2PartijQueryIT(
                         builder
                             .path("/graphql")
                             .build()
-                    }
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                     .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserPartij.gql")))
                     .exchange()
-                    .expectStatus().isOk
+                    .expectStatus()
+                    .isOk
                     .expectBody()
                     .returnResult()
                     .responseBodyContent
@@ -214,11 +214,11 @@ class OpenKlant2PartijQueryIT(
                         builder
                             .path("/graphql")
                             .build()
-                    }
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                     .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserPartij.gql")))
                     .exchange()
-                    .expectStatus().isOk
+                    .expectStatus()
+                    .isOk
                     .expectBody()
                     .returnResult()
                     .responseBodyContent
@@ -249,11 +249,11 @@ class OpenKlant2PartijQueryIT(
                         builder
                             .path("/graphql")
                             .build()
-                    }
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                     .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/findUserPartij.gql")))
                     .exchange()
-                    .expectStatus().isOk
+                    .expectStatus()
+                    .isOk
                     .expectBody()
                     .returnResult()
                     .responseBodyContent

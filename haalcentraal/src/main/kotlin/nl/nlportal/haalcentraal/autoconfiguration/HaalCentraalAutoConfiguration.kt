@@ -17,7 +17,7 @@ package nl.nlportal.haalcentraal.autoconfiguration
 
 import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.core.ssl.ResourceClientSslContextResolver
-import nl.nlportal.haalcentraal.client.HaalCentraalClientConfig
+import nl.nlportal.haalcentraal.client.HaalCentraalBrpConfig
 import nl.nlportal.haalcentraal.client.HaalCentraalClientProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfiguration
@@ -28,21 +28,21 @@ import org.springframework.context.annotation.Bean
 import org.springframework.core.io.ResourceLoader
 
 @AutoConfiguration
-@EnableConfigurationProperties(HaalCentraalClientConfig::class)
+@EnableConfigurationProperties(HaalCentraalBrpConfig::class)
 class HaalCentraalAutoConfiguration {
     @Bean
-    @ConditionalOnProperty("nl-portal.haalcentraal.ssl.enabled", matchIfMissing = false)
+    @ConditionalOnProperty(
+        prefix = "nl-portal.config.haalcentraal.brp.properties.ssl",
+        name = ["enabled"],
+        havingValue = "true",
+    )
     @ConditionalOnMissingBean(ClientSslContextResolver::class)
-    fun clientSslContextResolver(resourceLoader: ResourceLoader): ClientSslContextResolver {
-        return ResourceClientSslContextResolver(resourceLoader)
-    }
+    fun clientSslContextResolver(resourceLoader: ResourceLoader): ClientSslContextResolver = ResourceClientSslContextResolver(resourceLoader)
 
     @Bean
     @ConditionalOnMissingBean(HaalCentraalClientProvider::class)
     fun haalCentraalClientProvider(
-        haalCentraalClientConfig: HaalCentraalClientConfig,
+        haalCentraalClientConfig: HaalCentraalBrpConfig,
         @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
-    ): HaalCentraalClientProvider {
-        return HaalCentraalClientProvider(haalCentraalClientConfig, clientSslContextResolver)
-    }
+    ): HaalCentraalClientProvider = HaalCentraalClientProvider(haalCentraalClientConfig, clientSslContextResolver)
 }

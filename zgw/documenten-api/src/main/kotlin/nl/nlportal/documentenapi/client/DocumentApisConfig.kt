@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2025 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,32 +18,38 @@ package nl.nlportal.documentenapi.client
 import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.zgw.documentenapis", ignoreUnknownFields = true)
+@ConfigurationProperties(prefix = "nl-portal.config.documentenapis", ignoreUnknownFields = true)
 data class DocumentApisConfig(
-    var defaultDocumentApi: String,
-    var configurations: Map<String, DocumentApiConfig> = mapOf(),
+    var enabled: Boolean = false,
+    var properties: DocumentenApisConfigProperties = DocumentenApisConfigProperties(),
 ) {
-    fun getConfig(documentApi: String): DocumentApiConfig {
-        return configurations[documentApi]
-            ?: throw NullPointerException("No documentapi configuration with key $documentApi")
-    }
+    data class DocumentenApisConfigProperties(
+        var defaultDocumentApi: String = "",
+        val allowedMimeTypes: Set<String> = setOf(),
+        var configurations: Map<String, DocumentApiConfig> = emptyMap(),
+    ) {
+        fun getConfig(documentApi: String): DocumentApiConfig {
+            return configurations[documentApi]
+                ?: throw NullPointerException("No documentapi configuration with key $documentApi")
+        }
 
-    fun getConfigForDocumentUrl(documentUrl: String): String {
-        return configurations
-            .filterValues { documentenApiConfig ->
-                documentUrl.contains(documentenApiConfig.url)
-            }
-            .keys
-            .firstOrNull()
-            ?: throw NullPointerException("No documentapi configuration found for zaakdocument with url $documentUrl")
+        fun getConfigForDocumentUrl(documentUrl: String): String {
+            return configurations
+                .filterValues { documentenApiConfig ->
+                    documentUrl.contains(documentenApiConfig.url)
+                }
+                .keys
+                .firstOrNull()
+                ?: throw NullPointerException("No documentapi configuration found for zaakdocument with url $documentUrl")
+        }
+
+        data class DocumentApiConfig(
+            var url: String,
+            var clientId: String? = null,
+            var secret: String? = null,
+            var rsin: String? = null,
+            var documentTypeUrl: String? = null,
+            var ssl: Ssl? = null,
+        )
     }
 }
-
-data class DocumentApiConfig(
-    var url: String,
-    var clientId: String? = null,
-    var secret: String? = null,
-    var rsin: String? = null,
-    var documentTypeUrl: String? = null,
-    val ssl: Ssl? = null,
-)

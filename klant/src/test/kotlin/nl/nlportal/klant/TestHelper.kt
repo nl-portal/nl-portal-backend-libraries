@@ -18,12 +18,11 @@ package nl.nlportal.klant
 import okhttp3.mockwebserver.MockResponse
 
 object TestHelper {
-    fun mockResponseFromFile(fileName: String): MockResponse {
-        return MockResponse()
+    fun mockResponseFromFile(fileName: String): MockResponse =
+        MockResponse()
             .addHeader("Content-Type", "application/json; charset=utf-8")
             .setResponseCode(200)
             .setBody(readFileAsString(fileName))
-    }
 
     private fun readFileAsString(fileName: String): String = this::class.java.getResource(fileName).readText(Charsets.UTF_8)
 }

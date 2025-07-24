@@ -18,7 +18,9 @@ package nl.nlportal.core.util
 import org.springframework.security.core.context.SecurityContextHolder
 
 object SecurityUtils {
-    fun currentUserLogin(): String {
-        return SecurityContextHolder.getContext().authentication.principal.toString()
-    }
+    fun currentUserLogin(): String =
+        SecurityContextHolder
+            .getContext()
+            .authentication.principal
+            .toString()
 }

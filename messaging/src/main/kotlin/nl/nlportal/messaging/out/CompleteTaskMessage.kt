@@ -17,8 +17,11 @@ package nl.nlportal.messaging.out
 
 import com.fasterxml.jackson.databind.node.ObjectNode
 
-data class CompleteTaskMessage(val taskId: String, val externalCaseId: String, val submission: ObjectNode) :
-    PortalMessage {
+data class CompleteTaskMessage(
+    val taskId: String,
+    val externalCaseId: String,
+    val submission: ObjectNode,
+) : PortalMessage {
     override val destination: String
         get() = "complete-task"
 }

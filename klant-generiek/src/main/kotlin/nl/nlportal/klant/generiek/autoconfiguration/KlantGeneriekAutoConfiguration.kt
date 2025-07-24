@@ -20,34 +20,27 @@ import nl.nlportal.klant.generiek.client.OpenKlantClientConfig
 import nl.nlportal.klant.generiek.validation.GraphQlValidator
 import nl.nlportal.klant.generiek.client.OpenKlantClientProvider
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
 @EnableConfigurationProperties(OpenKlantClientConfig::class)
+@ConditionalOnProperty(prefix = "nl-portal.config.openklant", name = ["enabled"], havingValue = "true")
 class KlantGeneriekAutoConfiguration {
     @Bean
-    @ConditionalOnMissingBean(OpenKlantClientConfig::class)
-    fun openKlantClientConfig(): OpenKlantClientConfig {
-        return OpenKlantClientConfig()
-    }
-
-    @Bean
     @ConditionalOnMissingBean(GraphQlValidator::class)
-    fun graphqlValidator(): GraphQlValidator {
-        return GraphQlValidator()
-    }
+    fun graphqlValidator(): GraphQlValidator = GraphQlValidator()
 
     @Bean
     @ConditionalOnMissingBean(OpenKlantClientProvider::class)
     fun openKlantClientProvider(
         openKlantClientConfig: OpenKlantClientConfig,
         idTokenGenerator: IdTokenGenerator,
-    ): OpenKlantClientProvider {
-        return OpenKlantClientProvider(
-            openKlantClientConfig,
+    ): OpenKlantClientProvider =
+        OpenKlantClientProvider(
+            openKlantClientConfig.properties,
             idTokenGenerator,
         )
-    }
 }

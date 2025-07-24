@@ -51,11 +51,11 @@ class LiquibaseRunner(
                     connection.rollback()
                     connection.close()
                 } catch (e: SQLException) {
-                    logger.error("Error closing connection ", e)
+                    logger.error(e) { "Error closing connection " }
                 }
             }
         }
-        logger.info("Finished running liquibase")
+        logger.info { "Finished running liquibase" }
     }
 
     private fun runChangeLog(
@@ -63,7 +63,7 @@ class LiquibaseRunner(
         filePath: String?,
     ) {
         val liquibase = Liquibase(filePath, ClassLoaderResourceAccessor(), database)
-        logger.info("Running liquibase master changelog: {}", liquibase.changeLogFile)
+        logger.info { "Running liquibase master changelog: ${liquibase.changeLogFile}" }
         liquibase.update(context)
     }
 

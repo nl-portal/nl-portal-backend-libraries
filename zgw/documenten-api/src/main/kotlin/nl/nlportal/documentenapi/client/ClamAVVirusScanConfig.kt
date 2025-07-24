@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2025 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,13 @@ package nl.nlportal.documentenapi.client
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.zgw.documentenapis.virusscan.clamav")
+@ConfigurationProperties(prefix = "nl-portal.config.virusscan.clamav")
 data class ClamAVVirusScanConfig(
     var enabled: Boolean = false,
-    var hostName: String = "",
-    var port: Int = 3310,
-)
+    var properties: ClamAVVirusScanConfigProperties = ClamAVVirusScanConfigProperties(),
+) {
+    data class ClamAVVirusScanConfigProperties(
+        var hostName: String = "",
+        var port: Int = 3310,
+    )
+}

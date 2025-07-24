@@ -15,14 +15,14 @@
  */
 package nl.nlportal.catalogiapi.client
 
+import io.netty.handler.logging.LogLevel
+import nl.nlportal.catalogiapi.client.CatalogiApiConfig.CatalogiApiConfigProperties
+import nl.nlportal.catalogiapi.domain.BesluitType
 import nl.nlportal.catalogiapi.domain.ResultPage
 import nl.nlportal.catalogiapi.domain.StatusType
 import nl.nlportal.catalogiapi.domain.ZaakStatusType
 import nl.nlportal.catalogiapi.domain.ZaakType
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
-import io.netty.handler.logging.LogLevel
-import nl.nlportal.catalogiapi.domain.BesluitType
-import java.util.UUID
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.reactive.function.client.ExchangeStrategies
@@ -30,9 +30,10 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
+import java.util.UUID
 
 class CatalogiApiClient(
-    private val catalogiApiConfig: CatalogiApiConfig,
+    private val catalogiApiConfig: CatalogiApiConfigProperties,
     private val idTokenGenerator: IdTokenGenerator,
 ) {
     suspend fun getStatusTypes(zaakType: String): List<StatusType> {

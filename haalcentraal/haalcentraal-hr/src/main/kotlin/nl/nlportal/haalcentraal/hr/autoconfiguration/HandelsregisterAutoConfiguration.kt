@@ -17,47 +17,42 @@ package nl.nlportal.haalcentraal.hr.autoconfiguration
 
 import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.core.ssl.ResourceClientSslContextResolver
-import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrClientConfig
+import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrConfig
 import nl.nlportal.haalcentraal.hr.client.HandelsregisterClient
 import nl.nlportal.haalcentraal.hr.graphql.HandelsregisterQuery
 import nl.nlportal.haalcentraal.hr.service.HandelsregisterService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.core.io.ResourceLoader
 
 @AutoConfiguration
-@EnableConfigurationProperties(HaalCentraalHrClientConfig::class)
+@EnableConfigurationProperties(HaalCentraalHrConfig::class)
+@ConditionalOnProperty(prefix = "nl-portal.config.haalcentraal.hr", name = ["enabled"], havingValue = "true")
 class HandelsregisterAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(ClientSslContextResolver::class)
-    fun clientSslContextResolver(resourceLoader: ResourceLoader): ClientSslContextResolver {
-        return ResourceClientSslContextResolver(resourceLoader)
-    }
+    fun clientSslContextResolver(resourceLoader: ResourceLoader): ClientSslContextResolver = ResourceClientSslContextResolver(resourceLoader)
 
     @Bean
     @ConditionalOnMissingBean(HandelsregisterClient::class)
     fun handelsregisterClient(
-        haalCentraalHrClientConfig: HaalCentraalHrClientConfig,
+        haalCentraalHrClientConfig: HaalCentraalHrConfig,
         @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
-    ): HandelsregisterClient {
-        return HandelsregisterClient(
-            haalCentraalHrClientConfig,
+    ): HandelsregisterClient =
+        HandelsregisterClient(
+            haalCentraalHrClientConfig.properties,
             clientSslContextResolver,
         )
-    }
 
     @Bean
     @ConditionalOnMissingBean(HandelsregisterService::class)
-    fun handelsregisterService(handelsregisterClient: HandelsregisterClient): HandelsregisterService {
-        return HandelsregisterService(handelsregisterClient)
-    }
+    fun handelsregisterService(handelsregisterClient: HandelsregisterClient): HandelsregisterService = HandelsregisterService(handelsregisterClient)
 
     @Bean
     @ConditionalOnMissingBean(HandelsregisterQuery::class)
-    fun handelsregisterQuery(handelsregisterService: HandelsregisterService): HandelsregisterQuery {
-        return HandelsregisterQuery(handelsregisterService)
-    }
+    fun handelsregisterQuery(handelsregisterService: HandelsregisterService): HandelsregisterQuery = HandelsregisterQuery(handelsregisterService)
 }
