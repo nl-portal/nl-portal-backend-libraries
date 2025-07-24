@@ -19,8 +19,9 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.haalcentraal2.autoconfiguration.HaalCentraal2ModuleConfiguration.HaalCentraal2ConfigurationProperties
-import nl.nlportal.haalcentraal2.client.HaalCentraal2Client
-import nl.nlportal.haalcentraal2.client.path.Bewoning
+import nl.nlportal.haalcentraal2.client.HaalCentraal2BewoningClient
+import nl.nlportal.haalcentraal2.client.HaalCentraal2BrpClient
+import nl.nlportal.haalcentraal2.client.path.Bewoningen
 import nl.nlportal.haalcentraal2.client.path.Personen
 import nl.nlportal.haalcentraal2.domain.bewoning.BewoningenApiRequest
 import nl.nlportal.haalcentraal2.domain.bewoning.BewoningenApiResponse
@@ -32,7 +33,8 @@ import java.time.format.DateTimeFormatter
 
 class HaalCentraal2Service(
     val haalCentraal2ConfigurationProperties: HaalCentraal2ConfigurationProperties,
-    val haalCentraal2Client: HaalCentraal2Client,
+    val haalCentraal2BrpClient: HaalCentraal2BrpClient,
+    val haalCentraal2BewoningClient: HaalCentraal2BewoningClient,
 ) {
     suspend fun getPersoon(authentication: CommonGroundAuthentication): BrpPersoon? =
         if (authentication is BurgerAuthentication) {
@@ -41,7 +43,7 @@ class HaalCentraal2Service(
                     burgerservicenummer = listOf(authentication.userId),
                     fields = haalCentraal2ConfigurationProperties.brpFields,
                 )
-            haalCentraal2Client
+            haalCentraal2BrpClient
                 .path<Personen>()
                 .post(
                     brpApiRequest,
@@ -67,7 +69,7 @@ class HaalCentraal2Service(
                         peildatum = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                         adresseerbaarObjectIdentificatie = adresseerbaarObjectIdentificatie,
                     )
-                haalCentraal2Client.path<Bewoning>().post(bewoningenApiRequest, authentication)
+                haalCentraal2BewoningClient.path<Bewoningen>().post(bewoningenApiRequest, authentication)
             } else {
                 logger.warn { "Authentication is not supported" }
                 null
@@ -97,7 +99,7 @@ class HaalCentraal2Service(
                     burgerservicenummer = listOf(it),
                     fields = haalCentraal2ConfigurationProperties.brpFields,
                 )
-            haalCentraal2Client
+            haalCentraal2BrpClient
                 .path<Personen>()
                 .post(
                     brpApiRequest,

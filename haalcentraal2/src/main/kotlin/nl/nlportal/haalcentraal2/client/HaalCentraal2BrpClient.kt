@@ -27,7 +27,7 @@ import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
 import kotlin.reflect.full.primaryConstructor
 
-class HaalCentraal2Client(
+class HaalCentraal2BrpClient(
     val haalCentraal2ConfigurationProperties: HaalCentraal2ConfigurationProperties,
     private val clientSslContextResolver: ClientSslContextResolver? = null,
     webClientBuilder: WebClient.Builder,
@@ -66,7 +66,7 @@ class HaalCentraal2Client(
                                 result
                             },
                     ),
-                ).baseUrl(haalCentraal2ConfigurationProperties.url)
+                ).baseUrl(haalCentraal2ConfigurationProperties.brpApiUrl)
                 .apply {
                     if (!haalCentraal2ConfigurationProperties.apiKey.isNullOrBlank()) {
                         it.defaultHeader("X-API-KEY", haalCentraal2ConfigurationProperties.apiKey)
