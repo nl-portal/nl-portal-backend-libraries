@@ -7,12 +7,10 @@ management:
             probes:
                 enabled: true
             access: read_only
-        restart:
-            access: unrestricted
     endpoints:
         web:
             exposure:
-                include: health, restart
+                include: health
         access:
             default: none
 
