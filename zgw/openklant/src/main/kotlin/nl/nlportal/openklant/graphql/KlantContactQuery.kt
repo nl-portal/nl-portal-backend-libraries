@@ -21,6 +21,7 @@ import com.expediagroup.graphql.server.operations.Query
 import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.openklant.client.domain.OpenKlant2Klantcontact
+import nl.nlportal.openklant.graphql.domain.OnderwerpObjectIndentificatorType
 import nl.nlportal.openklant.service.OpenKlant2Service
 import java.util.UUID
 
@@ -28,10 +29,22 @@ import java.util.UUID
 class KlantContactQuery(
     private val openklant2Service: OpenKlant2Service,
 ) : Query {
-    @GraphQLDescription("Get KlantContacten of authenticated user.")
-    suspend fun getUserKlantContacten(dfe: DataFetchingEnvironment): List<OpenKlant2Klantcontact> =
+    @GraphQLDescription(
+        """
+        Get KlantContacten of authenticated user and optional filter on .
+        identificatorType, like zaak or product
+        identificatorId, the uuid of the zaak or product
+    """,
+    )
+    suspend fun getUserKlantContacten(
+        dfe: DataFetchingEnvironment,
+        identificatorType: OnderwerpObjectIndentificatorType? = null,
+        identificatorId: UUID? = null,
+    ): List<OpenKlant2Klantcontact> =
         openklant2Service.findKlantContacten(
             authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
+            identificatorType = identificatorType,
+            identificatorId = identificatorId,
         )
 
     @GraphQLDescription("Get KlantContact by id of authenticated user.")
