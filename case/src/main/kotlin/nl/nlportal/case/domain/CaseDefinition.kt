@@ -42,18 +42,15 @@ data class CaseDefinition(
     val statusDefinition: StatusDefinition,
     @Column(name = "created_on", columnDefinition = "TIMESTAMPTZ", nullable = false)
     val createdOn: LocalDateTime = LocalDateTime.now(),
-) : Persistable<CaseDefinitionId>, AggregateRoot<DomainEvent>() {
+) : AggregateRoot<DomainEvent>(),
+    Persistable<CaseDefinitionId> {
     init {
         ObjectValidator.validate(this)
     }
 
-    override fun getId(): CaseDefinitionId {
-        return caseDefinitionId
-    }
+    override fun getId(): CaseDefinitionId = caseDefinitionId
 
-    override fun isNew(): Boolean {
-        return caseDefinitionId.isNew()
-    }
+    override fun isNew(): Boolean = caseDefinitionId.isNew()
 
     fun modify(schema: ObjectNode) {
         this.schema = Schema(schema)

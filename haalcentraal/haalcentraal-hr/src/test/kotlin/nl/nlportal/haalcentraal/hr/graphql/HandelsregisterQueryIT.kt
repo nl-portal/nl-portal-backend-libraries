@@ -17,7 +17,7 @@ package nl.nlportal.haalcentraal.hr.graphql
 
 import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.haalcentraal.hr.TestHelper
-import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrClientConfig
+import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -38,7 +38,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class HandelsregisterQueryIT(
     @Autowired private val testClient: WebTestClient,
-    @Autowired private val haalCentraalClientConfig: HaalCentraalHrClientConfig,
+    @Autowired private val haalCentraalClientConfig: HaalCentraalHrConfig,
 ) {
     lateinit var server: MockWebServer
 
@@ -48,7 +48,7 @@ internal class HandelsregisterQueryIT(
         setupMockServer()
         server.start()
 
-        haalCentraalClientConfig.url = server.url("/").toString()
+        haalCentraalClientConfig.properties.url = server.url("/").toString()
     }
 
     @AfterEach
@@ -70,16 +70,20 @@ internal class HandelsregisterQueryIT(
 
         val basePath = "$.data.getBedrijf"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
             .bodyValue(query)
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .expectBody()
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.naam").isEqualTo("Test bedrijf")
+            .jsonPath(basePath)
+            .exists()
+            .jsonPath("$basePath.naam")
+            .isEqualTo("Test bedrijf")
     }
 
     private fun setupMockServer() {

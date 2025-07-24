@@ -16,6 +16,7 @@
 package nl.nlportal.openklant.graphql.domain
 
 import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdres
+import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdresUpdate
 import java.util.UUID
 
 data class DigitaleAdresRequest(
@@ -29,5 +30,13 @@ data class DigitaleAdresRequest(
             adres = waarde,
             omschrijving = omschrijving,
             soortDigitaalAdres = type.name.lowercase(),
+        )
+
+    fun asOpenKlant2DigitaleAdresUpdate(): OpenKlant2DigitaleAdresUpdate =
+        OpenKlant2DigitaleAdresUpdate(
+            adres = waarde,
+            omschrijving = omschrijving,
+            soortDigitaalAdres = type.name.lowercase(),
+            uuid = uuid!!,
         )
 }

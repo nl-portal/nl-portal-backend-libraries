@@ -22,9 +22,9 @@ import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 import nl.nlportal.haalcentraal.hr.service.HandelsregisterService
 import graphql.schema.DataFetchingEnvironment
 
-class HandelsregisterQuery(val handelsregisterService: HandelsregisterService) : Query {
+class HandelsregisterQuery(
+    val handelsregisterService: HandelsregisterService,
+) : Query {
     @GraphQLDescription("Gets the bedrijf data")
-    suspend fun getBedrijf(dfe: DataFetchingEnvironment): MaatschappelijkeActiviteit? {
-        return handelsregisterService.getMaatschappelijkeActiviteit(dfe.graphQlContext.get(AUTHENTICATION_KEY))
-    }
+    suspend fun getBedrijf(dfe: DataFetchingEnvironment): MaatschappelijkeActiviteit? = handelsregisterService.getMaatschappelijkeActiviteit(dfe.graphQlContext.get(AUTHENTICATION_KEY))
 }

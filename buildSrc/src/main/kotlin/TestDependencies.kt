@@ -15,11 +15,11 @@
  */
 
 object TestDependencies {
-    val hamcrest by lazy { "org.hamcrest:hamcrest:${TestVersions.hamcrest}" }
-    val kotlinCoroutines by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-test:${TestVersions.kotlinCoroutines}"}
-    val mockitoKotlin by lazy { "org.mockito.kotlin:mockito-kotlin:${TestVersions.mockitoKotlin}" }
-    val okHttp by lazy { "com.squareup.okhttp3:okhttp:${TestVersions.okHttp3}" }
-    val okHttpMockWebserver by lazy { "com.squareup.okhttp3:mockwebserver:${TestVersions.okHttp3}" }
-    val okHttpTls by lazy { "com.squareup.okhttp3:okhttp-tls:${TestVersions.okHttp3}" }
-    val postgresql by lazy { "org.postgresql:postgresql:${TestVersions.postgresql}" }
+    val hamcrest by lazy { "org.hamcrest:hamcrest:${Versions.hamcrest}" }
+    val kotlinCoroutines by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlinCoroutines}"}
+    val mockitoKotlin by lazy { "org.mockito.kotlin:mockito-kotlin:${Versions.mockitoKotlin}" }
+    val okHttp by lazy { "com.squareup.okhttp3:okhttp:${Versions.okHttp3}" }
+    val okHttpMockWebserver by lazy { "com.squareup.okhttp3:mockwebserver:${Versions.okHttp3}" }
+    val okHttpTls by lazy { "com.squareup.okhttp3:okhttp-tls:${Versions.okHttp3}" }
+    val postgresql by lazy { "org.postgresql:postgresql:${Versions.postgresql}" }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2025 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,34 +18,37 @@ package nl.nlportal.payment.autoconfiguration
 import nl.nlportal.core.util.ShaVersion
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.payment.ogone", ignoreUnknownFields = true)
+@ConfigurationProperties(prefix = "nl-portal.config.payment.ogone", ignoreUnknownFields = true)
 data class OgonePaymentConfig(
-    val url: String,
-    val shaOutParameters: List<String>,
-    val configurations: Map<String, OgonePaymentProfile> = mapOf(),
+    var enabled: Boolean = true,
+    var properties: OgonePaymentConfigProperties = OgonePaymentConfigProperties(),
 ) {
-    fun getPaymentProfile(profileIdentifier: String): OgonePaymentProfile? {
-        return configurations[profileIdentifier]
-    }
+    data class OgonePaymentConfigProperties(
+        var url: String = "",
+        var shaOutParameters: List<String> = emptyList(),
+        var configurations: Map<String, OgonePaymentProfile> = mapOf(),
+    ) {
+        fun getPaymentProfile(profileIdentifier: String): OgonePaymentProfile? = configurations[profileIdentifier]
 
-    fun getPaymentProfileByPspPid(pspId: String?): OgonePaymentProfile? {
-        configurations.forEach {
-            if (it.value.pspId == pspId) {
-                return it.value
+        fun getPaymentProfileByPspPid(pspId: String?): OgonePaymentProfile? {
+            configurations.forEach {
+                if (it.value.pspId == pspId) {
+                    return it.value
+                }
             }
+            return null
         }
-        return null
     }
-}
 
-data class OgonePaymentProfile(
-    val pspId: String = "",
-    val language: String = "nl_NL",
-    val currency: String = "EUR",
-    val title: String = "",
-    val shaInKey: String = "",
-    val shaOutKey: String = "",
-    val shaVersion: String = ShaVersion.SHA1.version,
-    val failureUrl: String = "",
-    val successUrl: String = "",
-)
+    data class OgonePaymentProfile(
+        var pspId: String = "",
+        var language: String = "nl_NL",
+        var currency: String = "EUR",
+        var title: String = "",
+        var shaInKey: String = "",
+        var shaOutKey: String = "",
+        var shaVersion: String = ShaVersion.SHA1.version,
+        var failureUrl: String = "",
+        var successUrl: String = "",
+    )
+}

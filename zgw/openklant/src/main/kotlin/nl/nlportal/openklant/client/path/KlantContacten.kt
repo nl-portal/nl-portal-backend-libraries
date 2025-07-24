@@ -16,25 +16,42 @@
 package nl.nlportal.openklant.client.path
 
 import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
-import nl.nlportal.openklant.client.domain.HadKlantcontact
+import nl.nlportal.openklant.client.domain.OpenKlant2Klantcontact
+import nl.nlportal.openklant.client.domain.OpenKlant2KlantcontactenFilters
+import nl.nlportal.openklant.client.domain.ResultPage
 import org.springframework.http.MediaType
+import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.awaitBodyOrNull
 import java.util.UUID
 
-class KlantContacten(val client: OpenKlant2KlantinteractiesClient) : KlantInteractiesPath() {
+class KlantContacten(
+    val client: OpenKlant2KlantinteractiesClient,
+) : KlantInteractiesPath() {
     override val path: String = "/klantcontacten"
 
-    suspend fun get(klantContactId: UUID): HadKlantcontact? {
-        return client
+    suspend fun get(searchFilters: List<Pair<OpenKlant2KlantcontactenFilters, Any>>? = null): List<OpenKlant2Klantcontact> =
+        client
+            .webClient()
+            .get()
+            .uri { uriBuilder ->
+                uriBuilder
+                    .path(path)
+                    .applyFilters(searchFilters)
+                uriBuilder.build()
+            }.accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .awaitBody<ResultPage<OpenKlant2Klantcontact>>()
+            .results
+
+    suspend fun get(klantContactId: UUID): OpenKlant2Klantcontact? =
+        client
             .webClient()
             .get()
             .uri { uriBuilder ->
                 uriBuilder
                     .path("$path/$klantContactId")
                     .build()
-            }
-            .accept(MediaType.APPLICATION_JSON)
+            }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBodyOrNull()
-    }
 }

@@ -43,14 +43,16 @@ class AuthenticationIT(
                 "    $query \n" +
                 "}"
 
-        testClient.post()
+        testClient
+            .post()
             .uri(GRAPHQL_ENDPOINT)
             .accept(APPLICATION_JSON)
             .contentType(GRAPHQL_MEDIA_TYPE)
             .bodyValue(body)
             .exchange()
             .verifyOnlyDataExists(query)
-            .jsonPath("$DATA_JSON_PATH.$query").isEqualTo("authenticated")
+            .jsonPath("$DATA_JSON_PATH.$query")
+            .isEqualTo("authenticated")
     }
 
     @Test
@@ -61,31 +63,39 @@ class AuthenticationIT(
                 "    $query \n" +
                 "}"
 
-        testClient.post()
+        testClient
+            .post()
             .uri(GRAPHQL_ENDPOINT)
             .accept(APPLICATION_JSON)
             .contentType(GRAPHQL_MEDIA_TYPE)
             .bodyValue(body)
             .exchange()
             .verifyOnlyDataExists(query)
-            .jsonPath("$DATA_JSON_PATH.$query").isEqualTo("unauthenticated")
+            .jsonPath("$DATA_JSON_PATH.$query")
+            .isEqualTo("unauthenticated")
     }
 
-    fun WebTestClient.ResponseSpec.verifyOnlyDataExists(expectedQuery: String): WebTestClient.BodyContentSpec {
-        return this.expectBody()
+    fun WebTestClient.ResponseSpec.verifyOnlyDataExists(expectedQuery: String): WebTestClient.BodyContentSpec =
+        this
+            .expectBody()
             .consumeWith(Consumer { t -> logger.info { t } })
-            .jsonPath("$DATA_JSON_PATH.$expectedQuery").exists()
-            .jsonPath(ERRORS_JSON_PATH).doesNotExist()
-            .jsonPath(EXTENSIONS_JSON_PATH).doesNotExist()
-    }
+            .jsonPath("$DATA_JSON_PATH.$expectedQuery")
+            .exists()
+            .jsonPath(ERRORS_JSON_PATH)
+            .doesNotExist()
+            .jsonPath(EXTENSIONS_JSON_PATH)
+            .doesNotExist()
 
-    fun WebTestClient.ResponseSpec.verifyOnlyErrorExists(expectedQuery: String): WebTestClient.BodyContentSpec {
-        return this.expectBody()
+    fun WebTestClient.ResponseSpec.verifyOnlyErrorExists(expectedQuery: String): WebTestClient.BodyContentSpec =
+        this
+            .expectBody()
             .consumeWith(Consumer { t -> logger.info { t } })
-            .jsonPath(ERRORS_JSON_PATH).exists()
-            .jsonPath(DATA_JSON_PATH).doesNotExist()
-            .jsonPath(EXTENSIONS_JSON_PATH).doesNotExist()
-    }
+            .jsonPath(ERRORS_JSON_PATH)
+            .exists()
+            .jsonPath(DATA_JSON_PATH)
+            .doesNotExist()
+            .jsonPath(EXTENSIONS_JSON_PATH)
+            .doesNotExist()
 
     companion object {
         private val logger = KotlinLogging.logger {}

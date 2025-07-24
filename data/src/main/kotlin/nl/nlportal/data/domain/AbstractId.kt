@@ -17,13 +17,13 @@ package nl.nlportal.data.domain
 
 import java.io.Serializable
 
-abstract class AbstractId<SELF> : Identity, Serializable {
+abstract class AbstractId<SELF> :
+    Identity,
+    Serializable {
     @Transient
     private var isNew = false
 
-    override fun isNew(): Boolean {
-        return isNew
-    }
+    override fun isNew(): Boolean = isNew
 
     open fun newIdentity(): AbstractId<SELF> {
         isNew = true // note: for jpa to know this is a new entity

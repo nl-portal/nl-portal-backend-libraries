@@ -28,15 +28,15 @@ dependencies {
     api(project(":core"))
 
     // GraphQL
-    api(ApiDependencies.graphqlKotlinSpringServer)
-    api(ApiDependencies.graphqlKotlinHooksProvider)
-    api(ApiDependencies.graphqlJavaExtendedScalars)
+    api(Dependencies.graphqlKotlinSpringServer)
+    api(Dependencies.graphqlKotlinHooksProvider)
+    api(Dependencies.graphqlJavaExtendedScalars)
 
     // Jackson
     api("com.fasterxml.jackson.module", "jackson-module-kotlin")
 
     // Logging for Kotlin
-    api(ApiDependencies.kotlinLogging)
+    api(Dependencies.kotlinLogging)
 
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.springframework.security", "spring-security-test")

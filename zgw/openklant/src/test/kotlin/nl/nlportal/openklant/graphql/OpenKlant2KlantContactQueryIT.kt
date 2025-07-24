@@ -62,11 +62,11 @@ class OpenKlant2KlantContactQueryIT(
                         builder
                             .path("/graphql")
                             .build()
-                    }
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                     .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserKlantContacten.gql")))
                     .exchange()
-                    .expectStatus().isOk
+                    .expectStatus()
+                    .isOk
                     .expectBody()
                     .returnResult()
                     .responseBodyContent
@@ -97,11 +97,11 @@ class OpenKlant2KlantContactQueryIT(
                         builder
                             .path("/graphql")
                             .build()
-                    }
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
                     .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserKlantContact.gql")))
                     .exchange()
-                    .expectStatus().isOk
+                    .expectStatus()
+                    .isOk
                     .expectBody()
                     .returnResult()
                     .responseBodyContent

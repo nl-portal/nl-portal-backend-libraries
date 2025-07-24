@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Ritense BV, the Netherlands.
+ * Copyright 2024-2025 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package nl.nlportal.openklant.autoconfigure
 import org.springframework.boot.context.properties.ConfigurationProperties
 import java.net.URI
 
-@ConfigurationProperties(prefix = "nl-portal.config.openklant")
+@ConfigurationProperties(prefix = "nl-portal.config.openklant2")
 data class OpenKlantModuleConfiguration(
     var enabled: Boolean = false,
     var properties: OpenKlantConfigurationProperties = OpenKlantConfigurationProperties(),
@@ -38,5 +38,6 @@ data class OpenKlantModuleConfiguration(
         var contactgegevensApiUrl: URI? = null,
         var klantinteractiesApiUrl: URI? = null,
         var token: String? = null,
+        val digitalAdressenReferentie: String? = null,
     )
 }

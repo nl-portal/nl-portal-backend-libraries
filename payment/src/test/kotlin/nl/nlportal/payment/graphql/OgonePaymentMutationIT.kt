@@ -56,16 +56,16 @@ internal class OgonePaymentMutationIT(
             )
         val payment =
             OgonePayment.create(
-                paymentConfig.url,
-                paymentConfig.getPaymentProfile("belastingzaken")!!,
+                paymentConfig.properties.url,
+                paymentConfig.properties.getPaymentProfile("belastingzaken")!!,
                 paymentRequest,
             )
 
         val shaSign =
             OgonePaymentService.hashParameters(
                 payment.fillFields(),
-                paymentConfig.getPaymentProfile("belastingzaken")!!.shaOutKey,
-                paymentConfig.getPaymentProfile("belastingzaken")!!.shaVersion,
+                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaOutKey,
+                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaVersion,
             )
         val mutation =
             """
@@ -84,7 +84,8 @@ internal class OgonePaymentMutationIT(
 
         val basePath = "$.data.generateOgonePayment"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
@@ -92,10 +93,14 @@ internal class OgonePaymentMutationIT(
             .exchange()
             .expectBody()
             .consumeWith(Consumer { t -> logger.info { t } })
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.formFields[0].value").isEqualTo("http://localhost:3000")
-            .jsonPath("$basePath.formFields[9].value").isEqualTo("10025")
-            .jsonPath("$basePath.formFields[11].value").isEqualTo(shaSign)
+            .jsonPath(basePath)
+            .exists()
+            .jsonPath("$basePath.formFields[0].value")
+            .isEqualTo("http://localhost:3000")
+            .jsonPath("$basePath.formFields[9].value")
+            .isEqualTo("10025")
+            .jsonPath("$basePath.formFields[11].value")
+            .isEqualTo(shaSign)
     }
 
     @Test
@@ -114,16 +119,16 @@ internal class OgonePaymentMutationIT(
             )
         val payment =
             OgonePayment.create(
-                paymentConfig.url,
-                paymentConfig.getPaymentProfile("belastingzaken")!!,
+                paymentConfig.properties.url,
+                paymentConfig.properties.getPaymentProfile("belastingzaken")!!,
                 paymentRequest,
             )
 
         val shaSign =
             OgonePaymentService.hashParameters(
                 payment.fillFields(),
-                paymentConfig.getPaymentProfile("belastingzaken")!!.shaOutKey,
-                paymentConfig.getPaymentProfile("belastingzaken")!!.shaVersion,
+                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaOutKey,
+                paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaVersion,
             )
         val mutation =
             """
@@ -142,7 +147,8 @@ internal class OgonePaymentMutationIT(
 
         val basePath = "$.data.generateOgonePayment"
 
-        testClient.post()
+        testClient
+            .post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
@@ -150,10 +156,14 @@ internal class OgonePaymentMutationIT(
             .exchange()
             .expectBody()
             .consumeWith(Consumer { t -> logger.info { t } })
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.formFields[0].value").isEqualTo("http://localhost:3000")
-            .jsonPath("$basePath.formFields[9].value").isEqualTo("10025")
-            .jsonPath("$basePath.formFields[11].value").isEqualTo(shaSign)
+            .jsonPath(basePath)
+            .exists()
+            .jsonPath("$basePath.formFields[0].value")
+            .isEqualTo("http://localhost:3000")
+            .jsonPath("$basePath.formFields[9].value")
+            .isEqualTo("10025")
+            .jsonPath("$basePath.formFields[11].value")
+            .isEqualTo(shaSign)
     }
 
     companion object {

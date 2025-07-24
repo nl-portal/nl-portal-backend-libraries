@@ -32,7 +32,8 @@ object Mapper {
             builder.serializers(LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)))
         }
     private val jacksonConfigurationModule =
-        KotlinModule.Builder()
+        KotlinModule
+            .Builder()
             .withReflectionCacheSize(512)
             .configure(KotlinFeature.NullToEmptyCollection, false)
             .configure(KotlinFeature.NullToEmptyMap, false)
@@ -41,16 +42,15 @@ object Mapper {
             .configure(KotlinFeature.StrictNullChecks, false)
             .build()
 
-    fun get(): ObjectMapper {
-        return mapper
-    }
+    fun get(): ObjectMapper = mapper
 
     init {
         val builder = Jackson2ObjectMapperBuilder()
         jacksonBuilderCustomizer.customize(builder)
 
         mapper =
-            builder.build<ObjectMapper>()
+            builder
+                .build<ObjectMapper>()
                 .apply {
                     registerModule(jacksonConfigurationModule)
                 }

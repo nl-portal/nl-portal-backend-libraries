@@ -18,25 +18,23 @@ package nl.nlportal.zgw.objectenapi.autoconfiguration
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.service.ObjectenApiService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
 @EnableConfigurationProperties(ObjectsApiClientConfig::class)
+@ConditionalOnProperty(prefix = "nl-portal.config.objectenapi", name = ["enabled"], havingValue = "true")
 class ObjectsApiAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(ObjectsApiClient::class)
-    fun objectsApiClient(objectsApiClientConfig: ObjectsApiClientConfig): ObjectsApiClient {
-        return ObjectsApiClient(objectsApiClientConfig)
-    }
+    fun objectsApiClient(objectsApiClientConfig: ObjectsApiClientConfig): ObjectsApiClient = ObjectsApiClient(objectsApiClientConfig.properties)
 
     @Bean
     @ConditionalOnMissingBean(ObjectenApiService::class)
     fun objectenApiService(
         objectsApiClient: ObjectsApiClient,
         objectsApiClientConfig: ObjectsApiClientConfig,
-    ): ObjectenApiService {
-        return ObjectenApiService(objectsApiClient, objectsApiClientConfig)
-    }
+    ): ObjectenApiService = ObjectenApiService(objectsApiClient, objectsApiClientConfig.properties)
 }

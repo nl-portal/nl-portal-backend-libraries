@@ -17,22 +17,22 @@ package nl.nlportal.haalcentraal.all.autoconfiguration
 
 import nl.nlportal.haalcentraal.all.graphql.GemachtigdeQuery
 import nl.nlportal.haalcentraal.brp.service.HaalCentraalBrpService
-import nl.nlportal.haalcentraal.client.HaalCentraalClientConfig
+import nl.nlportal.haalcentraal.client.HaalCentraalBrpConfig
 import nl.nlportal.haalcentraal.hr.service.HandelsregisterService
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
-@EnableConfigurationProperties(HaalCentraalClientConfig::class)
+@EnableConfigurationProperties(HaalCentraalBrpConfig::class)
+@ConditionalOnProperty(prefix = "nl-portal.config.haalcentraal", name = ["brp.enabled", "hr.enabled"], havingValue = "true")
 class HaalCentraalAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(GemachtigdeQuery::class)
     fun gemachtigdeQuery(
         haalCentraalBrpService: HaalCentraalBrpService,
         handelsregisterService: HandelsregisterService,
-    ): GemachtigdeQuery {
-        return GemachtigdeQuery(haalCentraalBrpService, handelsregisterService)
-    }
+    ): GemachtigdeQuery = GemachtigdeQuery(haalCentraalBrpService, handelsregisterService)
 }

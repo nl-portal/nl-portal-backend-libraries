@@ -41,7 +41,7 @@ data class OpenKlant2Partij(
     val correspondentieadres: OpenKlant2Adres? = null,
     val digitaleAdressen: List<OpenKlant2ForeignKey>? = null,
     val indicatieActief: Boolean,
-    val indicatieGeheimhouding: Boolean,
+    val indicatieGeheimhouding: Boolean? = null,
     @JsonInclude(JsonInclude.Include.NON_NULL)
     val interneNotitie: String? = null,
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -172,9 +172,7 @@ enum class OpenKlant2PartijenFilters(
     CORRESPONDENTIEADRES_LAND("correspondentieadres_land"),
     ;
 
-    override fun toString(): String {
-        return this.value
-    }
+    override fun toString(): String = this.value
 }
 
 enum class SoortPartij(
@@ -185,15 +183,19 @@ enum class SoortPartij(
     CONTACTPERSOON("contactpersoon"),
     ;
 
-    override fun toString(): String {
-        return this.value
-    }
+    override fun toString(): String = this.value
 }
 
-fun CommonGroundAuthentication.asSoortPartij(): String {
-    return when (this) {
+fun CommonGroundAuthentication.asSoortPartij(): String =
+    when (this) {
         is BurgerAuthentication -> "persoon"
         is BedrijfAuthentication -> "organisatie"
         else -> "contactpersoon"
     }
-}
+
+fun CommonGroundAuthentication.asSoortPartijEnum(): SoortPartij =
+    when (this) {
+        is BurgerAuthentication -> SoortPartij.PERSOON
+        is BedrijfAuthentication -> SoortPartij.ORGANISATIE
+        else -> SoortPartij.CONTACTPERSOON
+    }

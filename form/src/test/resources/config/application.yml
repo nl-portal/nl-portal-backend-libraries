@@ -40,10 +40,16 @@ spring:
             name: test
             password: test
 
-keycloak:
-    resource: resource
-    credentials:
-        secret: yoursecret
+nl-portal:
+    authentication:
+        keycloak:
+            resource: resource
+            audience: audience
+            credentials:
+                secret: yoursecret
+    config:
+      objectenapi:
+          enabled: true
 
 graphql:
     packages:

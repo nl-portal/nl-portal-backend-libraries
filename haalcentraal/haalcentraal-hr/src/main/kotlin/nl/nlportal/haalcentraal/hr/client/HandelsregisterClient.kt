@@ -15,10 +15,11 @@
  */
 package nl.nlportal.haalcentraal.hr.client
 
-import io.netty.handler.logging.LogLevel
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
+import io.netty.handler.logging.LogLevel
 import nl.nlportal.core.ssl.ClientSslContextResolver
+import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrConfig.HaalCentraalHrConfigProperties
 import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient
@@ -27,53 +28,52 @@ import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
 
 class HandelsregisterClient(
-    val haalCentraalHrClientConfig: HaalCentraalHrClientConfig,
+    val haalCentraalHrClientConfig: HaalCentraalHrConfigProperties,
     val clientSslContextResolver: ClientSslContextResolver? = null,
 ) {
-    suspend fun getMaatschappelijkeActiviteit(kvkNummer: String): MaatschappelijkeActiviteit {
-        return webClient()
+    suspend fun getMaatschappelijkeActiviteit(kvkNummer: String): MaatschappelijkeActiviteit =
+        webClient()
             .get()
             .uri("/basisprofielen/$kvkNummer")
             .retrieve()
             .awaitBody()
-    }
 
-    fun webClient(): WebClient {
-        return WebClient.builder()
+    fun webClient(): WebClient =
+        WebClient
+            .builder()
             .clientConnector(
                 ReactorClientHttpConnector(
-                    HttpClient.create().wiretap(
-                        "reactor.netty.http.client.HttpClient",
-                        LogLevel.DEBUG,
-                        AdvancedByteBufFormat.TEXTUAL,
-                    ).let { client ->
-                        var result = client
-                        if (clientSslContextResolver != null) {
-                            haalCentraalHrClientConfig.ssl?.let {
-                                val sslContext =
-                                    clientSslContextResolver.resolve(
-                                        it.key,
-                                        it.trustedCertificate,
-                                    )
+                    HttpClient
+                        .create()
+                        .wiretap(
+                            "reactor.netty.http.client.HttpClient",
+                            LogLevel.DEBUG,
+                            AdvancedByteBufFormat.TEXTUAL,
+                        ).let { client ->
+                            var result = client
+                            if (clientSslContextResolver != null) {
+                                haalCentraalHrClientConfig.ssl?.let {
+                                    val sslContext =
+                                        clientSslContextResolver.resolve(
+                                            it.key,
+                                            it.trustedCertificate,
+                                        )
 
-                                result = client.secure { builder -> builder.sslContext(sslContext) }
+                                    result = client.secure { builder -> builder.sslContext(sslContext) }
 
-                                logger.debug { "Client SSL context was set: private key=${it.key != null}, trusted certificate=${it.trustedCertificate != null}." }
+                                    logger.debug { "Client SSL context was set: private key=${it.key != null}, trusted certificate=${it.trustedCertificate != null}." }
+                                }
                             }
-                        }
-                        result
-                    },
+                            result
+                        },
                 ),
-            )
-            .baseUrl(haalCentraalHrClientConfig.url)
+            ).baseUrl(haalCentraalHrClientConfig.url)
             .apply {
                 if (!haalCentraalHrClientConfig.apiKey.isNullOrBlank()) {
                     it.defaultHeader("X-API-KEY", haalCentraalHrClientConfig.apiKey)
                     logger.debug { "X-API-KEY was set for client" }
                 }
-            }
-            .build()
-    }
+            }.build()
 
     companion object {
         private val logger: KLogger = KotlinLogging.logger {}

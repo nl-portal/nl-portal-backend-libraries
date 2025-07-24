@@ -19,33 +19,29 @@ import nl.nlportal.haalcentraal.brp.client.HaalCentraalBrpClient
 import nl.nlportal.haalcentraal.brp.graphql.HaalCentraalBrpQuery
 import nl.nlportal.haalcentraal.brp.service.HaalCentraalBrpService
 import nl.nlportal.haalcentraal.brp.service.impl.HaalCentraalBrpServiceImpl as HaalCentraalBrpServiceImpl
-import nl.nlportal.haalcentraal.client.HaalCentraalClientConfig
+import nl.nlportal.haalcentraal.client.HaalCentraalBrpConfig
 import nl.nlportal.haalcentraal.client.HaalCentraalClientProvider
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
 
 @AutoConfiguration
-@EnableConfigurationProperties(HaalCentraalClientConfig::class)
+@EnableConfigurationProperties(HaalCentraalBrpConfig::class)
+@ConditionalOnProperty(prefix = "nl-portal.config.haalcentraal.brp", name = ["enabled"], havingValue = "true")
 @Import(HaalCentraalClientProvider::class)
 class HaalCentraalBrpAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(HaalCentraalBrpClient::class)
-    fun haalCentraalBrpClient(haalCentraalClientProvider: HaalCentraalClientProvider): HaalCentraalBrpClient {
-        return HaalCentraalBrpClient(haalCentraalClientProvider)
-    }
+    fun haalCentraalBrpClient(haalCentraalClientProvider: HaalCentraalClientProvider): HaalCentraalBrpClient = HaalCentraalBrpClient(haalCentraalClientProvider)
 
     @Bean
     @ConditionalOnMissingBean(HaalCentraalBrpService::class)
-    fun haalCentraalBrpServiceImpl(haalCentraalBrpClient: HaalCentraalBrpClient): HaalCentraalBrpService {
-        return HaalCentraalBrpServiceImpl(haalCentraalBrpClient)
-    }
+    fun haalCentraalBrpServiceImpl(haalCentraalBrpClient: HaalCentraalBrpClient): HaalCentraalBrpService = HaalCentraalBrpServiceImpl(haalCentraalBrpClient)
 
     @Bean
     @ConditionalOnMissingBean(HaalCentraalBrpQuery::class)
-    fun haalCentraalBrpQuery(haalCentraalBrpService: HaalCentraalBrpService): HaalCentraalBrpQuery {
-        return HaalCentraalBrpQuery(haalCentraalBrpService)
-    }
+    fun haalCentraalBrpQuery(haalCentraalBrpService: HaalCentraalBrpService): HaalCentraalBrpQuery = HaalCentraalBrpQuery(haalCentraalBrpService)
 }

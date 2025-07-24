@@ -16,45 +16,40 @@
 package nl.nlportal.klant.autoconfiguration
 
 import nl.nlportal.klant.client.OpenKlantClient
+import nl.nlportal.klant.generiek.client.OpenKlantClientConfig
+import nl.nlportal.klant.generiek.client.OpenKlantClientProvider
+import nl.nlportal.klant.generiek.validation.GraphQlValidator
 import nl.nlportal.klant.graphql.BurgerMutation
 import nl.nlportal.klant.graphql.BurgerQuery
 import nl.nlportal.klant.service.BurgerService
-import nl.nlportal.klant.generiek.client.OpenKlantClientConfig
+import nl.nlportal.klant.service.impl.BurgerServiceImpl
 import org.springframework.boot.autoconfigure.AutoConfiguration
-import nl.nlportal.klant.generiek.client.OpenKlantClientProvider
-import nl.nlportal.klant.generiek.validation.GraphQlValidator
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
 @EnableConfigurationProperties(OpenKlantClientConfig::class)
+@ConditionalOnProperty(prefix = "nl-portal.config.openklant", name = ["enabled"], havingValue = "true")
 class KlantAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(BurgerService::class)
     fun burgerService(
         openKlantClientConfig: OpenKlantClientConfig,
         openKlantClient: OpenKlantClient,
-    ): BurgerService {
-        return nl.nlportal.klant.service.impl.BurgerService(openKlantClientConfig, openKlantClient)
-    }
+    ): BurgerService = BurgerServiceImpl(openKlantClientConfig.properties, openKlantClient)
 
     @Bean
     @ConditionalOnMissingBean(OpenKlantClient::class)
-    fun openKlantClient(openKlantClientProvider: OpenKlantClientProvider): OpenKlantClient {
-        return OpenKlantClient(openKlantClientProvider)
-    }
+    fun openKlantClient(openKlantClientProvider: OpenKlantClientProvider): OpenKlantClient = OpenKlantClient(openKlantClientProvider)
 
     @Bean
-    fun burgerQuery(burgerService: BurgerService): BurgerQuery {
-        return BurgerQuery(burgerService)
-    }
+    fun burgerQuery(burgerService: BurgerService): BurgerQuery = BurgerQuery(burgerService)
 
     @Bean
     fun burgerMutation(
         burgerService: BurgerService,
         graphQlValidator: GraphQlValidator,
-    ): BurgerMutation {
-        return BurgerMutation(burgerService, graphQlValidator)
-    }
+    ): BurgerMutation = BurgerMutation(burgerService, graphQlValidator)
 }

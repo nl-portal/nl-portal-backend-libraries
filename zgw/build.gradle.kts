@@ -22,7 +22,7 @@ val isLib = true
 
 dependencies {
 
-    implementation(ApiDependencies.kotlinLogging)
+    implementation(Dependencies.kotlinLogging)
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
 

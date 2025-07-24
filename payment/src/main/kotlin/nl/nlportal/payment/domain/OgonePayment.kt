@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2025 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package nl.nlportal.payment.domain
 
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonIgnore
-import nl.nlportal.payment.autoconfiguration.OgonePaymentProfile
+import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig.OgonePaymentProfile
 import java.math.BigDecimal
 
 data class OgonePayment(

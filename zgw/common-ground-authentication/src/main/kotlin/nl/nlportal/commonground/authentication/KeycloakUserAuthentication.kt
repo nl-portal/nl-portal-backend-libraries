@@ -30,9 +30,7 @@ class KeycloakUserAuthentication(
     }
 
     companion object {
-        private fun getUserId(jwt: Jwt): String {
-            return jwt.claims[SUB_KEY].toString().substring(0, 13)
-        }
+        private fun getUserId(jwt: Jwt): String = jwt.claims[SUB_KEY].toString().substring(0, 13)
     }
 
     fun getUid() = this.userId

@@ -15,7 +15,7 @@
  */
 package nl.nlportal.zgw.objectenapi.service
 
-import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
+import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig.ObjectsApiClientConfigProperties
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequest
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
@@ -27,32 +27,27 @@ import java.util.UUID
 
 class ObjectenApiService(
     val objectsApiClient: ObjectsApiClient,
-    val objectsApiClientConfig: ObjectsApiClientConfig,
+    val objectsApiClientConfig: ObjectsApiClientConfigProperties,
 ) {
     suspend inline fun <reified T> getObjects(
         objectSearchParameters: List<ObjectSearchParameter>,
         objectTypeUrl: String,
         pageNumber: Int,
         pageSize: Int,
-    ): ResultPage<ObjectsApiObject<T>> {
-        return objectsApiClient.getObjects(
+    ): ResultPage<ObjectsApiObject<T>> =
+        objectsApiClient.getObjects(
             objectSearchParameters = objectSearchParameters,
             objectTypeUrl = objectTypeUrl,
             page = pageNumber,
             pageSize = pageSize,
         )
-    }
 
-    suspend inline fun <reified T> getObjectById(objectId: String): ObjectsApiObject<T>? {
-        return objectsApiClient.getObjectById(objectId)
-    }
+    suspend inline fun <reified T> getObjectById(objectId: String): ObjectsApiObject<T>? = objectsApiClient.getObjectById(objectId)
 
     suspend inline fun <reified T> updateObject(
         objectUuid: UUID,
         objectsApiObject: UpdateObjectsApiObjectRequest<T>,
-    ): ObjectsApiObject<T>? {
-        return objectsApiClient.updateObject(objectUuid, objectsApiObject)
-    }
+    ): ObjectsApiObject<T>? = objectsApiClient.updateObject(objectUuid, objectsApiObject)
 
     suspend inline fun <reified T> getObjectByUrl(url: String): ObjectsApiObject<T>? {
         val requestedObjectenApiHost = URI.create(url).host
@@ -63,11 +58,10 @@ class ObjectenApiService(
         return objectsApiClient.getObjectByUrl(url)
     }
 
-    suspend inline fun <reified T> createObject(createObjectsApiObjectRequest: CreateObjectsApiObjectRequest<T>): ObjectsApiObject<T> {
-        return objectsApiClient.createObject(
+    suspend inline fun <reified T> createObject(createObjectsApiObjectRequest: CreateObjectsApiObjectRequest<T>): ObjectsApiObject<T> =
+        objectsApiClient.createObject(
             createObjectsApiObjectRequest,
         )
-    }
 
     suspend fun deleteObjectById(objectId: UUID) {
         objectsApiClient.deleteObjectById(objectId)

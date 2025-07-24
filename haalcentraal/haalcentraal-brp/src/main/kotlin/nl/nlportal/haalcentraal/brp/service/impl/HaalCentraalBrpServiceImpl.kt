@@ -30,21 +30,20 @@ import java.time.format.DateTimeFormatter
 class HaalCentraalBrpServiceImpl(
     val haalCentraalBrpClient: HaalCentraalBrpClient,
 ) : HaalCentraalBrpService {
-    override suspend fun getPersoon(authentication: CommonGroundAuthentication): Persoon? {
-        return if (authentication is BurgerAuthentication) {
+    override suspend fun getPersoon(authentication: CommonGroundAuthentication): Persoon? =
+        if (authentication is BurgerAuthentication) {
             haalCentraalBrpClient.getPersoon(authentication.getBsn(), authentication)?.apply {
                 naam.officialLastName = determineOfficialLastName(this)
             }
         } else {
             null
         }
-    }
 
     override suspend fun getBewoningen(
         authentication: CommonGroundAuthentication,
         adresseerbaarObjectIdentificatie: String,
-    ): Bewoning? {
-        return try {
+    ): Bewoning? =
+        try {
             if (authentication is BurgerAuthentication) {
                 val bewoningenApiRequest =
                     BewoningenApiRequest(
@@ -54,14 +53,13 @@ class HaalCentraalBrpServiceImpl(
                     )
                 haalCentraalBrpClient.getBewoningen(bewoningenApiRequest, authentication)
             } else {
-                logger.warn("Authentication is not supported")
+                logger.warn { "Authentication is not supported" }
                 null
             }
         } catch (ex: Exception) {
-            logger.error("Something went wrong with 'getBewoningen' - error: {}", ex.message, ex)
+            logger.error(ex) { "Something went wrong with 'getBewoningen' - error: ${ex.message}" }
             null
         }
-    }
 
     override suspend fun getBewonersAantal(
         authentication: CommonGroundAuthentication,
@@ -88,7 +86,11 @@ class HaalCentraalBrpServiceImpl(
         if (persoon.naam.aanduidingNaamgebruik == null) {
             return persoon.naam.lastName()
         }
-        val lastNamePartner = persoon.partners?.firstOrNull { it.naam != null }?.naam?.lastName() ?: ""
+        val lastNamePartner =
+            persoon.partners
+                ?.firstOrNull { it.naam != null }
+                ?.naam
+                ?.lastName() ?: ""
         return when (persoon.naam.aanduidingNaamgebruik) {
             AanduidingNaamGebruik.PARTNER -> {
                 lastNamePartner

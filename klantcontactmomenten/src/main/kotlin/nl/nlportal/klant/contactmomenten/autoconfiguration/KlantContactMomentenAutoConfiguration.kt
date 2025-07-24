@@ -22,33 +22,30 @@ import nl.nlportal.klant.contactmomenten.service.KlantContactMomentenService
 import nl.nlportal.klant.generiek.client.OpenKlantClientConfig
 import nl.nlportal.klant.generiek.client.OpenKlantClientProvider
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
 @EnableConfigurationProperties(OpenKlantClientConfig::class)
+@ConditionalOnProperty(prefix = "nl-portal.config.openklant", name = ["enabled"], havingValue = "true")
 class KlantContactMomentenAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(KlantContactMomentenService::class)
     fun klantContactMomentenService(
         klantContactMomentenClient: KlantContactMomentenClient,
         klantClient: OpenKlantClient,
-    ): KlantContactMomentenService {
-        return nl.nlportal.klant.contactmomenten.service.impl.KlantContactMomentenServiceImpl(
+    ): KlantContactMomentenService =
+        nl.nlportal.klant.contactmomenten.service.impl.KlantContactMomentenServiceImpl(
             klantContactMomentenClient,
             klantClient,
         )
-    }
 
     @Bean
     @ConditionalOnMissingBean(KlantContactMomentenClient::class)
-    fun openKlantContactMomentenClient(openKlantClientProvider: OpenKlantClientProvider): KlantContactMomentenClient {
-        return KlantContactMomentenClient(openKlantClientProvider)
-    }
+    fun openKlantContactMomentenClient(openKlantClientProvider: OpenKlantClientProvider): KlantContactMomentenClient = KlantContactMomentenClient(openKlantClientProvider)
 
     @Bean
-    fun contactMomentenQuery(klantContactMomentenService: KlantContactMomentenService): ContactMomentQuery {
-        return ContactMomentQuery(klantContactMomentenService)
-    }
+    fun contactMomentenQuery(klantContactMomentenService: KlantContactMomentenService): ContactMomentQuery = ContactMomentQuery(klantContactMomentenService)
 }

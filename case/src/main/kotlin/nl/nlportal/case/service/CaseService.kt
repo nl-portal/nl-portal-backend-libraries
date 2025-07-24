@@ -78,25 +78,20 @@ class CaseService(
         return case
     }
 
-    fun getAllCases(userId: String): List<Case> {
-        return caseRepository.findAllByUserId(userId)
-    }
+    fun getAllCases(userId: String): List<Case> = caseRepository.findAllByUserId(userId)
 
     fun getCase(
         id: CaseId,
         userId: String,
-    ): Case? {
-        return caseRepository.findCaseByCaseIdAndUserId(id, userId)
-    }
+    ): Case? = caseRepository.findCaseByCaseIdAndUserId(id, userId)
 
-    fun getCase(externalId: String): Case? {
-        return caseRepository.findCaseByExternalId(externalId)
-    }
+    fun getCase(externalId: String): Case? = caseRepository.findCaseByExternalId(externalId)
 
     fun updateExternalId(updateExternalIdPortalCaseMessage: UpdateExternalIdPortalCaseMessage): Case {
         logger.debug { "Received create case with external id: ${updateExternalIdPortalCaseMessage.externalId}" }
         val case =
-            caseRepository.findById(CaseId.existingId(updateExternalIdPortalCaseMessage.caseId))
+            caseRepository
+                .findById(CaseId.existingId(updateExternalIdPortalCaseMessage.caseId))
                 .orElseThrow { NullPointerException() }
         case.externalId = updateExternalIdPortalCaseMessage.externalId
         caseRepository.save(case)
