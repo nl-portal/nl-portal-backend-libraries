@@ -111,7 +111,7 @@ class ZakenApiClientTest {
             )
             assertEquals(
                 "KVK",
-                request.requestUrl?.queryParameter("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__kvkNummer"),
+                request.requestUrl?.queryParameter("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__annIdentificatie"),
             )
             assertEquals(
                 "UID",
@@ -152,7 +152,7 @@ class ZakenApiClientTest {
             val request = mockServer.takeRequest()
             assertEquals(
                 "123",
-                request.requestUrl?.queryParameter("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__kvkNummer"),
+                request.requestUrl?.queryParameter("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__annIdentificatie"),
             )
         }
     }

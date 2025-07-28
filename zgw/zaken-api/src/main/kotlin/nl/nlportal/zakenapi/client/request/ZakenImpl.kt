@@ -39,7 +39,14 @@ class SearchZakenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
     }
 
     override fun withKvk(kvk: String): SearchZaken {
-        queryParams.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__kvkNummer", kvk)
+        when {
+            zakenApiClient.useKvkNummer() -> {
+                queryParams.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__kvkNummer", kvk)
+            }
+            else -> {
+                queryParams.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__annIdentificatie", kvk)
+            }
+        }
         return this
     }
 
@@ -86,8 +93,16 @@ class SearchZakenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
         kvkNummer: String,
         vestigingsNummer: String,
     ): SearchZaken {
-        queryParams.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__vestigingsNummer", vestigingsNummer)
-        queryParams.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__kvkNummer", kvkNummer)
+        when {
+            zakenApiClient.useKvkNummer() -> {
+                queryParams.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__vestigingsNummer", vestigingsNummer)
+                queryParams.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__kvkNummer", kvkNummer)
+            }
+            else -> {
+                queryParams.add("rol__betrokkeneIdentificatie__vestiging__vestigingsNummer", vestigingsNummer)
+                queryParams.add("rol__betrokkeneIdentificatie__vestiging__kvkNummer", kvkNummer)
+            }
+        }
         return this
     }
 
