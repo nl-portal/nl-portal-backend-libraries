@@ -46,7 +46,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.net.URI
-import java.util.*
+import java.util.UUID
 
 open class DirectPaymentService(
     private val directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,

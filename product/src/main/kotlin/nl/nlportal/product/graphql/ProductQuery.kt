@@ -32,7 +32,7 @@ import nl.nlportal.product.service.PrefillService
 import nl.nlportal.product.service.ProductService
 import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zgw.taak.domain.TaakV2
-import java.util.*
+import java.util.UUID
 
 class ProductQuery(
     private val productService: ProductService,
