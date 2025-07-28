@@ -16,7 +16,7 @@
 package nl.nlportal.haalcentraal2.client.path
 
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.haalcentraal2.client.HaalCentraal2Client
+import nl.nlportal.haalcentraal2.client.HaalCentraal2BewoningClient
 import nl.nlportal.haalcentraal2.domain.bewoning.BewoningenApiResponse
 import nl.nlportal.haalcentraal2.domain.bewoning.BewoningenApiRequest
 import org.springframework.http.HttpHeaders
@@ -24,8 +24,8 @@ import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.web.reactive.function.client.awaitBody
 
-class Bewoning(
-    val client: HaalCentraal2Client,
+class Bewoningen(
+    val client: HaalCentraal2BewoningClient,
 ) : HaalCentraal2Path() {
     suspend fun post(
         bewoningenApiRequest: BewoningenApiRequest,
@@ -33,7 +33,7 @@ class Bewoning(
     ): BewoningenApiResponse =
         client.webClient
             .post()
-            .uri("/bewoning/bewoningen")
+            .uri("/bewoningen")
             .headers {
                 if (it[HttpHeaders.AUTHORIZATION].isNullOrEmpty()) {
                     it.setBearerAuth((authentication as CommonGroundAuthentication).token.tokenValue)

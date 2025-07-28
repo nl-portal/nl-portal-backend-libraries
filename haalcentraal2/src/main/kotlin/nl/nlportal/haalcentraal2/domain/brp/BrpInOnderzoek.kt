@@ -25,5 +25,5 @@ data class BrpInOnderzoek(
     val gemeenteVanInschrijving: Boolean? = false,
     val datumInschrijvingInGemeente: Boolean? = false,
     val indicatieCurateleRegister: Boolean? = false,
-    val indicatieGezagMinderjarige: Boolean?,
+    val indicatieGezagMinderjarige: Boolean? = false,
 )
