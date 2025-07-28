@@ -70,6 +70,10 @@ enum class OpenKlant2KlantcontactenFilters(
     PAGE("page"),
     PAGE_SIZE("pageSize"),
     HADBETROKKENE_PARTIJ_IDENTIFICATOR_CODE_OBJECTID("hadBetrokkene__wasPartij__partijIdentificator__objectId"),
+    ONDERWERPOBJECT_ONDERWERPOBJECTIDENTIFICATOR_OBJECTID("onderwerpobject__onderwerpobjectidentificatorObjectId"),
+    ONDERWERPOBJECT_ONDERWERPOBJECTIDENTIFICATOR_CODEOBJECTTYPE("onderwerpobject__onderwerpobjectidentificatorCodeObjecttype"),
+    ONDERWERPOBJECT_ONDERWERPOBJECTIDENTIFICATOR_CODESOORTOBJECTID("onderwerpobject__onderwerpobjectidentificatorCodeSoortObjectId"),
+    ONDERWERPOBJECT_ONDERWERPOBJECTIDENTIFICATOR_CODEREGISTER("onderwerpobject__onderwerpobjectidentificatorCodeRegister"),
     ;
 
     override fun toString() = this.value
