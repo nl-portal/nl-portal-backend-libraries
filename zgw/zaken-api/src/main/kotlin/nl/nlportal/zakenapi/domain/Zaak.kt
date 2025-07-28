@@ -25,7 +25,7 @@ import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.zakenapi.service.ZakenApiService
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 data class Zaak(
     val uuid: UUID,

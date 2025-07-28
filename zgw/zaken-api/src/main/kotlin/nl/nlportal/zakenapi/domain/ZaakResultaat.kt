@@ -19,7 +19,7 @@ import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import nl.nlportal.catalogiapi.domain.ResultaatType
 import nl.nlportal.catalogiapi.service.CatalogiApiService
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.*
+import java.util.UUID
 
 data class ZaakResultaat(
     val uuid: UUID,

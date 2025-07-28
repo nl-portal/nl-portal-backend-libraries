@@ -4,7 +4,7 @@ import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.client.handleStatus
 import nl.nlportal.zakenapi.domain.ZaakResultaat
 import org.springframework.web.reactive.function.client.awaitBody
-import java.util.*
+import java.util.UUID
 
 class ZaakResultatenImpl(val zakenApiClient: ZakenApiClient) : ZaakResultaten {
     override fun get(id: UUID): GetZaakResultaat {

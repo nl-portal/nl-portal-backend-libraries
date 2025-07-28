@@ -15,7 +15,7 @@
  */
 package nl.nlportal.zgw.objectenapi.domain
 
-import java.util.*
+import java.util.UUID
 
 data class CreateObjectsApiObjectRequest<T>(
     val uuid: UUID,
