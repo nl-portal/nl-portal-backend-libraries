@@ -48,6 +48,7 @@ import nl.nlportal.openklant.client.path.DigitaleAdressen
 import nl.nlportal.openklant.client.path.KlantContacten
 import nl.nlportal.openklant.client.path.PartijIdentificatoren
 import nl.nlportal.openklant.client.path.Partijen
+import nl.nlportal.openklant.graphql.domain.OnderwerpObjectIndentificatorType
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import java.util.UUID
 
@@ -301,8 +302,21 @@ class OpenKlant2Service(
         return
     }
 
-    suspend fun findKlantContacten(authentication: CommonGroundAuthentication): List<OpenKlant2Klantcontact> {
-        val searchVariables = searchVariablesKlantcontacten(authentication)
+    suspend fun findKlantContacten(
+        authentication: CommonGroundAuthentication,
+        identificatorType: OnderwerpObjectIndentificatorType? = null,
+        identificatorId: UUID? = null,
+    ): List<OpenKlant2Klantcontact> {
+        val searchVariables = searchVariablesKlantcontacten(authentication).toMutableList()
+
+        identificatorId?.let {
+            searchVariables.add(OpenKlant2KlantcontactenFilters.ONDERWERPOBJECT_ONDERWERPOBJECTIDENTIFICATOR_OBJECTID to it)
+            searchVariables.add(OpenKlant2KlantcontactenFilters.ONDERWERPOBJECT_ONDERWERPOBJECTIDENTIFICATOR_CODESOORTOBJECTID to "uuid")
+        }
+        identificatorType?.let {
+            searchVariables.add(OpenKlant2KlantcontactenFilters.ONDERWERPOBJECT_ONDERWERPOBJECTIDENTIFICATOR_CODEREGISTER to "open-" + it.name.lowercase())
+            searchVariables.add(OpenKlant2KlantcontactenFilters.ONDERWERPOBJECT_ONDERWERPOBJECTIDENTIFICATOR_CODEOBJECTTYPE to it.name.lowercase())
+        }
 
         return try {
             openKlant2Client.path<KlantContacten>().get(searchVariables)

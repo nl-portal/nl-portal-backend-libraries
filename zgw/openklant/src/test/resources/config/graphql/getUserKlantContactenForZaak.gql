@@ -1,0 +1,12 @@
+
+query {
+    getUserKlantContacten(
+        identificatorType: ZAAK,
+        identificatorId: "4a8b9c0d-109f-42d4-910c-bdb6addf47a8"
+     ){
+        uuid
+        inhoud
+        kanaal
+        onderwerp
+    }
+}
