@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.node.ObjectNode
 import nl.nlportal.core.util.Mapper
-import java.util.*
+import java.util.UUID
 
 data class ProductType(
     var id: UUID?,

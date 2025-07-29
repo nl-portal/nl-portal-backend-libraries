@@ -27,6 +27,7 @@ import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zakenapi.domain.ZaakDetails
 import nl.nlportal.zakenapi.domain.ZaakDetailsObject
 import nl.nlportal.zakenapi.domain.ZaakDocument
+import nl.nlportal.zakenapi.domain.ZaakResultaat
 import nl.nlportal.zakenapi.domain.ZaakRol
 import nl.nlportal.zakenapi.domain.ZaakStatus
 import nl.nlportal.zakenapi.graphql.ZaakPage
@@ -150,6 +151,10 @@ class ZakenApiService(
 
     suspend fun getZaakDocumenten(zaakUrl: String): List<ZaakDocument> {
         return zakenApiClient.zaakInformatieobjecten().search().forZaak(zaakUrl).retrieve()
+    }
+
+    suspend fun getZaakResultaat(resultaatUrl: String): ZaakResultaat {
+        return zakenApiClient.zaakResultaten().get(extractId(resultaatUrl)).retrieve()
     }
 
     suspend fun getZaakDetails(zaakUrl: String): ZaakDetails {
