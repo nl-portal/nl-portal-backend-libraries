@@ -37,7 +37,7 @@ import org.springframework.web.reactive.function.client.WebClient
 @EnableConfigurationProperties(
     ZakenApiConfig::class,
 )
-@ConditionalOnProperty(prefix = "nl-portal.config.zakenapi", name = ["enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled","catalogiapi.enabled","zakenapi.enabled"], havingValue = "true")
 class ZakenApiAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(ZakenApiService::class)

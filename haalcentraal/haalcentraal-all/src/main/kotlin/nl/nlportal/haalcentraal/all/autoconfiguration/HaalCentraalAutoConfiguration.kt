@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
 @EnableConfigurationProperties(HaalCentraalBrpConfig::class)
-@ConditionalOnProperty(prefix = "nl-portal.config.haalcentraal", name = ["brp.enabled", "hr.enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["haalcentraal.brp.enabled", "haalcentraal.hr.enabled"], havingValue = "true")
 class HaalCentraalAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(GemachtigdeQuery::class)

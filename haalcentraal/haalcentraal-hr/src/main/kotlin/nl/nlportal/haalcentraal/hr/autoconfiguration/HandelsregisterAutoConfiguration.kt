@@ -31,7 +31,7 @@ import org.springframework.core.io.ResourceLoader
 
 @AutoConfiguration
 @EnableConfigurationProperties(HaalCentraalHrConfig::class)
-@ConditionalOnProperty(prefix = "nl-portal.config.haalcentraal.hr", name = ["enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["haalcentraal.hr.enabled"], havingValue = "true")
 class HandelsregisterAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(ClientSslContextResolver::class)

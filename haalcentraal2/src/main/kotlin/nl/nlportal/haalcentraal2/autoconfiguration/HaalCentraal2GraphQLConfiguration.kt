@@ -24,7 +24,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 
-@ConditionalOnProperty(prefix = "nl-portal.config.haalcentraal2", name = ["enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["haalcentraal2.enabled"], havingValue = "true")
 class HaalCentraal2GraphQLConfiguration {
     @Bean
     @ConditionalOnMissingBean(HaalCentraal2BrpQuery::class)
@@ -42,7 +42,7 @@ class HaalCentraal2GraphQLConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(HaalCentraal2GemachtigdeQuery::class)
-    @ConditionalOnProperty(prefix = "nl-portal.config.haalcentraal.hr", name = ["enabled"], havingValue = "true")
+    @ConditionalOnProperty(prefix = "nl-portal.config", name = ["haalcentraal.hr.enabled"], havingValue = "true")
     fun haalCentraal2GemachtigdeQuery(
         haalCentraal2Service: HaalCentraal2Service,
         handelsregisterService: HandelsregisterService,
