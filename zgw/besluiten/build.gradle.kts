@@ -24,6 +24,7 @@ dependencies {
 
     api(project(":graphql"))
     api(project(":zgw:idtoken-authentication"))
+    api(project(":zgw:catalogi-api"))
 
     implementation("org.springframework.boot:spring-boot-starter")
 

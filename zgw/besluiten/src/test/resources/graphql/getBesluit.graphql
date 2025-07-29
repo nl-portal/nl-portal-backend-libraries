@@ -4,5 +4,9 @@ query {
         datum,
         toelichting,
         publicatiedatum
+        besluittype {
+            omschrijving,
+            omschrijvingGeneriek
+        }
     }
 }
