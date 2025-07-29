@@ -18,7 +18,7 @@ package nl.nlportal.idtokenauthentication.service
 import io.jsonwebtoken.JwtBuilder
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
-import java.util.*
+import java.util.Date
 
 class IdTokenGenerator {
     fun generateToken(

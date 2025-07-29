@@ -19,7 +19,7 @@ import com.fasterxml.jackson.core.type.TypeReference
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import java.time.LocalDateTime
-import java.util.*
+import java.util.UUID
 
 class TaakV2(
     val id: UUID,
