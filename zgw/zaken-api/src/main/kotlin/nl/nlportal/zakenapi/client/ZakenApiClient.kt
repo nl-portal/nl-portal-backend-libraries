@@ -117,6 +117,10 @@ class ZakenApiClient(
     fun zaakResultaten(): ZaakResultaten {
         return ZaakResultatenImpl(this)
     }
+
+    fun useNnpKvkQueryIdentificators(): Boolean {
+        return zakenApiConfig.useNnpKvkQueryIdentificators
+    }
 }
 
 fun WebClient.ResponseSpec.handleStatus() =
