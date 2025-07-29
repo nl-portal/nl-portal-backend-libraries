@@ -30,7 +30,7 @@ import org.springframework.context.annotation.Import
 
 @AutoConfiguration
 @EnableConfigurationProperties(HaalCentraalBrpConfig::class)
-@ConditionalOnProperty(prefix = "nl-portal.config.haalcentraal.brp", name = ["enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["haalcentraal.brp.enabled"], havingValue = "true")
 @Import(HaalCentraalClientProvider::class)
 class HaalCentraalBrpAutoConfiguration {
     @Bean

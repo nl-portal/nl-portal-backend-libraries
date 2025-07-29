@@ -30,7 +30,7 @@ import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
 @EnableConfigurationProperties(TaakConfig::class)
-@ConditionalOnProperty(prefix = "nl-portal.config.taak", name = ["enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled","taak.enabled"], havingValue = "true")
 class TaakAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(TaakService::class)

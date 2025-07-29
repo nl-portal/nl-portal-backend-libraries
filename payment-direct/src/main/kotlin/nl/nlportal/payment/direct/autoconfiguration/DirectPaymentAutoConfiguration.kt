@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
 @EnableConfigurationProperties(DirectPaymentModuleConfiguration::class)
-@ConditionalOnProperty(prefix = "nl-portal.config.payment.direct", name = ["enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled", "payment.direct.enabled"], havingValue = "true")
 class DirectPaymentAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(DirectPaymentService::class)
