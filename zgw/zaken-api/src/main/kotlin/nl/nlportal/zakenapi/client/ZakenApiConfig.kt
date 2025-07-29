@@ -37,7 +37,7 @@ data class ZakenApiConfig(
         var secret: String = "",
         var zaakTypesIdsExcluded: List<UUID> = emptyList(),
         var zaakDocumentenConfig: ZaakDocumentenConfig = ZaakDocumentenConfig(),
-        val useKvkNummer: Boolean = false,
+        val useNnpKvkQueryIdentificators: Boolean = false,
     ) {
         data class ZaakDocumentenConfig(
             var vertrouwelijkheidsaanduidingWhitelist: List<Vertrouwelijkheid> =

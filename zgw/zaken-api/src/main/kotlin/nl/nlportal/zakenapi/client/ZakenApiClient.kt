@@ -42,7 +42,7 @@ import reactor.netty.transport.logging.AdvancedByteBufFormat
 import java.util.UUID
 
 class ZakenApiClient(
-    val zakenApiConfig: ZakenApiConfigProperties,
+    private val zakenApiConfig: ZakenApiConfigProperties,
     private val catalogiApiConfig: CatalogiApiConfigProperties,
     webClientBuilder: WebClient.Builder,
 ) {
@@ -112,8 +112,8 @@ class ZakenApiClient(
         return ZaakStatussenImpl(this)
     }
 
-    fun useKvkNummer(): Boolean {
-        return zakenApiConfig.useKvkNummer
+    fun useNnpKvkQueryIdentificators(): Boolean {
+        return zakenApiConfig.useNnpKvkQueryIdentificators
     }
 }
 

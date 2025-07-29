@@ -47,7 +47,7 @@ class SearchZoekenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
 
     override fun withKvk(kvk: String): SearchZaken {
         when {
-            zakenApiClient.useKvkNummer() -> {
+            zakenApiClient.useNnpKvkQueryIdentificators() -> {
                 bodyValue.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__kvkNummer", kvk)
             }
             else -> {
@@ -112,7 +112,7 @@ class SearchZoekenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
         vestigingsNummer: String,
     ): SearchZaken {
         when {
-            zakenApiClient.useKvkNummer() -> {
+            zakenApiClient.useNnpKvkQueryIdentificators() -> {
                 bodyValue.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__vestigingsNummer", vestigingsNummer)
                 bodyValue.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__kvkNummer", kvkNummer)
             }
