@@ -22,6 +22,8 @@ import nl.nlportal.zakenapi.client.ZakenApiConfig.ZakenApiConfigProperties
 import nl.nlportal.zakenapi.client.request.ZaakInformatieobjecten
 import nl.nlportal.zakenapi.client.request.ZaakObjecten
 import nl.nlportal.zakenapi.client.request.ZaakObjectenImpl
+import nl.nlportal.zakenapi.client.request.ZaakResultaten
+import nl.nlportal.zakenapi.client.request.ZaakResultatenImpl
 import nl.nlportal.zakenapi.client.request.ZaakRollen
 import nl.nlportal.zakenapi.client.request.ZaakRollenImpl
 import nl.nlportal.zakenapi.client.request.ZaakStatussen
@@ -112,6 +114,10 @@ class ZakenApiClient(
 
     fun zaakStatussen(): ZaakStatussen {
         return ZaakStatussenImpl(this)
+    }
+
+    fun zaakResultaten(): ZaakResultaten {
+        return ZaakResultatenImpl(this)
     }
 
     fun zaakSubStatussen(): ZaakSubStatussen {

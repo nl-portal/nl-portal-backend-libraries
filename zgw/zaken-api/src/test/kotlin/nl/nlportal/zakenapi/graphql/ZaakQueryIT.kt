@@ -761,6 +761,14 @@ internal class ZaakQueryIT(
                         datum,
                         toelichting,
                         publicatiedatum
+                    },
+                    resultaat{
+                        toelichting,
+                        resultaattype {
+                            toelichting,
+                            omschrijving,
+                            omschrijvingGeneriek
+                        }   
                     }
                 }
             }
@@ -1006,6 +1014,8 @@ internal class ZaakQueryIT(
                             "/zaken/api/v1/rollen" -> handleZaakRollenRequest()
                             "/besluiten/api/v1/besluiten" -> handleBesluitenRequest()
                             "/zaken/api/v1/substatussen" -> handleSubStatusListRequest()
+                            "/zaken/api/v1/resultaten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> handleResultaatRequest()
+                            "/catalogi/api/v1/resultaattypen/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> handleResultaatTypeRequest()
                             else -> MockResponse().setResponseCode(404)
                         }
                     return response
@@ -1171,7 +1181,7 @@ internal class ZaakQueryIT(
                 "archiefnominatie": null,
                 "archiefstatus": "nog_te_archiveren",
                 "archiefactiedatum": null,
-                "resultaat": null
+                "resultaat": "http://localhost:8001/zaken/api/v1/resultaten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
             }
             """.trimIndent()
 
@@ -1492,6 +1502,69 @@ internal class ZaakQueryIT(
                   "uiterlijkeReactiedatum": "2019-08-24"
                 }
               ]
+            }
+            """.trimIndent()
+
+        return mockResponse(body)
+    }
+
+    fun handleResultaatRequest(): MockResponse {
+        val body =
+            """
+            {
+              "url": "http://example.com",
+              "uuid": "095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+              "zaak": "http://example.com",
+              "resultaattype": "http://localhost:8001/catalogi/api/v1/resultaattypen/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+              "toelichting": "toelichting resulaat"
+            }
+            """.trimIndent()
+
+        return mockResponse(body)
+    }
+
+    fun handleResultaatTypeRequest(): MockResponse {
+        val body =
+            """
+            {
+              "url": "http://example.com",
+              "zaaktype": "http://example.com",
+              "zaaktypeIdentificatie": "string",
+              "omschrijving": "resultaat type omschrijving",
+              "resultaattypeomschrijving": "http://example.com",
+              "omschrijvingGeneriek": "resultaat type generiek",
+              "selectielijstklasse": "http://example.com",
+              "toelichting": "resultaat type  toelichting",
+              "archiefnominatie": "blijvend_bewaren",
+              "archiefactietermijn": "string",
+              "brondatumArchiefprocedure": {
+                "afleidingswijze": "afgehandeld",
+                "datumkenmerk": "string",
+                "einddatumBekend": true,
+                "objecttype": "adres",
+                "registratie": "string",
+                "procestermijn": "string"
+              },
+              "procesobjectaard": "string",
+              "indicatieSpecifiek": true,
+              "procestermijn": "string",
+              "catalogus": "http://example.com",
+              "besluittypen": [
+                "http://example.com"
+              ],
+              "besluittypeOmschrijving": [
+                "string"
+              ],
+              "informatieobjecttypen": [
+                "http://example.com"
+              ],
+              "informatieobjecttypeOmschrijving": [
+                "string"
+              ],
+              "beginGeldigheid": "2019-08-24",
+              "eindeGeldigheid": "2019-08-24",
+              "beginObject": "2019-08-24",
+              "eindeObject": "2019-08-24"
             }
             """.trimIndent()
 

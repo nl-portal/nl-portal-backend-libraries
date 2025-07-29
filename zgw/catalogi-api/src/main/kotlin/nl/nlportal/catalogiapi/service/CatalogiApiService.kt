@@ -17,10 +17,12 @@ package nl.nlportal.catalogiapi.service
 
 import nl.nlportal.catalogiapi.client.CatalogiApiClient
 import nl.nlportal.catalogiapi.domain.BesluitType
+import nl.nlportal.catalogiapi.domain.ResultaatType
 import nl.nlportal.catalogiapi.domain.StatusType
 import nl.nlportal.catalogiapi.domain.ZaakStatusType
 import nl.nlportal.catalogiapi.domain.ZaakType
 import nl.nlportal.core.util.CoreUtils.extractId
+import java.util.UUID
 
 class CatalogiApiService(
     val catalogiApiClient: CatalogiApiClient,
@@ -43,5 +45,9 @@ class CatalogiApiService(
 
     suspend fun getBesluitType(besluitTypeUrl: String): BesluitType {
         return catalogiApiClient.getBesluitType(extractId(besluitTypeUrl))
+    }
+
+    suspend fun getResultaatType(resultaatTypeUrl: String): ResultaatType {
+        return catalogiApiClient.getResultaatType(extractId(resultaatTypeUrl))
     }
 }
