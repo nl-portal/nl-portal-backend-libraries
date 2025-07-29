@@ -13,18 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.zgw.objectenapi.domain
+package nl.nlportal.catalogiapi.domain
 
-import java.util.UUID
-
-data class CreateObjectsApiObjectRequest<T>(
-    val uuid: UUID,
-    val type: String,
-    val record: CreateObjectsApiObjectRequestRecord<T>,
-)
-
-data class CreateObjectsApiObjectRequestRecord<T>(
-    val typeVersion: Int,
-    val data: T,
-    val startAt: String,
+data class ResultaatType(
+    val url: String,
+    val zaaktype: String,
+    val zaaktypeIdentificatie: String? = null,
+    val omschrijving: String?,
+    val omschrijvingGeneriek: String? = null,
+    val resultaattypeomschrijving: String,
+    val selectielijstklasse: String,
+    val toelichting: String?,
 )
