@@ -23,8 +23,6 @@ data class TaakConfig(
     var properties: TaakConfigProperties = TaakConfigProperties(),
 ) {
     data class TaakConfigProperties(
-        @Deprecated("Use version 2")
-        var typeUrl: String = "",
         var typeUrlV2: String = "",
     )
 }
