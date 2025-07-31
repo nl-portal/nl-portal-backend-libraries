@@ -173,7 +173,7 @@ nl-portal:
                             keyPassword:
                         trustedCertificate:
             hr:
-                enabled: true
+                enabled: false
                 properties:
                     url: http://localhost:8080
                     apiKey:
