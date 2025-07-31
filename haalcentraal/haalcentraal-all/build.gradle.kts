@@ -21,7 +21,7 @@ val isLib = true
 
 dependencies {
     api(project(":haalcentraal:haalcentraal-brp"))
-    api(project(":haalcentraal:haalcentraal-hr"))
+    api(project(":haalcentraal-hr"))
 
     api(Dependencies.kotlinLogging)
 
