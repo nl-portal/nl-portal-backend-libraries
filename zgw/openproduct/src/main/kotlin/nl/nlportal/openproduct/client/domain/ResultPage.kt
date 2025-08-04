@@ -18,13 +18,13 @@ package nl.nlportal.openproduct.client.domain
 import java.net.URI
 
 data class ResultPage<T>(
-    val aantal: Int,
-    val volgende: URI? = null,
-    val vorige: URI? = null,
-    val resultaten: List<T>,
+    val count: Int,
+    val next: URI? = null,
+    val previous: URI? = null,
+    val results: List<T>,
 ) {
     fun getNextPageNumber(): Int? =
-        volgende
+        next
             ?.query
             ?.split("&")
             ?.asSequence()

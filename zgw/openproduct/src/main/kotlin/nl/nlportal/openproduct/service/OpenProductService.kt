@@ -114,8 +114,8 @@ class OpenProductService(
         }
 
         return ResultPage(
-            aantal = 0,
-            resultaten = emptyList(),
+            count = 0,
+            results = emptyList(),
         )
     }
 
@@ -123,7 +123,7 @@ class OpenProductService(
      * Get only published hoofd themas
      * @return: List of hoofd themas
      */
-    suspend fun getHoofdThemas(): List<OpenProductThema> = getThemas(1, 999).resultaten.filter { it.hoofdThema == null }
+    suspend fun getHoofdThemas(): List<OpenProductThema> = getThemas(1, 999).results.filter { it.hoofdThema == null }
 
     /**
      * Get published hoofd themas based of the products of the authenticated user
@@ -139,7 +139,7 @@ class OpenProductService(
                     authentication = authentication,
                     pageNumber = 1,
                     pageSize = 999,
-                ).resultaten
+                ).results
 
             if (producten.isNotEmpty()) {
                 val hoofdThemas = mutableSetOf<OpenProductThema>()
@@ -147,7 +147,7 @@ class OpenProductService(
                     getThemas(
                         pageNumber = 1,
                         pageSize = 999,
-                    ).resultaten
+                    ).results
 
                 // loop through producten to get via the producttypes the hoofdthemas
                 producten.forEach { product ->
@@ -181,7 +181,7 @@ class OpenProductService(
      */
     suspend fun getThemasHierarchy(): List<OpenProductThemaHierarchy> {
         val themasHierarchy = mutableListOf<OpenProductThemaHierarchy>()
-        val themas = getThemas(1, 999).resultaten
+        val themas = getThemas(1, 999).results
         val hoofdThemas = themas.filter { it.hoofdThema == null }
 
         hoofdThemas.forEach {
@@ -266,8 +266,8 @@ class OpenProductService(
         }
 
         return ResultPage(
-            aantal = 0,
-            resultaten = emptyList(),
+            count = 0,
+            results = emptyList(),
         )
     }
 
@@ -320,8 +320,8 @@ class OpenProductService(
         }
 
         return ResultPage(
-            aantal = 0,
-            resultaten = emptyList(),
+            count = 0,
+            results = emptyList(),
         )
     }
 
@@ -375,8 +375,8 @@ class OpenProductService(
         }
 
         return ResultPage(
-            aantal = 0,
-            resultaten = emptyList(),
+            count = 0,
+            results = emptyList(),
         )
     }
 
@@ -430,8 +430,8 @@ class OpenProductService(
         }
 
         return ResultPage(
-            aantal = 0,
-            resultaten = emptyList(),
+            count = 0,
+            results = emptyList(),
         )
     }
 
@@ -484,8 +484,8 @@ class OpenProductService(
         }
 
         return ResultPage(
-            aantal = 0,
-            resultaten = emptyList(),
+            count = 0,
+            results = emptyList(),
         )
     }
 
@@ -538,8 +538,8 @@ class OpenProductService(
         }
 
         return ResultPage(
-            aantal = 0,
-            resultaten = emptyList(),
+            count = 0,
+            results = emptyList(),
         )
     }
 
@@ -586,8 +586,8 @@ class OpenProductService(
         }
 
         return ResultPage(
-            aantal = 0,
-            resultaten = emptyList(),
+            count = 0,
+            results = emptyList(),
         )
     }
 
@@ -634,8 +634,8 @@ class OpenProductService(
         }
 
         return ResultPage(
-            aantal = 0,
-            resultaten = emptyList(),
+            count = 0,
+            results = emptyList(),
         )
     }
 
@@ -682,8 +682,8 @@ class OpenProductService(
         }
 
         return ResultPage(
-            aantal = 0,
-            resultaten = emptyList(),
+            count = 0,
+            results = emptyList(),
         )
     }
 
@@ -840,7 +840,7 @@ class OpenProductService(
                 pageNumber = 1,
                 pageSize = 999,
                 extraSearchVariables = searchVariables,
-            ).resultaten
+            ).results
         } catch (e: Exception) {
             logger.error { "Error getting products by thema id: ${thema.uuid} with cause: " + e.message }
         }
@@ -895,7 +895,7 @@ class OpenProductService(
                     getThemas(
                         pageNumber = 1,
                         pageSize = 999,
-                    ).resultaten,
+                    ).results,
                 )
             } else {
                 themasAll.addAll(themas)
@@ -966,7 +966,7 @@ class OpenProductService(
             getThemas(
                 pageNumber = 1,
                 pageSize = 999,
-            ).resultaten
+            ).results
         val collectedThemas =
             collectThemaHierarchyUpFromSubThema(
                 themaId = id,
@@ -1004,7 +1004,7 @@ class OpenProductService(
                 pageNumber = 1,
                 pageSize = 999,
                 extraSearchVariables = searchVariables,
-            ).resultaten
+            ).results
 
         // filter out the taak which is not connected to a zaak
         return taken
@@ -1072,7 +1072,7 @@ class OpenProductService(
                 pageNumber = 1,
                 pageSize = 999,
                 extraSearchVariables = extraSearchVariables,
-            ).resultaten
+            ).results
         } catch (e: Exception) {
             logger.error { "Error getting product acties: " + e.message }
         }
@@ -1281,7 +1281,7 @@ class OpenProductService(
      */
     private suspend fun buildThemaHierachy(thema: OpenProductThema): List<OpenProductThemaHierarchy> {
         val themasHierarchy = mutableListOf<OpenProductThemaHierarchy>()
-        val themas = getThemas(1, 999).resultaten
+        val themas = getThemas(1, 999).results
 
         themasHierarchy.add(
             searchSubThemasHierarchy(

@@ -1,8 +1,8 @@
 {
-  "aantal": 1,
-  "volgende": null,
-  "vorige": null,
-  "resultaten": [
+  "count": 1,
+  "next": null,
+  "previous": null,
+  "results": [
     {
       "uuid": "2435b986-7742-4cef-91f2-e1162c2f19c9",
       "naam": "watkanikregelen-belastingen",

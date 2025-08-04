@@ -1,8 +1,8 @@
 {
-  "aantal": 1,
-  "volgende": null,
-  "vorige": null,
-  "resultaten": [
+  "count": 1,
+  "next": null,
+  "previous": null,
+  "results": [
     {
       "uuid": "09cd7326-1bf0-4890-b8d1-0ac3ee22bac0",
       "organisatie": {

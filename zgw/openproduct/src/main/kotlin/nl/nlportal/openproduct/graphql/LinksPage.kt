@@ -31,12 +31,12 @@ class LinksPage(
             pageSize: Int,
             resultPage: ResultPage<OpenProductLink>,
         ): LinksPage {
-            val content = resultPage.resultaten.map { it }
+            val content = resultPage.results.map { it }
             return LinksPage(
                 number = pageNumber,
                 size = pageSize,
                 content = content,
-                totalElements = resultPage.aantal,
+                totalElements = resultPage.count,
             )
         }
     }

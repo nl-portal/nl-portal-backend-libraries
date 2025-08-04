@@ -1,8 +1,8 @@
 {
-  "aantal": 2,
-  "volgende": null,
-  "vorige": null,
-  "resultaten": [
+  "count": 2,
+  "next": null,
+  "previous": null,
+  "results": [
     {
       "uuid": "7506562c-9a2a-4931-85cd-2c752cbabaf0",
       "naam": "link naar Ritense website",

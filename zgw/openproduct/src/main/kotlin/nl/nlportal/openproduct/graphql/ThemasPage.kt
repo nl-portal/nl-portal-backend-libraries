@@ -31,12 +31,12 @@ class ThemasPage(
             pageSize: Int,
             resultPage: ResultPage<OpenProductThema>,
         ): ThemasPage {
-            val content = resultPage.resultaten.map { it }
+            val content = resultPage.results.map { it }
             return ThemasPage(
                 number = pageNumber,
                 size = pageSize,
                 content = content,
-                totalElements = resultPage.aantal,
+                totalElements = resultPage.count,
             )
         }
     }
