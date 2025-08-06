@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.NullNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.readValue
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.core.util.Mapper
@@ -145,6 +146,7 @@ class OpenKlant2DigitaleAdresMutationIT(
             // then
             verify(openKlant2Service, times(1)).updateDigitaleAdresById(any(), any())
 
+            logger.info { createResult }
             assertTrue(createResult is ObjectNode)
             assertTrue(createResult is ObjectNode)
             assertEquals(DigitaleAdresType.TELEFOONNUMMER.name, createResult!!.get("type").textValue())
@@ -253,5 +255,6 @@ class OpenKlant2DigitaleAdresMutationIT(
 
     companion object {
         private val objectMapper = Mapper.get()
+        val logger = KotlinLogging.logger {}
     }
 }

@@ -18,6 +18,7 @@ package nl.nlportal.openklant.client.domain
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonValue
+import java.time.LocalDate
 import java.util.UUID
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -32,6 +33,7 @@ data class OpenKlant2DigitaleAdres(
     val uuid: UUID? = null,
     val verstrektDoorBetrokkene: OpenKlant2UUID? = null,
     val verstrektDoorPartij: OpenKlant2UUID? = null,
+    val verificatieDatum: LocalDate? = null,
 ) {
     init {
         require(adres.length <= 80) {
@@ -51,6 +53,7 @@ data class OpenKlant2DigitaleAdresUpdate(
     val adres: String,
     val omschrijving: String,
     val soortDigitaalAdres: String,
+    val verificatieDatum: LocalDate? = null,
 )
 
 enum class OpenKlant2DigitaleAdressenFilters(
@@ -60,6 +63,7 @@ enum class OpenKlant2DigitaleAdressenFilters(
     PAGE_SIZE("pageSize"),
     VERSTREKTDOORPARTIJ_PARTIJ_IDENTIFICATOR_CODE_OBJECTID("verstrektDoorPartij__partijIdentificator__objectId"),
     REFERENTIE("referentie"),
+    ISGEVERIFIEERD("isGeverifieerd"),
     ;
 
     override fun toString() = this.value

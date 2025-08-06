@@ -17,6 +17,7 @@ package nl.nlportal.openklant.graphql.domain
 
 import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdres
 import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdresUpdate
+import java.time.LocalDate
 import java.util.UUID
 
 data class DigitaleAdresRequest(
@@ -24,12 +25,22 @@ data class DigitaleAdresRequest(
     val waarde: String,
     val type: DigitaleAdresType,
     val omschrijving: String,
+    val isGeverifieerd: Boolean? = false,
 ) {
     fun asOpenKlant2DigitaleAdres(): OpenKlant2DigitaleAdres =
         OpenKlant2DigitaleAdres(
             adres = waarde,
             omschrijving = omschrijving,
             soortDigitaalAdres = type.name.lowercase(),
+            verificatieDatum =
+                when (isGeverifieerd) {
+                    true -> {
+                        LocalDate.now()
+                    }
+                    else -> {
+                        null
+                    }
+                },
         )
 
     fun asOpenKlant2DigitaleAdresUpdate(): OpenKlant2DigitaleAdresUpdate =
@@ -38,5 +49,14 @@ data class DigitaleAdresRequest(
             omschrijving = omschrijving,
             soortDigitaalAdres = type.name.lowercase(),
             uuid = uuid!!,
+            verificatieDatum =
+                when (isGeverifieerd) {
+                    true -> {
+                        LocalDate.now()
+                    }
+                    else -> {
+                        null
+                    }
+                },
         )
 }

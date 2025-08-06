@@ -17,6 +17,7 @@ package nl.nlportal.openklant.graphql
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.readValue
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.core.util.Mapper
@@ -112,10 +113,45 @@ class OpenKlant2DigitaleAdresQueryIT(
                     ?.get("getUserDigitaleAdresen")
 
             // then
-            verify(openKlant2Service, times(1)).findDigitaleAdressen(any())
+            verify(openKlant2Service, times(1)).findDigitaleAdressen(any(), any())
 
             assertNotNull(response)
             assertEquals("OVERIG", response?.get(0)?.get("type")?.textValue())
+        }
+
+    @Test
+    @WithBurgerUser("569312863")
+    fun `should find DigitaleAdressen for authenticated user only verified`() =
+        runTest {
+            // when
+            val responseBody =
+                webTestClient
+                    .post()
+                    .uri { builder ->
+                        builder
+                            .path("/graphql")
+                            .build()
+                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserDigitaleAdresenVerified.gql")))
+                    .exchange()
+                    .expectStatus()
+                    .isOk
+                    .expectBody()
+                    .returnResult()
+                    .responseBodyContent
+                    ?.toString(Charset.defaultCharset())
+
+            val response =
+                objectMapper
+                    .readValue<JsonNode>(responseBody!!)
+                    .get("data")
+                    ?.get("getUserDigitaleAdresen")
+
+            // then
+            verify(openKlant2Service, times(1)).findDigitaleAdressen(any(), any())
+
+            assertNotNull(response)
+            assertEquals("EMAIL", response?.get(0)?.get("type")?.textValue())
         }
 
     @Test
@@ -140,18 +176,54 @@ class OpenKlant2DigitaleAdresQueryIT(
                     .responseBodyContent
                     ?.toString(Charset.defaultCharset())
 
-            val responsePartij =
+            val responseDigitalAdres =
                 objectMapper
                     .readValue<JsonNode>(responseBody!!)
                     .get("data")
                     ?.get("getUserDigitaleAdresen")
 
             // then
-            verify(openKlant2Service, times(1)).findDigitaleAdressen(any())
-            assertTrue(responsePartij!!.isEmpty)
+            verify(openKlant2Service, times(1)).findDigitaleAdressen(any(), any())
+            assertTrue(responseDigitalAdres!!.isEmpty)
+        }
+
+    @Test
+    @WithBurgerUser("111111110")
+    fun `should return DigitaleAdres`() =
+        runTest {
+            // when
+            val responseBody =
+                webTestClient
+                    .post()
+                    .uri { builder ->
+                        builder
+                            .path("/graphql")
+                            .build()
+                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserDigitaleAdres.gql")))
+                    .exchange()
+                    .expectStatus()
+                    .isOk
+                    .expectBody()
+                    .returnResult()
+                    .responseBodyContent
+                    ?.toString(Charset.defaultCharset())
+
+            val responseDigitalAdres =
+                objectMapper
+                    .readValue<JsonNode>(responseBody!!)
+                    .get("data")
+                    ?.get("getUserDigitaleAdres")
+
+            logger.info { responseDigitalAdres }
+
+            // then
+            verify(openKlant2Service, times(1)).findDigitalAdres(any())
+            assertEquals("EMAIL", responseDigitalAdres?.get("type")?.textValue())
         }
 
     companion object {
         private val objectMapper = Mapper.get()
+        private val logger = KotlinLogging.logger {}
     }
 }

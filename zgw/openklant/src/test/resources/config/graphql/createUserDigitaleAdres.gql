@@ -1,8 +1,10 @@
 mutation {
-    createUserDigitaleAdres(digitaleAdresRequest: {waarde: "0611111111", type: TELEFOONNUMMER, omschrijving: "Privè telefoonnummer"}) {
+    createUserDigitaleAdres(digitaleAdresRequest: {waarde: "0611111111", type: TELEFOONNUMMER, omschrijving: "Privè telefoonnummer", isGeverifieerd: true}) {
         uuid
         waarde
         type
-        omschrijving
+        omschrijving,
+        verificatieDatum,
+        isGeverifieerd
     }
 }

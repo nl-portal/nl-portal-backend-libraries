@@ -177,11 +177,18 @@ class OpenKlant2Service(
         }
     }
 
-    suspend fun findDigitaleAdressen(authentication: CommonGroundAuthentication): List<OpenKlant2DigitaleAdres> {
+    suspend fun findDigitaleAdressen(
+        authentication: CommonGroundAuthentication,
+        isGeverifieerd: Boolean? = false,
+    ): List<OpenKlant2DigitaleAdres> {
         val searchVariables = searchVariablesDigitaleAdressen(authentication).toMutableList()
 
         openKlantConfigurationProperties.digitalAdressenReferentie?.let {
             searchVariables.add(OpenKlant2DigitaleAdressenFilters.REFERENTIE to it)
+        }
+
+        if (isGeverifieerd == true) {
+            searchVariables.add(OpenKlant2DigitaleAdressenFilters.ISGEVERIFIEERD to isGeverifieerd)
         }
 
         val response =
@@ -246,6 +253,26 @@ class OpenKlant2Service(
             }
 
         return digitaleAdresResponse
+    }
+
+    suspend fun findDigitalAdres(
+        uuid: UUID,
+    ): OpenKlant2DigitaleAdres? {
+        try {
+            val digitaleAdresResponse =
+                try {
+                    openKlant2Client
+                        .path<DigitaleAdressen>()
+                        .get(uuid = uuid)
+                } catch (ex: WebClientResponseException) {
+                    logger.debug(ex) { "Failed to find DigitaleAdres: ${ex.responseBodyAsString}" }
+                    return null
+                }
+            return digitaleAdresResponse
+        } catch (ex: WebClientResponseException) {
+            logger.error(ex) { "Failed to find DigitaleAdres for uuid - $uuid: ${ex.responseBodyAsString}" }
+            return null
+        }
     }
 
     suspend fun updateDigitaleAdresById(

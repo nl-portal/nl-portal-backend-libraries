@@ -1,0 +1,10 @@
+
+query {
+    getUserDigitaleAdresen(isGeverifieerd: true) {
+        uuid
+        waarde
+        type
+        omschrijving
+        referentie
+    }
+}
