@@ -15,6 +15,7 @@
  */
 package nl.nlportal.haalcentraal.brp.domain.bewoning
 
+@Deprecated("Will be removed in 3.0.0, use haalcentraal 2")
 data class Bewoning(
     val bewoningen: List<Bewoningen>?,
 )

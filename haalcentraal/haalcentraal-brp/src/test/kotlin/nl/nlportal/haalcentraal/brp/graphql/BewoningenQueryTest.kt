@@ -20,6 +20,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
 
+@Deprecated("Will be removed in 3.0.0, use haalcentraal 2")
 @ExperimentalCoroutinesApi
 internal class BewoningenQueryTest : QueryTestBase() {
     @Test
