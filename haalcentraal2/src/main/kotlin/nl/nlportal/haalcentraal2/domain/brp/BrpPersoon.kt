@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired
 data class BrpPersoon(
     val burgerservicenummer: String,
     val datumEersteInschrijvingGBA: BrpDatum? = null,
-    val geheimhoudingPersoonsgegevens: Boolean? = null,
+    val geheimhoudingPersoonsgegevens: Boolean? = false,
     val geslacht: BrpCodeOmschrijving? = null,
     val inOnderzoek: BrpInOnderzoek? = null,
     val uitsluitingKiesrecht: BrpUitsluitingKiesrecht? = null,

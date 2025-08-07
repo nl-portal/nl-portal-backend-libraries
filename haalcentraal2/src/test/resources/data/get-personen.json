@@ -90,7 +90,7 @@
             },
             "nationaliteiten": [
                 {
-                    "type": "string",
+                    "type": "Nationaliteit",
                     "redenOpname": {
                         "code": "6030",
                         "omschrijving": "Nederland"

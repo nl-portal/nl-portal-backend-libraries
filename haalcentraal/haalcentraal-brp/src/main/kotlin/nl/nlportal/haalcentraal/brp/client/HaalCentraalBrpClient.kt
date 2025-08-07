@@ -23,6 +23,7 @@ import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.web.reactive.function.client.awaitBody
 
+@Deprecated("Will be removed in 3.0.0, use haalcentraal 2")
 class HaalCentraalBrpClient(
     val haalCentraalClientProvider: HaalCentraalClientProvider,
 ) {
