@@ -1,0 +1,16 @@
+query {
+    getOpenProductHoofdThemas {
+          uuid,
+          naam,
+          beschrijving,
+          gepubliceerd,
+          hoofdThema,
+          producttypen {
+              uuid,
+              code,
+              uniformeProductNaam
+          },
+          aanmaakDatum,
+          updateDatum
+      }
+}

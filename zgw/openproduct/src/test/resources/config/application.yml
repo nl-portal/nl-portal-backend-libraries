@@ -1,0 +1,63 @@
+graphql:
+    packages:
+        - "nl.nlportal"
+
+nl-portal:
+    config:
+        openproduct:
+            enabled: true
+            properties:
+                token: ac045222c9e7cde8120b48735560f9b920bb58cd
+                product-api-url: http://localhost:9070/producten/api/v1
+                product-type-api-url: http://localhost:9070/producttypen/api/v1
+        catalogiapi:
+            enabled: true
+            properties:
+                url: http://localhost:8001
+                clientId: valtimo_client
+                secret: e09b8bc5-5831-4618-ab28-41411304309d
+        zakenapi:
+            enabled: true
+            properties:
+                url: http://localhost:8001
+                clientId: valtimo_client
+                secret: e09b8bc5-5831-4618-ab28-41411304309d
+        documentenapis:
+            enabled: true
+            properties:
+                #virusscan:
+                #clamav:
+                #hostName: localhost
+                #enabled: true
+                defaultDocumentApi: openzaak
+                configurations:
+                    openzaak:
+                        url: http://localhost:8001/documenten/api/v1
+                        clientId: valtimo_client
+                        secret: e09b8bc5-5831-4618-ab28-41411304309d
+                        rsin: "051845623"
+                        documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/efc332f2-be3b-4bad-9e3c-49a6219c92ad
+                    dummydoc:
+                        url: http://localhost:8002/documenten/api/v1
+                        clientId: docdoc
+                        secret: e09b8bc5-5831-4618-ab28-41411304309d
+        objectenapi:
+            enabled: true
+            properties:
+                url: http://localhost:8010
+                token: 182c13e2209161852c53cef53a879f7a2f923430
+        taak:
+            enabled: true
+            properties:
+                typeUrl: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
+
+logging:
+    level:
+        reactor.netty.http.client.HttpClient: TRACE
+
+spring:
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://localhost:8082/auth/realms/nlportal

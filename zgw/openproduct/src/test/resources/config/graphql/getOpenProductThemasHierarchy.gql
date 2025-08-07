@@ -1,0 +1,67 @@
+query {
+    getOpenProductThemasHierarchy {
+          thema {
+            uuid,
+              naam,
+              beschrijving,
+              gepubliceerd,
+              hoofdThema,
+              producttypen {
+                  uuid,
+                  code,
+                  uniformeProductNaam
+              },
+              aanmaakDatum,
+              updateDatum
+          }
+          subThemas {
+              thema {
+                uuid,
+                naam,
+                beschrijving,
+                gepubliceerd,
+                hoofdThema,
+                producttypen {
+                    uuid,
+                    code,
+                    uniformeProductNaam
+                },
+                aanmaakDatum,
+                updateDatum
+              }
+              subThemas {
+                    thema {
+                      uuid,
+                      naam,
+                      beschrijving,
+                      gepubliceerd,
+                      hoofdThema,
+                      producttypen {
+                          uuid,
+                          code,
+                          uniformeProductNaam
+                      },
+                      aanmaakDatum,
+                      updateDatum
+                    }
+                    subThemas {
+                          thema {
+                            uuid,
+                            naam,
+                            beschrijving,
+                            gepubliceerd,
+                            hoofdThema,
+                            producttypen {
+                                uuid,
+                                code,
+                                uniformeProductNaam
+                            },
+                            aanmaakDatum,
+                            updateDatum
+                          }
+                      }
+                }
+          }
+
+      }
+}
