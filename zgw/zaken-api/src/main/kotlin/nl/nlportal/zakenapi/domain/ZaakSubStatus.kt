@@ -15,7 +15,7 @@
  */
 package nl.nlportal.zakenapi.domain
 
-import java.util.*
+import java.util.UUID
 
 data class ZaakSubStatus(
     val uuid: UUID,
