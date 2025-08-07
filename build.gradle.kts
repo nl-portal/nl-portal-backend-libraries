@@ -46,7 +46,7 @@ plugins {
 
     id("com.github.jk1.dependency-license-report") version "2.9"
 
-    id("org.owasp.dependencycheck") version "12.1.1"
+    id("org.owasp.dependencycheck") version "12.1.3"
 
     id("org.jreleaser") version "1.19.0"
 
@@ -169,6 +169,7 @@ subprojects {
             jvmTarget.set(JvmTarget.JVM_21)
             freeCompilerArgs.add("-Xjsr305=strict")
             freeCompilerArgs.add("-Xemit-jvm-type-annotations")
+            freeCompilerArgs.add("-Xannotation-default-target=param-property")
         }
     }
 

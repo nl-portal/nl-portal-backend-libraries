@@ -1,0 +1,15 @@
+query {
+    getOpenProductBestanden(
+        pageNumber: 1,
+        pageSize: 20
+     ){
+        number
+         size
+         totalElements
+         numberOfElements
+         content {
+            uuid,
+            bestand
+        }
+    }
+}

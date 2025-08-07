@@ -23,7 +23,7 @@ object Versions {
     const val clamAvVersion="2.1.2"
     const val apacheCommons = "3.17.0"
     const val commonsIo = "2.17.0"
-    const val commonsCodec = "1.18.0"
+    const val commonsCodec = "1.19.0"
     const val graphqlJava ="21.0"
     const val graphqlKotlin = "8.3.0"
     const val jacksonBom = "2.18.2"
@@ -32,7 +32,7 @@ object Versions {
 
     //Test versions
     const val hamcrest = "3.0"
-    const val mockitoKotlin = "5.4.0"
+    const val mockitoKotlin = "6.0.0"
     const val okHttp3 = "4.12.0"
     const val postgresql = "42.7.5"
 }
