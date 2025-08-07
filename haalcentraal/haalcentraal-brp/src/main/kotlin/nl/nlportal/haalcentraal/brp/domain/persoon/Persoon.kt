@@ -21,6 +21,7 @@ import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.haalcentraal.brp.service.HaalCentraalBrpService
 import org.springframework.beans.factory.annotation.Autowired
 
+@Deprecated("Will be removed in 3.0.0, use haalcentraal 2")
 data class Persoon(
     val burgerservicenummer: String? = null,
     val geslachtsaanduiding: String? = null,

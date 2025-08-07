@@ -17,6 +17,7 @@ package nl.nlportal.haalcentraal.brp.domain.persoon
 
 import com.fasterxml.jackson.annotation.JsonValue
 
+@Deprecated("Will be removed in 3.0.0, use haalcentraal 2")
 data class PersoonNaam(
     val aanhef: String? = null,
     val voornamen: String? = null,

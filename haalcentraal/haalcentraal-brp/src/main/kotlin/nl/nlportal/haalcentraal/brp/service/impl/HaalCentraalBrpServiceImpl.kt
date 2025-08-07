@@ -27,6 +27,7 @@ import nl.nlportal.haalcentraal.brp.service.HaalCentraalBrpService
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+@Deprecated("Will be removed in 3.0.0, use haalcentraal 2")
 class HaalCentraalBrpServiceImpl(
     val haalCentraalBrpClient: HaalCentraalBrpClient,
 ) : HaalCentraalBrpService {

@@ -15,6 +15,7 @@
  */
 package nl.nlportal.haalcentraal.brp.domain.persoon
 
+@Deprecated("Will be removed in 3.0.0, use haalcentraal 2")
 data class PersoonDatum(
     val datum: String? = null,
     val jaar: Int? = null,
