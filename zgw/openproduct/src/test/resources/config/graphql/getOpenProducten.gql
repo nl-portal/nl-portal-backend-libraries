@@ -1,0 +1,33 @@
+query {
+    getOpenProducten(
+        pageNumber: 1,
+        pageSize: 20,
+        status: "actief",
+     ){
+        number
+         size
+         totalElements
+         numberOfElements
+         content {
+            uuid,
+            url,
+            startDatum,
+            gepubliceerd,
+            aanmaakDatum,
+            producttype {
+                code,
+                uniformeProductNaam,
+                toegestaneStatussen,
+            }
+            prijs,
+            gepubliceerd,
+            status,
+            documenten {
+                url
+            },
+            frequentie,
+            verbruiksobject,
+            dataobject
+        }
+    }
+}
