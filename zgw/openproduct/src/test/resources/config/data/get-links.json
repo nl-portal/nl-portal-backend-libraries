@@ -1,0 +1,19 @@
+{
+  "count": 2,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "uuid": "7506562c-9a2a-4931-85cd-2c752cbabaf0",
+      "naam": "link naar Ritense website",
+      "url": "https://ritense.com/",
+      "producttype_uuid": "dee273e9-2aa8-40ae-84b7-cb7da3c075ba"
+    },
+    {
+      "uuid": "1a619662-9b0d-4219-81f4-d738fe76850d",
+      "naam": "link naar website",
+      "url": "https://www.google.com/",
+      "producttype_uuid": "dee273e9-2aa8-40ae-84b7-cb7da3c075ba"
+    }
+  ]
+}

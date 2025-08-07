@@ -1,0 +1,57 @@
+{
+  "uuid": "694242af-d906-470b-b7e1-eb3527886854",
+  "url": "http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/",
+  "naam": "parkeren",
+  "start_datum": "2025-04-30",
+  "eind_datum": "2026-04-30",
+  "aanmaak_datum": "2025-04-30T13:51:32.757301+02:00",
+  "update_datum": "2025-04-30T13:51:32.757301+02:00",
+  "producttype": {
+    "uuid": "dee273e9-2aa8-40ae-84b7-cb7da3c075ba",
+    "code": "PARKEREN",
+    "keywords": [
+      "parkeren",
+      "ibs"
+    ],
+    "uniforme_product_naam": "UPL-naam nog niet beschikbaar",
+    "toegestane_statussen": [
+      "gereed"
+    ],
+    "gepubliceerd": true,
+    "aanmaak_datum": "2025-04-30T13:51:32.736333+02:00",
+    "update_datum": "2025-05-06T08:53:00.078716+02:00"
+  },
+  "gepubliceerd": true,
+  "eigenaren": [
+    {
+      "uuid": "104dd54c-4464-45f2-9781-9df2c59a35ed",
+      "bsn": "569312863",
+      "kvk_nummer": "",
+      "vestigingsnummer": "",
+      "klantnummer": ""
+    }
+  ],
+  "documenten": [],
+  "zaken": [
+    {
+      "url": "http://localhost:8001/zaken/api/v1/zaken/703af290-abe0-418c-b9c3-10a65e662788"
+    }
+  ],
+  "taken": [
+    {
+      "url": "http://localhost:8010/api/v2/objects/4b5f4fba-0746-11ed-b939-0242ac120023"
+    },
+    {
+      "url": "http://localhost:8010/api/v2/objects/29ce0eea-2125-4446-9945-f109ec6bd906"
+    }
+  ],
+  "status": "actief",
+  "prijs": "20.20",
+  "frequentie": "eenmalig",
+  "verbruiksobject": {
+    "uren": 30
+  },
+  "dataobject": {
+    "uren": 30
+  }
+}

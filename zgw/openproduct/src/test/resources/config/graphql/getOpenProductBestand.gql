@@ -1,0 +1,8 @@
+query {
+    getOpenProductBestand(
+        id: "0a9ff804-d151-477b-81aa-09e16f3064d9"
+     ){
+        uuid,
+        bestand
+    }
+}

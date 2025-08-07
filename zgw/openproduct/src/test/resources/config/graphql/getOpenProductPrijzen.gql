@@ -1,0 +1,22 @@
+query {
+    getOpenProductPrijzen(
+        pageNumber: 1,
+        pageSize: 20
+     ){
+        number
+         size
+         totalElements
+         numberOfElements
+         content {
+            uuid,
+            prijsopties {
+                bedrag,
+                beschrijving
+            },
+            prijsregels {
+                url,
+                beschrijving
+            }
+        }
+    }
+}

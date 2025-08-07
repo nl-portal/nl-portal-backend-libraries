@@ -34,6 +34,7 @@ import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.reactive.server.WebTestClient
 
+@Deprecated("Will be removed in 3.0.0, use haalcentraal 2")
 @SpringBootTest
 @AutoConfigureWebTestClient
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

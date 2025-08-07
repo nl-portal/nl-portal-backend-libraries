@@ -19,6 +19,7 @@ import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.haalcentraal.brp.domain.bewoning.Bewoning
 import nl.nlportal.haalcentraal.brp.domain.persoon.Persoon
 
+@Deprecated("Will be removed in 3.0.0, use haalcentraal 2")
 interface HaalCentraalBrpService {
     suspend fun getPersoon(authentication: CommonGroundAuthentication): Persoon?
 
