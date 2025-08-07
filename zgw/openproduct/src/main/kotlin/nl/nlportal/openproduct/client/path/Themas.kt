@@ -21,7 +21,7 @@ import nl.nlportal.openproduct.client.domain.OpenProductThemasFilters
 import nl.nlportal.openproduct.client.domain.ResultPage
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.client.awaitBody
-import java.util.*
+import java.util.UUID
 
 class Themas(
     val client: OpenProductTypeClient,

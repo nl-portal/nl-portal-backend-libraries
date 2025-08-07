@@ -25,7 +25,7 @@ import nl.nlportal.openproduct.graphql.domain.OpenProductThemaHierarchy
 import nl.nlportal.openproduct.service.OpenProductService
 import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zgw.taak.domain.TaakV2
-import java.util.*
+import java.util.UUID
 
 @AuthenticatedDirective
 class OpenProductThemaQuery(

@@ -24,7 +24,7 @@ import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.awaitBodyOrNull
-import java.util.*
+import java.util.UUID
 
 class Producten(
     val client: OpenProductClient,

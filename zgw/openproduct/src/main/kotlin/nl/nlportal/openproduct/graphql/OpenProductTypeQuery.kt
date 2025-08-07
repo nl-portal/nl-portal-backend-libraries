@@ -21,7 +21,7 @@ import com.expediagroup.graphql.server.operations.Query
 import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.openproduct.client.domain.OpenProductProductType
 import nl.nlportal.openproduct.service.OpenProductService
-import java.util.*
+import java.util.UUID
 
 @AuthenticatedDirective
 class OpenProductTypeQuery(

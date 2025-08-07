@@ -20,7 +20,7 @@ import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDir
 import com.expediagroup.graphql.server.operations.Query
 import nl.nlportal.openproduct.client.domain.OpenProductLocatie
 import nl.nlportal.openproduct.service.OpenProductService
-import java.util.*
+import java.util.UUID
 
 @AuthenticatedDirective
 class OpenProductLocatieQuery(

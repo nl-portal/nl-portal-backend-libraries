@@ -21,7 +21,7 @@ import nl.nlportal.openproduct.client.domain.OpenProductLocatiesFilters
 import nl.nlportal.openproduct.client.domain.ResultPage
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.client.awaitBody
-import java.util.*
+import java.util.UUID
 
 class Locaties(
     val client: OpenProductTypeClient,

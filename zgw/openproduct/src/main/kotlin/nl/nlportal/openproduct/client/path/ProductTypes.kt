@@ -22,7 +22,7 @@ import nl.nlportal.openproduct.client.domain.OpenProductProductTypesFilters
 import nl.nlportal.openproduct.client.domain.ResultPage
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.client.awaitBody
-import java.util.*
+import java.util.UUID
 
 class ProductTypes(
     val client: OpenProductTypeClient,

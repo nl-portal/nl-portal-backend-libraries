@@ -21,7 +21,7 @@ import nl.nlportal.openproduct.client.domain.OpenProductLinksFilters
 import nl.nlportal.openproduct.client.domain.ResultPage
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.client.awaitBody
-import java.util.*
+import java.util.UUID
 
 class Links(
     val client: OpenProductTypeClient,

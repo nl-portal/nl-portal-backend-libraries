@@ -23,7 +23,7 @@ import nl.nlportal.graphql.security.SecurityConstants
 import nl.nlportal.openproduct.client.domain.OpenProductProduct
 import nl.nlportal.openproduct.client.domain.OpenProductToegestaneStatus
 import nl.nlportal.openproduct.service.OpenProductService
-import java.util.*
+import java.util.UUID
 
 @AuthenticatedDirective
 class OpenProductQuery(

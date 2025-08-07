@@ -74,7 +74,7 @@ import nl.nlportal.zgw.taak.domain.TaakV2
 import nl.nlportal.zgw.taak.graphql.TaakPageV2
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
-import java.util.*
+import java.util.UUID
 
 class OpenProductService(
     private val openProductClient: OpenProductClient,

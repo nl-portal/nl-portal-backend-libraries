@@ -26,7 +26,7 @@ import nl.nlportal.graphql.security.SecurityConstants
 import nl.nlportal.openproduct.client.domain.OpenProductActie
 import nl.nlportal.openproduct.service.OpenProductDmnService
 import nl.nlportal.openproduct.service.OpenProductService
-import java.util.*
+import java.util.UUID
 
 @AuthenticatedDirective
 class OpenProductActieQuery(
