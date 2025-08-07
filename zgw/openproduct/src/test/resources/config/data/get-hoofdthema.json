@@ -1,0 +1,10 @@
+{
+  "uuid": "c111ce6f-308f-4e6d-9460-ffe6a07e283a",
+  "naam": "HoofdThema",
+  "beschrijving": "Dit is een test thema",
+  "gepubliceerd": true,
+  "aanmaak_datum": "2025-05-01T09:40:43.307637+02:00",
+  "update_datum": "2025-05-06T16:36:43.971399+02:00",
+  "hoofd_thema": null,
+  "producttypen": []
+}

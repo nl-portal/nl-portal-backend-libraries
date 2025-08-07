@@ -1,0 +1,41 @@
+{
+  "uuid": "41f71c2e-9e0c-4a1b-8d39-709669b256c2",
+  "naam": "Parkeren",
+  "beschrijving": "Parkeren thema",
+  "gepubliceerd": true,
+  "aanmaak_datum": "2025-04-30T13:51:32.735390+02:00",
+  "update_datum": "2025-04-30T13:51:32.735390+02:00",
+  "hoofd_thema": "5422b0e4-18ae-4017-bcea-fb03446a8136",
+  "producttypen": [
+    {
+      "uuid": "dee273e9-2aa8-40ae-84b7-cb7da3c075ba",
+      "code": "PARKEREN",
+      "keywords": [
+        "parkeren",
+        "ibs"
+      ],
+      "uniforme_product_naam": "Parkeervergunning",
+      "toegestane_statussen": [
+        "gereed"
+      ],
+      "gepubliceerd": true,
+      "aanmaak_datum": "2025-04-30T13:51:32.736333+02:00",
+      "update_datum": "2025-04-30T13:51:32.736333+02:00"
+    },
+    {
+      "uuid": "73014953-3b86-465d-9128-1673703fcd72",
+      "code": "PARKEREN",
+      "keywords": [
+        "parkeren",
+        "ibs"
+      ],
+      "uniforme_product_naam": "Parkeervergunning",
+      "toegestane_statussen": [
+        "gereed"
+      ],
+      "gepubliceerd": true,
+      "aanmaak_datum": "2025-04-30T13:51:32.736333+02:00",
+      "update_datum": "2025-04-30T13:51:32.736333+02:00"
+    }
+  ]
+}

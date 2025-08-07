@@ -1,0 +1,141 @@
+{
+  "count": 1,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "uuid": "dee273e9-2aa8-40ae-84b7-cb7da3c075ba",
+      "uniforme_product_naam": "Parkeervergunning",
+      "themas": [
+        {
+          "uuid": "41f71c2e-9e0c-4a1b-8d39-709669b256c2",
+          "naam": "Parkeren",
+          "beschrijving": "Parkeren thema",
+          "gepubliceerd": true,
+          "aanmaak_datum": "2025-04-30T13:51:32.735390+02:00",
+          "update_datum": "2025-04-30T13:51:32.735390+02:00",
+          "hoofd_thema": null
+        }
+      ],
+      "locaties": [],
+      "organisaties": [],
+      "contacten": [],
+      "prijzen": [
+        {
+          "uuid": "317ab929-5cb4-4dde-ae4a-489f4d388699",
+          "prijsopties": [
+            {
+              "uuid": "d1eb87b9-0346-426b-bf7f-a2fb3f47f653",
+              "bedrag": "100.00",
+              "beschrijving": "prijs optie regel 1"
+            }
+          ],
+          "prijsregels": [
+            {
+              "uuid": "04d0f3ab-c691-408d-b99f-a7e045c82dea",
+              "url": "http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen",
+              "beschrijving": "prijs optie regel 2"
+            },
+            {
+              "uuid": "830dda6f-d167-4485-ab99-ebb8f3a33bd3",
+              "url": "http://localhost:9000/engine-rest/decision-definition/key/alg-parkeren",
+              "beschrijving": "prijs optie regel 1"
+            }
+          ],
+          "actief_vanaf": "2025-04-30"
+        }
+      ],
+      "links": [
+        {
+          "uuid": "7506562c-9a2a-4931-85cd-2c752cbabaf0",
+          "naam": "link naar Ritense website",
+          "url": "https://ritense.com/"
+        },
+        {
+          "uuid": "1a619662-9b0d-4219-81f4-d738fe76850d",
+          "naam": "link naar website",
+          "url": "https://www.google.com/"
+        }
+      ],
+      "acties": [
+        {
+          "uuid": "2435b986-7742-4cef-91f2-e1162c2f19c9",
+          "naam": "watkanikregelen-belastingen",
+          "url": "http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen"
+        },
+        {
+          "uuid": "082d143f-6a53-4e08-bc3c-0488b3b490e4",
+          "naam": "watkanikregelen-parkeren",
+          "url": "http://localhost:9000/engine-rest/decision-definition/key/alg-parkeren"
+        }
+      ],
+      "bestanden": [],
+      "naam": "Parkeren",
+      "samenvatting": "samenvatting translatie",
+      "taal": "nl",
+      "externe_codes": [
+        {
+          "naam": "taak_eigenaar",
+          "code": "RMWA"
+        },
+        {
+          "naam": "ISO",
+          "code": "123"
+        }
+      ],
+      "parameters": [
+        {
+          "naam": "paymentcategorie",
+          "waarde": "parkeren"
+        }
+      ],
+      "verbruiksobject_schema": {
+        "naam": "parkeervergunning-verbruiksobject",
+        "schema": {
+          "type": "object",
+          "required": [
+            "uren"
+          ],
+          "properties": {
+            "uren": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "dataobject_schema": {
+        "naam": "parkeervergunning-dataobject",
+        "schema": {
+          "type": "object",
+          "required": [
+            "uren"
+          ],
+          "properties": {
+            "uren": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "gepubliceerd": true,
+      "aanmaak_datum": "2025-04-30T13:51:32.736333+02:00",
+      "update_datum": "2025-05-06T08:53:00.078716+02:00",
+      "code": "PARKEREN",
+      "toegestane_statussen": [
+        "gereed"
+      ],
+      "keywords": [
+        "parkeren",
+        "ibs"
+      ],
+      "interne_opmerkingen": "",
+      "zaaktypen": [
+        {
+          "url": "http://localhost:8001/catalogi/api/v1/744ca059-f412-49d4-8963-5800e4afd486"
+        }
+      ],
+      "verzoektypen": [],
+      "processen": []
+    }
+  ]
+}

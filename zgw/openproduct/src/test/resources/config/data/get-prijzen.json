@@ -1,0 +1,31 @@
+{
+  "count": 1,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "uuid": "317ab929-5cb4-4dde-ae4a-489f4d388699",
+      "producttype_uuid": "dee273e9-2aa8-40ae-84b7-cb7da3c075ba",
+      "prijsopties": [
+        {
+          "uuid": "d1eb87b9-0346-426b-bf7f-a2fb3f47f653",
+          "bedrag": "100.00",
+          "beschrijving": "prijs optie regel 1"
+        }
+      ],
+      "prijsregels": [
+        {
+          "uuid": "04d0f3ab-c691-408d-b99f-a7e045c82dea",
+          "url": "http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen",
+          "beschrijving": "prijs optie regel 2"
+        },
+        {
+          "uuid": "830dda6f-d167-4485-ab99-ebb8f3a33bd3",
+          "url": "http://localhost:9000/engine-rest/decision-definition/key/alg-parkeren",
+          "beschrijving": "prijs optie regel 1"
+        }
+      ],
+      "actief_vanaf": "2025-05-14"
+    }
+  ]
+}

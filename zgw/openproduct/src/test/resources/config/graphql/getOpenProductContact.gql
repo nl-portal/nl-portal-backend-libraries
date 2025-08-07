@@ -1,0 +1,18 @@
+query {
+    getOpenProductContact(
+        id: "09cd7326-1bf0-4890-b8d1-0ac3ee22bac0"
+     ){
+        uuid,
+        naam,
+        organisatie {
+            naam,
+            email,
+            code,
+            telefoonnummer,
+            straat,
+            huisnummer,
+            postcode,
+            stad
+        }
+    }
+}

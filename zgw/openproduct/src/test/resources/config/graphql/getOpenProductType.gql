@@ -1,0 +1,75 @@
+query {
+    getOpenProductType(
+        id: "dee273e9-2aa8-40ae-84b7-cb7da3c075ba",
+     ){
+        uuid,
+        naam,
+        samenvatting,
+        gepubliceerd,
+        taal,
+        code,
+        keywords,
+        uniformeProductNaam
+        themas {
+            uuid,
+            naam
+        },
+        aanmaakDatum,
+        updateDatum,
+        toegestaneStatussen,
+        locaties {
+            naam,
+            email
+        },
+        prijzen {
+            uuid
+            prijsopties {
+                bedrag,
+                beschrijving,
+            }
+            prijsregels {
+                uuid,
+                beschrijving,
+                url
+            }
+        }
+        links {
+            naam,
+            url
+        }
+        acties {
+            naam,
+            url
+        }
+        externCodes {
+            naam,
+            code
+        }
+        parameters {
+            naam,
+            waarde
+        }
+        verbruiksObjectSchema {
+            naam,
+            schema
+        },
+        dataObjectSchema {
+            naam,
+            schema
+        },
+        zaaktypen{
+            url
+        }
+        verzoektypen{
+            url
+        }
+        processen{
+            url
+        }
+        content {
+            taal,
+            content,
+            labels
+        }
+    }
+}
