@@ -16,6 +16,6 @@
 package nl.nlportal.haalcentraal2.domain.brp
 
 data class BrpUitsluitingKiesrecht(
-    val uitgeslotenVanKiesrecht: Boolean,
-    val einddatum: BrpDatum,
+    val uitgeslotenVanKiesrecht: Boolean? = false,
+    val einddatum: BrpDatum? = null,
 )

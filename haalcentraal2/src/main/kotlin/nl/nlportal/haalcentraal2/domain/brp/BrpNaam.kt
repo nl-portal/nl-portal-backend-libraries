@@ -37,9 +37,9 @@ data class BrpNaam(
 }
 
 data class BrpAdellijkeTitelPredicaat(
-    val soort: String,
-    val omschrijving: String,
-    val code: String,
+    val soort: String? = null,
+    val omschrijving: String? = null,
+    val code: String? = null,
 )
 
 data class BrpNaamInOnderzoek(
