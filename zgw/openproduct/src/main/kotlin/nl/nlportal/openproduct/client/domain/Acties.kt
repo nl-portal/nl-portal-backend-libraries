@@ -18,7 +18,6 @@ package nl.nlportal.openproduct.client.domain
 import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
-import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.node.ObjectNode
 import nl.nlportal.core.util.Mapper
 import java.util.UUID
@@ -32,7 +31,7 @@ data class OpenProductActie(
     @GraphQLIgnore
     val mapping: Map<String, List<OpenProductActieMappingVariable>> = emptyMap(),
 ) {
-    fun mapping(): ObjectNode = Mapper.get().convertValue(mapping, object : TypeReference<ObjectNode>() {})
+    fun mapping(): ObjectNode = Mapper.get().valueToTree<ObjectNode>(mapping)
 }
 
 data class OpenProductActieMappingVariable(

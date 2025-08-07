@@ -38,7 +38,7 @@ import org.springframework.web.reactive.function.client.WebClient
     OpenProductModuleConfiguration::class,
     TaakConfig::class,
 )
-@ConditionalOnProperty(prefix = "nl-portal.config.openproduct", name = ["enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["openproduct.enabled", "objectenapi.enabled", "taak.enabled", "zakenapi.enabled"], havingValue = "true")
 class OpenProductAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(OpenProductClient::class)
