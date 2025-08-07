@@ -34,6 +34,7 @@ dependencies {
     implementation(project(":payment"))
     implementation(project(":payment-direct"))
     implementation(project(":zgw:besluiten"))
+    implementation(project(":zgw:openproduct"))
 
     implementation("org.springframework.boot", "spring-boot-starter-actuator")
     api("org.postgresql", "postgresql")

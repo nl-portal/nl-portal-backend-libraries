@@ -114,7 +114,7 @@ open class DirectPaymentService(
             // if webhookUrl property is configured, set webhook url in the request. Benefit is dynamically set the webhook url per environment.
             directPaymentModuleConfiguration.properties.webhookUrl?.let {
                 checkoutRequest.withFeedbacks(
-                    Feedbacks().withWebhookUrl(it),
+                    Feedbacks().withWebhooksUrls(listOf(it)),
                 )
             }
 

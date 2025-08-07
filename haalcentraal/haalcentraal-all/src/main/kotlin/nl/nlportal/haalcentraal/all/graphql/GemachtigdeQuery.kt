@@ -23,6 +23,7 @@ import nl.nlportal.haalcentraal.brp.service.HaalCentraalBrpService
 import nl.nlportal.haalcentraal.hr.service.HandelsregisterService
 import graphql.schema.DataFetchingEnvironment
 
+@Deprecated("Will be removed in 3.0.0, use haalcentraal 2")
 class GemachtigdeQuery(
     val haalCentraalBrpService: HaalCentraalBrpService,
     val handelsregisterService: HandelsregisterService,

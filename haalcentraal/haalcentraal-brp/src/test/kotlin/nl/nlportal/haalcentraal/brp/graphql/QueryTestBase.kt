@@ -26,6 +26,7 @@ import org.mockito.Mockito.mock
 import org.mockito.kotlin.whenever
 import org.springframework.security.core.Authentication
 
+@Deprecated("Will be removed in 3.0.0, use haalcentraal 2")
 @ExperimentalCoroutinesApi
 internal open class QueryTestBase {
     val haalCentraalBrpService = mock<HaalCentraalBrpService>()
