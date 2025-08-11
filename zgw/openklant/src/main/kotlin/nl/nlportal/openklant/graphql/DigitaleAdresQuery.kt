@@ -28,6 +28,15 @@ import nl.nlportal.openklant.service.OpenKlant2Service
 class DigitaleAdresQuery(
     private val openklant2Service: OpenKlant2Service,
 ) : Query {
+    @Deprecated(message = "Use getUserDigitaleAdressen instead")
+    @GraphQLDescription("Get DigitaleAdresen of authenticated user.")
+    suspend fun getUserDigitaleAdresen(dfe: DataFetchingEnvironment): List<DigitaleAdresResponse>? {
+        val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
+        val userDigitaleAdressen = openklant2Service.findDigitaleAdressen(authentication)
+
+        return userDigitaleAdressen?.map { DigitaleAdresResponse.fromOpenKlant2DigitaleAdres(it) }
+    }
+
     @GraphQLDescription("Get DigitaleAdressen of authenticated user.")
     suspend fun getUserDigitaleAdressen(dfe: DataFetchingEnvironment): List<DigitaleAdresResponse>? {
         val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
