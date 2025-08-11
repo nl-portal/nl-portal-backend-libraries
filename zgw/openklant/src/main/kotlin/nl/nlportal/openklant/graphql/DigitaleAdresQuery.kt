@@ -29,7 +29,7 @@ class DigitaleAdresQuery(
     private val openklant2Service: OpenKlant2Service,
 ) : Query {
     @GraphQLDescription("Get DigitaleAdressen of authenticated user.")
-    suspend fun getUserDigitaleAdresen(dfe: DataFetchingEnvironment): List<DigitaleAdresResponse>? {
+    suspend fun getUserDigitaleAdressen(dfe: DataFetchingEnvironment): List<DigitaleAdresResponse>? {
         val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
         val userDigitaleAdressen = openklant2Service.findDigitaleAdressen(authentication)
 
