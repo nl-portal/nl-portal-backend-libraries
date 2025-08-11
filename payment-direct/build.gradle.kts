@@ -25,7 +25,7 @@ dependencies {
     api(project(":zgw:taak"))
     api("com.worldline-solutions", "onlinepayments-sdk-java", "5.1.0")
 
-    api("commons-codec", "commons-codec", "1.18.0")
+    api("commons-codec", "commons-codec", "1.19.0")
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.assertj", "assertj-core")
