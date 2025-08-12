@@ -85,6 +85,15 @@ open class DirectPaymentService(
                 )
             val merchantClient = client.merchant(paymentDirectProfile.pspId)
 
+            val hostedCheckoutSpecificInput =
+                HostedCheckoutSpecificInput()
+                    .withLocale(paymentRequest.langId ?: paymentDirectProfile.language)
+                    .withReturnUrl(paymentRequest.returnUrl ?: paymentDirectProfile.returnUrl)
+
+            directPaymentModuleConfiguration.properties.customTemplateUrl?.let {
+                hostedCheckoutSpecificInput.variant = it
+            }
+
             val checkoutRequest =
                 CreateHostedCheckoutRequest()
                     .withOrder(
@@ -99,9 +108,7 @@ open class DirectPaymentService(
                                     .withMerchantReference(paymentRequest.orderId),
                             ),
                     ).withHostedCheckoutSpecificInput(
-                        HostedCheckoutSpecificInput()
-                            .withLocale(paymentRequest.langId ?: paymentDirectProfile.language)
-                            .withReturnUrl(paymentRequest.returnUrl ?: paymentDirectProfile.returnUrl),
+                        hostedCheckoutSpecificInput,
                     )
 
             // if webhookUrl property is configured, set webhook url in the request. Benefit is dynamically set the webhook url per environment.

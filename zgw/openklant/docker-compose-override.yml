@@ -2,7 +2,7 @@ services:
 
   # openklant 2
   openklant-2:
-      image: maykinmedia/open-klant:2.11.0
+      image: maykinmedia/open-klant:2.11.1
       container_name: openklant-2-test
       ports:
           - "9007:8000"
@@ -41,5 +41,5 @@ services:
           - ./imports/openklant-2/database:/docker-entrypoint-initdb.d/
 
   redis:
-      image: redis:8.2.0
+      image: redis:8.0.3
       container_name: redis-test
