@@ -1,6 +1,6 @@
 
 query {
-    getUserDigitaleAdresen(isGeverifieerd: true) {
+    getUserDigitaleAdressen(isGeverifieerd: true) {
         uuid
         waarde
         type

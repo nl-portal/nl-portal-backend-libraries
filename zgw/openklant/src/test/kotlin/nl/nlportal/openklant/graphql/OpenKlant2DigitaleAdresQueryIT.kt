@@ -132,7 +132,7 @@ class OpenKlant2DigitaleAdresQueryIT(
                             .path("/graphql")
                             .build()
                     }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserDigitaleAdresenVerified.gql")))
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserDigitaleAdressenVerified.gql")))
                     .exchange()
                     .expectStatus()
                     .isOk
@@ -145,7 +145,7 @@ class OpenKlant2DigitaleAdresQueryIT(
                 objectMapper
                     .readValue<JsonNode>(responseBody!!)
                     .get("data")
-                    ?.get("getUserDigitaleAdresen")
+                    ?.get("getUserDigitaleAdressen")
 
             // then
             verify(openKlant2Service, times(1)).findDigitaleAdressen(any(), any())

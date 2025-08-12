@@ -39,9 +39,16 @@ class DigitaleAdresQuery(
     }
 
     @GraphQLDescription("Get DigitaleAdressen of authenticated user.")
-    suspend fun getUserDigitaleAdressen(dfe: DataFetchingEnvironment): List<DigitaleAdresResponse>? {
+    suspend fun getUserDigitaleAdressen(
+        dfe: DataFetchingEnvironment,
+        isGeverifieerd: Boolean? = false,
+    ): List<DigitaleAdresResponse>? {
         val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
-        val userDigitaleAdressen = openklant2Service.findDigitaleAdressen(authentication)
+        val userDigitaleAdressen =
+            openklant2Service.findDigitaleAdressen(
+                authentication = authentication,
+                isGeverifieerd = isGeverifieerd,
+            )
 
         return userDigitaleAdressen?.map { DigitaleAdresResponse.fromOpenKlant2DigitaleAdres(it) }
     }
