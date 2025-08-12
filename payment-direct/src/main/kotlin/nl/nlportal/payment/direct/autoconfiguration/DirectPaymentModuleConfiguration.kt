@@ -27,6 +27,7 @@ data class DirectPaymentModuleConfiguration(
         val shaOutParameters: List<String> = emptyList(),
         val webhookHeaders: List<String> = emptyList(),
         val webhookUrl: String? = null,
+        val customTemplateUrl: String? = null,
         val configurations: Map<String, DirectPaymentProfile> = emptyMap(),
     ) {
         fun getPaymentProfile(profileIdentifier: String): DirectPaymentProfile? = configurations[profileIdentifier]
