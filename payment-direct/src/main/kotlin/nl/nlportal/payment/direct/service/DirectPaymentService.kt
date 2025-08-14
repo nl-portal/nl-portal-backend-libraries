@@ -116,6 +116,7 @@ open class DirectPaymentService(
                 redirectUrl = response.redirectUrl,
             )
         } catch (ex: Exception) {
+            logger.error(ex) { "Error while do payment for ${paymentRequest.identifier} - ${ex.message}" }
             throw ex
         }
     }
