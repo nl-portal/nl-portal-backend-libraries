@@ -24,11 +24,9 @@ import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
@@ -36,27 +34,53 @@ import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.reactive.server.WebTestClient
 import java.util.function.Consumer
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
 
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
-@TestInstance(PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 internal class DirectPaymentMutationIT(
     @Autowired private val testClient: WebTestClient,
     @Autowired private val directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
 ) {
-    lateinit var server: MockWebServer
+    companion object {
+        private val logger: KLogger = KotlinLogging.logger {}
+
+        @JvmStatic
+        var server: MockWebServer? = null
+
+        @JvmStatic
+        var url: String = ""
+
+        @JvmStatic
+        @DynamicPropertySource
+        fun properties(propsRegistry: DynamicPropertyRegistry) {
+            propsRegistry.add("nl-portal.config.payment.direct.properties.url") { url }
+        }
+
+        @JvmStatic
+        @BeforeAll
+        fun beforeAll() {
+            server = MockWebServer()
+            server?.start()
+            url = server?.url("/").toString()
+        }
+
+        @JvmStatic
+        @AfterAll
+        fun afterAll() {
+            server?.shutdown()
+        }
+    }
 
     @BeforeEach
     internal fun setUp() {
-        server = MockWebServer()
-        setupMockObjectsApiServer()
-        server.start()
-        directPaymentModuleConfiguration.properties.url = server.url("/").toString()
-    }
-
-    @AfterEach
-    internal fun tearDown() {
-        server.shutdown()
+        setupMockServer()
+        url = server?.url("/").toString()
+        directPaymentModuleConfiguration.properties.url = url
     }
 
     @Test
@@ -137,7 +161,7 @@ internal class DirectPaymentMutationIT(
             )
     }
 
-    fun setupMockObjectsApiServer() {
+    fun setupMockServer() {
         val dispatcher: Dispatcher =
             object : Dispatcher() {
                 @Throws(InterruptedException::class)
@@ -153,10 +177,6 @@ internal class DirectPaymentMutationIT(
                     return response
                 }
             }
-        server.dispatcher = dispatcher
-    }
-
-    companion object {
-        private val logger: KLogger = KotlinLogging.logger {}
+        server?.dispatcher = dispatcher
     }
 }
