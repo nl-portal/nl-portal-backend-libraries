@@ -226,11 +226,13 @@ nl-portal:
                     sha-out-parameters: AAVADDRESS,AAVCHECK,AAVMAIL,AAVNAME,AAVPHONE,AAVZIP,ACCEPTANCE,ALIAS,AMOUNT,BIC,BIN,BRAND,CARDNO,CCCTY,CN,COLLECTOR_BIC,COLLECTOR_IBAN,COMPLUS,CREATION_STATUS,CREDITDEBIT,CURRENCY,CVCCHECK,DCC_COMMPERCENTAGE,DCC_CONVAMOUNT,DCC_CONVCCY,DCC_EXCHRATE,DCC_EXCHRATESOURCE,DCC_EXCHRATETS,DCC_INDICATOR,DCC_MARGINPERCENTAGE,DCC_VALIDHOURS,DIGESTCARDNO,ECI,ED,EMAIL,ENCCARDNO,FXAMOUNT,FXCURRENCY,IP,IPCTY,MANDATEID,MOBILEMODE,NBREMAILUSAGE,NBRIPUSAGE,NBRIPUSAGE_ALLTX,NBRUSAGE,NCERROR,ORDERID,PAYID,PAYIDSUB,PAYMENT_REFERENCE,PM,SCO_CATEGORY,SCORING,SEQUENCETYPE,SIGNDATE,STATUS,SUBBRAND,SUBSCRIPTION_ID,TRXDATE,VC
                     configurations:
                         belastingzaken:
-                            pspId: GmDenHaagBelastingenDirect
-                            apiKey: 7DE0889B6C4C64908BA2
-                            apiSecret: diPuOda8H5gw8rwu81cyBsXyqWWfChAZ42Rek5S4pMnJKcHfYgux88zEK03nneRMquhBL0knTW2xOUWRxGeuDQ==
-                            webhookApiKey: 65325525d7b846168fa4784f94485a
-                            webhookApiSecret: 418f68e5-fcff-413f-9b06-77649ba3c52e
+                            pspId: TAX
+                            language: "nl_NL"
+                            returnUrl: http://localhost:3000
+                            apiKey: dummy
+                            apiSecret: dummy
+                            webhookApiKey: dummy
+                            webhookApiSecret: dummy
             ogone:
                 enabled: true
                 properties:
