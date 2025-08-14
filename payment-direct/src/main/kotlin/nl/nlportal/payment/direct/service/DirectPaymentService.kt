@@ -72,17 +72,7 @@ open class DirectPaymentService(
                         HttpStatus.BAD_REQUEST,
                         "Could not found direct payment profile for the identifier $paymentRequest.identifier",
                     )
-            /*val client =
-                Factory.createClient(
-                    CommunicatorConfiguration()
-                        .withApiKeyId(paymentDirectProfile.apiKey)
-                        .withSecretApiKey(paymentDirectProfile.apiSecret)
-                        .withApiEndpoint(URI.create(checkAndRemovePath(directPaymentModuleConfiguration.properties.url)))
-                        .withIntegrator(paymentRequest.identifier)
-                        .withAuthorizationType(AuthorizationType.V1HMAC),
-                )
-            val merchantClient = client.merchant(paymentDirectProfile.pspId)
-*/
+
             val hostedCheckoutSpecificInput =
                 HostedCheckoutSpecificInput()
                     .withLocale(paymentRequest.langId ?: paymentDirectProfile.language)
