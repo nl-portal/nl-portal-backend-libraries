@@ -32,13 +32,11 @@ class FrontendConfigurationResource(
     }
 
     @GetMapping(value = ["/theme/style"])
-    fun style(): ResponseEntity<String> {
-        if (!coreThemeConfiguration.style.isNullOrBlank()) {
-            return ResponseEntity.ok(coreThemeConfiguration.style)
+    fun style(): ResponseEntity<String> =
+        when (coreThemeConfiguration.style.isNullOrEmpty()) {
+            true -> ResponseEntity.noContent().build()
+            false -> ResponseEntity.ok().header("Content-Type", "text/css").body(coreThemeConfiguration.style)
         }
-
-        return ResponseEntity.noContent().build()
-    }
 
     @GetMapping(value = ["/theme/logo"])
     fun logo(): ResponseEntity<String> {
