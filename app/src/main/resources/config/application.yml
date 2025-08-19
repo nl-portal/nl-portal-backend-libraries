@@ -65,10 +65,6 @@ graphql:
 logging:
     level:
         root: INFO
-        .reactor:
-            netty:
-                http:
-                    client: TRACE
 
 nl-portal:
     authentication:
