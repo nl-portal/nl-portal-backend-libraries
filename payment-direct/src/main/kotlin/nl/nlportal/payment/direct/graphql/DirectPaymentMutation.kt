@@ -25,7 +25,7 @@ class DirectPaymentMutation(
     private val directPaymentService: DirectPaymentService,
 ) : Mutation {
     @GraphQLDescription("Do Worldline Direct payment")
-    fun doDirectPayment(paymentRequest: DirectPaymentRequest): DirectPaymentResponse =
+    suspend fun doDirectPayment(paymentRequest: DirectPaymentRequest): DirectPaymentResponse =
         directPaymentService.doDirectPayment(
             paymentRequest = paymentRequest,
         )

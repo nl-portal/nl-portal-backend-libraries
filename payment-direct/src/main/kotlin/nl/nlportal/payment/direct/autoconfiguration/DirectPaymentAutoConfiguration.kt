@@ -15,10 +15,13 @@
  */
 package nl.nlportal.payment.direct.autoconfiguration
 
+import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.payment.direct.api.DirectPaymentController
+import nl.nlportal.payment.direct.client.DirectPaymentClient
 import nl.nlportal.payment.direct.graphql.DirectPaymentMutation
 import nl.nlportal.payment.direct.service.DirectPaymentService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -30,14 +33,27 @@ import org.springframework.context.annotation.Bean
 @ConditionalOnProperty(prefix = "nl-portal.config.payment.direct", name = ["enabled"], havingValue = "true")
 class DirectPaymentAutoConfiguration {
     @Bean
+    @ConditionalOnMissingBean(DirectPaymentClient::class)
+    fun directPaymentClient(
+        directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
+        @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
+    ): DirectPaymentClient =
+        DirectPaymentClient(
+            directPaymentProperties = directPaymentModuleConfiguration.properties,
+            clientSslContextResolver = clientSslContextResolver,
+        )
+
+    @Bean
     @ConditionalOnMissingBean(DirectPaymentService::class)
     fun directPaymentService(
         directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
         objectsApiClient: ObjectsApiClient,
+        directPaymentClient: DirectPaymentClient,
     ): DirectPaymentService =
         DirectPaymentService(
             directPaymentModuleConfiguration,
             objectsApiClient,
+            directPaymentClient,
         )
 
     @Bean
