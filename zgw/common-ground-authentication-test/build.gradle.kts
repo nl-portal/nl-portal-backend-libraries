@@ -20,7 +20,7 @@ plugins {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     api(project(":zgw:common-ground-authentication"))
-    implementation("io.jsonwebtoken", "jjwt-api", "0.12.7")
+    implementation("io.jsonwebtoken", "jjwt-api", "0.13.0")
     implementation("io.jsonwebtoken", "jjwt-impl", "0.12.7")
     implementation("io.jsonwebtoken", "jjwt-jackson", "0.12.7")
 
