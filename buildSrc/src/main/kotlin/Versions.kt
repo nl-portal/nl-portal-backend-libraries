@@ -17,7 +17,7 @@
 object Versions {
     const val everitJsonSchema = "1.14.6"
     const val jsonPath = "2.9.0"
-    const val jsonWebTokens = "0.12.7"
+    const val jsonWebTokens = "0.13.0"
     const val kotlinCoroutines = "1.10.1"
     const val apacheTikaVersion="3.1.0"
     const val clamAvVersion="2.1.2"

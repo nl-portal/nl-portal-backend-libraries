@@ -142,7 +142,7 @@ class ZakenApiService(
                 .page(1)
                 .forZaak(zaakUrl)
                 .forStatus(statusUrl)
-                .retrieve().results
+                .retrieve().results.sortedBy { it.tijdstip }
 
         } catch (ex: Exception) {
             logger.warn { "Could not get zak sub statussen for $zaakUrl and $statusUrl: $ex" }
