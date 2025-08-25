@@ -798,6 +798,7 @@ internal class ZaakQueryIT(
             .jsonPath("$basePath.statusGeschiedenis[0].statustype.omschrijving").isEqualTo("Zaak afgerond")
             .jsonPath("$basePath.statusGeschiedenis[0].statustype.isEindstatus").isEqualTo(true)
             .jsonPath("$basePath.statusGeschiedenis[0].substatussen[0].omschrijving").isEqualTo("omschrijving substatus")
+            .jsonPath("$basePath.statusGeschiedenis[0].substatussen[0].tijdstip").isEqualTo("2019-07-24T14:15:22Z")
             .jsonPath("$basePath.documenten[0].uuid").isEqualTo("095be615-a8ad-4c33-8e9c-c7612fbf6c9f")
             .jsonPath("$basePath.documenten[0].titel").isEqualTo("Een titel")
             .jsonPath("$basePath.documenten[0].formaat").isEqualTo(".pdf")
@@ -1242,6 +1243,15 @@ internal class ZaakQueryIT(
                   "status": "http://localhost:8000/zaken/api/v1/statussen/7fd765f5-ce02-475c-8091-0203c531e41f",
                   "omschrijving": "omschrijving substatus",
                   "tijdstip": "2019-08-24T14:15:22Z",
+                  "doelgroep": "betrokkenen"
+                },
+                {
+                  "url": "http://localhost:8000/zaken/api/v1/statussen/e8b5fe34-be17-4e34-a2b8-81f8a4f96201",
+                  "uuid": "e8b5fe34-be17-4e34-a2b8-81f8a4f96201",
+                  "zaak": "http://localhost:8000/zaken/api/v1/zaken/e163caad-1ca4-4ad4-9ac3-6aeb6b8122ce",
+                  "status": "http://localhost:8000/zaken/api/v1/statussen/7fd765f5-ce02-475c-8091-0203c531e41f",
+                  "omschrijving": "omschrijving substatus",
+                  "tijdstip": "2019-07-24T14:15:22Z",
                   "doelgroep": "betrokkenen"
                 }
               ]
