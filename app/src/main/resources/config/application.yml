@@ -160,22 +160,10 @@ nl-portal:
                 brp-api-url: http://localhost:5010/haalcentraal/api/brp/
                 bewoning-api-url: http://localhost:5011/haalcentraal/api/bewoning/
         haalcentraal:
-            brp:
-                enabled: false
-                properties:
-                    url:
-                    apiKey:
-                    ssl:
-                        enabled: false
-                        key:
-                            key:
-                            certChain:
-                            keyPassword:
-                        trustedCertificate:
             hr:
                 enabled: false
                 properties:
-                    url:
+                    url: http://localhost:8080
                     apiKey:
                     ssl:
                         enabled: false
