@@ -137,4 +137,12 @@ internal class CatalogiApiServiceTest {
 
             verify(catalogiApiClient).getBesluitTypes(zaakUrl)
         }
+
+    @Test
+    fun getResultaatType() =
+        runTest {
+            val uuid = UUID.randomUUID()
+            catalogiApiService.getBesluitType("http://some.domain.com/catalogi/api/v1/resultaattypen/$uuid")
+            verify(catalogiApiClient).getBesluitType(uuid)
+        }
 }

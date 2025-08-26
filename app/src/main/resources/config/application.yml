@@ -192,6 +192,12 @@ nl-portal:
             enabled: true
             properties:
                 bericht-object-type-url: "http://host.docker.internal:8011/api/v1/objecttypes/78731088-430f-49fd-9a4c-80ddd42ded28"
+        openproduct:
+            enabled: true
+            properties:
+                token: ac045222c9e7cde8120b48735560f9b920bb58cd
+                product-api-url: http://localhost:8070/producten/api/v1
+                product-type-api-url: http://localhost:8070/producttypen/api/v1
         product:
             enabled: true
             properties:

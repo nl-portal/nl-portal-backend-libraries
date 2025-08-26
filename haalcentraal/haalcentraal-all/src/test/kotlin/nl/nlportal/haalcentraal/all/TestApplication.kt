@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.web.server.SecurityWebFilterChain
 
+@Deprecated("Will be removed in 3.0.0, use haalcentraal 2")
 @SpringBootApplication(
     exclude = [
         OauthSecurityAutoConfiguration::class,

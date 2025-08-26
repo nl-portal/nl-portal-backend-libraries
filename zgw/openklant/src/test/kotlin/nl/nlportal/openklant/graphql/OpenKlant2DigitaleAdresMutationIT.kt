@@ -201,7 +201,7 @@ class OpenKlant2DigitaleAdresMutationIT(
                                     .path("/graphql")
                                     .build()
                             }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                            .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserDigitaleAdresen.gql")))
+                            .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserDigitaleAdressen.gql")))
                             .exchange()
                             .expectStatus()
                             .isOk
@@ -209,7 +209,7 @@ class OpenKlant2DigitaleAdresMutationIT(
                             .returnResult()
                             .responseBodyContent,
                     ).get("data")
-                    ?.get("getUserDigitaleAdresen")
+                    ?.get("getUserDigitaleAdressen")
 
             assertFalse(testdigitaleAdresUUID in userAdressen!!.mapNotNull { it?.get("uuid")?.textValue() })
         }

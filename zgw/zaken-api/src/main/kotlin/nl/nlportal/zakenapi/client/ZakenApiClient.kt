@@ -22,10 +22,14 @@ import nl.nlportal.zakenapi.client.ZakenApiConfig.ZakenApiConfigProperties
 import nl.nlportal.zakenapi.client.request.ZaakInformatieobjecten
 import nl.nlportal.zakenapi.client.request.ZaakObjecten
 import nl.nlportal.zakenapi.client.request.ZaakObjectenImpl
+import nl.nlportal.zakenapi.client.request.ZaakResultaten
+import nl.nlportal.zakenapi.client.request.ZaakResultatenImpl
 import nl.nlportal.zakenapi.client.request.ZaakRollen
 import nl.nlportal.zakenapi.client.request.ZaakRollenImpl
 import nl.nlportal.zakenapi.client.request.ZaakStatussen
 import nl.nlportal.zakenapi.client.request.ZaakStatussenImpl
+import nl.nlportal.zakenapi.client.request.ZaakSubStatussen
+import nl.nlportal.zakenapi.client.request.ZaakSubStatussenImpl
 import nl.nlportal.zakenapi.client.request.Zaken
 import nl.nlportal.zakenapi.client.request.ZakenImpl
 import nl.nlportal.zakenapi.client.request.ZakenInformatieobjectenImpl
@@ -110,6 +114,18 @@ class ZakenApiClient(
 
     fun zaakStatussen(): ZaakStatussen {
         return ZaakStatussenImpl(this)
+    }
+
+    fun zaakResultaten(): ZaakResultaten {
+        return ZaakResultatenImpl(this)
+    }
+
+    fun zaakSubStatussen(): ZaakSubStatussen {
+        return ZaakSubStatussenImpl(this)
+    }
+
+    fun useNnpKvkQueryIdentificators(): Boolean {
+        return zakenApiConfig.useNnpKvkQueryIdentificators
     }
 }
 

@@ -18,6 +18,7 @@ package nl.nlportal.haalcentraal.all.graphql
 import nl.nlportal.haalcentraal.brp.domain.persoon.Persoon
 import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 
+@Deprecated("Will be removed in 3.0.0, use haalcentraal 2")
 class Gemachtigde(
     val persoon: Persoon?,
     val bedrijf: MaatschappelijkeActiviteit?,

@@ -37,6 +37,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
+@Deprecated("Will be removed in 3.0.0, use haalcentraal 2")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class HaalCentraalBrpClientTest {
     private lateinit var haalCentraalClientConfig: HaalCentraalBrpConfig

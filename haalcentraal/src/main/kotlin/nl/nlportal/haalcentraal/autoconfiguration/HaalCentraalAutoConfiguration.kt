@@ -27,6 +27,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.core.io.ResourceLoader
 
+@Deprecated("Will be removed in 3.0.0, use haalcentraal 2")
 @AutoConfiguration
 @EnableConfigurationProperties(HaalCentraalBrpConfig::class)
 class HaalCentraalAutoConfiguration {

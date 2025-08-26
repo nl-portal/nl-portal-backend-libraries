@@ -18,6 +18,7 @@ package nl.nlportal.haalcentraal.client
 import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 
+@Deprecated("Will be removed in 3.0.0, use haalcentraal 2")
 @ConfigurationProperties(prefix = "nl-portal.config.haalcentraal.brp", ignoreUnknownFields = true)
 data class HaalCentraalBrpConfig(
     var enabled: Boolean = false,

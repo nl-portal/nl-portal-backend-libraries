@@ -1,0 +1,10 @@
+{
+  "uuid": "5422b0e4-18ae-4017-bcea-fb03446a8136",
+  "naam": "Sub thema",
+  "beschrijving": "dit is een subthema",
+  "gepubliceerd": true,
+  "aanmaak_datum": "2025-05-06T16:35:50.250542+02:00",
+  "update_datum": "2025-05-06T16:36:49.477374+02:00",
+  "hoofd_thema": "c111ce6f-308f-4e6d-9460-ffe6a07e283a",
+  "producttypen": []
+}

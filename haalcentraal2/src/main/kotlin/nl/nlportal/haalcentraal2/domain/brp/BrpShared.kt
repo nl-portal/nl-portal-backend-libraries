@@ -18,9 +18,9 @@ package nl.nlportal.haalcentraal2.domain.brp
 import java.time.LocalDate
 
 data class BrpDatum(
-    val type: String,
-    val datum: LocalDate,
-    val langFormaat: String,
+    val type: String? = null,
+    val datum: LocalDate? = null,
+    val langFormaat: String? = null,
 )
 
 data class BrpCodeOmschrijving(

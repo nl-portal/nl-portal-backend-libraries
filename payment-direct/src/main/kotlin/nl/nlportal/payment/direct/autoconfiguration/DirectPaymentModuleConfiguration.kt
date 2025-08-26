@@ -15,6 +15,7 @@
  */
 package nl.nlportal.payment.direct.autoconfiguration
 
+import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.payment.direct", ignoreUnknownFields = true)
@@ -24,9 +25,11 @@ data class DirectPaymentModuleConfiguration(
 ) {
     data class DirectPaymentProperties(
         var url: String = "",
+        val ssl: Ssl? = null,
         val shaOutParameters: List<String> = emptyList(),
         val webhookHeaders: List<String> = emptyList(),
         val webhookUrl: String? = null,
+        val customTemplateUrl: String? = null,
         val configurations: Map<String, DirectPaymentProfile> = emptyMap(),
     ) {
         fun getPaymentProfile(profileIdentifier: String): DirectPaymentProfile? = configurations[profileIdentifier]

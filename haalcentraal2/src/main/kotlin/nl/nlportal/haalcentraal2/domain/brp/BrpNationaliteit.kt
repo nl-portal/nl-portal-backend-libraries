@@ -16,7 +16,7 @@
 package nl.nlportal.haalcentraal2.domain.brp
 
 data class BrpNationaliteit(
-    val type: String,
+    val type: String? = null,
     val redenOpname: BrpCodeOmschrijving? = null,
     val datumIngangGeldigheid: BrpCodeOmschrijving? = null,
     val nationaliteit: BrpCodeOmschrijving? = null,
