@@ -51,6 +51,6 @@ class TaakQueryV2(
         id: UUID,
         dfe: DataFetchingEnvironment,
     ): TaakV2? {
-        return taskService.getTaakById(id, dfe.graphQlContext[AUTHENTICATION_KEY])
+        return taskService.getTaakByIdV2(id, dfe.graphQlContext[AUTHENTICATION_KEY])
     }
 }

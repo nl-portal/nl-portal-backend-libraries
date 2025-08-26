@@ -91,9 +91,9 @@ internal class TaakQueryV2IT(
             ).isEqualTo("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4")
             .jsonPath("$basePath.number").isEqualTo(1)
             .jsonPath("$basePath.size").isEqualTo(1)
-            .jsonPath("$basePath.totalPages").isEqualTo(2)
-            .jsonPath("$basePath.totalElements").isEqualTo(2)
-            .jsonPath("$basePath.numberOfElements").isEqualTo(2)
+            .jsonPath("$basePath.totalPages").isEqualTo(1)
+            .jsonPath("$basePath.totalElements").isEqualTo(1)
+            .jsonPath("$basePath.numberOfElements").isEqualTo(1)
     }
 
     // Disabled durin migratiom from V1 to V2

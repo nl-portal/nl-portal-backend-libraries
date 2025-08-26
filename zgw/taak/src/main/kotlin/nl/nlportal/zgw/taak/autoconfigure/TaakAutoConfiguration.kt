@@ -17,9 +17,7 @@ package nl.nlportal.zgw.taak.autoconfigure
 
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
-import nl.nlportal.zgw.taak.graphql.TaakMutation
 import nl.nlportal.zgw.taak.graphql.TaakMutationV2
-import nl.nlportal.zgw.taak.graphql.TaakQuery
 import nl.nlportal.zgw.taak.graphql.TaakQueryV2
 import nl.nlportal.zgw.taak.service.TaakService
 import org.springframework.boot.autoconfigure.AutoConfiguration
@@ -40,18 +38,6 @@ class TaakAutoConfiguration {
         authenticationMachtigingsService: AuthenticationMachtigingsDienstService,
     ): TaakService {
         return TaakService(objectsApiClient, taakObjectConfig.properties, authenticationMachtigingsService)
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(TaakQuery::class)
-    fun taskQuery(taskService: TaakService): TaakQuery {
-        return TaakQuery(taskService)
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(TaakMutation::class)
-    fun taskMutation(taskService: TaakService): TaakMutation {
-        return TaakMutation(taskService)
     }
 
     @Bean
