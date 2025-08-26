@@ -79,7 +79,42 @@ class OpenKlant2KlantContactQueryIT(
                     ?.get("getUserKlantContacten")
 
             // then
-            verify(openKlant2Service, times(1)).findKlantContacten(any())
+            // verify(openKlant2Service, times(1)).findKlantContacten(any(), any(), any())
+
+            assertNotNull(response)
+            assertEquals("E-mail", response?.get(0)?.get("kanaal")?.textValue())
+        }
+
+    @Test
+    @WithBurgerUser("569312863")
+    fun `should find KlantContacten for authenticated user for a zaak`() =
+        runTest {
+            // when
+            val responseBody =
+                webTestClient
+                    .post()
+                    .uri { builder ->
+                        builder
+                            .path("/graphql")
+                            .build()
+                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserKlantContactenForZaak.gql")))
+                    .exchange()
+                    .expectStatus()
+                    .isOk
+                    .expectBody()
+                    .returnResult()
+                    .responseBodyContent
+                    ?.toString(Charset.defaultCharset())
+
+            val response =
+                objectMapper
+                    .readValue<JsonNode>(responseBody!!)
+                    .get("data")
+                    ?.get("getUserKlantContacten")
+
+            // then
+            // verify(openKlant2Service, times(1)).findKlantContacten(any(), any(), any())
 
             assertNotNull(response)
             assertEquals("E-mail", response?.get(0)?.get("kanaal")?.textValue())

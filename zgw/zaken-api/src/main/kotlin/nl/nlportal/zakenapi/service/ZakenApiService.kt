@@ -15,6 +15,9 @@
  */
 package nl.nlportal.zakenapi.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
+import java.util.Locale
+import java.util.UUID
 import kotlinx.coroutines.flow.Flow
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
@@ -27,16 +30,17 @@ import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zakenapi.domain.ZaakDetails
 import nl.nlportal.zakenapi.domain.ZaakDetailsObject
 import nl.nlportal.zakenapi.domain.ZaakDocument
+import nl.nlportal.zakenapi.domain.ZaakResultaat
 import nl.nlportal.zakenapi.domain.ZaakRol
 import nl.nlportal.zakenapi.domain.ZaakStatus
+import nl.nlportal.zakenapi.domain.ZaakSubStatus
+import nl.nlportal.zakenapi.domain.ZaakSubStatusDoelgroep
 import nl.nlportal.zakenapi.graphql.ZaakPage
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
-import java.util.Locale
-import java.util.UUID
 
 class ZakenApiService(
     private val zakenApiClient: ZakenApiClient,
@@ -131,6 +135,22 @@ class ZakenApiService(
         return zakenApiClient.zaakStatussen().get(extractId(statusUrl)).retrieve()
     }
 
+    suspend fun getZaakSubStatussen(zaakUrl: String, statusUrl: String): List<ZaakSubStatus> {
+        try {
+            return zakenApiClient
+                .zaakSubStatussen()
+                .search()
+                .page(1)
+                .forZaak(zaakUrl)
+                .forStatus(statusUrl)
+                .retrieve().results.filterNot { it.doelgroep == ZaakSubStatusDoelgroep.INTERN }.sortedBy { it.tijdstip }
+
+        } catch (ex: Exception) {
+            logger.warn { "Could not get zak sub statussen for $zaakUrl and $statusUrl: $ex" }
+        }
+        return emptyList()
+    }
+
     suspend fun getDocumenten(zaakUrl: String): List<Document> {
         return getZaakDocumenten(zaakUrl)
             .map { zaakDocument ->
@@ -150,6 +170,10 @@ class ZakenApiService(
 
     suspend fun getZaakDocumenten(zaakUrl: String): List<ZaakDocument> {
         return zakenApiClient.zaakInformatieobjecten().search().forZaak(zaakUrl).retrieve()
+    }
+
+    suspend fun getZaakResultaat(resultaatUrl: String): ZaakResultaat {
+        return zakenApiClient.zaakResultaten().get(extractId(resultaatUrl)).retrieve()
     }
 
     suspend fun getZaakDetails(zaakUrl: String): ZaakDetails {
@@ -197,5 +221,9 @@ class ZakenApiService(
 
             else -> null to null
         }
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger {}
     }
 }

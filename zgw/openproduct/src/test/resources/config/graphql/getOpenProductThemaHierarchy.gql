@@ -1,0 +1,66 @@
+query {
+    getOpenProductThemaHierarchy(id: "c111ce6f-308f-4e6d-9460-ffe6a07e283a") {
+        thema {
+            uuid,
+              naam,
+              beschrijving,
+              gepubliceerd,
+              hoofdThema,
+              producttypen {
+                  uuid,
+                  code,
+                  uniformeProductNaam
+              },
+              aanmaakDatum,
+              updateDatum
+          }
+          subThemas {
+              thema {
+                uuid,
+                naam,
+                beschrijving,
+                gepubliceerd,
+                hoofdThema,
+                producttypen {
+                    uuid,
+                    code,
+                    uniformeProductNaam
+                },
+                aanmaakDatum,
+                updateDatum
+              }
+              subThemas {
+                    thema {
+                      uuid,
+                      naam,
+                      beschrijving,
+                      gepubliceerd,
+                      hoofdThema,
+                      producttypen {
+                          uuid,
+                          code,
+                          uniformeProductNaam
+                      },
+                      aanmaakDatum,
+                      updateDatum
+                    }
+                    subThemas {
+                          thema {
+                            uuid,
+                            naam,
+                            beschrijving,
+                            gepubliceerd,
+                            hoofdThema,
+                            producttypen {
+                                uuid,
+                                code,
+                                uniformeProductNaam
+                            },
+                            aanmaakDatum,
+                            updateDatum
+                          }
+                      }
+                }
+          }
+    }
+}
