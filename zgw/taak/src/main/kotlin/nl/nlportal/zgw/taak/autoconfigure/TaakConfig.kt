@@ -23,6 +23,6 @@ data class TaakConfig(
     var properties: TaakConfigProperties = TaakConfigProperties(),
 ) {
     data class TaakConfigProperties(
-        var typeUrlV2: String = "",
+        var objectTypeUrl: String = "",
     )
 }

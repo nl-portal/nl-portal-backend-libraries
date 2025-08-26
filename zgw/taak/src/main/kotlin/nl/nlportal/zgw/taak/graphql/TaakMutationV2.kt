@@ -22,7 +22,7 @@ import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.zgw.taak.domain.TaakV2
 import nl.nlportal.zgw.taak.service.TaakService
-import java.util.*
+import java.util.UUID
 
 class TaakMutationV2(
     private val taskService: TaakService,

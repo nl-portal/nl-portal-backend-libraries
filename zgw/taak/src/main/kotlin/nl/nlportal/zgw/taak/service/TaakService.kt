@@ -83,7 +83,7 @@ open class TaakService(
                 pageSize,
                 authentication,
                 zaakUUID,
-                taakConfigProperties.typeUrlV2,
+                taakConfigProperties.objectTypeUrl,
                 status,
                 title,
             ).let { TaakPageV2.fromResultPage(pageNumber, pageSize, it) }

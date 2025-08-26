@@ -363,7 +363,7 @@ class ProductService(
         }
 
         return getObjectsApiObjectResultPage<TaakObjectV2>(
-            objectsApiTaskConfig.typeUrlV2,
+            objectsApiTaskConfig.objectTypeUrl,
             objectSearchParameters,
             pageNumber,
             pageSize,
