@@ -1,0 +1,21 @@
+query {
+    getOpenProductLocaties(
+        pageNumber: 1,
+        pageSize: 20
+     ){
+        number
+         size
+         totalElements
+         numberOfElements
+         content {
+            uuid,
+            naam,
+            email,
+            telefoonnummer,
+            straat,
+            huisnummer,
+            postcode,
+            stad
+        }
+    }
+}

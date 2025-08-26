@@ -1,0 +1,49 @@
+query {
+    getOpenProductThema(id: "41f71c2e-9e0c-4a1b-8d39-709669b256c2") {
+        uuid,
+        naam,
+        beschrijving,
+        gepubliceerd,
+        producttypen {
+            uuid,
+            code,
+            uniformeProductNaam
+        },
+        aanmaakDatum,
+        updateDatum,
+        zaken {
+            uuid,
+            omschrijving
+        },
+        taken {
+          id,
+          titel,
+          koppeling {
+              registratie,
+              value
+          }
+        },
+        producten {
+            uuid,
+            url,
+            naam,
+            startDatum,
+            gepubliceerd,
+            aanmaakDatum,
+            producttype {
+                code,
+                uniformeProductNaam,
+                toegestaneStatussen,
+            }
+            prijs,
+            gepubliceerd,
+            status,
+            documenten {
+                url
+            },
+            frequentie,
+            verbruiksobject,
+            dataobject
+        }
+    }
+}

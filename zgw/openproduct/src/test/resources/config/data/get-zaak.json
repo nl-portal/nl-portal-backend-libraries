@@ -1,0 +1,42 @@
+{
+    "url": "$url/zaken/api/v1/zaken/7d9cd6c2-8147-46f2-9ae9-c67e8213c202",
+    "uuid": "7d9cd6c2-8147-46f2-9ae9-c67e8213c202",
+    "identificatie": "ZAAK-2021-0000000003",
+    "bronorganisatie": "051845623",
+    "omschrijving": "Lopende zaak",
+    "toelichting": "",
+    "zaaktype": "http://localhost:8000/catalogi/api/v1/zaaktypen/7d9cd6c2-8147-46f2-9ae9-c67e8213c300",
+    "registratiedatum": "2021-09-16",
+    "verantwoordelijkeOrganisatie": "051845623",
+    "startdatum": "2021-09-16",
+    "einddatum": null,
+    "einddatumGepland": null,
+    "uiterlijkeEinddatumAfdoening": null,
+    "publicatiedatum": null,
+    "communicatiekanaal": "",
+    "productenOfDiensten": [],
+    "vertrouwelijkheidaanduiding": "zaakvertrouwelijk",
+    "betalingsindicatie": "",
+    "betalingsindicatieWeergave": "",
+    "laatsteBetaaldatum": null,
+    "zaakgeometrie": null,
+    "verlenging": {
+        "reden": "",
+        "duur": null
+    },
+    "opschorting": {
+        "indicatie": false,
+        "reden": ""
+    },
+    "selectielijstklasse": "",
+    "hoofdzaak": null,
+    "deelzaken": [],
+    "relevanteAndereZaken": [],
+    "eigenschappen": [],
+    "status": "http://localhost:8000/zaken/api/v1/statussen/0c019c8a-2274-4a7b-b381-2f35908500a6",
+    "kenmerken": [],
+    "archiefnominatie": null,
+    "archiefstatus": "nog_te_archiveren",
+    "archiefactiedatum": null,
+    "resultaat": null
+}

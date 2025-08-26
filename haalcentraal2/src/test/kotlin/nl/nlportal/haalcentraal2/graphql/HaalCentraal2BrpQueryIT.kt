@@ -100,6 +100,17 @@ internal class HaalCentraal2BrpQueryIT(
                         lastName,
                         officialLastName,
                     }
+                    nationaliteiten {
+                        type,
+                        redenOpname {
+                            code,
+                            omschrijving
+                        },
+                        nationaliteit {
+                            code,
+                            omschrijving
+                        }
+                    }
                 }
             }
             """.trimIndent()

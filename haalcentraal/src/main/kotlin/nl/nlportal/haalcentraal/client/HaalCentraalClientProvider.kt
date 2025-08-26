@@ -27,6 +27,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
 
+@Deprecated("Will be removed in 3.0.0, use haalcentraal 2")
 class HaalCentraalClientProvider(
     private val haalCentraalClientConfig: HaalCentraalBrpConfig,
     private val clientSslContextResolver: ClientSslContextResolver? = null,

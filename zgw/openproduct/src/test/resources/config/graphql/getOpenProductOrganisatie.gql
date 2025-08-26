@@ -1,0 +1,14 @@
+query {
+    getOpenProductOrganisatie(
+        id: "ac1ee933-8f9a-414b-bf0c-11adc969ed2c"
+     ){
+        uuid,
+        naam,
+        email,
+        telefoonnummer,
+        straat,
+        huisnummer,
+        postcode,
+        stad
+    }
+}

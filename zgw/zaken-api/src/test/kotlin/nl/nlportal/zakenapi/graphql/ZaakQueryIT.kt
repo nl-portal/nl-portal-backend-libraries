@@ -723,6 +723,11 @@ internal class ZaakQueryIT(
                         statustype {
                             omschrijving,
                             isEindstatus
+                        },
+                        substatussen {
+                            omschrijving,
+                            tijdstip,
+                            doelgroep,
                         }
                     },
                     statusGeschiedenis {
@@ -730,6 +735,11 @@ internal class ZaakQueryIT(
                         statustype {
                             omschrijving,
                             isEindstatus
+                        },
+                        substatussen {
+                            omschrijving,
+                            tijdstip,
+                            doelgroep,
                         }
                     },
                     documenten {
@@ -751,6 +761,14 @@ internal class ZaakQueryIT(
                         datum,
                         toelichting,
                         publicatiedatum
+                    },
+                    resultaat{
+                        toelichting,
+                        resultaattype {
+                            toelichting,
+                            omschrijving,
+                            omschrijvingGeneriek
+                        }   
                     }
                 }
             }
@@ -779,6 +797,9 @@ internal class ZaakQueryIT(
             .jsonPath("$basePath.statusGeschiedenis[0].datumStatusGezet").isEqualTo("2021-09-16T14:00:00Z")
             .jsonPath("$basePath.statusGeschiedenis[0].statustype.omschrijving").isEqualTo("Zaak afgerond")
             .jsonPath("$basePath.statusGeschiedenis[0].statustype.isEindstatus").isEqualTo(true)
+            .jsonPath("$basePath.statusGeschiedenis[0].substatussen.size()").isEqualTo(2)
+            .jsonPath("$basePath.statusGeschiedenis[0].substatussen[0].omschrijving").isEqualTo("omschrijving substatus")
+            .jsonPath("$basePath.statusGeschiedenis[0].substatussen[0].tijdstip").isEqualTo("2019-07-24T14:15:22Z")
             .jsonPath("$basePath.documenten[0].uuid").isEqualTo("095be615-a8ad-4c33-8e9c-c7612fbf6c9f")
             .jsonPath("$basePath.documenten[0].titel").isEqualTo("Een titel")
             .jsonPath("$basePath.documenten[0].formaat").isEqualTo(".pdf")
@@ -994,6 +1015,9 @@ internal class ZaakQueryIT(
                             "/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> handleDocumentRequest()
                             "/zaken/api/v1/rollen" -> handleZaakRollenRequest()
                             "/besluiten/api/v1/besluiten" -> handleBesluitenRequest()
+                            "/zaken/api/v1/substatussen" -> handleSubStatusListRequest()
+                            "/zaken/api/v1/resultaten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> handleResultaatRequest()
+                            "/catalogi/api/v1/resultaattypen/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> handleResultaatTypeRequest()
                             else -> MockResponse().setResponseCode(404)
                         }
                     return response
@@ -1159,7 +1183,7 @@ internal class ZaakQueryIT(
                 "archiefnominatie": null,
                 "archiefstatus": "nog_te_archiveren",
                 "archiefactiedatum": null,
-                "resultaat": null
+                "resultaat": "http://localhost:8001/zaken/api/v1/resultaten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
             }
             """.trimIndent()
 
@@ -1199,6 +1223,48 @@ internal class ZaakQueryIT(
                 "statustype": "http://localhost:8000/catalogi/api/v1/statustypen/a4bd90f4-b80c-446b-9f68-62c5b39298ff",
                 "datumStatusGezet": "2021-09-16T14:00:00Z",
                 "statustoelichting": ""
+            }
+            """.trimIndent()
+
+        return mockResponse(body)
+    }
+
+    fun handleSubStatusListRequest(): MockResponse {
+        val body =
+            """
+            {
+              "count": 1,
+              "next": "http://api.example.org/accounts/?page=4",
+              "previous": "http://api.example.org/accounts/?page=2",
+              "results": [
+                {
+                  "url": "http://localhost:8000/zaken/api/v1/statussen/e8b5fe34-be17-4e34-a2b8-81f8a4f96201",
+                  "uuid": "e8b5fe34-be17-4e34-a2b8-81f8a4f96201",
+                  "zaak": "http://localhost:8000/zaken/api/v1/zaken/e163caad-1ca4-4ad4-9ac3-6aeb6b8122ce",
+                  "status": "http://localhost:8000/zaken/api/v1/statussen/7fd765f5-ce02-475c-8091-0203c531e41f",
+                  "omschrijving": "omschrijving substatus",
+                  "tijdstip": "2019-08-24T14:15:22Z",
+                  "doelgroep": "betrokkenen"
+                },
+                {
+                  "url": "http://localhost:8000/zaken/api/v1/statussen/e8b5fe34-be17-4e34-a2b8-81f8a4f96201",
+                  "uuid": "e8b5fe34-be17-4e34-a2b8-81f8a4f96201",
+                  "zaak": "http://localhost:8000/zaken/api/v1/zaken/e163caad-1ca4-4ad4-9ac3-6aeb6b8122ce",
+                  "status": "http://localhost:8000/zaken/api/v1/statussen/7fd765f5-ce02-475c-8091-0203c531e41f",
+                  "omschrijving": "omschrijving substatus",
+                  "tijdstip": "2019-07-24T14:15:22Z",
+                  "doelgroep": "betrokkenen"
+                },
+                {
+                  "url": "http://localhost:8000/zaken/api/v1/statussen/e8b5fe34-be17-4e34-a2b8-81f8a4f96201",
+                  "uuid": "e8b5fe34-be17-4e34-a2b8-81f8a4f96201",
+                  "zaak": "http://localhost:8000/zaken/api/v1/zaken/e163caad-1ca4-4ad4-9ac3-6aeb6b8122ce",
+                  "status": "http://localhost:8000/zaken/api/v1/statussen/7fd765f5-ce02-475c-8091-0203c531e41f",
+                  "omschrijving": "omschrijving substatus",
+                  "tijdstip": "2019-06-24T14:15:22Z",
+                  "doelgroep": "intern"
+                }
+              ]
             }
             """.trimIndent()
 
@@ -1456,6 +1522,69 @@ internal class ZaakQueryIT(
                   "uiterlijkeReactiedatum": "2019-08-24"
                 }
               ]
+            }
+            """.trimIndent()
+
+        return mockResponse(body)
+    }
+
+    fun handleResultaatRequest(): MockResponse {
+        val body =
+            """
+            {
+              "url": "http://example.com",
+              "uuid": "095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+              "zaak": "http://example.com",
+              "resultaattype": "http://localhost:8001/catalogi/api/v1/resultaattypen/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+              "toelichting": "toelichting resulaat"
+            }
+            """.trimIndent()
+
+        return mockResponse(body)
+    }
+
+    fun handleResultaatTypeRequest(): MockResponse {
+        val body =
+            """
+            {
+              "url": "http://example.com",
+              "zaaktype": "http://example.com",
+              "zaaktypeIdentificatie": "string",
+              "omschrijving": "resultaat type omschrijving",
+              "resultaattypeomschrijving": "http://example.com",
+              "omschrijvingGeneriek": "resultaat type generiek",
+              "selectielijstklasse": "http://example.com",
+              "toelichting": "resultaat type  toelichting",
+              "archiefnominatie": "blijvend_bewaren",
+              "archiefactietermijn": "string",
+              "brondatumArchiefprocedure": {
+                "afleidingswijze": "afgehandeld",
+                "datumkenmerk": "string",
+                "einddatumBekend": true,
+                "objecttype": "adres",
+                "registratie": "string",
+                "procestermijn": "string"
+              },
+              "procesobjectaard": "string",
+              "indicatieSpecifiek": true,
+              "procestermijn": "string",
+              "catalogus": "http://example.com",
+              "besluittypen": [
+                "http://example.com"
+              ],
+              "besluittypeOmschrijving": [
+                "string"
+              ],
+              "informatieobjecttypen": [
+                "http://example.com"
+              ],
+              "informatieobjecttypeOmschrijving": [
+                "string"
+              ],
+              "beginGeldigheid": "2019-08-24",
+              "eindeGeldigheid": "2019-08-24",
+              "beginObject": "2019-08-24",
+              "eindeObject": "2019-08-24"
             }
             """.trimIndent()
 

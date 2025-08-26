@@ -15,6 +15,7 @@
  */
 package nl.nlportal.haalcentraal.brp.domain
 
+@Deprecated("Will be removed in 3.0.0, use haalcentraal 2")
 data class BewoningenApiRequest(
     val type: String,
     val peildatum: String,

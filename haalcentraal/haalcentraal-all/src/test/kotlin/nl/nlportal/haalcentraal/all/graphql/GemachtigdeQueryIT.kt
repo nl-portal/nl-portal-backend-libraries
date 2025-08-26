@@ -36,6 +36,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.reactive.server.WebTestClient
 
+@Deprecated("Will be removed in 3.0.0, use haalcentraal 2")
 @SpringBootTest
 @ExtendWith(SpringExtension::class)
 @AutoConfigureWebTestClient

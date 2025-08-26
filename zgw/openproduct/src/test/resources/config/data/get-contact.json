@@ -1,0 +1,18 @@
+{
+  "uuid": "09cd7326-1bf0-4890-b8d1-0ac3ee22bac0",
+  "organisatie": {
+    "uuid": "ac1ee933-8f9a-414b-bf0c-11adc969ed2c",
+    "naam": "Ritense",
+    "code": "RIT",
+    "email": "info@ritsense.nl",
+    "telefoonnummer": "0201234567",
+    "straat": "straat",
+    "huisnummer": "1",
+    "postcode": "1000AB",
+    "stad": "Amsterdam"
+  },
+  "naam": "Vincent van Beek",
+  "email": "test@test.nl",
+  "telefoonnummer": "0201234567",
+  "rol": "owner"
+}

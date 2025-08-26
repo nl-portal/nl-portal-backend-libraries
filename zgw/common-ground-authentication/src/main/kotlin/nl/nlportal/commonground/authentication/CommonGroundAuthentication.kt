@@ -19,7 +19,7 @@ import nl.nlportal.portal.authentication.domain.PortalAuthentication
 import nl.nlportal.portal.authentication.domain.SUB_KEY
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.oauth2.jwt.Jwt
-import java.util.*
+import java.util.UUID
 
 abstract class CommonGroundAuthentication(
     jwt: Jwt,
