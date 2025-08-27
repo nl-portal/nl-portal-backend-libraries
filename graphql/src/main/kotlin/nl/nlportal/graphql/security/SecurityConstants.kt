@@ -15,6 +15,7 @@
  */
 package nl.nlportal.graphql.security
 
+@Deprecated("needs to be removed in a future release.")
 object SecurityConstants {
     const val AUTHENTICATION_KEY = "authentication"
 }

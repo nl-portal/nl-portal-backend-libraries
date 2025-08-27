@@ -27,13 +27,18 @@ plugins {
 
 include(
     "app",
-    "case",
     "core",
-    "data",
-    "form",
     "gradle:cve-report",
     "gradle:license-report",
     "graphql",
+    "portal-authentication",
+    "zgw:common-ground-authentication",
+    "zgw:common-ground-authentication-test",
+    "zgw:openklant",
+    /*
+    "case",
+    "data",
+    "form",
     "haalcentraal-hr",
     "haalcentraal2",
     "klant",
@@ -53,7 +58,6 @@ include(
     "zgw:taak",
     "zgw:zaken-api",
     "zgw:objectenapi",
-    "zgw:besluiten",
-    "zgw:openklant",
-    "zgw:openproduct",
+    "zgw:besluiten",*/
+    //"zgw:openproduct",
 )

@@ -322,7 +322,7 @@ class OpenKlant2Service(
             openKlant2Client.path<KlantContacten>().get(searchVariables)
         } catch (ex: WebClientResponseException) {
             logger.error(ex) { "Failed to get Partij with Klantcontacten: ${ex.responseBodyAsString}" }
-            return emptyList()
+            emptyList()
         }
     }
 

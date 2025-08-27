@@ -16,10 +16,8 @@
 package nl.nlportal.openklant.graphql
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.module.kotlin.readValue
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
-import nl.nlportal.core.util.Mapper
 import nl.nlportal.openklant.service.OpenKlant2Service
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -33,20 +31,18 @@ import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.core.io.ClassPathResource
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean
-import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.web.reactive.function.BodyInserters
-import java.nio.charset.Charset
+import nl.nlportal.openklant.TestHelper
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @Tag("integration")
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class OpenKlant2DigitaleAdresQueryIT(
-    @Autowired private val webTestClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
 ) {
     @MockitoSpyBean
     lateinit var openKlant2Service: OpenKlant2Service
@@ -55,32 +51,19 @@ class OpenKlant2DigitaleAdresQueryIT(
     fun `should introspect DigitaleAdres type`() =
         runTest {
             // when
-            val responseBodyContent =
-                webTestClient
-                    .post()
-                    .uri { builder ->
-                        builder
-                            .path("/graphql")
-                            .build()
-                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/digitaleAdresIntrospection.gql")))
-                    .exchange()
-                    .expectStatus()
-                    .isOk
-                    .expectBody()
-                    .returnResult()
-                    .responseBodyContent
-                    ?.toString(Charset.defaultCharset())
-
-            val typeResponse =
-                objectMapper
-                    .readValue<JsonNode>(responseBodyContent!!)
-                    .get("data")
-                    ?.get("__type")
+            val responseBody =
+                httpGraphQlTester
+                    .document(TestHelper.readFileAsString("/config/graphql/digitaleAdresIntrospection.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("__type")
+                    .entity(JsonNode::class.java)
+                    .get()
 
             // then
-            assertEquals("OBJECT", typeResponse?.get("kind")?.textValue())
-            assertEquals("DigitaleAdresResponse", typeResponse?.get("name")?.textValue())
+            assertEquals("OBJECT", responseBody.get("kind")?.textValue())
+            assertEquals("DigitaleAdresResponse", responseBody.get("name")?.textValue())
         }
 
     @Test
@@ -89,33 +72,20 @@ class OpenKlant2DigitaleAdresQueryIT(
         runTest {
             // when
             val responseBody =
-                webTestClient
-                    .post()
-                    .uri { builder ->
-                        builder
-                            .path("/graphql")
-                            .build()
-                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserDigitaleAdressen.gql")))
-                    .exchange()
-                    .expectStatus()
-                    .isOk
-                    .expectBody()
-                    .returnResult()
-                    .responseBodyContent
-                    ?.toString(Charset.defaultCharset())
-
-            val response =
-                objectMapper
-                    .readValue<JsonNode>(responseBody!!)
-                    .get("data")
-                    ?.get("getUserDigitaleAdressen")
+                httpGraphQlTester
+                    .document(TestHelper.readFileAsString("/config/graphql/getUserDigitaleAdressen.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getUserDigitaleAdressen")
+                    .entity(JsonNode::class.java)
+                    .get()
 
             // then
             verify(openKlant2Service, times(1)).findDigitaleAdressen(any())
 
-            assertNotNull(response)
-            assertEquals("OVERIG", response?.get(0)?.get("type")?.textValue())
+            assertNotNull(responseBody)
+            assertEquals("OVERIG", responseBody.get(0)?.get("type")?.textValue())
         }
 
     @Test
@@ -124,34 +94,17 @@ class OpenKlant2DigitaleAdresQueryIT(
         runTest {
             // when
             val responseBody =
-                webTestClient
-                    .post()
-                    .uri { builder ->
-                        builder
-                            .path("/graphql")
-                            .build()
-                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserDigitaleAdressen.gql")))
-                    .exchange()
-                    .expectStatus()
-                    .isOk
-                    .expectBody()
-                    .returnResult()
-                    .responseBodyContent
-                    ?.toString(Charset.defaultCharset())
-
-            val responsePartij =
-                objectMapper
-                    .readValue<JsonNode>(responseBody!!)
-                    .get("data")
-                    ?.get("getUserDigitaleAdressen")
+                httpGraphQlTester
+                    .document(TestHelper.readFileAsString("/config/graphql/getUserDigitaleAdressen.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getUserDigitaleAdressen")
+                    .entity(JsonNode::class.java)
+                    .get()
 
             // then
             verify(openKlant2Service, times(1)).findDigitaleAdressen(any())
-            assertTrue(responsePartij!!.isEmpty)
+            assertTrue(responseBody.isEmpty)
         }
-
-    companion object {
-        private val objectMapper = Mapper.get()
-    }
 }

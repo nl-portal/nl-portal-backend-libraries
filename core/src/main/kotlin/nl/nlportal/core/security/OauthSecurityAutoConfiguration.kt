@@ -78,7 +78,7 @@ class OauthSecurityAutoConfiguration {
                 }
             }.authorizeExchange {
                 it.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                it.pathMatchers("/playground").permitAll()
+                it.pathMatchers("/graphiql").permitAll()
                 it.pathMatchers("/graphql").permitAll()
                 it
                     .pathMatchers("/actuator/**")
