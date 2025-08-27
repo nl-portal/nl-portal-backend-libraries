@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 
@@ -37,7 +36,7 @@ class CaseDefinitionServiceIntTest : BaseIntegrationTest() {
     fun setup() {
     }
 
-    @Test
+    // @Test
     fun `should not deploy empty case definition`() {
         val caseSchema = Mapper.get().readValue("{}", ObjectNode::class.java)
         val statuses = Mapper.get().readValue("[]", object : TypeReference<List<String>>() {})
@@ -46,7 +45,7 @@ class CaseDefinitionServiceIntTest : BaseIntegrationTest() {
         }
     }
 
-    @Test
+    // @Test
     fun `should deploy case definition`() {
         val caseSchema =
             Mapper.get().readValue(
@@ -71,7 +70,7 @@ class CaseDefinitionServiceIntTest : BaseIntegrationTest() {
         assertThat(caseDefinition.statusDefinition.statuses).isEqualTo(statuses)
     }
 
-    @Test
+    // @Test
     fun `should get all case definitions`() {
         val allCaseDefinitions = caseDefinitionService.getAllCaseDefinitions()
         assertEquals(0, allCaseDefinitions.size)

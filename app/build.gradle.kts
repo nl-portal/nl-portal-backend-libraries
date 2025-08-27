@@ -35,7 +35,6 @@ dependencies {
     implementation(project(":payment-direct"))
     implementation(project(":zgw:besluiten"))
     implementation(project(":zgw:openproduct"))*/
-
     implementation(project(":zgw:openklant"))
 
     implementation("org.springframework.boot", "spring-boot-starter-actuator")

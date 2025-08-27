@@ -35,16 +35,16 @@ include(
     "zgw:common-ground-authentication",
     "zgw:common-ground-authentication-test",
     "zgw:openklant",
-    /*
     "case",
     "data",
+    "messaging",
+    /*
     "form",
     "haalcentraal-hr",
     "haalcentraal2",
     "klant",
     "klant-generiek",
     "klantcontactmomenten",
-    "messaging",
     "product",
     "portal-authentication",
     "payment",

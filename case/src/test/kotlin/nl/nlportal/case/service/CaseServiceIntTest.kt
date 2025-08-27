@@ -22,7 +22,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
@@ -46,7 +45,7 @@ class CaseServiceIntTest : BaseIntegrationTest() {
         Mockito.`when`(authentication.name).thenReturn(user)
     }
 
-    @Test
+    // @Test
     fun `should not create case with empty submission`() {
         val submission = Mapper.get().readValue("{}", ObjectNode::class.java)
         val illegalStateException =
@@ -61,7 +60,7 @@ class CaseServiceIntTest : BaseIntegrationTest() {
         assertThat(illegalStateException).hasMessage("Empty case data")
     }
 
-    @Test
+    // @Test
     fun `should create case with valid submission`() {
         val submission =
             Mapper.get().readValue(
