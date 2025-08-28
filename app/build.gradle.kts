@@ -24,7 +24,7 @@ dependencies {
     implementation(project(":klant"))
     implementation(project(":klantcontactmomenten"))
     implementation(project(":product"))
-    implementation(project(":form"))
+
     implementation(project(":zgw:berichten"))
     implementation(project(":zgw:taak"))
 
@@ -36,6 +36,7 @@ dependencies {
     implementation(project(":zgw:besluiten"))
     implementation(project(":zgw:openproduct"))*/
     implementation(project(":zgw:openklant"))
+    implementation(project(":form"))
 
     implementation("org.springframework.boot", "spring-boot-starter-actuator")
     api("org.postgresql", "postgresql")
