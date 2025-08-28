@@ -1,0 +1,407 @@
+type Query {
+    # Gets the persoon data
+    getPersoonV2: BrpPersoon
+
+    # Gets the number of people living in the same house of the adresseerbaarObjectIdentificatie
+    getBewonersAantalV2(adresseerbaarObjectIdentificatie: String!): Int
+
+    # Gets the data of the gemachtigde
+    getGemachtigdeV2: GemachtigdeV2
+}
+
+type GemachtigdeV2 {
+    persoon: BrpPersoon,
+    bedrijf: MaatschappelijkeActiviteit,
+}
+
+type Brp2Adres {
+    aanduidingBijHuisnummer: BrpCodeOmschrijving
+    huisletter: String
+    huisnummer: Int
+    huisnummertoevoeging: String
+    inOnderzoek: Brp2AdresInOnderzoek
+    korteStraatnaam: String
+    officieleStraatnaam: String
+    postcode: String
+    woonplaats: String
+}
+
+type Brp2AdresInOnderzoek {
+    aanduidingBijHuisnummer: Boolean
+    huisletter: Boolean
+    huisnummer: Boolean
+    huisnummertoevoeging: Boolean
+    korteStraatnaam: Boolean
+    officieleStraatnaam: Boolean
+    postcode: Boolean
+    woonplaats: Boolean
+}
+
+type Brp2NationaliteitInOnderzoek {
+    datumIngangGeldigheid: Boolean
+    datumIngangOnderzoek: BrpDatum
+    nationaliteit: Boolean
+    redenOpname: Boolean
+    type: Boolean
+}
+
+type BrpAdellijkeTitelPredicaat {
+    code: String
+    omschrijving: String
+    soort: String
+}
+
+type BrpAdressering {
+    aanhef: String
+    aanschrijfwijze: BrpAdresseringAanschrijfwijze
+    adresregel1: String
+    adresregel2: String
+    adresregel3: String
+    gebruikInLopendeTekst: String
+    indicatieVastgesteldVerblijftNietOpAdres: Boolean
+    land: BrpCodeOmschrijving
+}
+
+type BrpAdresseringAanschrijfwijze {
+    aanspreekvorm: String
+    naam: String
+}
+
+type BrpCodeOmschrijving {
+    code: String
+    omschrijving: String
+}
+
+type BrpDatum {
+    datum: Date
+    langFormaat: String
+    type: String
+}
+
+type BrpDatumLandPlaats {
+    datum: BrpDatum
+    inOnderzoek: BrpDatumLandPlaatsInOnderzoek
+    land: BrpCodeOmschrijving
+    plaats: BrpCodeOmschrijving
+}
+
+type BrpDatumLandPlaatsInOnderzoek {
+    datum: Boolean
+    datumIngangOnderzoek: BrpDatum
+    land: Boolean
+    plaats: Boolean
+}
+
+type BrpEuropeesKiesrecht {
+    aanduiding: BrpCodeOmschrijving
+    einddatumUitsluiting: BrpDatum
+}
+
+type BrpGezag {
+    derde: BrpGezagDerde
+    derden: [BrpGezagDerde!]
+    minderjarige: BrpGezagMinderjarige
+    ouder: BrpGezagOuder
+    ouders: [BrpGezagOuder!]
+    type: String
+}
+
+type BrpGezagDerde {
+    burgerservicenummer: String
+    naam: BrpGezagNaam
+    type: String
+}
+
+type BrpGezagMinderjarige {
+    burgerservicenummer: String
+    leeftijd: Int
+    naam: BrpGezagNaam
+}
+
+type BrpGezagNaam {
+    volledigeNaam: String
+}
+
+type BrpGezagOuder {
+    burgerservicenummer: String
+    naam: BrpGezagNaam
+}
+
+type BrpImigratie {
+    datumVestigingInNederland: BrpDatum
+    inOnderzoek: BrpImigratieInOnderzoek
+    indicatieVestigingVanuitBuitenland: Boolean
+    landVanwaarIngeschreven: BrpCodeOmschrijving
+    vanuitVerblijfplaatsOnbekend: Boolean
+}
+
+type BrpImigratieInOnderzoek {
+    datumIngangOnderzoek: BrpDatum
+    datumVestigingInNederland: Boolean
+    indicatieVestigingVanuitBuitenland: Boolean
+    landVanwaarIngeschreven: Boolean
+    vanuitVerblijfplaatsOnbekend: Boolean
+}
+
+type BrpInOnderzoek {
+    burgerservicenummer: Boolean
+    datumIngangOnderzoekGemeente: BrpDatum
+    datumIngangOnderzoekGezag: BrpDatum
+    datumIngangOnderzoekPersoon: BrpDatum
+    datumInschrijvingInGemeente: Boolean
+    gemeenteVanInschrijving: Boolean
+    geslacht: Boolean
+    indicatieCurateleRegister: Boolean
+    indicatieGezagMinderjarige: Boolean
+    leeftijd: Boolean
+}
+
+type BrpKind {
+    burgerservicenummer: String
+    geboorte: BrpDatumLandPlaats
+    inOnderzoek: BrpKindInOnderzoek
+    naam: BrpNaam
+}
+
+type BrpKindInOnderzoek {
+    burgerservicenummer: Boolean
+    datumIngangOnderzoek: BrpDatum
+}
+
+type BrpNaam {
+    aanduidingNaamgebruik: BrpCodeOmschrijving
+    adellijkeTitelPredicaat: BrpAdellijkeTitelPredicaat
+    geslachtsnaam: String
+    inOnderzoek: BrpNaamInOnderzoek
+    officialLastName: String
+    volledigeNaam: String
+    voorletters: String
+    voornamen: String
+    voorvoegsel: String
+    lastName: String!
+}
+
+type BrpNaamInOnderzoek {
+    aanduidingNaamgebruik: Boolean
+    adellijkeTitelPredicaat: Boolean
+    datumIngangOnderzoek: BrpDatum
+    geslachtsnaam: Boolean
+    volledigeNaam: Boolean
+    voorletters: Boolean
+    voornamen: Boolean
+    voorvoegsel: Boolean
+}
+
+type BrpNationaliteit {
+    datumIngangGeldigheid: BrpCodeOmschrijving
+    inOnderzoek: Brp2NationaliteitInOnderzoek
+    nationaliteit: BrpCodeOmschrijving
+    redenOpname: BrpCodeOmschrijving
+    type: String
+}
+
+type BrpOuder {
+    burgerservicenummer: String
+    datumIngangFamilierechtelijkeBetrekking: BrpDatum
+    geboorte: BrpDatumLandPlaats
+    geslacht: BrpCodeOmschrijving
+    inOnderzoek: BrpOuderInOnderzoek
+    naam: BrpNaam
+    ouderAanduiding: String
+}
+
+type BrpOuderInOnderzoek {
+    burgerservicenummer: Boolean
+    datumIngangFamilierechtelijkeBetrekking: Boolean
+    datumIngangOnderzoek: BrpDatum
+    geslacht: Boolean
+}
+
+type BrpPartner {
+    aangaanHuwelijkPartnerschap: BrpPartnerHuwelijkAangaan
+    burgerservicenummer: String
+    geboorte: BrpDatumLandPlaats
+    geslacht: BrpCodeOmschrijving
+    inOnderzoek: BrpPartnerInOnderzoek
+    naam: BrpNaam
+    ontbindingHuwelijkPartnerschap: BrpPartnerHuwelijkOntbinding
+    soortVerbintenis: BrpCodeOmschrijving
+}
+
+type BrpPartnerHuwelijkAangaan {
+    datum: BrpDatum
+    inOnderzoek: BrpPartnerHuwelijkAangaanInOnderzoek
+    land: BrpCodeOmschrijving
+    plaats: BrpCodeOmschrijving
+    soortVerbintenis: BrpCodeOmschrijving
+}
+
+type BrpPartnerHuwelijkAangaanInOnderzoek {
+    datum: Boolean
+    datumIngangOnderzoek: BrpDatum
+    land: Boolean
+    plaats: Boolean
+    soortVerbintenis: Boolean
+}
+
+type BrpPartnerHuwelijkOntbinding {
+    datum: BrpDatum
+    inOnderzoek: BrpPartnerHuwelijkOntbindingInOnderzoek
+}
+
+type BrpPartnerHuwelijkOntbindingInOnderzoek {
+    datum: Boolean
+    datumIngangOnderzoek: BrpDatum
+}
+
+type BrpPartnerInOnderzoek {
+    burgerservicenummer: Boolean
+    datumIngangOnderzoek: BrpDatum
+    geslacht: Boolean
+    soortVerbintenis: Boolean
+}
+
+type BrpPersoon {
+    adressering: BrpAdressering
+    burgerservicenummer: String!
+    datumEersteInschrijvingGBA: BrpDatum
+    datumInschrijvingInGemeente: BrpDatum
+    europeesKiesrecht: BrpEuropeesKiesrecht
+    geboorte: BrpDatumLandPlaats
+    geheimhoudingPersoonsgegevens: Boolean
+    gemeenteVanInschrijving: BrpCodeOmschrijving
+    geslacht: BrpCodeOmschrijving
+    gezag: [BrpGezag!]
+    imigratie: BrpImigratie
+    inOnderzoek: BrpInOnderzoek
+    indicatieCurateleRegister: Boolean
+    indicatieGezagMinderjarige: BrpCodeOmschrijving
+    kinderen: [BrpKind!]
+    leeftijd: Int!
+    naam: BrpNaam!
+    nationaliteiten: [BrpNationaliteit!]!
+    ouders: [BrpOuder!]
+    overlijden: BrpDatumLandPlaats
+    partners: [BrpPartner!]
+    rni: [BrpPersoonRni!]
+    uitsluitingKiesrecht: BrpUitsluitingKiesrecht
+    verblijfplaats: BrpVerblijfplaats
+    verblijfstitel: BrpVerblijfsTitel
+    verificatie: BrpPersoonVerificatie
+    bewonersAantal: Int
+}
+
+type BrpPersoonRni {
+    categorie: String
+    deelnemer: BrpCodeOmschrijving
+    omschrijvingVerdrag: String
+}
+
+type BrpPersoonVerificatie {
+    datum: BrpDatum
+    omschrijving: String
+}
+
+type BrpUitsluitingKiesrecht {
+    einddatum: BrpDatum
+    uitgeslotenVanKiesrecht: Boolean
+}
+
+type BrpVerblijfplaats {
+    adresseerbaarObjectIdentificatie: String
+    datumVan: BrpDatum
+    functieAdres: BrpCodeOmschrijving
+    inOnderzoek: BrpVerblijfplaatsInOnderzoek
+    indicatieVastgesteldVerblijftNietOpAdres: Boolean
+    nummeraanduidingIdentificatie: String
+    type: String
+    verblijfadres: Brp2Adres
+}
+
+type BrpVerblijfplaatsInOnderzoek {
+    adresseerbaarObjectIdentificatie: Boolean
+    datumIngangOnderzoek: BrpDatum
+    datumVan: Boolean
+    functieAdres: Boolean
+    indicatieVastgesteldVerblijftNietOpAdres: Boolean
+    nummeraanduidingIdentificatie: Boolean
+    type: Boolean
+    verblijfplaats: Boolean
+}
+
+type BrpVerblijfsTitel {
+    aanduiding: BrpCodeOmschrijving
+    datumEinde: BrpDatum
+    datumIngang: BrpDatum
+    inOnderzoek: BrpVerblijfsTitelInOnderzoek
+}
+
+type BrpVerblijfsTitelInOnderzoek {
+    aanduiding: Boolean
+    datumEinde: Boolean
+    datumIngang: Boolean
+    datumIngangOnderzoek: BrpDatum
+}
+
+type MaatschappelijkeActiviteit {
+    naam: String!,
+    kvkNummer: String!,
+    indNonMailing: String,
+    formeleRegistratiedatum: String,
+    materieleRegistratie: MaterieleRegistratie,
+    totaalWerkzamePersonen: Int,
+    statutaireNaam: String!,
+    handelsnamen: [HandelsNaam],
+    sbiActiviteiten: [SbiActiviteit],
+    embedded: Embedded
+}
+
+type MaterieleRegistratie {
+    datumAanvang: String!
+}
+
+type HandelsNaam {
+    naam: String!,
+    volgorde: Int!
+}
+
+type SbiActiviteit {
+    sbiCode: String!,
+    sbiOmschrijving: String!,
+    indHoofdactiviteit: String!
+}
+
+type Embedded {
+    hoofdvestiging: Hoofdvestiging!,
+    eigenaar: Eigenaar!,
+}
+
+type Hoofdvestiging {
+    vestigingsnummer: String!,
+    kvkNummer: String!,
+    eersteHandelsnaam: String!,
+    indHoofdvestiging: String!,
+    indCommercieleVestiging: String!,
+    totaalWerkzamePersonen: Int!,
+    adressen: [Adres],
+}
+
+type Adres {
+    type: String!,
+    indAfgeschermd: String!,
+    volledigAdres: String!,
+    straatnaam: String,
+    postcode: String!,
+    postbusnummer: Int,
+    plaats: String!,
+    land: String!,
+    huisnummer: Int,
+}
+
+type Eigenaar {
+    rsin: String,
+    rechtsvorm: String!,
+    uitgebreideRechtsvorm: String!,
+}
+
+scalar Date

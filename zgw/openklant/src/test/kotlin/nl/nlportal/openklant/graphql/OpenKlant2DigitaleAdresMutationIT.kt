@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
-import nl.nlportal.core.util.Mapper
 import nl.nlportal.openklant.graphql.domain.DigitaleAdresType
 import nl.nlportal.openklant.service.OpenKlant2Service
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -180,8 +179,4 @@ class OpenKlant2DigitaleAdresMutationIT(
             assertEquals("0611111111", responseBody.get("waarde").textValue())
             assertEquals("Privè telefoonnummer", responseBody.get("omschrijving").textValue())
         }
-
-    companion object {
-        private val objectMapper = Mapper.get()
-    }
 }

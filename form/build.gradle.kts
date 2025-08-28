@@ -32,7 +32,7 @@ dependencies {
 
     implementation(Dependencies.kotlinCoroutines)
     implementation(Dependencies.kotlinCoroutinesReactor)
-    api("org.springframework.data", "spring-data-commons")
+    implementation("org.springframework.data", "spring-data-commons")
 
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.assertj", "assertj-core")

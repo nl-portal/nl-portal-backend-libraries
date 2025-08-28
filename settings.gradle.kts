@@ -42,10 +42,11 @@ include(
     "data",
     "messaging",
     "form",
-    /*
-    "form",
     "haalcentraal-hr",
     "haalcentraal2",
+    /*
+    "form",
+
     "klant",
     "klant-generiek",
     "klantcontactmomenten",
