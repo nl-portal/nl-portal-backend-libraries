@@ -15,12 +15,10 @@
  */
 package nl.nlportal.documentenapi.domain
 
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.UUID
 
 data class Document(
-    @GraphQLIgnore
     val url: String?,
     var identificatie: String?,
     val creatiedatum: String?,
@@ -29,10 +27,8 @@ data class Document(
     val bestandsnaam: String?,
     val bestandsomvang: Int?,
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @GraphQLIgnore
     val status: DocumentStatus?,
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @GraphQLIgnore
     val vertrouwelijkheidaanduiding: Vertrouwelijkheid?,
     var documentapi: String = "",
 ) {

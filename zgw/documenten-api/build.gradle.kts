@@ -27,9 +27,13 @@ dependencies {
     api(project(":portal-authentication"))
     api(project(":zgw:idtoken-authentication"))
 
-    implementation("org.springframework.boot:spring-boot-starter")
+    //implementation("org.springframework.boot:spring-boot-starter")
     implementation(Dependencies.clamAv)
     implementation(Dependencies.tikaCore)
+
+    implementation(Dependencies.kotlinCoroutines)
+    implementation(Dependencies.kotlinCoroutinesReactor)
+    implementation("org.springframework.data", "spring-data-commons")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -42,6 +46,7 @@ dependencies {
     testImplementation(TestDependencies.okHttpMockWebserver)
     testImplementation(TestDependencies.okHttp)
     testImplementation(TestDependencies.postgresql)
+    testImplementation("org.springframework.graphql:spring-graphql-test")
 }
 
 val jar: Jar by tasks

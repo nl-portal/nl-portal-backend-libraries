@@ -45,6 +45,7 @@ include(
     "haalcentraal-hr",
     "haalcentraal2",
     "zgw:taak",
+    "zgw:documenten-api",
     /*
     "form",
 

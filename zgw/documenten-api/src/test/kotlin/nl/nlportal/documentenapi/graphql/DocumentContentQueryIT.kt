@@ -15,6 +15,9 @@
  */
 package nl.nlportal.documentenapi.graphql
 
+import com.fasterxml.jackson.databind.JsonNode
+import java.io.InputStream
+import java.util.Base64
 import nl.nlportal.documentenapi.client.DocumentApisConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -23,25 +26,24 @@ import okhttp3.mockwebserver.RecordedRequest
 import okio.Buffer
 import okio.source
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
-import org.springframework.http.MediaType.APPLICATION_JSON
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.security.test.context.support.WithMockUser
-import org.springframework.test.web.reactive.server.WebTestClient
-import java.io.InputStream
-import java.util.Base64
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(PER_CLASS)
 internal class DocumentContentQueryIT(
-    @Autowired private val testClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private var documentApisConfig: DocumentApisConfig,
 ) {
     lateinit var server1: MockWebServer
@@ -73,19 +75,20 @@ internal class DocumentContentQueryIT(
             }
             """.trimIndent()
 
-        val basePath = "$.data.getDocumentContent"
+        val responseBody =
+            httpGraphQlTester
+                .document(query)
+                .execute()
+                .errors()
+                .verify()
+                .path("getDocumentContent")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
-            .exchange()
-            .expectBody()
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.content").isEqualTo(
-                getResourceAsStream("logo.png").use { Base64.getEncoder().encodeToString(it.readAllBytes()) },
-            )
+        val content = responseBody.get("content").textValue()
+        val resourceStream = getResourceAsStream("logo.png").use { Base64.getEncoder().encodeToString(it.readAllBytes()) }
+
+        assertEquals(resourceStream, content)
     }
 
     @Test
@@ -100,19 +103,20 @@ internal class DocumentContentQueryIT(
             }
             """.trimIndent()
 
-        val basePath = "$.data.getDocumentContent"
+        val responseBody =
+            httpGraphQlTester
+                .document(query)
+                .execute()
+                .errors()
+                .verify()
+                .path("getDocumentContent")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
-            .exchange()
-            .expectBody()
-            .jsonPath(basePath).exists()
-            .jsonPath("$basePath.content").isEqualTo(
-                getResourceAsStream("github.png").use { Base64.getEncoder().encodeToString(it.readAllBytes()) },
-            )
+        val content = responseBody.get("content").textValue()
+        val resourceStream = getResourceAsStream("github.png").use { Base64.getEncoder().encodeToString(it.readAllBytes()) }
+
+        assertEquals(resourceStream, content)
     }
 
     fun setupMockOpenZaakServer(resource: String): MockWebServer {
