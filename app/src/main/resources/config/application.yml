@@ -22,6 +22,8 @@ spring:
     graphql:
         graphiql:
             enabled: true
+        schema:
+            locations: classpath*:graphql/**/
     security:
         oauth2:
             resourceserver:

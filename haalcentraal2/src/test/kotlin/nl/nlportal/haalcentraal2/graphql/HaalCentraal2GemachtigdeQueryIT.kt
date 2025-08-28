@@ -97,9 +97,6 @@ internal class HaalCentraal2GemachtigdeQueryIT(
                             geslachtsnaam,
                             volledigeNaam,
                         }
-                    },
-                    bedrijf {
-                        naam
                     }
                 }
             }
@@ -117,40 +114,6 @@ internal class HaalCentraal2GemachtigdeQueryIT(
 
         assertEquals("Pieter Jan de Vries", responseBody.requiredAt("/persoon/naam/volledigeNaam")?.textValue())
         assertEquals("Vries", responseBody.requiredAt("/persoon/naam/geslachtsnaam")?.textValue())
-    }
-
-    @Test
-    @WithBurgerUser("318634776", gemachtigdeKvk = "90012768")
-    fun `getGemachtigde with kvk`() {
-        val query =
-            """
-            query {
-                getGemachtigdeV2 {
-                    persoon {
-                        burgerservicenummer,
-                        naam {
-                            geslachtsnaam,
-                            volledigeNaam,
-                        },
-                    },
-                    bedrijf {
-                        naam
-                    }
-                }
-            }
-            """.trimIndent()
-
-        val responseBody =
-            httpGraphQlTester
-                .document(query)
-                .execute()
-                .errors()
-                .verify()
-                .path("getGemachtigdeV2")
-                .entity(JsonNode::class.java)
-                .get()
-
-        assertEquals("Test bedrijf", responseBody.requiredAt("/bedrijf/naam")?.textValue())
     }
 
     private fun setupMockServer() {

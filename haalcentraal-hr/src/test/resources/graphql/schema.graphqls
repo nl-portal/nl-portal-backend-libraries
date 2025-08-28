@@ -1,4 +1,4 @@
-extend type Query {
+type Query {
     # Gets the bedrijf data
     getBedrijf: MaatschappelijkeActiviteit
 }

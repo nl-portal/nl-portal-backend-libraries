@@ -1,4 +1,4 @@
-type Query {
+extend type Query {
     allCaseInstances (
         orderBy: CaseInstanceOrdering!,
     ): [CaseInstance]
@@ -10,7 +10,7 @@ type Query {
     allCaseDefinitions: [CaseDefinition]!
 }
 
-type Mutation {
+extend type Mutation {
     processSubmission(
         submission: JSON,
         caseDefinitionId: String!,

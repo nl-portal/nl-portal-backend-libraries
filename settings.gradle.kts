@@ -44,6 +44,7 @@ include(
     "form",
     "haalcentraal-hr",
     "haalcentraal2",
+    "zgw:taak",
     /*
     "form",
 
@@ -60,7 +61,7 @@ include(
     "zgw:common-ground-authentication-test",
     "zgw:documenten-api",
     "zgw:idtoken-authentication",
-    "zgw:taak",
+
     "zgw:zaken-api",
     "zgw:objectenapi",
     "zgw:besluiten",*/

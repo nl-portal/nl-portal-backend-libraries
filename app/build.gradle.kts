@@ -25,7 +25,7 @@ dependencies {
     implementation(project(":product"))
 
     implementation(project(":zgw:berichten"))
-    implementation(project(":zgw:taak"))
+
 
     implementation(project(":zgw:zaken-api"))
     implementation(project(":zgw:catalogi-api"))
@@ -38,6 +38,7 @@ dependencies {
     implementation(project(":form"))
     implementation(project(":haalcentraal-hr"))
     implementation(project(":haalcentraal2"))
+    implementation(project(":zgw:taak"))
 
     implementation("org.springframework.boot", "spring-boot-starter-actuator")
     api("org.postgresql", "postgresql")

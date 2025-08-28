@@ -117,7 +117,7 @@ open class TaakService(
 
     suspend fun submitTaak(
         id: UUID,
-        submission: ObjectNode,
+        submission: Any,
         authentication: CommonGroundAuthentication,
     ): TaakV2 {
         val submittedTask =
@@ -132,7 +132,7 @@ open class TaakService(
 
     suspend fun submitTaakV2(
         id: UUID,
-        submission: ObjectNode,
+        submission: Any,
         authentication: CommonGroundAuthentication,
     ): TaakV2 {
         val objectsApiTask =

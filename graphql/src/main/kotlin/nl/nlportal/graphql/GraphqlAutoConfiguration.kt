@@ -17,6 +17,7 @@ package nl.nlportal.graphql
 
 import graphql.scalars.ExtendedScalars
 import graphql.schema.idl.RuntimeWiring
+import nl.nlportal.graphql.customtype.graphqlZonedDateTimeType
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.graphql.execution.RuntimeWiringConfigurer
@@ -30,11 +31,13 @@ class GraphqlAutoConfiguration {
                 .scalar(ExtendedScalars.GraphQLBigDecimal)
                 .scalar(ExtendedScalars.GraphQLBigInteger)
                 .scalar(ExtendedScalars.GraphQLLong)
+                .scalar(ExtendedScalars.PositiveFloat)
                 .scalar(ExtendedScalars.Json)
                 .scalar(ExtendedScalars.LocalTime)
                 .scalar(ExtendedScalars.DateTime)
                 .scalar(ExtendedScalars.Date)
                 .scalar(ExtendedScalars.Locale)
                 .scalar(ExtendedScalars.UUID)
+                .scalar(graphqlZonedDateTimeType)
         }
 }
