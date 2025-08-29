@@ -48,6 +48,7 @@ include(
     "zgw:documenten-api",
     "zgw:berichten",
     "zgw:besluiten",
+    "payment",
     /*
     "form",
 

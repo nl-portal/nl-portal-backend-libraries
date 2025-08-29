@@ -15,30 +15,28 @@
  */
 package nl.nlportal.payment.domain
 
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonIgnore
-import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig.OgonePaymentProfile
 import java.math.BigDecimal
+import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig.OgonePaymentProfile
 
 data class OgonePayment(
-    @GraphQLIgnore @JsonIgnore val pspId: String,
-    @GraphQLIgnore @JsonIgnore val amount: BigDecimal = BigDecimal.ZERO,
-    @GraphQLIgnore @JsonIgnore val title: String,
-    @GraphQLIgnore @JsonIgnore val reference: String,
-    @GraphQLIgnore @JsonIgnore var orderId: String,
-    @GraphQLIgnore @JsonIgnore val currency: String,
-    @GraphQLIgnore @JsonIgnore val language: String,
-    @GraphQLIgnore @JsonIgnore val acceptUrl: String,
-    @GraphQLIgnore @JsonIgnore val declineUrl: String,
-    @GraphQLIgnore @JsonIgnore val exceptionUrl: String,
-    @GraphQLIgnore @JsonIgnore val cancelUrl: String,
+    @JsonIgnore val pspId: String,
+    @JsonIgnore val amount: BigDecimal = BigDecimal.ZERO,
+    @JsonIgnore val title: String,
+    @JsonIgnore val reference: String,
+    @JsonIgnore var orderId: String,
+    @JsonIgnore val currency: String,
+    @JsonIgnore val language: String,
+    @JsonIgnore val acceptUrl: String,
+    @JsonIgnore val declineUrl: String,
+    @JsonIgnore val exceptionUrl: String,
+    @JsonIgnore val cancelUrl: String,
     val formAction: String,
     var formFields: ArrayList<PaymentField>,
 ) {
     /**
      * amount is converted to cents to avoid decimals
      */
-    @GraphQLIgnore
     fun fillFields(): ArrayList<PaymentField> {
         val fields = ArrayList<PaymentField>()
         fields.add(PaymentField(PAYMENT_PROPERTY_ACCEPT_URL, acceptUrl))
