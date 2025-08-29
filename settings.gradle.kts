@@ -49,6 +49,7 @@ include(
     "zgw:berichten",
     "zgw:besluiten",
     "payment",
+    "payment-direct",
     /*
     "form",
 

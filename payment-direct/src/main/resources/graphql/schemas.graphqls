@@ -1,0 +1,18 @@
+extend type Mutation {
+    # Do Worldline Direct payment
+    doDirectPayment(
+        paymentRequest: DirectPaymentRequestInput!
+    ): DirectPaymentResponse!
+}
+input DirectPaymentRequestInput {
+    amount: PositiveFloat!
+    identifier: String!
+    langId: String
+    orderId: String!
+    reference: String!
+    returnUrl: String
+}
+
+type DirectPaymentResponse {
+    redirectUrl: String!
+}

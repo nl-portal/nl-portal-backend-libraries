@@ -23,16 +23,7 @@ dependencies {
     implementation(project(":klant"))
     implementation(project(":klantcontactmomenten"))
     implementation(project(":product"))
-
-    implementation(project(":zgw:berichten"))
-
-
     implementation(project(":zgw:zaken-api"))
-    implementation(project(":zgw:catalogi-api"))
-    implementation(project(":zgw:documenten-api"))
-    implementation(project(":payment"))
-    implementation(project(":payment-direct"))
-    implementation(project(":zgw:besluiten"))
     implementation(project(":zgw:openproduct"))*/
     implementation(project(":zgw:openklant"))
     implementation(project(":form"))
@@ -43,6 +34,7 @@ dependencies {
     implementation(project(":zgw:berichten"))
     implementation(project(":zgw:besluiten"))
     implementation(project(":payment"))
+    implementation(project(":payment-direct"))
 
     implementation("org.springframework.boot", "spring-boot-starter-actuator")
     api("org.postgresql", "postgresql")
