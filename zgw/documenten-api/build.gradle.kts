@@ -27,7 +27,6 @@ dependencies {
     api(project(":portal-authentication"))
     api(project(":zgw:idtoken-authentication"))
 
-    //implementation("org.springframework.boot:spring-boot-starter")
     implementation(Dependencies.clamAv)
     implementation(Dependencies.tikaCore)
 

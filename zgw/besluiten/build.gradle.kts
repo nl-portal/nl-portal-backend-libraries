@@ -26,7 +26,9 @@ dependencies {
     api(project(":zgw:idtoken-authentication"))
     api(project(":zgw:catalogi-api"))
 
-    implementation("org.springframework.boot:spring-boot-starter")
+    implementation(Dependencies.kotlinCoroutines)
+    implementation(Dependencies.kotlinCoroutinesReactor)
+    implementation("org.springframework.data", "spring-data-commons")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -39,6 +41,7 @@ dependencies {
     testImplementation(TestDependencies.okHttp)
     testImplementation(TestDependencies.postgresql)
     testImplementation(project(":zgw:common-ground-authentication-test"))
+    testImplementation("org.springframework.graphql:spring-graphql-test")
 }
 
 val jar: Jar by tasks

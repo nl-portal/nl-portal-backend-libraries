@@ -40,6 +40,8 @@ dependencies {
     implementation(project(":haalcentraal2"))
     implementation(project(":zgw:taak"))
     implementation(project(":zgw:documenten-api"))
+    implementation(project(":zgw:berichten"))
+    implementation(project(":zgw:besluiten"))
 
     implementation("org.springframework.boot", "spring-boot-starter-actuator")
     api("org.postgresql", "postgresql")

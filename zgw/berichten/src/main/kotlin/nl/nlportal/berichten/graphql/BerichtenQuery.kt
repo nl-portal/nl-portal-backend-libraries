@@ -15,50 +15,46 @@
  */
 package nl.nlportal.berichten.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Query
-import graphql.schema.DataFetchingEnvironment
+import java.util.UUID
 import nl.nlportal.berichten.domain.Bericht
 import nl.nlportal.berichten.service.BerichtenService
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
-import java.util.UUID
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
+@Controller
 class BerichtenQuery(
     private val berichtenService: BerichtenService,
-) : Query {
-    @GraphQLDescription("Gets a single Bericht by Id")
+) {
+    @QueryMapping
     suspend fun getBericht(
-        dfe: DataFetchingEnvironment,
-        id: UUID,
+        authentication: CommonGroundAuthentication,
+        @Argument id: UUID,
     ): Bericht? =
         berichtenService.getBericht(
-            authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
+            authentication = authentication,
             id = id,
         )
 
-    @GraphQLDescription(
-        """
-        Returns a paginated list of all Berichten
-        Could partial search on 'onderwerp'
-    """,
-    )
+    @QueryMapping
     suspend fun getBerichten(
-        dfe: DataFetchingEnvironment,
-        pageNumber: Int? = 1,
-        pageSize: Int? = 20,
-        onderwerp: String? = null,
+        authentication: CommonGroundAuthentication,
+        @Argument pageNumber: Int? = 1,
+        @Argument pageSize: Int? = 20,
+        @Argument onderwerp: String? = null,
     ): BerichtenPage =
         berichtenService.getBerichtenPage(
-            authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
+            authentication = authentication,
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             onderwerp = onderwerp,
         )
 
-    @GraphQLDescription("Returns the total amount of unopened Berichten")
-    suspend fun getUnopenedBerichtenCount(dfe: DataFetchingEnvironment): Int =
+    @QueryMapping
+    suspend fun getUnopenedBerichtenCount(authentication: CommonGroundAuthentication): Int =
         berichtenService
             .getUnopenedBerichtenCount(
-                authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
+                authentication = authentication,
             )
 }

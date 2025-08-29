@@ -46,6 +46,8 @@ include(
     "haalcentraal2",
     "zgw:taak",
     "zgw:documenten-api",
+    "zgw:berichten",
+    "zgw:besluiten",
     /*
     "form",
 

@@ -24,22 +24,22 @@ import org.springframework.util.StreamUtils
 
 @Configuration
 class GraphQLTestConfiguration {
-    @Value("classpath:graphql/getBesluiten.graphql")
+    @Value("classpath:graphql-queries/getBesluiten.graphql")
     private lateinit var getBesluiten: Resource
 
-    @Value("classpath:graphql/getBesluit.graphql")
+    @Value("classpath:graphql-queries/getBesluit.graphql")
     private lateinit var getBesluit: Resource
 
-    @Value("classpath:graphql/getBesluitAuditTrails.graphql")
+    @Value("classpath:graphql-queries/getBesluitAuditTrails.graphql")
     private lateinit var getBesluitAuditTrails: Resource
 
-    @Value("classpath:graphql/getBesluitAuditTrail.graphql")
+    @Value("classpath:graphql-queries/getBesluitAuditTrail.graphql")
     private lateinit var getBesluitAuditTrail: Resource
 
-    @Value("classpath:graphql/getBesluitDocumenten.graphql")
+    @Value("classpath:graphql-queries/getBesluitDocumenten.graphql")
     private lateinit var getBesluitDocumenten: Resource
 
-    @Value("classpath:graphql/getBesluitDocument.graphql")
+    @Value("classpath:graphql-queries/getBesluitDocument.graphql")
     private lateinit var getBesluitDocument: Resource
 
     @Bean
