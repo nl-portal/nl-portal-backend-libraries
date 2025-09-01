@@ -15,6 +15,7 @@
  */
 package nl.nlportal.klant.contactmomenten.graphql
 
+import com.fasterxml.jackson.databind.JsonNode
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.klant.contactmomenten.TestHelper
 import nl.nlportal.klant.generiek.client.OpenKlantClientConfig
@@ -23,20 +24,22 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
-import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class ContactMomentQueryIT(
-    @Autowired private val testClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val openKlantClientConfig: OpenKlantClientConfig,
 ) {
     lateinit var server: MockWebServer
@@ -70,29 +73,19 @@ internal class ContactMomentQueryIT(
             }
             """.trimIndent()
 
-        val basePath = "$.data.getKlantContactMomenten"
-        val resultPath = "$basePath.content[0]"
+        val responseBody =
+            httpGraphQlTester
+                .document(query)
+                .execute()
+                .errors()
+                .verify()
+                .path("getKlantContactMomenten")
+                .entity(JsonNode::class.java)
+                .get()
 
-        val response =
-            testClient
-                .post()
-                .uri("/graphql")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType("application", "graphql"))
-                .bodyValue(query)
-                .exchange()
-                .expectBody()
-                .consumeWith(System.out::println)
-
-        response
-            .jsonPath(basePath)
-            .exists()
-            .jsonPath("$resultPath.tekst")
-            .isEqualTo("Contact moment")
-            .jsonPath("$resultPath.kanaal")
-            .isEqualTo("mail")
-            .jsonPath("$resultPath.registratiedatum")
-            .isEqualTo("2019-08-24T14:15:22Z")
+        assertEquals("Contact moment", responseBody.requiredAt("/content/0/tekst")?.textValue())
+        assertEquals("mail", responseBody.requiredAt("/content/0/kanaal")?.textValue())
+        assertEquals("2019-08-24T14:15:22Z", responseBody.requiredAt("/content/0/registratiedatum")?.textValue())
     }
 
     @Test
@@ -110,30 +103,19 @@ internal class ContactMomentQueryIT(
                 }
             }
             """.trimIndent()
+        val responseBody =
+            httpGraphQlTester
+                .document(query)
+                .execute()
+                .errors()
+                .verify()
+                .path("getObjectContactMomenten")
+                .entity(JsonNode::class.java)
+                .get()
 
-        val basePath = "$.data.getObjectContactMomenten"
-        val resultPath = "$basePath.content[0]"
-
-        val response =
-            testClient
-                .post()
-                .uri("/graphql")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType("application", "graphql"))
-                .bodyValue(query)
-                .exchange()
-                .expectBody()
-                .consumeWith(System.out::println)
-
-        response
-            .jsonPath(basePath)
-            .exists()
-            .jsonPath("$resultPath.tekst")
-            .isEqualTo("Contact moment")
-            .jsonPath("$resultPath.kanaal")
-            .isEqualTo("mail")
-            .jsonPath("$resultPath.registratiedatum")
-            .isEqualTo("2019-08-24T14:15:22Z")
+        assertEquals("Contact moment", responseBody.requiredAt("/content/0/tekst")?.textValue())
+        assertEquals("mail", responseBody.requiredAt("/content/0/kanaal")?.textValue())
+        assertEquals("2019-08-24T14:15:22Z", responseBody.requiredAt("/content/0/registratiedatum")?.textValue())
     }
 
     fun setupMockOpenKlantServer() {

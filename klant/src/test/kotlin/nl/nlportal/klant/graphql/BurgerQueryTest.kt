@@ -16,37 +16,23 @@
 package nl.nlportal.klant.graphql
 
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.klant.service.BurgerService
-import graphql.GraphQLContext
-import graphql.schema.DataFetchingEnvironment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
-import org.springframework.security.core.Authentication
 
 @ExperimentalCoroutinesApi
 internal class BurgerQueryTest {
     var burgerService = mock(BurgerService::class.java)
-    var environment = mock(DataFetchingEnvironment::class.java)
     var authentication = mock(CommonGroundAuthentication::class.java)
-    val context = mock(GraphQLContext::class.java)
     var burgerQuery = BurgerQuery(burgerService)
-
-    @BeforeEach
-    fun setup() {
-        Mockito.`when`(environment.graphQlContext).thenReturn(context)
-        Mockito.`when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
-    }
 
     @Test
     fun getBurgerProfiel() =
         runTest {
-            burgerQuery.getBurgerProfiel(environment)
+            burgerQuery.getBurgerProfiel(authentication)
             verify(burgerService).getBurgerProfiel(authentication)
         }
 }

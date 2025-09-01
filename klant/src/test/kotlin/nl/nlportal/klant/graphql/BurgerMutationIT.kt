@@ -15,6 +15,7 @@
  */
 package nl.nlportal.klant.graphql
 
+import com.fasterxml.jackson.databind.JsonNode
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.klant.TestHelper
@@ -31,16 +32,16 @@ import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
-import org.springframework.http.MediaType.APPLICATION_JSON
-import org.springframework.test.web.reactive.server.WebTestClient
-import java.util.function.Consumer
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(PER_CLASS)
 internal class BurgerMutationIT(
-    @Autowired private val testClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val openKlantClientConfig: OpenKlantClientConfig,
 ) {
     lateinit var server: MockWebServer
@@ -75,23 +76,18 @@ internal class BurgerMutationIT(
             }
             """.trimIndent()
 
-        val basePath = "$.data.updateBurgerProfiel"
+        val responseBody =
+            httpGraphQlTester
+                .document(mutation)
+                .execute()
+                .errors()
+                .verify()
+                .path("updateBurgerProfiel")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(mutation)
-            .exchange()
-            .expectBody()
-            .consumeWith(Consumer { t -> logger.info { t } })
-            .jsonPath(basePath)
-            .exists()
-            .jsonPath("$basePath.telefoonnummer")
-            .isEqualTo("0611111111")
-            .jsonPath("$basePath.emailadres")
-            .isEqualTo("updated@email.nl")
+        assertEquals("0611111111", responseBody.get("telefoonnummer")?.textValue())
+        assertEquals("updated@email.nl", responseBody.get("emailadres")?.textValue())
     }
 
     @Test
@@ -109,22 +105,18 @@ internal class BurgerMutationIT(
             }
             """.trimIndent()
 
-        val basePath = "$.data.updateBurgerProfiel"
+        val responseBody =
+            httpGraphQlTester
+                .document(mutation)
+                .execute()
+                .errors()
+                .verify()
+                .path("updateBurgerProfiel")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(mutation)
-            .exchange()
-            .expectBody()
-            .jsonPath(basePath)
-            .exists()
-            .jsonPath("$basePath.telefoonnummer")
-            .isEqualTo("0622222222")
-            .jsonPath("$basePath.emailadres")
-            .isEqualTo("created@email.nl")
+        assertEquals("0622222222", responseBody.get("telefoonnummer")?.textValue())
+        assertEquals("created@email.nl", responseBody.get("emailadres")?.textValue())
     }
 
     fun setupMockOpenKlantServer() {

@@ -96,39 +96,6 @@ input ContactpersoonIdentificatieInput {
     werkteVoorPartij: OpenKlant2ForeignKeyInput
 }
 
-type ContactMoment {
-    bronorganisatie: String
-    initiatiefnemer: String
-    kanaal: String!
-    medewerker: String
-    registratiedatum: String!
-    tekst: String!
-    volgendContactmoment: String
-    voorkeurskanaal: String
-    voorkeurstaal: String
-    vorigContactmoment: String
-}
-
-type ContactMomentPage {
-    # The elements on this page
-    content: [ContactMoment!]!
-
-    # The requested page number
-    number: Int!
-
-    # The number of elements on this page
-    numberOfElements: Int!
-
-    # The requested page size
-    size: Int!
-
-    # The total number of elements
-    totalElements: Int!
-
-    # The total number of available pages
-    totalPages: Int!
-}
-
 type Contactnaam {
     achternaam: String
     voorletters: String

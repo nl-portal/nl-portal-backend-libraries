@@ -1,0 +1,20 @@
+type Query {
+    # Gets the profile for the user
+    getBurgerProfiel: Klant
+}
+type Mutation {
+    # Updates the profile for the user
+    updateBurgerProfiel(klant: KlantUpdateInput!): Klant
+}
+
+input KlantUpdateInput {
+    aanmaakkanaal: String
+    emailadres: String
+    telefoonnummer: String
+}
+
+type Klant {
+    aanmaakkanaal: String
+    emailadres: String
+    telefoonnummer: String
+}

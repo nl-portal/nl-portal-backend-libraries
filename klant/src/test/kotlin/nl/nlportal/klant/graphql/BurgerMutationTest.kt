@@ -16,12 +16,9 @@
 package nl.nlportal.klant.graphql
 
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.klant.domain.klanten.KlantUpdate
 import nl.nlportal.klant.service.BurgerService
 import nl.nlportal.klant.generiek.validation.GraphQlValidator
-import graphql.GraphQLContext
-import graphql.schema.DataFetchingEnvironment
 import jakarta.validation.ValidationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -31,10 +28,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
-import org.springframework.security.core.Authentication
 
 @ExtendWith(MockitoExtension::class)
 @ExperimentalCoroutinesApi
@@ -43,13 +38,7 @@ internal class BurgerMutationTest {
     lateinit var burgerService: BurgerService
 
     @Mock
-    lateinit var environment: DataFetchingEnvironment
-
-    @Mock
     lateinit var authentication: CommonGroundAuthentication
-
-    @Mock
-    lateinit var context: GraphQLContext
 
     private lateinit var burgerMutation: BurgerMutation
 
@@ -61,15 +50,13 @@ internal class BurgerMutationTest {
     @Test
     fun `can update klant with valid phone number and email`() =
         runTest {
-            Mockito.`when`(environment.graphQlContext).thenReturn(context)
-            Mockito.`when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
             val klant =
                 KlantUpdate(
                     telefoonnummer = "0611111111",
                     emailadres = "new@email.nl",
                 )
 
-            burgerMutation.updateBurgerProfiel(klant, environment)
+            burgerMutation.updateBurgerProfiel(klant, authentication)
 
             verify(burgerService).updateBurgerProfiel(klant, authentication)
         }
@@ -77,15 +64,13 @@ internal class BurgerMutationTest {
     @Test
     fun `can update klant with empty phone number and email`() =
         runTest {
-            Mockito.`when`(environment.graphQlContext).thenReturn(context)
-            Mockito.`when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
             val klant =
                 KlantUpdate(
                     telefoonnummer = "",
                     emailadres = "",
                 )
 
-            burgerMutation.updateBurgerProfiel(klant, environment)
+            burgerMutation.updateBurgerProfiel(klant, authentication)
 
             verify(burgerService).updateBurgerProfiel(klant, authentication)
         }
@@ -99,7 +84,7 @@ internal class BurgerMutationTest {
             )
         val exception =
             Assertions.assertThrows(ValidationException::class.java) {
-                runTest { burgerMutation.updateBurgerProfiel(klant, environment) }
+                runTest { burgerMutation.updateBurgerProfiel(klant, authentication) }
             }
         assertThat(exception).hasMessage("Must be a valid phone number")
     }
@@ -113,7 +98,7 @@ internal class BurgerMutationTest {
             )
         val exception =
             Assertions.assertThrows(ValidationException::class.java) {
-                runTest { burgerMutation.updateBurgerProfiel(klant, environment) }
+                runTest { burgerMutation.updateBurgerProfiel(klant, authentication) }
             }
         assertThat(exception).hasMessage("must be a well-formed email address")
     }

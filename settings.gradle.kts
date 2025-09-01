@@ -50,12 +50,13 @@ include(
     "zgw:besluiten",
     "payment",
     "payment-direct",
-    /*
-    "form",
-
     "klant",
     "klant-generiek",
     "klantcontactmomenten",
+    /*
+    "form",
+
+
     "product",
     "portal-authentication",
     "payment",

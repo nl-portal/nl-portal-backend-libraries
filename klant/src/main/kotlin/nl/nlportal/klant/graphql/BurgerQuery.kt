@@ -15,16 +15,16 @@
  */
 package nl.nlportal.klant.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Query
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.klant.domain.klanten.Klant
 import nl.nlportal.klant.service.BurgerService
-import graphql.schema.DataFetchingEnvironment
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
+@Controller
 class BurgerQuery(
     val burgerService: BurgerService,
-) : Query {
-    @GraphQLDescription("Gets the profile for the user")
-    suspend fun getBurgerProfiel(dfe: DataFetchingEnvironment): Klant? = burgerService.getBurgerProfiel(dfe.graphQlContext.get(AUTHENTICATION_KEY))
+) {
+    @QueryMapping
+    suspend fun getBurgerProfiel(authentication: CommonGroundAuthentication): Klant? = burgerService.getBurgerProfiel(authentication)
 }

@@ -15,6 +15,7 @@
  */
 package nl.nlportal.klant.graphql
 
+import com.fasterxml.jackson.databind.JsonNode
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.klant.TestHelper
 import nl.nlportal.klant.generiek.client.OpenKlantClientConfig
@@ -23,22 +24,23 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
-import org.springframework.http.MediaType.APPLICATION_JSON
-import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(PER_CLASS)
 internal class BurgerQueryIT(
-    @Autowired private val testClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val openKlantClientConfig: OpenKlantClientConfig,
 ) {
     lateinit var server: MockWebServer
@@ -69,22 +71,18 @@ internal class BurgerQueryIT(
             }
             """.trimIndent()
 
-        val basePath = "$.data.getBurgerProfiel"
+        val responseBody =
+            httpGraphQlTester
+                .document(query)
+                .execute()
+                .errors()
+                .verify()
+                .path("getBurgerProfiel")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
-            .exchange()
-            .expectBody()
-            .jsonPath(basePath)
-            .exists()
-            .jsonPath("$basePath.telefoonnummer")
-            .isEqualTo("0600000000")
-            .jsonPath("$basePath.emailadres")
-            .isEqualTo("peter@example.com")
+        assertEquals("0600000000", responseBody.get("telefoonnummer")?.textValue())
+        assertEquals("peter@example.com", responseBody.get("emailadres")?.textValue())
     }
 
     fun setupMockOpenKlantServer() {

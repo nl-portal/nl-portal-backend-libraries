@@ -47,5 +47,6 @@ class KlantContactMomentenAutoConfiguration {
     fun openKlantContactMomentenClient(openKlantClientProvider: OpenKlantClientProvider): KlantContactMomentenClient = KlantContactMomentenClient(openKlantClientProvider)
 
     @Bean
+    @ConditionalOnMissingBean(ContactMomentQuery::class)
     fun contactMomentenQuery(klantContactMomentenService: KlantContactMomentenService): ContactMomentQuery = ContactMomentQuery(klantContactMomentenService)
 }

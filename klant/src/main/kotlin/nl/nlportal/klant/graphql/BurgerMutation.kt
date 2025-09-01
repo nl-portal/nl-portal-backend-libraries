@@ -15,25 +15,29 @@
  */
 package nl.nlportal.klant.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Mutation
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.klant.domain.klanten.Klant
 import nl.nlportal.klant.domain.klanten.KlantUpdate
-import nl.nlportal.klant.service.BurgerService
 import nl.nlportal.klant.generiek.validation.GraphQlValidator
-import graphql.schema.DataFetchingEnvironment
+import nl.nlportal.klant.service.BurgerService
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.stereotype.Controller
 
+@Controller
 class BurgerMutation(
     val burgerService: BurgerService,
     val graphQlValidator: GraphQlValidator,
-) : Mutation {
-    @GraphQLDescription("Updates the profile for the user")
+) {
+    @MutationMapping
     suspend fun updateBurgerProfiel(
-        klant: KlantUpdate,
-        dfe: DataFetchingEnvironment,
+        @Argument klant: KlantUpdate,
+        authentication: CommonGroundAuthentication,
     ): Klant? {
         graphQlValidator.validate(klant)
-        return burgerService.updateBurgerProfiel(klant, dfe.graphQlContext.get(AUTHENTICATION_KEY))
+        return burgerService.updateBurgerProfiel(
+            klant = klant,
+            authentication = authentication,
+        )
     }
 }

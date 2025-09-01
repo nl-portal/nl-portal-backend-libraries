@@ -15,34 +15,35 @@
  */
 package nl.nlportal.klant.contactmomenten.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Query
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
-import graphql.schema.DataFetchingEnvironment
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.klant.contactmomenten.service.KlantContactMomentenService
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
+@Controller
 class ContactMomentQuery(
     val klantContactMomentenService: KlantContactMomentenService,
-) : Query {
-    @GraphQLDescription("Gets the contactmomenten of a klant")
+) {
+    @QueryMapping
     suspend fun getKlantContactMomenten(
-        dfe: DataFetchingEnvironment,
-        pageNumber: Int? = 1,
+        authentication: CommonGroundAuthentication,
+        @Argument pageNumber: Int? = 1,
     ): ContactMomentPage? =
         klantContactMomentenService.getKlantContactMomenten(
-            dfe.graphQlContext.get(AUTHENTICATION_KEY),
-            pageNumber ?: 1,
+            authentication = authentication,
+            page = pageNumber ?: 1,
         )
 
-    @GraphQLDescription("Gets the contactmomenten of a object(zaak)")
+    @QueryMapping
     suspend fun getObjectContactMomenten(
-        dfe: DataFetchingEnvironment,
-        objectUrl: String,
-        pageNumber: Int? = 1,
+        authentication: CommonGroundAuthentication,
+        @Argument objectUrl: String,
+        @Argument pageNumber: Int? = 1,
     ): ContactMomentPage? =
         klantContactMomentenService.getObjectContactMomenten(
-            dfe.graphQlContext.get(AUTHENTICATION_KEY),
-            objectUrl,
-            pageNumber ?: 1,
+            authentication = authentication,
+            objectUrl = objectUrl,
+            page = pageNumber ?: 1,
         )
 }

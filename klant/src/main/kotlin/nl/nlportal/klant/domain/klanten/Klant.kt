@@ -15,16 +15,10 @@
  */
 package nl.nlportal.klant.domain.klanten
 
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
-
 data class Klant(
-    @GraphQLIgnore
     val url: String,
-    @GraphQLIgnore
     val bronorganisatie: String,
-    @GraphQLIgnore
     val klantnummer: String,
-    @GraphQLIgnore
     val websiteUrl: String,
     var telefoonnummer: String?,
     var emailadres: String?,
