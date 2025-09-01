@@ -54,6 +54,7 @@ include(
     "klant-generiek",
     "klantcontactmomenten",
     "zgw:zaken-api",
+    "zgw:openproduct",
     /*
     "form",
 

@@ -15,10 +15,8 @@
  */
 package nl.nlportal.openproduct.client.domain
 
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonValue
 
-@GraphQLIgnore
 interface OpenProductFilters
 
 data class OpenProductUrl(

@@ -15,21 +15,21 @@
  */
 package nl.nlportal.openproduct.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
-import com.expediagroup.graphql.server.operations.Query
+import java.util.UUID
 import nl.nlportal.openproduct.client.domain.OpenProductLink
 import nl.nlportal.openproduct.service.OpenProductService
-import java.util.UUID
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
-@AuthenticatedDirective
+@Controller
 class OpenProductLinkQuery(
     val openProductService: OpenProductService,
-) : Query {
-    @GraphQLDescription("Get all links")
+) {
+    @QueryMapping
     suspend fun getOpenProductLinks(
-        pageNumber: Int? = null,
-        pageSize: Int? = null,
+        @Argument pageNumber: Int? = null,
+        @Argument pageSize: Int? = null,
     ): LinksPage =
         LinksPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
@@ -41,8 +41,10 @@ class OpenProductLinkQuery(
                 ),
         )
 
-    @GraphQLDescription("Get a link")
-    suspend fun getOpenProductLink(id: UUID): OpenProductLink? =
+    @QueryMapping
+    suspend fun getOpenProductLink(
+        @Argument id: UUID,
+    ): OpenProductLink? =
         openProductService.getLink(
             id = id,
         )

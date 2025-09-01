@@ -15,10 +15,12 @@
  */
 package nl.nlportal.openproduct.graphql
 
+import com.fasterxml.jackson.databind.JsonNode
+import java.net.URI
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.openproduct.TestHelper
-import nl.nlportal.openproduct.TestHelper.verifyOnlyDataExists
+import nl.nlportal.openproduct.TestHelper.readFileAsString
 import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration
 import nl.nlportal.zakenapi.client.ZakenApiConfig
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
@@ -27,27 +29,25 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.core.io.ClassPathResource
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
-import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.web.reactive.function.BodyInserters
-import java.net.URI
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class OpenProductThemaQueryIT(
-    @Autowired private val webTestClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val openProductModuleConfiguration: OpenProductModuleConfiguration,
     @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
     @Autowired private val zakenApiConfig: ZakenApiConfig,
@@ -97,191 +97,155 @@ class OpenProductThemaQueryIT(
     @WithBurgerUser("569312863")
     fun `get themas`() =
         runTest {
-            val basePath = "$.data.getOpenProductThemas"
-            val resultPath = "$basePath.content[0]"
-            webTestClient
-                .post()
-                .uri { builder ->
-                    builder
-                        .path("/graphql")
-                        .build()
-                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductThemas.gql")))
-                .exchange()
-                .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.totalElements")
-                .isEqualTo(4)
-                .jsonPath("$resultPath.naam")
-                .isEqualTo("Parkeren")
-                .jsonPath("$resultPath.producttypen[0].uniformeProductNaam")
-                .isEqualTo("Parkeervergunning")
-                .jsonPath("$resultPath.producttypen[0].code")
-                .isEqualTo("PARKEREN")
+            val responseBody =
+                httpGraphQlTester
+                    .document(readFileAsString("/config/graphql/getOpenProductThemas.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getOpenProductThemas")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals(4, responseBody.get("totalElements")?.intValue())
+            assertEquals("Parkeren", responseBody.requiredAt("/content/0/naam")?.textValue())
+            assertEquals("Parkeervergunning", responseBody.requiredAt("/content/0/producttypen/0/uniformeProductNaam")?.textValue())
+            assertEquals("PARKEREN", responseBody.requiredAt("/content/0/producttypen/0/code")?.textValue())
         }
 
     @Test
     @WithBurgerUser("569312863")
     fun `get hoofd themas`() =
         runTest {
-            val basePath = "$.data.getOpenProductHoofdThemas"
-            webTestClient
-                .post()
-                .uri { builder ->
-                    builder
-                        .path("/graphql")
-                        .build()
-                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductHoofdThemas.gql")))
-                .exchange()
-                .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.size()")
-                .isEqualTo(2)
-                .jsonPath("$basePath[0].naam")
-                .isEqualTo("Belastingzaken")
-                .jsonPath("$basePath[0].producttypen[0].uniformeProductNaam")
-                .isEqualTo("toeristenbelasting")
-                .jsonPath("$basePath[0].producttypen[0].code")
-                .isEqualTo("BELASTINGZAKEN")
+            val responseBody =
+                httpGraphQlTester
+                    .document(readFileAsString("/config/graphql/getOpenProductHoofdThemas.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getOpenProductHoofdThemas")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals(2, responseBody.size())
+            assertEquals("Belastingzaken", responseBody.requiredAt("/0/naam")?.textValue())
+            assertEquals("toeristenbelasting", responseBody.requiredAt("/0/producttypen/0/uniformeProductNaam")?.textValue())
+            assertEquals("BELASTINGZAKEN", responseBody.requiredAt("/0/producttypen/0/code")?.textValue())
         }
 
     @Test
     @WithBurgerUser("569312863")
     fun `get hoofd themas by producten`() =
         runTest {
-            val basePath = "$.data.getOpenProductHoofdThemasByProducten"
-            webTestClient
-                .post()
-                .uri { builder ->
-                    builder
-                        .path("/graphql")
-                        .build()
-                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductHoofdThemasByProducten.gql")))
-                .exchange()
-                .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.size()")
-                .isEqualTo(2)
-                .jsonPath("$basePath[0].naam")
-                .isEqualTo("Belastingzaken")
-                .jsonPath("$basePath[0].producttypen[0].uniformeProductNaam")
-                .isEqualTo("toeristenbelasting")
-                .jsonPath("$basePath[0].producttypen[0].code")
-                .isEqualTo("BELASTINGZAKEN")
+            val responseBody =
+                httpGraphQlTester
+                    .document(readFileAsString("/config/graphql/getOpenProductHoofdThemasByProducten.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getOpenProductHoofdThemasByProducten")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals(2, responseBody.size())
+            assertEquals("Belastingzaken", responseBody.requiredAt("/0/naam")?.textValue())
+            assertEquals("toeristenbelasting", responseBody.requiredAt("/0/producttypen/0/uniformeProductNaam")?.textValue())
+            assertEquals("BELASTINGZAKEN", responseBody.requiredAt("/0/producttypen/0/code")?.textValue())
         }
 
     @Test
     @WithBurgerUser("569312863")
     fun `get themas hierarchy`() =
         runTest {
-            val basePath = "$.data.getOpenProductThemasHierarchy"
-            webTestClient
-                .post()
-                .uri { builder ->
-                    builder
-                        .path("/graphql")
-                        .build()
-                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductThemasHierarchy.gql")))
-                .exchange()
-                .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.size()")
-                .isEqualTo(2)
-                .jsonPath("$basePath[0].thema.naam")
-                .isEqualTo("Belastingzaken")
-                .jsonPath("$basePath[0].thema.producttypen[0].uniformeProductNaam")
-                .isEqualTo("toeristenbelasting")
-                .jsonPath("$basePath[0].thema.producttypen[0].code")
-                .isEqualTo("BELASTINGZAKEN")
+            val responseBody =
+                httpGraphQlTester
+                    .document(readFileAsString("/config/graphql/getOpenProductThemasHierarchy.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getOpenProductThemasHierarchy")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals(2, responseBody.size())
+            assertEquals("Belastingzaken", responseBody.requiredAt("/0/thema/naam")?.textValue())
+            assertEquals("toeristenbelasting", responseBody.requiredAt("/0/thema/producttypen/0/uniformeProductNaam")?.textValue())
+            assertEquals("BELASTINGZAKEN", responseBody.requiredAt("/0/thema/producttypen/0/code")?.textValue())
         }
 
     @Test
     @WithBurgerUser("569312863")
     fun `get themas zaken`() =
         runTest {
-            val basePath = "$.data.getOpenProductThemaZaken"
-            webTestClient
-                .post()
-                .uri { builder ->
-                    builder
-                        .path("/graphql")
-                        .build()
-                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductThemaZaken.gql")))
-                .exchange()
-                .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.size()")
-                .isEqualTo(1)
-                .jsonPath("$basePath[0].omschrijving")
-                .isEqualTo("Lopende zaak")
+            val responseBody =
+                httpGraphQlTester
+                    .document(readFileAsString("/config/graphql/getOpenProductThemaZaken.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getOpenProductThemaZaken")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals(1, responseBody.size())
+            assertEquals("Lopende zaak", responseBody.requiredAt("/0/omschrijving")?.textValue())
         }
 
     @Test
     @WithBurgerUser("569312863")
     fun `get themas taken`() =
         runTest {
-            val basePath = "$.data.getOpenProductThemaTaken"
-            webTestClient
-                .post()
-                .uri { builder ->
-                    builder
-                        .path("/graphql")
-                        .build()
-                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductThemaTaken.gql")))
-                .exchange()
-                .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.size()")
-                .isEqualTo(2)
-                .jsonPath("$basePath[0].id")
-                .isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
-                .jsonPath("$basePath[0].titel")
-                .isEqualTo("Taak linked to Zaak")
+            val responseBody =
+                httpGraphQlTester
+                    .document(readFileAsString("/config/graphql/getOpenProductThemaTaken.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getOpenProductThemaTaken")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals(2, responseBody.size())
+            assertEquals("2d725c07-2f26-4705-8637-438a42b5ac2d", responseBody.requiredAt("/0/id")?.textValue())
+            assertEquals("Taak linked to Zaak", responseBody.requiredAt("/0/titel")?.textValue())
         }
 
     @Test
     @WithBurgerUser("569312863")
     fun `get thema`() =
         runTest {
-            val basePath = "$.data.getOpenProductThema"
-            webTestClient
-                .post()
-                .uri { builder ->
-                    builder
-                        .path("/graphql")
-                        .build()
-                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductThema.gql")))
-                .exchange()
-                .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.naam")
-                .isEqualTo("Parkeren")
-                .jsonPath("$basePath.producttypen[0].uniformeProductNaam")
-                .isEqualTo("Parkeervergunning")
-                .jsonPath("$basePath.producttypen[0].code")
-                .isEqualTo("PARKEREN")
+            val responseBody =
+                httpGraphQlTester
+                    .document(readFileAsString("/config/graphql/getOpenProductThema.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getOpenProductThema")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals("Parkeren", responseBody.requiredAt("/naam")?.textValue())
+            assertEquals("Parkeervergunning", responseBody.requiredAt("/producttypen/0/uniformeProductNaam")?.textValue())
+            assertEquals("PARKEREN", responseBody.requiredAt("/producttypen/0/code")?.textValue())
         }
 
     @Test
     @WithBurgerUser("569312863")
     fun `get thema hierarchy`() =
         runTest {
-            val basePath = "$.data.getOpenProductThemaHierarchy"
-            webTestClient
-                .post()
-                .uri { builder ->
-                    builder
-                        .path("/graphql")
-                        .build()
-                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductThemaHierarchy.gql")))
-                .exchange()
-                .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.size()")
-                .isEqualTo(1)
-                .jsonPath("$basePath[0].thema.naam")
-                .isEqualTo("HoofdThema")
-                .jsonPath("$basePath[0].subThemas[0].thema.naam")
-                .isEqualTo("Sub thema")
+            val responseBody =
+                httpGraphQlTester
+                    .document(readFileAsString("/config/graphql/getOpenProductThemaHierarchy.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getOpenProductThemaHierarchy")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals(1, responseBody.size())
+            assertEquals("HoofdThema", responseBody.requiredAt("/0/thema/naam")?.textValue())
+            assertEquals("Sub thema", responseBody.requiredAt("/0/subThemas/0/thema/naam")?.textValue())
         }
 
     private fun setupMockServer() {

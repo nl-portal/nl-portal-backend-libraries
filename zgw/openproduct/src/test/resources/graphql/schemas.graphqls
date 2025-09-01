@@ -1,0 +1,826 @@
+type Query {
+    # Get all hoofd themas
+    getOpenProductHoofdThemas: [OpenProductThema!]!
+
+    # Get all hoofd themas by producten
+    getOpenProductHoofdThemasByProducten: [OpenProductThema!]!
+
+    # Get a thema
+    getOpenProductThema(id: UUID!): OpenProductThema
+
+    # Get thema hierarchy
+    getOpenProductThemaHierarchy(id: UUID!): [OpenProductThemaHierarchy!]!
+
+    # Get taken of a thema, including their parent themas
+    getOpenProductThemaTaken(id: UUID!, language: String): [TaakV2!]!
+
+    # Get zaken of a thema, including their parent themas
+    getOpenProductThemaZaken(
+        id: UUID!
+        language: String
+        isOpen: Boolean
+    ): [Zaak!]!
+
+    # Get all themas
+    getOpenProductThemas(pageNumber: Int, pageSize: Int): ThemasPage!
+
+    # Get all themas hierarchy
+    getOpenProductThemasHierarchy: [OpenProductThemaHierarchy!]!
+
+    # Get a Open product type by id
+    getOpenProductType(id: UUID!, language: String): OpenProductProductType
+
+    # Get all Open product types
+    getOpenProductTypes(
+        pageNumber: Int
+        pageSize: Int
+        language: String
+    ): ProductTypesPage!
+
+    # Get a Open product type by id
+    getOpenProduct(id: UUID!): OpenProductProduct
+
+    #
+    #         Get all Open producten
+    #         The allowed statussen:
+    #         - initieel
+    #         - gereed
+    #         - actief
+    #         - ingetrokken
+    #         - geweigerd
+    #         - verlopen
+    #
+    getOpenProducten(
+        pageNumber: Int
+        pageSize: Int
+        status: String
+    ): ProductenPage!
+
+    # Get a Open producten type by thema id
+    getOpenProductenByThema(themaId: UUID!): [OpenProductProduct!]!
+
+    # Get a actie
+    getOpenProductActie(id: UUID!): OpenProductActie
+
+    # Get decision by actie naam
+    getOpenProductActieDecision(productId: UUID!, naam: String!): [JSON!]!
+
+    # Get all acties
+    getOpenProductActies(pageNumber: Int, pageSize: Int): ActiesPage!
+
+    # Get a bestand
+    getOpenProductBestand(id: UUID!): OpenProductBestand
+
+    # Get all bestanden
+    getOpenProductBestanden(
+        pageNumber: Int
+        pageSize: Int
+        naam: String
+    ): BestandenPage!
+
+    # Get a contact
+    getOpenProductContact(id: UUID!): OpenProductContact
+
+    # Get all contacten
+    getOpenProductContacten(
+        pageNumber: Int
+        pageSize: Int
+        naam: String
+    ): ContactenPage!
+
+    # Get a locatie
+    getOpenProductLocatie(id: UUID!): OpenProductLocatie
+
+    # Get all locaties
+    getOpenProductLocaties(
+        pageNumber: Int
+        pageSize: Int
+        naam: String
+    ): LocatiesPage!
+
+    # Get a link
+    getOpenProductLink(id: UUID!): OpenProductLink
+
+    # Get all links
+    getOpenProductLinks(pageNumber: Int, pageSize: Int): LinksPage!
+
+    # Get a organisatie
+    getOpenProductOrganisatie(id: UUID!): OpenProductOrganisatie
+
+    # Get all organisaties
+    getOpenProductOrganisaties(
+        pageNumber: Int
+        pageSize: Int
+        naam: String
+    ): OrganisatiesPage!
+
+    # Get a prijs
+    getOpenProductPrijs(id: UUID!): OpenProductPrijs
+
+    # Get all prijzen
+    getOpenProductPrijzen(pageNumber: Int, pageSize: Int): PrijzenPage!
+
+}
+
+type Mutation {
+    # Update product
+    updateProduct(
+        productUpdateRequest: UpdateProductRequestInput!
+    ): OpenProductProduct
+}
+
+input UpdateProductRequestInput {
+    dataobject: JSON
+    uuid: UUID!
+    verbruiksobject: JSON
+}
+
+type OpenProductActie {
+    naam: String!
+    productTypeUuid: UUID
+    url: String!
+    uuid: UUID!
+    mapping: JSON!
+}
+
+type OpenProductBestand {
+    bestand: String!
+    productTypeUuid: UUID!
+    uuid: UUID!
+}
+
+type OpenProductContact {
+    email: String
+    huisnummer: String
+    naam: String!
+    organisatie: OpenProductOrganisatie
+    postcode: String
+    stad: String
+    straat: String
+    telefoonnummer: String
+    uuid: UUID!
+}
+
+enum OpenProductFrequentie {
+    GEREED
+    ACTIEF
+    INGETROKKEN
+}
+
+type OpenProductLink {
+    naam: String!
+    url: String!
+    uuid: UUID!
+}
+
+type OpenProductLocatie {
+    email: String
+    huisnummer: String
+    naam: String!
+    postcode: String
+    stad: String
+    straat: String
+    telefoonnummer: String
+    uuid: UUID!
+}
+
+type OpenProductOrganisatie {
+    code: String!
+    email: String
+    huisnummer: String
+    naam: String!
+    postcode: String
+    stad: String
+    straat: String
+    telefoonnummer: String
+    uuid: UUID!
+}
+
+type OpenProductPrijs {
+    actiefVanaf: Date!
+    prijsopties: [OpenProductPrijsOptie!]!
+    prijsregels: [OpenProductPrijsRegel!]!
+    uuid: UUID!
+}
+
+type OpenProductPrijsOptie {
+    bedrag: PositiveFloat!
+    beschrijving: String!
+    uuid: UUID!
+}
+
+type OpenProductPrijsRegel {
+    beschrijving: String!
+    url: String!
+    uuid: UUID!
+}
+
+type OpenProductProduct {
+    aanmaakDatum: ZonedDateTime!
+    dataobject: JSON
+    documenten: [OpenProductUrl!]!
+    eindDatum: Date
+    frequentie: OpenProductFrequentie!
+    gepubliceerd: Boolean
+    naam: String!
+    prijs: PositiveFloat
+    producttype: OpenProductProductProductType!
+    startDatum: Date
+    status: OpenProductToegestaneStatus!
+    updateDatum: ZonedDateTime!
+    url: String
+    uuid: UUID!
+    verbruiksobject: JSON
+    acties: [OpenProductActie!]
+    decisions: [JSON!]!
+    taken: [TaakV2!]
+    zaken: [Zaak!]
+}
+
+type OpenProductProductProductType {
+    aanmaakDatum: ZonedDateTime!
+    code: String!
+    gepubliceerd: Boolean
+    keywords: [String!]!
+    toegestaneStatussen: [OpenProductToegestaneStatus!]!
+    uniformeProductNaam: String!
+    updateDatum: ZonedDateTime!
+    uuid: UUID!
+}
+
+type OpenProductProductType {
+    aanmaakDatum: ZonedDateTime!
+    acties: [OpenProductActie!]!
+    bestanden: [OpenProductProductTypeBestand!]!
+    code: String!
+    contacten: [OpenProductContact!]!
+    dataObjectSchema: OpenProductSchema!
+    externCodes: [OpenProductProductTypeExterneCode!]!
+    gepubliceerd: Boolean
+    interneOpmerking: String
+    keywords: [String!]!
+    links: [OpenProductLink!]!
+    locaties: [OpenProductLocatie!]!
+    naam: String!
+    organisaties: [OpenProductOrganisatie!]!
+    parameters: [OpenProductProductTypeParameter!]!
+    prijzen: [OpenProductPrijs!]!
+    processen: [OpenProductUrl!]!
+    samenvatting: String!
+    taal: String!
+    themas: [OpenProductProductTypeThema!]!
+    toegestaneStatussen: [OpenProductToegestaneStatus!]!
+    uniformeProductNaam: String!
+    updateDatum: ZonedDateTime!
+    uuid: UUID!
+    verbruiksObjectSchema: OpenProductSchema!
+    verzoektypen: [OpenProductUrl!]!
+    zaaktypen: [OpenProductUrl!]!
+    content: [OpenProductProductTypeContent!]
+}
+
+type OpenProductProductTypeBestand {
+    bestand: String!
+    uuid: UUID!
+}
+
+type OpenProductProductTypeContent {
+    content: String!
+    labels: [String!]
+    taal: String!
+    uuid: UUID!
+}
+
+type OpenProductProductTypeExterneCode {
+    code: String!
+    naam: String!
+}
+
+type OpenProductProductTypeParameter {
+    naam: String!
+    waarde: String!
+}
+
+type OpenProductProductTypeThema {
+    aanmaakDatum: ZonedDateTime!
+    beschrijving: String
+    gepubliceerd: Boolean
+    hoofdThema: String
+    naam: String!
+    producttypen: [OpenProductThemaProductType!]!
+    updateDatum: ZonedDateTime!
+    uuid: UUID!
+}
+
+type OpenProductSchema {
+    naam: String!
+    schema: JSON!
+}
+
+type OpenProductThema {
+    aanmaakDatum: ZonedDateTime!
+    beschrijving: String
+    gepubliceerd: Boolean
+
+    # UUID of the hoofdthema, which this thema is related to.
+    hoofdThema: UUID
+    naam: String!
+    producttypen: [OpenProductThemaProductType!]!
+    updateDatum: ZonedDateTime!
+    uuid: UUID!
+    producten: [OpenProductProduct!]
+    taken: [TaakV2!]
+    zaken: [Zaak!]
+}
+
+type OpenProductThemaHierarchy {
+    subThemas: [OpenProductThemaHierarchy!]
+    thema: OpenProductThema!
+}
+
+type OpenProductThemaProductType {
+    aanmaakDatum: ZonedDateTime!
+    code: String!
+    gepubliceerd: Boolean
+    keywords: [String!]!
+    toegestaneStatussen: [OpenProductToegestaneStatus!]!
+    uniformeProductNaam: String!
+    updateDatum: ZonedDateTime!
+    uuid: UUID!
+}
+
+enum OpenProductToegestaneStatus {
+    INITIEEL
+    IN_AANVRAAG
+    GEREED
+    ACTIEF
+    INGETROKKEN
+    GEWEIGERD
+    VERLOPEN
+}
+
+type OpenProductUrl {
+    url: String!
+}
+
+type OrganisatiesPage {
+    # The elements on this page
+    content: [OpenProductOrganisatie!]!
+
+    # The requested page number
+    number: Int!
+
+    # The number of elements on this page
+    numberOfElements: Int!
+
+    # The requested page size
+    size: Int!
+
+    # The total number of elements
+    totalElements: Int!
+
+    # The total number of available pages
+    totalPages: Int!
+}
+
+type PrijzenPage {
+    # The elements on this page
+    content: [OpenProductPrijs!]!
+
+    # The requested page number
+    number: Int!
+
+    # The number of elements on this page
+    numberOfElements: Int!
+
+    # The requested page size
+    size: Int!
+
+    # The total number of elements
+    totalElements: Int!
+
+    # The total number of available pages
+    totalPages: Int!
+}
+
+type ProductTypesPage {
+    # The elements on this page
+    content: [OpenProductProductType!]!
+
+    # The requested page number
+    number: Int!
+
+    # The number of elements on this page
+    numberOfElements: Int!
+
+    # The requested page size
+    size: Int!
+
+    # The total number of elements
+    totalElements: Int!
+
+    # The total number of available pages
+    totalPages: Int!
+}
+
+type ProductenPage {
+    # The elements on this page
+    content: [OpenProductProduct!]!
+
+    # The requested page number
+    number: Int!
+
+    # The number of elements on this page
+    numberOfElements: Int!
+
+    # The requested page size
+    size: Int!
+
+    # The total number of elements
+    totalElements: Int!
+
+    # The total number of available pages
+    totalPages: Int!
+}
+
+type ThemasPage {
+    # The elements on this page
+    content: [OpenProductThema!]!
+
+    # The requested page number
+    number: Int!
+
+    # The number of elements on this page
+    numberOfElements: Int!
+
+    # The requested page size
+    size: Int!
+
+    # The total number of elements
+    totalElements: Int!
+
+    # The total number of available pages
+    totalPages: Int!
+}
+
+type ActiesPage {
+    # The elements on this page
+    content: [OpenProductActie!]!
+
+    # The requested page number
+    number: Int!
+
+    # The number of elements on this page
+    numberOfElements: Int!
+
+    # The requested page size
+    size: Int!
+
+    # The total number of elements
+    totalElements: Int!
+
+    # The total number of available pages
+    totalPages: Int!
+}
+
+type BestandenPage {
+    # The elements on this page
+    content: [OpenProductBestand!]!
+
+    # The requested page number
+    number: Int!
+
+    # The number of elements on this page
+    numberOfElements: Int!
+
+    # The requested page size
+    size: Int!
+
+    # The total number of elements
+    totalElements: Int!
+
+    # The total number of available pages
+    totalPages: Int!
+}
+
+type ContactenPage {
+    # The elements on this page
+    content: [OpenProductContact!]!
+
+    # The requested page number
+    number: Int!
+
+    # The number of elements on this page
+    numberOfElements: Int!
+
+    # The requested page size
+    size: Int!
+
+    # The total number of elements
+    totalElements: Int!
+
+    # The total number of available pages
+    totalPages: Int!
+}
+
+type LinksPage {
+    # The elements on this page
+    content: [OpenProductLink!]!
+
+    # The requested page number
+    number: Int!
+
+    # The number of elements on this page
+    numberOfElements: Int!
+
+    # The requested page size
+    size: Int!
+
+    # The total number of elements
+    totalElements: Int!
+
+    # The total number of available pages
+    totalPages: Int!
+}
+
+type LocatiesPage {
+    # The elements on this page
+    content: [OpenProductLocatie!]!
+
+    # The requested page number
+    number: Int!
+
+    # The number of elements on this page
+    numberOfElements: Int!
+
+    # The requested page size
+    size: Int!
+
+    # The total number of elements
+    totalElements: Int!
+
+    # The total number of available pages
+    totalPages: Int!
+}
+
+type TaakForm {
+    formulier: TaakFormulierV2!
+    data: JSON
+}
+
+type TaakFormulierV2 {
+    soort: String!
+    value: String!
+}
+
+type TaakIdentificatie {
+    type: String!
+    value: String!
+}
+
+type TaakKoppeling {
+    registratie: String!
+    value: String
+}
+
+type TaakPageV2 {
+    # The elements on this page
+    content: [TaakV2!]!
+
+    # The requested page number
+    number: Int!
+
+    # The number of elements on this page
+    numberOfElements: Int!
+
+    # The requested page size
+    size: Int!
+
+    # The total number of elements
+    totalElements: Int!
+
+    # The total number of available pages
+    totalPages: Int!
+}
+
+enum TaakSoort {
+    URL
+    PORTAALFORMULIER
+    OGONEBETALING
+}
+
+enum TaakStatus {
+    OPEN
+    INGEDIEND
+    AFGEROND
+    VERWERKT
+    GESLOTEN
+}
+
+type TaakUrl {
+    uri: String!
+}
+
+type TaakV2 {
+    eigenaar: String!
+    id: UUID!
+    identificatie: TaakIdentificatie!
+    koppeling: TaakKoppeling!
+    ogonebetaling: OgoneBetaling
+    portaalformulier: TaakForm
+    soort: TaakSoort!
+    status: TaakStatus!
+    titel: String!
+    url: TaakUrl
+    verloopdatum: ZonedDateTime
+}
+
+type OgoneBetaling {
+    bedrag: PositiveFloat!
+    betaalkenmerk: String!
+    pspid: String!
+}
+
+type Zaak {
+    einddatum: Date
+    identificatie: String!
+    omschrijving: String!
+    startdatum: Date!
+    url: String!
+    uuid: UUID!
+    besluiten: [Besluit!]!
+    documenten: [Document!]!
+    resultaat: ZaakResultaat
+    status: ZaakStatus
+    statusGeschiedenis: [ZaakStatus!]!
+    statussen: [StatusType!]!
+    zaakdetails: ZaakDetails!
+    zaaktype: ZaakType!
+}
+
+type ZaakDetails {
+    data: [JSON!]!
+    zaak: String!
+}
+
+type StatusType {
+    isEindstatus: Boolean
+    omschrijving: String!
+    omschrijvingGeneriek: String
+}
+
+type ZaakPage {
+    # The elements on this page
+    content: [Zaak!]!
+
+    # The requested page number
+    number: Int!
+
+    # The number of elements on this page
+    numberOfElements: Int!
+
+    # The requested page size
+    size: Int!
+
+    # The total number of elements
+    totalElements: Int!
+
+    # The total number of available pages
+    totalPages: Int!
+}
+
+type ZaakResultaat {
+    toelichting: String
+    url: String!
+    uuid: UUID!
+    zaak: String!
+    resultaattype: ResultaatType!
+}
+
+type ZaakStatus {
+    datumStatusGezet: String!
+    url: String!
+    uuid: UUID!
+    zaak: String!
+    statustype: ZaakStatusType!
+    substatussen: [ZaakSubStatus!]!
+}
+
+type ZaakStatusType {
+    isEindstatus: Boolean!
+    omschrijving: String!
+    omschrijvingGeneriek: String
+}
+
+type ZaakSubStatus {
+    doelgroep: ZaakSubStatusDoelgroep!
+    omschrijving: String!
+    status: String
+    tijdstip: String!
+    uuid: UUID!
+    zaak: String!
+}
+
+enum ZaakSubStatusDoelgroep {
+    INTERN
+    BETROKKENEN
+    GEEN_DOELGROEP
+}
+
+type ZaakType {
+    identificatie: String!
+    omschrijving: String!
+    omschrijvingGeneriek: String
+}
+
+type ResultaatType {
+    omschrijving: String
+    omschrijvingGeneriek: String
+    resultaattypeomschrijving: String!
+    selectielijstklasse: String!
+    toelichting: String
+    url: String!
+    zaaktype: String!
+    zaaktypeIdentificatie: String
+}
+
+type Document {
+    bestandsnaam: String
+    bestandsomvang: Int
+    creatiedatum: String
+    documentapi: String!
+    formaat: String
+    identificatie: String
+    titel: String
+    uuid: UUID!
+}
+
+type Besluit {
+    bestuursorgaan: String
+    datum: Date!
+    identificatie: String!
+    ingangsdatum: Date!
+    publicatiedatum: Date
+    toelichting: String
+    uiterlijkeReactiedatum: Date
+    url: String!
+    verantwoordelijkeOrganisatie: String!
+    vervaldatum: Date
+    vervalreden: String!
+    vervalredenWeergave: String!
+    verzenddatum: Date
+    zaak: String!
+    auditTrails: [BesluitAuditTrail!]!
+    besluittype: BesluitType!
+    documenten: [BesluitDocument!]!
+}
+
+type BesluitAuditTrail {
+    aanmaakdatum: ZonedDateTime
+    actie: String!
+    actieWeergave: String
+    applicatieId: String
+    applicatieWeergave: String
+    bron: String!
+    gebruikersId: String
+    gebruikersWeergave: String
+    hoofdObject: String!
+    resource: String!
+    resourceUrl: String!
+    resourceWeergave: String!
+    resultaat: Int!
+    toelichting: String
+    uuid: UUID!
+    wijzigingen: BesluitAuditTrailWijzigingen!
+}
+
+type BesluitAuditTrailWijzigingen {
+    nieuw: JSON
+    oud: JSON
+}
+
+type BesluitDocument {
+    besluit: String!
+    informatieobject: String!
+    url: String!
+}
+
+type BesluitType {
+    besluitcategorie: String!
+    omschrijving: String
+    omschrijvingGeneriek: String
+    publicatieIndicatie: Boolean!
+    publicatietekst: String
+    publicatietermijn: String
+    reactietermijn: String
+    toelichting: String
+    url: String!
+    zaaktypen: [String!]!
+}
+
+scalar PositiveFloat
+scalar ZonedDateTime
+scalar JSON
+scalar UUID
+scalar Date
+

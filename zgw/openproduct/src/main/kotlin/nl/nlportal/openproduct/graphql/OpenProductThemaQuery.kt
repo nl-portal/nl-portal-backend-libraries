@@ -15,26 +15,27 @@
  */
 package nl.nlportal.openproduct.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
-import com.expediagroup.graphql.server.operations.Query
-import graphql.schema.DataFetchingEnvironment
-import nl.nlportal.graphql.security.SecurityConstants
+import java.util.UUID
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.openproduct.client.domain.OpenProductProduct
 import nl.nlportal.openproduct.client.domain.OpenProductThema
 import nl.nlportal.openproduct.graphql.domain.OpenProductThemaHierarchy
 import nl.nlportal.openproduct.service.OpenProductService
 import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zgw.taak.domain.TaakV2
-import java.util.UUID
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.graphql.data.method.annotation.SchemaMapping
+import org.springframework.stereotype.Controller
 
-@AuthenticatedDirective
+@Controller
 class OpenProductThemaQuery(
     val openProductService: OpenProductService,
-) : Query {
-    @GraphQLDescription("Get all themas")
+) {
+    @QueryMapping
     suspend fun getOpenProductThemas(
-        pageNumber: Int? = null,
-        pageSize: Int? = null,
+        @Argument pageNumber: Int? = null,
+        @Argument pageSize: Int? = null,
     ): ThemasPage =
         ThemasPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
@@ -46,25 +47,29 @@ class OpenProductThemaQuery(
                 ),
         )
 
-    @GraphQLDescription("Get all hoofd themas")
+    @QueryMapping
     suspend fun getOpenProductHoofdThemas(): List<OpenProductThema> = openProductService.getHoofdThemas()
 
-    @GraphQLDescription("Get all hoofd themas by producten")
+    @QueryMapping
     suspend fun getOpenProductHoofdThemasByProducten(
-        dfe: DataFetchingEnvironment,
+        authentication: CommonGroundAuthentication,
     ): List<OpenProductThema> =
         openProductService.getHoofdThemasByProducten(
-            authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+            authentication = authentication,
         )
 
-    @GraphQLDescription("Get all themas hierarchy")
+    @QueryMapping
     suspend fun getOpenProductThemasHierarchy(): List<OpenProductThemaHierarchy> = openProductService.getThemasHierarchy()
 
-    @GraphQLDescription("Get thema hierarchy")
-    suspend fun getOpenProductThemaHierarchy(id: UUID): List<OpenProductThemaHierarchy> = openProductService.getThemaHierarchy(id = id)
+    @QueryMapping
+    suspend fun getOpenProductThemaHierarchy(
+        @Argument id: UUID,
+    ): List<OpenProductThemaHierarchy> = openProductService.getThemaHierarchy(id = id)
 
-    @GraphQLDescription("Get a thema")
-    suspend fun getOpenProductThema(id: UUID): OpenProductThema? {
+    @QueryMapping
+    suspend fun getOpenProductThema(
+        @Argument id: UUID,
+    ): OpenProductThema? {
         val response =
             openProductService.getThema(
                 id = id,
@@ -72,29 +77,59 @@ class OpenProductThemaQuery(
         return response
     }
 
-    @GraphQLDescription("Get zaken of a thema, including their parent themas")
+    @QueryMapping
     suspend fun getOpenProductThemaZaken(
-        dfe: DataFetchingEnvironment,
-        id: UUID,
-        language: String? = null,
-        isOpen: Boolean? = null,
+        authentication: CommonGroundAuthentication,
+        @Argument id: UUID,
+        @Argument language: String? = null,
+        @Argument isOpen: Boolean? = null,
     ): List<Zaak> =
         openProductService.getThemaZaken(
-            authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+            authentication = authentication,
             id = id,
             language = language,
             isOpen = isOpen,
         )
 
-    @GraphQLDescription("Get taken of a thema, including their parent themas")
+    @QueryMapping
     suspend fun getOpenProductThemaTaken(
-        dfe: DataFetchingEnvironment,
-        id: UUID,
-        language: String? = null,
+        authentication: CommonGroundAuthentication,
+        @Argument id: UUID,
+        @Argument language: String? = null,
     ): List<TaakV2> =
         openProductService.getThemaTaken(
-            authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+            authentication = authentication,
             id = id,
             language = language,
+        )
+
+    @SchemaMapping(typeName = "OpenProductThema", field = "zaken")
+    suspend fun zaken(
+        authentication: CommonGroundAuthentication,
+        openProductThema: OpenProductThema,
+    ): List<Zaak>? =
+        openProductService.getThemaZaken(
+            authentication = authentication,
+            id = openProductThema.uuid,
+        )
+
+    @SchemaMapping(typeName = "OpenProductThema", field = "taken")
+    suspend fun taken(
+        authentication: CommonGroundAuthentication,
+        openProductThema: OpenProductThema,
+    ): List<TaakV2>? =
+        openProductService.getThemaTaken(
+            authentication = authentication,
+            id = openProductThema.uuid,
+        )
+
+    @SchemaMapping(typeName = "OpenProductThema", field = "producten")
+    suspend fun producten(
+        authentication: CommonGroundAuthentication,
+        openProductThema: OpenProductThema,
+    ): List<OpenProductProduct>? =
+        openProductService.getThemaProducten(
+            authentication = authentication,
+            thema = openProductThema,
         )
 }
