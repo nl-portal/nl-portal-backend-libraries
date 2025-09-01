@@ -1,0 +1,163 @@
+extend type Query {
+    #
+    #         Get Decision by key and json as source
+    #         Don't use it directly but via custom queries
+    #
+    getDecision(
+        sources: JSON
+        key: String!
+        productTypeId: UUID
+        productName: String!
+        dmnVariables: JSON
+    ): [JSON!]!
+
+    # Get product by id
+    getProduct(id: UUID!): Product
+
+    #
+    #         Get Product Decision by key. Don't use it till it is configured in ProductType
+    #
+    getProductDecision(
+        sources: JSON
+        key: String!
+        productTypeId: UUID
+        productName: String!
+        dmnVariables: JSON
+    ): [JSON!]!
+
+    # Get list of taken by product name
+    getProductTaken(
+        productTypeId: UUID
+        productName: String!
+        productSubType: String
+        pageSize: Int
+    ): [TaakV2!]!
+
+    # Get productType by name
+    getProductType(productTypeId: UUID, productName: String!): ProductType
+
+    # Get productTypes where the user has products
+    getProductTypes: [ProductType!]!
+
+    # Get list of verbruiksobjecten of product
+    getProductVerbruiksObjecten(productId: UUID!): [ProductVerbruiksObject!]!
+
+    #
+    #         Get list of zaken by product name or productTypeId
+    #         isOpen is optional, when not available, all zaken will be returned
+    #         isOpen is true, only zaken without enddate will be returned
+    #         isOpen is false, only zaken with an enddate will be returned
+    #
+    getProductZaken(
+        productTypeId: UUID
+        productName: String!
+        pageSize: Int
+        isOpen: Boolean
+    ): [Zaak!]!
+
+    #
+    #         Get list of products by product name or productTypeId
+    #         subProductType, is optional. It search for the subProductType in the products
+    #
+    getProducten(
+        productTypeId: UUID
+        productName: String!
+        subProductType: String
+        pageNumber: Int
+        pageSize: Int
+    ): ProductPage!
+
+    #
+    #         Prefill data to start a form.
+    #
+    productPrefill(
+        sources: JSON
+        staticData: JSON
+        productTypeId: UUID
+        productName: String!
+        key: String!
+    ): PrefillResponse!
+}
+
+extend type Mutation {
+    # Update product verbruiks object
+    updateProductVerbruiksObject(
+        id: UUID!
+        submission: JSON!
+    ): ProductVerbruiksObject!
+}
+
+type PrefillResponse {
+    formulierUrl: String!
+    hash: String!
+    objectId: UUID!
+}
+
+type Product {
+    documenten: [String!]!
+    eigenschappen: JSON
+    geldigTot: DateTime
+    geldigVan: DateTime!
+    id: UUID
+    naam: String!
+    parameters: JSON
+    productSubType: String
+    status: String!
+    productDetails: ProductDetails
+    productType: ProductType
+    taken: [TaakV2!]!
+    verbruiksobjecten: [ProductVerbruiksObject!]!
+    zaken: [Zaak!]!
+}
+
+type ProductDetails {
+    data: [JSON!]!
+    id: UUID
+    productInstantie: UUID!
+}
+
+type ProductPage {
+    # The elements on this page
+    content: [Product!]!
+
+    # The requested page number
+    number: Int!
+
+    # The number of elements on this page
+    numberOfElements: Int!
+
+    # The requested page size
+    size: Int!
+
+    # The total number of elements
+    totalElements: Int!
+
+    # The total number of available pages
+    totalPages: Int!
+}
+
+type ProductType {
+    eigenschappen: JSON
+    id: UUID
+    naam: String!
+    omschrijving: String
+    parameters: JSON
+    productSubType: String
+    zaaktypen: [UUID!]!
+
+    # Get list of available beslistabellen, with their object configurations
+    beslistabelMappings: [String!]
+
+    # Get list of available forms to prefill, with their object configurations
+    prefillMappings: JSON
+}
+
+type ProductVerbruiksObject {
+    data: JSON
+    id: UUID
+    productInstantie: String!
+    soort: String
+}
+
+
+

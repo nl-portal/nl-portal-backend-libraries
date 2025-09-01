@@ -229,14 +229,14 @@ class ProductService(
 
     suspend fun updateVerbruiksObject(
         id: UUID,
-        submission: ObjectNode,
+        submission: Any,
         authentication: CommonGroundAuthentication,
     ): ProductVerbruiksObject {
         val objectsApiVerbruiksObject =
             getObjectsApiObjectById<ProductVerbruiksObject>(id.toString()) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
 
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiVerbruiksObject)
-        updateRequest.record.data.data = submission
+        updateRequest.record.data.data = Mapper.get().convertValue(submission, ObjectNode::class.java)
         updateRequest.record.correctedBy = authentication.getUserRepresentation()
         updateRequest.record.correctionFor = objectsApiVerbruiksObject.record.index.toString()
 

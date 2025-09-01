@@ -55,23 +55,5 @@ include(
     "klantcontactmomenten",
     "zgw:zaken-api",
     "zgw:openproduct",
-    /*
-    "form",
-
-
     "product",
-    "portal-authentication",
-    "payment",
-    "payment-direct",
-    "zgw:berichten",
-    "zgw:catalogi-api",
-    "zgw:common-ground-authentication",
-    "zgw:common-ground-authentication-test",
-    "zgw:documenten-api",
-    "zgw:idtoken-authentication",
-
-    "zgw:zaken-api",
-    "zgw:objectenapi",
-    "zgw:besluiten",*/
-    //"zgw:openproduct",
 )

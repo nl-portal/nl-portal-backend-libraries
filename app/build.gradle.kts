@@ -19,11 +19,6 @@ plugins {
 }
 
 dependencies {
-    /*
-
-    implementation(project(":product"))
-
-    */
     implementation(project(":zgw:openklant"))
     implementation(project(":form"))
     implementation(project(":haalcentraal-hr"))
@@ -38,6 +33,7 @@ dependencies {
     implementation(project(":klantcontactmomenten"))
     implementation(project(":zgw:zaken-api"))
     implementation(project(":zgw:openproduct"))
+    implementation(project(":product"))
 
     implementation("org.springframework.boot", "spring-boot-starter-actuator")
     api("org.postgresql", "postgresql")
