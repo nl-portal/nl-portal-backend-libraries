@@ -1,0 +1,137 @@
+extend type Query {
+    # Gets a zaak by id
+    getZaak(id: UUID!): Zaak!
+
+    #
+    #         Gets all zaken for the user
+    #         isOpen is optional, when not available, all zaken will be returned
+    #         isOpen is true, only zaken without enddate will be returned
+    #         isOpen is false, only zaken with an enddate will be returned
+    #         omschrijving: partial search of this property. Since OpenZaak 1.18.0
+    #         identificatieContains: partial search of this property. Since OpenZaak 1.18.0
+    #
+    getZaken(
+        page: Int
+        pageSize: Int
+        zaakTypeUrl: String
+        isOpen: Boolean
+        identificatie: String
+        omschrijving: String
+        identificatieContains: String
+    ): ZaakPage!
+}
+
+type Zaak {
+    einddatum: Date
+    identificatie: String!
+    omschrijving: String!
+    startdatum: Date!
+    url: String!
+    uuid: UUID!
+    besluiten: [Besluit!]!
+    documenten: [Document!]!
+    resultaat: ZaakResultaat
+    status: ZaakStatus
+    statusGeschiedenis: [ZaakStatus!]!
+    statussen: [StatusType!]!
+    zaakdetails: ZaakDetails!
+    zaaktype: ZaakType!
+}
+
+type ZaakDetails {
+    data: [JSON!]!
+    zaak: String!
+}
+
+type StatusType {
+    isEindstatus: Boolean
+    omschrijving: String!
+    omschrijvingGeneriek: String
+}
+type ZaakPage {
+    # The elements on this page
+    content: [Zaak!]!
+
+    # The requested page number
+    number: Int!
+
+    # The number of elements on this page
+    numberOfElements: Int!
+
+    # The requested page size
+    size: Int!
+
+    # The total number of elements
+    totalElements: Int!
+
+    # The total number of available pages
+    totalPages: Int!
+}
+
+type ZaakResultaat {
+    toelichting: String
+    url: String!
+    uuid: UUID!
+    zaak: String!
+    resultaattype: ResultaatType!
+}
+
+type ZaakStatus {
+    datumStatusGezet: String!
+    url: String!
+    uuid: UUID!
+    zaak: String!
+    statustype: ZaakStatusType!
+    substatussen: [ZaakSubStatus!]!
+}
+
+type ZaakStatusType {
+    isEindstatus: Boolean!
+    omschrijving: String!
+    omschrijvingGeneriek: String
+}
+
+type ZaakSubStatus {
+    doelgroep: ZaakSubStatusDoelgroep!
+    omschrijving: String!
+    status: String
+    tijdstip: String!
+    uuid: UUID!
+    zaak: String!
+}
+
+enum ZaakSubStatusDoelgroep {
+    INTERN
+    BETROKKENEN
+    GEEN_DOELGROEP
+}
+
+type ZaakType {
+    identificatie: String!
+    omschrijving: String!
+    omschrijvingGeneriek: String
+}
+
+type ResultaatType {
+    omschrijving: String
+    omschrijvingGeneriek: String
+    resultaattypeomschrijving: String!
+    selectielijstklasse: String!
+    toelichting: String
+    url: String!
+    zaaktype: String!
+    zaaktypeIdentificatie: String
+}
+
+type Document {
+    bestandsnaam: String
+    bestandsomvang: Int
+    creatiedatum: String
+    documentapi: String!
+    formaat: String
+    identificatie: String
+    titel: String
+    uuid: UUID!
+}
+
+

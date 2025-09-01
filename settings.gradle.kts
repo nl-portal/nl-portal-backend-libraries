@@ -53,6 +53,7 @@ include(
     "klant",
     "klant-generiek",
     "klantcontactmomenten",
+    "zgw:zaken-api",
     /*
     "form",
 

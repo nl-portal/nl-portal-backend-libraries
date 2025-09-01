@@ -15,22 +15,18 @@
  */
 package nl.nlportal.zakenapi.domain
 
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
+import java.util.UUID
 import nl.nlportal.catalogiapi.domain.ResultaatType
 import nl.nlportal.catalogiapi.service.CatalogiApiService
-import org.springframework.beans.factory.annotation.Autowired
-import java.util.UUID
 
 data class ZaakResultaat(
     val uuid: UUID,
     val url: String,
     val zaak: String,
     val toelichting: String? = null,
-    @GraphQLIgnore
     val resultaattype: String,
 ) {
     suspend fun resultaattype(
-        @GraphQLIgnore @Autowired
         catalogiApiService: CatalogiApiService,
     ): ResultaatType {
         return catalogiApiService.getResultaatType(
