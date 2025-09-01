@@ -36,6 +36,7 @@ import org.mockito.Mockito.`when`
 import org.springframework.security.core.Authentication
 import java.util.UUID
 import java.util.Optional
+import org.junit.jupiter.api.Test
 
 class CaseServiceUnitTest : BaseTest() {
     lateinit var caseService: CaseService
@@ -52,7 +53,7 @@ class CaseServiceUnitTest : BaseTest() {
         `when`(authentication.name).thenReturn(user)
     }
 
-    // @Test
+    @Test
     fun `should not create case with empty submission`() {
         val submission = Mapper.get().readValue("{}", ObjectNode::class.java)
         val illegalStateException =
@@ -66,7 +67,7 @@ class CaseServiceUnitTest : BaseTest() {
         assertThat(illegalStateException).hasMessage("Empty case data")
     }
 
-    // @Test
+    @Test
     fun `should eliminate unknown properties from submission prior case def validation`() {
         val submission = Mapper.get().readValue("{\"unknownProperty\" : \"myName\"}", ObjectNode::class.java)
         val illegalStateException =
@@ -80,7 +81,7 @@ class CaseServiceUnitTest : BaseTest() {
         assertThat(illegalStateException).hasMessage("Empty case data")
     }
 
-    // @Test
+    @Test
     fun `should not create case due to size validation exception`() {
         val submission = Mapper.get().readValue("{\"firstName\" : \"moreThan15CharsTooLong\"}", ObjectNode::class.java)
         val validationException =
@@ -94,7 +95,7 @@ class CaseServiceUnitTest : BaseTest() {
         assertThat(validationException).hasMessage("#/firstName: expected maxLength: 15, actual: 22")
     }
 
-    // @Test
+    @Test
     fun `should not create case due to type validation exception`() {
         val submission = Mapper.get().readValue("{\"firstName\" : 1}", ObjectNode::class.java)
         val validationException =
@@ -108,7 +109,7 @@ class CaseServiceUnitTest : BaseTest() {
         assertThat(validationException).hasMessage("#/firstName: expected type: String, found: Integer")
     }
 
-    // @Test
+    @Test
     fun `should create case with valid submission`() {
         val submission = Mapper.get().readValue("{\"firstName\" : \"myName\"}", ObjectNode::class.java)
         val case =
@@ -129,7 +130,7 @@ class CaseServiceUnitTest : BaseTest() {
         ).isEqualTo("myName")
     }
 
-    // @Test
+    @Test
     fun `should handle external case event`() {
         val externalCaseCreatedEvent = UpdateExternalIdPortalCaseMessage(UUID.randomUUID(), "anExternalId")
 
@@ -153,7 +154,7 @@ class CaseServiceUnitTest : BaseTest() {
         assertThat(case.externalId).isEqualTo(externalCaseCreatedEvent.externalId)
     }
 
-    // @Test
+    @Test
     fun `should not handle external case event if caseId is not found`() {
         val externalCaseCreatedEvent = UpdateExternalIdPortalCaseMessage(UUID.randomUUID(), "anExternalId")
 
@@ -162,7 +163,7 @@ class CaseServiceUnitTest : BaseTest() {
         }
     }
 
-    // @Test
+    @Test
     fun `should not handle update status case event if external case id is not found`() {
         val externalCaseStatusUpdatedEvent = UpdateStatusPortalCaseMessage("anExternalId", "some status")
 
@@ -171,7 +172,7 @@ class CaseServiceUnitTest : BaseTest() {
         }
     }
 
-    // @Test
+    @Test
     fun `should handle status update case event`() {
         val event = UpdateStatusPortalCaseMessage("externalId", "b")
 

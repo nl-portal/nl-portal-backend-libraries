@@ -22,6 +22,7 @@ import org.json.JSONObject
 import org.json.JSONTokener
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class MetaJsonSchemaV7DraftUnitTest : BaseTest() {
     @BeforeEach
@@ -29,7 +30,7 @@ class MetaJsonSchemaV7DraftUnitTest : BaseTest() {
         baseSetUp()
     }
 
-    // @Test
+    @Test
     fun `should not return valid schema`() {
         val subject = JSONObject(JSONTokener(getResourceAsStream("config/case/definition/invalidperson.schema.json")))
         assertThrows(ValidationException::class.java) {
@@ -37,14 +38,14 @@ class MetaJsonSchemaV7DraftUnitTest : BaseTest() {
         }
     }
 
-    //  @Test
+    @Test
     fun `should not return valid schema for empty schema`() {
         assertThrows(IllegalStateException::class.java) {
             MetaJsonSchemaV7Draft.validate(JSONObject(JSONTokener("{}")))
         }
     }
 
-    // @Test
+    @Test
     fun `should return valid schema`() {
         val subject = JSONObject(JSONTokener(getResourceAsStream("config/case/definition/person/person.schema.json")))
         assertThatCode {

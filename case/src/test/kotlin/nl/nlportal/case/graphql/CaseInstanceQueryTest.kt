@@ -25,14 +25,17 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.JwtBuilder
+import nl.nlportal.commonground.authentication.WithBurgerUser
+import org.junit.jupiter.api.Test
 
 class CaseInstanceQueryTest : BaseTest() {
     var caseService = mock(CaseService::class.java)
     var caseInstanceQuery = CaseInstanceQuery(caseService)
     val context = mock(GraphQLContext::class.java)
-    var userId = "123"
+    var userId = "1234"
 
-    // @Test
+    @WithBurgerUser("569312863")
+    @Test
     fun shouldGetAllCaseInstancesInAscendingOrder() {
         val today = LocalDateTime.now()
         val yesterday = LocalDateTime.now().minusDays(1)
@@ -50,7 +53,7 @@ class CaseInstanceQueryTest : BaseTest() {
         assertThat(allCaseInstances.last().createdOn).isEqualTo(today.format(DateTimeFormatter.ISO_DATE_TIME))
     }
 
-    // @Test
+    @Test
     fun shouldGetAllCaseInstancesInDescendingOrder() {
         val today = LocalDateTime.now()
         val yesterday = LocalDateTime.now().minusDays(1)
