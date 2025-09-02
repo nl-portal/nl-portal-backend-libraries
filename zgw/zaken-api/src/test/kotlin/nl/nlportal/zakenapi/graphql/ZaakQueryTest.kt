@@ -15,22 +15,16 @@
  */
 package nl.nlportal.zakenapi.graphql
 
-import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
-import nl.nlportal.zakenapi.service.ZakenApiService
-import graphql.GraphQLContext
-import graphql.schema.DataFetchingEnvironment
 import java.util.UUID
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.besluiten.service.BesluitenService
 import nl.nlportal.catalogiapi.service.CatalogiApiService
-import org.junit.jupiter.api.BeforeEach
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.zakenapi.service.ZakenApiService
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
-import org.springframework.security.core.Authentication
 
 @ExperimentalCoroutinesApi
 internal class ZaakQueryTest {
