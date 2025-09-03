@@ -57,10 +57,11 @@ class BerichtenService(
     suspend fun getBericht(
         authentication: CommonGroundAuthentication,
         id: UUID,
-    ): Bericht {
-        val objectsApiBericht =
-            objectenApiService.getObjectById<Bericht>(id.toString())
-                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Bericht not found")
+    ): Bericht? {
+        val objectsApiBericht = objectenApiService.getObjectById<Bericht>(id.toString())
+        if (objectsApiBericht == null) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Bericht not found")
+        }
 
         val bericht = objectsApiBericht.record.data
 

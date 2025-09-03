@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @EnableConfigurationProperties(BerichtenConfiguration::class)
-@ConditionalOnProperty(prefix = "nl-portal.config.berichten", name = ["enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["berichten.enabled", "documentenapis.enabled"], havingValue = "true")
 class BerichtenAutoConfiguration {
     @Bean
     fun berichtenService(
