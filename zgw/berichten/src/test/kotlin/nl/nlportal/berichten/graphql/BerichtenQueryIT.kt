@@ -18,6 +18,7 @@ package nl.nlportal.berichten.graphql
 import nl.nlportal.berichten.TestHelper
 import nl.nlportal.berichten.TestHelper.verifyOnlyDataExists
 import nl.nlportal.commonground.authentication.WithBurgerUser
+import nl.nlportal.documentenapi.client.DocumentApisConfig
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -41,6 +42,7 @@ import org.springframework.web.reactive.function.BodyInserters
 class BerichtenQueryIT(
     @Autowired private val webTestClient: WebTestClient,
     @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
+    @Autowired private val documentApisConfig: DocumentApisConfig,
 ) {
     lateinit var mockObjectenApi: MockWebServer
 
@@ -48,8 +50,10 @@ class BerichtenQueryIT(
     fun setUp() {
         mockObjectenApi = MockWebServer()
         setupMockObjectsApiServer()
-        mockObjectenApi.start()
+        mockObjectenApi.start(port = 10001)
+
         objectsApiClientConfig.properties.url = mockObjectenApi.url("/").toUri()
+        documentApisConfig.properties.getConfig("openzaak").url = mockObjectenApi.url("/").toString()
     }
 
     @AfterEach
@@ -111,6 +115,26 @@ class BerichtenQueryIT(
                     .build()
             }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
             .body(BodyInserters.fromValue(TestHelper.graphqlValidBerichtReadRequest))
+            .exchange()
+            .verifyOnlyDataExists(basePath)
+            .jsonPath("$basePath.berichtType")
+            .isEqualTo("NOTIFICATIE")
+            .jsonPath("$basePath.geopend")
+            .isEqualTo("true")
+    }
+
+    @WithBurgerUser("999990755")
+    @Test
+    fun `should return bericht met documenten`() {
+        val basePath = "$.data.getBericht"
+        webTestClient
+            .post()
+            .uri { builder ->
+                builder
+                    .path("/graphql")
+                    .build()
+            }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
+            .body(BodyInserters.fromValue(TestHelper.graphqlValidBerichtReadRequestWithDocuments))
             .exchange()
             .verifyOnlyDataExists(basePath)
             .jsonPath("$basePath.berichtType")
@@ -186,7 +210,7 @@ class BerichtenQueryIT(
                                 } else {
                                     MockResponse().setResponseCode(404)
                                 }
-                            } // a4961c4a-29a7-4cc7-9d5d-bceed1dfccba
+                            }
                             "GET /api/v2/objects/9e021130-8cbd-4c6f-846a-677448e21ce8" -> {
                                 TestHelper.mockResponse(TestHelper.objectenApiBerichtObjectResponse)
                             }
@@ -195,6 +219,9 @@ class BerichtenQueryIT(
                             }
                             "PUT /api/v2/objects/9e021130-8cbd-4c6f-846a-677448e21ce8" -> {
                                 TestHelper.mockResponse(TestHelper.objectenApiBerichtIsReadObjectResponse)
+                            }
+                            "GET /enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> {
+                                TestHelper.mockResponse(TestHelper.handleDocumentResponse)
                             }
                             else -> MockResponse().setResponseCode(404)
                         }

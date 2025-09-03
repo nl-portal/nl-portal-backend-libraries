@@ -33,9 +33,12 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
 import java.util.UUID
+import nl.nlportal.documentenapi.domain.Document
+import nl.nlportal.documentenapi.service.DocumentenApiService
 
 class BerichtenService(
     private val objectenApiService: ObjectenApiService,
+    private val documentenApiService: DocumentenApiService,
     private val berichtenConfigurationProperties: BerichtenConfigurationProperties,
 ) {
     suspend fun getUnopenedBerichtenCount(authentication: CommonGroundAuthentication): Int {
@@ -54,11 +57,10 @@ class BerichtenService(
     suspend fun getBericht(
         authentication: CommonGroundAuthentication,
         id: UUID,
-    ): Bericht? {
-        val objectsApiBericht = objectenApiService.getObjectById<Bericht>(id.toString())
-        if (objectsApiBericht == null) {
-            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Bericht not found")
-        }
+    ): Bericht {
+        val objectsApiBericht =
+            objectenApiService.getObjectById<Bericht>(id.toString())
+                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Bericht not found")
 
         val bericht = objectsApiBericht.record.data
 
@@ -71,14 +73,27 @@ class BerichtenService(
             return bericht
         }
 
+        // set bericht as opened and update object in objectsapi
+        bericht.geopend = true
+
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiBericht)
         updateRequest.record.data.geopend = true
         updateRequest.record.correctedBy = authentication.userId
         updateRequest.record.correctionFor = objectsApiBericht.record.index.toString()
-        val updatedObjectsApiBericht = objectenApiService.updateObject(objectsApiBericht.uuid, updateRequest)
+        objectenApiService.updateObject(objectsApiBericht.uuid, updateRequest)
 
-        return updatedObjectsApiBericht?.record?.data
+        return bericht
     }
+
+    suspend fun getDocumenten(
+        identificatie: String,
+        bijlages: List<String>,
+    ): List<Document> =
+        bijlages.map {
+            documentenApiService
+                .getDocument(it)
+                .copy(identificatie = identificatie)
+        }
 
     suspend fun getBerichtenPage(
         authentication: CommonGroundAuthentication,
