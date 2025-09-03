@@ -30,7 +30,7 @@ class BerichtenQuery(
     suspend fun getBericht(
         dfe: DataFetchingEnvironment,
         id: UUID,
-    ): Bericht? =
+    ): Bericht =
         berichtenService.getBericht(
             authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
             id = id,

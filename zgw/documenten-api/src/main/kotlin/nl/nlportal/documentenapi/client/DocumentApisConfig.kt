@@ -40,7 +40,7 @@ data class DocumentApisConfig(
                 }
                 .keys
                 .firstOrNull()
-                ?: throw NullPointerException("No documentapi configuration found for zaakdocument with url $documentUrl")
+                ?: throw NullPointerException("No documentapi configuration found for with url $documentUrl")
         }
 
         data class DocumentApiConfig(
