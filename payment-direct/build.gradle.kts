@@ -23,7 +23,7 @@ dependencies {
     api(project(":core"))
     api(project(":graphql"))
     api(project(":zgw:taak"))
-    api("com.worldline-solutions", "onlinepayments-sdk-java", "6.0.0")
+    api("com.worldline-solutions", "onlinepayments-sdk-java", "6.1.0")
 
     api("commons-codec", "commons-codec", "1.19.0")
     testImplementation(project(":zgw:common-ground-authentication-test"))
