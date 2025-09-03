@@ -2,6 +2,14 @@ graphql:
     packages:
         - "nl.nlportal"
 
+
+logging:
+    level:
+        reactor:
+            netty:
+                http:
+                    client: TRACE
+
 nl-portal:
     config:
         objectenapi:
