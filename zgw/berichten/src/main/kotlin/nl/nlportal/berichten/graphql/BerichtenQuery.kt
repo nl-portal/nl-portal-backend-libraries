@@ -19,8 +19,10 @@ import java.util.UUID
 import nl.nlportal.berichten.domain.Bericht
 import nl.nlportal.berichten.service.BerichtenService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.documentenapi.domain.Document
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.graphql.data.method.annotation.SchemaMapping
 import org.springframework.stereotype.Controller
 
 @Controller
@@ -57,4 +59,13 @@ class BerichtenQuery(
             .getUnopenedBerichtenCount(
                 authentication = authentication,
             )
+
+    @SchemaMapping(typeName = "Bericht", field = "documenten")
+    suspend fun documenten(
+        bericht: Bericht,
+    ): List<Document> =
+        berichtenService.getDocumenten(
+            identificatie = bericht.identificatie.value,
+            bijlages = bericht.bijlages,
+        )
 }

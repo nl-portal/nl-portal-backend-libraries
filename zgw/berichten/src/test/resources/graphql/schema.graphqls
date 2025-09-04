@@ -28,6 +28,7 @@ type Bericht {
     onderwerp: String!
     publicatiedatum: ZonedDateTime!
     referentie: String!
+    documenten: [Document!]!
 }
 
 enum BerichtHandelingsperspectief {
@@ -66,6 +67,17 @@ type BerichtenPage {
 
     # The total number of available pages
     totalPages: Int!
+}
+
+type Document {
+    bestandsnaam: String
+    bestandsomvang: Int
+    creatiedatum: String
+    documentapi: String!
+    formaat: String
+    identificatie: String
+    titel: String
+    uuid: UUID!
 }
 
 scalar UUID

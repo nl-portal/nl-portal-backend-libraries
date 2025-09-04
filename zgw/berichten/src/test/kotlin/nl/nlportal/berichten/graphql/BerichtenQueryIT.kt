@@ -21,6 +21,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.berichten.TestHelper
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.core.util.Mapper
+import nl.nlportal.documentenapi.client.DocumentApisConfig
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -44,6 +45,7 @@ import org.springframework.graphql.test.tester.HttpGraphQlTester
 class BerichtenQueryIT(
     @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
+    @Autowired private val documentApisConfig: DocumentApisConfig,
 ) {
     lateinit var mockObjectenApi: MockWebServer
 
@@ -51,8 +53,9 @@ class BerichtenQueryIT(
     fun setUp() {
         mockObjectenApi = MockWebServer()
         setupMockObjectsApiServer()
-        mockObjectenApi.start()
+        mockObjectenApi.start(port = 10001)
         objectsApiClientConfig.properties.url = mockObjectenApi.url("/").toUri()
+        documentApisConfig.properties.getConfig("openzaak").url = mockObjectenApi.url("/").toString()
     }
 
     @AfterEach
@@ -114,6 +117,23 @@ class BerichtenQueryIT(
 
     @WithBurgerUser("999990755")
     @Test
+    fun `should return bericht met documenten`() {
+        val responseBody =
+            httpGraphQlTester
+                .document(TestHelper.graphqlValidBerichtReadRequestWithDocuments)
+                .execute()
+                .errors()
+                .verify()
+                .path("getBericht")
+                .entity(JsonNode::class.java)
+                .get()
+
+        assertEquals("NOTIFICATIE", responseBody.get("berichtType").textValue())
+        assertEquals(true, responseBody.get("geopend").booleanValue())
+    }
+
+    @WithBurgerUser("999990755")
+    @Test
     fun `should return unopened berichten`() {
         val responseBody =
             httpGraphQlTester
@@ -152,6 +172,9 @@ class BerichtenQueryIT(
                             }
                             "PUT /api/v2/objects/9e021130-8cbd-4c6f-846a-677448e21ce8" -> {
                                 TestHelper.mockResponse(TestHelper.objectenApiBerichtIsReadObjectResponse)
+                            }
+                            "GET /enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> {
+                                TestHelper.mockResponse(TestHelper.handleDocumentResponse)
                             }
                             else -> MockResponse().setResponseCode(404)
                         }

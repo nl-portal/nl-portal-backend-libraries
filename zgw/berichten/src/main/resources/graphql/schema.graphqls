@@ -28,6 +28,7 @@ type Bericht {
     onderwerp: String!
     publicatiedatum: ZonedDateTime!
     referentie: String!
+    documenten: [Document!]!
 }
 
 enum BerichtHandelingsperspectief {
