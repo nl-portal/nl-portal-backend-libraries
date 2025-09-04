@@ -48,7 +48,7 @@ plugins {
 
     id("org.owasp.dependencycheck") version "12.1.3"
 
-    id("org.jreleaser") version "1.19.0"
+    id("org.jreleaser") version "1.20.0"
 
     `maven-publish`
     signing
