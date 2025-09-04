@@ -22,6 +22,9 @@ import nl.nlportal.berichten.domain.Bericht
 import nl.nlportal.berichten.service.BerichtenService
 import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import java.util.UUID
+import kotlin.text.get
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 
 class BerichtenQuery(
     private val berichtenService: BerichtenService,
@@ -30,11 +33,17 @@ class BerichtenQuery(
     suspend fun getBericht(
         dfe: DataFetchingEnvironment,
         id: UUID,
-    ): Bericht? =
-        berichtenService.getBericht(
-            authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
-            id = id,
-        )
+    ): Bericht? {
+        val bericht =
+            berichtenService.getBericht(
+                authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
+                id = id,
+            )
+
+        if (bericht == null) throw ResponseStatusException(HttpStatus.NOT_FOUND, "Bericht not found")
+
+        return bericht
+    }
 
     @GraphQLDescription(
         """
