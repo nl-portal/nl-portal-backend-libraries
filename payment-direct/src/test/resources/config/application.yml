@@ -2,6 +2,7 @@ graphql:
     packages:
         - "nl.nlportal"
 
+
 nl-portal:
     config:
         objectenapi:
