@@ -77,6 +77,7 @@ open class DirectPaymentService(
                 HostedCheckoutSpecificInput()
                     .withLocale(paymentRequest.langId ?: paymentDirectProfile.language)
                     .withReturnUrl(paymentRequest.returnUrl ?: paymentDirectProfile.returnUrl)
+                    .withShowResultPage(directPaymentModuleConfiguration.properties.showResultPage)
 
             directPaymentModuleConfiguration.properties.customTemplateUrl?.let {
                 hostedCheckoutSpecificInput.variant = it
