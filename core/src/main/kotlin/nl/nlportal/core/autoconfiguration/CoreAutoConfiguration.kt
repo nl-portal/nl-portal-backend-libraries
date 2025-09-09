@@ -16,15 +16,19 @@
 package nl.nlportal.core.autoconfiguration
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import nl.nlportal.core.frontend.FrontendConfigurationResource
+import nl.nlportal.core.frontend.configuration.FrontendConfigurationResource
+import nl.nlportal.core.frontend.service.FrontendConfigurationService
 import nl.nlportal.core.util.Mapper
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.cloud.context.config.annotation.RefreshScope
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Scope
 
-@AutoConfiguration
-@EnableConfigurationProperties(CoreThemeConfiguration::class)
+@Configuration
+@EnableConfigurationProperties(CoreThemeConfigurationProperties::class)
 class CoreAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(name = ["objectMapper"])
@@ -33,6 +37,6 @@ class CoreAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(FrontendConfigurationResource::class)
     fun frontendConfigurationResource(
-        coreThemeConfiguration: CoreThemeConfiguration,
-    ): FrontendConfigurationResource = FrontendConfigurationResource(coreThemeConfiguration)
+        frontendConfigurationService: FrontendConfigurationService,
+    ): FrontendConfigurationResource = FrontendConfigurationResource(frontendConfigurationService)
 }

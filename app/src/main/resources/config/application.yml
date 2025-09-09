@@ -1,8 +1,10 @@
 server:
-    port: 8090
+    port: 8080
 
 management:
     endpoint:
+        refresh:
+            access: unrestricted
         health:
             probes:
                 enabled: true
@@ -10,7 +12,7 @@ management:
     endpoints:
         web:
             exposure:
-                include: health
+                include: health, refresh
         access:
             default: none
 
@@ -224,3 +226,6 @@ nl-portal:
                             shaOutKey: de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00
                             failureUrl: http://localhost:3000
                             successUrl: http://localhost:3000
+        theme:
+            logo:
+            style:

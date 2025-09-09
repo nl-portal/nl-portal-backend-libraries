@@ -19,10 +19,12 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
+import org.springframework.context.annotation.ComponentScan
 import java.net.InetAddress
 
 @EnableConfigurationProperties
 @SpringBootApplication
+@ComponentScan(basePackages = ["nl.nlportal.core.frontend"])
 class PortalApplication
 
 fun main(args: Array<String>) {
