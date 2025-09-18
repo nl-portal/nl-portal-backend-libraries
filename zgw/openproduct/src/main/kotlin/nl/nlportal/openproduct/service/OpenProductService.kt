@@ -885,6 +885,7 @@ class OpenProductService(
         language: String? = null,
         themasList: List<OpenProductThema>? = null,
         themas: List<OpenProductThema> = emptyList(),
+        pageSize: Int? = null,
     ): List<Zaak> {
         val themasAll = mutableListOf<OpenProductThema>()
         val collectedThemaList = mutableListOf<OpenProductThema>()
@@ -930,7 +931,7 @@ class OpenProductService(
                 .zoeken()
                 .search()
                 .page(1)
-                .pageSize(999)
+                .pageSize(pageSize ?: 999)
                 .withAuthentication(authentication)
         isOpen?.let {
             request.isOpen(isOpen)
@@ -947,7 +948,6 @@ class OpenProductService(
         return request
             .retrieve()
             .results
-            .sortedBy { it.startdatum }
     }
 
     /**
@@ -961,6 +961,7 @@ class OpenProductService(
         authentication: CommonGroundAuthentication,
         id: UUID,
         language: String? = null,
+        pageSize: Int? = null,
     ): List<TaakV2> {
         val themas =
             getThemas(
@@ -976,7 +977,7 @@ class OpenProductService(
             findTakenByIdentification(
                 authentication = authentication,
                 pageNumber = 1,
-                pageSize = 999,
+                pageSize = pageSize ?: 999,
             )
 
         // when no tasks are found, just return immediately
