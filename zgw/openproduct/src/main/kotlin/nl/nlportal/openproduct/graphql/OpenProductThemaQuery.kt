@@ -78,12 +78,14 @@ class OpenProductThemaQuery(
         id: UUID,
         language: String? = null,
         isOpen: Boolean? = null,
+        pageSize: Int? = null,
     ): List<Zaak> =
         openProductService.getThemaZaken(
             authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
             id = id,
             language = language,
             isOpen = isOpen,
+            pageSize = pageSize,
         )
 
     @GraphQLDescription("Get taken of a thema, including their parent themas")
@@ -91,10 +93,12 @@ class OpenProductThemaQuery(
         dfe: DataFetchingEnvironment,
         id: UUID,
         language: String? = null,
+        pageSize: Int? = null,
     ): List<TaakV2> =
         openProductService.getThemaTaken(
             authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
             id = id,
             language = language,
+            pageSize = pageSize,
         )
 }
