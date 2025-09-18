@@ -15,9 +15,6 @@
  */
 package nl.nlportal.payment.direct.service
 
-import com.onlinepayments.CommunicatorConfiguration
-import com.onlinepayments.Factory
-import com.onlinepayments.authentication.AuthorizationType
 import com.onlinepayments.communication.RequestHeader
 import com.onlinepayments.domain.AmountOfMoney
 import com.onlinepayments.domain.CreateHostedCheckoutRequest
@@ -31,11 +28,14 @@ import com.onlinepayments.webhooks.SignatureValidationException
 import com.onlinepayments.webhooks.WebhooksHelper
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.util.UUID
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration
+import nl.nlportal.payment.direct.client.DirectPaymentClient
 import nl.nlportal.payment.direct.constants.DirectPaymentState
 import nl.nlportal.payment.direct.domain.DirectPaymentRequest
 import nl.nlportal.payment.direct.domain.DirectPaymentResponse
+import nl.nlportal.payment.direct.domain.DirectPaymentStatus
 import nl.nlportal.payment.direct.domain.DirectPaymentWebhookRequest
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
@@ -45,12 +45,11 @@ import nl.nlportal.zgw.taak.domain.TaakStatus
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
-import java.net.URI
-import java.util.UUID
 
 open class DirectPaymentService(
     private val directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
     private val objectsApiClient: ObjectsApiClient,
+    private val directPaymentClient: DirectPaymentClient,
 ) {
     val webhookHelper = WebhooksHelper(DefaultMarshaller.INSTANCE, InMemorySecretKeyStore.INSTANCE)
 
@@ -60,12 +59,35 @@ open class DirectPaymentService(
         }
     }
 
+    suspend fun getDirectPaymentStatus(
+        identifier: String,
+        hostedCheckoutId: String,
+    ): DirectPaymentStatus {
+        val paymentDirectProfile =
+            directPaymentModuleConfiguration.properties.getPaymentProfile(identifier)
+                ?: directPaymentModuleConfiguration.properties.getPaymentProfileByPspPid(identifier)
+                ?: throw ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Could not found direct payment profile for the identifier $identifier",
+                )
+
+        val directPaymentStatusResponse =
+            directPaymentClient.hostedCheckoutStatus(
+                directPaymentProfile = paymentDirectProfile,
+                hostedCheckoutId = hostedCheckoutId,
+            )
+
+        return DirectPaymentStatus(
+            status = directPaymentStatusResponse.createdPaymentOutput.paymentStatusCategory,
+        )
+    }
+
     /**
      * Do Direct Payment at payment provider
      * @param paymentRequest: properties to create a payment
      * @return redirectUrl to do the actual payment at payment provider
      */
-    open fun doDirectPayment(paymentRequest: DirectPaymentRequest): DirectPaymentResponse {
+    open suspend fun doDirectPayment(paymentRequest: DirectPaymentRequest): DirectPaymentResponse {
         try {
             val paymentDirectProfile =
                 directPaymentModuleConfiguration.properties.getPaymentProfile(paymentRequest.identifier)
@@ -74,21 +96,12 @@ open class DirectPaymentService(
                         HttpStatus.BAD_REQUEST,
                         "Could not found direct payment profile for the identifier $paymentRequest.identifier",
                     )
-            val client =
-                Factory.createClient(
-                    CommunicatorConfiguration()
-                        .withApiKeyId(paymentDirectProfile.apiKey)
-                        .withSecretApiKey(paymentDirectProfile.apiSecret)
-                        .withApiEndpoint(URI.create(checkAndRemovePath(directPaymentModuleConfiguration.properties.url)))
-                        .withIntegrator(paymentRequest.identifier)
-                        .withAuthorizationType(AuthorizationType.V1HMAC),
-                )
-            val merchantClient = client.merchant(paymentDirectProfile.pspId)
 
             val hostedCheckoutSpecificInput =
                 HostedCheckoutSpecificInput()
                     .withLocale(paymentRequest.langId ?: paymentDirectProfile.language)
                     .withReturnUrl(paymentRequest.returnUrl ?: paymentDirectProfile.returnUrl)
+                    .withShowResultPage(directPaymentModuleConfiguration.properties.showResultPage)
 
             directPaymentModuleConfiguration.properties.customTemplateUrl?.let {
                 hostedCheckoutSpecificInput.variant = it
@@ -118,12 +131,17 @@ open class DirectPaymentService(
                 )
             }
 
-            val response = merchantClient.hostedCheckout().createHostedCheckout(checkoutRequest)
+            val response =
+                directPaymentClient.hostedCheckout(
+                    directPaymentProfile = paymentDirectProfile,
+                    checkoutRequest = checkoutRequest,
+                )
 
             return DirectPaymentResponse(
                 redirectUrl = response.redirectUrl,
             )
         } catch (ex: Exception) {
+            logger.error(ex) { "Error while do payment for ${paymentRequest.identifier} - ${ex.message}" }
             throw ex
         }
     }

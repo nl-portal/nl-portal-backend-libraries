@@ -33,9 +33,12 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
 import java.util.UUID
+import nl.nlportal.documentenapi.domain.Document
+import nl.nlportal.documentenapi.service.DocumentenApiService
 
 class BerichtenService(
     private val objectenApiService: ObjectenApiService,
+    private val documentenApiService: DocumentenApiService,
     private val berichtenConfigurationProperties: BerichtenConfigurationProperties,
 ) {
     suspend fun getUnopenedBerichtenCount(authentication: CommonGroundAuthentication): Int {
@@ -55,10 +58,7 @@ class BerichtenService(
         authentication: CommonGroundAuthentication,
         id: UUID,
     ): Bericht? {
-        val objectsApiBericht = objectenApiService.getObjectById<Bericht>(id.toString())
-        if (objectsApiBericht == null) {
-            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Bericht not found")
-        }
+        val objectsApiBericht = objectenApiService.getObjectById<Bericht>(id.toString()) ?: return null
 
         val bericht = objectsApiBericht.record.data
 
@@ -76,9 +76,18 @@ class BerichtenService(
         updateRequest.record.correctedBy = authentication.userId
         updateRequest.record.correctionFor = objectsApiBericht.record.index.toString()
         val updatedObjectsApiBericht = objectenApiService.updateObject(objectsApiBericht.uuid, updateRequest)
-
         return updatedObjectsApiBericht?.record?.data
     }
+
+    suspend fun getDocumenten(
+        identificatie: String,
+        bijlages: List<String>,
+    ): List<Document> =
+        bijlages.map {
+            documentenApiService
+                .getDocument(it)
+                .copy(identificatie = identificatie)
+        }
 
     suspend fun getBerichtenPage(
         authentication: CommonGroundAuthentication,

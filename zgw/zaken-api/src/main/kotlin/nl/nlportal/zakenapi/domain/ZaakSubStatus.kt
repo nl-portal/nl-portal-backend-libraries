@@ -15,6 +15,7 @@
  */
 package nl.nlportal.zakenapi.domain
 
+import com.fasterxml.jackson.annotation.JsonValue
 import java.util.UUID
 
 data class ZaakSubStatus(
@@ -23,5 +24,16 @@ data class ZaakSubStatus(
     val status: String? = null,
     val omschrijving: String,
     val tijdstip: String,
-    val doelgroep: String,
+    val doelgroep: ZaakSubStatusDoelgroep,
 )
+
+enum class ZaakSubStatusDoelgroep(
+    @JsonValue val value: String
+) {
+
+    INTERN("intern"),
+    BETROKKENEN("betrokkenen"),
+    GEEN_DOELGROEP("");
+
+    override fun toString(): String = this.value
+}

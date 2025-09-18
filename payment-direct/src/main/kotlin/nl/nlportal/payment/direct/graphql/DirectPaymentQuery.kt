@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2025 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,19 @@
  */
 package nl.nlportal.payment.direct.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Mutation
-import nl.nlportal.payment.direct.domain.DirectPaymentRequest
-import nl.nlportal.payment.direct.domain.DirectPaymentResponse
+import com.expediagroup.graphql.server.operations.Query
+import nl.nlportal.payment.direct.domain.DirectPaymentStatus
 import nl.nlportal.payment.direct.service.DirectPaymentService
 
-class DirectPaymentMutation(
+class DirectPaymentQuery(
     private val directPaymentService: DirectPaymentService,
-) : Mutation {
-    @GraphQLDescription("Do Worldline Direct payment")
-    suspend fun doDirectPayment(paymentRequest: DirectPaymentRequest): DirectPaymentResponse =
-        directPaymentService.doDirectPayment(
-            paymentRequest = paymentRequest,
+) : Query {
+    suspend fun getDirectPaymentStatus(
+        identifier: String,
+        hostedCheckoutId: String,
+    ): DirectPaymentStatus =
+        directPaymentService.getDirectPaymentStatus(
+            identifier = identifier,
+            hostedCheckoutId = hostedCheckoutId,
         )
 }

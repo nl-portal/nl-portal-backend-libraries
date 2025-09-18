@@ -42,7 +42,7 @@ import org.springframework.test.context.DynamicPropertySource
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-internal class DirectPaymentMutationIT(
+internal class DirectPaymentQueryIT(
     @Autowired private val testClient: WebTestClient,
     @Autowired private val directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
 ) {
@@ -85,79 +85,36 @@ internal class DirectPaymentMutationIT(
 
     @Test
     @WithBurgerUser("123")
-    fun doDirectPaymentWithIdentifier() {
-        val mutation =
+    fun getDirectPaymentStatus() {
+        val query =
             """
-            mutation {
-                doDirectPayment(
-                    paymentRequest: { 
-                        identifier: "belastingzaken", 
-                        amount: 100.25, 
-                        orderId: "123456", 
-                        reference: "12345",
-                    }
+            query {
+                getDirectPaymentStatus(
+                    identifier: "belastingzaken", 
+                    hostedCheckoutId: "4373041363"
                 ) {
-                redirectUrl,
+                status,
                 }
             }
             """.trimIndent()
 
-        val basePath = "$.data.doDirectPayment"
+        val basePath = "$.data.getDirectPaymentStatus"
 
         testClient
             .post()
             .uri("/graphql")
             .accept(APPLICATION_JSON)
             .contentType(MediaType("application", "graphql"))
-            .bodyValue(mutation)
+            .bodyValue(query)
             .exchange()
             .expectBody()
             .consumeWith(Consumer { t -> logger.info { t } })
             .jsonPath(basePath)
             .exists()
             .jsonPath(
-                "$basePath.redirectUrl",
+                "$basePath.status",
             ).isEqualTo(
-                "https://payment.preprod.direct.worldline-solutions.com/hostedcheckout/PaymentMethods/Selection/e61340e579e04172a740676ffdda162e",
-            )
-    }
-
-    @Test
-    @WithBurgerUser("123")
-    fun doDirectPaymentWithInvalidIdentifier() {
-        val mutation =
-            """
-            mutation {
-                doDirectPayment(
-                    paymentRequest: { 
-                        identifier: "invalid-identifier", 
-                        amount: 100.25, 
-                        orderId: "123456", 
-                        reference: "12345",
-                    }
-                ) {
-                redirectUrl,
-                }
-            }
-            """.trimIndent()
-
-        val basePath = "$.errors"
-
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(mutation)
-            .exchange()
-            .expectBody()
-            .consumeWith(Consumer { t -> logger.info { t } })
-            .jsonPath(basePath)
-            .exists()
-            .jsonPath(
-                "$basePath[0].message",
-            ).isEqualTo(
-                "Exception while fetching data (/doDirectPayment) : 400 BAD_REQUEST \"Could not found direct payment profile for the identifier DirectPaymentRequest(identifier=invalid-identifier, amount=100.25, reference=12345, orderId=123456, langId=null, returnUrl=null).identifier\"",
+                "SUCCESSFUL",
             )
     }
 
@@ -169,8 +126,8 @@ internal class DirectPaymentMutationIT(
                     val path = request.path?.substringBefore('?')
                     val response =
                         when (request.method + " " + path) {
-                            "POST /v2/TAX/hostedcheckouts" -> {
-                                TestHelper.mockResponseFromFile("/data/payment-response.json")
+                            "GET /v2/TAX/hostedcheckouts/4373041363" -> {
+                                TestHelper.mockResponseFromFile("/data/payment-status-response.json")
                             }
                             else -> MockResponse().setResponseCode(404)
                         }
