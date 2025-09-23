@@ -3,14 +3,14 @@ package nl.nlportal.openklant.graphql.domain
 import java.util.UUID
 
 data class VerificatieCreateInput(
-    val digitalAdresId: UUID,
-    val email: String? = null,
-    val phoneNumber: String? = null,
+    val uuid: UUID,
+    val waarde: String,
+    val type: DigitaleAdresType,
 )
 
 data class VerificatieVerifyInput(
-    val digitalAdresId: UUID,
+    val uuid: UUID,
+    val waarde: String,
+    val type: DigitaleAdresType,
     val code: String,
-    val email: String? = null,
-    val phoneNumber: String? = null,
 )

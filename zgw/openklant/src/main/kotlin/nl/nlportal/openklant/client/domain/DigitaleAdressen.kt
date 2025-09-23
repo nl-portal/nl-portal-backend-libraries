@@ -51,7 +51,7 @@ data class OpenKlant2DigitaleAdres(
 data class OpenKlant2DigitaleAdresUpdate(
     val uuid: UUID,
     val adres: String,
-    val omschrijving: String,
+    val omschrijving: String? = null,
     val soortDigitaalAdres: String,
     val verificatieDatum: LocalDate? = null,
 )
