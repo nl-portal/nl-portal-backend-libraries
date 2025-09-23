@@ -725,6 +725,8 @@ class OpenProductService(
      * @param: pageSize, size for pagination
      * @param: extraSearchVariables, extra search variables to extend the search
      * @param: status, status of product
+     * @param: productTypeCode, producttype code
+     * @param: productTypeId, producttype uuid
      * @return: Result of producten
      */
     suspend fun getProducten(
@@ -733,6 +735,8 @@ class OpenProductService(
         pageSize: Int,
         extraSearchVariables: List<Pair<OpenProductProductenFilters, String>> = emptyList(),
         status: OpenProductToegestaneStatus? = null,
+        productTypeCode: String? = null,
+        productTypeId: String? = null,
     ): ResultPage<OpenProductProduct> {
         val searchVariables =
             mutableListOf(
@@ -747,8 +751,16 @@ class OpenProductService(
             searchVariables.addAll(extraSearchVariables)
         }
 
-        if (status != null) {
-            searchVariables.add(OpenProductProductenFilters.STATUS to status.toString().lowercase())
+        status?.let {
+            searchVariables.add(OpenProductProductenFilters.STATUS to it.toString().lowercase())
+        }
+
+        productTypeCode?.let {
+            searchVariables.add(OpenProductProductenFilters.PRODUCTTYPE_CODE to it)
+        }
+
+        productTypeId?.let {
+            searchVariables.add(OpenProductProductenFilters.PRODUCTTYPE_UUID to it)
         }
 
         return openProductClient.path<Producten>().get(
