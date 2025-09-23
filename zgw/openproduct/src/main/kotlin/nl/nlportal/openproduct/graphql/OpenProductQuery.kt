@@ -48,6 +48,8 @@ class OpenProductQuery(
         status: String? = null,
         productTypeCode: String? = null,
         productTypeId: String? = null,
+        productTypeCodes: List<String>? = null,
+        productTypeIds: List<String>? = null,
     ): ProductenPage =
         ProductenPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
@@ -60,6 +62,8 @@ class OpenProductQuery(
                     status = status?.let { OpenProductToegestaneStatus.valueOf(status.uppercase()) },
                     productTypeCode = productTypeCode,
                     productTypeId = productTypeId,
+                    productTypeCodes = productTypeCodes,
+                    productTypeIds = productTypeIds,
                 ),
         )
 

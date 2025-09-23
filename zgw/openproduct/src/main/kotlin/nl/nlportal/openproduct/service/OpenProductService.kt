@@ -737,6 +737,8 @@ class OpenProductService(
         status: OpenProductToegestaneStatus? = null,
         productTypeCode: String? = null,
         productTypeId: String? = null,
+        productTypeCodes: List<String>? = null,
+        productTypeIds: List<String>? = null,
     ): ResultPage<OpenProductProduct> {
         val searchVariables =
             mutableListOf(
@@ -759,8 +761,16 @@ class OpenProductService(
             searchVariables.add(OpenProductProductenFilters.PRODUCTTYPE_CODE to it)
         }
 
+        productTypeCodes?.let {
+            searchVariables.add(OpenProductProductenFilters.PRODUCTTYPE_CODE_IN to it.joinToString(","))
+        }
+
         productTypeId?.let {
             searchVariables.add(OpenProductProductenFilters.PRODUCTTYPE_UUID to it)
+        }
+
+        productTypeIds?.let {
+            searchVariables.add(OpenProductProductenFilters.PRODUCTTYPE_UUID_IN to it.joinToString(","))
         }
 
         return openProductClient.path<Producten>().get(
