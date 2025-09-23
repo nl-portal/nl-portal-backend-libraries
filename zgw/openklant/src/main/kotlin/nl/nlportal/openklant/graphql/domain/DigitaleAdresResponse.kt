@@ -41,6 +41,7 @@ data class DigitaleAdresResponse(
                         ?: OVERIG,
                 referentie = openKlant2DigitaleAdres.referentie ?: "",
                 verificatieDatum = openKlant2DigitaleAdres.verificatieDatum,
+
             )
     }
 
