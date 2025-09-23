@@ -46,6 +46,8 @@ data class OpenKlantModuleConfiguration(
             var clientId: String = "",
             var secret: String = "",
             var apiKey: String = "",
+            var templateIdPhoneNumber: String = "",
+            var templateIdEmail: String = "",
             var ssl: Ssl? = null,
         )
     }

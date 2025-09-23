@@ -19,6 +19,7 @@ import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
 import nl.nlportal.openklant.client.OpenKlant2VerificatieClient
 import nl.nlportal.openklant.service.OpenKlant2Service
+import nl.nlportal.openklant.service.OpenKlantVerificatieService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -55,4 +56,15 @@ class OpenKlantAutoConfiguration {
             clientSslContextResolver = clientSslContextResolver,
             webClientBuilder = webClientBuilder,
         )
+
+    @Bean
+    fun openKlantVerificatieService(
+        openklantModuleConfiguration: OpenKlantModuleConfiguration,
+        openKlant2VerificatieClient: OpenKlant2VerificatieClient,
+        openKlant2Service: OpenKlant2Service
+    ) = OpenKlantVerificatieService(
+        verificatieConfigurationProperties = openklantModuleConfiguration.properties.verificatieProperties,
+        verificatieClient = openKlant2VerificatieClient,
+        openKlant2Service = openKlant2Service,
+    )
 }
