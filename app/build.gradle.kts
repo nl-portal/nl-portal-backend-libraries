@@ -29,8 +29,6 @@ dependencies {
     implementation(project(":zgw:besluiten"))
     implementation(project(":payment"))
     implementation(project(":payment-direct"))
-    implementation(project(":klant"))
-    implementation(project(":klantcontactmomenten"))
     implementation(project(":zgw:zaken-api"))
     implementation(project(":zgw:openproduct"))
     implementation(project(":product"))
