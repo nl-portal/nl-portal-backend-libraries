@@ -43,7 +43,7 @@ data class Bericht(
         berichtenService: BerichtenService,
     ): List<Document> =
         berichtenService.getDocumenten(
-            identificatie = referentie ?: "no referentie",
+            identificatie = referentie ?: "no identification",
             bijlages = bijlages,
         )
 }
