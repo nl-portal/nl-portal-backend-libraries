@@ -35,7 +35,7 @@ data class Bericht(
     val identificatie: BerichtIdentificatie,
     val onderwerp: String,
     val publicatiedatum: LocalDateTime,
-    val referentie: String,
+    val referentie: String? = null,
 ) {
     suspend fun documenten(
         @GraphQLIgnore
@@ -43,7 +43,7 @@ data class Bericht(
         berichtenService: BerichtenService,
     ): List<Document> =
         berichtenService.getDocumenten(
-            identificatie = referentie,
+            identificatie = referentie ?: "no referentie",
             bijlages = bijlages,
         )
 }
