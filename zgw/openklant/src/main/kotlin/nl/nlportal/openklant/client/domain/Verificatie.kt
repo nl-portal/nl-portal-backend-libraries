@@ -16,6 +16,7 @@
 package nl.nlportal.openklant.client.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import java.time.LocalDateTime
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class VerificatieCreateRequest(
@@ -27,7 +28,7 @@ data class VerificatieCreateRequest(
 )
 
 data class VerificatieCreateResponse(
- val success: Boolean,
+    val success: Boolean,
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -36,9 +37,9 @@ data class VerificatieVerifyRequest(
     val reference: String? = null,
     val email: String? = null,
     val phoneNumber: String? = null,
-
 )
 
 data class VerificatieVerifyResponse(
     val verified: Boolean,
+    val verifiedOp: LocalDateTime,
 )

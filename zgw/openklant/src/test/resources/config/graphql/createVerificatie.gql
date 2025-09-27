@@ -1,0 +1,5 @@
+mutation {
+    createVerificatie(verificatieCreateInput: {uuid: "7ed7fdae-9715-46e1-b967-295d22685b76", waarde: "0611111111", type: TELEFOONNUMMER}) {
+        success
+    }
+}

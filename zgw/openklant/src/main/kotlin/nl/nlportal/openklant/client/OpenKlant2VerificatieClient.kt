@@ -76,15 +76,12 @@ class OpenKlant2VerificatieClient(
                                 result
                             },
                     ),
-
-                )
-                .apply {
+                ).apply {
                     val token = getToken()
                     if (token != null) {
                         it.defaultHeader("Authorization", "Bearer $token")
                     }
-                }
-                .exchangeStrategies(
+                }.exchangeStrategies(
                     ExchangeStrategies
                         .builder()
                         .codecs { configurer ->
@@ -98,11 +95,12 @@ class OpenKlant2VerificatieClient(
                                 )
                             }
                         }.build(),
-                ).build()
+                ).baseUrl(verificatieConfigurationProperties.url)
+                .build()
     }
 
     suspend fun create(
-        request: VerificatieCreateRequest
+        request: VerificatieCreateRequest,
     ): VerificatieCreateResponse =
         webClient
             .post()
@@ -116,7 +114,7 @@ class OpenKlant2VerificatieClient(
             .awaitBody<VerificatieCreateResponse>()
 
     suspend fun verify(
-        request: VerificatieVerifyRequest
+        request: VerificatieVerifyRequest,
     ): VerificatieVerifyResponse =
         webClient
             .post()
@@ -152,7 +150,6 @@ class OpenKlant2VerificatieClient(
             .onStatus({ httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus }, {
                 throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)
             })
-
 
     companion object {
         private val logger: KLogger = KotlinLogging.logger {}

@@ -52,7 +52,7 @@ class OpenKlantAutoConfiguration {
         webClientBuilder: WebClient.Builder,
     ): OpenKlant2VerificatieClient =
         OpenKlant2VerificatieClient(
-            verificatieConfigurationProperties = openklantModuleConfiguration.properties.verificatieProperties,
+            verificatieConfigurationProperties = openklantModuleConfiguration.properties.verificatie,
             clientSslContextResolver = clientSslContextResolver,
             webClientBuilder = webClientBuilder,
         )
@@ -61,9 +61,9 @@ class OpenKlantAutoConfiguration {
     fun openKlantVerificatieService(
         openklantModuleConfiguration: OpenKlantModuleConfiguration,
         openKlant2VerificatieClient: OpenKlant2VerificatieClient,
-        openKlant2Service: OpenKlant2Service
+        openKlant2Service: OpenKlant2Service,
     ) = OpenKlantVerificatieService(
-        verificatieConfigurationProperties = openklantModuleConfiguration.properties.verificatieProperties,
+        verificatieConfigurationProperties = openklantModuleConfiguration.properties.verificatie,
         verificatieClient = openKlant2VerificatieClient,
         openKlant2Service = openKlant2Service,
     )

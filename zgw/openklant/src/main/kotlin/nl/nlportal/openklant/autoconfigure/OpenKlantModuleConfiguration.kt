@@ -40,9 +40,10 @@ data class OpenKlantModuleConfiguration(
         var klantinteractiesApiUrl: URI? = null,
         var token: String? = null,
         val digitalAdressenReferentie: String? = null,
-        val verificatieProperties: OpenKlantVerificatieConfigurationProperties = OpenKlantVerificatieConfigurationProperties(),
+        val verificatie: OpenKlantVerificatieConfigurationProperties = OpenKlantVerificatieConfigurationProperties(),
     ) {
         data class OpenKlantVerificatieConfigurationProperties(
+            var url: String = "",
             var clientId: String = "",
             var secret: String = "",
             var apiKey: String = "",
