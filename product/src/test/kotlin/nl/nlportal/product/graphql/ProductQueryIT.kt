@@ -318,6 +318,26 @@ internal class ProductQueryIT(
     }
 
     @Test
+    @WithBedrijfUser(
+        kvkNummer = "569312863",
+        machtigingsDienst = "dd95bdee-c493-4757-bae3-fe0a5b5063f8",
+    )
+    fun getProductTypesTestBedrijfWithMachtingDienst() {
+        val basePath = "$.data.getProductTypes"
+
+        testClient
+            .post()
+            .uri("/graphql")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType("application", "graphql"))
+            .bodyValue(graphqlGetProductTypes)
+            .exchange()
+            .verifyOnlyDataExists(basePath)
+            .jsonPath("$basePath.size()")
+            .isEqualTo(0)
+    }
+
+    @Test
     @WithBurgerUser("569312863")
     fun getProductTakenTestBurger() {
         val basePath = "$.data.getProductTaken"

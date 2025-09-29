@@ -45,6 +45,8 @@ class AuthenticationMachtigingsDienstService(
         return authenticationMachtingDiensten.find { it.uuid == uuid }
     }
 
+    fun hasMachtingDienst(authentication: CommonGroundAuthentication): Boolean = authentication.machtigingsDienstUUIDs(authenticationMachtingsDienstConfig.allMachtigingUuid) != null
+
     fun zaakTypes(authentication: CommonGroundAuthentication): List<UUID>? {
         if (authentication !is BedrijfAuthentication) {
             return null
