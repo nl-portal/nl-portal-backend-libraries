@@ -123,6 +123,39 @@ object TestHelper {
         }
         """.trimIndent()
 
+    val graphqlValidBerichtReadRequestWithDocuments =
+        """
+        query {
+            getBericht(id: "a4961c4a-29a7-4cc7-9d5d-bceed1dfccba") {
+                berichtTekst
+                berichtType
+                bijlages
+                einddatumHandelingstermijn
+                geopend
+                handelingsperspectief
+                identificatie {
+                    type
+                    value
+                    __typename
+                }
+                documenten {
+                    uuid,
+                    documentapi,
+                    identificatie,
+                    creatiedatum,
+                    titel,
+                    formaat,
+                    bestandsnaam,
+                    bestandsomvang
+                },
+                onderwerp
+                publicatiedatum
+                referentie
+                __typename
+            }
+        }
+        """.trimIndent()
+
     val graphqlInvalidBerichtRequest =
         """
         query {
@@ -158,7 +191,7 @@ object TestHelper {
                 "data": {
                     "geopend": false,
                     "bijlages": [
-                        "https://example.com/documenten/api/v1/enkelvoudiginformatieobjecten/1"
+                        "http://localhost:10001/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
                     ],
                     "onderwerp": "Bericht over uw buurt.",
                     "referentie": "ZAAK-2024-0000000001",
@@ -194,7 +227,7 @@ object TestHelper {
                 "data": {
                     "geopend": true,
                     "bijlages": [
-                        "https://example.com/documenten/api/v1/enkelvoudiginformatieobjecten/1"
+                        "http://localhost:10001/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
                     ],
                     "onderwerp": "Bericht over uw buurt.",
                     "referentie": "ZAAK-2024-0000000001",
@@ -235,7 +268,7 @@ object TestHelper {
                         "data": {
                             "geopend": false,
                             "bijlages": [
-                                "https://example.com/documenten/api/v1/enkelvoudiginformatieobjecten/1"
+                                "http://localhost:10001/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
                             ],
                             "onderwerp": "Bericht over uw buurt.",
                             "referentie": "ZAAK-2024-0000000001",
@@ -267,7 +300,7 @@ object TestHelper {
                         "data": {
                             "geopend": false,
                             "bijlages": [
-                                "https://example.com/documenten/api/v1/enkelvoudiginformatieobjecten/1"
+                                "http://localhost:10001/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
                             ],
                             "onderwerp": "Bericht over uw buurt.",
                             "referentie": "ZAAK-2024-0000000001",
@@ -299,7 +332,7 @@ object TestHelper {
                         "data": {
                             "geopend": false,
                             "bijlages": [
-                                "https://example.com/documenten/api/v1/enkelvoudiginformatieobjecten/1"
+                                "http://localhost:10001/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
                             ],
                             "onderwerp": "Bericht over uw buurt.",
                             "referentie": "ZAAK-2024-0000000001",
@@ -331,7 +364,7 @@ object TestHelper {
                         "data": {
                             "geopend": false,
                             "bijlages": [
-                                "https://example.com/documenten/api/v1/enkelvoudiginformatieobjecten/1"
+                                "http://localhost:10001/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
                             ],
                             "onderwerp": "Bericht over uw buurt.",
                             "referentie": "ZAAK-2024-0000000001",
@@ -363,7 +396,7 @@ object TestHelper {
                         "data": {
                             "geopend": false,
                             "bijlages": [
-                                "https://example.com/documenten/api/v1/enkelvoudiginformatieobjecten/1"
+                                "http://localhost:10001/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
                             ],
                             "onderwerp": "Bericht over uw buurt.",
                             "referentie": "ZAAK-2024-0000000001",
@@ -395,7 +428,7 @@ object TestHelper {
                         "data": {
                             "geopend": false,
                             "bijlages": [
-                                "https://example.com/documenten/api/v1/enkelvoudiginformatieobjecten/1"
+                                "http://localhost:10001/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
                             ],
                             "onderwerp": "Bericht over uw buurt.",
                             "referentie": "ZAAK-2024-0000000001",
@@ -427,7 +460,7 @@ object TestHelper {
                         "data": {
                             "geopend": false,
                             "bijlages": [
-                                "https://example.com/documenten/api/v1/enkelvoudiginformatieobjecten/1"
+                                "http://localhost:10001/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
                             ],
                             "onderwerp": "Bericht over uw buurt.",
                             "referentie": "ZAAK-2024-0000000001",
@@ -459,7 +492,7 @@ object TestHelper {
                         "data": {
                             "geopend": false,
                             "bijlages": [
-                                "https://example.com/documenten/api/v1/enkelvoudiginformatieobjecten/1"
+                                "http://localhost:10001/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
                             ],
                             "onderwerp": "Bericht over uw buurt.",
                             "referentie": "ZAAK-2024-0000000001",
@@ -491,7 +524,7 @@ object TestHelper {
                         "data": {
                             "geopend": false,
                             "bijlages": [
-                                "https://example.com/documenten/api/v1/enkelvoudiginformatieobjecten/1"
+                                "http://localhost:10001/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
                             ],
                             "onderwerp": "Bericht over uw buurt.",
                             "referentie": "ZAAK-2024-0000000001",
@@ -523,7 +556,7 @@ object TestHelper {
                         "data": {
                             "geopend": false,
                             "bijlages": [
-                                "https://example.com/documenten/api/v1/enkelvoudiginformatieobjecten/1"
+                                "http://localhost:10001/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
                             ],
                             "onderwerp": "Bericht over uw buurt.",
                             "referentie": "ZAAK-2024-0000000001",
@@ -555,7 +588,7 @@ object TestHelper {
                         "data": {
                             "geopend": false,
                             "bijlages": [
-                                "https://example.com/documenten/api/v1/enkelvoudiginformatieobjecten/1"
+                                "http://localhost:10001/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
                             ],
                             "onderwerp": "Bericht over uw buurt.",
                             "referentie": "ZAAK-2024-0000000001",
@@ -579,5 +612,52 @@ object TestHelper {
                 }
             ]
         }
+        """.trimIndent()
+
+    val handleDocumentResponse =
+        """
+        {
+           "url": "http://some.domain.com/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+           "identificatie": "string",
+           "bronorganisatie": "string",
+           "creatiedatum": "2021-10-14",
+           "titel": "Een titel",
+           "vertrouwelijkheidaanduiding": "openbaar",
+           "auteur": "string",
+           "status": "definitief",
+           "formaat": ".pdf",
+           "taal": "str",
+           "versie": 0,
+           "beginRegistratie": "2021-10-14T12:27:43Z",
+           "bestandsnaam": "string",
+           "inhoud": "http://example.com",
+           "bestandsomvang": 0,
+           "link": "http://example.com",
+           "beschrijving": "string",
+           "ontvangstdatum": "2021-10-14",
+           "verzenddatum": "2021-10-14",
+           "indicatieGebruiksrecht": true,
+           "ondertekening": {
+             "soort": "analoog",
+             "datum": "2021-10-14"
+           },
+           "integriteit": {
+             "algoritme": "crc_16",
+             "waarde": "string",
+             "datum": "2021-10-14"
+           },
+           "informatieobjecttype": "http://example.com",
+           "locked": true,
+           "bestandsdelen": [
+             {
+               "url": "http://example.com",
+               "volgnummer": 0,
+               "omvang": 0,
+               "inhoud": "http://example.com",
+               "voltooid": true,
+               "lock": "string"
+             }
+           ]
+         }
         """.trimIndent()
 }

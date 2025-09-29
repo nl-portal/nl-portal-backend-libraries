@@ -1,0 +1,30 @@
+{
+  "createdPaymentOutput": {
+    "payment": {
+      "statusOutput": {
+        "errors": [
+          {
+            "errorCode": 50001130,
+            "category": "PAYMENT_PLATFORM_ERROR",
+            "code": 50001130,
+            "httpStatusCode": 404,
+            "id": "UNKNOWN_PAYMENT_ID",
+            "message": "Authorisation declined",
+            "propertyName": "paymentId",
+            "retriable": true
+          }
+        ],
+        "isCancellable": true,
+        "statusCategory": "CREATED",
+        "statusCode": 0,
+        "statusCodeChangeDateTime": "string",
+        "isAuthorized": true,
+        "isRefundable": true
+      },
+      "id": 30660197300
+    },
+    "paymentStatusCategory": "SUCCESSFUL"
+  },
+  "status": "PAYMENT_CREATED"
+}
+

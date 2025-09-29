@@ -24,6 +24,7 @@ dependencies {
     api(project(":graphql"))
     api(project(":zgw:common-ground-authentication"))
     api(project(":zgw:objectenapi"))
+    api(project(":zgw:documenten-api"))
 
     implementation(kotlin("stdlib-jdk8"))
     implementation("org.springframework.boot:spring-boot-starter")
