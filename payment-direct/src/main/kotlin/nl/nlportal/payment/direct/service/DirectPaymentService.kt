@@ -35,6 +35,7 @@ import nl.nlportal.payment.direct.client.DirectPaymentClient
 import nl.nlportal.payment.direct.constants.DirectPaymentState
 import nl.nlportal.payment.direct.domain.DirectPaymentRequest
 import nl.nlportal.payment.direct.domain.DirectPaymentResponse
+import nl.nlportal.payment.direct.domain.DirectPaymentStatus
 import nl.nlportal.payment.direct.domain.DirectPaymentWebhookRequest
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
@@ -58,6 +59,29 @@ open class DirectPaymentService(
         }
     }
 
+    suspend fun getDirectPaymentStatus(
+        identifier: String,
+        hostedCheckoutId: String,
+    ): DirectPaymentStatus {
+        val paymentDirectProfile =
+            directPaymentModuleConfiguration.properties.getPaymentProfile(identifier)
+                ?: directPaymentModuleConfiguration.properties.getPaymentProfileByPspPid(identifier)
+                ?: throw ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Could not found direct payment profile for the identifier $identifier",
+                )
+
+        val directPaymentStatusResponse =
+            directPaymentClient.hostedCheckoutStatus(
+                directPaymentProfile = paymentDirectProfile,
+                hostedCheckoutId = hostedCheckoutId,
+            )
+
+        return DirectPaymentStatus(
+            status = directPaymentStatusResponse.createdPaymentOutput.paymentStatusCategory,
+        )
+    }
+
     /**
      * Do Direct Payment at payment provider
      * @param paymentRequest: properties to create a payment
@@ -77,6 +101,7 @@ open class DirectPaymentService(
                 HostedCheckoutSpecificInput()
                     .withLocale(paymentRequest.langId ?: paymentDirectProfile.language)
                     .withReturnUrl(paymentRequest.returnUrl ?: paymentDirectProfile.returnUrl)
+                    .withShowResultPage(directPaymentModuleConfiguration.properties.showResultPage)
 
             directPaymentModuleConfiguration.properties.customTemplateUrl?.let {
                 hostedCheckoutSpecificInput.variant = it

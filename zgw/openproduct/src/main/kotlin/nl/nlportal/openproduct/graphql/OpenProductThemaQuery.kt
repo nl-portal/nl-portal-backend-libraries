@@ -83,12 +83,14 @@ class OpenProductThemaQuery(
         @Argument id: UUID,
         @Argument language: String? = null,
         @Argument isOpen: Boolean? = null,
+        @Argument pageSize: Int? = null,
     ): List<Zaak> =
         openProductService.getThemaZaken(
             authentication = authentication,
             id = id,
             language = language,
             isOpen = isOpen,
+            pageSize = pageSize,
         )
 
     @QueryMapping
@@ -96,11 +98,13 @@ class OpenProductThemaQuery(
         authentication: CommonGroundAuthentication,
         @Argument id: UUID,
         @Argument language: String? = null,
+        @Argument pageSize: Int? = null,
     ): List<TaakV2> =
         openProductService.getThemaTaken(
             authentication = authentication,
             id = id,
             language = language,
+            pageSize = pageSize,
         )
 
     @SchemaMapping(typeName = "OpenProductThema", field = "zaken")

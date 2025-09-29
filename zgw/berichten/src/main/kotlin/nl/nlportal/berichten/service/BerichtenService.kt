@@ -38,8 +38,8 @@ import nl.nlportal.documentenapi.service.DocumentenApiService
 
 class BerichtenService(
     private val objectenApiService: ObjectenApiService,
-    private val berichtenConfigurationProperties: BerichtenConfigurationProperties,
     private val documentenApiService: DocumentenApiService,
+    private val berichtenConfigurationProperties: BerichtenConfigurationProperties,
 ) {
     suspend fun getUnopenedBerichtenCount(authentication: CommonGroundAuthentication): Int {
         val searchParameters =
@@ -71,16 +71,12 @@ class BerichtenService(
             return bericht
         }
 
-        // set bericht as opened and update object in objectsapi
-        bericht.geopend = true
-
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiBericht)
         updateRequest.record.data.geopend = true
         updateRequest.record.correctedBy = authentication.userId
         updateRequest.record.correctionFor = objectsApiBericht.record.index.toString()
-        objectenApiService.updateObject(objectsApiBericht.uuid, updateRequest)
-
-        return bericht
+        val updatedObjectsApiBericht = objectenApiService.updateObject(objectsApiBericht.uuid, updateRequest)
+        return updatedObjectsApiBericht?.record?.data
     }
 
     suspend fun getDocumenten(
