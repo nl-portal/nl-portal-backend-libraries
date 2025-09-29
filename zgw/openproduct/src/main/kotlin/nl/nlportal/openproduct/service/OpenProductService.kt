@@ -1168,7 +1168,7 @@ class OpenProductService(
             }
 
             return getObjectsApiObjectResultPage<TaakObjectV2>(
-                objectsApiTaskConfigProperties.typeUrlV2,
+                objectsApiTaskConfigProperties.objectTypeUrl,
                 objectSearchParameters,
                 pageNumber,
                 pageSize,
