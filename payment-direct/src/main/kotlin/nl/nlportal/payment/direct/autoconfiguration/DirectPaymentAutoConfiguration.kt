@@ -19,6 +19,7 @@ import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.payment.direct.api.DirectPaymentController
 import nl.nlportal.payment.direct.client.DirectPaymentClient
 import nl.nlportal.payment.direct.graphql.DirectPaymentMutation
+import nl.nlportal.payment.direct.graphql.DirectPaymentQuery
 import nl.nlportal.payment.direct.service.DirectPaymentService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import org.springframework.beans.factory.annotation.Autowired
@@ -58,6 +59,9 @@ class DirectPaymentAutoConfiguration {
 
     @Bean
     fun directPaymentMutation(directPaymentService: DirectPaymentService): DirectPaymentMutation = DirectPaymentMutation(directPaymentService)
+
+    @Bean
+    fun directPaymentQuery(directPaymentService: DirectPaymentService): DirectPaymentQuery = DirectPaymentQuery(directPaymentService)
 
     @Bean
     @ConditionalOnMissingBean(DirectPaymentController::class)

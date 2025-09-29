@@ -30,6 +30,7 @@ data class DirectPaymentModuleConfiguration(
         val webhookHeaders: List<String> = emptyList(),
         val webhookUrl: String? = null,
         val customTemplateUrl: String? = null,
+        val showResultPage: Boolean = false,
         val configurations: Map<String, DirectPaymentProfile> = emptyMap(),
     ) {
         fun getPaymentProfile(profileIdentifier: String): DirectPaymentProfile? = configurations[profileIdentifier]

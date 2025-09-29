@@ -15,21 +15,26 @@
  */
 package nl.nlportal.payment.direct.client
 
-import com.onlinepayments.authentication.V1HmacAuthenticator
-import com.onlinepayments.communication.RequestHeader
 import com.onlinepayments.domain.CreateHostedCheckoutRequest
 import com.onlinepayments.domain.CreateHostedCheckoutResponse
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.netty.handler.logging.LogLevel
-import java.net.URI
+import java.io.UnsupportedEncodingException
+import java.security.InvalidKeyException
+import java.security.NoSuchAlgorithmException
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration.DirectPaymentProfile
 import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration.DirectPaymentProperties
+import nl.nlportal.payment.direct.domain.DirectPaymentStatusResponse
+import org.apache.commons.codec.binary.Base64
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient
@@ -83,15 +88,13 @@ class DirectPaymentClient(
     ): CreateHostedCheckoutResponse {
         val endpointUrl = "/v2/${directPaymentProfile.pspId}/hostedcheckouts"
         val dateTime = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("UTC")).format(DateTimeFormatter.RFC_1123_DATE_TIME)
-        val hmacAuthenticator = V1HmacAuthenticator(directPaymentProfile.apiKey, directPaymentProfile.apiSecret)
         val hmacHeader =
-            hmacAuthenticator.getAuthorization(
-                "POST",
-                URI.create(endpointUrl),
-                listOf(
-                    RequestHeader("Content-Type", MediaType.APPLICATION_JSON.toString()),
-                    RequestHeader(HttpHeaders.DATE, dateTime),
-                ),
+            createHmacHeader(
+                endpointUrl = endpointUrl,
+                directPaymentProfile = directPaymentProfile,
+                dateTime = dateTime,
+                contentType = MediaType.APPLICATION_JSON.toString(),
+                httpMethod = HttpMethod.POST,
             )
 
         return webClient
@@ -105,6 +108,47 @@ class DirectPaymentClient(
             .bodyValue(checkoutRequest)
             .retrieve()
             .awaitBody<CreateHostedCheckoutResponse>()
+    }
+
+    suspend fun hostedCheckoutStatus(
+        directPaymentProfile: DirectPaymentProfile,
+        hostedCheckoutId: String,
+    ): DirectPaymentStatusResponse {
+        val endpointUrl = "/v2/${directPaymentProfile.pspId}/hostedcheckouts/$hostedCheckoutId"
+        val dateTime = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("UTC")).format(DateTimeFormatter.RFC_1123_DATE_TIME)
+        val hmacHeader =
+            createHmacHeader(
+                endpointUrl = endpointUrl,
+                directPaymentProfile = directPaymentProfile,
+                dateTime = dateTime,
+                contentType = "",
+                httpMethod = HttpMethod.GET,
+            )
+
+        return webClient
+            .get()
+            .uri(endpointUrl)
+            .headers {
+                it.add(HttpHeaders.AUTHORIZATION, hmacHeader)
+                it.add(HttpHeaders.DATE, dateTime)
+            }.retrieve()
+            .awaitBody<DirectPaymentStatusResponse>()
+    }
+
+    @Throws(NoSuchAlgorithmException::class, InvalidKeyException::class, UnsupportedEncodingException::class)
+    fun createHmacHeader(
+        endpointUrl: String,
+        directPaymentProfile: DirectPaymentProfile,
+        dateTime: String,
+        contentType: String,
+        httpMethod: HttpMethod,
+    ): String {
+        val stringToHash = "${httpMethod}\n${contentType}\n$dateTime\n$endpointUrl\n"
+        val sha256HMAC = Mac.getInstance("HmacSHA256")
+        val secretKey = SecretKeySpec(directPaymentProfile.apiSecret.toByteArray(), "HmacSHA256")
+        sha256HMAC.init(secretKey)
+        val hash = Base64.encodeBase64String(sha256HMAC.doFinal(stringToHash.toByteArray()))
+        return "GCS v1HMAC:" + directPaymentProfile.apiKey + ":" + hash
     }
 
     companion object {
