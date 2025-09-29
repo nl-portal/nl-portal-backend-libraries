@@ -17,6 +17,7 @@ package nl.nlportal.berichten.autoconfigure
 
 import nl.nlportal.berichten.graphql.BerichtenQuery
 import nl.nlportal.berichten.service.BerichtenService
+import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.zgw.objectenapi.service.ObjectenApiService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty

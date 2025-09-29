@@ -236,16 +236,17 @@ internal class ProductQueryIT(
     fun getProductTypesTestBedrijfWithMachtingDienst() {
         val basePath = "$.data.getProductTypes"
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetProductTypes)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.size()")
-            .isEqualTo(0)
+        val responseBody =
+            httpGraphQlTester
+                .document(graphqlGetProductTypes)
+                .execute()
+                .errors()
+                .verify()
+                .path("getProductTypes")
+                .entity(JsonNode::class.java)
+                .get()
+
+        assertEquals(0, responseBody.size())
     }
 
     @Test

@@ -1,3 +1,9 @@
+extend type Query {
+    getDirectPaymentStatus(
+        identifier: String!,
+        hostedCheckoutId: String!
+    ): DirectPaymentStatus!
+}
 extend type Mutation {
     # Do Worldline Direct payment
     doDirectPayment(
@@ -15,4 +21,14 @@ input DirectPaymentRequestInput {
 
 type DirectPaymentResponse {
     redirectUrl: String!
+}
+
+type DirectPaymentStatus {
+    status: DirectPaymentStatusCategory
+}
+
+enum DirectPaymentStatusCategory {
+    SUCCESSFUL,
+    REJECTED,
+    STATUS_UNKNOWN
 }

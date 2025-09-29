@@ -12,13 +12,14 @@ extend type Query {
     getOpenProductThemaHierarchy(id: UUID!): [OpenProductThemaHierarchy!]!
 
     # Get taken of a thema, including their parent themas
-    getOpenProductThemaTaken(id: UUID!, language: String): [TaakV2!]!
+    getOpenProductThemaTaken(id: UUID!, language: String, pageSize: Int): [TaakV2!]!
 
     # Get zaken of a thema, including their parent themas
     getOpenProductThemaZaken(
         id: UUID!
         language: String
         isOpen: Boolean
+        pageSize: Int
     ): [Zaak!]!
 
     # Get all themas

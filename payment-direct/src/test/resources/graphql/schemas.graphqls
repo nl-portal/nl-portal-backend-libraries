@@ -1,5 +1,8 @@
 type Query {
-    dummy: String
+    getDirectPaymentStatus(
+        identifier: String!,
+        hostedCheckoutId: String!
+    ): DirectPaymentStatus!
 }
 type Mutation {
     # Do Worldline Direct payment
@@ -19,5 +22,16 @@ input DirectPaymentRequestInput {
 type DirectPaymentResponse {
     redirectUrl: String!
 }
+
+type DirectPaymentStatus {
+    status: DirectPaymentStatusCategory
+}
+
+enum DirectPaymentStatusCategory {
+    SUCCESSFUL,
+    REJECTED,
+    STATUS_UNKNOWN
+}
+
 
 scalar PositiveFloat
