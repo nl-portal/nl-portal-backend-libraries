@@ -282,8 +282,7 @@ class OpenProductThemaQueryIT(
                                 TestHelper.mockResponseFromFile("/config/data/get-producten.json")
                             }
                             "GET /api/v2/objects" -> {
-                                if (queryParams.any { it.contains("identificatie__value__exact__569312863") }
-                                ) {
+                                if (queryParams.any { it.contains("identificatie__value__exact__569312863") }) {
                                     TestHelper.mockResponseFromFile("/config/data/get-taken.json")
                                 } else {
                                     MockResponse().setResponseCode(404)
