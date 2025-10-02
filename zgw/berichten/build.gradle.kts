@@ -27,11 +27,11 @@ dependencies {
     api(project(":zgw:documenten-api"))
 
     implementation(kotlin("stdlib-jdk8"))
-    implementation("org.springframework.boot:spring-boot-starter")
+    implementation(Dependencies.springBootStarter)
 
     testImplementation(project(":zgw:common-ground-authentication-test"))
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
-    testImplementation("org.springframework.security", "spring-security-test")
+    testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.springSecurityTest)
     testImplementation(TestDependencies.kotlinCoroutines)
     testImplementation(TestDependencies.mockitoKotlin)
     testImplementation(TestDependencies.okHttpMockWebserver)

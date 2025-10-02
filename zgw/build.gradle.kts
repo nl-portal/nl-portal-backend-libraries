@@ -23,12 +23,12 @@ val isLib = true
 dependencies {
 
     implementation(Dependencies.kotlinLogging)
-    implementation("org.springframework.boot:spring-boot-starter")
+    implementation(Dependencies.springBootStarter)
     implementation("org.springframework.boot:spring-boot-starter-webflux")
 
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation(TestDependencies.kotlinTest)
+    testImplementation(TestDependencies.junitJupiterTest)
+    testImplementation(TestDependencies.springBootTest)
 }
 
 val jar: Jar by tasks

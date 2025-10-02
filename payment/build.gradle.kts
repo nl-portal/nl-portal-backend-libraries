@@ -23,10 +23,10 @@ dependencies {
     api(project(":graphql"))
     api(project(":zgw:taak"))
 
-    api("commons-codec", "commons-codec", "1.19.0")
+    api("commons-codec:commons-codec:1.19.0")
     testImplementation(project(":zgw:common-ground-authentication-test"))
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
-    testImplementation("org.assertj", "assertj-core")
+    testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.assertJCore)
     testImplementation(TestDependencies.mockitoKotlin)
     testImplementation(TestDependencies.kotlinCoroutines)
     testImplementation(TestDependencies.okHttpMockWebserver)

@@ -27,7 +27,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     api(project(":core"))
 
-    api("org.springframework.boot", "spring-boot-starter-data-jpa")
+    api("org.springframework.boot:spring-boot-starter-data-jpa")
 }
 
 apply(from = "gradle/publishing.gradle.kts")
