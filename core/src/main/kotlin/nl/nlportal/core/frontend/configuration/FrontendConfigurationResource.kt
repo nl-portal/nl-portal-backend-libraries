@@ -1,7 +1,5 @@
 package nl.nlportal.core.frontend.configuration
 
-import io.github.oshai.kotlinlogging.KotlinLogging
-import nl.nlportal.core.autoconfiguration.CoreThemeConfigurationProperties
 import nl.nlportal.core.frontend.service.FrontendConfigurationService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping

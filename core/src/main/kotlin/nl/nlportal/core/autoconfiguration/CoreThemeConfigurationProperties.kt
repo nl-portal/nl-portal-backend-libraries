@@ -19,6 +19,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.theme", ignoreUnknownFields = true)
 class CoreThemeConfigurationProperties {
-    lateinit var style: String
-    lateinit var logo: String
+    var style: String? = null
+    var logo: String? = null
 }

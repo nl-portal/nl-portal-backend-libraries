@@ -19,11 +19,11 @@ import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.documentenapis", ignoreUnknownFields = true)
-data class DocumentApisConfig(
-    var enabled: Boolean = false,
-    var properties: DocumentenApisConfigProperties = DocumentenApisConfigProperties(),
-) {
-    data class DocumentenApisConfigProperties(
+class DocumentApisConfig {
+    var enabled: Boolean = false
+    var properties: DocumentenApisConfigProperties = DocumentenApisConfigProperties()
+
+    class DocumentenApisConfigProperties(
         var defaultDocumentApi: String = "",
         val allowedMimeTypes: Set<String> = setOf(),
         var configurations: Map<String, DocumentApiConfig> = emptyMap(),
@@ -43,13 +43,13 @@ data class DocumentApisConfig(
                 ?: throw NullPointerException("No documentapi configuration found for handling: $documentUrl")
         }
 
-        data class DocumentApiConfig(
-            var url: String,
-            var clientId: String? = null,
-            var secret: String? = null,
-            var rsin: String? = null,
-            var documentTypeUrl: String? = null,
-            var ssl: Ssl? = null,
-        )
+        class DocumentApiConfig {
+            var url: String = ""
+            var clientId: String? = null
+            var secret: String? = null
+            var rsin: String? = null
+            var documentTypeUrl: String? = null
+            var ssl: Ssl? = null
+        }
     }
 }

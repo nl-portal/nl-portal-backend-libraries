@@ -27,31 +27,32 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import java.util.UUID
 
 @ConfigurationProperties(prefix = "nl-portal.config.zakenapi")
-data class ZakenApiConfig(
-    var enabled: Boolean = false,
-    var properties: ZakenApiConfigProperties = ZakenApiConfigProperties(),
-) {
-    data class ZakenApiConfigProperties(
-        var url: String = "",
-        var clientId: String = "",
-        var secret: String = "",
-        var zaakTypesIdsExcluded: List<UUID> = emptyList(),
-        var zaakDocumentenConfig: ZaakDocumentenConfig = ZaakDocumentenConfig(),
-        val useNnpKvkQueryIdentificators: Boolean = false,
-    ) {
-        data class ZaakDocumentenConfig(
+class ZakenApiConfig {
+
+    var enabled: Boolean = false
+    var properties: ZakenApiConfigProperties = ZakenApiConfigProperties()
+
+    class ZakenApiConfigProperties {
+        var url: String = ""
+        var clientId: String = ""
+        var secret: String = ""
+        var zaakTypesIdsExcluded: List<UUID> = emptyList()
+        var zaakDocumentenConfig: ZaakDocumentenConfig = ZaakDocumentenConfig()
+        val useNnpKvkQueryIdentificators: Boolean = false
+
+        class ZaakDocumentenConfig {
             var vertrouwelijkheidsaanduidingWhitelist: List<Vertrouwelijkheid> =
                 listOf(
                     OPENBAAR,
                     BEPERKT_OPENBAAR,
                     INTERN,
                     ZAAKVERTROUWELIJK,
-                ),
+                )
             var statusWhitelist: List<DocumentStatus> =
                 listOf(
                     DEFINITIEF,
                     GEARCHIVEERD,
-                ),
-        )
+                )
+        }
     }
 }

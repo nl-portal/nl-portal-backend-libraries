@@ -19,12 +19,12 @@ import nl.nlportal.core.util.ShaVersion
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.prefill", ignoreUnknownFields = true)
-data class PrefillConfig(
-    var enabled: Boolean = false,
-    var properties: PrefillConfigProperties = PrefillConfigProperties(),
-) {
-    data class PrefillConfigProperties(
-        val typeUrl: String = "",
-        val prefillShaVersion: String = ShaVersion.SHA1.version,
-    )
+class PrefillConfig{
+    var enabled: Boolean = false
+    var properties: PrefillConfigProperties = PrefillConfigProperties()
+
+    class PrefillConfigProperties {
+        var typeUrl: String = ""
+        var prefillShaVersion: String = ShaVersion.SHA1.version
+    }
 }

@@ -157,7 +157,7 @@ nl-portal:
                 bewoning-api-url: http://localhost:5011/haalcentraal/api/bewoning/
         haalcentraal:
             hr:
-                enabled: false
+                enabled: true
                 properties:
                     url: http://localhost:8080
                     apiKey:
@@ -171,11 +171,11 @@ nl-portal:
         taak:
             enabled: true
             properties:
-                object-type-url: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
+                object-type-url: http://host.docker.internal:8011/api/v2/objecttypes/b4a617af-6969-45e8-9afd-d51e170716d5
         berichten:
             enabled: true
             properties:
-                bericht-object-type-url: "http://host.docker.internal:8011/api/v1/objecttypes/78731088-430f-49fd-9a4c-80ddd42ded28"
+                bericht-object-type-url: http://host.docker.internal:8011/api/v2/objecttypes/78731088-430f-49fd-9a4c-80ddd42ded28
         openproduct:
             enabled: true
             properties:

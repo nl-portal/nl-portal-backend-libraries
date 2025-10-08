@@ -19,11 +19,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import java.net.URI
 
 @ConfigurationProperties(prefix = "nl-portal.config.objectenapi")
-data class ObjectsApiClientConfig(
-    var enabled: Boolean = false,
-    var properties: ObjectsApiClientConfigProperties = ObjectsApiClientConfigProperties(),
-) {
-    data class ObjectsApiClientConfigProperties(
+class ObjectsApiClientConfig {
+    var enabled: Boolean = false
+    var properties: ObjectsApiClientConfigProperties = ObjectsApiClientConfigProperties()
+
+    class ObjectsApiClientConfigProperties(
         var url: URI = URI.create(""),
         var token: String = "",
     )
