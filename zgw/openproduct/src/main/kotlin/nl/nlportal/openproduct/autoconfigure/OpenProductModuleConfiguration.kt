@@ -38,18 +38,18 @@ class OpenProductModuleConfiguration {
         }
     }
 
-     class OpenProductConfigurationProperties{
+    class OpenProductConfigurationProperties {
         var productApiUrl: URI? = null
         var productTypeApiUrl: URI? = null
         var token: String? = null
         var dmn: OpenProductDmnConfigurationProperties = OpenProductDmnConfigurationProperties()
 
-         class OpenProductDmnConfigurationProperties{
+        class OpenProductDmnConfigurationProperties {
             var clientId: String = ""
             var secret: String = ""
             var username: String = ""
             var password: String = ""
             var ssl: Ssl? = null
-         }
+        }
     }
 }

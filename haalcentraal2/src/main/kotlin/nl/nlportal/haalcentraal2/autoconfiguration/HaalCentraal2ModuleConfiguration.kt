@@ -61,7 +61,7 @@ class HaalCentraal2ModuleConfiguration {
                 "verblijfplaats",
                 "verblijfstitel",
                 "verblijfplaatsBinnenland",
-                "adresseringBinnenland"
+                "adresseringBinnenland",
             )
     }
 }

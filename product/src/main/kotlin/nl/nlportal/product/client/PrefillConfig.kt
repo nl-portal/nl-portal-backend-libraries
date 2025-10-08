@@ -19,7 +19,7 @@ import nl.nlportal.core.util.ShaVersion
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.prefill", ignoreUnknownFields = true)
-class PrefillConfig{
+class PrefillConfig {
     var enabled: Boolean = false
     var properties: PrefillConfigProperties = PrefillConfigProperties()
 

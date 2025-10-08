@@ -27,6 +27,7 @@ class OgonePaymentConfig {
         var url: String = ""
         var shaOutParameters: List<String> = emptyList()
         var configurations: Map<String, OgonePaymentProfile> = mapOf()
+
         fun getPaymentProfile(profileIdentifier: String): OgonePaymentProfile? = configurations[profileIdentifier]
 
         fun getPaymentProfileByPspPid(pspId: String?): OgonePaymentProfile? {

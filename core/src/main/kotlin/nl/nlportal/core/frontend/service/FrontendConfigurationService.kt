@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package nl.nlportal.core.frontend.service
 
 import nl.nlportal.core.autoconfiguration.CoreThemeConfigurationProperties
@@ -24,8 +23,9 @@ import org.springframework.stereotype.Service
 @RefreshScope
 @Component
 class FrontendConfigurationService(
-    private var coreThemeConfigurationProperties: CoreThemeConfigurationProperties
+    private var coreThemeConfigurationProperties: CoreThemeConfigurationProperties,
 ) {
     fun getLogo(): String? = coreThemeConfigurationProperties.logo
+
     fun getStyle(): String? = coreThemeConfigurationProperties.style
 }
