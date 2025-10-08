@@ -18,12 +18,13 @@ package nl.nlportal.documentenapi.client
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.virusscan.clamav")
-class ClamAVVirusScanConfig {
-    var enabled: Boolean = false
-    var properties: ClamAVVirusScanConfigProperties = ClamAVVirusScanConfigProperties()
+class ClamAVVirusScanConfig(
+    var enabled: Boolean = false,
+    var properties: ClamAVVirusScanConfigProperties = ClamAVVirusScanConfigProperties(),
+) {
+    class ClamAVVirusScanConfigProperties(
+        var hostName: String = "",
+        var port: Int = 3310,
 
-    class ClamAVVirusScanConfigProperties {
-        var hostName: String = ""
-        var port: Int = 3310
-    }
+    )
 }

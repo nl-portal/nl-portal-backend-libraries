@@ -22,7 +22,7 @@ class ProductConfig(
     var enabled: Boolean = false,
     var properties: ProductConfigProperties = ProductConfigProperties(),
 ) {
-    data class ProductConfigProperties(
+    class ProductConfigProperties(
         var productTypeUrl: String = "",
         var productInstantieTypeUrl: String = "",
         var productVerbruiksObjectTypeUrl: String = "",

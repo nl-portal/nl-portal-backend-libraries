@@ -19,10 +19,10 @@ import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.haalcentraal2", ignoreUnknownFields = true)
-class HaalCentraal2ModuleConfiguration {
-    var enabled: Boolean = false
-    var properties: HaalCentraal2ConfigurationProperties = HaalCentraal2ConfigurationProperties()
-
+class HaalCentraal2ModuleConfiguration(
+    var enabled: Boolean = false,
+    var properties: HaalCentraal2ConfigurationProperties = HaalCentraal2ConfigurationProperties(),
+) {
     init {
         if (enabled) {
             requireNotNull(properties.brpApiUrl) {
@@ -31,11 +31,11 @@ class HaalCentraal2ModuleConfiguration {
         }
     }
 
-    class HaalCentraal2ConfigurationProperties {
-        var brpApiUrl: String = ""
-        var bewoningApiUrl: String = ""
-        var apiKey: String? = null
-        var ssl: Ssl? = null
+    class HaalCentraal2ConfigurationProperties(
+        var brpApiUrl: String = "",
+        var bewoningApiUrl: String = "",
+        var apiKey: String? = null,
+        var ssl: Ssl? = null,
         val brpFields: List<String> =
             listOf(
                 "aNummer",
@@ -62,6 +62,6 @@ class HaalCentraal2ModuleConfiguration {
                 "verblijfstitel",
                 "verblijfplaatsBinnenland",
                 "adresseringBinnenland",
-            )
-    }
+            ),
+    )
 }

@@ -18,10 +18,10 @@ package nl.nlportal.berichten.autoconfigure
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.berichten")
-class BerichtenConfiguration {
-    var enabled: Boolean = false
-    var properties: BerichtenConfigurationProperties = BerichtenConfigurationProperties()
-
+class BerichtenConfiguration(
+    var enabled: Boolean = false,
+    var properties: BerichtenConfigurationProperties = BerichtenConfigurationProperties(),
+) {
     class BerichtenConfigurationProperties {
         var berichtObjectTypeUrl: String = ""
     }

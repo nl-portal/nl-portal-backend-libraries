@@ -20,10 +20,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import java.net.URI
 
 @ConfigurationProperties(prefix = "nl-portal.config.openproduct")
-class OpenProductModuleConfiguration {
-    var enabled: Boolean = false
-    var properties: OpenProductConfigurationProperties = OpenProductConfigurationProperties()
-
+class OpenProductModuleConfiguration(
+    var enabled: Boolean = false,
+    var properties: OpenProductConfigurationProperties = OpenProductConfigurationProperties(),
+) {
     init {
         if (enabled) {
             requireNotNull(properties.productApiUrl) {
@@ -38,18 +38,18 @@ class OpenProductModuleConfiguration {
         }
     }
 
-    class OpenProductConfigurationProperties {
-        var productApiUrl: URI? = null
-        var productTypeApiUrl: URI? = null
-        var token: String? = null
-        var dmn: OpenProductDmnConfigurationProperties = OpenProductDmnConfigurationProperties()
-
-        class OpenProductDmnConfigurationProperties {
-            var clientId: String = ""
-            var secret: String = ""
-            var username: String = ""
-            var password: String = ""
-            var ssl: Ssl? = null
-        }
+    class OpenProductConfigurationProperties(
+        var productApiUrl: URI? = null,
+        var productTypeApiUrl: URI? = null,
+        var token: String? = null,
+        var dmn: OpenProductDmnConfigurationProperties = OpenProductDmnConfigurationProperties(),
+    ) {
+        class OpenProductDmnConfigurationProperties(
+            var clientId: String = "",
+            var secret: String = "",
+            var username: String = "",
+            var password: String = "",
+            var ssl: Ssl? = null,
+        )
     }
 }

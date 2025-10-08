@@ -19,19 +19,19 @@ import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.payment.direct", ignoreUnknownFields = true)
-data class DirectPaymentModuleConfiguration(
+class DirectPaymentModuleConfiguration(
     var enabled: Boolean = false,
     var properties: DirectPaymentProperties = DirectPaymentProperties(),
 ) {
-    data class DirectPaymentProperties(
+    class DirectPaymentProperties(
         var url: String = "",
-        val ssl: Ssl? = null,
-        val shaOutParameters: List<String> = emptyList(),
-        val webhookHeaders: List<String> = emptyList(),
-        val webhookUrl: String? = null,
-        val customTemplateUrl: String? = null,
-        val showResultPage: Boolean = false,
-        val configurations: Map<String, DirectPaymentProfile> = emptyMap(),
+        var ssl: Ssl? = null,
+        var shaOutParameters: List<String> = emptyList(),
+        var webhookHeaders: List<String> = emptyList(),
+        var webhookUrl: String? = null,
+        var customTemplateUrl: String? = null,
+        var showResultPage: Boolean = false,
+        var configurations: Map<String, DirectPaymentProfile> = emptyMap(),
     ) {
         fun getPaymentProfile(profileIdentifier: String): DirectPaymentProfile? = configurations[profileIdentifier]
 
@@ -45,14 +45,14 @@ data class DirectPaymentModuleConfiguration(
         }
     }
 
-    data class DirectPaymentProfile(
-        val pspId: String = "",
-        val language: String = "nl_NL",
-        val currency: String = "EUR",
-        val apiKey: String = "",
-        val apiSecret: String = "",
-        val returnUrl: String = "",
-        val webhookApiKey: String = "",
-        val webhookApiSecret: String = "",
+    class DirectPaymentProfile(
+        var pspId: String = "",
+        var language: String = "nl_NL",
+        var currency: String = "EUR",
+        var apiKey: String = "",
+        var apiSecret: String = "",
+        var returnUrl: String = "",
+        var webhookApiKey: String = "",
+        var webhookApiSecret: String = "",
     )
 }

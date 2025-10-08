@@ -19,11 +19,11 @@ import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.dmn", ignoreUnknownFields = true)
-data class DmnConfig(
+class DmnConfig(
     var enabled: Boolean = false,
     var properties: DmnConfigProperties = DmnConfigProperties(),
 ) {
-    data class DmnConfigProperties(
+    class DmnConfigProperties(
         var url: String = "",
         var clientId: String = "",
         var secret: String = "",
