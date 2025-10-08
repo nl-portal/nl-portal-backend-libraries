@@ -21,10 +21,10 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     api(project(":core"))
 
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
-    testImplementation("org.springframework.security", "spring-security-test")
-    testImplementation("org.jetbrains.kotlin", "kotlin-test")
-    testImplementation("org.mockito.kotlin", "mockito-kotlin", "6.0.0")
+    testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.springSecurityTest)
+    testImplementation(TestDependencies.kotlinTest)
+    testImplementation(TestDependencies.mockitoKotlin)
     testImplementation(project(":zgw:common-ground-authentication-test"))
 }
 

@@ -27,7 +27,7 @@ dependencies {
     api(project(":zgw:common-ground-authentication"))
     api(project(":zgw:objectenapi"))
 
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
+    testImplementation(TestDependencies.springBootTest)
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.okHttpMockWebserver)
 }

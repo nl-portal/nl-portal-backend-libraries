@@ -16,9 +16,9 @@ jobs:
             JAVA_VERSION: ${{ inputs.javaVersion }}
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v4
+            -   uses: actions/checkout@v5
             -   name: Set up JDK ${{ env.JAVA_VERSION }}
-                uses: actions/setup-java@v4
+                uses: actions/setup-java@v5
                 with:
                     java-version: '${{ env.JAVA_VERSION }}'
                     distribution: 'temurin'
@@ -29,7 +29,7 @@ jobs:
             -   name: Gradle htmlDependencyReport
                 run: ./gradlew htmlDependencyReport
             -   name: Publish to Sonatype Central with Gradle
-                # Must be two separate gradle invocations or it can fail with a race condition. 
+                # Must be two separate gradle invocations or it can fail with a race condition.
                 # Most likely because JReleaser does not declare a Gradle dependency from `jreleaserdeploy` to `publish`
                 run: ./gradlew publish -Pversion=${{env.ARTIFACT_VERSION}} --stacktrace && ./gradlew jreleaserDeploy -Pversion=${{env.ARTIFACT_VERSION}} --stacktrace
                 env:

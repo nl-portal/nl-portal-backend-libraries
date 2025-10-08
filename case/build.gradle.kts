@@ -35,16 +35,16 @@ dependencies {
     api(project(":graphql"))
     api(project(":messaging"))
 
-    implementation("org.springframework.boot", "spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot", "spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
 
     // JsonSchema support
     implementation(Dependencies.everitJsonSchema)
     implementation(Dependencies.jsonPath)
 
     testImplementation(TestDependencies.postgresql)
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
-    testImplementation("org.assertj", "assertj-core")
+    testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.assertJCore)
 }
 
 apply(from = "gradle/publishing.gradle.kts")
