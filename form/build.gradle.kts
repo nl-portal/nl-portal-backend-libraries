@@ -32,10 +32,10 @@ dependencies {
 
     implementation(Dependencies.kotlinCoroutines)
     implementation(Dependencies.kotlinCoroutinesReactor)
-    implementation("org.springframework.data", "spring-data-commons")
+    implementation("org.springframework.data:spring-data-commons")
 
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
-    testImplementation("org.assertj", "assertj-core")
+    testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.assertJCore)
     testImplementation(TestDependencies.postgresql)
     testImplementation("org.springframework.graphql:spring-graphql-test")
 }

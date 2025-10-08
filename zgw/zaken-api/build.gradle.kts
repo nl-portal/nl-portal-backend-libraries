@@ -31,14 +31,15 @@ dependencies {
     api(project(":zgw:objectenapi"))
     api(project(":zgw:besluiten"))
 
+    implementation(Dependencies.springBootStarter)
     implementation(Dependencies.kotlinCoroutines)
     implementation(Dependencies.kotlinCoroutinesReactor)
-    implementation("org.springframework.data", "spring-data-commons")
+    implementation("org.springframework.data:spring-data-commons")
 
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.security:spring-security-test")
+    testImplementation(TestDependencies.kotlinTest)
+    testImplementation(TestDependencies.junitJupiterTest)
+    testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.springSecurityTest)
 
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.kotlinCoroutines)

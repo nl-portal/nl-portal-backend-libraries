@@ -31,7 +31,7 @@ dependencies {
     api("org.springframework.boot", "spring-boot-starter-graphql")
     api(Dependencies.graphqlJavaExtendedScalars)
     // Jackson
-    api("com.fasterxml.jackson.module", "jackson-module-kotlin")
+    api("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     // Logging for Kotlin
     api(Dependencies.kotlinLogging)
@@ -41,7 +41,7 @@ dependencies {
     testImplementation("org.springframework.boot", "spring-boot-starter-webflux")
     testImplementation("org.assertj", "assertj-core")
     testImplementation(TestDependencies.kotlinCoroutines)
-    testImplementation(TestDependencies.postgresql)*/
+    testImplementation(TestDependencies.postgresql)
 }
 
 apply(from = "gradle/publishing.gradle.kts")

@@ -27,14 +27,15 @@ dependencies {
     api(project(":zgw:documenten-api"))
 
     implementation(kotlin("stdlib-jdk8"))
+    implementation(Dependencies.springBootStarter)
 
     implementation(Dependencies.kotlinCoroutines)
     implementation(Dependencies.kotlinCoroutinesReactor)
-    implementation("org.springframework.data", "spring-data-commons")
+    implementation("org.springframework.data:spring-data-commons")
 
     testImplementation(project(":zgw:common-ground-authentication-test"))
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
-    testImplementation("org.springframework.security", "spring-security-test")
+    testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.springSecurityTest)
     testImplementation(TestDependencies.kotlinCoroutines)
     testImplementation(TestDependencies.mockitoKotlin)
     testImplementation(TestDependencies.okHttpMockWebserver)

@@ -26,11 +26,11 @@ jar.enabled = true
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
 
-    api("org.springframework.boot", "spring-boot-starter-validation")
-    api("org.springframework.boot", "spring-boot-starter-security")
-    api("org.springframework.boot", "spring-boot-starter-webflux")
-    api("org.springframework.security", "spring-security-oauth2-jose")
-    api("org.springframework.security", "spring-security-oauth2-resource-server")
+    api("org.springframework.boot:spring-boot-starter-validation")
+    api("org.springframework.boot:spring-boot-starter-security")
+    api("org.springframework.boot:spring-boot-starter-webflux")
+    api("org.springframework.security:spring-security-oauth2-jose")
+    api("org.springframework.security:spring-security-oauth2-resource-server")
 
     // Spring Cloud
     api(Dependencies.springCloudConfig)
@@ -38,12 +38,12 @@ dependencies {
 
     // Jackson
     api(Dependencies.jacksonBom)
-    api("com.fasterxml.jackson.module", "jackson-module-kotlin")
+    api("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     api(Dependencies.commonsCodec)
 
     // Liquibase
-    api("org.liquibase", "liquibase-core")
+    api("org.liquibase:liquibase-core")
 
     // Apache Commons
     api(Dependencies.commonsIo)
@@ -52,7 +52,7 @@ dependencies {
     // Logging for Kotlin
     api(Dependencies.kotlinLogging)
 
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
+    testImplementation(TestDependencies.springBootTest)
     testImplementation(TestDependencies.kotlinCoroutines)
     testImplementation(TestDependencies.mockitoKotlin)
 }

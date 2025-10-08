@@ -27,17 +27,18 @@ dependencies {
     api(project(":portal-authentication"))
     api(project(":zgw:idtoken-authentication"))
 
+    implementation(Dependencies.springBootStarter)
     implementation(Dependencies.clamAv)
     implementation(Dependencies.tikaCore)
 
     implementation(Dependencies.kotlinCoroutines)
     implementation(Dependencies.kotlinCoroutinesReactor)
-    implementation("org.springframework.data", "spring-data-commons")
+    implementation("org.springframework.data:spring-data-commons")
 
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.security:spring-security-test")
+    testImplementation(TestDependencies.kotlinTest)
+    testImplementation(TestDependencies.junitJupiterTest)
+    testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.springSecurityTest)
 
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.kotlinCoroutines)

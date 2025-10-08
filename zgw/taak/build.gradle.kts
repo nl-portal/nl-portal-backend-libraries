@@ -27,11 +27,12 @@ dependencies {
     api(project(":zgw:common-ground-authentication"))
     api(project(":zgw:objectenapi"))
 
+
     implementation(Dependencies.kotlinCoroutines)
     implementation(Dependencies.kotlinCoroutinesReactor)
-    implementation("org.springframework.data", "spring-data-commons")
+    implementation("org.springframework.data:spring-data-commons")
 
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
+    testImplementation(TestDependencies.springBootTest)
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.okHttpMockWebserver)
     testImplementation("org.springframework.graphql:spring-graphql-test")
