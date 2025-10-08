@@ -30,8 +30,8 @@ dependencies {
     api(project(":graphql"))
     api(project(":zgw:objectenapi"))
 
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
-    testImplementation("org.assertj", "assertj-core")
+    testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.assertJCore)
     testImplementation(TestDependencies.postgresql)
 }
 

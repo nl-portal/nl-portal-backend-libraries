@@ -32,7 +32,7 @@ object Versions {
 
     //Test versions
     const val hamcrest = "3.0"
-    const val mockitoKotlin = "6.0.0"
+    const val mockitoKotlin = "6.1.0"
     const val okHttp3 = "4.12.0"
     const val postgresql = "42.7.5"
 }

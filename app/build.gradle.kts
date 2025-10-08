@@ -34,8 +34,8 @@ dependencies {
     implementation(project(":zgw:besluiten"))
     implementation(project(":zgw:openproduct"))
 
-    implementation("org.springframework.boot", "spring-boot-starter-actuator")
-    api("org.postgresql", "postgresql")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    api("org.postgresql:postgresql")
 }
 
 tasks.getByName<Jar>("jar") {

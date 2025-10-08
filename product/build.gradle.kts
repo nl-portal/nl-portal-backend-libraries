@@ -25,11 +25,11 @@ dependencies {
     api(project(":zgw:taak"))
 
     implementation(Dependencies.jsonPath)
-    api("com.github.wnameless.json", "json-flattener", "0.17.3")
+    api("com.github.wnameless.json:json-flattener:0.17.3")
 
     testImplementation(project(":zgw:common-ground-authentication-test"))
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
-    testImplementation("org.assertj", "assertj-core")
+    testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.assertJCore)
     testImplementation(TestDependencies.mockitoKotlin)
     testImplementation(TestDependencies.kotlinCoroutines)
     testImplementation(TestDependencies.okHttpMockWebserver)
