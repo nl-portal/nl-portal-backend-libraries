@@ -1,0 +1,425 @@
+type Query {
+    #
+    #         Get Decision by key and json as source
+    #         Don't use it directly but via custom queries
+    #
+    getDecision(
+        sources: JSON
+        key: String!
+        productTypeId: UUID
+        productName: String!
+        dmnVariables: JSON
+    ): [JSON!]!
+
+    # Get product by id
+    getProduct(id: UUID!): Product
+
+    #
+    #         Get Product Decision by key. Don't use it till it is configured in ProductType
+    #
+    getProductDecision(
+        sources: JSON
+        key: String!
+        productTypeId: UUID
+        productName: String!
+        dmnVariables: JSON
+    ): [JSON!]!
+
+    # Get list of taken by product name
+    getProductTaken(
+        productTypeId: UUID
+        productName: String!
+        productSubType: String
+        pageSize: Int
+    ): [TaakV2!]!
+
+    # Get productType by name
+    getProductType(productTypeId: UUID, productName: String!): ProductType
+
+    # Get productTypes where the user has products
+    getProductTypes: [ProductType!]!
+
+    # Get list of verbruiksobjecten of product
+    getProductVerbruiksObjecten(productId: UUID!): [ProductVerbruiksObject!]!
+
+    #
+    #         Get list of zaken by product name or productTypeId
+    #         isOpen is optional, when not available, all zaken will be returned
+    #         isOpen is true, only zaken without enddate will be returned
+    #         isOpen is false, only zaken with an enddate will be returned
+    #
+    getProductZaken(
+        productTypeId: UUID
+        productName: String!
+        pageSize: Int
+        isOpen: Boolean
+    ): [Zaak!]!
+
+    #
+    #         Get list of products by product name or productTypeId
+    #         subProductType, is optional. It search for the subProductType in the products
+    #
+    getProducten(
+        productTypeId: UUID
+        productName: String!
+        subProductType: String
+        pageNumber: Int
+        pageSize: Int
+    ): ProductPage!
+
+    #
+    #         Prefill data to start a form.
+    #
+    productPrefill(
+        sources: JSON
+        staticData: JSON
+        productTypeId: UUID
+        productName: String!
+        key: String!
+    ): PrefillResponse!
+}
+
+type Mutation {
+    # Update product verbruiks object
+    updateProductVerbruiksObject(
+        id: UUID!
+        submission: JSON!
+    ): ProductVerbruiksObject!
+}
+
+type PrefillResponse {
+    formulierUrl: String!
+    hash: String!
+    objectId: UUID!
+}
+
+type Product {
+    documenten: [String!]!
+    eigenschappen: JSON
+    geldigTot: DateTime
+    geldigVan: DateTime!
+    id: UUID
+    naam: String!
+    parameters: JSON
+    productSubType: String
+    status: String!
+    productDetails: ProductDetails
+    productType: ProductType
+    taken: [TaakV2!]!
+    verbruiksobjecten: [ProductVerbruiksObject!]!
+    zaken: [Zaak!]!
+}
+
+type ProductDetails {
+    data: [JSON!]!
+    id: UUID
+    productInstantie: UUID!
+}
+
+type ProductPage {
+    # The elements on this page
+    content: [Product!]!
+
+    # The requested page number
+    number: Int!
+
+    # The number of elements on this page
+    numberOfElements: Int!
+
+    # The requested page size
+    size: Int!
+
+    # The total number of elements
+    totalElements: Int!
+
+    # The total number of available pages
+    totalPages: Int!
+}
+
+type ProductType {
+    eigenschappen: JSON
+    id: UUID
+    naam: String!
+    omschrijving: String
+    parameters: JSON
+    productSubType: String
+    zaaktypen: [UUID!]!
+
+    # Get list of available beslistabellen, with their object configurations
+    beslistabelMappings: [String!]
+
+    # Get list of available forms to prefill, with their object configurations
+    prefillMappings: JSON
+}
+
+type ProductVerbruiksObject {
+    data: JSON
+    id: UUID
+    productInstantie: String!
+    soort: String
+}
+
+type TaakForm {
+    formulier: TaakFormulierV2!
+    data: JSON
+}
+
+type TaakFormulierV2 {
+    soort: String!
+    value: String!
+}
+
+type TaakIdentificatie {
+    type: String!
+    value: String!
+}
+
+type TaakKoppeling {
+    registratie: String!
+    value: String
+}
+
+type TaakPageV2 {
+    # The elements on this page
+    content: [TaakV2!]!
+
+    # The requested page number
+    number: Int!
+
+    # The number of elements on this page
+    numberOfElements: Int!
+
+    # The requested page size
+    size: Int!
+
+    # The total number of elements
+    totalElements: Int!
+
+    # The total number of available pages
+    totalPages: Int!
+}
+
+enum TaakSoort {
+    URL
+    PORTAALFORMULIER
+    OGONEBETALING
+}
+
+enum TaakStatus {
+    OPEN
+    INGEDIEND
+    AFGEROND
+    VERWERKT
+    GESLOTEN
+}
+
+type TaakUrl {
+    uri: String!
+}
+
+type TaakV2 {
+    eigenaar: String!
+    id: UUID!
+    identificatie: TaakIdentificatie!
+    koppeling: TaakKoppeling!
+    ogonebetaling: OgoneBetaling
+    portaalformulier: TaakForm
+    soort: TaakSoort!
+    status: TaakStatus!
+    titel: String!
+    url: TaakUrl
+    verloopdatum: ZonedDateTime
+}
+
+type OgoneBetaling {
+    bedrag: PositiveFloat!
+    betaalkenmerk: String!
+    pspid: String!
+}
+
+type Zaak {
+    einddatum: Date
+    identificatie: String!
+    omschrijving: String!
+    startdatum: Date!
+    url: String!
+    uuid: UUID!
+    besluiten: [Besluit!]!
+    documenten: [Document!]!
+    resultaat: ZaakResultaat
+    status: ZaakStatus
+    statusGeschiedenis: [ZaakStatus!]!
+    statussen: [StatusType!]!
+    zaakdetails: ZaakDetails!
+    zaaktype: ZaakType!
+}
+
+type ZaakDetails {
+    data: [JSON!]!
+    zaak: String!
+}
+
+type StatusType {
+    isEindstatus: Boolean
+    omschrijving: String!
+    omschrijvingGeneriek: String
+}
+
+type ZaakPage {
+    # The elements on this page
+    content: [Zaak!]!
+
+    # The requested page number
+    number: Int!
+
+    # The number of elements on this page
+    numberOfElements: Int!
+
+    # The requested page size
+    size: Int!
+
+    # The total number of elements
+    totalElements: Int!
+
+    # The total number of available pages
+    totalPages: Int!
+}
+
+type ZaakResultaat {
+    toelichting: String
+    url: String!
+    uuid: UUID!
+    zaak: String!
+    resultaattype: ResultaatType!
+}
+
+type ZaakStatus {
+    datumStatusGezet: String!
+    url: String!
+    uuid: UUID!
+    zaak: String!
+    statustype: ZaakStatusType!
+    substatussen: [ZaakSubStatus!]!
+}
+
+type ZaakStatusType {
+    isEindstatus: Boolean!
+    omschrijving: String!
+    omschrijvingGeneriek: String
+}
+
+type ZaakSubStatus {
+    doelgroep: ZaakSubStatusDoelgroep!
+    omschrijving: String!
+    status: String
+    tijdstip: String!
+    uuid: UUID!
+    zaak: String!
+}
+
+enum ZaakSubStatusDoelgroep {
+    INTERN
+    BETROKKENEN
+    GEEN_DOELGROEP
+}
+
+type ZaakType {
+    identificatie: String!
+    omschrijving: String!
+    omschrijvingGeneriek: String
+}
+
+type ResultaatType {
+    omschrijving: String
+    omschrijvingGeneriek: String
+    resultaattypeomschrijving: String!
+    selectielijstklasse: String!
+    toelichting: String
+    url: String!
+    zaaktype: String!
+    zaaktypeIdentificatie: String
+}
+
+type Document {
+    bestandsnaam: String
+    bestandsomvang: Int
+    creatiedatum: String
+    documentapi: String!
+    formaat: String
+    identificatie: String
+    titel: String
+    uuid: UUID!
+}
+
+type Besluit {
+    bestuursorgaan: String
+    datum: Date!
+    identificatie: String!
+    ingangsdatum: Date!
+    publicatiedatum: Date
+    toelichting: String
+    uiterlijkeReactiedatum: Date
+    url: String!
+    verantwoordelijkeOrganisatie: String!
+    vervaldatum: Date
+    vervalreden: String!
+    vervalredenWeergave: String!
+    verzenddatum: Date
+    zaak: String!
+    auditTrails: [BesluitAuditTrail!]!
+    besluittype: BesluitType!
+    documenten: [BesluitDocument!]!
+}
+
+type BesluitAuditTrail {
+    aanmaakdatum: ZonedDateTime
+    actie: String!
+    actieWeergave: String
+    applicatieId: String
+    applicatieWeergave: String
+    bron: String!
+    gebruikersId: String
+    gebruikersWeergave: String
+    hoofdObject: String!
+    resource: String!
+    resourceUrl: String!
+    resourceWeergave: String!
+    resultaat: Int!
+    toelichting: String
+    uuid: UUID!
+    wijzigingen: BesluitAuditTrailWijzigingen!
+}
+
+type BesluitAuditTrailWijzigingen {
+    nieuw: JSON
+    oud: JSON
+}
+
+type BesluitDocument {
+    besluit: String!
+    informatieobject: String!
+    url: String!
+}
+
+type BesluitType {
+    besluitcategorie: String!
+    omschrijving: String
+    omschrijvingGeneriek: String
+    publicatieIndicatie: Boolean!
+    publicatietekst: String
+    publicatietermijn: String
+    reactietermijn: String
+    toelichting: String
+    url: String!
+    zaaktypen: [String!]!
+}
+
+scalar PositiveFloat
+scalar ZonedDateTime
+scalar JSON
+scalar UUID
+scalar Date
+scalar DateTime
+
+
+

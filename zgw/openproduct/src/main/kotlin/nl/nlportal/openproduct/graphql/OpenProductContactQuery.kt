@@ -15,22 +15,22 @@
  */
 package nl.nlportal.openproduct.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
-import com.expediagroup.graphql.server.operations.Query
+import java.util.UUID
 import nl.nlportal.openproduct.client.domain.OpenProductContact
 import nl.nlportal.openproduct.service.OpenProductService
-import java.util.UUID
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
-@AuthenticatedDirective
+@Controller
 class OpenProductContactQuery(
     val openProductService: OpenProductService,
-) : Query {
-    @GraphQLDescription("Get all contacten")
+) {
+    @QueryMapping
     suspend fun getOpenProductContacten(
-        pageNumber: Int? = null,
-        pageSize: Int? = null,
-        naam: String? = null,
+        @Argument pageNumber: Int? = null,
+        @Argument pageSize: Int? = null,
+        @Argument naam: String? = null,
     ): ContactenPage =
         ContactenPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
@@ -43,8 +43,10 @@ class OpenProductContactQuery(
                 ),
         )
 
-    @GraphQLDescription("Get a contact")
-    suspend fun getOpenProductContact(id: UUID): OpenProductContact? =
+    @QueryMapping
+    suspend fun getOpenProductContact(
+        @Argument id: UUID,
+    ): OpenProductContact? =
         openProductService.getContact(
             id = id,
         )

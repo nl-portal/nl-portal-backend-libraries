@@ -28,22 +28,13 @@ dependencies {
     api(project(":core"))
 
     // GraphQL
-    api(Dependencies.graphqlKotlinSpringServer)
-    api(Dependencies.graphqlKotlinHooksProvider)
+    api("org.springframework.boot", "spring-boot-starter-graphql")
     api(Dependencies.graphqlJavaExtendedScalars)
-
     // Jackson
     api("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     // Logging for Kotlin
     api(Dependencies.kotlinLogging)
-
-    testImplementation(TestDependencies.springBootTest)
-    testImplementation(TestDependencies.springSecurityTest)
-    testImplementation(TestDependencies.springWebFluxTest)
-    testImplementation(TestDependencies.assertJCore)
-    testImplementation(TestDependencies.kotlinCoroutines)
-    testImplementation(TestDependencies.postgresql)
 }
 
 apply(from = "gradle/publishing.gradle.kts")

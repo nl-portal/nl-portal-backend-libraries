@@ -15,11 +15,8 @@
  */
 package nl.nlportal.openproduct.client.domain
 
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
-import nl.nlportal.openproduct.service.OpenProductService
-import org.springframework.beans.factory.annotation.Autowired
 import java.time.ZonedDateTime
 import java.util.UUID
 
@@ -59,13 +56,7 @@ data class OpenProductProductType(
     val zaaktypen: List<OpenProductUrl> = emptyList(),
     val verzoektypen: List<OpenProductUrl> = emptyList(),
     val processen: List<OpenProductUrl> = emptyList(),
-) {
-    suspend fun content(
-        @GraphQLIgnore
-        @Autowired
-        openProductService: OpenProductService,
-    ): List<OpenProductProductTypeContent>? = openProductService.getProductTypeContent(productTypeId = uuid)
-}
+)
 
 data class OpenProductProductTypeContent(
     val uuid: UUID,

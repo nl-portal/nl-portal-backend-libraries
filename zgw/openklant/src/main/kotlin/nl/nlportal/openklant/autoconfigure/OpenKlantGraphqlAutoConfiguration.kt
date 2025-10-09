@@ -15,8 +15,6 @@
  */
 package nl.nlportal.openklant.autoconfigure
 
-import com.expediagroup.graphql.server.operations.Mutation
-import com.expediagroup.graphql.server.operations.Query
 import nl.nlportal.openklant.graphql.DigitaleAdresMutation
 import nl.nlportal.openklant.graphql.DigitaleAdresQuery
 import nl.nlportal.openklant.graphql.KlantContactQuery
@@ -31,21 +29,21 @@ import org.springframework.context.annotation.Bean
 class OpenKlantGraphqlAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(PartijQuery::class)
-    fun partijQuery(openKlant2Service: OpenKlant2Service): Query = PartijQuery(openKlant2Service)
+    fun partijQuery(openKlant2Service: OpenKlant2Service) = PartijQuery(openKlant2Service)
 
     @Bean
     @ConditionalOnMissingBean(PartijMutation::class)
-    fun partijMutation(openKlant2Service: OpenKlant2Service): Mutation = PartijMutation(openKlant2Service)
+    fun partijMutation(openKlant2Service: OpenKlant2Service) = PartijMutation(openKlant2Service)
 
     @Bean
     @ConditionalOnMissingBean(DigitaleAdresQuery::class)
-    fun digitaleAdresQuery(openKlant2Service: OpenKlant2Service): Query = DigitaleAdresQuery(openKlant2Service)
+    fun digitaleAdresQuery(openKlant2Service: OpenKlant2Service) = DigitaleAdresQuery(openKlant2Service)
 
     @Bean
     @ConditionalOnMissingBean(DigitaleAdresMutation::class)
-    fun digitaleAdresMutation(openKlant2Service: OpenKlant2Service): Mutation = DigitaleAdresMutation(openKlant2Service)
+    fun digitaleAdresMutation(openKlant2Service: OpenKlant2Service) = DigitaleAdresMutation(openKlant2Service)
 
     @Bean
     @ConditionalOnMissingBean(KlantContactQuery::class)
-    fun klantContactQuery(openKlant2Service: OpenKlant2Service): Query = KlantContactQuery(openKlant2Service)
+    fun klantContactQuery(openKlant2Service: OpenKlant2Service) = KlantContactQuery(openKlant2Service)
 }

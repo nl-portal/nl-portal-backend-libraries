@@ -1,23 +1,31 @@
 package nl.nlportal.besluiten.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Query
+import java.util.UUID
 import nl.nlportal.besluiten.domain.Besluit
 import nl.nlportal.besluiten.domain.BesluitAuditTrail
 import nl.nlportal.besluiten.domain.BesluitDocument
 import nl.nlportal.besluiten.service.BesluitenService
-import java.util.UUID
+import nl.nlportal.catalogiapi.domain.BesluitType
+import nl.nlportal.catalogiapi.service.CatalogiApiService
+import nl.nlportal.core.util.CoreUtils
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.graphql.data.method.annotation.SchemaMapping
+import org.springframework.stereotype.Controller
 
+@Controller
 class BesluitenQuery(
     val besluitenService: BesluitenService,
-) : Query {
-    @GraphQLDescription("Get all besluiten")
+    val catalogiApiService: CatalogiApiService
+) {
+    @QueryMapping
     suspend fun getBesluiten(
-        besluitType: String? = null,
-        identificatie: String? = null,
-        pageNumber: Int? = 1,
-        verantwoordelijkeOrganisatie: String? = null,
-        zaak: String? = null,
+        @Argument besluitType: String? = null,
+        @Argument identificatie: String? = null,
+        @Argument pageNumber: Int? = 1,
+        @Argument verantwoordelijkeOrganisatie: String? = null,
+        @Argument zaak: String? = null,
     ): BesluitPage {
         val besluiten =
             besluitenService.getBesluiten(
@@ -31,34 +39,74 @@ class BesluitenQuery(
         return BesluitPage.fromList(pageNumber, besluiten)
     }
 
-    @GraphQLDescription("Get all besluit by id")
-    suspend fun getBesluit(besluitId: UUID): Besluit {
-        return besluitenService.getBesluit(besluitId)
+    @QueryMapping
+    suspend fun getBesluit(
+        @Argument besluitId: UUID
+    ): Besluit {
+        return besluitenService.getBesluit(
+            besluitId = besluitId
+        )
     }
 
-    @GraphQLDescription("Get all besluit audit trails")
-    suspend fun getBesluitAuditTrails(besluitId: UUID): List<BesluitAuditTrail> {
-        return besluitenService.getBesluitAuditTrails(besluitId)
+    @QueryMapping
+    suspend fun getBesluitAuditTrails(
+        @Argument besluitId: UUID
+    ): List<BesluitAuditTrail> {
+        return besluitenService.getBesluitAuditTrails(
+            besluitId = besluitId
+        )
     }
 
-    @GraphQLDescription("Get all besluit audit trails by id")
+    @QueryMapping
     suspend fun getBesluitAuditTrail(
-        besluitId: UUID,
-        auditTrailId: UUID,
+        @Argument besluitId: UUID,
+        @Argument auditTrailId: UUID,
     ): BesluitAuditTrail {
-        return besluitenService.getBesluitAuditTrail(besluitId, auditTrailId)
+        return besluitenService.getBesluitAuditTrail(
+            besluitId = besluitId,
+            auditTrailId = auditTrailId
+        )
     }
 
-    @GraphQLDescription("Get all besluit documents")
+    @QueryMapping
     suspend fun getBesluitDocumenten(
-        besluit: String? = null,
-        informatieobject: String? = null,
+        @Argument besluit: String? = null,
+        @Argument informatieobject: String? = null,
     ): List<BesluitDocument> {
-        return besluitenService.getBesluitDocumenten(besluit, informatieobject)
+        return besluitenService.getBesluitDocumenten(
+            besluit = besluit,
+            informatieobject = informatieobject
+        )
     }
 
-    @GraphQLDescription("Get all besluit document by id")
-    suspend fun getBesluitDocument(documentId: UUID): BesluitDocument {
-        return besluitenService.getBesluitDocument(documentId)
+    @QueryMapping
+    suspend fun getBesluitDocument(
+        @Argument documentId: UUID
+    ): BesluitDocument {
+        return besluitenService.getBesluitDocument(
+            documentId = documentId)
+    }
+
+    @SchemaMapping(typeName = "Besluit", field = "auditrails")
+    suspend fun auditTrails(
+        besluit: Besluit
+    ): List<BesluitAuditTrail> {
+        return besluitenService.getBesluitAuditTrails(CoreUtils.extractId(besluit.url))
+    }
+
+    @SchemaMapping(typeName = "Besluit", field = "documenten")
+    suspend fun documenten(
+        besluit: Besluit
+    ): List<BesluitDocument> {
+        return besluitenService.getBesluitDocumenten(besluit.url)
+    }
+
+    @SchemaMapping(typeName = "Besluit", field = "besluittype")
+    suspend fun besluittype(
+        besluit: Besluit
+    ): BesluitType {
+        return catalogiApiService.getBesluitType(
+            besluitTypeUrl = besluit.besluittype
+        )
     }
 }

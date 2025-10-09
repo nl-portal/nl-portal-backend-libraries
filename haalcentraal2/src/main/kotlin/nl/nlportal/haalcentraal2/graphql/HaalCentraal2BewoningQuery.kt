@@ -15,23 +15,23 @@
  */
 package nl.nlportal.haalcentraal2.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Query
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
-import graphql.schema.DataFetchingEnvironment
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.haalcentraal2.service.HaalCentraal2Service
-import kotlin.text.get
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
+@Controller
 class HaalCentraal2BewoningQuery(
     val haalCentraal2Service: HaalCentraal2Service,
-) : Query {
-    @GraphQLDescription("Gets the number of people living in the same house of the adresseerbaarObjectIdentificatie")
+) {
+    @QueryMapping
     suspend fun getBewonersAantalV2(
-        dfe: DataFetchingEnvironment,
-        adresseerbaarObjectIdentificatie: String,
+        authentication: CommonGroundAuthentication,
+        @Argument adresseerbaarObjectIdentificatie: String,
     ): Int? =
         haalCentraal2Service.getBewonersAantal(
-            dfe.graphQlContext[AUTHENTICATION_KEY],
-            adresseerbaarObjectIdentificatie,
+            authentication = authentication,
+            adresseerbaarObjectIdentificatie = adresseerbaarObjectIdentificatie,
         )
 }

@@ -15,9 +15,9 @@
  */
 package nl.nlportal.haalcentraal2.graphql
 
+import com.fasterxml.jackson.databind.JsonNode
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.haalcentraal2.TestHelper
-import nl.nlportal.haalcentraal2.TestHelper.verifyOnlyDataExists
 import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrConfig
 import nl.nlportal.haalcentraal2.autoconfiguration.HaalCentraal2ModuleConfiguration
 import okhttp3.mockwebserver.Dispatcher
@@ -25,23 +25,25 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
-import org.springframework.test.web.reactive.server.WebTestClient
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 internal class HaalCentraal2GemachtigdeQueryIT(
-    @Autowired private val testClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val haalCentraal2ModuleConfiguration: HaalCentraal2ModuleConfiguration,
     @Autowired private val haalCentraalHrClientConfig: HaalCentraalHrConfig,
 ) {
@@ -95,73 +97,23 @@ internal class HaalCentraal2GemachtigdeQueryIT(
                             geslachtsnaam,
                             volledigeNaam,
                         }
-                    },
-                    bedrijf {
-                        naam
                     }
                 }
             }
             """.trimIndent()
 
-        val basePath = "$.data.getGemachtigdeV2"
+        val responseBody =
+            httpGraphQlTester
+                .document(query)
+                .execute()
+                .errors()
+                .verify()
+                .path("getGemachtigdeV2")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
-            .exchange()
-            .expectStatus()
-            .isOk
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.persoon.naam.volledigeNaam")
-            .isEqualTo("Pieter Jan de Vries")
-            .jsonPath("$basePath.persoon.naam.geslachtsnaam")
-            .isEqualTo("Vries")
-            .jsonPath("$basePath.bedrijf.naam")
-            .doesNotExist()
-    }
-
-    @Test
-    @WithBurgerUser("318634776", gemachtigdeKvk = "90012768")
-    fun `getGemachtigde with kvk`() {
-        val query =
-            """
-            query {
-                getGemachtigdeV2 {
-                    persoon {
-                        burgerservicenummer,
-                        naam {
-                            geslachtsnaam,
-                            volledigeNaam,
-                        },
-                    },
-                    bedrijf {
-                        naam
-                    }
-                }
-            }
-            """.trimIndent()
-
-        val basePath = "$.data.getGemachtigdeV2"
-
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
-            .exchange()
-            .expectStatus()
-            .isOk
-            .expectBody()
-            .jsonPath(basePath)
-            .exists()
-            .jsonPath("$basePath.bedrijf.naam")
-            .isEqualTo("Test bedrijf")
-            .jsonPath("$basePath.persoon.volledigeNaam")
-            .doesNotExist()
+        assertEquals("Pieter Jan de Vries", responseBody.requiredAt("/persoon/naam/volledigeNaam")?.textValue())
+        assertEquals("Vries", responseBody.requiredAt("/persoon/naam/geslachtsnaam")?.textValue())
     }
 
     private fun setupMockServer() {

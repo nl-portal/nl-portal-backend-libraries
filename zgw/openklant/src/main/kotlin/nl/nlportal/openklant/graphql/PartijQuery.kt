@@ -15,29 +15,27 @@
  */
 package nl.nlportal.openklant.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
-import com.expediagroup.graphql.server.operations.Query
-import graphql.schema.DataFetchingEnvironment
+import java.util.UUID
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.openklant.client.domain.OpenKlant2Partij
 import nl.nlportal.openklant.service.OpenKlant2Service
-import java.util.UUID
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
-@AuthenticatedDirective
+@Controller
 class PartijQuery(
     private val openklant2Service: OpenKlant2Service,
-) : Query {
-    @GraphQLDescription("Find the Partij of the authenticated user.")
-    suspend fun findUserPartij(dfe: DataFetchingEnvironment): OpenKlant2Partij? = openklant2Service.findPartijByAuthentication(dfe.graphQlContext.get(AUTHENTICATION_KEY))
+) {
+    @QueryMapping
+    suspend fun findUserPartij(authentication: CommonGroundAuthentication): OpenKlant2Partij? = openklant2Service.findPartijByAuthentication(authentication = authentication)
 
-    @GraphQLDescription("Get Partij by Id for authenticated user.")
+    @QueryMapping
     suspend fun getUserPartij(
-        dfe: DataFetchingEnvironment,
-        partijId: UUID,
+        authentication: CommonGroundAuthentication,
+        @Argument partijId: UUID,
     ): OpenKlant2Partij? {
-        val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
+        val authentication: CommonGroundAuthentication = authentication
         val userPartijen =
             openklant2Service
                 .findPartijIdentificatoren(authentication)

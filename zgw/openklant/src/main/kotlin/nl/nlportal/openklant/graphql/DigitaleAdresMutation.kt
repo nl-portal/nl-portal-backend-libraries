@@ -15,57 +15,56 @@
  */
 package nl.nlportal.openklant.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
-import com.expediagroup.graphql.server.operations.Mutation
-import graphql.schema.DataFetchingEnvironment
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
+import java.util.UUID
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.openklant.graphql.domain.DigitaleAdresRequest
 import nl.nlportal.openklant.graphql.domain.DigitaleAdresResponse
 import nl.nlportal.openklant.service.OpenKlant2Service
-import java.util.UUID
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.stereotype.Controller
 
-@AuthenticatedDirective
+@Controller
 class DigitaleAdresMutation(
     private val openklant2Service: OpenKlant2Service,
-) : Mutation {
-    @GraphQLDescription("Create DigitaleAdres for User")
+) {
+    @MutationMapping
     suspend fun createUserDigitaleAdres(
-        dfe: DataFetchingEnvironment,
-        digitaleAdresRequest: DigitaleAdresRequest,
+        authentication: CommonGroundAuthentication,
+        @Argument digitaleAdresRequest: DigitaleAdresRequest,
     ): DigitaleAdresResponse? {
         val digitaleAdres =
             openklant2Service.createDigitaleAdres(
-                authentication = dfe.graphQlContext.get(AUTHENTICATION_KEY),
+                authentication = authentication,
                 digitaleAdres = digitaleAdresRequest.asOpenKlant2DigitaleAdres(),
             )
         return digitaleAdres?.let { DigitaleAdresResponse.fromOpenKlant2DigitaleAdres(digitaleAdres) }
     }
 
-    @GraphQLDescription("Update DigitaleAdres of User")
+    @MutationMapping
     suspend fun updateUserDigitaleAdres(
-        dfe: DataFetchingEnvironment,
-        digitaleAdresRequest: DigitaleAdresRequest,
+        authentication: CommonGroundAuthentication,
+        @Argument digitaleAdresRequest: DigitaleAdresRequest,
     ): DigitaleAdresResponse? {
         val digitaleAdres =
             openklant2Service
                 .updateDigitaleAdresById(
-                    authentication = dfe.graphQlContext.get(AUTHENTICATION_KEY),
+                    authentication = authentication,
                     digitaleAdres = digitaleAdresRequest.asOpenKlant2DigitaleAdresUpdate(),
                 )
 
         return digitaleAdres?.let { DigitaleAdresResponse.fromOpenKlant2DigitaleAdres(digitaleAdres) }
     }
 
-    @GraphQLDescription("Delete DigitaleAdres of User by Id")
+    @MutationMapping
     suspend fun deleteUserDigitaleAdres(
-        dfe: DataFetchingEnvironment,
-        digitaleAdresId: UUID,
+        authentication: CommonGroundAuthentication,
+        @Argument digitaleAdresId: UUID,
     ): Boolean? {
         openklant2Service
             .deleteDigitaleAdresById(
-                dfe.graphQlContext.get(AUTHENTICATION_KEY),
-                digitaleAdresId,
+                authentication = authentication,
+                digitaleAdresId = digitaleAdresId,
             )
         return null
     }

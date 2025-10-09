@@ -15,16 +15,19 @@
  */
 package nl.nlportal.haalcentraal.hr.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Query
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
 import nl.nlportal.haalcentraal.hr.service.HandelsregisterService
-import graphql.schema.DataFetchingEnvironment
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
+@Controller
 class HandelsregisterQuery(
     val handelsregisterService: HandelsregisterService,
-) : Query {
-    @GraphQLDescription("Gets the bedrijf data")
-    suspend fun getBedrijf(dfe: DataFetchingEnvironment): MaatschappelijkeActiviteit? = handelsregisterService.getMaatschappelijkeActiviteit(dfe.graphQlContext.get(AUTHENTICATION_KEY))
+) {
+    @QueryMapping
+    suspend fun getBedrijf(authentication: CommonGroundAuthentication): MaatschappelijkeActiviteit? =
+        handelsregisterService.getMaatschappelijkeActiviteit(
+            authentication = authentication,
+        )
 }

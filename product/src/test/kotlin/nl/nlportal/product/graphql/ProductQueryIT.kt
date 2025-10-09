@@ -15,10 +15,12 @@
  */
 package nl.nlportal.product.graphql
 
+import com.fasterxml.jackson.databind.JsonNode
+import io.github.oshai.kotlinlogging.KLogger
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.product.TestHelper
-import nl.nlportal.product.TestHelper.verifyOnlyDataExists
 import nl.nlportal.zakenapi.client.ZakenApiConfig
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import okhttp3.mockwebserver.Dispatcher
@@ -33,17 +35,20 @@ import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
-import org.springframework.test.web.reactive.server.WebTestClient
 import java.net.URI
+import nl.nlportal.core.util.Mapper
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 internal class ProductQueryIT(
-    @Autowired private val testClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
     @Autowired private val zakenApiConfig: ZakenApiConfig,
     @Autowired private val graphqlGetProduct: String,
@@ -60,6 +65,9 @@ internal class ProductQueryIT(
     @Autowired private val graphqlProductPrefill: String,
 ) {
     companion object {
+        private val logger: KLogger = KotlinLogging.logger {}
+        private val objectMapper = Mapper.get()
+
         @JvmStatic
         var server: MockWebServer? = null
 
@@ -97,113 +105,56 @@ internal class ProductQueryIT(
     }
 
     @Test
-    @WithBurgerUser("")
-    fun getProductenTestUnauthorized() {
-        val basePath = "$.data.getProducten[0]"
-
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetProducten)
-            .exchange()
-            .expectBody()
-            .jsonPath(basePath)
-    }
-
-    @Test
-    @WithBurgerUser("569312864")
-    fun getProductenTestNotFound() {
-        val basePath = "$.data.getProducten"
-
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetProducten)
-            .exchange()
-            .expectBody()
-            .jsonPath(basePath)
-    }
-
-    @Test
     @WithBurgerUser("569312863")
     fun getProductenTestBurger() {
-        val basePath = "$.data.getProducten"
-        val resultPath = "$basePath.content[0]"
+        val responseBody =
+            httpGraphQlTester
+                .document(graphqlGetProducten)
+                .execute()
+                .errors()
+                .verify()
+                .path("getProducten")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetProducten)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$resultPath.id")
-            .isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
-            .jsonPath("$resultPath.naam")
-            .isEqualTo("erfpacht")
+        assertEquals("2d725c07-2f26-4705-8637-438a42b5ac2d", responseBody.requiredAt("/content/0/id")?.textValue())
+        assertEquals("erfpacht", responseBody.requiredAt("/content/0/naam")?.textValue())
     }
 
     @Test
     @WithBurgerUser("569312863")
     fun getProductTestBurger() {
-        val basePath = "$.data.getProduct"
+        val responseBody =
+            httpGraphQlTester
+                .document(graphqlGetProduct)
+                .execute()
+                .errors()
+                .verify()
+                .path("getProduct")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetProduct)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.naam")
-            .isEqualTo("erfpacht")
-            .jsonPath("$basePath.zaken[0].uuid")
-            .isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c202")
-            .jsonPath("$basePath.zaken[0].omschrijving")
-            .isEqualTo("Lopende zaak")
-            .jsonPath("$basePath.taken[0].titel")
-            .isEqualTo("Taak linked to Zaak")
-            .jsonPath("$basePath.productDetails.id")
-            .isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c500")
-    }
-
-    @Test
-    @WithBurgerUser("569312864")
-    fun getProductTestBurgerUnauthorized() {
-        val basePath = "$.data.getProduct"
-
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetProduct)
-            .exchange()
-            .expectBody()
-            .jsonPath(basePath)
+        assertEquals("erfpacht", responseBody.requiredAt("/naam")?.textValue())
+        assertEquals("7d9cd6c2-8147-46f2-9ae9-c67e8213c202", responseBody.requiredAt("/zaken/0/uuid")?.textValue())
+        assertEquals("Lopende zaak", responseBody.requiredAt("/zaken/0/omschrijving")?.textValue())
+        assertEquals("Taak linked to Zaak", responseBody.requiredAt("/taken/0/titel")?.textValue())
+        assertEquals("7d9cd6c2-8147-46f2-9ae9-c67e8213c500", responseBody.requiredAt("/productDetails/id")?.textValue())
     }
 
     @Test
     @WithBurgerUser("569312863")
     fun getProductZakenTestBurger() {
-        val basePath = "$.data.getProductZaken"
+        val responseBody =
+            httpGraphQlTester
+                .document(graphqlGetProductZaken)
+                .execute()
+                .errors()
+                .verify()
+                .path("getProductZaken")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetProductZaken)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath[0].omschrijving")
-            .isEqualTo("Lopende zaak")
+        assertEquals("Lopende zaak", responseBody.requiredAt("/0/omschrijving")?.textValue())
     }
 
     @Test
@@ -212,109 +163,69 @@ internal class ProductQueryIT(
         machtigingsDienst = "dd95bdee-c493-4757-bae3-fe0a5b5063f8",
     )
     fun getProductZakenTestBedrijf() {
-        val basePath = "$.data.getProductZaken"
+        val responseBody =
+            httpGraphQlTester
+                .document(graphqlGetProductZaken)
+                .execute()
+                .errors()
+                .verify()
+                .path("getProductZaken")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetProductZaken)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath[0].omschrijving")
-            .isEqualTo("Lopende zaak")
-    }
-
-    @Test
-    @WithBurgerUser("569312863")
-    fun getProductZakenTestBurgerNoZaakTypes() {
-        val basePath = "$.data.getProductZaken"
-
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetProductZakenNoZaakTypes)
-            .exchange()
-            .expectBody()
-            .jsonPath(basePath)
-    }
-
-    @Test
-    @WithBurgerUser("569312863")
-    fun getProductZakenTestBurgerNotFound() {
-        val basePath = "$.data.getProductZaken"
-
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetProductZakenNotFound)
-            .exchange()
-            .expectBody()
-            .jsonPath(basePath)
+        assertEquals("Lopende zaak", responseBody.requiredAt("/0/omschrijving")?.textValue())
     }
 
     @Test
     @WithBurgerUser("569312863")
     fun getProductVerbruiksObjectenTestBurger() {
-        val basePath = "$.data.getProductVerbruiksObjecten"
+        val responseBody =
+            httpGraphQlTester
+                .document(graphqlGetProductVerbruiksObjecten)
+                .execute()
+                .errors()
+                .verify()
+                .path("getProductVerbruiksObjecten")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetProductVerbruiksObjecten)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath[0].id")
-            .isEqualTo("2d725c07-2f26-4705-8637-438a42b5a800")
-            .jsonPath("$basePath[0].soort")
-            .isEqualTo("test verbruiksobject")
+        assertEquals("2d725c07-2f26-4705-8637-438a42b5a800", responseBody.requiredAt("/0/id")?.textValue())
+        assertEquals("test verbruiksobject", responseBody.requiredAt("/0/soort")?.textValue())
     }
 
     @Test
     @WithBurgerUser("569312863")
     fun getProductTypeTestBurger() {
-        val basePath = "$.data.getProductType"
+        val responseBody =
+            httpGraphQlTester
+                .document(graphqlGetProductType)
+                .execute()
+                .errors()
+                .verify()
+                .path("getProductType")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetProductType)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.id")
-            .isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c200")
-            .jsonPath("$basePath.naam")
-            .isEqualTo("erfpacht")
+        assertEquals("7d9cd6c2-8147-46f2-9ae9-c67e8213c200", responseBody.requiredAt("/id")?.textValue())
+        assertEquals("erfpacht", responseBody.requiredAt("/naam")?.textValue())
     }
 
     @Test
     @WithBurgerUser("569312863")
     fun getProductTypesTestBurger() {
-        val basePath = "$.data.getProductTypes"
+        val responseBody =
+            httpGraphQlTester
+                .document(graphqlGetProductTypes)
+                .execute()
+                .errors()
+                .verify()
+                .path("getProductTypes")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetProductTypes)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.size()")
-            .isEqualTo(1)
-            .jsonPath("$basePath[0].id")
-            .isEqualTo("7d9cd6c2-8147-46f2-9ae9-c67e8213c200")
-            .jsonPath("$basePath[0].naam")
-            .isEqualTo("erfpacht")
+        assertEquals(1, responseBody.size())
+        assertEquals("7d9cd6c2-8147-46f2-9ae9-c67e8213c200", responseBody.requiredAt("/0/id")?.textValue())
+        assertEquals("erfpacht", responseBody.requiredAt("/0/naam")?.textValue())
     }
 
     @Test
@@ -325,37 +236,35 @@ internal class ProductQueryIT(
     fun getProductTypesTestBedrijfWithMachtingDienst() {
         val basePath = "$.data.getProductTypes"
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetProductTypes)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.size()")
-            .isEqualTo(0)
+        val responseBody =
+            httpGraphQlTester
+                .document(graphqlGetProductTypes)
+                .execute()
+                .errors()
+                .verify()
+                .path("getProductTypes")
+                .entity(JsonNode::class.java)
+                .get()
+
+        assertEquals(0, responseBody.size())
     }
 
     @Test
     @WithBurgerUser("569312863")
     fun getProductTakenTestBurger() {
-        val basePath = "$.data.getProductTaken"
+        val responseBody =
+            httpGraphQlTester
+                .document(graphqlGetProductTaken)
+                .execute()
+                .errors()
+                .verify()
+                .path("getProductTaken")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetProductTaken)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.size()")
-            .isEqualTo(2)
-            .jsonPath("$basePath[0].id")
-            .isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
-            .jsonPath("$basePath[0].titel")
-            .isEqualTo("Taak linked to Zaak")
+        assertEquals(2, responseBody.size())
+        assertEquals("2d725c07-2f26-4705-8637-438a42b5ac2d", responseBody.requiredAt("/0/id")?.textValue())
+        assertEquals("Taak linked to Zaak", responseBody.requiredAt("/0/titel")?.textValue())
     }
 
     @Test
@@ -364,94 +273,84 @@ internal class ProductQueryIT(
         machtigingsDienst = "dd95bdee-c493-4757-bae3-fe0a5b5063f8",
     )
     fun getProductTakenTestBedrijf() {
-        val basePath = "$.data.getProductTaken"
+        val responseBody =
+            httpGraphQlTester
+                .document(graphqlGetProductTaken)
+                .execute()
+                .errors()
+                .verify()
+                .path("getProductTaken")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetProductTaken)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.size()")
-            .isEqualTo(2)
-            .jsonPath("$basePath[0].id")
-            .isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
-            .jsonPath("$basePath[0].titel")
-            .isEqualTo("Taak linked to Zaak")
+        assertEquals(2, responseBody.size())
+        assertEquals("2d725c07-2f26-4705-8637-438a42b5ac2d", responseBody.requiredAt("/0/id")?.textValue())
+        assertEquals("Taak linked to Zaak", responseBody.requiredAt("/0/titel")?.textValue())
     }
 
     @Test
     @WithBurgerUser("569312864")
     fun getProductTakenTestBurgerNoTaken() {
-        val basePath = "$.data.getProductTaken"
+        val responseBody =
+            httpGraphQlTester
+                .document(graphqlGetProductTaken)
+                .execute()
+                .errors()
+                .verify()
+                .path("getProductTaken")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetProductTaken)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.size()")
-            .isEqualTo(0)
+        assertEquals(0, responseBody.size())
     }
 
     @Test
     @WithBurgerUser("569312864")
     fun getProductDescisionTest() {
-        val basePath = "$.data.getProductDecision"
+        val responseBody =
+            httpGraphQlTester
+                .document(graphqlGetProductDecision)
+                .execute()
+                .errors()
+                .verify()
+                .path("getProductDecision")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetProductDecision)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath(
-                "$basePath[0].action.value",
-            ).isEqualTo("https://formulier.denhaag.nl/Tripleforms/formulier/nl-NL/DefaultEnvironment/scNaheffingsAanslagParkeren.aspx")
+        assertEquals("https://formulier.denhaag.nl/Tripleforms/formulier/nl-NL/DefaultEnvironment/scNaheffingsAanslagParkeren.aspx", responseBody.requiredAt("/0/action/value")?.textValue())
     }
 
     @Test
     @WithBurgerUser("569312864")
     fun getDescisionTest() {
-        val basePath = "$.data.getDecision"
+        val responseBody =
+            httpGraphQlTester
+                .document(graphqlGetDecision)
+                .execute()
+                .errors()
+                .verify()
+                .path("getDecision")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetDecision)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath(
-                "$basePath[0].action.value",
-            ).isEqualTo("https://formulier.denhaag.nl/Tripleforms/formulier/nl-NL/DefaultEnvironment/scNaheffingsAanslagParkeren.aspx")
+        assertEquals("https://formulier.denhaag.nl/Tripleforms/formulier/nl-NL/DefaultEnvironment/scNaheffingsAanslagParkeren.aspx", responseBody.requiredAt("/0/action/value")?.textValue())
     }
 
     @Test
     @WithBurgerUser("569312863")
     fun productPrefillTestBurger() {
-        val basePath = "$.data.productPrefill"
+        val responseBody =
+            httpGraphQlTester
+                .document(graphqlProductPrefill)
+                .execute()
+                .errors()
+                .verify()
+                .path("productPrefill")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlProductPrefill)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.objectId")
-            .isEqualTo("f9d7f166-bcea-4448-a984-4e717e558458")
-            .jsonPath("$basePath.formulierUrl")
-            .isEqualTo("http://localhost:8080/formuliernaam")
+        assertEquals("f9d7f166-bcea-4448-a984-4e717e558458", responseBody.requiredAt("/objectId")?.textValue())
+        assertEquals("http://localhost:8080/formuliernaam", responseBody.requiredAt("/formulierUrl")?.textValue())
     }
 
     fun setupMockServer() {

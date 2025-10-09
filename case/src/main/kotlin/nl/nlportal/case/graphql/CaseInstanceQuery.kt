@@ -15,25 +15,24 @@
  */
 package nl.nlportal.case.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Query
-import graphql.schema.DataFetchingEnvironment
+import java.util.UUID
 import nl.nlportal.case.domain.CaseId
 import nl.nlportal.case.service.CaseService
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
-import org.springframework.security.core.Authentication
-import java.util.UUID
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
+@Controller
 class CaseInstanceQuery(
     private val caseService: CaseService,
-) : Query {
-    @GraphQLDescription("retrieves all available case instances")
+) {
+    @QueryMapping
     fun allCaseInstances(
-        @GraphQLDescription("The case instance orderBy ")
-        orderBy: CaseInstanceOrdering = CaseInstanceOrdering(createdOn = Sort.DESC),
-        dfe: DataFetchingEnvironment,
+        @Argument orderBy: CaseInstanceOrdering = CaseInstanceOrdering(createdOn = Sort.DESC),
+        authentication: CommonGroundAuthentication,
     ): List<CaseInstance> {
-        var caseInstances = caseService.getAllCases(dfe.graphQlContext.get<Authentication>(AUTHENTICATION_KEY).name)
+        var caseInstances = caseService.getAllCases(authentication.userId)
         if (orderBy.createdOn == Sort.ASC) {
             caseInstances = caseInstances.sortedBy { it.createdOn }
         } else if (orderBy.createdOn == Sort.DESC) {
@@ -42,15 +41,15 @@ class CaseInstanceQuery(
         return caseInstances.map { CaseInstance.from(it) }
     }
 
-    @GraphQLDescription("retrieves single case instance from repository")
+    @QueryMapping
     fun getCaseInstance(
-        @GraphQLDescription("The case instance id ") id: UUID,
-        dfe: DataFetchingEnvironment,
+        @Argument id: UUID,
+        authentication: CommonGroundAuthentication,
     ): CaseInstance? {
         val case =
             caseService.getCase(
                 CaseId.existingId(id),
-                dfe.graphQlContext.get<Authentication>(AUTHENTICATION_KEY).name,
+                authentication.userId,
             ) ?: return null
         return CaseInstance.from(case)
     }
