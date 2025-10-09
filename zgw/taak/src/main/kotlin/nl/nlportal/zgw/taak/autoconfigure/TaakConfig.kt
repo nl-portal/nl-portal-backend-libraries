@@ -18,11 +18,11 @@ package nl.nlportal.zgw.taak.autoconfigure
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.taak")
-class TaakConfig(
-    var enabled: Boolean = false,
-    var properties: TaakConfigProperties = TaakConfigProperties(),
-){
-    class TaakConfigProperties(
+class TaakConfig{
+    var enabled: Boolean = false
+    var properties: TaakConfigProperties = TaakConfigProperties()
+
+    class TaakConfigProperties {
         var objectTypeUrl: String = ""
-    )
+    }
 }

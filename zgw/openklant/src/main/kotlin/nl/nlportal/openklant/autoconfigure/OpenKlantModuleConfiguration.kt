@@ -19,10 +19,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import java.net.URI
 
 @ConfigurationProperties(prefix = "nl-portal.config.openklant2")
-class OpenKlantModuleConfiguration(
-    var enabled: Boolean = false,
-    var properties: OpenKlantConfigurationProperties = OpenKlantConfigurationProperties(),
-) {
+class OpenKlantModuleConfiguration {
+    var enabled: Boolean = false
+    var properties: OpenKlantConfigurationProperties = OpenKlantConfigurationProperties()
+
     init {
         if (enabled) {
             requireNotNull(properties.klantinteractiesApiUrl) {

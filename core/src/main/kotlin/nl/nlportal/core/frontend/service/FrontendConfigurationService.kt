@@ -15,10 +15,15 @@
  */
 package nl.nlportal.core.frontend.service
 
-import nl.nlportal.core.frontend.configuration.FrontendThemeConfigurationProperties
+import nl.nlportal.core.autoconfiguration.CoreThemeConfigurationProperties
+import org.springframework.cloud.context.config.annotation.RefreshScope
+import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
+@RefreshScope
+@Component
 class FrontendConfigurationService(
-    private var coreThemeConfigurationProperties: FrontendThemeConfigurationProperties,
+    private var coreThemeConfigurationProperties: CoreThemeConfigurationProperties,
 ) {
     fun getLogo(): String? = coreThemeConfigurationProperties.logo
 
