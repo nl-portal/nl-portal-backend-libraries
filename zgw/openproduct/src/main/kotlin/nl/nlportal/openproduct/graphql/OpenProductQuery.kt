@@ -15,75 +15,101 @@
  */
 package nl.nlportal.openproduct.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
-import com.expediagroup.graphql.server.operations.Query
-import graphql.schema.DataFetchingEnvironment
-import nl.nlportal.graphql.security.SecurityConstants
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.node.ObjectNode
+import java.util.UUID
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.core.util.Mapper
+import nl.nlportal.openproduct.client.domain.OpenProductActie
 import nl.nlportal.openproduct.client.domain.OpenProductProduct
 import nl.nlportal.openproduct.client.domain.OpenProductToegestaneStatus
+import nl.nlportal.openproduct.service.OpenProductDmnService
 import nl.nlportal.openproduct.service.OpenProductService
-import java.util.UUID
+import nl.nlportal.zakenapi.domain.Zaak
+import nl.nlportal.zgw.taak.domain.TaakV2
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.graphql.data.method.annotation.SchemaMapping
+import org.springframework.stereotype.Controller
 
-@AuthenticatedDirective
+@Controller
 class OpenProductQuery(
     val openProductService: OpenProductService,
-) : Query {
-    @GraphQLDescription(
-        """
-        Get all Open producten
-        The allowed statussen:
-        - initieel
-        - gereed
-        - actief
-        - ingetrokken
-        - geweigerd
-        - verlopen
-    """,
-    )
+    val openProductDmnService: OpenProductDmnService,
+) {
+    @QueryMapping
     suspend fun getOpenProducten(
-        dfe: DataFetchingEnvironment,
-        pageNumber: Int? = null,
-        pageSize: Int? = null,
-        status: String? = null,
-        productTypeCode: String? = null,
-        productTypeId: String? = null,
-        productTypeCodes: List<String>? = null,
-        productTypeIds: List<String>? = null,
+        authentication: CommonGroundAuthentication,
+        @Argument pageNumber: Int? = null,
+        @Argument pageSize: Int? = null,
+        @Argument status: String? = null,
     ): ProductenPage =
         ProductenPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             resultPage =
                 openProductService.getProducten(
-                    authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+                    authentication = authentication,
                     pageNumber = pageNumber ?: 1,
                     pageSize = pageSize ?: 20,
                     status = status?.let { OpenProductToegestaneStatus.valueOf(status.uppercase()) },
-                    productTypeCode = productTypeCode,
-                    productTypeId = productTypeId,
-                    productTypeCodes = productTypeCodes,
-                    productTypeIds = productTypeIds,
                 ),
         )
 
-    @GraphQLDescription("Get a Open product type by id")
+    @QueryMapping
     suspend fun getOpenProduct(
-        dfe: DataFetchingEnvironment,
-        id: UUID,
+        authentication: CommonGroundAuthentication,
+        @Argument id: UUID,
     ): OpenProductProduct? =
         openProductService.getProduct(
-            authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+            authentication = authentication,
             id = id,
         )
 
-    @GraphQLDescription("Get a Open producten type by thema id")
+    @QueryMapping
     suspend fun getOpenProductenByThema(
-        dfe: DataFetchingEnvironment,
-        themaId: UUID,
+        authentication: CommonGroundAuthentication,
+        @Argument themaId: UUID,
     ): List<OpenProductProduct> =
         openProductService.getProductenByThema(
-            authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+            authentication = authentication,
             themaId = themaId,
         )
+
+    @SchemaMapping(typeName = "OpenProductProduct", field = "zaken")
+    suspend fun zaken(
+        openProductProduct: OpenProductProduct,
+    ): List<Zaak>? =
+        openProductProduct.zaken?.let {
+            openProductService.getProductZaken(
+                it,
+            )
+        }
+
+    @SchemaMapping(typeName = "OpenProductProduct", field = "taken")
+    suspend fun taken(
+        openProductProduct: OpenProductProduct,
+    ): List<TaakV2>? =
+        openProductProduct.taken?.let {
+            openProductService.getProductTaken(
+                it,
+            )
+        }
+
+    @SchemaMapping(typeName = "OpenProductProduct", field = "acties")
+    suspend fun acties(
+        openProductProduct: OpenProductProduct,
+    ): List<OpenProductActie> = openProductService.getProductActies(openProductProduct.producttype.uuid)
+
+    @SchemaMapping(typeName = "OpenProductProduct", field = "decisions")
+    suspend fun decisions(
+        openProductProduct: OpenProductProduct,
+    ): List<ObjectNode> {
+        val result =
+            openProductDmnService.getProductDecision(
+                product = openProductProduct,
+            )
+
+        return Mapper.get().convertValue(result, object : TypeReference<List<ObjectNode>>() {})
+    }
 }

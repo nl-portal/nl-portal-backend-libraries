@@ -21,6 +21,7 @@ object Dependencies {
     val jsonWebTokensImpl by lazy { "io.jsonwebtoken:jjwt-impl:${Versions.jsonWebTokens}" }
     val jsonWebTokensJackson by lazy { "io.jsonwebtoken:jjwt-jackson:${Versions.jsonWebTokens}" }
     val kotlinCoroutines by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlinCoroutines}" }
+    val kotlinCoroutinesReactor by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${Versions.kotlinCoroutines}" }
     val springCloudConfig by lazy { "org.springframework.cloud:spring-cloud-starter-config:${Versions.springCloud}" }
     val springCloudBootstrap by lazy { "org.springframework.cloud:spring-cloud-starter-bootstrap:${Versions.springCloud}" }
 
@@ -31,8 +32,9 @@ object Dependencies {
     val commonsCodec by lazy { "commons-codec:commons-codec:${Versions.commonsCodec}" }
     val apacheCommons by lazy { "org.apache.commons:commons-lang3:${Versions.apacheCommons}"}
     val graphqlJavaExtendedScalars by lazy { "com.graphql-java:graphql-java-extended-scalars:${Versions.graphqlJava}"}
-    val graphqlKotlinHooksProvider by lazy { "com.expediagroup:graphql-kotlin-hooks-provider:${Versions.graphqlKotlin}"}
-    val graphqlKotlinSpringServer by lazy { "com.expediagroup:graphql-kotlin-spring-server:${Versions.graphqlKotlin}"}
+    //val graphqlKotlinHooksProvider by lazy { "com.expediagroup:graphql-kotlin-hooks-provider:${Versions.graphqlKotlin}"}
+    //val graphqlKotlinSpringServer by lazy { "com.expediagroup:graphql-kotlin-spring-server:${Versions.graphqlKotlin}"}
+
     val jacksonBom by lazy { "com.fasterxml.jackson:jackson-bom:${Versions.jacksonBom}" }
     val kotlinLogging by lazy { "io.github.oshai:kotlin-logging-jvm:${Versions.kotlinLogging}"}
     val springCloudStream by lazy { "org.springframework.cloud:spring-cloud-stream:${Versions.springCloud}" }

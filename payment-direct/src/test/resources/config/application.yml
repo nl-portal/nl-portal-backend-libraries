@@ -5,7 +5,7 @@ graphql:
 logging:
     level:
         reactor.netty.http.client.HttpClient: TRACE
-        
+
 nl-portal:
     config:
         objectenapi:

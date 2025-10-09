@@ -15,23 +15,24 @@
  */
 package nl.nlportal.openproduct.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
-import com.expediagroup.graphql.server.operations.Query
-import graphql.schema.DataFetchingEnvironment
-import nl.nlportal.openproduct.client.domain.OpenProductProductType
-import nl.nlportal.openproduct.service.OpenProductService
 import java.util.UUID
+import nl.nlportal.openproduct.client.domain.OpenProductProductType
+import nl.nlportal.openproduct.client.domain.OpenProductProductTypeContent
+import nl.nlportal.openproduct.service.OpenProductService
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.graphql.data.method.annotation.SchemaMapping
+import org.springframework.stereotype.Controller
 
-@AuthenticatedDirective
+@Controller
 class OpenProductTypeQuery(
     val openProductService: OpenProductService,
-) : Query {
-    @GraphQLDescription("Get all Open product types ")
+) {
+    @QueryMapping
     suspend fun getOpenProductTypes(
-        pageNumber: Int? = null,
-        pageSize: Int? = null,
-        language: String? = null,
+        @Argument pageNumber: Int? = null,
+        @Argument pageSize: Int? = null,
+        @Argument language: String? = null,
     ): ProductTypesPage =
         ProductTypesPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
@@ -44,14 +45,18 @@ class OpenProductTypeQuery(
                 ),
         )
 
-    @GraphQLDescription("Get a Open product type by id")
+    @QueryMapping
     suspend fun getOpenProductType(
-        dfe: DataFetchingEnvironment,
-        id: UUID,
-        language: String? = null,
+        @Argument id: UUID,
+        @Argument language: String? = null,
     ): OpenProductProductType? =
         openProductService.getProductType(
             id = id,
             language = language,
         )
+
+    @SchemaMapping(typeName = "OpenProductProductType", field = "content")
+    suspend fun content(
+        openProductProductType: OpenProductProductType,
+    ): List<OpenProductProductTypeContent>? = openProductService.getProductTypeContent(productTypeId = openProductProductType.uuid)
 }

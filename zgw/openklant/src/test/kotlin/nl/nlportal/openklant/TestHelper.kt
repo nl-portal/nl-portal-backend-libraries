@@ -16,6 +16,8 @@
 package nl.nlportal.openklant
 
 object TestHelper {
+    fun readFileAsString(fileName: String): String = this::class.java.getResource(fileName).readText(Charsets.UTF_8)
+
     val emptyPage =
         """
         {

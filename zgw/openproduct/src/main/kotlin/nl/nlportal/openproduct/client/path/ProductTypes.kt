@@ -70,7 +70,7 @@ class ProductTypes(
             .get()
             .uri { uriBuilder ->
                 uriBuilder
-                    .path("$path/$id/content/")
+                    .path("$path/$id/content")
                     .build()
             }.accept(MediaType.APPLICATION_JSON)
             .retrieve()

@@ -24,5 +24,5 @@ object TestHelper {
             .setResponseCode(200)
             .setBody(readFileAsString(fileName))
 
-    private fun readFileAsString(fileName: String): String = this::class.java.getResource(fileName).readText(Charsets.UTF_8)
+    fun readFileAsString(fileName: String): String = this::class.java.getResource(fileName).readText(Charsets.UTF_8)
 }

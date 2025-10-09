@@ -15,28 +15,27 @@
  */
 package nl.nlportal.openproduct.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
-import com.expediagroup.graphql.server.operations.Query
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.node.ObjectNode
-import graphql.schema.DataFetchingEnvironment
+import java.util.UUID
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.Mapper
-import nl.nlportal.graphql.security.SecurityConstants
 import nl.nlportal.openproduct.client.domain.OpenProductActie
 import nl.nlportal.openproduct.service.OpenProductDmnService
 import nl.nlportal.openproduct.service.OpenProductService
-import java.util.UUID
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
-@AuthenticatedDirective
+@Controller
 class OpenProductActieQuery(
     val openProductService: OpenProductService,
     val openProductDmnService: OpenProductDmnService,
-) : Query {
-    @GraphQLDescription("Get all acties")
+) {
+    @QueryMapping
     suspend fun getOpenProductActies(
-        pageNumber: Int? = null,
-        pageSize: Int? = null,
+        @Argument pageNumber: Int? = null,
+        @Argument pageSize: Int? = null,
     ): ActiesPage =
         ActiesPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
@@ -48,21 +47,23 @@ class OpenProductActieQuery(
                 ),
         )
 
-    @GraphQLDescription("Get a actie")
-    suspend fun getOpenProductActie(id: UUID): OpenProductActie? =
+    @QueryMapping
+    suspend fun getOpenProductActie(
+        @Argument id: UUID,
+    ): OpenProductActie? =
         openProductService.getActie(
             id = id,
         )
 
-    @GraphQLDescription("Get decision by actie naam")
+    @QueryMapping
     suspend fun getOpenProductActieDecision(
-        dfe: DataFetchingEnvironment,
-        productId: UUID,
-        naam: String,
+        authentication: CommonGroundAuthentication,
+        @Argument productId: UUID,
+        @Argument naam: String,
     ): List<ObjectNode> {
         val result =
             openProductDmnService.getActieDecision(
-                authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+                authentication = authentication,
                 naam = naam,
                 productId = productId,
             )

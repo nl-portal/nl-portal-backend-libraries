@@ -15,34 +15,29 @@
  */
 package nl.nlportal.form.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Query
+import java.util.UUID.fromString
 import nl.nlportal.form.service.FormIoFormDefinitionService
 import nl.nlportal.form.service.ObjectsApiFormDefinitionService
-import java.util.UUID.fromString
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
+@Controller
 class FormDefinitionQuery(
     private val formIoFormDefinitionService: FormIoFormDefinitionService,
     private val objectenApiFormDefinitionService: ObjectsApiFormDefinitionService,
-) : Query {
-    @GraphQLDescription("find all form definitions from repository")
-    @Deprecated("This method is not used by the NL Portal frontend and is not being replaced.")
-    fun allFormDefinitions(): List<FormDefinition> =
-        formIoFormDefinitionService
-            .findAllFormDefinitions()
-            .map { FormDefinition(it.formDefinition) }
-
-    @GraphQLDescription("find single form definition from repository")
+) {
+    @QueryMapping
     fun getFormDefinitionByName(
-        @GraphQLDescription("The form definition name") name: String,
+        @Argument name: String,
     ): FormDefinition? {
         val formIoFormDefinition = formIoFormDefinitionService.findFormIoFormDefinitionByName(name) ?: return null
         return FormDefinition(formIoFormDefinition.formDefinition)
     }
 
-    @GraphQLDescription("find single form definition from the Objecten API")
+    @QueryMapping
     suspend fun getFormDefinitionByObjectenApiUrl(
-        @GraphQLDescription("The form definition url") url: String,
+        @Argument url: String,
     ): FormDefinition? {
         val objectenApiFormDefinition = objectenApiFormDefinitionService.findObjectsApiFormDefinitionByUrl(url) ?: return null
         return FormDefinition(objectenApiFormDefinition.formDefinition)
@@ -52,9 +47,9 @@ class FormDefinitionQuery(
         message = "Replaced by getFormDefinitionByName and getFormDefinitionByObjectenApiUrl",
         replaceWith = ReplaceWith("getFormDefinitionByName or getFormDefinitionByObjectenApiUrl"),
     )
-    @GraphQLDescription("find single form definition from repository or Objecten API")
+    @QueryMapping
     suspend fun getFormDefinitionById(
-        @GraphQLDescription("The form definition id") id: String,
+        @Argument id: String,
     ): FormDefinition? {
         // for backwards compatibility
         // if the requested id is a UUID, we assume it's an Objecten API id

@@ -1,0 +1,84 @@
+type Query {
+    # Gets a single Bericht by Id
+    getBericht(id: UUID!): Bericht
+
+    #
+    #         Returns a paginated list of all Berichten
+    #         Could partial search on 'onderwerp'
+    #
+    getBerichten(
+        pageNumber: Int
+        pageSize: Int
+        onderwerp: String
+    ): BerichtenPage!
+
+    # Returns the total amount of unopened Berichten
+    getUnopenedBerichtenCount: Int!
+}
+
+type Bericht {
+    berichtTekst: String!
+    berichtType: BerichtType!
+    bijlages: [String!]!
+    einddatumHandelingstermijn: ZonedDateTime!
+    geopend: Boolean!
+    handelingsperspectief: BerichtHandelingsperspectief!
+    id: UUID
+    identificatie: BerichtIdentificatie!
+    onderwerp: String!
+    publicatiedatum: ZonedDateTime!
+    referentie: String!
+    documenten: [Document!]!
+}
+
+enum BerichtHandelingsperspectief {
+    BETALEN
+    INFORMATIE_VERSTREKKEN
+    INFORMATIE_ONTVANGEN
+}
+
+type BerichtIdentificatie {
+    type: String!
+    value: String!
+}
+
+enum BerichtType {
+    NOTIFICATIE
+    BETAALVERZOEK
+    UITNODIGING
+    VERZOEK
+}
+
+type BerichtenPage {
+    # The elements on this page
+    content: [Bericht!]!
+
+    # The requested page number
+    number: Int!
+
+    # The number of elements on this page
+    numberOfElements: Int!
+
+    # The requested page size
+    size: Int!
+
+    # The total number of elements
+    totalElements: Int!
+
+    # The total number of available pages
+    totalPages: Int!
+}
+
+type Document {
+    bestandsnaam: String
+    bestandsomvang: Int
+    creatiedatum: String
+    documentapi: String!
+    formaat: String
+    identificatie: String
+    titel: String
+    uuid: UUID!
+}
+
+scalar UUID
+scalar ZonedDateTime

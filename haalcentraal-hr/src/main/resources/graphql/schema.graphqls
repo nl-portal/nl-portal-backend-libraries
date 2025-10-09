@@ -1,0 +1,65 @@
+extend type Query {
+    # Gets the bedrijf data
+    getBedrijf: MaatschappelijkeActiviteit
+}
+
+type MaatschappelijkeActiviteit {
+    naam: String!,
+    kvkNummer: String!,
+    indNonMailing: String,
+    formeleRegistratiedatum: String,
+    materieleRegistratie: MaterieleRegistratie,
+    totaalWerkzamePersonen: Int,
+    statutaireNaam: String!,
+    handelsnamen: [HandelsNaam],
+    sbiActiviteiten: [SbiActiviteit],
+    embedded: Embedded
+}
+
+type MaterieleRegistratie {
+    datumAanvang: String!
+}
+
+type HandelsNaam {
+    naam: String!,
+    volgorde: Int!
+}
+
+type SbiActiviteit {
+    sbiCode: String!,
+    sbiOmschrijving: String!,
+    indHoofdactiviteit: String!
+}
+
+type Embedded {
+    hoofdvestiging: Hoofdvestiging!,
+    eigenaar: Eigenaar!,
+}
+
+type Hoofdvestiging {
+    vestigingsnummer: String!,
+    kvkNummer: String!,
+    eersteHandelsnaam: String!,
+    indHoofdvestiging: String!,
+    indCommercieleVestiging: String!,
+    totaalWerkzamePersonen: Int!,
+    adressen: [Adres],
+}
+
+type Adres {
+    type: String!,
+    indAfgeschermd: String!,
+    volledigAdres: String!,
+    straatnaam: String,
+    postcode: String!,
+    postbusnummer: Int,
+    plaats: String!,
+    land: String!,
+    huisnummer: Int,
+}
+
+type Eigenaar {
+    rsin: String,
+    rechtsvorm: String!,
+    uitgebreideRechtsvorm: String!,
+}

@@ -15,22 +15,22 @@
  */
 package nl.nlportal.openproduct.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
-import com.expediagroup.graphql.server.operations.Query
+import java.util.UUID
 import nl.nlportal.openproduct.client.domain.OpenProductBestand
 import nl.nlportal.openproduct.service.OpenProductService
-import java.util.UUID
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
-@AuthenticatedDirective
+@Controller
 class OpenProductBestandQuery(
     val openProductService: OpenProductService,
-) : Query {
-    @GraphQLDescription("Get all bestanden")
+) {
+    @QueryMapping
     suspend fun getOpenProductBestanden(
-        pageNumber: Int? = null,
-        pageSize: Int? = null,
-        naam: String? = null,
+        @Argument pageNumber: Int? = null,
+        @Argument pageSize: Int? = null,
+        @Argument naam: String? = null,
     ): BestandenPage =
         BestandenPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
@@ -43,8 +43,10 @@ class OpenProductBestandQuery(
                 ),
         )
 
-    @GraphQLDescription("Get a bestand")
-    suspend fun getOpenProductBestand(id: UUID): OpenProductBestand? =
+    @QueryMapping
+    suspend fun getOpenProductBestand(
+        @Argument id: UUID,
+    ): OpenProductBestand? =
         openProductService.getBestand(
             id = id,
         )

@@ -15,6 +15,7 @@
  */
 package nl.nlportal.payment.graphql
 
+import com.fasterxml.jackson.databind.JsonNode
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.WithBurgerUser
@@ -28,16 +29,16 @@ import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
-import org.springframework.http.MediaType.APPLICATION_JSON
-import org.springframework.test.web.reactive.server.WebTestClient
-import java.util.function.Consumer
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(PER_CLASS)
 internal class OgonePaymentMutationIT(
-    @Autowired private val testClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val paymentConfig: OgonePaymentConfig,
 ) {
     @Test
@@ -82,25 +83,19 @@ internal class OgonePaymentMutationIT(
             }
             """.trimIndent()
 
-        val basePath = "$.data.generateOgonePayment"
+        val responseBody =
+            httpGraphQlTester
+                .document(mutation)
+                .execute()
+                .errors()
+                .verify()
+                .path("generateOgonePayment")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(mutation)
-            .exchange()
-            .expectBody()
-            .consumeWith(Consumer { t -> logger.info { t } })
-            .jsonPath(basePath)
-            .exists()
-            .jsonPath("$basePath.formFields[0].value")
-            .isEqualTo("http://localhost:3000")
-            .jsonPath("$basePath.formFields[9].value")
-            .isEqualTo("10025")
-            .jsonPath("$basePath.formFields[11].value")
-            .isEqualTo(shaSign)
+        assertEquals("http://localhost:3000", responseBody.requiredAt("/formFields/0/value")?.textValue())
+        assertEquals("10025", responseBody.requiredAt("/formFields/9/value")?.textValue())
+        assertEquals(shaSign, responseBody.requiredAt("/formFields/11/value")?.textValue())
     }
 
     @Test
@@ -145,25 +140,19 @@ internal class OgonePaymentMutationIT(
             }
             """.trimIndent()
 
-        val basePath = "$.data.generateOgonePayment"
+        val responseBody =
+            httpGraphQlTester
+                .document(mutation)
+                .execute()
+                .errors()
+                .verify()
+                .path("generateOgonePayment")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(mutation)
-            .exchange()
-            .expectBody()
-            .consumeWith(Consumer { t -> logger.info { t } })
-            .jsonPath(basePath)
-            .exists()
-            .jsonPath("$basePath.formFields[0].value")
-            .isEqualTo("http://localhost:3000")
-            .jsonPath("$basePath.formFields[9].value")
-            .isEqualTo("10025")
-            .jsonPath("$basePath.formFields[11].value")
-            .isEqualTo(shaSign)
+        assertEquals("http://localhost:3000", responseBody.requiredAt("/formFields/0/value")?.textValue())
+        assertEquals("10025", responseBody.requiredAt("/formFields/9/value")?.textValue())
+        assertEquals(shaSign, responseBody.requiredAt("/formFields/11/value")?.textValue())
     }
 
     companion object {

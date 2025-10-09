@@ -1,7 +1,7 @@
 package nl.nlportal.besluiten.graphql
 
+import com.fasterxml.jackson.databind.JsonNode
 import nl.nlportal.besluiten.TestHelper
-import nl.nlportal.besluiten.TestHelper.verifyOnlyDataExists
 import nl.nlportal.besluiten.client.BesluitenApiConfig
 import nl.nlportal.catalogiapi.client.CatalogiApiConfig
 import nl.nlportal.commonground.authentication.WithBurgerUser
@@ -10,25 +10,26 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
-import org.springframework.http.MediaType.APPLICATION_JSON
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
-import org.springframework.test.web.reactive.server.WebTestClient
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(PER_METHOD)
 class BesluitenQueryIT(
-    @Autowired private val testClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val besluitenApiConfig: BesluitenApiConfig,
     @Autowired private val catalogiApiConfig: CatalogiApiConfig,
     @Autowired private val graphqlGetBesluiten: String,
@@ -78,113 +79,111 @@ class BesluitenQueryIT(
     @Test
     @WithBurgerUser("569312864")
     fun getBesluiten() {
-        val basePath = "$.data.getBesluiten"
-        val resultPath = "$basePath.content[0]"
 
-        testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetBesluiten)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$resultPath.identificatie").isEqualTo("klantportaal")
-            .jsonPath("$resultPath.toelichting").isEqualTo("toelichting")
-            .jsonPath("$resultPath.publicatiedatum").isEqualTo("2019-08-24")
+        val responseBody =
+            httpGraphQlTester
+                .document(graphqlGetBesluiten)
+                .execute()
+                .errors()
+                .verify()
+                .path("getBesluiten")
+                .entity(JsonNode::class.java)
+                .get()
+
+        assertEquals("klantportaal", responseBody.requiredAt("/content/0/identificatie").textValue())
+        assertEquals("toelichting", responseBody.requiredAt("/content/0/toelichting").textValue())
+        assertEquals("2019-08-24", responseBody.requiredAt("/content/0/publicatiedatum").textValue())
     }
 
     @Test
     @WithBurgerUser("569312864")
     fun getBesluit() {
-        val basePath = "$.data.getBesluit"
+        val responseBody =
+            httpGraphQlTester
+                .document(graphqlGetBesluit)
+                .execute()
+                .errors()
+                .verify()
+                .path("getBesluit")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetBesluit)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.identificatie").isEqualTo("klantportaal")
-            .jsonPath("$basePath.toelichting").isEqualTo("toelichting")
-            .jsonPath("$basePath.publicatiedatum").isEqualTo("2019-08-24")
+        assertEquals("klantportaal", responseBody.get("identificatie").textValue())
+        assertEquals("toelichting", responseBody.get("toelichting").textValue())
+        assertEquals("2019-08-24", responseBody.get("publicatiedatum").textValue())
     }
 
     @Test
     @WithBurgerUser("569312864")
     fun getBesluitAuditTrails() {
-        val basePath = "$.data.getBesluitAuditTrails"
+        val responseBody =
+            httpGraphQlTester
+                .document(graphqlGetBesluitAuditTrails)
+                .execute()
+                .errors()
+                .verify()
+                .path("getBesluitAuditTrails")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetBesluitAuditTrails)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath[0].uuid").isEqualTo("095be615-a8ad-4c33-8e9c-c7612fbf6c9f")
-            .jsonPath("$basePath[0].bron").isEqualTo("ac")
-            .jsonPath("$basePath[0].actie").isEqualTo("list")
-            .jsonPath("$basePath[0].aanmaakdatum").isEqualTo("2019-08-24T14:15:22")
+        assertEquals("095be615-a8ad-4c33-8e9c-c7612fbf6c9f", responseBody.requiredAt("/0/uuid").textValue())
+        assertEquals("ac", responseBody.requiredAt("/0/bron").textValue())
+        assertEquals("list", responseBody.requiredAt("/0/actie").textValue())
+        assertEquals("2019-08-24T14:15:22", responseBody.requiredAt("/0/aanmaakdatum").textValue())
     }
 
     @Test
     @WithBurgerUser("569312864")
     fun getBesluitAuditTrail() {
-        val basePath = "$.data.getBesluitAuditTrail"
+        val responseBody =
+            httpGraphQlTester
+                .document(graphqlGetBesluitAuditTrail)
+                .execute()
+                .errors()
+                .verify()
+                .path("getBesluitAuditTrail")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetBesluitAuditTrail)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.uuid").isEqualTo("095be615-a8ad-4c33-8e9c-c7612fbf6c9f")
-            .jsonPath("$basePath.bron").isEqualTo("ac")
-            .jsonPath("$basePath.actie").isEqualTo("list")
+        assertEquals("095be615-a8ad-4c33-8e9c-c7612fbf6c9f", responseBody.get("uuid").textValue())
+        assertEquals("ac", responseBody.get("bron").textValue())
+        assertEquals("list", responseBody.get("actie").textValue())
     }
 
     @Test
     @WithBurgerUser("569312864")
     fun getBesluitDocumenten() {
-        val basePath = "$.data.getBesluitDocumenten"
+        val responseBody =
+        httpGraphQlTester
+            .document(graphqlGetBesluitDocumenten)
+            .execute()
+            .errors()
+            .verify()
+            .path("getBesluitDocumenten")
+            .entity(JsonNode::class.java)
+            .get()
 
-        testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetBesluitDocumenten)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath[0].url").isEqualTo("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z")
-            .jsonPath(
-                "$basePath[0].informatieobject",
-            ).isEqualTo("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z")
-            .jsonPath(
-                "$basePath[0].besluit",
-            ).isEqualTo("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z")
+        assertEquals("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z", responseBody.requiredAt("/0/url").textValue())
+        assertEquals("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z", responseBody.requiredAt("/0/informatieobject").textValue())
+        assertEquals("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z", responseBody.requiredAt("/0/besluit").textValue())
     }
 
     @Test
     @WithBurgerUser("569312864")
     fun getBesluitDocument() {
-        val basePath = "$.data.getBesluitDocument"
+        val responseBody =
+            httpGraphQlTester
+                .document(graphqlGetBesluitDocument)
+                .execute()
+                .errors()
+                .verify()
+                .path("getBesluitDocument")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlGetBesluitDocument)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.url").isEqualTo("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z")
-            .jsonPath(
-                "$basePath.informatieobject",
-            ).isEqualTo("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z")
-            .jsonPath(
-                "$basePath.besluit",
-            ).isEqualTo("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z")
+        assertEquals("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z", responseBody.get("url").textValue())
+        assertEquals("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z", responseBody.get("informatieobject").textValue())
+        assertEquals("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z", responseBody.get("besluit").textValue())
     }
 
     fun setupMockObjectsApiServer() {

@@ -15,15 +15,6 @@
  */
 package nl.nlportal.zakenapi.domain
 
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
-import nl.nlportal.besluiten.domain.Besluit
-import nl.nlportal.besluiten.service.BesluitenService
-import nl.nlportal.catalogiapi.domain.StatusType
-import nl.nlportal.catalogiapi.domain.ZaakType
-import nl.nlportal.catalogiapi.service.CatalogiApiService
-import nl.nlportal.documentenapi.domain.Document
-import nl.nlportal.zakenapi.service.ZakenApiService
-import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDate
 import java.util.UUID
 
@@ -32,80 +23,9 @@ data class Zaak(
     val url: String,
     val identificatie: String,
     val omschrijving: String,
-    @GraphQLIgnore
     val zaaktype: String,
     val startdatum: LocalDate,
     val einddatum: LocalDate?,
-    @GraphQLIgnore
     val status: String?,
-    @GraphQLIgnore
     val resultaat: String? = null,
-) {
-    suspend fun status(
-        @GraphQLIgnore
-        @Autowired
-        zakenApiService: ZakenApiService,
-    ): ZaakStatus? {
-        return status?.let { zakenApiService.getZaakStatus(it) }
-    }
-
-    suspend fun statusGeschiedenis(
-        @GraphQLIgnore
-        @Autowired
-        zakenApiService: ZakenApiService,
-    ): List<ZaakStatus> {
-        return zakenApiService.getZaakStatusHistory(uuid)
-    }
-
-    suspend fun documenten(
-        @GraphQLIgnore
-        @Autowired
-        zakenApiService: ZakenApiService,
-    ): List<Document> {
-        return zakenApiService.getDocumenten(url)
-    }
-
-    suspend fun statussen(
-        @GraphQLIgnore
-        @Autowired
-        catalogiApiService: CatalogiApiService,
-    ): List<StatusType> {
-        return catalogiApiService.getZaakStatusTypes(zaaktype)
-    }
-
-    suspend fun zaaktype(
-        @GraphQLIgnore
-        @Autowired
-        catalogiApiService: CatalogiApiService,
-    ): ZaakType {
-        return catalogiApiService.getZaakType(zaaktype)
-    }
-
-    suspend fun zaakdetails(
-        @GraphQLIgnore
-        @Autowired
-        zakenApiService: ZakenApiService,
-    ): ZaakDetails {
-        return zakenApiService.getZaakDetails(url)
-    }
-
-    suspend fun besluiten(
-        @GraphQLIgnore
-        @Autowired
-        besluitenService: BesluitenService,
-    ): List<Besluit> {
-        return besluitenService.getBesluiten(
-            zaak = url,
-        )
-    }
-
-    suspend fun resultaat(
-        @GraphQLIgnore
-        @Autowired
-        zakenApiService: ZakenApiService,
-    ): ZaakResultaat? {
-        return resultaat?.let {
-            zakenApiService.getZaakResultaat(it)
-        }
-    }
-}
+)

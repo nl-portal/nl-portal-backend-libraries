@@ -16,19 +16,18 @@
 package nl.nlportal.openklant.graphql
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.treeToValue
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.core.util.Mapper
+import nl.nlportal.openklant.TestHelper
 import nl.nlportal.openklant.client.domain.OrganisatieIdentificatie
 import nl.nlportal.openklant.client.domain.PersoonsIdentificatie
 import nl.nlportal.openklant.client.domain.SoortPartij
 import nl.nlportal.openklant.service.OpenKlant2Service
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -37,22 +36,19 @@ import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.core.io.ClassPathResource
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean
-import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.web.reactive.function.BodyInserters
-import java.nio.charset.Charset
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @Tag("integration")
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class OpenKlant2PartijQueryIT(
-    @Autowired private val webTestClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
 ) {
     @MockitoSpyBean
     lateinit var openKlant2Service: OpenKlant2Service
@@ -60,33 +56,18 @@ class OpenKlant2PartijQueryIT(
     @Test
     fun `should introspect Partij type`() =
         runTest {
-            // when
-            val responseBodyContent =
-                webTestClient
-                    .post()
-                    .uri { builder ->
-                        builder
-                            .path("/graphql")
-                            .build()
-                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/partijIntrospection.gql")))
-                    .exchange()
-                    .expectStatus()
-                    .isOk
-                    .expectBody()
-                    .returnResult()
-                    .responseBodyContent
-                    ?.toString(Charset.defaultCharset())
+            val responseBody =
+                httpGraphQlTester
+                    .document(TestHelper.readFileAsString("/config/graphql/partijIntrospection.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("__type")
+                    .entity(JsonNode::class.java)
+                    .get()
 
-            val typeResponse =
-                objectMapper
-                    .readValue<JsonNode>(responseBodyContent!!)
-                    .get("data")
-                    ?.get("__type")
-
-            // then
-            assertEquals("OBJECT", typeResponse?.get("kind")?.textValue())
-            assertEquals("PartijResponse", typeResponse?.get("name")?.textValue())
+            assertEquals("OBJECT", responseBody.get("kind")?.textValue())
+            assertEquals("PartijResponse", responseBody.get("name")?.textValue())
         }
 
     @Test
@@ -95,35 +76,22 @@ class OpenKlant2PartijQueryIT(
         runTest {
             // when
             val responseBody =
-                webTestClient
-                    .post()
-                    .uri { builder ->
-                        builder
-                            .path("/graphql")
-                            .build()
-                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/findUserPartij.gql")))
-                    .exchange()
-                    .expectStatus()
-                    .isOk
-                    .expectBody()
-                    .returnResult()
-                    .responseBodyContent
-                    ?.toString(Charset.defaultCharset())
-
-            val responsePartij =
-                objectMapper
-                    .readValue<JsonNode>(responseBody!!)
-                    .get("data")
-                    ?.get("findUserPartij")
+                httpGraphQlTester
+                    .document(TestHelper.readFileAsString("/config/graphql/findUserPartij.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("findUserPartij")
+                    .entity(JsonNode::class.java)
+                    .get()
 
             // then
             verify(openKlant2Service, times(1)).findPartijByAuthentication(any())
 
-            assertNotNull(responsePartij)
-            assertEquals(SoortPartij.PERSOON.name, responsePartij?.get("soortPartij")?.textValue())
-            assertDoesNotThrow { objectMapper.treeToValue<PersoonsIdentificatie>(responsePartij!!.get("partijIdentificatie")) }
-            assertEquals("Lucas Boom", responsePartij?.requiredAt("/partijIdentificatie/volledigeNaam")?.textValue())
+            assertNotNull(responseBody)
+            assertEquals(SoortPartij.PERSOON.name, responseBody.get("soortPartij")?.textValue())
+            assertDoesNotThrow { objectMapper.treeToValue<PersoonsIdentificatie>(responseBody.get("partijIdentificatie")) }
+            assertEquals("Lucas Boom", responseBody.requiredAt("/partijIdentificatie/volledigeNaam")?.textValue())
         }
 
     @Test
@@ -134,35 +102,22 @@ class OpenKlant2PartijQueryIT(
         runTest {
             // when
             val responseBody =
-                webTestClient
-                    .post()
-                    .uri { builder ->
-                        builder
-                            .path("/graphql")
-                            .build()
-                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/findUserPartij.gql")))
-                    .exchange()
-                    .expectStatus()
-                    .isOk
-                    .expectBody()
-                    .returnResult()
-                    .responseBodyContent
-                    ?.toString(Charset.defaultCharset())
-
-            val responsePartij =
-                objectMapper
-                    .readValue<JsonNode>(responseBody!!)
-                    .get("data")
-                    ?.get("findUserPartij")
+                httpGraphQlTester
+                    .document(TestHelper.readFileAsString("/config/graphql/findUserPartij.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("findUserPartij")
+                    .entity(JsonNode::class.java)
+                    .get()
 
             // then
             verify(openKlant2Service, times(1)).findPartijByAuthentication(any())
 
-            assertNotNull(responsePartij)
-            assertEquals(SoortPartij.ORGANISATIE.name, responsePartij?.get("soortPartij")?.textValue())
-            assertDoesNotThrow { objectMapper.treeToValue<OrganisatieIdentificatie>(responsePartij!!.get("partijIdentificatie")) }
-            assertEquals("Ritense", responsePartij?.requiredAt("/partijIdentificatie/naam")?.textValue())
+            assertNotNull(responseBody)
+            assertEquals(SoortPartij.ORGANISATIE.name, responseBody.get("soortPartij")?.textValue())
+            assertDoesNotThrow { objectMapper.treeToValue<OrganisatieIdentificatie>(responseBody.get("partijIdentificatie")) }
+            assertEquals("Ritense", responseBody.requiredAt("/partijIdentificatie/naam")?.textValue())
         }
 
     @Test
@@ -171,35 +126,22 @@ class OpenKlant2PartijQueryIT(
         runTest {
             // when
             val responseBody =
-                webTestClient
-                    .post()
-                    .uri { builder ->
-                        builder
-                            .path("/graphql")
-                            .build()
-                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserPartij.gql")))
-                    .exchange()
-                    .expectStatus()
-                    .isOk
-                    .expectBody()
-                    .returnResult()
-                    .responseBodyContent
-                    ?.toString(Charset.defaultCharset())
-
-            val responsePartij =
-                objectMapper
-                    .readValue<JsonNode>(responseBody!!)
-                    .get("data")
-                    ?.get("getUserPartij")
+                httpGraphQlTester
+                    .document(TestHelper.readFileAsString("/config/graphql/getUserPartij.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getUserPartij")
+                    .entity(JsonNode::class.java)
+                    .get()
 
             // then
             verify(openKlant2Service, times(1)).getPartij(any())
 
-            assertNotNull(responsePartij)
-            assertEquals(SoortPartij.PERSOON.name, responsePartij?.get("soortPartij")?.textValue())
-            assertDoesNotThrow { objectMapper.treeToValue<PersoonsIdentificatie>(responsePartij!!.get("partijIdentificatie")) }
-            assertEquals("Lucas Boom", responsePartij?.requiredAt("/partijIdentificatie/volledigeNaam")?.textValue())
+            assertNotNull(responseBody)
+            assertEquals(SoortPartij.PERSOON.name, responseBody.get("soortPartij")?.textValue())
+            assertDoesNotThrow { objectMapper.treeToValue<PersoonsIdentificatie>(responseBody.get("partijIdentificatie")) }
+            assertEquals("Lucas Boom", responseBody.requiredAt("/partijIdentificatie/volledigeNaam")?.textValue())
         }
 
     @Test
@@ -207,34 +149,16 @@ class OpenKlant2PartijQueryIT(
     fun `should return null when user is not allowed to request Partij`() =
         runTest {
             // when
-            val responseBody =
-                webTestClient
-                    .post()
-                    .uri { builder ->
-                        builder
-                            .path("/graphql")
-                            .build()
-                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserPartij.gql")))
-                    .exchange()
-                    .expectStatus()
-                    .isOk
-                    .expectBody()
-                    .returnResult()
-                    .responseBodyContent
-                    ?.toString(Charset.defaultCharset())
-
-            val responsePartij =
-                objectMapper
-                    .readValue<JsonNode>(responseBody!!)
-                    .get("data")
-                    ?.get("getUserPartij")
+            httpGraphQlTester
+                .document(TestHelper.readFileAsString("/config/graphql/getUserPartij.gql"))
+                .execute()
+                .errors()
+                .verify()
+                .path("getUserPartij")
 
             // then
             verify(openKlant2Service, times(1)).findPartijIdentificatoren(any())
             verify(openKlant2Service, times(0)).getPartij(any())
-
-            assertTrue(responsePartij!!.isNull)
         }
 
     @Test
@@ -242,32 +166,13 @@ class OpenKlant2PartijQueryIT(
     fun `should return null when no Partij was found for authenticated user`() =
         runTest {
             // when
-            val responseBody =
-                webTestClient
-                    .post()
-                    .uri { builder ->
-                        builder
-                            .path("/graphql")
-                            .build()
-                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/findUserPartij.gql")))
-                    .exchange()
-                    .expectStatus()
-                    .isOk
-                    .expectBody()
-                    .returnResult()
-                    .responseBodyContent
-                    ?.toString(Charset.defaultCharset())
-
-            val responsePartij =
-                objectMapper
-                    .readValue<JsonNode>(responseBody!!)
-                    .get("data")
-                    ?.get("findUserPartij")
-
-            // then
+            httpGraphQlTester
+                .document(TestHelper.readFileAsString("/config/graphql/findUserPartij.gql"))
+                .execute()
+                .errors()
+                .verify()
+                .path("findUserPartij")
             verify(openKlant2Service, times(1)).findPartijByAuthentication(any())
-            assertTrue(responsePartij!!.isNull)
         }
 
     companion object {

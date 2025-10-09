@@ -1,0 +1,718 @@
+extend type Query {
+    # Get DigitaleAdressen of authenticated user.
+    getUserDigitaleAdressen: [DigitaleAdresResponse!]
+
+    # Get KlantContact by id of authenticated user.
+    getUserKlantContact(klantContactId: UUID!): OpenKlant2Klantcontact
+
+    #
+    #         Get KlantContacten of authenticated user and optional filter on .
+    #         identificatorType, like zaak or product
+    #         identificatorId, the uuid of the zaak or product
+    #
+    getUserKlantContacten(
+        identificatorType: OnderwerpObjectIndentificatorType
+        identificatorId: UUID
+    ): [OpenKlant2Klantcontact!]!
+
+    # Find the Partij of the authenticated user.
+    findUserPartij: OpenKlant2Partij
+
+    # Get Partij by Id for authenticated user.
+    getUserPartij(partijId: UUID!): OpenKlant2Partij
+
+}
+
+extend type Mutation {
+    # Create DigitaleAdres for User
+    createUserDigitaleAdres(
+        digitaleAdresRequest: DigitaleAdresRequestInput!
+    ): DigitaleAdresResponse
+
+    # Delete DigitaleAdres of User by Id
+    deleteUserDigitaleAdres(digitaleAdresId: UUID!): Boolean
+
+    # Update DigitaleAdres of User
+    updateUserDigitaleAdres(
+        digitaleAdresRequest: DigitaleAdresRequestInput!
+    ): DigitaleAdresResponse
+
+    # Create Partij for user
+    createUserPartij(partijRequest: PartijRequestInput!): PartijResponse
+
+    # Update user Partij
+    updateUserPartij(partijRequest: PartijRequestInput!): PartijResponse
+}
+
+type Betrokkene {
+    bezoekadres: OpenKlant2Adres
+    contactnaam: Contactnaam
+    correspondentieadres: OpenKlant2Adres
+    digitaleAdressen: [OpenKlant2ForeignKey!]!
+    hadKlantcontact: OpenKlant2ForeignKey!
+    initiator: Boolean!
+    organisatienaam: String!
+    rol: String!
+    url: String!
+    uuid: String!
+    volledigeNaam: String!
+    wasPartij: OpenKlant2ForeignKey
+}
+
+type Categorie {
+    naam: String!
+    url: String!
+    uuid: String!
+}
+
+type CategorieRelatie {
+    beginDatum: Date
+    categorie: Categorie
+    eindDatum: Date
+    partij: OpenKlant2ForeignKey
+    url: String!
+    uuid: String!
+}
+
+type CategorieRelatieForeignKey {
+    beginDatum: Date
+    categorieNaam: String!
+    eindDatum: Date
+    url: String!
+    uuid: String!
+}
+
+type ContactpersoonIdentificatie {
+    contactnaam: Contactnaam
+    uuid: UUID
+    volledigeNaam: String
+    werkteVoorPartij: OpenKlant2ForeignKey
+}
+
+input ContactpersoonIdentificatieInput {
+    contactnaam: ContactnaamInput
+    uuid: UUID
+    volledigeNaam: String
+    werkteVoorPartij: OpenKlant2ForeignKeyInput
+}
+
+type Contactnaam {
+    achternaam: String
+    voorletters: String
+    voornaam: String
+    voorvoegselAchternaam: String
+}
+
+input ContactnaamInput {
+    achternaam: String
+    voorletters: String
+    voornaam: String
+    voorvoegselAchternaam: String
+}
+
+input DigitaleAdresRequestInput {
+    omschrijving: String!
+    type: DigitaleAdresType!
+    uuid: UUID
+    waarde: String!
+}
+
+type DigitaleAdresResponse {
+    omschrijving: String!
+    referentie: String!
+    type: DigitaleAdresType!
+    uuid: UUID!
+    waarde: String!
+}
+
+enum DigitaleAdresType {
+    TELEFOONNUMMER
+    EMAIL
+    OVERIG
+}
+
+type HadBetrokkenActoren {
+    actoridentificator: OpenKlant2Identificator!
+    indicatieActief: Boolean!
+    naam: String!
+    soortActor: String!
+    url: String!
+    uuid: String!
+}
+
+type HadKlantcontact {
+    gingOverOnderwerpobjecten: [OpenKlant2ForeignKey!]!
+    hadBetrokkenActoren: [HadBetrokkenActoren!]!
+    hadBetrokkenen: [OpenKlant2ForeignKey!]!
+    indicatieContactGelukt: Boolean!
+    inhoud: String!
+    kanaal: String!
+    leiddeTotInterneTaken: [OpenKlant2ForeignKey!]!
+    nummer: String!
+    omvatteBijlagen: [OpenKlant2ForeignKey!]!
+    onderwerp: String!
+    plaatsgevondenOp: String!
+    taal: String!
+    url: String!
+    uuid: String!
+    vertrouwelijk: Boolean!
+}
+
+enum OnderwerpObjectIndentificatorType {
+    ZAAK
+    PRODUCT
+}
+
+type OpenKlant2Adres {
+    adresregel1: String
+    adresregel2: String
+    adresregel3: String
+    land: OpenKlant2Landcode
+    nummeraanduidingId: String
+}
+
+type OpenKlant2DigitaleAdres {
+    adres: String!
+    omschrijving: String!
+    referentie: String
+    soortDigitaalAdres: String!
+    url: String
+    uuid: UUID
+    verstrektDoorBetrokkene: OpenKlant2UUID
+    verstrektDoorPartij: OpenKlant2UUID
+}
+
+type OpenKlant2ForeignKey {
+    url: String!
+    uuid: UUID!
+}
+
+input OpenKlant2ForeignKeyInput {
+    url: String!
+    uuid: UUID!
+}
+
+type OpenKlant2Identificator {
+    codeObjecttype: String!
+    codeRegister: String!
+    codeSoortObjectId: String!
+    objectId: String!
+}
+
+type OpenKlant2IdentificeerdePartij {
+    uuid: UUID!
+}
+
+type OpenKlant2Klantcontact {
+    gingOverOnderwerpobjecten: [OpenKlant2ForeignKey!]!
+    hadBetrokkenActoren: [HadBetrokkenActoren!]!
+    hadBetrokkenen: [OpenKlant2ForeignKey!]!
+    indicatieContactGelukt: Boolean!
+    inhoud: String!
+    kanaal: String!
+    leiddeTotInterneTaken: [OpenKlant2ForeignKey!]!
+    nummer: String!
+    omvatteBijlagen: [OpenKlant2ForeignKey!]!
+    onderwerp: String!
+    plaatsgevondenOp: String!
+    taal: String!
+    url: String!
+    uuid: String!
+    vertrouwelijk: Boolean!
+}
+
+enum OpenKlant2Landcode {
+    CANADA
+    FRANKRIJK
+    ZWITSERLAND
+    RHODESIE
+    MALAWI
+    CUBA
+    SURINAME
+    TUNESIE
+    OOSTENRIJK
+    BELGIE
+    BOTSWANA
+    IRAN
+    NIEUWZEELAND
+    ZUIDAFRIKA
+    DENEMARKEN
+    NOORDJEMEN
+    HONGARIJE
+    SAOEDIARABIE
+    LIBERIA
+    ETHIOPIE
+    CHILI
+    MAROKKO
+    TOGO
+    GHANA
+    LAOS
+    ANGOLA
+    FILIPIJNEN
+    ZAMBIA
+    MALI
+    IVOORKUST
+    BURMA
+    MONACO
+    COLOMBIA
+    ALBANIE
+    KAMEROEN
+    ZUIDVIETNAM
+    SINGAPORE
+    PARAGUAY
+    ZWEDEN
+    CYPRUS
+    AUSTRALISCH_NIEUWGUINEA
+    BRUNEI
+    IRAK
+    MAURITIUS
+    VATICAANSTAD
+    KASHMIR
+    MYANMAR
+    JEMEN
+    SLOVENIE
+    ZAIRE
+    KROATIE
+    TAIWAN
+    RUSLAND
+    ARMENIE
+    ASCENSION
+    AZOREN
+    BAHREIN
+    BHUTAN
+    BRITSE_ANTILLEN
+    COMOREN
+    FALKLANDEILANDEN
+    FRANSGUYANA
+    FRANSSOMALILAND
+    GILBERT_EN_ELLICEEILANDEN
+    GROENLAND
+    GUADELOUPE
+    KAAPVERDISCHE_EILANDEN
+    MACAU
+    MARTINIQUE
+    MOZAMBIQUE
+    PITCAIRNEILANDEN
+    GUINEEBISSAU
+    REUNION
+    SAINT_PIERRE_EN_MIQUELON
+    SEYCHELLEN_EN_AMIRANTEN
+    TONGA
+    WALLIS_EN_FUTUNA
+    ZUIDWESTAFRIKA
+    FRANSINDIE
+    JOHNSTON
+    KEDAH
+    KELANTAN
+    MALAKKA
+    MAYOTTE
+    NEGRI_SEMBILAN
+    PAHANG
+    PERAK
+    PERLIS
+    PORTUGEESINDIE
+    SELANGOR
+    SIKKIM
+    SAINT_VINCENT_EN_DE_GRENADINES
+    SPITSBERGEN
+    TRENGGANU
+    ARUBA
+    BURKINA_FASO
+    AZERBEIDZJAN
+    BELARUS
+    KAZACHSTAN
+    MACEDONIE
+    TIMOR_LESTE
+    SERVIE_EN_MONTENEGRO
+    SERVIE
+    MONTENEGRO
+    KOSOVO
+    BONAIRE
+    CURACAO
+    SABA
+    SINT_EUSTATIUS
+    SINT_MAARTEN
+    ZUIDSOEDAN
+    GAZASTROOK_EN_WESTELIJKE_JORDAANOEVER
+    REPUBLIEK_NOORDMACEDONIE
+    MOLDAVIE
+    BURUNDI
+    FINLAND
+    GRIEKENLAND
+    GUATEMALA
+    NIGERIA
+    LIBIE
+    IERLAND
+    BRAZILIE
+    RWANDA
+    VENEZUELA
+    IJSLAND
+    LIECHTENSTEIN
+    SOMALIE
+    VERENIGDE_STATEN_VAN_AMERIKA
+    BOLIVIA
+    AUSTRALIE
+    JAMAICA
+    LUXEMBURG
+    TSJAAD
+    MAURITANIE
+    KIRGIZIE
+    CHINA
+    AFGHANISTAN
+    INDONESIE
+    GUYANA
+    NOORDVIETNAM
+    NOORWEGEN
+    SAN_MARINO
+    DUITSLAND
+    NEDERLAND
+    CAMBODJA
+    FIJI
+    BAHAMAS
+    ISRAEL
+    NEPAL
+    ZUIDKOREA
+    SPANJE
+    OEKRAINE
+    VERENIGD_KONINKRIJK
+    NIGER
+    HAITI
+    JORDANIE
+    TURKIJE
+    TRINIDAD_EN_TOBAGO
+    JOEGOSLAVIE
+    OPPERVOLTA
+    ALGERIJE
+    GABON
+    NOORDKOREA
+    OEZBEKISTAN
+    SIERRA_LEONE
+    BRITSHONDURAS
+    CANARISCHE_EILANDEN
+    FRANSPOLYNESIE
+    GIBRALTAR
+    PORTUGEESTIMOR
+    TADZJIKISTAN
+    BRITSE_SALOMONSEILANDEN
+    SAO_TOME_EN_PRINCIPE
+    SINTHELENA
+    TRISTAN_DA_CUNHA
+    WESTSAMOA
+    TURKMENISTAN
+    GEORGIE
+    BOSNIEHERZEGOVINA
+    TSJECHIE
+    SLOWAKIJE
+    FEDERALE_REPUBLIEK_JOEGOSLAVIE
+    DEMOCRATISCHE_REPUBLIEK_CONGO
+    UGANDA
+    KENYA
+    MALTA
+    BARBADOS
+    ANDORRA
+    MEXICO
+    COSTA_RICA
+    GAMBIA
+    SYRIE
+    NEDERLANDSE_ANTILLEN
+    ZUIDJEMEN
+    EGYPTE
+    ARGENTINIE
+    LESOTHO
+    HONDURAS
+    NICARAGUA
+    PAKISTAN
+    SENEGAL
+    DAHOMEY
+    BULGARIJE
+    MALEISIE
+    DOMINICAANSE_REPUBLIEK
+    POLEN
+    RUSLAND_OUD
+    BRITSE_MAAGDENEILANDEN
+    TANZANIA
+    EL_SALVADOR
+    SRI_LANKA
+    SOEDAN
+    JAPAN
+    HONGKONG
+    PANAMA
+    URUGUAY
+    ECUADOR
+    GUINEE
+    MALDIVEN
+    THAILAND
+    LIBANON
+    ITALIE
+    KOEWEIT
+    INDIA
+    ROEMENIE
+    TSJECHOSLOWAKIJE
+    PERU
+    PORTUGAL
+    OMAN
+    MONGOLIE
+    SAMOA
+    VERENIGDE_ARABISCHE_EMIRATEN
+    TIBET
+    NAURU
+    NEDERLANDS_NIEUWGUINEA
+    TANGANYIKA
+    PALESTINA
+    BRITS_WESTINDIE
+    PORTUGEESAFRIKA
+    LETLAND
+    ESTLAND
+    LITOUWEN
+    BRITSAFRIKA
+    BELGISCHCONGO
+    BRITSINDIE
+    NOORDRHODESIE
+    ZUIDRHODESIE
+    SAARLAND
+    FRANS_INDOCHINA
+    BRITS_WESTBORNEO
+    GOUDKUST
+    RAS_ALKHAIMAH
+    FRANSCONGO
+    SIAM
+    BRITS_OOSTAFRIKA
+    BRITS_NOORDBORNEO
+    BANGLADESH
+    DUITSE_DEMOCRATISCHE_REPUBLIEK
+    MADEIRAEILANDEN
+    AMERIKAANSE_MAAGDENEILANDEN
+    AUSTRALISCHE_SALOMONSEILANDEN
+    SPAANSE_SAHARA
+    CAYMANEILANDEN
+    CAICOSEILANDEN
+    TURKSEILANDEN
+    BRITS_ANTARCTISCH_TERRITORIUM
+    BRITS_INDISCHE_OCEAANTERRITORIUM
+    COOKEILANDEN
+    TOKELAU
+    NIEUWCALEDONIE
+    HAWAIIEILANDEN
+    GUAM
+    AMERIKAANSSAMOA
+    MIDWAY
+    RIUKIUEILANDEN
+    WAKE
+    PACIFICEILANDEN
+    GRENADA
+    MARIANEN
+    CABINDA
+    CANTON_EN_ENDERBURY
+    CHRISTMASEILAND
+    COCOSEILANDEN
+    FAEROER
+    MONTSERRAT
+    NORFOLK
+    BELIZE
+    TASMANIE
+    TURKS_EN_CAICOSEILANDEN
+    PUERTO_RICO
+    PAPOEANIEUWGUINEA
+    SALOMONSEILANDEN
+    BENIN
+    VIETNAM
+    KAAPVERDIE
+    SEYCHELLEN
+    KIRIBATI
+    TUVALU
+    SAINT_LUCIA
+    DOMINICA
+    ZIMBABWE
+    DUBAI
+    NIEUWE_HEBRIDEN
+    KANAALEILANDEN
+    MAN
+    ANGUILLA
+    SAINT_KITTS_EN_NEVIS
+    ANTIGUA
+    SAINT_VINCENT
+    GILBERTEILANDEN
+    PANAMAKANAALZONE
+    SAINT_KITTS_NEVIS_EN_ANGUILLA
+    BELAU
+    PALAU
+    ANTIGUA_EN_BARBUDA
+    NEWFOUNDLAND
+    NYASALAND
+    ERITREA
+    IFNI
+    BRITSKAMEROEN
+    KEIZER_WILHELMSLAND
+    CONGO
+    CONGOKINSHASA
+    MADAGASKAR
+    CONGOBRAZZAVILLE
+    LEEWARDEILANDEN
+    WINDWARDEILANDEN
+    FRANS_TERRITORIUM_VOOR_AFARS_EN_ISSAS
+    PHOENIXEILANDEN
+    PORTUGEESGUINEE
+    DUITS_ZUIDWESTAFRIKA
+    NAMIBIE
+    BRITSSOMALILAND
+    ITALIAANSSOMALILAND
+    NEDERLANDSINDIE
+    BRITSGUYANA
+    SWAZILAND
+    QATAR
+    ESWATINI
+    ADEN
+    ZUIDARABISCHE_FEDERATIE
+    EQUATORIAALGUINEA
+    SPAANSGUINEE
+    VERENIGDE_ARABISCHE_REPUBLIEK
+    BERMUDA
+    SOVJETUNIE
+    DUITS_OOSTAFRIKA
+    ZANZIBAR
+    CEYLON
+    MUSCAT_EN_OMAN
+    TRUCIAL_OMAN
+    INDOCHINA
+    MARSHALLEILANDEN
+    SARAWAK
+    BRITSBORNEO
+    SABAH
+    ABU_DHABI
+    AJMAN
+    BASUTOLAND
+    BECHUANALAND
+    FUJAIRAH
+    FRANSKAMEROEN
+    JOHORE
+    KOREA
+    LABUAN
+    UMM_ALQAIWAIN
+    OOSTENRIJKHONGARIJE
+    PORTUGEES_OOSTAFRIKA
+    PORTUGEES_WESTAFRIKA
+    SHARJAH
+    STRAITS_SETTLEMENTS
+    ABESSINIE
+    FRANS_WESTAFRIKA
+    FRANS_EQUATORIAALAFRIKA
+    URUNDI
+    RUANDAURUNDI
+    GOA
+    DANTZIG
+    CENTRAALAFRIKAANSE_REPUBLIEK
+    DJIBOUTI
+    TRANSJORDANIE
+    BONDSREPUBLIEK_DUITSLAND
+    VANUATU
+    NIUE
+    SPAANS_NOORDAFRIKA
+    WESTELIJKE_SAHARA
+    MICRONESIA
+    SVALBARDEILANDEN
+    INTERNATIONAAL_GEBIED
+    NONE
+}
+
+# A Type that represents a Klantinteracties API Partij object
+type OpenKlant2Partij {
+    betrokkenen: [OpenKlant2ForeignKey!]
+    bezoekadres: OpenKlant2Adres
+    categorieRelaties: [CategorieRelatieForeignKey!]
+    correspondentieadres: OpenKlant2Adres
+    digitaleAdressen: [OpenKlant2ForeignKey!]
+    expand: PartijExpand
+    indicatieActief: Boolean!
+    indicatieGeheimhouding: Boolean
+    interneNotitie: String
+    nummer: String
+    partijIdentificatie: PartijIdentificatie!
+    partijIdentificatoren: [OpenKlant2PartijIdentificator!]
+    rekeningnummers: [OpenKlant2ForeignKey!]
+    soortPartij: SoortPartij!
+    url: String
+    uuid: UUID
+    vertegenwoordigden: [OpenKlant2ForeignKey!]
+    voorkeursDigitaalAdres: OpenKlant2ForeignKey
+    voorkeursRekeningnummer: OpenKlant2ForeignKey
+    voorkeurstaal: String
+}
+
+type OpenKlant2PartijIdentificator {
+    anderePartijIdentificator: String
+    identificeerdePartij: OpenKlant2IdentificeerdePartij
+    partijIdentificator: OpenKlant2Identificator
+    subIdentificatorVan: OpenKlant2SubIdentificatorVan
+    url: String
+    uuid: UUID
+}
+
+type OrganisatieIdentificatie {
+    naam: String
+}
+
+input OrganisatieIdentificatieInput {
+    naam: String
+}
+
+type PartijExpand {
+    betrokkenen: [Betrokkene!]
+    categorieRelaties: [CategorieRelatie!]
+    digitaleAdressen: [OpenKlant2DigitaleAdres!]
+    hadKlantcontact: [HadKlantcontact!]
+}
+
+union PartijIdentificatie =
+    ContactpersoonIdentificatie
+    | OrganisatieIdentificatie
+    | PersoonsIdentificatie
+
+input PartijRequestInput {
+    contactpersoonIdentificatie: ContactpersoonIdentificatieInput
+    indicatieActief: Boolean!
+    indicatieGeheimhouding: Boolean!
+    organisatieIdentificatie: OrganisatieIdentificatieInput
+    persoonsIdentificatie: PersoonsIdentificatieInput
+    type: PartijType!
+}
+
+type PartijResponse {
+    contactpersoonIdentificatie: ContactpersoonIdentificatie
+    digitaleAdressen: [OpenKlant2DigitaleAdres!]
+    indicatieActief: Boolean!
+    indicatieGeheimhouding: Boolean
+    klantcontacten: [HadKlantcontact!]
+    organisatieIdentificatie: OrganisatieIdentificatie
+    persoonsIdentificatie: PersoonsIdentificatie
+    type: PartijType!
+}
+
+enum PartijType {
+    PERSOON
+    ORGANISATIE
+    CONTACTPERSOON
+}
+
+type PersoonsIdentificatie {
+    contactnaam: Contactnaam
+    volledigeNaam: String
+}
+
+input PersoonsIdentificatieInput {
+    contactnaam: ContactnaamInput
+    volledigeNaam: String
+}
+
+type OpenKlant2SubIdentificatorVan {
+    uuid: UUID!
+}
+
+type OpenKlant2UUID {
+    uuid: UUID!
+}
+
+enum SoortPartij {
+    PERSOON
+    ORGANISATIE
+    CONTACTPERSOON
+}

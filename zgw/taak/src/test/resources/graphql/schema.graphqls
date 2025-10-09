@@ -1,0 +1,101 @@
+type Query {
+    # Get task by id V2
+    getTaakByIdV2(id: UUID!): TaakV2
+
+    # Get a list of tasks. Optional filter for zaak V2
+    getTakenV2(
+        pageNumber: Int
+        pageSize: Int
+        zaakUUID: UUID
+        status: TaakStatus
+        title: String
+    ): TaakPageV2!
+}
+
+type Mutation {
+    # Submit a task
+    submitTaakV2(id: UUID!, submission: JSON!): TaakV2!
+}
+
+type TaakForm {
+    formulier: TaakFormulierV2!
+    data: JSON
+}
+
+type TaakFormulierV2 {
+    soort: String!
+    value: String!
+}
+
+type TaakIdentificatie {
+    type: String!
+    value: String!
+}
+
+type TaakKoppeling {
+    registratie: String!
+    value: String
+}
+
+type TaakPageV2 {
+    # The elements on this page
+    content: [TaakV2!]!
+
+    # The requested page number
+    number: Int!
+
+    # The number of elements on this page
+    numberOfElements: Int!
+
+    # The requested page size
+    size: Int!
+
+    # The total number of elements
+    totalElements: Int!
+
+    # The total number of available pages
+    totalPages: Int!
+}
+
+enum TaakSoort {
+    URL
+    PORTAALFORMULIER
+    OGONEBETALING
+}
+
+enum TaakStatus {
+    OPEN
+    INGEDIEND
+    AFGEROND
+    VERWERKT
+    GESLOTEN
+}
+
+type TaakUrl {
+    uri: String!
+}
+
+type TaakV2 {
+    eigenaar: String!
+    id: UUID!
+    identificatie: TaakIdentificatie!
+    koppeling: TaakKoppeling!
+    ogonebetaling: OgoneBetaling
+    portaalformulier: TaakForm
+    soort: TaakSoort!
+    status: TaakStatus!
+    titel: String!
+    url: TaakUrl
+    verloopdatum: ZonedDateTime
+}
+
+type OgoneBetaling {
+    bedrag: PositiveFloat!
+    betaalkenmerk: String!
+    pspid: String!
+}
+
+scalar JSON
+scalar ZonedDateTime
+scalar UUID
+scalar PositiveFloat

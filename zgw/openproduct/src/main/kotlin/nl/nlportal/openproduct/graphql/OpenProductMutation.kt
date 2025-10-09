@@ -15,26 +15,25 @@
  */
 package nl.nlportal.openproduct.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
-import com.expediagroup.graphql.server.operations.Mutation
-import graphql.schema.DataFetchingEnvironment
-import nl.nlportal.graphql.security.SecurityConstants
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.openproduct.client.domain.OpenProductProduct
 import nl.nlportal.openproduct.graphql.domain.UpdateProductRequest
 import nl.nlportal.openproduct.service.OpenProductService
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.stereotype.Controller
 
-@AuthenticatedDirective
+@Controller
 class OpenProductMutation(
     val openProductService: OpenProductService,
-) : Mutation {
-    @GraphQLDescription("Update product")
+) {
+    @MutationMapping
     suspend fun updateProduct(
-        dfe: DataFetchingEnvironment,
-        productUpdateRequest: UpdateProductRequest,
+        authentication: CommonGroundAuthentication,
+        @Argument productUpdateRequest: UpdateProductRequest,
     ): OpenProductProduct? =
         openProductService.updateProduct(
-            authentication = dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+            authentication = authentication,
             productUpdate = productUpdateRequest.asOpenProductProductUpdate(),
         )
 }

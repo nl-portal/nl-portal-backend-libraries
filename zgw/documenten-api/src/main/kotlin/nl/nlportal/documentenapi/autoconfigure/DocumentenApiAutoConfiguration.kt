@@ -62,13 +62,13 @@ class DocumentenApiAutoConfiguration {
     }
 
     @Bean
-    fun documentContentQuery2(documentenApiService: DocumentenApiService): DocumentContentQuery {
+    fun documentContentQuery(documentenApiService: DocumentenApiService): DocumentContentQuery {
         return DocumentContentQuery(documentenApiService)
     }
 
     @Bean
     @ConditionalOnMissingBean(DocumentContentResourceHttpSecurityConfigurer::class)
-    fun documentContentResourceHttpSecurityConfigurer2(): DocumentContentResourceHttpSecurityConfigurer {
+    fun documentContentResourceHttpSecurityConfigurer(): DocumentContentResourceHttpSecurityConfigurer {
         return DocumentContentResourceHttpSecurityConfigurer()
     }
 

@@ -28,6 +28,10 @@ dependencies {
 
     implementation(Dependencies.springBootStarter)
 
+    implementation(Dependencies.kotlinCoroutines)
+    implementation(Dependencies.kotlinCoroutinesReactor)
+    implementation("org.springframework.data:spring-data-commons")
+
     testImplementation(TestDependencies.kotlinTest)
     testImplementation(TestDependencies.junitJupiterTest)
     testImplementation(TestDependencies.springBootTest)
@@ -39,6 +43,7 @@ dependencies {
     testImplementation(TestDependencies.okHttp)
     testImplementation(TestDependencies.postgresql)
     testImplementation(project(":zgw:common-ground-authentication-test"))
+    testImplementation("org.springframework.graphql:spring-graphql-test")
 }
 
 val jar: Jar by tasks
