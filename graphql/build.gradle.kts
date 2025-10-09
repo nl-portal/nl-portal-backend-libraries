@@ -35,13 +35,6 @@ dependencies {
 
     // Logging for Kotlin
     api(Dependencies.kotlinLogging)
-
-    /*testImplementation("org.springframework.boot", "spring-boot-starter-test")
-    testImplementation("org.springframework.security", "spring-security-test")
-    testImplementation("org.springframework.boot", "spring-boot-starter-webflux")
-    testImplementation("org.assertj", "assertj-core")
-    testImplementation(TestDependencies.kotlinCoroutines)
-    testImplementation(TestDependencies.postgresql)*/
 }
 
 apply(from = "gradle/publishing.gradle.kts")
