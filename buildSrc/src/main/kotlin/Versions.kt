@@ -25,14 +25,13 @@ object Versions {
     const val commonsIo = "2.17.0"
     const val commonsCodec = "1.19.0"
     const val graphqlJava ="24.0"
-    const val jacksonBom = "2.18.2"
-    const val kotlinLogging = "7.0.4"
+    const val jacksonBom = "2.20.0"
+    const val kotlinLogging = "7.0.13"
     const val springCloud = "4.3.0"
 
     //Test versions
     const val hamcrest = "3.0"
     const val mockitoKotlin = "6.1.0"
-    const val okHttp3 = "4.12.0"
-    const val postgresql = "42.7.5"
-    const val grapgQlTest = "1.4.1"
+    const val okHttp3 = "5.2.0"
+    const val postgresql = "42.7.8"
 }
