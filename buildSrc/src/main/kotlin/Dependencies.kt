@@ -33,7 +33,6 @@ object Dependencies {
     val apacheCommons by lazy { "org.apache.commons:commons-lang3:${Versions.apacheCommons}"}
     val graphqlJavaExtendedScalars by lazy { "com.graphql-java:graphql-java-extended-scalars:${Versions.graphqlJava}"}
 
-    val jacksonBom by lazy { "com.fasterxml.jackson:jackson-bom:${Versions.jacksonBom}" }
     val jacksonKotlinModule by lazy { "com.fasterxml.jackson.module:jackson-module-kotlin" }
     val kotlinLogging by lazy { "io.github.oshai:kotlin-logging-jvm:${Versions.kotlinLogging}"}
     val springCloudStream by lazy { "org.springframework.cloud:spring-cloud-stream:${Versions.springCloud}" }

@@ -37,7 +37,6 @@ dependencies {
     api(Dependencies.springCloudBootstrap)
 
     // Jackson
-    api(Dependencies.jacksonBom)
     api(Dependencies.jacksonKotlinModule)
 
     api(Dependencies.commonsCodec)
