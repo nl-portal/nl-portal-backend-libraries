@@ -28,11 +28,13 @@ import nl.nlportal.openproduct.graphql.OpenProductThemaQuery
 import nl.nlportal.openproduct.graphql.OpenProductTypeQuery
 import nl.nlportal.openproduct.service.OpenProductDmnService
 import nl.nlportal.openproduct.service.OpenProductService
+import org.springframework.boot.autoconfigure.AutoConfiguration
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 
-@ConditionalOnProperty(prefix = "nl-portal.config.openproduct", name = ["enabled"], havingValue = "true")
+@AutoConfiguration
+@ConditionalOnBean(OpenProductService::class)
 class OpenProductGraphqlAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(OpenProductThemaQuery::class)

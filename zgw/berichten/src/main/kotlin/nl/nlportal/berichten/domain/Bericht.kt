@@ -18,9 +18,6 @@ package nl.nlportal.berichten.domain
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDateTime
 import java.util.UUID
-import nl.nlportal.berichten.service.BerichtenService
-import nl.nlportal.documentenapi.domain.Document
-import org.springframework.beans.factory.annotation.Autowired
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class Bericht(
