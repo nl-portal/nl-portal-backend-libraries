@@ -1,0 +1,30 @@
+type Query {
+    dummy: String
+}
+type Mutation {
+    # Create Ogone payment with hash and fields
+    generateOgonePayment(paymentRequest: OgonePaymentRequestInput!): OgonePayment!
+}
+
+type OgonePayment {
+    formAction: String!
+    formFields: [PaymentField!]!
+}
+
+input OgonePaymentRequestInput {
+    amount: PositiveFloat!
+    failureUrl: String
+    langId: String
+    orderId: String!
+    pspId: String!
+    reference: String!
+    successUrl: String
+    title: String
+}
+
+type PaymentField {
+    name: String!
+    value: String!
+}
+
+scalar PositiveFloat

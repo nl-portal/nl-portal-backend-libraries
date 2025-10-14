@@ -15,6 +15,7 @@
  */
 package nl.nlportal.zgw.taak.graphql
 
+import com.fasterxml.jackson.databind.JsonNode
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import nl.nlportal.zgw.taak.TestHelper
@@ -25,22 +26,26 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.reactive.server.WebTestClient
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(PER_CLASS)
 internal class TaakMutationV2IT(
-    @Autowired private val testClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
 ) {
     lateinit var server: MockWebServer
@@ -64,37 +69,31 @@ internal class TaakMutationV2IT(
     @Test
     @WithBurgerUser("569312863")
     fun `should submit Taak for burger`() {
-        val basePath = "$.data.submitTaakV2"
+        val responseBody =
+            httpGraphQlTester
+                .document(updateTaakPayloadV2)
+                .execute()
+                .errors()
+                .verify()
+                .path("submitTaakV2")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(updateTaakPayloadV2)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce708")
-            .jsonPath(
-                "$basePath.portaalformulier.formulier.value",
-            ).isEqualTo("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4")
-            .jsonPath("$basePath.portaalformulier.data.voornaam").isEqualTo("Jan")
-            .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
-            .jsonPath("$basePath.verloopdatum").isEqualTo("2023-09-20T18:25:43.524")
+        assertEquals("58fad5ab-dc2f-11ec-9075-f22a405ce708", responseBody.get("id")?.textValue())
+        assertEquals(TaakStatus.OPEN.toString(), responseBody.get("status")?.textValue())
+        assertEquals("2023-09-20T18:25:43.524", responseBody.get("verloopdatum")?.textValue())
+        assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/portaalformulier/formulier/value")?.textValue())
+        assertEquals("Jan", responseBody.requiredAt("/portaalformulier/data/voornaam")?.textValue())
     }
 
     @Test
     @WithBurgerUser("569312864")
     fun `should unauthorized submit Taak for burger`() {
-        val basePath = "$.data.submitTaakV2"
-
-        testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(updateTaakPayloadV2)
-            .exchange()
-            .expectBody()
-            .jsonPath(basePath)
+        httpGraphQlTester
+            .document(updateTaakPayloadV2)
+            .execute()
+            .errors()
+            .verify()
     }
 
     fun setupMockObjectsApiServer() {

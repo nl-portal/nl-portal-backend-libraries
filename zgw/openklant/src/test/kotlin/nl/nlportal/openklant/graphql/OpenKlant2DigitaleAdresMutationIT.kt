@@ -16,13 +16,9 @@
 package nl.nlportal.openklant.graphql
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.NullNode
 import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.module.kotlin.readValue
-import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
-import nl.nlportal.core.util.Mapper
 import nl.nlportal.openklant.graphql.domain.DigitaleAdresType
 import nl.nlportal.openklant.service.OpenKlant2Service
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -40,21 +36,19 @@ import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.core.io.ClassPathResource
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean
-import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.web.reactive.function.BodyInserters
-import java.nio.charset.Charset
+import nl.nlportal.openklant.TestHelper
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @Tag("integration")
 @TestMethodOrder(OrderAnnotation::class)
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class OpenKlant2DigitaleAdresMutationIT(
-    @Autowired private val webTestClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
 ) {
     @MockitoSpyBean
     lateinit var openKlant2Service: OpenKlant2Service
@@ -67,37 +61,25 @@ class OpenKlant2DigitaleAdresMutationIT(
     fun `should create DigitaleAdres for burger`() =
         runTest {
             // when
-            val createResponse =
-                webTestClient
-                    .post()
-                    .uri { builder ->
-                        builder
-                            .path("/graphql")
-                            .build()
-                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/createUserDigitaleAdres.gql")))
-                    .exchange()
-                    .expectStatus()
-                    .isOk
-                    .expectBody()
-                    .returnResult()
-                    .responseBodyContent
-                    ?.toString(Charset.defaultCharset())
+            val responseBody =
+                httpGraphQlTester
+                    .document(TestHelper.readFileAsString("/config/graphql/createUserDigitaleAdres.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("createUserDigitaleAdres")
+                    .entity(JsonNode::class.java)
+                    .get()
 
-            val createResult =
-                objectMapper
-                    .readValue<JsonNode>(createResponse!!)
-                    .get("data")
-                    ?.get("createUserDigitaleAdres")
             // then
             verify(openKlant2Service, times(1)).createDigitaleAdres(any(), any())
 
-            assertTrue(createResult is ObjectNode)
-            assertEquals(DigitaleAdresType.TELEFOONNUMMER.name, createResult!!.get("type").textValue())
-            assertEquals("0611111111", createResult.get("waarde").textValue())
-            assertEquals("Privè telefoonnummer", createResult.get("omschrijving").textValue())
+            assertTrue(responseBody is ObjectNode)
+            assertEquals(DigitaleAdresType.TELEFOONNUMMER.name, responseBody.get("type").textValue())
+            assertEquals("0611111111", responseBody.get("waarde").textValue())
+            assertEquals("Privè telefoonnummer", responseBody.get("omschrijving").textValue())
 
-            testdigitaleAdresUUID = createResult.get("uuid").textValue()
+            testdigitaleAdresUUID = responseBody.get("uuid").textValue()
         }
 
     @Test
@@ -106,17 +88,9 @@ class OpenKlant2DigitaleAdresMutationIT(
     fun `should update existing DigitaleAdres for burger`() =
         runTest {
             // when
-            val createResponse =
-                webTestClient
-                    .post()
-                    .uri { builder ->
-                        builder
-                            .path("/graphql")
-                            .build()
-                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .bodyValue(
-                        """
-                        mutation {
+            val mutation =
+                """
+                mutation {
                             updateUserDigitaleAdres(
                                 digitaleAdresRequest: {
                                     waarde: "0611111112", type: TELEFOONNUMMER, omschrijving: "Modified", uuid: "$testdigitaleAdresUUID"
@@ -128,30 +102,25 @@ class OpenKlant2DigitaleAdresMutationIT(
                                 omschrijving
                             }
                         }
-                        """.trimIndent(),
-                    ).exchange()
-                    .expectStatus()
-                    .isOk
-                    .expectBody()
-                    .returnResult()
-                    .responseBodyContent
-                    ?.toString(Charset.defaultCharset())
-
-            val createResult =
-                objectMapper
-                    .readValue<JsonNode>(createResponse!!)
-                    .get("data")
-                    ?.get("updateUserDigitaleAdres")
+                """.trimIndent()
+            val responseBody =
+                httpGraphQlTester
+                    .document(mutation)
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("updateUserDigitaleAdres")
+                    .entity(JsonNode::class.java)
+                    .get()
 
             // then
             verify(openKlant2Service, times(1)).updateDigitaleAdresById(any(), any())
 
-            logger.info { createResult }
-            assertTrue(createResult is ObjectNode)
-            assertTrue(createResult is ObjectNode)
-            assertEquals(DigitaleAdresType.TELEFOONNUMMER.name, createResult!!.get("type").textValue())
-            assertEquals("0611111112", createResult.get("waarde").textValue())
-            assertEquals("Modified", createResult.get("omschrijving").textValue())
+            assertTrue(responseBody is ObjectNode)
+            assertTrue(responseBody is ObjectNode)
+            assertEquals(DigitaleAdresType.TELEFOONNUMMER.name, responseBody.get("type").textValue())
+            assertEquals("0611111112", responseBody.get("waarde").textValue())
+            assertEquals("Modified", responseBody.get("omschrijving").textValue())
         }
 
     @Test
@@ -160,60 +129,30 @@ class OpenKlant2DigitaleAdresMutationIT(
     fun `should delete existing DigitaleAdres for burger`() =
         runTest {
             // when
-            val createResponse =
-                webTestClient
-                    .post()
-                    .uri { builder ->
-                        builder
-                            .path("/graphql")
-                            .build()
-                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .bodyValue(
-                        """
-                        mutation {
+            val mutation =
+                """
+                mutation {
                             deleteUserDigitaleAdres(digitaleAdresId: "$testdigitaleAdresUUID")
                         }
-                        """.trimIndent(),
-                    ).exchange()
-                    .expectStatus()
-                    .isOk
-                    .expectBody()
-                    .returnResult()
-                    .responseBodyContent
-                    ?.toString(Charset.defaultCharset())
-
-            val createResult =
-                objectMapper
-                    .readValue<JsonNode>(createResponse!!)
-                    .get("data")
-                    ?.get("deleteUserDigitaleAdres")
+                """.trimIndent()
+            httpGraphQlTester
+                .document(mutation)
+                .executeAndVerify()
 
             // then
             verify(openKlant2Service, times(1)).deleteDigitaleAdresById(any(), any())
 
-            assertTrue(createResult is NullNode)
+            val responseBodyUserAdressen =
+                httpGraphQlTester
+                    .document(TestHelper.readFileAsString("/config/graphql/getUserDigitaleAdressen.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getUserDigitaleAdressen")
+                    .entity(JsonNode::class.java)
+                    .get()
 
-            val userAdressen =
-                objectMapper
-                    .readTree(
-                        webTestClient
-                            .post()
-                            .uri { builder ->
-                                builder
-                                    .path("/graphql")
-                                    .build()
-                            }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                            .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserDigitaleAdressen.gql")))
-                            .exchange()
-                            .expectStatus()
-                            .isOk
-                            .expectBody()
-                            .returnResult()
-                            .responseBodyContent,
-                    ).get("data")
-                    ?.get("getUserDigitaleAdressen")
-
-            assertFalse(testdigitaleAdresUUID in userAdressen!!.mapNotNull { it?.get("uuid")?.textValue() })
+            assertFalse(testdigitaleAdresUUID in responseBodyUserAdressen.mapNotNull { it?.get("uuid")?.textValue() })
         }
 
     @Test
@@ -222,39 +161,22 @@ class OpenKlant2DigitaleAdresMutationIT(
     fun `should create DigitaleAdres for burger zonder partij`() =
         runTest {
             // when
-            val createResponse =
-                webTestClient
-                    .post()
-                    .uri { builder ->
-                        builder
-                            .path("/graphql")
-                            .build()
-                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/createUserDigitaleAdres.gql")))
-                    .exchange()
-                    .expectStatus()
-                    .isOk
-                    .expectBody()
-                    .returnResult()
-                    .responseBodyContent
-                    ?.toString(Charset.defaultCharset())
+            val responseBody =
+                httpGraphQlTester
+                    .document(TestHelper.readFileAsString("/config/graphql/createUserDigitaleAdres.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("createUserDigitaleAdres")
+                    .entity(JsonNode::class.java)
+                    .get()
 
-            val createResult =
-                objectMapper
-                    .readValue<JsonNode>(createResponse!!)
-                    .get("data")
-                    ?.get("createUserDigitaleAdres")
             // then
             verify(openKlant2Service, times(1)).createDigitaleAdres(any(), any())
 
-            assertTrue(createResult is ObjectNode)
-            assertEquals(DigitaleAdresType.TELEFOONNUMMER.name, createResult!!.get("type").textValue())
-            assertEquals("0611111111", createResult.get("waarde").textValue())
-            assertEquals("Privè telefoonnummer", createResult.get("omschrijving").textValue())
+            assertTrue(responseBody is ObjectNode)
+            assertEquals(DigitaleAdresType.TELEFOONNUMMER.name, responseBody.get("type").textValue())
+            assertEquals("0611111111", responseBody.get("waarde").textValue())
+            assertEquals("Privè telefoonnummer", responseBody.get("omschrijving").textValue())
         }
-
-    companion object {
-        private val objectMapper = Mapper.get()
-        val logger = KotlinLogging.logger {}
-    }
 }

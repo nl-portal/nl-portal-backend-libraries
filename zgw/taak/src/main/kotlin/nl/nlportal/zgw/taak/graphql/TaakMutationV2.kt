@@ -15,31 +15,30 @@
  */
 package nl.nlportal.zgw.taak.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Mutation
 import com.fasterxml.jackson.databind.node.ObjectNode
-import graphql.schema.DataFetchingEnvironment
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
-import nl.nlportal.zgw.taak.domain.TaakV2
-import nl.nlportal.zgw.taak.domain.TaakVersion
-import nl.nlportal.zgw.taak.service.TaakService
 import java.util.UUID
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.core.util.Mapper
+import nl.nlportal.zgw.taak.domain.TaakV2
+import nl.nlportal.zgw.taak.service.TaakService
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.stereotype.Controller
 
+@Controller
 class TaakMutationV2(
     private val taskService: TaakService,
-) : Mutation {
-    @GraphQLDescription("Submit a task")
+) {
+    @MutationMapping
     suspend fun submitTaakV2(
-        dfe: DataFetchingEnvironment,
-        id: UUID,
-        submission: ObjectNode,
-        version: TaakVersion,
+        authentication: CommonGroundAuthentication,
+        @Argument id: UUID,
+        @Argument submission: Any,
     ): TaakV2 {
         return taskService.submitTaak(
-            id,
-            submission,
-            dfe.graphQlContext[AUTHENTICATION_KEY],
-            version,
+            id = id,
+            submission = submission,
+            authentication = authentication,
         )
     }
 }

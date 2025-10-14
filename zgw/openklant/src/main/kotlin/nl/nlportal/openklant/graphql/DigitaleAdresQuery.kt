@@ -15,54 +15,20 @@
  */
 package nl.nlportal.openklant.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
-import com.expediagroup.graphql.server.operations.Query
-import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.openklant.graphql.domain.DigitaleAdresResponse
 import nl.nlportal.openklant.service.OpenKlant2Service
-import java.util.UUID
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
-@AuthenticatedDirective
+@Controller
 class DigitaleAdresQuery(
     private val openklant2Service: OpenKlant2Service,
-) : Query {
-    @Deprecated(message = "Use getUserDigitaleAdressen instead")
-    @GraphQLDescription("Get DigitaleAdresen of authenticated user.")
-    suspend fun getUserDigitaleAdresen(dfe: DataFetchingEnvironment): List<DigitaleAdresResponse>? {
-        val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
+) {
+    @QueryMapping
+    suspend fun getUserDigitaleAdressen(authentication: CommonGroundAuthentication): List<DigitaleAdresResponse>? {
         val userDigitaleAdressen = openklant2Service.findDigitaleAdressen(authentication)
 
         return userDigitaleAdressen?.map { DigitaleAdresResponse.fromOpenKlant2DigitaleAdres(it) }
-    }
-
-    @GraphQLDescription("Get DigitaleAdressen of authenticated user.")
-    suspend fun getUserDigitaleAdressen(
-        dfe: DataFetchingEnvironment,
-        isGeverifieerd: Boolean? = false,
-    ): List<DigitaleAdresResponse>? {
-        val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
-        val userDigitaleAdressen =
-            openklant2Service.findDigitaleAdressen(
-                authentication = authentication,
-                isGeverifieerd = isGeverifieerd,
-            )
-
-        return userDigitaleAdressen?.map { DigitaleAdresResponse.fromOpenKlant2DigitaleAdres(it) }
-    }
-
-    @GraphQLDescription("Get DigitaleAdres by uuid")
-    suspend fun getUserDigitaleAdres(
-        dfe: DataFetchingEnvironment,
-        uuid: UUID,
-    ): DigitaleAdresResponse? {
-        val userDigitaleAdres =
-            openklant2Service.findDigitalAdres(
-                uuid = uuid,
-            )
-
-        return userDigitaleAdres?.let { DigitaleAdresResponse.fromOpenKlant2DigitaleAdres(it) }
     }
 }

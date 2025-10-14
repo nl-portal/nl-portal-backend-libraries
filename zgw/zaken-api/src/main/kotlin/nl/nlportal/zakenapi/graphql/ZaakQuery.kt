@@ -15,39 +15,49 @@
  */
 package nl.nlportal.zakenapi.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Query
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
-import nl.nlportal.zakenapi.domain.Zaak
-import nl.nlportal.zakenapi.service.ZakenApiService
-import graphql.schema.DataFetchingEnvironment
 import java.util.UUID
+import nl.nlportal.besluiten.domain.Besluit
+import nl.nlportal.besluiten.service.BesluitenService
+import nl.nlportal.catalogiapi.domain.ResultaatType
+import nl.nlportal.catalogiapi.domain.StatusType
+import nl.nlportal.catalogiapi.domain.ZaakStatusType
+import nl.nlportal.catalogiapi.domain.ZaakType
+import nl.nlportal.catalogiapi.service.CatalogiApiService
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.documentenapi.domain.Document
+import nl.nlportal.zakenapi.domain.Zaak
+import nl.nlportal.zakenapi.domain.ZaakDetails
+import nl.nlportal.zakenapi.domain.ZaakResultaat
+import nl.nlportal.zakenapi.domain.ZaakStatus
+import nl.nlportal.zakenapi.domain.ZaakSubStatus
+import nl.nlportal.zakenapi.service.ZakenApiService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.graphql.data.method.annotation.SchemaMapping
+import org.springframework.stereotype.Controller
 
-open class ZaakQuery(val zakenApiService: ZakenApiService) : Query {
-    @GraphQLDescription(
-        """
-        Gets all zaken for the user
-        isOpen is optional, when not available, all zaken will be returned
-        isOpen is true, only zaken without enddate will be returned
-        isOpen is false, only zaken with an enddate will be returned
-        omschrijving: partial search of this property. Since OpenZaak 1.18.0
-        identificatieContains: partial search of this property. Since OpenZaak 1.18.0
-    """,
-    )
+@Controller
+open class ZaakQuery(
+    val zakenApiService: ZakenApiService,
+    val besluitenService: BesluitenService,
+    val catalogiApiService: CatalogiApiService,
+) {
+    @QueryMapping
     open suspend fun getZaken(
-        dfe: DataFetchingEnvironment,
-        page: Int? = 1,
-        pageSize: Int? = null,
-        zaakTypeUrl: String? = null,
-        isOpen: Boolean? = null,
-        identificatie: String? = null,
-        omschrijving: String? = null,
-        identificatieContains: String? = null,
+        authentication: CommonGroundAuthentication,
+        @Argument page: Int? = 1,
+        @Argument pageSize: Int? = null,
+        @Argument zaakTypeUrl: String? = null,
+        @Argument isOpen: Boolean? = null,
+        @Argument identificatie: String? = null,
+        @Argument omschrijving: String? = null,
+        @Argument identificatieContains: String? = null,
     ): ZaakPage {
         return zakenApiService.getZaken(
             page = page ?: 1,
             pageSize = pageSize,
-            authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
+            authentication = authentication,
             zaakTypeUrl = zaakTypeUrl,
             isOpen = isOpen,
             identificatie = identificatie,
@@ -56,11 +66,100 @@ open class ZaakQuery(val zakenApiService: ZakenApiService) : Query {
         )
     }
 
-    @GraphQLDescription("Gets a zaak by id")
+    @QueryMapping
     open suspend fun getZaak(
-        id: UUID,
-        dfe: DataFetchingEnvironment,
+        @Argument id: UUID,
+        authentication: CommonGroundAuthentication,
     ): Zaak {
-        return zakenApiService.getZaak(id, dfe.graphQlContext[AUTHENTICATION_KEY])
+        return zakenApiService.getZaak(
+            id = id,
+            authentication = authentication
+        )
+    }
+
+    @SchemaMapping(typeName = "Zaak", field = "status")
+    suspend fun status(
+        zaak: Zaak,
+    ): ZaakStatus? {
+        return zaak.status?.let { zakenApiService.getZaakStatus(it) }
+    }
+
+    @SchemaMapping(typeName = "Zaak", field = "statusGeschiedenis")
+    suspend fun statusGeschiedenis(
+        zaak: Zaak,
+    ): List<ZaakStatus> {
+        return zakenApiService.getZaakStatusHistory(zaak.uuid)
+    }
+
+    @SchemaMapping(typeName = "Zaak", field = "documenten")
+    suspend fun documenten(
+        zaak: Zaak,
+    ): List<Document> {
+        return zakenApiService.getDocumenten(zaak.url)
+    }
+
+    @SchemaMapping(typeName = "Zaak", field = "statussen")
+    suspend fun statussen(
+        zaak: Zaak,
+    ): List<StatusType> {
+        return catalogiApiService.getZaakStatusTypes(zaak.zaaktype)
+    }
+
+    @SchemaMapping(typeName = "Zaak", field = "zaaktype")
+    suspend fun zaaktype(
+        zaak: Zaak,
+    ): ZaakType {
+        return catalogiApiService.getZaakType(zaak.zaaktype)
+    }
+
+    @SchemaMapping(typeName = "Zaak", field = "zaakdetails")
+    suspend fun zaakdetails(
+        zaak: Zaak,
+    ): ZaakDetails {
+        return zakenApiService.getZaakDetails(zaak.url)
+    }
+
+    @SchemaMapping(typeName = "Zaak", field = "besluiten")
+    suspend fun besluiten(
+        zaak: Zaak,
+    ): List<Besluit> {
+        return besluitenService.getBesluiten(
+            zaak = zaak.url,
+        )
+    }
+
+    @SchemaMapping(typeName = "Zaak", field = "resultaat")
+    suspend fun resultaat(
+        zaak: Zaak,
+    ): ZaakResultaat? {
+        return zaak.resultaat?.let {
+            zakenApiService.getZaakResultaat(it)
+        }
+    }
+
+    @SchemaMapping(typeName = "ZaakResultaat", field = "resultaattype")
+    suspend fun resultaattype(
+        zaakResultaat: ZaakResultaat,
+    ): ResultaatType {
+        return catalogiApiService.getResultaatType(
+            resultaatTypeUrl = zaakResultaat.resultaattype
+        )
+    }
+
+    @SchemaMapping(typeName = "ZaakStatus", field = "statustype")
+    suspend fun statustype(
+        zaakStatus: ZaakStatus
+    ): ZaakStatusType {
+        return catalogiApiService.getZaakStatusType(zaakStatus.statustype)
+    }
+
+    @SchemaMapping(typeName = "ZaakStatus", field = "substatussen")
+    suspend fun substatussen(
+        zaakStatus: ZaakStatus
+    ): List<ZaakSubStatus> {
+        return zakenApiService.getZaakSubStatussen(
+            zaakUrl = zaakStatus.zaak,
+            statusUrl = zaakStatus.url
+        )
     }
 }

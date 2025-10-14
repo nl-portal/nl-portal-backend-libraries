@@ -16,36 +16,32 @@
 package nl.nlportal.openklant.graphql
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.module.kotlin.readValue
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
-import nl.nlportal.core.util.Mapper
+import nl.nlportal.openklant.TestHelper
 import nl.nlportal.openklant.service.OpenKlant2Service
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.mockito.Mockito.times
-import org.mockito.Mockito.verify
+import org.junit.jupiter.api.assertNotNull
 import org.mockito.kotlin.any
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.core.io.ClassPathResource
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean
-import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.web.reactive.function.BodyInserters
-import java.nio.charset.Charset
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @Tag("integration")
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class OpenKlant2KlantContactQueryIT(
-    @Autowired private val webTestClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
 ) {
     @MockitoSpyBean
     lateinit var openKlant2Service: OpenKlant2Service
@@ -54,108 +50,55 @@ class OpenKlant2KlantContactQueryIT(
     @WithBurgerUser("296648875")
     fun `should find KlantContacten for authenticated user`() =
         runTest {
-            // when
             val responseBody =
-                webTestClient
-                    .post()
-                    .uri { builder ->
-                        builder
-                            .path("/graphql")
-                            .build()
-                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserKlantContacten.gql")))
-                    .exchange()
-                    .expectStatus()
-                    .isOk
-                    .expectBody()
-                    .returnResult()
-                    .responseBodyContent
-                    ?.toString(Charset.defaultCharset())
+                httpGraphQlTester
+                    .document(TestHelper.readFileAsString("/config/graphql/getUserKlantContacten.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getUserKlantContacten")
+                    .entity(JsonNode::class.java)
+                    .get()
 
-            val response =
-                objectMapper
-                    .readValue<JsonNode>(responseBody!!)
-                    .get("data")
-                    ?.get("getUserKlantContacten")
-
-            // then
-            // verify(openKlant2Service, times(1)).findKlantContacten(any(), any(), any())
-
-            assertNotNull(response)
-            assertEquals("E-mail", response?.get(0)?.get("kanaal")?.textValue())
+            assertNotNull(responseBody)
+            assertEquals("E-mail", responseBody.get(0)?.get("kanaal")?.textValue())
         }
 
     @Test
     @WithBurgerUser("569312863")
     fun `should find KlantContacten for authenticated user for a zaak`() =
         runTest {
-            // when
             val responseBody =
-                webTestClient
-                    .post()
-                    .uri { builder ->
-                        builder
-                            .path("/graphql")
-                            .build()
-                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserKlantContactenForZaak.gql")))
-                    .exchange()
-                    .expectStatus()
-                    .isOk
-                    .expectBody()
-                    .returnResult()
-                    .responseBodyContent
-                    ?.toString(Charset.defaultCharset())
+                httpGraphQlTester
+                    .document(TestHelper.readFileAsString("/config/graphql/getUserKlantContactenForZaak.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getUserKlantContacten")
+                    .entity(JsonNode::class.java)
+                    .get()
 
-            val response =
-                objectMapper
-                    .readValue<JsonNode>(responseBody!!)
-                    .get("data")
-                    ?.get("getUserKlantContacten")
-
-            // then
-            // verify(openKlant2Service, times(1)).findKlantContacten(any(), any(), any())
-
-            assertNotNull(response)
-            assertEquals("E-mail", response?.get(0)?.get("kanaal")?.textValue())
+            assertNotNull(responseBody)
+            assertEquals("E-mail", responseBody.get(0)?.get("kanaal")?.textValue())
         }
 
     @Test
     @WithBurgerUser("123456788")
     fun `should find KlantContact for authenticated user`() =
         runTest {
-            // when
             val responseBody =
-                webTestClient
-                    .post()
-                    .uri { builder ->
-                        builder
-                            .path("/graphql")
-                            .build()
-                    }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                    .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getUserKlantContact.gql")))
-                    .exchange()
-                    .expectStatus()
-                    .isOk
-                    .expectBody()
-                    .returnResult()
-                    .responseBodyContent
-                    ?.toString(Charset.defaultCharset())
+                httpGraphQlTester
+                    .document(TestHelper.readFileAsString("/config/graphql/getUserKlantContact.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getUserKlantContact")
+                    .entity(JsonNode::class.java)
+                    .get()
 
-            val response =
-                objectMapper
-                    .readValue<JsonNode>(responseBody!!)
-                    .get("data")
-                    ?.get("getUserKlantContact")
-
-            // then
             verify(openKlant2Service, times(1)).findKlantContact(any())
 
-            assertNotNull(response)
-            assertEquals("E-mail", response?.get("kanaal")?.textValue())
+            assertNotNull(responseBody)
+            assertEquals("E-mail", responseBody?.get("kanaal")?.textValue())
         }
-
-    companion object {
-        private val objectMapper = Mapper.get()
-    }
 }

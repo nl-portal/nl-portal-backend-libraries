@@ -15,7 +15,6 @@
  */
 package nl.nlportal.berichten.domain
 
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDateTime
 import java.util.UUID
@@ -35,15 +34,5 @@ data class Bericht(
     val identificatie: BerichtIdentificatie,
     val onderwerp: String,
     val publicatiedatum: LocalDateTime,
-    val referentie: String,
-) {
-    suspend fun documenten(
-        @GraphQLIgnore
-        @Autowired
-        berichtenService: BerichtenService,
-    ): List<Document> =
-        berichtenService.getDocumenten(
-            identificatie = identificatie.value,
-            bijlages = bijlages,
-        )
-}
+    val referentie: String? = null,
+)

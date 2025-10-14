@@ -26,16 +26,20 @@ dependencies {
     api(project(":zgw:taak"))
 
     implementation(Dependencies.jsonPath)
-    api("com.github.wnameless.json", "json-flattener", "0.17.3")
+    api("com.github.wnameless.json:json-flattener:0.17.3")
+    implementation(Dependencies.kotlinCoroutines)
+    implementation(Dependencies.kotlinCoroutinesReactor)
+    implementation("org.springframework.data:spring-data-commons")
 
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.postgresql)
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
-    testImplementation("org.springframework.security", "spring-security-test")
+    testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.springSecurityTest)
     testImplementation(TestDependencies.kotlinCoroutines)
     testImplementation(TestDependencies.mockitoKotlin)
     testImplementation(TestDependencies.okHttpMockWebserver)
     testImplementation(TestDependencies.okHttp)
+    testImplementation("org.springframework.graphql:spring-graphql-test")
 }
 
 val jar: Jar by tasks

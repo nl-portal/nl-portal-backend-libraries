@@ -15,18 +15,23 @@
  */
 package nl.nlportal.documentenapi.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Query
-import nl.nlportal.documentenapi.service.DocumentenApiService
-import nl.nlportal.documentenapi.domain.DocumentContent
 import java.util.UUID
+import nl.nlportal.documentenapi.domain.DocumentContent
+import nl.nlportal.documentenapi.service.DocumentenApiService
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
-class DocumentContentQuery(private val documentenApiService: DocumentenApiService) : Query {
-    @GraphQLDescription("Gets a document content by id as base64 encoded")
+@Controller
+class DocumentContentQuery(private val documentenApiService: DocumentenApiService) {
+    @QueryMapping
     suspend fun getDocumentContent(
-        documentApi: String,
-        id: UUID,
+        @Argument documentApi: String,
+        @Argument id: UUID,
     ): DocumentContent {
-        return documentenApiService.getDocumentContent(id, documentApi)
+        return documentenApiService.getDocumentContent(
+            documentId = id,
+            documentApi = documentApi
+        )
     }
 }

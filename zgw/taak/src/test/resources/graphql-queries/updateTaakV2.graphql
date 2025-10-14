@@ -1,0 +1,20 @@
+mutation {
+    submitTaakV2(id: "58fad5ab-dc2f-11ec-9075-f22a405ce708", submission: {test:"test"}) {
+        id,
+        titel
+        status
+        soort,
+        verloopdatum
+        portaalformulier {
+            formulier{
+                soort,
+                value
+            },
+            data
+        }
+        identificatie {
+            type
+            value
+        }
+    }
+}

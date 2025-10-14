@@ -20,13 +20,13 @@ plugins {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     api(project(":zgw:common-ground-authentication"))
-    implementation("io.jsonwebtoken", "jjwt-api", "0.13.0")
-    implementation("io.jsonwebtoken", "jjwt-impl", "0.13.0")
-    implementation("io.jsonwebtoken", "jjwt-jackson", "0.13.0")
+    implementation(Dependencies.jsonWebTokensApi)
+    implementation(Dependencies.jsonWebTokensImpl)
+    implementation(Dependencies.jsonWebTokensJackson)
+    implementation(TestDependencies.springSecurityTest)
 
-    implementation("org.springframework.security", "spring-security-test")
+    testImplementation(TestDependencies.springBootTest)
 
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
 }
 
 val jar: Jar by tasks

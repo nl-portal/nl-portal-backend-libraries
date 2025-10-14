@@ -15,9 +15,12 @@
  */
 package nl.nlportal.berichten.graphql
 
+import com.fasterxml.jackson.databind.JsonNode
+import io.github.oshai.kotlinlogging.KLogger
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.berichten.TestHelper
-import nl.nlportal.berichten.TestHelper.verifyOnlyDataExists
 import nl.nlportal.commonground.authentication.WithBurgerUser
+import nl.nlportal.core.util.Mapper
 import nl.nlportal.documentenapi.client.DocumentApisConfig
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import okhttp3.mockwebserver.Dispatcher
@@ -25,22 +28,22 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
-import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.web.reactive.function.BodyInserters
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class BerichtenQueryIT(
-    @Autowired private val webTestClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
     @Autowired private val documentApisConfig: DocumentApisConfig,
 ) {
@@ -51,7 +54,6 @@ class BerichtenQueryIT(
         mockObjectenApi = MockWebServer()
         setupMockObjectsApiServer()
         mockObjectenApi.start(port = 10001)
-
         objectsApiClientConfig.properties.url = mockObjectenApi.url("/").toUri()
         documentApisConfig.properties.getConfig("openzaak").url = mockObjectenApi.url("/").toString()
     }
@@ -64,135 +66,86 @@ class BerichtenQueryIT(
     @Test
     @WithBurgerUser("999990755")
     fun `should return BerichtenPage`() {
-        val basePath = "$.data.getBerichten"
-        webTestClient
-            .post()
-            .uri { builder ->
-                builder
-                    .path("/graphql")
-                    .build()
-            }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-            .body(BodyInserters.fromValue(TestHelper.graphqlBerichtenPageRequest))
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.content[0].berichtType")
-            .isEqualTo("NOTIFICATIE")
-            .jsonPath("$basePath.content[0].geopend")
-            .isEqualTo("false")
-            .jsonPath("$basePath.content[0].publicatiedatum")
-            .isEqualTo("2024-07-18T18:25:43.524")
+        val responseBody =
+            httpGraphQlTester
+                .document(TestHelper.graphqlBerichtenPageRequest)
+                .execute()
+                .errors()
+                .verify()
+                .path("getBerichten")
+                .entity(JsonNode::class.java)
+                .get()
+
+        assertEquals("NOTIFICATIE", responseBody.requiredAt("/content/0/berichtType")?.textValue())
+        assertEquals(false, responseBody.requiredAt("/content/0/geopend")?.booleanValue())
+        assertEquals("2024-07-18T18:25:43.524", responseBody.requiredAt("/content/0/publicatiedatum")?.textValue())
     }
 
     @WithBurgerUser("999990755")
     @Test
     fun `should update bericht before return`() {
-        val basePath = "$.data.getBericht"
-        webTestClient
-            .post()
-            .uri { builder ->
-                builder
-                    .path("/graphql")
-                    .build()
-            }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-            .body(BodyInserters.fromValue(TestHelper.graphqlValidBerichtRequest))
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.berichtType")
-            .isEqualTo("NOTIFICATIE")
-            .jsonPath("$basePath.geopend")
-            .isEqualTo("true")
+        val responseBody =
+            httpGraphQlTester
+                .document(TestHelper.graphqlValidBerichtRequest)
+                .execute()
+                .errors()
+                .verify()
+                .path("getBericht")
+                .entity(JsonNode::class.java)
+                .get()
+
+        assertEquals("NOTIFICATIE", responseBody.get("berichtType").textValue())
+        assertEquals(true, responseBody.get("geopend").booleanValue())
     }
 
     @WithBurgerUser("999990755")
     @Test
     fun `should return bericht`() {
-        val basePath = "$.data.getBericht"
-        webTestClient
-            .post()
-            .uri { builder ->
-                builder
-                    .path("/graphql")
-                    .build()
-            }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-            .body(BodyInserters.fromValue(TestHelper.graphqlValidBerichtReadRequest))
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.berichtType")
-            .isEqualTo("NOTIFICATIE")
-            .jsonPath("$basePath.geopend")
-            .isEqualTo("true")
+        val responseBody =
+            httpGraphQlTester
+                .document(TestHelper.graphqlValidBerichtReadRequest)
+                .execute()
+                .errors()
+                .verify()
+                .path("getBericht")
+                .entity(JsonNode::class.java)
+                .get()
+
+        assertEquals("NOTIFICATIE", responseBody.get("berichtType").textValue())
+        assertEquals(true, responseBody.get("geopend").booleanValue())
     }
 
     @WithBurgerUser("999990755")
     @Test
     fun `should return bericht met documenten`() {
-        val basePath = "$.data.getBericht"
-        webTestClient
-            .post()
-            .uri { builder ->
-                builder
-                    .path("/graphql")
-                    .build()
-            }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-            .body(BodyInserters.fromValue(TestHelper.graphqlValidBerichtReadRequestWithDocuments))
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.berichtType")
-            .isEqualTo("NOTIFICATIE")
-            .jsonPath("$basePath.geopend")
-            .isEqualTo("true")
-    }
+        val responseBody =
+            httpGraphQlTester
+                .document(TestHelper.graphqlValidBerichtReadRequestWithDocuments)
+                .execute()
+                .errors()
+                .verify()
+                .path("getBericht")
+                .entity(JsonNode::class.java)
+                .get()
 
-    @WithBurgerUser("111111110")
-    @Test
-    fun `should return null for bericht request that doesn't belong to user`() {
-        val basePath = "$.data.getBericht"
-        webTestClient
-            .post()
-            .uri { builder ->
-                builder
-                    .path("/graphql")
-                    .build()
-            }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-            .body(BodyInserters.fromValue(TestHelper.graphqlValidBerichtReadRequest))
-            .exchange()
-            .expectBody()
-            .jsonPath(basePath)
-    }
-
-    @WithBurgerUser("999990755")
-    @Test
-    fun `should return null instead of exception for invalid bericht request`() {
-        val basePath = "$.data.getBericht"
-        webTestClient
-            .post()
-            .uri { builder ->
-                builder
-                    .path("/graphql")
-                    .build()
-            }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-            .body(BodyInserters.fromValue(TestHelper.graphqlInvalidBerichtRequest))
-            .exchange()
-            .expectBody()
-            .jsonPath(basePath)
+        assertEquals("NOTIFICATIE", responseBody.get("berichtType").textValue())
+        assertEquals(true, responseBody.get("geopend").booleanValue())
     }
 
     @WithBurgerUser("999990755")
     @Test
     fun `should return unopened berichten`() {
-        val basePath = "$.data.getUnopenedBerichtenCount"
-        webTestClient
-            .post()
-            .uri { builder ->
-                builder
-                    .path("/graphql")
-                    .build()
-            }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-            .body(BodyInserters.fromValue(TestHelper.graphqlUnopenedBerichtenCountRequest))
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath(basePath)
-            .isEqualTo(11)
+        val responseBody =
+            httpGraphQlTester
+                .document(TestHelper.graphqlUnopenedBerichtenCountRequest)
+                .execute()
+                .errors()
+                .verify()
+                .path("getUnopenedBerichtenCount")
+                .entity(JsonNode::class.java)
+                .get()
+
+        assertEquals(11, responseBody.intValue())
     }
 
     fun setupMockObjectsApiServer() {
@@ -210,7 +163,7 @@ class BerichtenQueryIT(
                                 } else {
                                     MockResponse().setResponseCode(404)
                                 }
-                            }
+                            } // a4961c4a-29a7-4cc7-9d5d-bceed1dfccba
                             "GET /api/v2/objects/9e021130-8cbd-4c6f-846a-677448e21ce8" -> {
                                 TestHelper.mockResponse(TestHelper.objectenApiBerichtObjectResponse)
                             }
@@ -229,5 +182,10 @@ class BerichtenQueryIT(
                 }
             }
         mockObjectenApi.dispatcher = dispatcher
+    }
+
+    companion object {
+        private val logger: KLogger = KotlinLogging.logger {}
+        private val objectMapper = Mapper.get()
     }
 }

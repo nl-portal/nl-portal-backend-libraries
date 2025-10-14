@@ -15,21 +15,21 @@
  */
 package nl.nlportal.openproduct.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
-import com.expediagroup.graphql.server.operations.Query
+import java.util.UUID
 import nl.nlportal.openproduct.client.domain.OpenProductPrijs
 import nl.nlportal.openproduct.service.OpenProductService
-import java.util.UUID
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
-@AuthenticatedDirective
+@Controller
 class OpenProductPrijsQuery(
     val openProductService: OpenProductService,
-) : Query {
-    @GraphQLDescription("Get all prijzen")
+) {
+    @QueryMapping
     suspend fun getOpenProductPrijzen(
-        pageNumber: Int? = null,
-        pageSize: Int? = null,
+        @Argument pageNumber: Int? = null,
+        @Argument pageSize: Int? = null,
     ): PrijzenPage =
         PrijzenPage.fromResultPage(
             pageNumber = pageNumber ?: 1,
@@ -41,8 +41,10 @@ class OpenProductPrijsQuery(
                 ),
         )
 
-    @GraphQLDescription("Get a prijs")
-    suspend fun getOpenProductPrijs(id: UUID): OpenProductPrijs? =
+    @QueryMapping
+    suspend fun getOpenProductPrijs(
+        @Argument id: UUID,
+    ): OpenProductPrijs? =
         openProductService.getPrijs(
             id = id,
         )

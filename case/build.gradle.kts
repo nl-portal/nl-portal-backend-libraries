@@ -30,21 +30,28 @@ bootJar.enabled = false
 jar.enabled = true
 
 dependencies {
-    api(project(":core"))
     api(project(":data"))
     api(project(":graphql"))
     api(project(":messaging"))
+    api(project(":portal-authentication"))
+    api(project(":zgw:common-ground-authentication"))
 
-    implementation("org.springframework.boot", "spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot", "spring-boot-starter-validation")
+    implementation(Dependencies.kotlinCoroutines)
+    implementation(Dependencies.kotlinCoroutinesReactor)
+    api("org.springframework.data:spring-data-commons")
+
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
 
     // JsonSchema support
     implementation(Dependencies.everitJsonSchema)
     implementation(Dependencies.jsonPath)
 
+    testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.postgresql)
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
-    testImplementation("org.assertj", "assertj-core")
+    testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.assertJCore)
+    testImplementation("org.springframework.graphql:spring-graphql-test")
 }
 
 apply(from = "gradle/publishing.gradle.kts")

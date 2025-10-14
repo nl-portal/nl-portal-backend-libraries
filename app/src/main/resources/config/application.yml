@@ -5,7 +5,7 @@ management:
     endpoint:
         health:
             probes:
-                enabled: true
+                enabled: false
             access: read_only
     endpoints:
         web:
@@ -19,6 +19,11 @@ spring:
         default: dev
     application:
         name: nl-portal-backend-libraries
+    graphql:
+        graphiql:
+            enabled: true
+        schema:
+            locations: classpath*:graphql/**/
     security:
         oauth2:
             resourceserver:
@@ -143,12 +148,6 @@ nl-portal:
             properties:
                 url: http://localhost:8010
                 token: 182c13e2209161852c53cef53a879f7a2f923430
-        openklant:
-            enabled: true
-            properties:
-                url: http://localhost:8006
-                clientId: valtimo_client
-                secret: e09b8bc5-5831-4618-ab28-41411304309d
         openklant2:
             enabled: true
             properties:
@@ -160,22 +159,10 @@ nl-portal:
                 brp-api-url: http://localhost:5010/haalcentraal/api/brp/
                 bewoning-api-url: http://localhost:5011/haalcentraal/api/bewoning/
         haalcentraal:
-            brp:
-                enabled: false
-                properties:
-                    url:
-                    apiKey:
-                    ssl:
-                        enabled: false
-                        key:
-                            key:
-                            certChain:
-                            keyPassword:
-                        trustedCertificate:
             hr:
                 enabled: false
                 properties:
-                    url:
+                    url: http://localhost:8080
                     apiKey:
                     ssl:
                         enabled: false
@@ -187,8 +174,7 @@ nl-portal:
         taak:
             enabled: true
             properties:
-                typeUrl: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
-                type-url-v2: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
+                object-type-url: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
         berichten:
             enabled: true
             properties:
@@ -199,6 +185,7 @@ nl-portal:
                 token: ac045222c9e7cde8120b48735560f9b920bb58cd
                 product-api-url: http://localhost:8070/producten/api/v1
                 product-type-api-url: http://localhost:8070/producttypen/api/v1
+
         product:
             enabled: true
             properties:

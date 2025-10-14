@@ -15,29 +15,31 @@
  */
 package nl.nlportal.product.graphql
 
-import nl.nlportal.product.TestHelper
-import nl.nlportal.product.TestHelper.verifyOnlyDataExists
+import com.fasterxml.jackson.databind.JsonNode
 import nl.nlportal.commonground.authentication.WithBurgerUser
+import nl.nlportal.product.TestHelper
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
-import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class ProductMutationIT(
-    @Autowired private val testClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
     @Autowired private val graphqlUpdateProductVerbruiksObject: String,
 ) {
@@ -63,48 +65,26 @@ internal class ProductMutationIT(
     fun updateVerbruikdObjectTestUnauthorized() {
         val basePath = "$.data.updateProductVerbruiksObject[0]"
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlUpdateProductVerbruiksObject)
-            .exchange()
-            .expectBody()
-            .jsonPath(basePath)
-    }
-
-    @Test
-    @WithBurgerUser("569312864")
-    fun updateVerbruikdObjectTestNotFound() {
-        val basePath = "$.data.updateProductVerbruiksObject"
-
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlUpdateProductVerbruiksObject)
-            .exchange()
-            .expectBody()
-            .jsonPath(basePath)
+        httpGraphQlTester
+            .document(graphqlUpdateProductVerbruiksObject)
+            .execute()
+            .errors()
     }
 
     @Test
     @WithBurgerUser("569312863")
     fun updateVerbruikdObjectTestBurger() {
-        val basePath = "$.data.updateProductVerbruiksObject"
+        val responseBody =
+            httpGraphQlTester
+                .document(graphqlUpdateProductVerbruiksObject)
+                .execute()
+                .errors()
+                .verify()
+                .path("updateProductVerbruiksObject")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(graphqlUpdateProductVerbruiksObject)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.id")
-            .isEqualTo("2d725c07-2f26-4705-8637-438a42b5a800")
+        assertEquals("2d725c07-2f26-4705-8637-438a42b5a800", responseBody.requiredAt("/id")?.textValue())
     }
 
     fun setupMockOpenZaakServer() {

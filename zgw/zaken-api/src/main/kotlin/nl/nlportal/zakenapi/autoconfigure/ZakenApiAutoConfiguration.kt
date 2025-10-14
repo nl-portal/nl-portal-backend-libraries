@@ -15,7 +15,9 @@
  */
 package nl.nlportal.zakenapi.autoconfigure
 
+import nl.nlportal.besluiten.service.BesluitenService
 import nl.nlportal.catalogiapi.client.CatalogiApiConfig
+import nl.nlportal.catalogiapi.service.CatalogiApiService
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.core.security.config.HttpSecurityConfigurer
 import nl.nlportal.documentenapi.service.DocumentenApiService
@@ -73,8 +75,16 @@ class ZakenApiAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(ZaakQuery::class)
-    fun zaakListQuery2(zaakService: ZakenApiService): ZaakQuery {
-        return ZaakQuery(zaakService)
+    fun zaakQuery(
+        zakenApiService: ZakenApiService,
+        besluitenService: BesluitenService,
+        catalogiApiService: CatalogiApiService,
+    ): ZaakQuery {
+        return ZaakQuery(
+            zakenApiService = zakenApiService,
+            besluitenService = besluitenService,
+            catalogiApiService = catalogiApiService
+        )
     }
 
     @Bean

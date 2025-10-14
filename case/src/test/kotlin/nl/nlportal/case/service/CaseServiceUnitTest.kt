@@ -31,12 +31,12 @@ import org.everit.json.schema.ValidationException
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.springframework.security.core.Authentication
 import java.util.UUID
 import java.util.Optional
+import org.junit.jupiter.api.Test
 
 class CaseServiceUnitTest : BaseTest() {
     lateinit var caseService: CaseService

@@ -15,33 +15,34 @@
  */
 package nl.nlportal.haalcentraal2.graphql
 
+import com.fasterxml.jackson.databind.JsonNode
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.haalcentraal2.TestHelper
-import nl.nlportal.haalcentraal2.TestHelper.verifyOnlyDataExists
 import nl.nlportal.haalcentraal2.autoconfiguration.HaalCentraal2ModuleConfiguration
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
-import org.springframework.http.MediaType.APPLICATION_JSON
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
-import org.springframework.test.web.reactive.server.WebTestClient
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 internal class HaalCentraal2BrpQueryIT(
-    @Autowired private val testClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val haalCentraal2ModuleConfiguration: HaalCentraal2ModuleConfiguration,
 ) {
     companion object {
@@ -115,22 +116,19 @@ internal class HaalCentraal2BrpQueryIT(
             }
             """.trimIndent()
 
-        val basePath = "$.data.getPersoonV2"
+        val responseBody =
+            httpGraphQlTester
+                .document(query)
+                .execute()
+                .errors()
+                .verify()
+                .path("getPersoonV2")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.burgerservicenummer")
-            .isEqualTo("999993847")
-            .jsonPath("$basePath.naam.volledigeNaam")
-            .isEqualTo("Pieter Jan de Vries")
-            .jsonPath("$basePath.naam.geslachtsnaam")
-            .isEqualTo("Vries")
+        assertEquals("999993847", responseBody.get("burgerservicenummer").textValue())
+        assertEquals("Pieter Jan de Vries", responseBody.requiredAt("/naam/volledigeNaam")?.textValue())
+        assertEquals("Vries", responseBody.requiredAt("/naam/geslachtsnaam")?.textValue())
     }
 
     @Test
@@ -150,20 +148,18 @@ internal class HaalCentraal2BrpQueryIT(
             }
             """.trimIndent()
 
-        val basePath = "$.data.getPersoonV2"
+        val responseBody =
+            httpGraphQlTester
+                .document(query)
+                .execute()
+                .errors()
+                .verify()
+                .path("getPersoonV2")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.burgerservicenummer")
-            .isEqualTo("999993847")
-            .jsonPath("$basePath.bewonersAantal")
-            .isEqualTo(4)
+        assertEquals("999993847", responseBody.get("burgerservicenummer").textValue())
+        assertEquals(4, responseBody.get("bewonersAantal").intValue())
     }
 
     @Test
@@ -249,33 +245,21 @@ internal class HaalCentraal2BrpQueryIT(
             }
             """.trimIndent()
 
-        val basePath = "$.data.getPersoonV2"
+        val responseBody =
+            httpGraphQlTester
+                .document(query)
+                .execute()
+                .errors()
+                .verify()
+                .path("getPersoonV2")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
-            .exchange()
-            .expectStatus()
-            .isOk
-            .expectBody()
-            .consumeWith(System.out::println)
-            .jsonPath(basePath)
-            .exists()
-            .jsonPath("$basePath.burgerservicenummer")
-            .isEqualTo("999993847")
-            .jsonPath("$basePath.geheimhoudingPersoonsgegevens")
-            .isEqualTo(true)
-            .jsonPath("$basePath.nationaliteiten")
-            .isArray()
-            .jsonPath("$basePath.nationaliteiten[0].nationaliteit.omschrijving")
-            .isEqualTo("Nederlands")
-            .jsonPath("$basePath.verblijfplaats.verblijfadres.officieleStraatnaam")
-            .isEqualTo("Het Spui 1")
-            .jsonPath("$basePath.verblijfplaats.adresseerbaarObjectIdentificatie")
-            .isEqualTo("226010000038820")
+        assertEquals("999993847", responseBody.get("burgerservicenummer").textValue())
+        assertEquals(true, responseBody.get("geheimhoudingPersoonsgegevens").booleanValue())
+        assertEquals("226010000038820", responseBody.requiredAt("/verblijfplaats/adresseerbaarObjectIdentificatie")?.textValue())
+        assertEquals("Het Spui 1", responseBody.requiredAt("/verblijfplaats/verblijfadres/officieleStraatnaam")?.textValue())
+        assertEquals("Nederlands", responseBody.requiredAt("/nationaliteiten/0/nationaliteit/omschrijving")?.textValue())
     }
 
     private fun setupMockServer() {

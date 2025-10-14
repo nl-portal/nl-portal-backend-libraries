@@ -15,12 +15,9 @@
  */
 package nl.nlportal.catalogiapi.domain
 
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
-
 data class StatusType(
     val omschrijving: String,
     val omschrijvingGeneriek: String? = null,
     val isEindstatus: Boolean? = null,
-    @GraphQLIgnore
     val volgnummer: Int,
 )

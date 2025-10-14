@@ -15,17 +15,9 @@
  */
 package nl.nlportal.openproduct.client.domain
 
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
-import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.node.ObjectNode
-import nl.nlportal.core.util.Mapper
-import nl.nlportal.openproduct.service.OpenProductDmnService
-import nl.nlportal.openproduct.service.OpenProductService
-import nl.nlportal.zakenapi.domain.Zaak
-import nl.nlportal.zgw.taak.domain.TaakV2
-import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -44,7 +36,6 @@ data class OpenProductProduct(
     val updateDatum: ZonedDateTime,
     val producttype: OpenProductProductProductType,
     val gepubliceerd: Boolean? = false,
-    @GraphQLIgnore
     val eigenaren: List<OpenProductProductEigenaar> = emptyList(),
     val documenten: List<OpenProductUrl> = emptyList(),
     val status: OpenProductToegestaneStatus,
@@ -52,57 +43,14 @@ data class OpenProductProduct(
     val frequentie: OpenProductFrequentie,
     val verbruiksobject: ObjectNode? = null,
     val dataobject: ObjectNode? = null,
-    @GraphQLIgnore
     val zaken: List<OpenProductUrl>? = emptyList(),
-    @GraphQLIgnore
     val taken: List<OpenProductUrl>? = emptyList(),
-) {
-    suspend fun zaken(
-        @GraphQLIgnore
-        @Autowired
-        openProductService: OpenProductService,
-    ): List<Zaak>? =
-        zaken?.let {
-            openProductService.getProductZaken(
-                zaken,
-            )
-        }
-
-    suspend fun taken(
-        @GraphQLIgnore
-        @Autowired
-        openProductService: OpenProductService,
-    ): List<TaakV2>? =
-        taken?.let {
-            openProductService.getProductTaken(
-                taken,
-            )
-        }
-
-    suspend fun acties(
-        @GraphQLIgnore
-        @Autowired
-        openProductService: OpenProductService,
-    ): List<OpenProductActie>? = openProductService.getProductActies(producttype.uuid)
-
-    suspend fun decisions(
-        @GraphQLIgnore
-        @Autowired
-        openProductDmnService: OpenProductDmnService,
-    ): List<ObjectNode> {
-        val result =
-            openProductDmnService.getProductDecision(
-                product = this,
-            )
-
-        return Mapper.get().convertValue(result, object : TypeReference<List<ObjectNode>>() {})
-    }
-}
+)
 
 data class OpenProductProductUpdate(
     val uuid: UUID,
-    val verbruiksobject: ObjectNode? = null,
-    val dataobject: ObjectNode? = null,
+    val verbruiksobject: Any? = null,
+    val dataobject: Any? = null,
 )
 
 data class OpenProductProductProductType(

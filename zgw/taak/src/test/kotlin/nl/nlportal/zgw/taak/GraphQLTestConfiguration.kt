@@ -24,50 +24,18 @@ import org.springframework.util.StreamUtils
 
 @Configuration
 class GraphQLTestConfiguration {
-    @Value("classpath:graphql/getTakenQuery.graphql")
-    private lateinit var getTakenFile: Resource
 
-    @Value("classpath:graphql/getTaakByIdQuery.graphql")
-    private lateinit var getTaakByIdFile: Resource
-
-    @Value("classpath:graphql/getTaakByIdQueryBedrijf.graphql")
-    private lateinit var getTaakByIdFileBedrijf: Resource
-
-    @Value("classpath:graphql/getTakenQueryV2.graphql")
+    @Value("classpath:graphql-queries/getTakenQueryV2.graphql")
     private lateinit var getTakenFileV2: Resource
 
-    @Value("classpath:graphql/getTaakByIdQueryV2.graphql")
+    @Value("classpath:graphql-queries/getTaakByIdQueryV2.graphql")
     private lateinit var getTaakByIdFileV2: Resource
 
-    @Value("classpath:graphql/getTaakByIdQueryV2Bedrijf.graphql")
+    @Value("classpath:graphql-queries/getTaakByIdQueryV2Bedrijf.graphql")
     private lateinit var getTaakByIdFileV2Bedrijf: Resource
 
-    @Value("classpath:graphql/updateTaakV2.graphql")
+    @Value("classpath:graphql-queries/updateTaakV2.graphql")
     private lateinit var updateTaakV2: Resource
-
-    @Bean
-    fun getTakenPayload(): String {
-        return StreamUtils.copyToString(
-            getTakenFile.inputStream,
-            StandardCharsets.UTF_8,
-        )
-    }
-
-    @Bean
-    fun getTaakByIdPayload(): String {
-        return StreamUtils.copyToString(
-            getTaakByIdFile.inputStream,
-            StandardCharsets.UTF_8,
-        )
-    }
-
-    @Bean
-    fun getTaakByIdPayloadBedrijf(): String {
-        return StreamUtils.copyToString(
-            getTaakByIdFileBedrijf.inputStream,
-            StandardCharsets.UTF_8,
-        )
-    }
 
     @Bean
     fun getTakenPayloadV2(): String {

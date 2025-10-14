@@ -725,6 +725,8 @@ class OpenProductService(
      * @param: pageSize, size for pagination
      * @param: extraSearchVariables, extra search variables to extend the search
      * @param: status, status of product
+     * @param: productTypeCode, producttype code
+     * @param: productTypeId, producttype uuid
      * @return: Result of producten
      */
     suspend fun getProducten(
@@ -733,6 +735,10 @@ class OpenProductService(
         pageSize: Int,
         extraSearchVariables: List<Pair<OpenProductProductenFilters, String>> = emptyList(),
         status: OpenProductToegestaneStatus? = null,
+        productTypeCode: String? = null,
+        productTypeId: String? = null,
+        productTypeCodes: List<String>? = null,
+        productTypeIds: List<String>? = null,
     ): ResultPage<OpenProductProduct> {
         val searchVariables =
             mutableListOf(
@@ -747,8 +753,24 @@ class OpenProductService(
             searchVariables.addAll(extraSearchVariables)
         }
 
-        if (status != null) {
-            searchVariables.add(OpenProductProductenFilters.STATUS to status.toString().lowercase())
+        status?.let {
+            searchVariables.add(OpenProductProductenFilters.STATUS to it.toString().lowercase())
+        }
+
+        productTypeCode?.let {
+            searchVariables.add(OpenProductProductenFilters.PRODUCTTYPE_CODE to it)
+        }
+
+        productTypeCodes?.let {
+            searchVariables.add(OpenProductProductenFilters.PRODUCTTYPE_CODE_IN to it.joinToString(","))
+        }
+
+        productTypeId?.let {
+            searchVariables.add(OpenProductProductenFilters.PRODUCTTYPE_UUID to it)
+        }
+
+        productTypeIds?.let {
+            searchVariables.add(OpenProductProductenFilters.PRODUCTTYPE_UUID_IN to it.joinToString(","))
         }
 
         return openProductClient.path<Producten>().get(
@@ -885,6 +907,7 @@ class OpenProductService(
         language: String? = null,
         themasList: List<OpenProductThema>? = null,
         themas: List<OpenProductThema> = emptyList(),
+        pageSize: Int? = null,
     ): List<Zaak> {
         val themasAll = mutableListOf<OpenProductThema>()
         val collectedThemaList = mutableListOf<OpenProductThema>()
@@ -930,7 +953,7 @@ class OpenProductService(
                 .zoeken()
                 .search()
                 .page(1)
-                .pageSize(999)
+                .pageSize(pageSize ?: 999)
                 .withAuthentication(authentication)
         isOpen?.let {
             request.isOpen(isOpen)
@@ -947,7 +970,6 @@ class OpenProductService(
         return request
             .retrieve()
             .results
-            .sortedBy { it.startdatum }
     }
 
     /**
@@ -961,6 +983,7 @@ class OpenProductService(
         authentication: CommonGroundAuthentication,
         id: UUID,
         language: String? = null,
+        pageSize: Int? = null,
     ): List<TaakV2> {
         val themas =
             getThemas(
@@ -976,7 +999,7 @@ class OpenProductService(
             findTakenByIdentification(
                 authentication = authentication,
                 pageNumber = 1,
-                pageSize = 999,
+                pageSize = pageSize ?: 999,
             )
 
         // when no tasks are found, just return immediately
@@ -1145,7 +1168,7 @@ class OpenProductService(
             }
 
             return getObjectsApiObjectResultPage<TaakObjectV2>(
-                objectsApiTaskConfigProperties.typeUrlV2,
+                objectsApiTaskConfigProperties.objectTypeUrl,
                 objectSearchParameters,
                 pageNumber,
                 pageSize,

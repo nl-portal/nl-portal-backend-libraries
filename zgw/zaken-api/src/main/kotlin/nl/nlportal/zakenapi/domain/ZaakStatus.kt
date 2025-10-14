@@ -15,11 +15,6 @@
  */
 package nl.nlportal.zakenapi.domain
 
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
-import nl.nlportal.catalogiapi.domain.ZaakStatusType
-import nl.nlportal.catalogiapi.service.CatalogiApiService
-import nl.nlportal.zakenapi.service.ZakenApiService
-import org.springframework.beans.factory.annotation.Autowired
 import java.util.UUID
 
 data class ZaakStatus(
@@ -27,24 +22,5 @@ data class ZaakStatus(
     val uuid: UUID,
     val datumStatusGezet: String,
     val zaak: String,
-    @GraphQLIgnore
     val statustype: String,
-) {
-    suspend fun statustype(
-        @GraphQLIgnore @Autowired
-        catalogiApiService: CatalogiApiService,
-    ): ZaakStatusType {
-        return catalogiApiService.getZaakStatusType(statustype)
-    }
-
-    suspend fun substatussen(
-        @GraphQLIgnore
-        @Autowired
-        zakenApiService: ZakenApiService,
-    ): List<ZaakSubStatus> {
-        return zakenApiService.getZaakSubStatussen(
-            zaakUrl = zaak,
-            statusUrl = url
-        )
-    }
-}
+)

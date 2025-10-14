@@ -17,6 +17,7 @@ package nl.nlportal.product.service
 
 import com.fasterxml.jackson.databind.node.ObjectNode
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.util.UUID
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.Mapper
@@ -41,7 +42,6 @@ import nl.nlportal.zgw.taak.domain.TaakV2
 import nl.nlportal.zgw.taak.graphql.TaakPageV2
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
-import java.util.UUID
 
 class ProductService(
     val productConfigProperties: ProductConfigProperties,
@@ -229,14 +229,14 @@ class ProductService(
 
     suspend fun updateVerbruiksObject(
         id: UUID,
-        submission: ObjectNode,
+        submission: Any,
         authentication: CommonGroundAuthentication,
     ): ProductVerbruiksObject {
         val objectsApiVerbruiksObject =
             getObjectsApiObjectById<ProductVerbruiksObject>(id.toString()) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
 
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiVerbruiksObject)
-        updateRequest.record.data.data = submission
+        updateRequest.record.data.data = Mapper.get().convertValue(submission, ObjectNode::class.java)
         updateRequest.record.correctedBy = authentication.getUserRepresentation()
         updateRequest.record.correctionFor = objectsApiVerbruiksObject.record.index.toString()
 
@@ -294,6 +294,11 @@ class ProductService(
     }
 
     suspend fun getProductTypes(authentication: CommonGroundAuthentication): List<ProductType> {
+        // if user has a machtigingsdienst in their authentication return an empty list
+        if (authenticationMachtigingsDienstService.hasMachtingDienst(authentication)) {
+            return emptyList()
+        }
+
         val productTypes =
             getObjectsApiObjectResultPage<ProductType>(
                 productConfigProperties.productTypeUrl,
@@ -363,7 +368,7 @@ class ProductService(
         }
 
         return getObjectsApiObjectResultPage<TaakObjectV2>(
-            objectsApiTaskConfig.typeUrlV2,
+            objectsApiTaskConfig.objectTypeUrl,
             objectSearchParameters,
             pageNumber,
             pageSize,

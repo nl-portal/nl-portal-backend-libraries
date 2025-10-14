@@ -15,42 +15,46 @@
  */
 package nl.nlportal.zgw.taak.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Query
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
-import nl.nlportal.zgw.taak.service.TaakService
-import graphql.schema.DataFetchingEnvironment
+import java.util.UUID
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.zgw.taak.domain.TaakStatus
 import nl.nlportal.zgw.taak.domain.TaakV2
-import java.util.UUID
+import nl.nlportal.zgw.taak.service.TaakService
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
+@Controller
 class TaakQueryV2(
     private val taskService: TaakService,
-) : Query {
-    @GraphQLDescription("Get a list of tasks. Optional filter for zaak V2")
+) {
+    @QueryMapping
     suspend fun getTakenV2(
-        dfe: DataFetchingEnvironment,
-        pageNumber: Int? = 1,
-        pageSize: Int? = 20,
-        zaakUUID: UUID? = null,
-        status: TaakStatus? = null,
-        title: String? = null,
+        authentication: CommonGroundAuthentication,
+        @Argument pageNumber: Int? = 1,
+        @Argument pageSize: Int? = 20,
+        @Argument zaakUUID: UUID? = null,
+        @Argument status: TaakStatus? = null,
+        @Argument title: String? = null,
     ): TaakPageV2 {
         return taskService.getTaken(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
-            authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
+            authentication = authentication,
             zaakUUID = zaakUUID,
             status = status,
             title = title,
         )
     }
 
-    @GraphQLDescription("Get task by id V2")
+    @QueryMapping
     suspend fun getTaakByIdV2(
-        id: UUID,
-        dfe: DataFetchingEnvironment,
+        @Argument id: UUID,
+        authentication: CommonGroundAuthentication,
     ): TaakV2? {
-        return taskService.getTaakById(id, dfe.graphQlContext[AUTHENTICATION_KEY])
+        return taskService.getTaakByIdV2(
+            id = id,
+            authentication = authentication
+        )
     }
 }

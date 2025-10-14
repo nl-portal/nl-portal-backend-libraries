@@ -15,40 +15,39 @@
  */
 package nl.nlportal.openklant.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
-import com.expediagroup.graphql.server.operations.Mutation
-import graphql.schema.DataFetchingEnvironment
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.openklant.graphql.domain.PartijRequest
 import nl.nlportal.openklant.graphql.domain.PartijResponse
 import nl.nlportal.openklant.service.OpenKlant2Service
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.stereotype.Controller
 
-@AuthenticatedDirective
+@Controller
 class PartijMutation(
     private val openklant2Service: OpenKlant2Service,
-) : Mutation {
-    @GraphQLDescription("Create Partij for user")
+) {
+    @MutationMapping
     suspend fun createUserPartij(
-        dfe: DataFetchingEnvironment,
-        partijRequest: PartijRequest,
+        authentication: CommonGroundAuthentication,
+        @Argument partijRequest: PartijRequest,
     ): PartijResponse? {
         val partij =
             openklant2Service.createPartijWithIdentificator(
-                authentication = dfe.graphQlContext.get(AUTHENTICATION_KEY),
+                authentication = authentication,
                 partij = partijRequest.asOpenKlant2Partij(),
             )
         return partij?.let { PartijResponse.fromOpenKlant2Partij(partij) }
     }
 
-    @GraphQLDescription("Update user Partij")
+    @MutationMapping
     suspend fun updateUserPartij(
-        dfe: DataFetchingEnvironment,
-        partijRequest: PartijRequest,
+        authentication: CommonGroundAuthentication,
+        @Argument partijRequest: PartijRequest,
     ): PartijResponse? {
         val partij =
             openklant2Service.updatePartij(
-                dfe.graphQlContext.get(AUTHENTICATION_KEY),
+                authentication = authentication,
                 partijRequest.asOpenKlant2Partij(),
             )
 

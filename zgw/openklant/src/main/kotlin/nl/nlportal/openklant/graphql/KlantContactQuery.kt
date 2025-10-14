@@ -15,40 +15,35 @@
  */
 package nl.nlportal.openklant.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.generator.federation.directives.AuthenticatedDirective
-import com.expediagroup.graphql.server.operations.Query
-import graphql.schema.DataFetchingEnvironment
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
+import java.util.UUID
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.openklant.client.domain.OpenKlant2Klantcontact
 import nl.nlportal.openklant.graphql.domain.OnderwerpObjectIndentificatorType
 import nl.nlportal.openklant.service.OpenKlant2Service
-import java.util.UUID
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
-@AuthenticatedDirective
+@Controller
 class KlantContactQuery(
     private val openklant2Service: OpenKlant2Service,
-) : Query {
-    @GraphQLDescription(
-        """
-        Get KlantContacten of authenticated user and optional filter on .
-        identificatorType, like zaak or product
-        identificatorId, the uuid of the zaak or product
-    """,
-    )
+) {
+    @QueryMapping
     suspend fun getUserKlantContacten(
-        dfe: DataFetchingEnvironment,
-        identificatorType: OnderwerpObjectIndentificatorType? = null,
-        identificatorId: UUID? = null,
+        authentication: CommonGroundAuthentication,
+        @Argument identificatorType: OnderwerpObjectIndentificatorType? = null,
+        @Argument identificatorId: UUID? = null,
     ): List<OpenKlant2Klantcontact> =
         openklant2Service.findKlantContacten(
-            authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
+            authentication = authentication, // dfe.graphQlContext[AUTHENTICATION_KEY],
             identificatorType = identificatorType,
             identificatorId = identificatorId,
         )
 
-    @GraphQLDescription("Get KlantContact by id of authenticated user.")
-    suspend fun getUserKlantContact(klantContactId: UUID): OpenKlant2Klantcontact? =
+    @QueryMapping
+    suspend fun getUserKlantContact(
+        @Argument klantContactId: UUID,
+    ): OpenKlant2Klantcontact? =
         openklant2Service.findKlantContact(
             klantContactId = klantContactId,
         )
