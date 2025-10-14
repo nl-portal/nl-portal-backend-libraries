@@ -181,6 +181,11 @@ subprojects {
                 bomProperty("graphql-java.version", Versions.graphqlJava)
             }
         }
+        dependencies {
+            // JReleaser 1.19.0 still expects the JGit 6.x API; Boot 3.5 BOM promotes JGit 7.x
+            dependency("org.eclipse.jgit:org.eclipse.jgit:6.10.1.202505221210-r")
+            dependency("org.eclipse.jgit:org.eclipse.jgit.gpg.bc:6.10.1.202505221210-r")
+        }
     }
 
     publishing {
