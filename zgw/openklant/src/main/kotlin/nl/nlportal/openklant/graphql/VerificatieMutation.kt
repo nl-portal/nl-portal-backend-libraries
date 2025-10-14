@@ -15,31 +15,35 @@
  */
 package nl.nlportal.openklant.graphql
 
-import com.expediagroup.graphql.server.operations.Mutation
-import graphql.schema.DataFetchingEnvironment
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.openklant.client.domain.VerificatieCreateResponse
 import nl.nlportal.openklant.client.domain.VerificatieVerifyResponse
 import nl.nlportal.openklant.graphql.domain.VerificatieCreateInput
 import nl.nlportal.openklant.graphql.domain.VerificatieVerifyInput
 import nl.nlportal.openklant.service.OpenKlantVerificatieService
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.stereotype.Controller
 
+@Controller
 class VerificatieMutation(
     val verificatieService: OpenKlantVerificatieService,
-) : Mutation {
+) {
+    @MutationMapping
     suspend fun createVerificatie(
-        verificatieCreateInput: VerificatieCreateInput,
+        @Argument verificatieCreateInput: VerificatieCreateInput,
     ): VerificatieCreateResponse =
         verificatieService.createVerificatie(
             verificatieCreateInput = verificatieCreateInput,
         )
 
+    @MutationMapping
     suspend fun verifyVerificatie(
-        dfe: DataFetchingEnvironment,
-        verificatieVerifyInput: VerificatieVerifyInput,
+        authentication: CommonGroundAuthentication,
+        @Argument verificatieVerifyInput: VerificatieVerifyInput,
     ): VerificatieVerifyResponse =
         verificatieService.verify(
-            authentication = dfe.graphQlContext.get(AUTHENTICATION_KEY),
+            authentication = authentication,
             verificatieVerifyInput = verificatieVerifyInput,
         )
 }

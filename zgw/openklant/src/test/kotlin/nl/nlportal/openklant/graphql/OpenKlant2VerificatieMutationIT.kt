@@ -15,37 +15,36 @@
  */
 package nl.nlportal.openklant.graphql
 
+import com.fasterxml.jackson.databind.JsonNode
 import java.net.URI
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.openklant.TestHelper
-import nl.nlportal.openklant.TestHelper.verifyOnlyDataExists
 import nl.nlportal.openklant.autoconfigure.OpenKlantModuleConfiguration
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.core.io.ClassPathResource
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
-import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.web.reactive.function.BodyInserters
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class OpenKlant2VerificatieMutationIT(
-    @Autowired private val webTestClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val openKlantModuleConfiguration: OpenKlantModuleConfiguration,
 ) {
     companion object {
@@ -89,38 +88,34 @@ class OpenKlant2VerificatieMutationIT(
     @WithBurgerUser("569312863")
     fun `create verificatie`() =
         runTest {
-            val basePath = "$.data.createVerificatie"
-            webTestClient
-                .post()
-                .uri { builder ->
-                    builder
-                        .path("/graphql")
-                        .build()
-                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/createVerificatie.gql")))
-                .exchange()
-                .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.success")
-                .isEqualTo(true)
+            val responseBody =
+                httpGraphQlTester
+                    .document(TestHelper.readFileAsString("/config/graphql/createVerificatie.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("createVerificatie")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals(true, responseBody.get("success").booleanValue())
         }
 
     @Test
     @WithBurgerUser("569312863")
     fun `verify verificatie`() =
         runTest {
-            val basePath = "$.data.verifyVerificatie"
-            webTestClient
-                .post()
-                .uri { builder ->
-                    builder
-                        .path("/graphql")
-                        .build()
-                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/verifyVerificatie.gql")))
-                .exchange()
-                .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.verified")
-                .isEqualTo(true)
+            val responseBody =
+                httpGraphQlTester
+                    .document(TestHelper.readFileAsString("/config/graphql/verifyVerificatie.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("verifyVerificatie")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals(true, responseBody.get("verified").booleanValue())
         }
 
     private fun setupMockServer() {

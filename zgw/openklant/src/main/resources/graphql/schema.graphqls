@@ -42,6 +42,14 @@ extend type Mutation {
 
     # Update user Partij
     updateUserPartij(partijRequest: PartijRequestInput!): PartijResponse
+
+    createVerificatie(
+        verificatieCreateInput: VerificatieCreateInput!
+    ): VerificatieCreateResponse!
+
+    verifyVerificatie(
+        verificatieVerifyInput: VerificatieVerifyInput!
+    ): VerificatieVerifyResponse!
 }
 
 type Betrokkene {
@@ -122,7 +130,9 @@ type DigitaleAdresResponse {
     referentie: String!
     type: DigitaleAdresType!
     uuid: UUID!
+    verificatieDatum: Date
     waarde: String!
+    isGeverifieerd: Boolean!
 }
 
 enum DigitaleAdresType {
@@ -715,4 +725,26 @@ enum SoortPartij {
     PERSOON
     ORGANISATIE
     CONTACTPERSOON
+}
+
+input VerificatieCreateInput {
+    type: DigitaleAdresType!
+    uuid: UUID!
+    waarde: String!
+}
+
+type VerificatieCreateResponse {
+    success: Boolean!
+}
+
+input VerificatieVerifyInput {
+    code: String!
+    type: DigitaleAdresType!
+    uuid: UUID!
+    waarde: String!
+}
+
+type VerificatieVerifyResponse {
+    verified: Boolean!
+    verifiedOp: DateTime!
 }
