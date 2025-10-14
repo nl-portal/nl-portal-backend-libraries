@@ -3,6 +3,8 @@ server:
 
 management:
     endpoint:
+        restart:
+            access: unrestricted
         refresh:
             access: unrestricted
         health:
@@ -12,7 +14,7 @@ management:
     endpoints:
         web:
             exposure:
-                include: health, refresh
+                include: health, refresh, restart
         access:
             default: none
 
