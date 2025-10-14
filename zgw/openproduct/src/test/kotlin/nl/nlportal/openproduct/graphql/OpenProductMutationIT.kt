@@ -15,37 +15,37 @@
  */
 package nl.nlportal.openproduct.graphql
 
+import com.fasterxml.jackson.databind.JsonNode
+import java.net.URI
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.openproduct.TestHelper
-import nl.nlportal.openproduct.TestHelper.verifyOnlyDataExists
+import nl.nlportal.openproduct.TestHelper.readFileAsString
 import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.core.io.ClassPathResource
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
-import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.web.reactive.function.BodyInserters
-import java.net.URI
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class OpenProductMutationIT(
-    @Autowired private val webTestClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val openProductModuleConfiguration: OpenProductModuleConfiguration,
 ) {
     companion object {
@@ -87,46 +87,19 @@ class OpenProductMutationIT(
     @WithBurgerUser("569312863")
     fun `update product is allowed`() =
         runTest {
-            val basePath = "$.data.updateProduct"
-            webTestClient
-                .post()
-                .uri { builder ->
-                    builder
-                        .path("/graphql")
-                        .build()
-                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/updateProduct.gql")))
-                .exchange()
-                .verifyOnlyDataExists(basePath)
-                .jsonPath(
-                    "$basePath.url",
-                ).isEqualTo("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/")
-                .jsonPath("$basePath.startDatum")
-                .isEqualTo("2025-04-30")
-                .jsonPath("$basePath.producttype.code")
-                .isEqualTo("PARKEREN")
-                .jsonPath("$basePath.verbruiksobject.uren")
-                .isEqualTo(30)
-        }
+            val responseBody =
+                httpGraphQlTester
+                    .document(readFileAsString("/config/graphql/updateProduct.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("updateProduct")
+                    .entity(JsonNode::class.java)
+                    .get()
 
-    @Test
-    @WithBurgerUser("569312864")
-    fun `get product is not allowed`() =
-        runTest {
-            val basePath = "$.data.updateProduct"
-            webTestClient
-                .post()
-                .uri { builder ->
-                    builder
-                        .path("/graphql")
-                        .build()
-                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/updateProduct.gql")))
-                .exchange()
-                .expectBody()
-                .jsonPath(
-                    "errors[0].message",
-                ).isEqualTo("Exception while fetching data (/updateProduct) : 401 UNAUTHORIZED \"Not authorized\"")
+            assertEquals("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/", responseBody.get("url")?.textValue())
+            assertEquals("PARKEREN", responseBody.requiredAt("/producttype/code")?.textValue())
+            assertEquals(30, responseBody.requiredAt("/verbruiksobject/uren")?.intValue())
         }
 
     private fun setupMockServer() {

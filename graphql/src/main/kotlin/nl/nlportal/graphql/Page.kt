@@ -15,20 +15,17 @@
  */
 package nl.nlportal.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import kotlin.math.ceil
 
 open class Page<T>(
-    @GraphQLDescription("The requested page number") val number: Int,
-    @GraphQLDescription("The requested page size") val size: Int,
-    @GraphQLDescription("The elements on this page")val content: List<T>,
-    @GraphQLDescription("The total number of elements") val totalElements: Int,
+    val number: Int,
+    val size: Int,
+    val content: List<T>,
+    val totalElements: Int,
 ) {
-    @GraphQLDescription("The number of elements on this page")
     val numberOfElements: Int
         get() = content.size
 
-    @GraphQLDescription("The total number of available pages")
     val totalPages: Int
         get() = ceil(totalElements.toDouble() / size).toInt()
 }

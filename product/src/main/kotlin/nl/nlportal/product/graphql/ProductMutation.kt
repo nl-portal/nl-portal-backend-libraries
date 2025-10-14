@@ -15,27 +15,27 @@
  */
 package nl.nlportal.product.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Mutation
-import com.fasterxml.jackson.databind.node.ObjectNode
-import graphql.schema.DataFetchingEnvironment
-import nl.nlportal.graphql.security.SecurityConstants
+import java.util.UUID
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.product.domain.ProductVerbruiksObject
 import nl.nlportal.product.service.ProductService
-import java.util.UUID
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.stereotype.Controller
 
+@Controller
 class ProductMutation(
     private val productService: ProductService,
-) : Mutation {
-    @GraphQLDescription("Update product verbruiks object")
+) {
+    @MutationMapping
     suspend fun updateProductVerbruiksObject(
-        dfe: DataFetchingEnvironment,
-        id: UUID,
-        submission: ObjectNode,
+        authentication: CommonGroundAuthentication,
+        @Argument id: UUID,
+        @Argument submission: Any,
     ): ProductVerbruiksObject =
         productService.updateVerbruiksObject(
             id,
             submission,
-            dfe.graphQlContext[SecurityConstants.AUTHENTICATION_KEY],
+            authentication,
         )
 }

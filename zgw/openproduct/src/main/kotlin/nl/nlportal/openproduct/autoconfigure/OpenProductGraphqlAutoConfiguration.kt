@@ -15,8 +15,6 @@
  */
 package nl.nlportal.openproduct.autoconfigure
 
-import com.expediagroup.graphql.server.operations.Mutation
-import com.expediagroup.graphql.server.operations.Query
 import nl.nlportal.openproduct.graphql.OpenProductActieQuery
 import nl.nlportal.openproduct.graphql.OpenProductBestandQuery
 import nl.nlportal.openproduct.graphql.OpenProductContactQuery
@@ -38,63 +36,65 @@ import org.springframework.context.annotation.Bean
 class OpenProductGraphqlAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(OpenProductThemaQuery::class)
-    fun openProductthemaQuery(openProductService: OpenProductService): Query =
+    fun openProductthemaQuery(openProductService: OpenProductService) =
         OpenProductThemaQuery(
             openProductService = openProductService,
         )
 
     @Bean
     @ConditionalOnMissingBean(OpenProductTypeQuery::class)
-    fun openProductTypeQuery(openProductService: OpenProductService): Query =
+    fun openProductTypeQuery(openProductService: OpenProductService) =
         OpenProductTypeQuery(
             openProductService = openProductService,
         )
 
     @Bean
     @ConditionalOnMissingBean(OpenProductQuery::class)
-    fun openProductQuery(openProductService: OpenProductService): Query =
-        OpenProductQuery(
-            openProductService = openProductService,
-        )
+    fun openProductQuery(
+        openProductService: OpenProductService,
+        openProductDmnService: OpenProductDmnService,
+    ) = OpenProductQuery(
+        openProductService = openProductService,
+        openProductDmnService = openProductDmnService,
+    )
 
     @Bean
     @ConditionalOnMissingBean(OpenProductActieQuery::class)
     fun openProductActieQuery(
         openProductService: OpenProductService,
         openProductDmnService: OpenProductDmnService,
-    ): Query =
-        OpenProductActieQuery(
-            openProductService = openProductService,
-            openProductDmnService = openProductDmnService,
-        )
+    ) = OpenProductActieQuery(
+        openProductService = openProductService,
+        openProductDmnService = openProductDmnService,
+    )
 
     @Bean
     @ConditionalOnMissingBean(OpenProductBestandQuery::class)
-    fun openProductBestandQuery(openProductService: OpenProductService): Query = OpenProductBestandQuery(openProductService = openProductService)
+    fun openProductBestandQuery(openProductService: OpenProductService) = OpenProductBestandQuery(openProductService = openProductService)
 
     @Bean
     @ConditionalOnMissingBean(OpenProductContactQuery::class)
-    fun openProductContactQuery(openProductService: OpenProductService): Query = OpenProductContactQuery(openProductService = openProductService)
+    fun openProductContactQuery(openProductService: OpenProductService) = OpenProductContactQuery(openProductService = openProductService)
 
     @Bean
     @ConditionalOnMissingBean(OpenProductLocatieQuery::class)
-    fun openProductLocatieQuery(openProductService: OpenProductService): Query = OpenProductLocatieQuery(openProductService = openProductService)
+    fun openProductLocatieQuery(openProductService: OpenProductService) = OpenProductLocatieQuery(openProductService = openProductService)
 
     @Bean
     @ConditionalOnMissingBean(OpenProductLinkQuery::class)
-    fun openProductLinkQuery(openProductService: OpenProductService): Query = OpenProductLinkQuery(openProductService = openProductService)
+    fun openProductLinkQuery(openProductService: OpenProductService) = OpenProductLinkQuery(openProductService = openProductService)
 
     @Bean
     @ConditionalOnMissingBean(OpenProductOrganisatieQuery::class)
-    fun openProductOrganisatieQuery(openProductService: OpenProductService): Query = OpenProductOrganisatieQuery(openProductService = openProductService)
+    fun openProductOrganisatieQuery(openProductService: OpenProductService) = OpenProductOrganisatieQuery(openProductService = openProductService)
 
     @Bean
     @ConditionalOnMissingBean(OpenProductPrijsQuery::class)
-    fun openProductPrijsQuery(openProductService: OpenProductService): Query = OpenProductPrijsQuery(openProductService = openProductService)
+    fun openProductPrijsQuery(openProductService: OpenProductService) = OpenProductPrijsQuery(openProductService = openProductService)
 
     @Bean
     @ConditionalOnMissingBean(OpenProductMutation::class)
-    fun openProductMutation(openProductService: OpenProductService): Mutation =
+    fun openProductMutation(openProductService: OpenProductService) =
         OpenProductMutation(
             openProductService = openProductService,
         )

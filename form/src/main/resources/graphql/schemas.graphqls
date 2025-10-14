@@ -1,0 +1,27 @@
+extend type Query {
+    # find single form definition from repository or Objecten API
+    #deprecated(
+    # reason: "Replaced by getFormDefinitionByName and getFormDefinitionByObjectenApiUrl, replace with getFormDefinitionByName or getFormDefinitionByObjectenApiUrl"
+    #)
+    getFormDefinitionById(
+        # The form definition id
+        id: String!
+    ): FormDefinition
+
+
+    # find single form definition from repository
+    getFormDefinitionByName(
+        # The form definition name
+        name: String!
+    ): FormDefinition
+
+    # find single form definition from the Objecten API
+    getFormDefinitionByObjectenApiUrl(
+        # The form definition url
+        url: String!
+    ): FormDefinition
+}
+
+type FormDefinition {
+    formDefinition: JSON!
+}

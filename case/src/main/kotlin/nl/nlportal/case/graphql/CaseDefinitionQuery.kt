@@ -15,14 +15,15 @@
  */
 package nl.nlportal.case.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Query
 import nl.nlportal.case.service.CaseDefinitionService
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
+@Controller
 class CaseDefinitionQuery(
     val caseDefinitionService: CaseDefinitionService,
-) : Query {
-    @GraphQLDescription("retrieves all available case definitions")
+) {
+    @QueryMapping
     fun allCaseDefinitions(): List<CaseDefinition> =
         caseDefinitionService.getAllCaseDefinitions().map {
             CaseDefinition(

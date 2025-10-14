@@ -15,6 +15,7 @@
  */
 package nl.nlportal.haalcentraal.hr.graphql
 
+import com.fasterxml.jackson.databind.JsonNode
 import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.haalcentraal.hr.TestHelper
 import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrConfig
@@ -23,21 +24,22 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
-import org.springframework.http.MediaType.APPLICATION_JSON
-import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class HandelsregisterQueryIT(
-    @Autowired private val testClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val haalCentraalClientConfig: HaalCentraalHrConfig,
 ) {
     lateinit var server: MockWebServer
@@ -68,22 +70,17 @@ internal class HandelsregisterQueryIT(
             }
             """.trimIndent()
 
-        val basePath = "$.data.getBedrijf"
+        val responseBody =
+            httpGraphQlTester
+                .document(query)
+                .execute()
+                .errors()
+                .verify()
+                .path("getBedrijf")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
-            .exchange()
-            .expectStatus()
-            .isOk
-            .expectBody()
-            .jsonPath(basePath)
-            .exists()
-            .jsonPath("$basePath.naam")
-            .isEqualTo("Test bedrijf")
+        assertEquals("Test bedrijf", responseBody.get("naam").textValue())
     }
 
     private fun setupMockServer() {

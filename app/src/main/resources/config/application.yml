@@ -9,7 +9,7 @@ management:
             access: unrestricted
         health:
             probes:
-                enabled: true
+                enabled: false
             access: read_only
     endpoints:
         web:
@@ -23,6 +23,11 @@ spring:
         default: dev
     application:
         name: nl-portal-backend-libraries
+    graphql:
+        graphiql:
+            enabled: true
+        schema:
+            locations: classpath*:graphql/**/
     security:
         oauth2:
             resourceserver:

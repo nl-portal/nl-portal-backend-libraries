@@ -15,7 +15,6 @@
  */
 package nl.nlportal.openklant.client.domain
 
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonValue
 import java.util.UUID
 
@@ -73,7 +72,6 @@ data class OpenKlant2Adres(
     }
 }
 
-@GraphQLIgnore
 interface OpenKlant2Filters
 
 enum class PartijIdentificatorCodeRegister(

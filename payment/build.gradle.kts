@@ -24,6 +24,10 @@ dependencies {
     api(project(":zgw:taak"))
 
     api("commons-codec:commons-codec:1.19.0")
+    implementation(Dependencies.kotlinCoroutines)
+    implementation(Dependencies.kotlinCoroutinesReactor)
+    implementation("org.springframework.data:spring-data-commons")
+
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.springBootTest)
     testImplementation(TestDependencies.assertJCore)
@@ -31,6 +35,8 @@ dependencies {
     testImplementation(TestDependencies.kotlinCoroutines)
     testImplementation(TestDependencies.okHttpMockWebserver)
     testImplementation(TestDependencies.okHttp)
+
+    testImplementation("org.springframework.graphql:spring-graphql-test")
 }
 
 val jar: Jar by tasks

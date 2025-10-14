@@ -15,22 +15,14 @@
  */
 package nl.nlportal.product.domain
 
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.node.ObjectNode
-import graphql.schema.DataFetchingEnvironment
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
-import nl.nlportal.product.service.ProductService
-import nl.nlportal.zakenapi.domain.Zaak
-import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
-import nl.nlportal.zgw.taak.domain.TaakV2
-import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDateTime
 import java.util.UUID
+import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 
 class Product(
     var id: UUID?,
-    @GraphQLIgnore
     @JsonProperty("PDCProductType")
     val productTypeId: String,
     val naam: String,
@@ -39,58 +31,12 @@ class Product(
     val status: String,
     val geldigVan: LocalDateTime,
     val geldigTot: LocalDateTime?,
-    @GraphQLIgnore
     val rollen: Map<String, ProductRol>,
     val eigenschappen: ObjectNode?,
     val parameters: ObjectNode?,
-    @GraphQLIgnore
-    @Deprecated("will be removed in a future release.")
-    val taken: List<UUID>?,
-    @GraphQLIgnore
     val zaken: List<UUID>,
     val documenten: List<String>,
 ) {
-    suspend fun productType(
-        @GraphQLIgnore
-        @Autowired
-        productService: ProductService,
-    ): ProductType? = productService.getObjectsApiObjectById<ProductType>(productTypeId)?.record?.data
-
-    suspend fun productDetails(
-        @GraphQLIgnore
-        @Autowired
-        productService: ProductService,
-    ): ProductDetails? = id?.let { productService.getProductDetails(it) }
-
-    suspend fun zaken(
-        @GraphQLIgnore
-        @Autowired
-        productService: ProductService,
-    ): List<Zaak> = zaken.map { productService.getZaak(it) }
-
-    suspend fun taken(
-        @GraphQLIgnore
-        @Autowired
-        productService: ProductService,
-        dfe: DataFetchingEnvironment,
-    ): List<TaakV2> =
-        productService.getTaken(
-            dfe.graphQlContext[AUTHENTICATION_KEY],
-            id!!,
-            zaken,
-        )
-
-    suspend fun verbruiksobjecten(
-        @GraphQLIgnore
-        @Autowired
-        productService: ProductService,
-    ): List<ProductVerbruiksObject> =
-        productService.getProductVerbruiksObjecten(
-            productId = id.toString(),
-            pageNumber = 1,
-            pageSize = 20,
-        )
-
     companion object {
         fun fromObjectsApiProduct(objectsApiTask: ObjectsApiObject<Product>): Product {
             objectsApiTask.record.data.id = objectsApiTask.uuid

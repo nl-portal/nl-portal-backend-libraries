@@ -30,9 +30,14 @@ dependencies {
     api(project(":graphql"))
     api(project(":zgw:objectenapi"))
 
+    implementation(Dependencies.kotlinCoroutines)
+    implementation(Dependencies.kotlinCoroutinesReactor)
+    implementation("org.springframework.data:spring-data-commons")
+
     testImplementation(TestDependencies.springBootTest)
     testImplementation(TestDependencies.assertJCore)
     testImplementation(TestDependencies.postgresql)
+    testImplementation("org.springframework.graphql:spring-graphql-test")
 }
 
 val jar: Jar by tasks

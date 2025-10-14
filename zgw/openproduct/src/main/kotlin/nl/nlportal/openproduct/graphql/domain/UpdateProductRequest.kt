@@ -15,14 +15,13 @@
  */
 package nl.nlportal.openproduct.graphql.domain
 
-import com.fasterxml.jackson.databind.node.ObjectNode
 import nl.nlportal.openproduct.client.domain.OpenProductProductUpdate
 import java.util.UUID
 
 data class UpdateProductRequest(
     val uuid: UUID,
-    val verbruiksobject: ObjectNode? = null,
-    val dataobject: ObjectNode? = null,
+    val verbruiksobject: Any? = null,
+    val dataobject: Any? = null,
 ) {
     fun asOpenProductProductUpdate(): OpenProductProductUpdate =
         OpenProductProductUpdate(

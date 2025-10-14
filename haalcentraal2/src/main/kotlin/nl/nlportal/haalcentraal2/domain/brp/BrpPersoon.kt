@@ -15,12 +15,6 @@
  */
 package nl.nlportal.haalcentraal2.domain.brp
 
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
-import graphql.schema.DataFetchingEnvironment
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
-import nl.nlportal.haalcentraal2.service.HaalCentraal2Service
-import org.springframework.beans.factory.annotation.Autowired
-
 data class BrpPersoon(
     val burgerservicenummer: String,
     val datumEersteInschrijvingGBA: BrpDatum? = null,
@@ -48,20 +42,7 @@ data class BrpPersoon(
     val partners: List<BrpPartner>? = null,
     val rni: List<BrpPersoonRni>? = null,
     val verificatie: BrpPersoonVerificatie? = null,
-) {
-    suspend fun bewonersAantal(
-        @GraphQLIgnore
-        @Autowired
-        haalCentraal2Service: HaalCentraal2Service,
-        dfe: DataFetchingEnvironment,
-    ): Int? =
-        verblijfplaats?.adresseerbaarObjectIdentificatie?.let {
-            haalCentraal2Service.getBewonersAantal(
-                authentication = dfe.graphQlContext[AUTHENTICATION_KEY],
-                it,
-            )
-        }
-}
+)
 
 data class BrpPersoonRni(
     val deelnemer: BrpCodeOmschrijving? = null,

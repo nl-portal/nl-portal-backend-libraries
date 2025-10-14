@@ -1,0 +1,61 @@
+extend type Query {
+    allCaseInstances (
+        orderBy: CaseInstanceOrdering!,
+    ): [CaseInstance]
+
+    getCaseInstance (
+        id: UUID
+    ): CaseInstance
+
+    allCaseDefinitions: [CaseDefinition]!
+}
+
+extend type Mutation {
+    processSubmission(
+        submission: JSON,
+        caseDefinitionId: String!,
+        initialStatus: String,
+    ): CaseCreated
+}
+
+type CaseCreated {
+    caseId: UUID
+}
+
+type CaseDefinition {
+    id: String!,
+    schema: JSON!,
+    statusDefinition: [String]!,
+}
+
+enum CaseInstanceOrdering {
+    ASC,
+    DESC
+}
+
+type CaseInstance {
+    id: UUID,
+    externalId: String,
+    userId: String!,
+    status: Status,
+    submission: JSON,
+    statusHistory: [HistoricStatus],
+    caseDefinitionId: String!,
+    createdOn: String!,
+}
+
+type HistoricStatus {
+    status: Status!,
+    createdOn: String!,
+}
+
+type Status {
+    name: String!,
+    createdOn: String!,
+}
+
+enum Sort {
+    ASC,
+    DESC,
+}
+

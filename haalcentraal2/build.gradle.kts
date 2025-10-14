@@ -30,6 +30,10 @@ dependencies {
     implementation(Dependencies.jsonWebTokensImpl)
     implementation(Dependencies.jsonWebTokensJackson)
 
+    implementation(Dependencies.kotlinCoroutines)
+    implementation(Dependencies.kotlinCoroutinesReactor)
+    implementation("org.springframework.data:spring-data-commons")
+
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.springBootTest)
     testImplementation(TestDependencies.springSecurityTest)
@@ -45,6 +49,7 @@ dependencies {
     testImplementation(TestDependencies.okHttp)
     testImplementation(TestDependencies.okHttpTls)
     testImplementation(TestDependencies.hamcrest)
+    testImplementation("org.springframework.graphql:spring-graphql-test")
 }
 
 val jar: Jar by tasks

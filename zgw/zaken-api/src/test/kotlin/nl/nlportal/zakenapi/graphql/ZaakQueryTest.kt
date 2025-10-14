@@ -15,39 +15,29 @@
  */
 package nl.nlportal.zakenapi.graphql
 
-import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
-import nl.nlportal.zakenapi.service.ZakenApiService
-import graphql.GraphQLContext
-import graphql.schema.DataFetchingEnvironment
 import java.util.UUID
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
+import nl.nlportal.besluiten.service.BesluitenService
+import nl.nlportal.catalogiapi.service.CatalogiApiService
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.zakenapi.service.ZakenApiService
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
-import org.springframework.security.core.Authentication
 
 @ExperimentalCoroutinesApi
 internal class ZaakQueryTest {
     var zakenApiService: ZakenApiService = mock()
-    var environment: DataFetchingEnvironment = mock()
+    var besluitenService: BesluitenService = mock()
+    var catalogiApiService: CatalogiApiService = mock()
     var authentication: CommonGroundAuthentication = mock()
-    val context: GraphQLContext = mock()
-    var zaakQuery = ZaakQuery(zakenApiService)
-
-    @BeforeEach
-    fun setup() {
-        Mockito.`when`(environment.graphQlContext).thenReturn(context)
-        Mockito.`when`(context.get<Authentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
-    }
+    var zaakQuery = ZaakQuery(zakenApiService, besluitenService, catalogiApiService)
 
     @Test
     fun getZaken() =
         runTest {
-            zaakQuery.getZaken(environment, 3)
+            zaakQuery.getZaken(authentication, 3)
             verify(zakenApiService).getZaken(
                 page = 3,
                 authentication = authentication,
@@ -57,7 +47,7 @@ internal class ZaakQueryTest {
     @Test
     fun `getZaken no page`() =
         runTest {
-            zaakQuery.getZaken(environment)
+            zaakQuery.getZaken(authentication)
             verify(zakenApiService).getZaken(
                 page = 1,
                 authentication = authentication,
@@ -69,7 +59,7 @@ internal class ZaakQueryTest {
         runTest {
             val zaakId = UUID.randomUUID()
 
-            zaakQuery.getZaak(zaakId, environment)
+            zaakQuery.getZaak(zaakId, authentication)
             verify(zakenApiService).getZaak(zaakId, authentication)
         }
 }

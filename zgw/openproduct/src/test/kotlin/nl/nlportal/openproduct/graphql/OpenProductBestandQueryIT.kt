@@ -15,10 +15,10 @@
  */
 package nl.nlportal.openproduct.graphql
 
+import com.fasterxml.jackson.databind.JsonNode
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.openproduct.TestHelper
-import nl.nlportal.openproduct.TestHelper.verifyOnlyDataExists
 import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -32,20 +32,20 @@ import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.core.io.ClassPathResource
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
-import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.web.reactive.function.BodyInserters
 import java.net.URI
+import nl.nlportal.openproduct.TestHelper.readFileAsString
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class OpenProductBestandQueryIT(
-    @Autowired private val webTestClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val openProductModuleConfiguration: OpenProductModuleConfiguration,
 ) {
     companion object {
@@ -87,41 +87,35 @@ class OpenProductBestandQueryIT(
     @WithBurgerUser("569312863")
     fun `get bestanden`() =
         runTest {
-            val basePath = "$.data.getOpenProductBestanden"
-            val resultPath = "$basePath.content[0]"
-            webTestClient
-                .post()
-                .uri { builder ->
-                    builder
-                        .path("/graphql")
-                        .build()
-                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductBestanden.gql")))
-                .exchange()
-                .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.number")
-                .isEqualTo(1)
-                .jsonPath("$resultPath.bestand")
-                .isEqualTo("http://localhost:8070/media/https%3A/gemeente.open-product.nl/media/test.txt")
+            val responseBody =
+                httpGraphQlTester
+                    .document(readFileAsString("/config/graphql/getOpenProductBestanden.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getOpenProductBestanden")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals(1, responseBody.get("number")?.intValue())
+            assertEquals("http://localhost:8070/media/https%3A/gemeente.open-product.nl/media/test.txt", responseBody.requiredAt("/content/0/bestand")?.textValue())
         }
 
     @Test
     @WithBurgerUser("569312863")
     fun `get actie`() =
         runTest {
-            val basePath = "$.data.getOpenProductBestand"
-            webTestClient
-                .post()
-                .uri { builder ->
-                    builder
-                        .path("/graphql")
-                        .build()
-                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductBestand.gql")))
-                .exchange()
-                .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.bestand")
-                .isEqualTo("http://localhost:8070/media/https%3A/gemeente.open-product.nl/media/test.txt")
+            val responseBody =
+                httpGraphQlTester
+                    .document(readFileAsString("/config/graphql/getOpenProductBestand.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getOpenProductBestand")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals("http://localhost:8070/media/https%3A/gemeente.open-product.nl/media/test.txt", responseBody.requiredAt("/bestand")?.textValue())
         }
 
     private fun setupMockServer() {

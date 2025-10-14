@@ -15,7 +15,6 @@
  */
 package nl.nlportal.openklant.client.domain
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -30,7 +29,6 @@ import java.time.LocalDate
 import java.util.Locale
 import java.util.UUID
 
-@GraphQLDescription(value = "A Type that represents a Klantinteracties API Partij object")
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class OpenKlant2Partij(
     @JsonInclude(JsonInclude.Include.NON_NULL)

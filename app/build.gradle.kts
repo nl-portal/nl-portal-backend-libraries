@@ -19,20 +19,19 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":zgw:openklant"))
+    implementation(project(":form"))
     implementation(project(":haalcentraal-hr"))
     implementation(project(":haalcentraal2"))
-    implementation(project(":product"))
-    implementation(project(":form"))
-    implementation(project(":zgw:berichten"))
     implementation(project(":zgw:taak"))
-    implementation(project(":zgw:openklant"))
-    implementation(project(":zgw:zaken-api"))
-    implementation(project(":zgw:catalogi-api"))
     implementation(project(":zgw:documenten-api"))
+    implementation(project(":zgw:berichten"))
+    implementation(project(":zgw:besluiten"))
     implementation(project(":payment"))
     implementation(project(":payment-direct"))
-    implementation(project(":zgw:besluiten"))
+    implementation(project(":zgw:zaken-api"))
     implementation(project(":zgw:openproduct"))
+    implementation(project(":product"))
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     api("org.postgresql:postgresql")

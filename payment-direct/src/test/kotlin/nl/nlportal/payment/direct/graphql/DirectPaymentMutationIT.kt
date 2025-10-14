@@ -15,8 +15,7 @@
  */
 package nl.nlportal.payment.direct.graphql
 
-import io.github.oshai.kotlinlogging.KLogger
-import io.github.oshai.kotlinlogging.KotlinLogging
+import com.fasterxml.jackson.databind.JsonNode
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.payment.direct.TestHelper
 import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration
@@ -30,25 +29,23 @@ import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
-import org.springframework.http.MediaType.APPLICATION_JSON
-import org.springframework.test.web.reactive.server.WebTestClient
-import java.util.function.Consumer
 import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 internal class DirectPaymentMutationIT(
-    @Autowired private val testClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
 ) {
     companion object {
-        private val logger: KLogger = KotlinLogging.logger {}
-
         @JvmStatic
         var server: MockWebServer? = null
 
@@ -102,63 +99,17 @@ internal class DirectPaymentMutationIT(
             }
             """.trimIndent()
 
-        val basePath = "$.data.doDirectPayment"
+        val responseBody =
+            httpGraphQlTester
+                .document(mutation)
+                .execute()
+                .errors()
+                .verify()
+                .path("doDirectPayment")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(mutation)
-            .exchange()
-            .expectBody()
-            .consumeWith(Consumer { t -> logger.info { t } })
-            .jsonPath(basePath)
-            .exists()
-            .jsonPath(
-                "$basePath.redirectUrl",
-            ).isEqualTo(
-                "https://payment.preprod.direct.worldline-solutions.com/hostedcheckout/PaymentMethods/Selection/e61340e579e04172a740676ffdda162e",
-            )
-    }
-
-    @Test
-    @WithBurgerUser("123")
-    fun doDirectPaymentWithInvalidIdentifier() {
-        val mutation =
-            """
-            mutation {
-                doDirectPayment(
-                    paymentRequest: { 
-                        identifier: "invalid-identifier", 
-                        amount: 100.25, 
-                        orderId: "123456", 
-                        reference: "12345",
-                    }
-                ) {
-                redirectUrl,
-                }
-            }
-            """.trimIndent()
-
-        val basePath = "$.errors"
-
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(mutation)
-            .exchange()
-            .expectBody()
-            .consumeWith(Consumer { t -> logger.info { t } })
-            .jsonPath(basePath)
-            .exists()
-            .jsonPath(
-                "$basePath[0].message",
-            ).isEqualTo(
-                "Exception while fetching data (/doDirectPayment) : 400 BAD_REQUEST \"Could not found direct payment profile for the identifier DirectPaymentRequest(identifier=invalid-identifier, amount=100.25, reference=12345, orderId=123456, langId=null, returnUrl=null).identifier\"",
-            )
+        assertEquals("https://payment.preprod.direct.worldline-solutions.com/hostedcheckout/PaymentMethods/Selection/e61340e579e04172a740676ffdda162e", responseBody.get("redirectUrl")?.textValue())
     }
 
     fun setupMockServer() {

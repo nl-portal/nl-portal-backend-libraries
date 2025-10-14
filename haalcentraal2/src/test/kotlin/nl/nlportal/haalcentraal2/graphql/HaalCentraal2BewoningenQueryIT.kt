@@ -15,36 +15,43 @@
  */
 package nl.nlportal.haalcentraal2.graphql
 
+import com.fasterxml.jackson.databind.JsonNode
+import io.github.oshai.kotlinlogging.KLogger
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.WithBurgerUser
+import nl.nlportal.core.util.Mapper
 import nl.nlportal.haalcentraal2.TestHelper
-import nl.nlportal.haalcentraal2.TestHelper.verifyOnlyDataExists
 import nl.nlportal.haalcentraal2.autoconfiguration.HaalCentraal2ModuleConfiguration
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
-import org.springframework.http.MediaType.APPLICATION_JSON
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
-import org.springframework.test.web.reactive.server.WebTestClient
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 internal class HaalCentraal2BewoningenQueryIT(
-    @Autowired private val testClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val haalCentraal2ModuleConfiguration: HaalCentraal2ModuleConfiguration,
 ) {
     companion object {
+        private val logger: KLogger = KotlinLogging.logger {}
+        private val objectMapper = Mapper.get()
+
         @JvmStatic
         var server: MockWebServer? = null
 
@@ -89,18 +96,17 @@ internal class HaalCentraal2BewoningenQueryIT(
             }
             """.trimIndent()
 
-        val basePath = "$.data.getBewonersAantalV2"
+        val responseBody =
+            httpGraphQlTester
+                .document(query)
+                .execute()
+                .errors()
+                .verify()
+                .path("getBewonersAantalV2")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient
-            .post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(query)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath(basePath)
-            .isEqualTo(4)
+        assertEquals(4, responseBody.intValue())
     }
 
     private fun setupMockServer() {
