@@ -65,19 +65,19 @@ class ZakenApiServiceTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
 
-        zakenApiConfigProperties = ZakenApiConfigProperties(
-            url = "http://localhost:8080",
-            clientId = "zaken-api-client-id",
-            secret = "zaken-api-secret",
-            zaakTypesIdsExcluded = emptyList(),
-            zaakDocumentenConfig =ZaakDocumentenConfig(
+        zakenApiConfigProperties = ZakenApiConfigProperties().apply {
+            url = "http://localhost:8080"
+            clientId = "zaken-api-client-id"
+            secret = "zaken-api-secret"
+            zaakTypesIdsExcluded = emptyList()
+            zaakDocumentenConfig =ZaakDocumentenConfig().apply {
                 vertrouwelijkheidsaanduidingWhitelist =
                     listOf(
                         OPENBAAR,
                         ZAAKVERTROUWELIJK,
-                    ),
-            )
-        )
+                    )
+            }
+        }
 
         zakenApiService =
             ZakenApiService(

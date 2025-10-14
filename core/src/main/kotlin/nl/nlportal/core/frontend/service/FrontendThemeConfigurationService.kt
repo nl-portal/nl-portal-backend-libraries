@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.core.autoconfiguration
+package nl.nlportal.core.frontend.service
 
-import org.springframework.boot.context.properties.ConfigurationProperties
+import nl.nlportal.core.autoconfiguration.FrontendThemeConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.config.theme", ignoreUnknownFields = true)
-class CoreThemeConfigurationProperties {
-    var style: String? = null
-    var logo: String? = null
+class FrontendThemeConfigurationService(
+    private var coreThemeConfigurationProperties: FrontendThemeConfigurationProperties,
+) {
+    fun getLogo(): String? = coreThemeConfigurationProperties.logo
+
+    fun getStyle(): String? = coreThemeConfigurationProperties.style
 }

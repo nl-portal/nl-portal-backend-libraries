@@ -36,11 +36,11 @@ class ZakenApiClientTest {
         client = WebClient.builder().baseUrl(host).build()
 
         zakenApiConfigProperties =
-            ZakenApiConfigProperties(
-                host,
-                "gzac",
-                "12345678123456781234567812345678",
-            )
+            ZakenApiConfigProperties().apply {
+                url = host
+                clientId = "gzac"
+                secret = "12345678123456781234567812345678"
+            }
 
         catalogiApiConfigProperties =
             CatalogiApiConfigProperties(

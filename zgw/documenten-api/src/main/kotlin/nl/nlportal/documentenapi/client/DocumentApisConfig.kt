@@ -23,11 +23,11 @@ class DocumentApisConfig {
     var enabled: Boolean = false
     var properties: DocumentenApisConfigProperties = DocumentenApisConfigProperties()
 
-    class DocumentenApisConfigProperties(
-        var defaultDocumentApi: String = "",
-        val allowedMimeTypes: Set<String> = setOf(),
-        var configurations: Map<String, DocumentApiConfig> = emptyMap(),
-    ) {
+    class DocumentenApisConfigProperties{
+        var defaultDocumentApi: String = ""
+        var allowedMimeTypes: Set<String> = setOf()
+        var configurations: Map<String, DocumentApiConfig> = emptyMap()
+
         fun getConfig(documentApi: String): DocumentApiConfig {
             return configurations[documentApi]
                 ?: throw NullPointerException("No documentapi configuration with key $documentApi")

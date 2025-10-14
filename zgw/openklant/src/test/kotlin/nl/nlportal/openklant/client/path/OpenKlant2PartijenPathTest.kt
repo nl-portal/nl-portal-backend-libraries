@@ -41,14 +41,14 @@ class OpenKlant2PartijenPathTest {
         mockServer.start()
 
         openklantModuleConfiguration =
-            OpenKlantModuleConfiguration(
-                enabled = true,
+            OpenKlantModuleConfiguration().apply {
+                enabled = true
                 properties =
                     OpenKlantConfigurationProperties(
                         klantinteractiesApiUrl = mockServer.url(API_PATH).toUri(),
                         token = "SuperSecretToken1234",
-                    ),
-            )
+                    )
+            }
         openKlant2Client = OpenKlant2KlantinteractiesClient(openklantModuleConfiguration.properties)
     }
 

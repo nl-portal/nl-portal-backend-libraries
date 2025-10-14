@@ -15,7 +15,7 @@
  */
 package nl.nlportal.core.frontend.configuration
 
-import nl.nlportal.core.frontend.service.FrontendConfigurationService
+import nl.nlportal.core.frontend.service.FrontendThemeConfigurationService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping(value = ["/api/public"])
-class FrontendConfigurationResource(
-    private val frontendConfigurationService: FrontendConfigurationService,
+class FrontendThemeConfigurationResource(
+    private val frontendConfigurationService: FrontendThemeConfigurationService,
 ) {
     @GetMapping(value = ["/theme/style"])
     fun style(): ResponseEntity<String> =
