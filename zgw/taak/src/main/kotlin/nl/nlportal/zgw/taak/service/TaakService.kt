@@ -34,6 +34,7 @@ import nl.nlportal.zgw.taak.domain.TaakStatus
 import nl.nlportal.zgw.taak.domain.TaakV2
 import nl.nlportal.zgw.taak.graphql.TaakPageV2
 import org.springframework.http.HttpStatus
+import org.springframework.web.reactive.function.client.WebClientResponseException
 import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
 
@@ -89,6 +90,7 @@ open class TaakService(
             ).let { TaakPageV2.fromResultPage(pageNumber, pageSize, it) }
         } catch (ex: Exception) {
             logger.info { "Something went wrong with getTakenV2: ${ex.message}" }
+            if (ex is WebClientResponseException) logger.debug { "Response from Objects API: ${ex.responseBodyAsString}" }
             return TaakPageV2(
                 number = pageNumber,
                 size = pageSize,

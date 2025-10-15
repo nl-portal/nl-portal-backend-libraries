@@ -4,3 +4,4 @@ spring:
             enabled: ${CONFIGURATION_PANEL_ENABLED:false}
             uri: ${CONFIGURATION_PANEL_URI}
             token: ${CONFIGURATION_PANEL_TOKEN}
+            name: ${CONFIGURATION_PANEL_APPLICATION_NAME}
