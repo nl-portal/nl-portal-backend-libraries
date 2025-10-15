@@ -24,7 +24,6 @@ object TestDependencies {
     val postgresql by lazy { "org.postgresql:postgresql:${Versions.postgresql}" }
     val springBootTest by lazy {"org.springframework.boot:spring-boot-starter-test"}
     val springSecurityTest by lazy {"org.springframework.security:spring-security-test"}
-    val springWebFluxTest by lazy {"org.springframework.boot:spring-boot-starter-webflux"}
     val assertJCore by lazy { "org.assertj:assertj-core" }
     val kotlinTest by lazy { "org.jetbrains.kotlin:kotlin-test" }
     val junitJupiterTest by lazy { "org.junit.jupiter:junit-jupiter" }

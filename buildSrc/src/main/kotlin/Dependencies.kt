@@ -32,12 +32,11 @@ object Dependencies {
     val commonsCodec by lazy { "commons-codec:commons-codec:${Versions.commonsCodec}" }
     val apacheCommons by lazy { "org.apache.commons:commons-lang3:${Versions.apacheCommons}"}
     val graphqlJavaExtendedScalars by lazy { "com.graphql-java:graphql-java-extended-scalars:${Versions.graphqlJava}"}
-    //val graphqlKotlinHooksProvider by lazy { "com.expediagroup:graphql-kotlin-hooks-provider:${Versions.graphqlKotlin}"}
-    //val graphqlKotlinSpringServer by lazy { "com.expediagroup:graphql-kotlin-spring-server:${Versions.graphqlKotlin}"}
 
-    val jacksonBom by lazy { "com.fasterxml.jackson:jackson-bom:${Versions.jacksonBom}" }
+    val jacksonKotlinModule by lazy { "com.fasterxml.jackson.module:jackson-module-kotlin" }
     val kotlinLogging by lazy { "io.github.oshai:kotlin-logging-jvm:${Versions.kotlinLogging}"}
     val springCloudStream by lazy { "org.springframework.cloud:spring-cloud-stream:${Versions.springCloud}" }
     val springCloudStreamBinderRabbit by lazy { "org.springframework.cloud:spring-cloud-stream-binder-rabbit:${Versions.springCloud}" }
     val springBootStarter by lazy {"org.springframework.boot:spring-boot-starter"}
+    val springWebFlux by lazy {"org.springframework.boot:spring-boot-starter-webflux"}
 }
