@@ -15,7 +15,7 @@
  */
 package nl.nlportal.core.nl.nlportal.core.frontend
 
-import nl.nlportal.core.autoconfiguration.CoreThemeConfiguration
+import nl.nlportal.core.autoconfiguration.FrontendThemeConfigurationProperties
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -28,9 +28,9 @@ import java.nio.charset.Charset
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class FrontendConfigurationResourceTest(
+class FrontendThemeConfigurationResourceTest(
     @Autowired private val webTestClient: WebTestClient,
-    @Autowired private val coreThemeConfiguration: CoreThemeConfiguration,
+    @Autowired private val coreThemeConfiguration: FrontendThemeConfigurationProperties,
 ) {
     @Test
     fun `get style`() {

@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.core.frontend
+package nl.nlportal.core.frontend.configuration
 
-import io.github.oshai.kotlinlogging.KotlinLogging
-import nl.nlportal.core.autoconfiguration.CoreThemeConfiguration
+import nl.nlportal.core.frontend.service.FrontendThemeConfigurationService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -24,28 +23,20 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping(value = ["/api/public"])
-class FrontendConfigurationResource(
-    private val coreThemeConfiguration: CoreThemeConfiguration,
+class FrontendThemeConfigurationResource(
+    private val frontendConfigurationService: FrontendThemeConfigurationService,
 ) {
-    init {
-        logger.info { "Start FrontendConfigurationResource with $coreThemeConfiguration" }
-    }
-
     @GetMapping(value = ["/theme/style"])
     fun style(): ResponseEntity<String> =
-        when (coreThemeConfiguration.style.isNullOrEmpty()) {
-            true -> ResponseEntity.noContent().build()
-            false -> ResponseEntity.ok().header("Content-Type", "text/css").body(coreThemeConfiguration.style)
+        when (val style = frontendConfigurationService.getStyle()) {
+            null -> ResponseEntity.noContent().build()
+            else -> ResponseEntity.ok().header("Content-Type", "text/css").body(style)
         }
 
     @GetMapping(value = ["/theme/logo"])
     fun logo(): ResponseEntity<String> =
-        when (coreThemeConfiguration.logo.isNullOrEmpty()) {
-            true -> ResponseEntity.noContent().build()
-            false -> ResponseEntity.ok().body(coreThemeConfiguration.logo)
+        when (val logo = frontendConfigurationService.getLogo()) {
+            null -> ResponseEntity.noContent().build()
+            else -> ResponseEntity.ok().body(logo)
         }
-
-    companion object {
-        private val logger = KotlinLogging.logger {}
-    }
 }
