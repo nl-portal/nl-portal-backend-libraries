@@ -55,13 +55,13 @@ internal class OgonePaymentServiceTest {
             )
 
         val paymentProfile =
-            OgonePaymentProfile(
-                pspId = "TAX",
-                title = "Belastingzaken",
-                shaInKey = "de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00",
-                failureUrl = "http://dummy.nl",
-                successUrl = "http://dummy.nl",
-            )
+            OgonePaymentProfile().apply {
+                pspId = "TAX"
+                title = "Belastingzaken"
+                shaInKey = "de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00"
+                failureUrl = "http://dummy.nl"
+                successUrl = "http://dummy.nl"
+            }
 
         whenever(paymentConfigProperties.getPaymentProfileByPspPid(anyString())).thenReturn(paymentProfile)
         whenever(paymentConfigProperties.url).thenReturn("https://secure.ogone.com/ncol/prod/orderstandard.asp")

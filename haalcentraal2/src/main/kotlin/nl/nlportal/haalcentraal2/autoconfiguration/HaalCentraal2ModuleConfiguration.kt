@@ -19,10 +19,10 @@ import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.haalcentraal2", ignoreUnknownFields = true)
-data class HaalCentraal2ModuleConfiguration(
-    var enabled: Boolean = false,
-    var properties: HaalCentraal2ConfigurationProperties = HaalCentraal2ConfigurationProperties(),
-) {
+class HaalCentraal2ModuleConfiguration {
+    var enabled: Boolean = false
+    var properties: HaalCentraal2ConfigurationProperties = HaalCentraal2ConfigurationProperties()
+
     init {
         if (enabled) {
             requireNotNull(properties.brpApiUrl) {
@@ -31,12 +31,37 @@ data class HaalCentraal2ModuleConfiguration(
         }
     }
 
-    data class HaalCentraal2ConfigurationProperties(
-        var brpApiUrl: String = "",
-        var bewoningApiUrl: String = "",
-        var apiKey: String? = null,
-        var ssl: Ssl? = null,
+    class HaalCentraal2ConfigurationProperties {
+        var brpApiUrl: String = ""
+        var bewoningApiUrl: String = ""
+        var apiKey: String? = null
+        var ssl: Ssl? = null
         val brpFields: List<String> =
-            listOf("aNummer", "adressering", "burgerservicenummer", "datumEersteInschrijvingGBA", "datumInschrijvingInGemeente", "europeesKiesrecht", "geboorte", "gemeenteVanInschrijving", "geslacht", "gezag", "immigratie", "indicatieCurateleRegister", "kinderen", "leeftijd", "naam", "nationaliteiten", "ouders", "overlijden", "partners", "uitsluitingKiesrecht", "verblijfplaats", "verblijfstitel", "verblijfplaatsBinnenland", "adresseringBinnenland"),
-    )
+            listOf(
+                "aNummer",
+                "adressering",
+                "burgerservicenummer",
+                "datumEersteInschrijvingGBA",
+                "datumInschrijvingInGemeente",
+                "europeesKiesrecht",
+                "geboorte",
+                "gemeenteVanInschrijving",
+                "geslacht",
+                "gezag",
+                "immigratie",
+                "indicatieCurateleRegister",
+                "kinderen",
+                "leeftijd",
+                "naam",
+                "nationaliteiten",
+                "ouders",
+                "overlijden",
+                "partners",
+                "uitsluitingKiesrecht",
+                "verblijfplaats",
+                "verblijfstitel",
+                "verblijfplaatsBinnenland",
+                "adresseringBinnenland",
+            )
+    }
 }

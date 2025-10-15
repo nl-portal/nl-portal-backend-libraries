@@ -31,7 +31,7 @@ dependencies {
     api("org.springframework.boot", "spring-boot-starter-graphql")
     api(Dependencies.graphqlJavaExtendedScalars)
     // Jackson
-    api("com.fasterxml.jackson.module:jackson-module-kotlin")
+    api(Dependencies.jacksonKotlinModule)
 
     // Logging for Kotlin
     api(Dependencies.kotlinLogging)

@@ -31,6 +31,7 @@ import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.taak.autoconfigure.TaakConfig
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfiguration
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -53,7 +54,7 @@ class ProductAutoConfiguration {
         )
 
     @Bean
-    @ConditionalOnProperty(prefix = "nl-portal.config.product", name = ["enabled"], havingValue = "true")
+    @ConditionalOnProperty(prefix = "nl-portal.config", name = ["product.enabled", "zakenapi.enabled"], havingValue = "true")
     fun productService(
         productConfig: ProductConfig,
         objectsApiClient: ObjectsApiClient,
@@ -71,6 +72,7 @@ class ProductAutoConfiguration {
 
     @Bean("dmnService")
     @ConditionalOnProperty(prefix = "nl-portal.config.dmn", name = ["enabled"], havingValue = "true")
+    @ConditionalOnBean(ProductService::class)
     fun dmnService(
         objectsApiClient: ObjectsApiClient,
         dmnClient: DmnClient,
@@ -84,6 +86,7 @@ class ProductAutoConfiguration {
 
     @Bean("prefillService")
     @ConditionalOnProperty(prefix = "nl-portal.config.prefill", name = ["enabled"], havingValue = "true")
+    @ConditionalOnBean(ProductService::class)
     fun prefillService(
         prefillConfig: PrefillConfig,
         objectsApiClient: ObjectsApiClient,
@@ -97,6 +100,7 @@ class ProductAutoConfiguration {
 
     @Bean
     @ConditionalOnProperty(prefix = "nl-portal.config.product", name = ["enabled"], havingValue = "true")
+    @ConditionalOnBean(ProductService::class)
     fun productQuery(
         productService: ProductService,
         dmnService: DmnService,
@@ -105,5 +109,6 @@ class ProductAutoConfiguration {
 
     @Bean
     @ConditionalOnProperty(prefix = "nl-portal.config.product", name = ["enabled"], havingValue = "true")
+    @ConditionalOnBean(ProductService::class)
     fun productMutation(productService: ProductService): ProductMutation = ProductMutation(productService)
 }
