@@ -38,6 +38,6 @@ class OpenKlantModuleConfiguration {
         var contactgegevensApiUrl: URI? = null,
         var klantinteractiesApiUrl: URI? = null,
         var token: String? = null,
-        val digitalAdressenReferentie: String? = null,
+        var digitalAdressenReferentie: String? = null,
     )
 }
