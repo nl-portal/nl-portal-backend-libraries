@@ -55,6 +55,10 @@ extend type Query {
         pageNumber: Int
         pageSize: Int
         status: String
+        productTypeCode: String
+        productTypeId: String
+        productTypeCodes: [String]
+        productTypeIds: [String]
     ): ProductenPage!
 
     # Get a Open producten type by thema id
