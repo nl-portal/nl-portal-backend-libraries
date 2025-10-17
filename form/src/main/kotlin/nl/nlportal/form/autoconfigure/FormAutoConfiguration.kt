@@ -18,12 +18,14 @@ package nl.nlportal.form.autoconfigure
 import nl.nlportal.data.liquibase.LiquibaseMasterChangeLogLocation
 import nl.nlportal.form.autodeployment.FormApplicationReadyEventListener
 import nl.nlportal.form.autodeployment.FormDefinitionDeploymentService
+import nl.nlportal.form.graphql.FormDefinitionQuery
 import nl.nlportal.form.repository.FormIoFormDefinitionRepository
 import nl.nlportal.form.service.FormIoFormDefinitionService
 import nl.nlportal.form.service.ObjectsApiFormDefinitionService
 import nl.nlportal.zgw.objectenapi.service.ObjectenApiService
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
 import org.springframework.core.io.ResourceLoader
@@ -32,6 +34,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 @AutoConfiguration
 @EnableJpaRepositories(basePackages = ["nl.nlportal.form.repository"])
 @EntityScan("nl.nlportal.form.domain")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled"], havingValue = "true")
 class FormAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(FormApplicationReadyEventListener::class)
@@ -56,4 +59,10 @@ class FormAutoConfiguration {
 
     @Bean
     fun formLiquibaseConfig(): LiquibaseMasterChangeLogLocation = LiquibaseMasterChangeLogLocation("config/liquibase/form-master.xml")
+
+    @Bean
+    fun formDefinitionQuery(
+        formIoFormDefinitionService: FormIoFormDefinitionService,
+        objectenApiFormDefinitionService: ObjectsApiFormDefinitionService,
+    ): FormDefinitionQuery = FormDefinitionQuery(formIoFormDefinitionService, objectenApiFormDefinitionService)
 }
