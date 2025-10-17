@@ -25,7 +25,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 
-@ConditionalOnProperty(prefix = "nl-portal.config.openklant2", name = ["enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["openklant2.enabled"], havingValue = "true")
 class OpenKlantGraphqlAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(PartijQuery::class)
