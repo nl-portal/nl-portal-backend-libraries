@@ -67,5 +67,5 @@ internal val graphqlLocalDateTimeType =
         .newScalar()
         .name("LocalDateTime")
         .description("A local date time")
-        .coercing(ZonedDateTimeCoercing)
+        .coercing(LocalDateTimeCoercing)
         .build()
