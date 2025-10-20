@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.core.frontend.configuration
+package nl.nlportal.core.frontend.web.rest
 
 import nl.nlportal.core.frontend.service.FrontendThemeConfigurationService
 import org.springframework.http.ResponseEntity
