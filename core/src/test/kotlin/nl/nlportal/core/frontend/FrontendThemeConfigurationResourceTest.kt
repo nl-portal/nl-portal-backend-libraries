@@ -15,7 +15,7 @@
  */
 package nl.nlportal.core.nl.nlportal.core.frontend
 
-import nl.nlportal.core.autoconfiguration.FrontendThemeConfigurationProperties
+import nl.nlportal.core.frontend.configuration.FrontendThemeConfigurationProperties
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance

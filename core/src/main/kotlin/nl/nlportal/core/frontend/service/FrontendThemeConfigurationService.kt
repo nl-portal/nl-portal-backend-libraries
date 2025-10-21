@@ -15,7 +15,7 @@
  */
 package nl.nlportal.core.frontend.service
 
-import nl.nlportal.core.autoconfiguration.FrontendThemeConfigurationProperties
+import nl.nlportal.core.frontend.configuration.FrontendThemeConfigurationProperties
 
 class FrontendThemeConfigurationService(
     private var coreThemeConfigurationProperties: FrontendThemeConfigurationProperties,
