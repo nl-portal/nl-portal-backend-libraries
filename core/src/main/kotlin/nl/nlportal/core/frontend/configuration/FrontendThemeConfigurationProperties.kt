@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.core.autoconfiguration
+package nl.nlportal.core.frontend.configuration
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
