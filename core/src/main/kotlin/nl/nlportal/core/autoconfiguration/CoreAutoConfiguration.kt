@@ -16,7 +16,8 @@
 package nl.nlportal.core.autoconfiguration
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import nl.nlportal.core.frontend.configuration.FrontendThemeConfigurationResource
+import nl.nlportal.core.frontend.configuration.FrontendThemeConfigurationProperties
+import nl.nlportal.core.frontend.web.rest.FrontendThemeConfigurationResource
 import nl.nlportal.core.frontend.service.FrontendThemeConfigurationService
 import nl.nlportal.core.util.Mapper
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
