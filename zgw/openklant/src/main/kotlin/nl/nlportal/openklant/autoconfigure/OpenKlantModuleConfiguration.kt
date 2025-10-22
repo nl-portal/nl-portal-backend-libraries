@@ -50,6 +50,8 @@ class OpenKlantModuleConfiguration {
             var templateIdPhoneNumber: String = "",
             var templateIdEmail: String = "",
             var ssl: Ssl? = null,
-        )
+        ) {
+            fun isEnabled() = url.isNotBlank()
+        }
     }
 }

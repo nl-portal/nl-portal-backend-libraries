@@ -21,6 +21,7 @@ type Query {
     # Get Partij by Id for authenticated user.
     getUserPartij(partijId: UUID!): OpenKlant2Partij
 
+    verificatieEnabled: Boolean
 }
 
 type Mutation {

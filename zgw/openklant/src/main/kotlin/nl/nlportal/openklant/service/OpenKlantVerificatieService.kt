@@ -119,4 +119,6 @@ class OpenKlantVerificatieService(
 
         return response
     }
+
+    fun verificatieEnabled(): Boolean = verificatieConfigurationProperties.isEnabled()
 }
