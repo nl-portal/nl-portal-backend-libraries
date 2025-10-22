@@ -43,7 +43,7 @@ import org.springframework.test.context.DynamicPropertySource
 @AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-class OpenKlant2VerificatieMutationIT(
+class VerificatieMutationIT(
     @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val openKlantModuleConfiguration: OpenKlantModuleConfiguration,
 ) {
