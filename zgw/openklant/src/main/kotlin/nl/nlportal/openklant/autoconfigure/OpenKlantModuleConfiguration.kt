@@ -20,10 +20,10 @@ import java.net.URI
 import nl.nlportal.core.ssl.Ssl
 
 @ConfigurationProperties(prefix = "nl-portal.config.openklant2")
-data class OpenKlantModuleConfiguration(
-    var enabled: Boolean = false,
-    var properties: OpenKlantConfigurationProperties = OpenKlantConfigurationProperties(),
-) {
+class OpenKlantModuleConfiguration {
+    var enabled: Boolean = false
+    var properties: OpenKlantConfigurationProperties = OpenKlantConfigurationProperties()
+
     init {
         if (enabled) {
             requireNotNull(properties.klantinteractiesApiUrl) {
@@ -35,14 +35,14 @@ data class OpenKlantModuleConfiguration(
         }
     }
 
-    data class OpenKlantConfigurationProperties(
+    class OpenKlantConfigurationProperties(
         var contactgegevensApiUrl: URI? = null,
         var klantinteractiesApiUrl: URI? = null,
         var token: String? = null,
-        val digitalAdressenReferentie: String? = null,
-        val verificatie: OpenKlantVerificatieConfigurationProperties = OpenKlantVerificatieConfigurationProperties(),
+        var digitalAdressenReferentie: String? = null,
+        var verificatie: OpenKlantVerificatieConfigurationProperties = OpenKlantVerificatieConfigurationProperties(),
     ) {
-        data class OpenKlantVerificatieConfigurationProperties(
+        class OpenKlantVerificatieConfigurationProperties(
             var url: String = "",
             var clientId: String = "",
             var secret: String = "",

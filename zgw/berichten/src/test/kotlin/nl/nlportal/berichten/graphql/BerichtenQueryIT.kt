@@ -163,7 +163,7 @@ class BerichtenQueryIT(
                                 } else {
                                     MockResponse().setResponseCode(404)
                                 }
-                            } // a4961c4a-29a7-4cc7-9d5d-bceed1dfccba
+                            }
                             "GET /api/v2/objects/9e021130-8cbd-4c6f-846a-677448e21ce8" -> {
                                 TestHelper.mockResponse(TestHelper.objectenApiBerichtObjectResponse)
                             }

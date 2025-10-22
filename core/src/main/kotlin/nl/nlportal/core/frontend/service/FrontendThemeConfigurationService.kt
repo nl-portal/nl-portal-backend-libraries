@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2025 Ritense BV, the Netherlands.
+ * Copyright 2025 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.zgw.taak.autoconfigure
+package nl.nlportal.core.frontend.service
 
-import org.springframework.boot.context.properties.ConfigurationProperties
+import nl.nlportal.core.frontend.configuration.FrontendThemeConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.config.taak")
-class TaakConfig{
-    var enabled: Boolean = false
-    var properties: TaakConfigProperties = TaakConfigProperties()
+class FrontendThemeConfigurationService(
+    private var coreThemeConfigurationProperties: FrontendThemeConfigurationProperties,
+) {
+    fun getLogo(): String? = coreThemeConfigurationProperties.logo
 
-    class TaakConfigProperties {
-        var objectTypeUrl: String = ""
-    }
+    fun getStyle(): String? = coreThemeConfigurationProperties.style
 }

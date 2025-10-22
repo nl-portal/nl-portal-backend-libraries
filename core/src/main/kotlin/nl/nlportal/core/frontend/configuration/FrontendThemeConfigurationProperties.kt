@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.core.autoconfiguration
+package nl.nlportal.core.frontend.configuration
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.theme", ignoreUnknownFields = true)
-data class CoreThemeConfiguration(
-    val style: String? = null,
-    val logo: String? = null,
-)
+class FrontendThemeConfigurationProperties {
+    var style: String? = null
+    var logo: String? = null
+}

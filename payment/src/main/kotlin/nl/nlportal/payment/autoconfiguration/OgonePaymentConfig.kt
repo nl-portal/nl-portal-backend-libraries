@@ -19,15 +19,15 @@ import nl.nlportal.core.util.ShaVersion
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.payment.ogone", ignoreUnknownFields = true)
-data class OgonePaymentConfig(
-    var enabled: Boolean = true,
-    var properties: OgonePaymentConfigProperties = OgonePaymentConfigProperties(),
-) {
-    data class OgonePaymentConfigProperties(
-        var url: String = "",
-        var shaOutParameters: List<String> = emptyList(),
-        var configurations: Map<String, OgonePaymentProfile> = mapOf(),
-    ) {
+class OgonePaymentConfig {
+    var enabled: Boolean = true
+    var properties: OgonePaymentConfigProperties = OgonePaymentConfigProperties()
+
+    class OgonePaymentConfigProperties {
+        var url: String = ""
+        var shaOutParameters: List<String> = emptyList()
+        var configurations: Map<String, OgonePaymentProfile> = mapOf()
+
         fun getPaymentProfile(profileIdentifier: String): OgonePaymentProfile? = configurations[profileIdentifier]
 
         fun getPaymentProfileByPspPid(pspId: String?): OgonePaymentProfile? {
@@ -40,15 +40,15 @@ data class OgonePaymentConfig(
         }
     }
 
-    data class OgonePaymentProfile(
-        var pspId: String = "",
-        var language: String = "nl_NL",
-        var currency: String = "EUR",
-        var title: String = "",
-        var shaInKey: String = "",
-        var shaOutKey: String = "",
-        var shaVersion: String = ShaVersion.SHA1.version,
-        var failureUrl: String = "",
-        var successUrl: String = "",
-    )
+    class OgonePaymentProfile {
+        var pspId: String = ""
+        var language: String = "nl_NL"
+        var currency: String = "EUR"
+        var title: String = ""
+        var shaInKey: String = ""
+        var shaOutKey: String = ""
+        var shaVersion: String = ShaVersion.SHA1.version
+        var failureUrl: String = ""
+        var successUrl: String = ""
+    }
 }

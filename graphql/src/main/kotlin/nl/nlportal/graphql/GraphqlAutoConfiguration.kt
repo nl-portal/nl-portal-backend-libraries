@@ -17,6 +17,7 @@ package nl.nlportal.graphql
 
 import graphql.scalars.ExtendedScalars
 import graphql.schema.idl.RuntimeWiring
+import nl.nlportal.graphql.customtype.graphqlLocalDateTimeType
 import nl.nlportal.graphql.customtype.graphqlZonedDateTimeType
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.context.annotation.Bean
@@ -39,5 +40,6 @@ class GraphqlAutoConfiguration {
                 .scalar(ExtendedScalars.Locale)
                 .scalar(ExtendedScalars.UUID)
                 .scalar(graphqlZonedDateTimeType)
+                .scalar(graphqlLocalDateTimeType)
         }
 }

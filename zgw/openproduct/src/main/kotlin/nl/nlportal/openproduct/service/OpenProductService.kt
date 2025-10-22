@@ -1247,16 +1247,12 @@ class OpenProductService(
                 if (vestigingsNummer != null) {
                     listOf(
                         Pair(
-                            OpenProductProductenFilters.EIGENAREN_KVKNUMMER,
+                            OpenProductProductenFilters.EIGENAREN_VESTIGINGSNUMMER,
                             authentication.userId,
                         ),
                     )
                 } else {
                     listOf(
-                        Pair(
-                            OpenProductProductenFilters.EIGENAREN_VESTIGINGSNUMMER,
-                            authentication.userId,
-                        ),
                         Pair(
                             OpenProductProductenFilters.EIGENAREN_KVKNUMMER,
                             authentication.userId,

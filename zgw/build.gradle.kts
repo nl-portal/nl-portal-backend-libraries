@@ -24,7 +24,7 @@ dependencies {
 
     implementation(Dependencies.kotlinLogging)
     implementation(Dependencies.springBootStarter)
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation(Dependencies.springWebFlux)
 
     testImplementation(TestDependencies.kotlinTest)
     testImplementation(TestDependencies.junitJupiterTest)

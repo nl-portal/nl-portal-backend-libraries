@@ -19,11 +19,11 @@ package nl.nlportal.besluiten.client
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.besluitenapi")
-data class BesluitenApiConfig(
-    var enabled: Boolean = false,
-    var properties: BesluitenApiConfigProperties = BesluitenApiConfigProperties(),
-) {
-    data class BesluitenApiConfigProperties(
+class BesluitenApiConfig {
+    var enabled: Boolean = false
+    var properties: BesluitenApiConfigProperties = BesluitenApiConfigProperties()
+
+    class BesluitenApiConfigProperties(
         var url: String = "",
         var clientId: String = "",
         var secret: String = "",

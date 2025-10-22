@@ -28,7 +28,7 @@ dependencies {
 
     api("org.springframework.boot:spring-boot-starter-validation")
     api("org.springframework.boot:spring-boot-starter-security")
-    api("org.springframework.boot:spring-boot-starter-webflux")
+    api(Dependencies.springWebFlux)
     api("org.springframework.security:spring-security-oauth2-jose")
     api("org.springframework.security:spring-security-oauth2-resource-server")
 
@@ -37,8 +37,7 @@ dependencies {
     api(Dependencies.springCloudBootstrap)
 
     // Jackson
-    api(Dependencies.jacksonBom)
-    api("com.fasterxml.jackson.module:jackson-module-kotlin")
+    api(Dependencies.jacksonKotlinModule)
 
     api(Dependencies.commonsCodec)
 
