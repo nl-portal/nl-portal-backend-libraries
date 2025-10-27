@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2025 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,10 +33,9 @@ object LocalDateTimeCoercing : Coercing<LocalDateTime, String> {
         graphQLContext: GraphQLContext,
         locale: Locale,
     ): LocalDateTime =
-        runCatching {
-            LocalDateTime.parse(input as? String)
-        }.getOrElse {
-            throw CoercingParseValueException("Expected valid LocalDateTime but was $input")
+        when (input is String) {
+            true -> LocalDateTime.parse(input)
+            else -> throw CoercingParseValueException("Expected valid LocalDateTime but was $input")
         }
 
     override fun parseLiteral(
@@ -45,11 +44,9 @@ object LocalDateTimeCoercing : Coercing<LocalDateTime, String> {
         graphQLContext: GraphQLContext,
         locale: Locale,
     ): LocalDateTime {
-        val dateString = (input as? StringValue)?.value
-        return runCatching {
-            LocalDateTime.parse(dateString)
-        }.getOrElse {
-            throw CoercingParseLiteralException("Expected valid LocalDateTime literal but was $dateString")
+        when (input is StringValue) {
+            true -> return LocalDateTime.parse(input.value)
+            else -> throw CoercingParseLiteralException("Expected valid LocalDateTime literal but was $input")
         }
     }
 

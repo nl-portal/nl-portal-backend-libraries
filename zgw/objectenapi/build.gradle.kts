@@ -25,7 +25,7 @@ dependencies {
 
     implementation(Dependencies.kotlinCoroutines)
 
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
+    testImplementation(TestDependencies.springBootTest)
     testImplementation(TestDependencies.okHttpMockWebserver)
     testImplementation(TestDependencies.okHttp)
 }

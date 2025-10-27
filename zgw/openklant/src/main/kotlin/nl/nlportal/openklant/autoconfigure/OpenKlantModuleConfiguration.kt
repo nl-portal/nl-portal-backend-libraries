@@ -19,10 +19,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import java.net.URI
 
 @ConfigurationProperties(prefix = "nl-portal.config.openklant2")
-data class OpenKlantModuleConfiguration(
-    var enabled: Boolean = false,
-    var properties: OpenKlantConfigurationProperties = OpenKlantConfigurationProperties(),
-) {
+class OpenKlantModuleConfiguration {
+    var enabled: Boolean = false
+    var properties: OpenKlantConfigurationProperties = OpenKlantConfigurationProperties()
+
     init {
         if (enabled) {
             requireNotNull(properties.klantinteractiesApiUrl) {
@@ -34,10 +34,10 @@ data class OpenKlantModuleConfiguration(
         }
     }
 
-    data class OpenKlantConfigurationProperties(
+    class OpenKlantConfigurationProperties(
         var contactgegevensApiUrl: URI? = null,
         var klantinteractiesApiUrl: URI? = null,
         var token: String? = null,
-        val digitalAdressenReferentie: String? = null,
+        var digitalAdressenReferentie: String? = null,
     )
 }

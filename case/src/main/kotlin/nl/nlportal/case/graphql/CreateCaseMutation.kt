@@ -15,28 +15,29 @@
  */
 package nl.nlportal.case.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Mutation
 import com.fasterxml.jackson.databind.node.ObjectNode
-import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.case.service.CaseService
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.stereotype.Controller
 
+@Controller
 class CreateCaseMutation(
     private val caseService: CaseService,
-) : Mutation {
-    @GraphQLDescription("Convert submission to json return resulting data")
+) {
+    @MutationMapping
     fun processSubmission(
-        submission: ObjectNode,
-        caseDefinitionId: String,
-        initialStatus: String? = null,
-        dfe: DataFetchingEnvironment,
+        @Argument submission: ObjectNode,
+        @Argument caseDefinitionId: String,
+        @Argument initialStatus: String? = null,
+        authentication: CommonGroundAuthentication,
     ): CaseCreated {
         val case =
             caseService.create(
                 caseDefinitionId,
                 submission,
-                dfe.graphQlContext.get(AUTHENTICATION_KEY),
+                authentication,
                 initialStatus,
             )
         return CaseCreated(case.caseId.value)

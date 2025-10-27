@@ -19,7 +19,7 @@ jobs:
             -   name: Log scope
                 run: echo "::notice::Using scope - \"${{ steps.detect-scope.outputs.SCOPE }}\"."
             -   name: Checkout
-                uses: actions/checkout@v4
+                uses: actions/checkout@v5
             -   name: Get version from project
                 id: get-project-version
                 run: echo "PROJECT_VERSION=$(grep "version" gradle.properties | sed 's/^.*=//')" >> $GITHUB_OUTPUT
@@ -46,7 +46,7 @@ jobs:
             targets: "['sonatype-snapshots']"
             artifactVersion: ${{ needs.detect-variables.outputs.version }}
         secrets: inherit
-    
+
     # Disabled for now
     # publish-release:
     #     needs:

@@ -15,7 +15,6 @@
  */
 package nl.nlportal.haalcentraal2.client.path
 
-import com.expediagroup.graphql.generator.annotations.GraphQLIgnore
 import org.springframework.web.util.UriBuilder
 
 open class HaalCentraal2Path {
@@ -27,5 +26,4 @@ open class HaalCentraal2Path {
         }
 }
 
-@GraphQLIgnore
 interface HaalCentraal2Filters

@@ -17,7 +17,10 @@ package nl.nlportal.product.service
 
 import com.fasterxml.jackson.databind.node.ObjectNode
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.util.UUID
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
+import nl.nlportal.commonground.authentication.BedrijfAuthentication
+import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.product.client.ProductConfig.ProductConfigProperties
@@ -41,7 +44,6 @@ import nl.nlportal.zgw.taak.domain.TaakV2
 import nl.nlportal.zgw.taak.graphql.TaakPageV2
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
-import java.util.UUID
 
 class ProductService(
     val productConfigProperties: ProductConfigProperties,
@@ -72,11 +74,12 @@ class ProductService(
         authentication: CommonGroundAuthentication,
         productTypeId: UUID?,
     ): ProductPage {
-        val objectSearchParametersProducten =
-            mutableListOf(
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.userId),
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE, Comparator.EQUAL_TO, productTypeId.toString()),
-            )
+        val objectSearchParametersProducten = getInitiatorSearchParameters(authentication).toMutableList()
+
+        objectSearchParametersProducten.add(
+            ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE, Comparator.EQUAL_TO, productTypeId.toString()),
+        )
+
         return getObjectsApiObjectResultPage<Product>(
             productConfigProperties.productInstantieTypeUrl,
             objectSearchParametersProducten,
@@ -97,11 +100,11 @@ class ProductService(
         if (productTypeUUID == null) {
             productTypeUUID = getProductType(null, productName)?.id
         }
-        val objectSearchParametersProducten =
-            mutableListOf(
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.userId),
-                ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE, Comparator.EQUAL_TO, productTypeUUID.toString()),
-            )
+        val objectSearchParametersProducten = getInitiatorSearchParameters(authentication).toMutableList()
+
+        objectSearchParametersProducten.add(
+            ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE, Comparator.EQUAL_TO, productTypeUUID.toString()),
+        )
 
         productSubType?.let {
             objectSearchParametersProducten.add(
@@ -229,14 +232,14 @@ class ProductService(
 
     suspend fun updateVerbruiksObject(
         id: UUID,
-        submission: ObjectNode,
+        submission: Any,
         authentication: CommonGroundAuthentication,
     ): ProductVerbruiksObject {
         val objectsApiVerbruiksObject =
             getObjectsApiObjectById<ProductVerbruiksObject>(id.toString()) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
 
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiVerbruiksObject)
-        updateRequest.record.data.data = submission
+        updateRequest.record.data.data = Mapper.get().convertValue(submission, ObjectNode::class.java)
         updateRequest.record.correctedBy = authentication.getUserRepresentation()
         updateRequest.record.correctionFor = objectsApiVerbruiksObject.record.index.toString()
 
@@ -294,6 +297,11 @@ class ProductService(
     }
 
     suspend fun getProductTypes(authentication: CommonGroundAuthentication): List<ProductType> {
+        // if user has a machtigingsdienst in their authentication return an empty list
+        if (authenticationMachtigingsDienstService.hasMachtingDienst(authentication)) {
+            return emptyList()
+        }
+
         val productTypes =
             getObjectsApiObjectResultPage<ProductType>(
                 productConfigProperties.productTypeUrl,
@@ -440,8 +448,35 @@ class ProductService(
             else -> null
         }
 
+    private fun getInitiatorSearchParameters(authentication: CommonGroundAuthentication): List<ObjectSearchParameter> =
+        when (authentication) {
+            is BurgerAuthentication -> {
+                listOf(
+                    ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.userId),
+                    ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_BETROKKENETYPE, Comparator.EQUAL_TO, "natuurlijkpersoon"),
+                )
+            }
+            is BedrijfAuthentication -> {
+                val vestigingsNummer = authentication.getVestigingsNummer()
+                if (vestigingsNummer != null) {
+                    listOf(
+                        ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.userId),
+                        ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_BETROKKENETYPE, Comparator.EQUAL_TO, "nietnatuurlijkpersoon"),
+                    )
+                } else {
+                    listOf(
+                        ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.userId),
+                        ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_BETROKKENETYPE, Comparator.EQUAL_TO, "vestiging"),
+                    )
+                }
+            }
+
+            else -> throw IllegalArgumentException("Authentication not supported")
+        }
+
     companion object {
         const val OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE = "rollen__initiator__identificatie"
+        const val OBJECT_SEARCH_PARAMETER_ROLLEN_BETROKKENETYPE = "rollen__initiator__betrokkeneType"
         const val OBJECT_SEARCH_PARAMETER_PRODUCT_INSTANTIE = "productInstantie"
         const val OBJECT_SEARCH_PARAMETER_PRODUCT_NAME = "naam"
         const val OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE = "PDCProductType"

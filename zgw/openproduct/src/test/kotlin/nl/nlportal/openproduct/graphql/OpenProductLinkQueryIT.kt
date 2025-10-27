@@ -15,37 +15,37 @@
  */
 package nl.nlportal.openproduct.graphql
 
+import com.fasterxml.jackson.databind.JsonNode
+import java.net.URI
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.openproduct.TestHelper
-import nl.nlportal.openproduct.TestHelper.verifyOnlyDataExists
+import nl.nlportal.openproduct.TestHelper.readFileAsString
 import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.core.io.ClassPathResource
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
-import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.web.reactive.function.BodyInserters
-import java.net.URI
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class OpenProductLinkQueryIT(
-    @Autowired private val webTestClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val openProductModuleConfiguration: OpenProductModuleConfiguration,
 ) {
     companion object {
@@ -87,45 +87,37 @@ class OpenProductLinkQueryIT(
     @WithBurgerUser("569312863")
     fun `get links`() =
         runTest {
-            val basePath = "$.data.getOpenProductLinks"
-            val resultPath = "$basePath.content[0]"
-            webTestClient
-                .post()
-                .uri { builder ->
-                    builder
-                        .path("/graphql")
-                        .build()
-                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductLinks.gql")))
-                .exchange()
-                .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.numberOfElements")
-                .isEqualTo(2)
-                .jsonPath("$resultPath.naam")
-                .isEqualTo("link naar Ritense website")
-                .jsonPath("$resultPath.url")
-                .isEqualTo("https://ritense.com/")
+            val responseBody =
+                httpGraphQlTester
+                    .document(readFileAsString("/config/graphql/getOpenProductLinks.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getOpenProductLinks")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals(2, responseBody.get("numberOfElements")?.intValue())
+            assertEquals("link naar Ritense website", responseBody.requiredAt("/content/0/naam")?.textValue())
+            assertEquals("https://ritense.com/", responseBody.requiredAt("/content/0/url")?.textValue())
         }
 
     @Test
     @WithBurgerUser("569312863")
     fun `get link`() =
         runTest {
-            val basePath = "$.data.getOpenProductLink"
-            webTestClient
-                .post()
-                .uri { builder ->
-                    builder
-                        .path("/graphql")
-                        .build()
-                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductLink.gql")))
-                .exchange()
-                .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.naam")
-                .isEqualTo("link naar Ritense website")
-                .jsonPath("$basePath.url")
-                .isEqualTo("https://ritense.com/")
+            val responseBody =
+                httpGraphQlTester
+                    .document(readFileAsString("/config/graphql/getOpenProductLink.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getOpenProductLink")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals("link naar Ritense website", responseBody.requiredAt("/naam")?.textValue())
+            assertEquals("https://ritense.com/", responseBody.requiredAt("/url")?.textValue())
         }
 
     private fun setupMockServer() {

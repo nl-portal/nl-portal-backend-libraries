@@ -41,14 +41,14 @@ class OpenKlant2KlantinteractiesClientTest {
         hostUrl = "http://${mockServer.hostName}:${mockServer.port}/"
         apiUrl = "http://${mockServer.hostName}:${mockServer.port}/myapi/v1"
         openklantModuleConfiguration =
-            OpenKlantModuleConfiguration(
-                enabled = true,
+            OpenKlantModuleConfiguration().apply {
+                enabled = true
                 properties =
                     OpenKlantConfigurationProperties(
                         klantinteractiesApiUrl = mockServer.url("/myapi/v1").toUri(),
                         token = "SuperSecretToken1234",
-                    ),
-            )
+                    )
+            }
         openKlant2Client = OpenKlant2KlantinteractiesClient(openklantModuleConfiguration.properties)
     }
 

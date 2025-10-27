@@ -23,16 +23,21 @@ dependencies {
     api(project(":core"))
     api(project(":graphql"))
     api(project(":zgw:taak"))
-    api("com.worldline-solutions", "onlinepayments-sdk-java", "6.2.0")
+    api("com.worldline-solutions:onlinepayments-sdk-java:6.3.0")
 
-    api("commons-codec", "commons-codec", "1.19.0")
+    implementation(Dependencies.kotlinCoroutines)
+    implementation(Dependencies.kotlinCoroutinesReactor)
+    implementation("org.springframework.data:spring-data-commons")
+
+    api("commons-codec:commons-codec:1.19.0")
     testImplementation(project(":zgw:common-ground-authentication-test"))
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
-    testImplementation("org.assertj", "assertj-core")
+    testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.assertJCore)
     testImplementation(TestDependencies.mockitoKotlin)
     testImplementation(TestDependencies.kotlinCoroutines)
     testImplementation(TestDependencies.okHttpMockWebserver)
     testImplementation(TestDependencies.okHttp)
+    testImplementation("org.springframework.graphql:spring-graphql-test")
 }
 
 val jar: Jar by tasks

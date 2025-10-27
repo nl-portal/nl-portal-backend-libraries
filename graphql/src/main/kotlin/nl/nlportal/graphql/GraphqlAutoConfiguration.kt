@@ -15,20 +15,31 @@
  */
 package nl.nlportal.graphql
 
-import com.expediagroup.graphql.generator.directives.KotlinDirectiveWiringFactory
-import com.expediagroup.graphql.server.operations.Query
-import nl.nlportal.graphql.hooks.CustomSchemaGeneratorHooks
-import nl.nlportal.graphql.query.DefaultQuery
+import graphql.scalars.ExtendedScalars
+import graphql.schema.idl.RuntimeWiring
+import nl.nlportal.graphql.customtype.graphqlLocalDateTimeType
+import nl.nlportal.graphql.customtype.graphqlZonedDateTimeType
 import org.springframework.boot.autoconfigure.AutoConfiguration
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
+import org.springframework.graphql.execution.RuntimeWiringConfigurer
 
 @AutoConfiguration
 class GraphqlAutoConfiguration {
     @Bean
-    fun hooks() = CustomSchemaGeneratorHooks(KotlinDirectiveWiringFactory())
-
-    @Bean
-    @ConditionalOnMissingBean(Query::class)
-    fun defaultQuery(): Query = DefaultQuery()
+    fun runtimeWiringConfigurer(): RuntimeWiringConfigurer =
+        RuntimeWiringConfigurer { wiringBuilder: RuntimeWiring.Builder? ->
+            wiringBuilder!!
+                .scalar(ExtendedScalars.GraphQLBigDecimal)
+                .scalar(ExtendedScalars.GraphQLBigInteger)
+                .scalar(ExtendedScalars.GraphQLLong)
+                .scalar(ExtendedScalars.PositiveFloat)
+                .scalar(ExtendedScalars.Json)
+                .scalar(ExtendedScalars.LocalTime)
+                .scalar(ExtendedScalars.DateTime)
+                .scalar(ExtendedScalars.Date)
+                .scalar(ExtendedScalars.Locale)
+                .scalar(ExtendedScalars.UUID)
+                .scalar(graphqlZonedDateTimeType)
+                .scalar(graphqlLocalDateTimeType)
+        }
 }

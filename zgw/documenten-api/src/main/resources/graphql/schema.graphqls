@@ -1,0 +1,10 @@
+extend type Query {
+
+    # Gets a document content by id as base64 encoded
+    getDocumentContent(documentApi: String!, id: UUID!): DocumentContent!
+
+}
+
+type DocumentContent {
+    content: String!
+}

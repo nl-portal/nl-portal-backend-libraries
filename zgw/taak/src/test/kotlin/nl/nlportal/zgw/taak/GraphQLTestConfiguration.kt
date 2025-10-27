@@ -25,16 +25,16 @@ import org.springframework.util.StreamUtils
 @Configuration
 class GraphQLTestConfiguration {
 
-    @Value("classpath:graphql/getTakenQueryV2.graphql")
+    @Value("classpath:graphql-queries/getTakenQueryV2.graphql")
     private lateinit var getTakenFileV2: Resource
 
-    @Value("classpath:graphql/getTaakByIdQueryV2.graphql")
+    @Value("classpath:graphql-queries/getTaakByIdQueryV2.graphql")
     private lateinit var getTaakByIdFileV2: Resource
 
-    @Value("classpath:graphql/getTaakByIdQueryV2Bedrijf.graphql")
+    @Value("classpath:graphql-queries/getTaakByIdQueryV2Bedrijf.graphql")
     private lateinit var getTaakByIdFileV2Bedrijf: Resource
 
-    @Value("classpath:graphql/updateTaakV2.graphql")
+    @Value("classpath:graphql-queries/updateTaakV2.graphql")
     private lateinit var updateTaakV2: Resource
 
     @Bean

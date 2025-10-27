@@ -15,7 +15,6 @@
  */
 package nl.nlportal.openproduct
 
-import com.expediagroup.graphql.server.operations.Query
 import nl.nlportal.core.security.OauthSecurityAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -40,11 +39,4 @@ class TestApplication {
             .authorizeExchange {
                 it.anyExchange().permitAll()
             }.build()
-
-    @Bean
-    fun testQuery(): Query = TestQuery()
-
-    class TestQuery : Query {
-        fun runTest(): String = "Test"
-    }
 }

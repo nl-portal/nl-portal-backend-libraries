@@ -15,16 +15,20 @@
  */
 package nl.nlportal.payment.direct.graphql
 
-import com.expediagroup.graphql.server.operations.Query
 import nl.nlportal.payment.direct.domain.DirectPaymentStatus
 import nl.nlportal.payment.direct.service.DirectPaymentService
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
+@Controller
 class DirectPaymentQuery(
     private val directPaymentService: DirectPaymentService,
-) : Query {
+) {
+    @QueryMapping
     suspend fun getDirectPaymentStatus(
-        identifier: String,
-        hostedCheckoutId: String,
+        @Argument identifier: String,
+        @Argument hostedCheckoutId: String,
     ): DirectPaymentStatus =
         directPaymentService.getDirectPaymentStatus(
             identifier = identifier,

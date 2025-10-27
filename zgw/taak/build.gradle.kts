@@ -27,9 +27,15 @@ dependencies {
     api(project(":zgw:common-ground-authentication"))
     api(project(":zgw:objectenapi"))
 
-    testImplementation("org.springframework.boot", "spring-boot-starter-test")
+
+    implementation(Dependencies.kotlinCoroutines)
+    implementation(Dependencies.kotlinCoroutinesReactor)
+    implementation("org.springframework.data:spring-data-commons")
+
+    testImplementation(TestDependencies.springBootTest)
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.okHttpMockWebserver)
+    testImplementation("org.springframework.graphql:spring-graphql-test")
 }
 
 val jar: Jar by tasks

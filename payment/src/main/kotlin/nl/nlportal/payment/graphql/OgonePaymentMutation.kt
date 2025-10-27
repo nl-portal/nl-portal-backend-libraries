@@ -15,17 +15,21 @@
  */
 package nl.nlportal.payment.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Mutation
 import nl.nlportal.payment.domain.OgonePayment
 import nl.nlportal.payment.domain.OgonePaymentRequest
 import nl.nlportal.payment.service.OgonePaymentService
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.stereotype.Controller
 
+@Controller
 class OgonePaymentMutation(
     private val ogonePaymentService: OgonePaymentService,
-) : Mutation {
-    @GraphQLDescription("Create Ogone payment with hash and fields")
-    fun generateOgonePayment(paymentRequest: OgonePaymentRequest): OgonePayment =
+) {
+    @MutationMapping
+    fun generateOgonePayment(
+        @Argument paymentRequest: OgonePaymentRequest,
+    ): OgonePayment =
         ogonePaymentService.createPayment(
             paymentRequest = paymentRequest,
         )

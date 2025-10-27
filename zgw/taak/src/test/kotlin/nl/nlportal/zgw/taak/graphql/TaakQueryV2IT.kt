@@ -15,8 +15,13 @@
  */
 package nl.nlportal.zgw.taak.graphql
 
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.module.kotlin.treeToValue
+import io.github.oshai.kotlinlogging.KLogger
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.commonground.authentication.WithBurgerUser
+import nl.nlportal.core.util.Mapper
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import nl.nlportal.zgw.taak.TestHelper
 import nl.nlportal.zgw.taak.TestHelper.verifyOnlyDataExists
@@ -27,22 +32,27 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.reactive.server.WebTestClient
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(PER_CLASS)
 internal class TaakQueryV2IT(
-    @Autowired private val testClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
 ) {
     lateinit var server: MockWebServer
@@ -72,56 +82,54 @@ internal class TaakQueryV2IT(
     @Test
     @WithBurgerUser("569312863")
     fun `should get list of tasks for burger`() {
-        val basePath = "$.data.getTakenV2"
-        val resultPath = "$basePath.content[0]"
+        val responseBody =
+            httpGraphQlTester
+                .document(getTakenPayloadV2)
+                .execute()
+                .errors()
+                .verify()
+                .path("getTakenV2")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(getTakenPayloadV2)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$resultPath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce708")
-            .jsonPath("$resultPath.status").isEqualTo(TaakStatus.OPEN.toString())
-            .jsonPath("$resultPath.soort").isEqualTo(TaakSoort.PORTAALFORMULIER.name)
-            .jsonPath("$resultPath.verloopdatum").isEqualTo("2023-09-20T18:25:43.524")
-            .jsonPath(
-                "$resultPath.portaalformulier.formulier.value",
-            ).isEqualTo("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4")
-            .jsonPath("$basePath.number").isEqualTo(1)
-            .jsonPath("$basePath.size").isEqualTo(1)
-            .jsonPath("$basePath.totalPages").isEqualTo(1)
-            .jsonPath("$basePath.totalElements").isEqualTo(1)
-            .jsonPath("$basePath.numberOfElements").isEqualTo(1)
+        assertEquals(1, responseBody.get("number")?.intValue())
+        assertEquals(1, responseBody.get("size")?.intValue())
+        assertEquals(1, responseBody.get("totalPages")?.intValue())
+        assertEquals(1, responseBody.get("totalElements")?.intValue())
+        assertEquals(1, responseBody.get("numberOfElements")?.intValue())
+        assertEquals("58fad5ab-dc2f-11ec-9075-f22a405ce708", responseBody.requiredAt("/content/0/id")?.textValue())
+        assertEquals(TaakStatus.OPEN.toString(), responseBody.requiredAt("/content/0/status")?.textValue())
+        assertEquals(TaakSoort.PORTAALFORMULIER.name, responseBody.requiredAt("/content/0/soort")?.textValue())
+        assertEquals("2023-09-20T18:25:43.524", responseBody.requiredAt("/content/0/verloopdatum")?.textValue())
+        assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/content/0/portaalformulier/formulier/value")?.textValue())
     }
 
     // Disabled durin migratiom from V1 to V2
     // @Test
     @WithBedrijfUser("14127293")
     fun `should get list of tasks for bedrijf`() {
-        val basePath = "$.data.getTakenV2"
-        val resultPath = "$basePath.content[0]"
+        val responseBody =
+            httpGraphQlTester
+                .document(getTakenPayloadV2)
+                .execute()
+                .errors()
+                .verify()
+                .path("getTakenV2")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(getTakenPayloadV2)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$resultPath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce708")
-            .jsonPath("$resultPath.status").isEqualTo(TaakStatus.OPEN.toString())
-            .jsonPath("$resultPath.verloopdatum").isEqualTo("2023-09-20T18:25:43.524")
-            .jsonPath(
-                "$resultPath.portaalformulier.formulier",
-            ).isEqualTo("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4")
-            .jsonPath("$resultPath.portaalformulier.data.voornaam").isEqualTo("Jan")
-            .jsonPath("$basePath.number").isEqualTo(1)
-            .jsonPath("$basePath.size").isEqualTo(1)
-            .jsonPath("$basePath.totalPages").isEqualTo(2)
-            .jsonPath("$basePath.totalElements").isEqualTo(2)
-            .jsonPath("$basePath.numberOfElements").isEqualTo(1)
+        assertEquals(1, responseBody.get("number")?.intValue())
+        assertEquals(1, responseBody.get("size")?.intValue())
+        assertEquals(2, responseBody.get("totalPages")?.intValue())
+        assertEquals(2, responseBody.get("totalElements")?.intValue())
+        assertEquals(1, responseBody.get("numberOfElements")?.intValue())
+        assertEquals("58fad5ab-dc2f-11ec-9075-f22a405ce708", responseBody.requiredAt("/content/0/id")?.textValue())
+        assertEquals(TaakStatus.OPEN.toString(), responseBody.requiredAt("/content/0/status")?.textValue())
+        assertEquals(TaakSoort.PORTAALFORMULIER.name, responseBody.requiredAt("/content/0/soort")?.textValue())
+        assertEquals("2023-09-20T18:25:43.524", responseBody.requiredAt("/content/0/verloopdatum")?.textValue())
+        assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/content/0/portaalformulier/formulier/value")?.textValue())
+        assertEquals("Jan", responseBody.requiredAt("/content/0/portaalformulier/data/voornaam")?.textValue())
+
     }
 
     @Test
@@ -130,70 +138,65 @@ internal class TaakQueryV2IT(
         machtigingsDienst = "dd95bdee-c493-4757-bae3-fe0a5b5063f8",
     )
     fun `should get list of tasks for bedrijf with machtigingsdienst`() {
-        val basePath = "$.data.getTakenV2"
-        val resultPath = "$basePath.content[0]"
+        val responseBody =
+            httpGraphQlTester
+                .document(getTakenPayloadV2)
+                .execute()
+                .errors()
+                .verify()
+                .path("getTakenV2")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(getTakenPayloadV2)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$resultPath.id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
-            .jsonPath("$resultPath.status").isEqualTo(TaakStatus.OPEN.toString())
-            .jsonPath("$resultPath.verloopdatum").isEqualTo("2023-09-20T18:25:43.524")
-            .jsonPath(
-                "$resultPath.portaalformulier.formulier.value",
-            ).isEqualTo("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4")
-            .jsonPath("$resultPath.portaalformulier.data.voornaam").isEqualTo("Jan")
-            .jsonPath("$basePath.number").isEqualTo(1)
-            .jsonPath("$basePath.size").isEqualTo(1)
-            .jsonPath("$basePath.totalPages").isEqualTo(1)
-            .jsonPath("$basePath.totalElements").isEqualTo(1)
-            .jsonPath("$basePath.numberOfElements").isEqualTo(1)
+        assertEquals(1, responseBody.get("number")?.intValue())
+        assertEquals(1, responseBody.get("size")?.intValue())
+        assertEquals(1, responseBody.get("totalPages")?.intValue())
+        assertEquals(1, responseBody.get("totalElements")?.intValue())
+        assertEquals(1, responseBody.get("numberOfElements")?.intValue())
+        assertEquals("2d725c07-2f26-4705-8637-438a42b5ac2d", responseBody.requiredAt("/content/0/id")?.textValue())
+        assertEquals(TaakStatus.OPEN.toString(), responseBody.requiredAt("/content/0/status")?.textValue())
+        assertEquals(TaakSoort.PORTAALFORMULIER.name, responseBody.requiredAt("/content/0/soort")?.textValue())
+        assertEquals("2023-09-20T18:25:43.524", responseBody.requiredAt("/content/0/verloopdatum")?.textValue())
+        assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/content/0/portaalformulier/formulier/value")?.textValue())
+        assertEquals("Jan", responseBody.requiredAt("/content/0/portaalformulier/data/voornaam")?.textValue())
     }
 
     @Test
     @WithBurgerUser("569312863")
     fun `should get task by id for burger`() {
-        val basePath = "$.data.getTaakByIdV2"
+        val responseBody =
+            httpGraphQlTester
+                .document(getTaakByIdPayloadV2)
+                .execute()
+                .errors()
+                .verify()
+                .path("getTaakByIdV2")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(getTaakByIdPayloadV2)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.id").isEqualTo("58fad5ab-dc2f-11ec-9075-f22a405ce707")
-            .jsonPath(
-                "$basePath.portaalformulier.formulier.value",
-            ).isEqualTo("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4")
-        // .jsonPath("$basePath.portaalformulier.data.voornaam").isEqualTo("Jan")
-        // .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
-        // .jsonPath("$basePath.verloopdatum").isEqualTo("2023-09-20T18:25:43.524")
+        assertEquals("58fad5ab-dc2f-11ec-9075-f22a405ce707", responseBody.get("id")?.textValue())
+        assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/portaalformulier/formulier/value")?.textValue())
     }
 
     @Test
     @WithBedrijfUser("14127293")
     fun `should get task by id for bedrijf`() {
-        val basePath = "$.data.getTaakByIdV2"
+        val responseBody =
+            httpGraphQlTester
+                .document(getTaakByIdPayloadV2Bedrijf)
+                .execute()
+                .errors()
+                .verify()
+                .path("getTaakByIdV2")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(getTaakByIdPayloadV2Bedrijf)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
-            .jsonPath(
-                "$basePath.portaalformulier.formulier.value",
-            ).isEqualTo("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4")
-            .jsonPath("$basePath.portaalformulier.data.voornaam").isEqualTo("Jan")
-            .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
-            .jsonPath("$basePath.verloopdatum").isEqualTo("2023-09-20T18:25:43.524")
+        assertEquals("2d725c07-2f26-4705-8637-438a42b5ac2d", responseBody.get("id")?.textValue())
+        assertEquals(TaakStatus.OPEN.toString(), responseBody.get("status")?.textValue())
+        assertEquals("2023-09-20T18:25:43.524", responseBody.get("verloopdatum")?.textValue())
+        assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/portaalformulier/formulier/value")?.textValue())
+        assertEquals("Jan", responseBody.requiredAt("/portaalformulier/data/voornaam")?.textValue())
+
     }
 
     @Test
@@ -202,37 +205,30 @@ internal class TaakQueryV2IT(
         machtigingsDienst = "dd95bdee-c493-4757-bae3-fe0a5b5063f8",
     )
     fun `should get task by id for bedrijf and machtigingsdienst`() {
-        val basePath = "$.data.getTaakByIdV2"
+        val responseBody =
+            httpGraphQlTester
+                .document(getTaakByIdPayloadV2Bedrijf)
+                .execute()
+                .errors()
+                .verify()
+                .path("getTaakByIdV2")
+                .entity(JsonNode::class.java)
+                .get()
 
-        testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(getTaakByIdPayloadV2Bedrijf)
-            .exchange()
-            .verifyOnlyDataExists(basePath)
-            .jsonPath("$basePath.id").isEqualTo("2d725c07-2f26-4705-8637-438a42b5ac2d")
-            .jsonPath(
-                "$basePath.portaalformulier.formulier.value",
-            ).isEqualTo("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4")
-            .jsonPath("$basePath.portaalformulier.data.voornaam").isEqualTo("Jan")
-            .jsonPath("$basePath.status").isEqualTo(TaakStatus.OPEN.toString())
-            .jsonPath("$basePath.verloopdatum").isEqualTo("2023-09-20T18:25:43.524")
+        assertEquals("2d725c07-2f26-4705-8637-438a42b5ac2d", responseBody.get("id")?.textValue())
+        assertEquals(TaakStatus.OPEN.toString(), responseBody.get("status")?.textValue())
+        assertEquals("2023-09-20T18:25:43.524", responseBody.get("verloopdatum")?.textValue())
+        assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/portaalformulier/formulier/value")?.textValue())
+        assertEquals("Jan", responseBody.requiredAt("/portaalformulier/data/voornaam")?.textValue())
     }
 
     @Test
     @WithBurgerUser("569312864")
     fun `should unauthorized get task by id for burger`() {
-        val basePath = "$.data.getTaakByIdV2"
-
-        testClient.post()
-            .uri("/graphql")
-            .accept(APPLICATION_JSON)
-            .contentType(MediaType("application", "graphql"))
-            .bodyValue(getTaakByIdPayloadV2)
-            .exchange()
-            .expectBody()
-            .jsonPath(basePath)
+        httpGraphQlTester
+                .document(getTaakByIdPayloadV2Bedrijf)
+                .execute()
+                .errors()
     }
 
     fun setupMockObjectsApiServer() {

@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
 @EnableConfigurationProperties(OgonePaymentConfig::class)
-@ConditionalOnProperty(prefix = "nl-portal.config.payment.ogone", name = ["enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled", "payment.ogone.enabled"], havingValue = "true")
 class PaymentAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(OgonePaymentService::class)

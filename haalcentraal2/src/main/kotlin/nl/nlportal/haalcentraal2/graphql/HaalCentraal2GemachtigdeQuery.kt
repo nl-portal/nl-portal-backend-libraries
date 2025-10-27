@@ -15,26 +15,22 @@
  */
 package nl.nlportal.haalcentraal2.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Query
-import graphql.schema.DataFetchingEnvironment
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import nl.nlportal.haalcentraal.hr.service.HandelsregisterService
 import nl.nlportal.haalcentraal2.domain.GemachtigdeV2
 import nl.nlportal.haalcentraal2.service.HaalCentraal2Service
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
 
+@Controller
 class HaalCentraal2GemachtigdeQuery(
     val haalCentraal2Service: HaalCentraal2Service,
     val handelsregisterService: HandelsregisterService,
-) : Query {
-    @GraphQLDescription("Gets the data of the gemachtigde")
-    suspend fun getGemachtigdeV2(dfe: DataFetchingEnvironment): GemachtigdeV2 {
-        val authentication: CommonGroundAuthentication = dfe.graphQlContext.get(AUTHENTICATION_KEY)
-
-        return GemachtigdeV2(
+) {
+    @QueryMapping
+    suspend fun getGemachtigdeV2(authentication: CommonGroundAuthentication): GemachtigdeV2 =
+        GemachtigdeV2(
             haalCentraal2Service.getGemachtigde(authentication),
             handelsregisterService.getGemachtigde(authentication),
         )
-    }
 }

@@ -15,37 +15,37 @@
  */
 package nl.nlportal.openproduct.graphql
 
+import com.fasterxml.jackson.databind.JsonNode
+import java.net.URI
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.openproduct.TestHelper
-import nl.nlportal.openproduct.TestHelper.verifyOnlyDataExists
+import nl.nlportal.openproduct.TestHelper.readFileAsString
 import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.core.io.ClassPathResource
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
-import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.web.reactive.function.BodyInserters
-import java.net.URI
 
 @SpringBootTest
+@AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class OpenProductActieQueryIT(
-    @Autowired private val webTestClient: WebTestClient,
+    @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val openProductModuleConfiguration: OpenProductModuleConfiguration,
 ) {
     companion object {
@@ -89,65 +89,54 @@ class OpenProductActieQueryIT(
     @WithBurgerUser("569312863")
     fun `get acties`() =
         runTest {
-            val basePath = "$.data.getOpenProductActies"
-            val resultPath = "$basePath.content[0]"
-            webTestClient
-                .post()
-                .uri { builder ->
-                    builder
-                        .path("/graphql")
-                        .build()
-                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductActies.gql")))
-                .exchange()
-                .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.number")
-                .isEqualTo(1)
-                .jsonPath("$resultPath.naam")
-                .isEqualTo("watkanikregelen-belastingen")
-                .jsonPath("$resultPath.url")
-                .isEqualTo("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen")
+            val responseBody =
+                httpGraphQlTester
+                    .document(readFileAsString("/config/graphql/getOpenProductActies.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getOpenProductActies")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals(1, responseBody.get("number")?.intValue())
+            assertEquals("watkanikregelen-belastingen", responseBody.requiredAt("/content/0/naam")?.textValue())
+            assertEquals("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen", responseBody.requiredAt("/content/0/url")?.textValue())
         }
 
     @Test
     @WithBurgerUser("569312863")
     fun `get actie`() =
         runTest {
-            val basePath = "$.data.getOpenProductActie"
-            webTestClient
-                .post()
-                .uri { builder ->
-                    builder
-                        .path("/graphql")
-                        .build()
-                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductActie.gql")))
-                .exchange()
-                .verifyOnlyDataExists(basePath)
-                .jsonPath("$basePath.naam")
-                .isEqualTo("watkanikregelen-belastingen")
-                .jsonPath("$basePath.url")
-                .isEqualTo("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen")
+            val responseBody =
+                httpGraphQlTester
+                    .document(readFileAsString("/config/graphql/getOpenProductActie.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getOpenProductActie")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals("watkanikregelen-belastingen", responseBody.requiredAt("/naam")?.textValue())
+            assertEquals("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen", responseBody.requiredAt("/url")?.textValue())
         }
 
     @Test
     @WithBurgerUser("569312863")
     fun `get actie decisions`() =
         runTest {
-            val basePath = "$.data.getOpenProductActieDecision"
-            webTestClient
-                .post()
-                .uri { builder ->
-                    builder
-                        .path("/graphql")
-                        .build()
-                }.header(HttpHeaders.CONTENT_TYPE, MediaType("application", "graphql").toString())
-                .body(BodyInserters.fromResource(ClassPathResource("/config/graphql/getOpenProductActieDecision.gql")))
-                .exchange()
-                .verifyOnlyDataExists(basePath)
-                .jsonPath(
-                    "$basePath[0].action.value",
-                ).isEqualTo("https://openformulieren-zgw.test.denhaag.nl/bezwaarschrift-overige-gemeentelijke-belastingen/startpagina")
+            val responseBody =
+                httpGraphQlTester
+                    .document(readFileAsString("/config/graphql/getOpenProductActieDecision.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getOpenProductActieDecision")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals("https://openformulieren-zgw.test.denhaag.nl/bezwaarschrift-overige-gemeentelijke-belastingen/startpagina", responseBody.requiredAt("/0/action/value")?.textValue())
         }
 
     private fun setupMockServer() {

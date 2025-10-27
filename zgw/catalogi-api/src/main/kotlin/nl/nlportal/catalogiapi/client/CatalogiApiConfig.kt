@@ -18,11 +18,11 @@ package nl.nlportal.catalogiapi.client
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.catalogiapi")
-data class CatalogiApiConfig(
-    var enabled: Boolean = false,
-    var properties: CatalogiApiConfigProperties = CatalogiApiConfigProperties(),
-) {
-    data class CatalogiApiConfigProperties(
+class CatalogiApiConfig {
+    var enabled: Boolean = false
+    var properties: CatalogiApiConfigProperties = CatalogiApiConfigProperties()
+
+    class CatalogiApiConfigProperties(
         var url: String = "",
         var clientId: String = "",
         var secret: String = "",

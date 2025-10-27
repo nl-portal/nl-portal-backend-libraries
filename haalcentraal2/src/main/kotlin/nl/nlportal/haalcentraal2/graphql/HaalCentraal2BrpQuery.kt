@@ -15,17 +15,32 @@
  */
 package nl.nlportal.haalcentraal2.graphql
 
-import com.expediagroup.graphql.generator.annotations.GraphQLDescription
-import com.expediagroup.graphql.server.operations.Query
-import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
-import graphql.schema.DataFetchingEnvironment
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.haalcentraal2.domain.brp.BrpPersoon
 import nl.nlportal.haalcentraal2.service.HaalCentraal2Service
-import kotlin.text.get
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.graphql.data.method.annotation.SchemaMapping
+import org.springframework.stereotype.Controller
 
+@Controller
 class HaalCentraal2BrpQuery(
     val haalCentraal2Service: HaalCentraal2Service,
-) : Query {
-    @GraphQLDescription("Gets the persoon data")
-    suspend fun getPersoonV2(dfe: DataFetchingEnvironment): BrpPersoon? = haalCentraal2Service.getPersoon(dfe.graphQlContext[AUTHENTICATION_KEY])
+) {
+    @QueryMapping
+    suspend fun getPersoonV2(authentication: CommonGroundAuthentication): BrpPersoon? =
+        haalCentraal2Service.getPersoon(
+            authentication = authentication,
+        )
+
+    @SchemaMapping(typeName = "BrpPersoon", field = "bewonersAantal")
+    suspend fun bewonersAantal(
+        authentication: CommonGroundAuthentication,
+        persoon: BrpPersoon,
+    ): Int? =
+        persoon.verblijfplaats?.adresseerbaarObjectIdentificatie?.let {
+            haalCentraal2Service.getBewonersAantal(
+                authentication = authentication,
+                adresseerbaarObjectIdentificatie = it,
+            )
+        }
 }
