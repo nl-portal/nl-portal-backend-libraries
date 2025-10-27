@@ -20,6 +20,7 @@ import graphql.schema.idl.RuntimeWiring
 import nl.nlportal.graphql.customtype.graphqlLocalDateTimeType
 import nl.nlportal.graphql.customtype.graphqlZonedDateTimeType
 import org.springframework.boot.autoconfigure.AutoConfiguration
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.graphql.execution.RuntimeWiringConfigurer
 
@@ -42,4 +43,8 @@ class GraphqlAutoConfiguration {
                 .scalar(graphqlZonedDateTimeType)
                 .scalar(graphqlLocalDateTimeType)
         }
+
+    @Bean
+    @ConditionalOnMissingBean(GraphQLExceptionHandler::class)
+    fun graphQLExceptionHandler() = GraphQLExceptionHandler()
 }
