@@ -6,7 +6,8 @@ query {
             numberOfElements
             content {
                 id,
-                naam
+                naam,
+                geldigTot
             }
         }
 }
