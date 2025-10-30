@@ -460,13 +460,13 @@ class ProductService(
                 val vestigingsNummer = authentication.getVestigingsNummer()
                 if (vestigingsNummer != null) {
                     listOf(
-                        ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.userId),
-                        ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_BETROKKENETYPE, Comparator.EQUAL_TO, "nietnatuurlijkpersoon"),
+                        ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, vestigingsNummer),
+                        ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_BETROKKENETYPE, Comparator.EQUAL_TO, "vestiging"),
                     )
                 } else {
                     listOf(
                         ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_IDENTIFICATIE, Comparator.EQUAL_TO, authentication.userId),
-                        ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_BETROKKENETYPE, Comparator.EQUAL_TO, "vestiging"),
+                        ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_BETROKKENETYPE, Comparator.EQUAL_TO, "nietnatuurlijkpersoon"),
                     )
                 }
             }

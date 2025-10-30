@@ -1248,7 +1248,7 @@ class OpenProductService(
                     listOf(
                         Pair(
                             OpenProductProductenFilters.EIGENAREN_VESTIGINGSNUMMER,
-                            authentication.userId,
+                            vestigingsNummer,
                         ),
                     )
                 } else {
