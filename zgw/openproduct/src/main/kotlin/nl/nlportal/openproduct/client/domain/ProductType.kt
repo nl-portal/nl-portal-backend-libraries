@@ -50,9 +50,9 @@ data class OpenProductProductType(
     val externCodes: List<OpenProductProductTypeExterneCode> = emptyList(),
     val parameters: List<OpenProductProductTypeParameter> = emptyList(),
     @JsonProperty("verbruiksobject_schema")
-    val verbruiksObjectSchema: OpenProductSchema,
+    val verbruiksObjectSchema: OpenProductSchema? = null,
     @JsonProperty("dataobject_schema")
-    val dataObjectSchema: OpenProductSchema,
+    val dataObjectSchema: OpenProductSchema? = null,
     val zaaktypen: List<OpenProductUrl> = emptyList(),
     val verzoektypen: List<OpenProductUrl> = emptyList(),
     val processen: List<OpenProductUrl> = emptyList(),
