@@ -143,9 +143,7 @@ input UpdateProductRequestInput {
 type OpenProductActie {
     naam: String!
     productTypeUuid: UUID
-    url: String!
     uuid: UUID!
-    mapping: JSON!
 }
 
 type OpenProductBestand {

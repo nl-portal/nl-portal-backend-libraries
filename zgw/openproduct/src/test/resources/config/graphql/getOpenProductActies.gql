@@ -9,7 +9,6 @@ query {
          numberOfElements
          content {
             uuid,
-            url,
             naam
         }
     }
