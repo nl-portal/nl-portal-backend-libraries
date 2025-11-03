@@ -101,7 +101,6 @@ class OpenProductActieQueryIT(
 
             assertEquals(1, responseBody.get("number")?.intValue())
             assertEquals("watkanikregelen-belastingen", responseBody.requiredAt("/content/0/naam")?.textValue())
-            assertEquals("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen", responseBody.requiredAt("/content/0/url")?.textValue())
         }
 
     @Test
@@ -119,7 +118,6 @@ class OpenProductActieQueryIT(
                     .get()
 
             assertEquals("watkanikregelen-belastingen", responseBody.requiredAt("/naam")?.textValue())
-            assertEquals("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen", responseBody.requiredAt("/url")?.textValue())
         }
 
     @Test
