@@ -130,10 +130,6 @@ class OpenProductDmnService(
                 }
             }
 
-            if (variablesMapping.isEmpty()) {
-                logger.warn { SOURCE_MAPPING_FAILED + actie.naam }
-                return emptyList()
-            }
             val dmnRequest =
                 OpenProductDmnRequest(
                     key = actie.naam,
