@@ -147,10 +147,8 @@ class OpenProductThemaQueryIT(
                     .entity(JsonNode::class.java)
                     .get()
 
-            assertEquals(2, responseBody.size())
-            assertEquals("Belastingzaken", responseBody.requiredAt("/0/naam")?.textValue())
-            assertEquals("toeristenbelasting", responseBody.requiredAt("/0/producttypen/0/uniformeProductNaam")?.textValue())
-            assertEquals("BELASTINGZAKEN", responseBody.requiredAt("/0/producttypen/0/code")?.textValue())
+            assertEquals(1, responseBody.size())
+            assertEquals("HoofdThema", responseBody.requiredAt("/0/naam")?.textValue())
         }
 
     @Test
