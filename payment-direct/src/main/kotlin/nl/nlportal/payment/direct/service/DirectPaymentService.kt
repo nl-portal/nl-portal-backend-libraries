@@ -17,6 +17,7 @@ package nl.nlportal.payment.direct.service
 
 import com.onlinepayments.communication.RequestHeader
 import com.onlinepayments.domain.AmountOfMoney
+import com.onlinepayments.domain.CardPaymentMethodSpecificInputBase
 import com.onlinepayments.domain.CreateHostedCheckoutRequest
 import com.onlinepayments.domain.Feedbacks
 import com.onlinepayments.domain.HostedCheckoutSpecificInput
@@ -107,6 +108,10 @@ open class DirectPaymentService(
                 hostedCheckoutSpecificInput.variant = it
             }
 
+            val cardPaymentMethodSpecificInput =
+                CardPaymentMethodSpecificInputBase()
+                    .withAuthorizationMode("SALE")
+
             val checkoutRequest =
                 CreateHostedCheckoutRequest()
                     .withOrder(
@@ -122,6 +127,8 @@ open class DirectPaymentService(
                             ),
                     ).withHostedCheckoutSpecificInput(
                         hostedCheckoutSpecificInput,
+                    ).withCardPaymentMethodSpecificInput(
+                        cardPaymentMethodSpecificInput,
                     )
 
             // if webhookUrl property is configured, set webhook url in the request. Benefit is dynamically set the webhook url per environment.

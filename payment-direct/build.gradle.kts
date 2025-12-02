@@ -23,7 +23,7 @@ dependencies {
     api(project(":core"))
     api(project(":graphql"))
     api(project(":zgw:taak"))
-    api("com.worldline-solutions:onlinepayments-sdk-java:6.3.0")
+    api("com.worldline-solutions:onlinepayments-sdk-java:6.4.0")
 
     implementation(Dependencies.kotlinCoroutines)
     implementation(Dependencies.kotlinCoroutinesReactor)
