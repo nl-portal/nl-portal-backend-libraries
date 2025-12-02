@@ -26,14 +26,14 @@ import nl.nlportal.documentenapi.service.VirusScanService
 import nl.nlportal.documentenapi.web.rest.DocumentContentResource
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.ResourceLoader
 
-@Configuration
+@AutoConfiguration
 @EnableConfigurationProperties(DocumentApisConfig::class)
 @ConditionalOnProperty(prefix = "nl-portal.config.documentenapis", name = ["enabled"], havingValue = "true")
 
