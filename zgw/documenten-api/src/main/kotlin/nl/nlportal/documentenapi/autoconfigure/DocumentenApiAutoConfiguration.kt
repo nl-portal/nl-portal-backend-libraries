@@ -15,17 +15,14 @@
  */
 package nl.nlportal.documentenapi.autoconfigure
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.core.ssl.ResourceClientSslContextResolver
-import nl.nlportal.documentenapi.client.ClamAVVirusScanConfig
 import nl.nlportal.documentenapi.client.DocumentApisConfig
 import nl.nlportal.documentenapi.client.DocumentenApiClient
 import nl.nlportal.documentenapi.graphql.DocumentContentQuery
 import nl.nlportal.documentenapi.security.config.DocumentContentResourceHttpSecurityConfigurer
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.documentenapi.service.VirusScanService
-import nl.nlportal.documentenapi.service.impl.ClamAVService
 import nl.nlportal.documentenapi.web.rest.DocumentContentResource
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import org.springframework.beans.factory.annotation.Autowired
@@ -37,19 +34,10 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.ResourceLoader
 
 @Configuration
-@EnableConfigurationProperties(DocumentApisConfig::class, ClamAVVirusScanConfig::class)
+@EnableConfigurationProperties(DocumentApisConfig::class)
 @ConditionalOnProperty(prefix = "nl-portal.config.documentenapis", name = ["enabled"], havingValue = "true")
-class DocumentenApiAutoConfiguration {
 
-    @Bean
-    @ConditionalOnProperty(prefix = "nl-portal.config.virusscan.clamav", name = ["enabled"], havingValue = "true")
-    @ConditionalOnMissingBean(VirusScanService::class)
-    fun virusScanService(clamAVVirusScanConfig: ClamAVVirusScanConfig): VirusScanService {
-        logger.info {
-            "ClamAV virusscan is loaded with host: ${clamAVVirusScanConfig.properties.hostName} and port: ${clamAVVirusScanConfig.properties.port}"
-        }
-        return ClamAVService(clamAVVirusScanConfig.properties)
-    }
+class DocumentenApiAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(ClientSslContextResolver::class)
@@ -92,12 +80,8 @@ class DocumentenApiAutoConfiguration {
     fun documentContentResource2(
         documentenApiService: DocumentenApiService,
         virusScanService: VirusScanService?,
-        documentApisConfig: DocumentApisConfig,
+        documentApisConfig: DocumentApisConfig
     ): DocumentContentResource {
         return DocumentContentResource(documentenApiService, virusScanService, documentApisConfig)
-    }
-
-    companion object {
-        private val logger = KotlinLogging.logger {}
     }
 }
