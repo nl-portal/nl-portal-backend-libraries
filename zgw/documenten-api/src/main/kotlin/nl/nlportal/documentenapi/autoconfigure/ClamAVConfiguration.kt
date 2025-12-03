@@ -20,24 +20,21 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.documentenapi.client.ClamAVVirusScanConfig
 import nl.nlportal.documentenapi.service.VirusScanService
 import nl.nlportal.documentenapi.service.impl.ClamAVService
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 
-@Configuration
-@ConditionalOnProperty(prefix = "nl-portal.config.virusscan.clamav", name = ["enabled"], havingValue = "true")
+@AutoConfiguration
 @EnableConfigurationProperties(ClamAVVirusScanConfig::class)
+@ConditionalOnProperty(prefix = "nl-portal.config.virusscan.clamav", name = ["enabled"], havingValue = "true")
 class ClamAVConfiguration {
     @Bean
-    fun clamAVVirusScanConfig(): ClamAVVirusScanConfig {
-        return ClamAVVirusScanConfig()
-    }
-
-    @Bean
     @ConditionalOnMissingBean(VirusScanService::class)
-    fun virusScanService(clamAVVirusScanConfig: ClamAVVirusScanConfig): VirusScanService {
+    fun virusScanService(
+        clamAVVirusScanConfig: ClamAVVirusScanConfig
+    ): VirusScanService {
         logger.info {
             "ClamAV virusscan is loaded with host: ${clamAVVirusScanConfig.properties.hostName} and port: ${clamAVVirusScanConfig.properties.port}"
         }
