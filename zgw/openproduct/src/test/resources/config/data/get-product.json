@@ -34,6 +34,9 @@
   "documenten": [],
   "zaken": [
     {
+      "url": "http://localhost:8001/zaken/api/v1/zaken/703af290-abe0-418c-b9c3-10a65e662789"
+    },
+    {
       "url": "http://localhost:8001/zaken/api/v1/zaken/703af290-abe0-418c-b9c3-10a65e662788"
     }
   ],

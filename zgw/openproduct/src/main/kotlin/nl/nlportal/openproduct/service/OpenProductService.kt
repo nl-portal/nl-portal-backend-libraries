@@ -1042,10 +1042,17 @@ class OpenProductService(
      * @param: zaken, list of zaken
      * @return: list of zaken
      */
-    suspend fun getProductZaken(zaken: List<OpenProductUrl>): List<Zaak> =
-        zaken.map {
-            zakenApiClient.zaken().get(CoreUtils.extractId(it.url)).retrieve()
+    suspend fun getProductZaken(zaken: List<OpenProductUrl>): List<Zaak> {
+        val zaakList = mutableListOf<Zaak>()
+        zaken.forEach {
+            try {
+                zaakList.add(zakenApiClient.zaken().get(CoreUtils.extractId(it.url)).retrieve())
+            } catch (e: Exception) {
+                logger.error(e) { "Error while fetching product zaken: " + e.message }
+            }
         }
+        return zaakList
+    }
 
     /**
      * Get taken of a product
