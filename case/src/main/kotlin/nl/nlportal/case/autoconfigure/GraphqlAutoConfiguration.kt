@@ -20,11 +20,11 @@ import nl.nlportal.case.graphql.CaseInstanceQuery
 import nl.nlportal.case.graphql.CreateCaseMutation
 import nl.nlportal.case.service.CaseDefinitionService
 import nl.nlportal.case.service.CaseService
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 
-@Configuration
+@AutoConfiguration
 class GraphqlAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(CreateCaseMutation::class)

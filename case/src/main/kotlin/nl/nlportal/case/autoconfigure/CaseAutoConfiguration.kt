@@ -16,6 +16,7 @@
 package nl.nlportal.case.autoconfigure
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.util.function.Consumer
 import nl.nlportal.case.autodeployment.CaseDefinitionApplicationReadyEventListener
 import nl.nlportal.case.repository.CaseDefinitionRepository
 import nl.nlportal.case.repository.CaseRepository
@@ -26,16 +27,15 @@ import nl.nlportal.messaging.`in`.UpdateExternalIdPortalCaseMessage
 import nl.nlportal.messaging.`in`.UpdatePortalCaseMessage
 import nl.nlportal.messaging.`in`.UpdateStatusPortalCaseMessage
 import nl.nlportal.messaging.out.PortalMessage
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.ResourceLoader
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import reactor.core.publisher.Sinks
-import java.util.function.Consumer
 
-@Configuration
+@AutoConfiguration
 @EnableJpaRepositories(basePackages = ["nl.nlportal.case.repository"])
 @EntityScan("nl.nlportal.case.domain")
 class CaseAutoConfiguration {
