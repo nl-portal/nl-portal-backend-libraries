@@ -2,7 +2,7 @@ package nl.nlportal.zgw.taak.domain
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ObjectNode
 import nl.nlportal.core.util.Mapper
 
 @JsonInclude(JsonInclude.Include.NON_NULL)

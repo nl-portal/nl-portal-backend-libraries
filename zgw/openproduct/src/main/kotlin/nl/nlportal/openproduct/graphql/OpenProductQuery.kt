@@ -15,8 +15,8 @@
  */
 package nl.nlportal.openproduct.graphql
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.node.ObjectNode
 import java.util.UUID
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.Mapper

@@ -15,8 +15,6 @@
  */
 package nl.nlportal.openproduct.graphql
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.node.ObjectNode
 import java.util.UUID
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.Mapper
@@ -26,6 +24,8 @@ import nl.nlportal.openproduct.service.OpenProductService
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.stereotype.Controller
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.node.ObjectNode
 
 @Controller
 class OpenProductActieQuery(

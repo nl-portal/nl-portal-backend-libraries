@@ -15,8 +15,8 @@
  */
 package nl.nlportal.messaging.`in`
 
-import com.fasterxml.jackson.core.JsonPointer
-import com.fasterxml.jackson.databind.JsonNode
+import tools.jackson.core.JsonPointer
+import tools.jackson.databind.JsonNode
 
 data class UpdatePortalCaseMessage(
     val externalId: String,

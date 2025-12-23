@@ -15,8 +15,8 @@
  */
 package nl.nlportal.case.service
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.JsonNodeFactory
+import tools.jackson.databind.node.ObjectNode
 import nl.nlportal.case.BaseTest
 import nl.nlportal.case.domain.Case
 import nl.nlportal.case.domain.CaseDefinitionId

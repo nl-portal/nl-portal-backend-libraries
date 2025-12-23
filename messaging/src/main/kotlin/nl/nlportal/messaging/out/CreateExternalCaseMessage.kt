@@ -15,7 +15,7 @@
  */
 package nl.nlportal.messaging.out
 
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ObjectNode
 import java.util.UUID
 
 data class CreateExternalCaseMessage(

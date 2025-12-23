@@ -28,7 +28,7 @@ dependencies {
     api(project(":core"))
 
     // GraphQL
-    api("org.springframework.boot", "spring-boot-starter-graphql")
+    api("org.springframework.boot:spring-boot-starter-graphql")
     api(Dependencies.graphqlJavaExtendedScalars)
     // Jackson
     api(Dependencies.jacksonKotlinModule)

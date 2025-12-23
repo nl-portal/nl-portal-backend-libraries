@@ -33,10 +33,12 @@ object Dependencies {
     val apacheCommons by lazy { "org.apache.commons:commons-lang3:${Versions.apacheCommons}"}
     val graphqlJavaExtendedScalars by lazy { "com.graphql-java:graphql-java-extended-scalars:${Versions.graphqlJava}"}
 
-    val jacksonKotlinModule by lazy { "com.fasterxml.jackson.module:jackson-module-kotlin" }
+    val jacksonKotlinModule by lazy { "tools.jackson.module:jackson-module-kotlin" }
     val kotlinLogging by lazy { "io.github.oshai:kotlin-logging-jvm:${Versions.kotlinLogging}"}
     val springCloudStream by lazy { "org.springframework.cloud:spring-cloud-stream:${Versions.springCloud}" }
     val springCloudStreamBinderRabbit by lazy { "org.springframework.cloud:spring-cloud-stream-binder-rabbit:${Versions.springCloud}" }
     val springBootStarter by lazy {"org.springframework.boot:spring-boot-starter"}
     val springWebFlux by lazy {"org.springframework.boot:spring-boot-starter-webflux"}
+    val springWebMvc by lazy {"org.springframework.boot:spring-boot-starter-webmvc"}
+    val springBootWebClient by lazy {"org.springframework.boot:spring-boot-starter-webclient"}
 }

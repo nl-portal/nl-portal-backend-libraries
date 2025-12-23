@@ -15,7 +15,6 @@
  */
 package nl.nlportal.haalcentraal.hr.graphql
 
-import com.fasterxml.jackson.databind.JsonNode
 import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.haalcentraal.hr.TestHelper
 import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrConfig
@@ -29,15 +28,16 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.graphql.test.tester.HttpGraphQlTester
+import tools.jackson.databind.JsonNode
 
 @SpringBootTest
 @AutoConfigureHttpGraphQlTester
-@AutoConfigureWebTestClient
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@AutoConfigureWebTestClient(timeout = "36000")
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 internal class HandelsregisterQueryIT(
     @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val haalCentraalClientConfig: HaalCentraalHrConfig,

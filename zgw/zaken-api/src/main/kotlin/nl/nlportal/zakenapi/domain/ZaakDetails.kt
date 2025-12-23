@@ -15,7 +15,7 @@
  */
 package nl.nlportal.zakenapi.domain
 
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ObjectNode
 
 data class ZaakDetails(
     val zaak: String,

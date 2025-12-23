@@ -15,7 +15,7 @@
  */
 package nl.nlportal.case.domain
 
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ObjectNode
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 import nl.nlportal.case.domain.meta.MetaJsonSchemaV7Draft

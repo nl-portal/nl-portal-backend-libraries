@@ -29,6 +29,6 @@ class DigitaleAdresQuery(
     suspend fun getUserDigitaleAdressen(authentication: CommonGroundAuthentication): List<DigitaleAdresResponse>? {
         val userDigitaleAdressen = openklant2Service.findDigitaleAdressen(authentication)
 
-        return userDigitaleAdressen?.map { DigitaleAdresResponse.fromOpenKlant2DigitaleAdres(it) }
+        return userDigitaleAdressen.map { DigitaleAdresResponse.fromOpenKlant2DigitaleAdres(it) }
     }
 }

@@ -21,6 +21,7 @@ object SecurityUtils {
     fun currentUserLogin(): String =
         SecurityContextHolder
             .getContext()
-            .authentication.principal
+            .authentication
+            ?.principal
             .toString()
 }

@@ -37,7 +37,7 @@ dependencies {
     testImplementation(TestDependencies.springBootTest)
     testImplementation(TestDependencies.assertJCore)
     testImplementation(TestDependencies.postgresql)
-    testImplementation("org.springframework.graphql:spring-graphql-test")
+    testImplementation(TestDependencies.springGraphQLTest)
 }
 
 val jar: Jar by tasks

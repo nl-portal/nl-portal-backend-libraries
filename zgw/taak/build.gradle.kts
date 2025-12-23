@@ -33,9 +33,11 @@ dependencies {
     implementation("org.springframework.data:spring-data-commons")
 
     testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.springBootWebClientTest)
+    testImplementation(TestDependencies.springBootTestWebClient)
+    testImplementation(TestDependencies.springGraphQLTest)
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.okHttpMockWebserver)
-    testImplementation("org.springframework.graphql:spring-graphql-test")
 }
 
 val jar: Jar by tasks

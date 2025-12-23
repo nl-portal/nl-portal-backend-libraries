@@ -16,17 +16,17 @@
 package nl.nlportal.openklant.client
 
 import io.netty.handler.logging.LogLevel.TRACE
+import kotlin.reflect.full.primaryConstructor
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.openklant.autoconfigure.OpenKlantModuleConfiguration.OpenKlantConfigurationProperties
 import nl.nlportal.openklant.client.path.KlantInteractiesPath
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
-import org.springframework.http.codec.json.Jackson2JsonDecoder
-import org.springframework.http.codec.json.Jackson2JsonEncoder
+import org.springframework.http.codec.json.JacksonJsonDecoder
+import org.springframework.http.codec.json.JacksonJsonEncoder
 import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
-import kotlin.reflect.full.primaryConstructor
 
 class OpenKlant2KlantinteractiesClient(
     private val openKlantConfigurationProperties: OpenKlantConfigurationProperties,
@@ -58,11 +58,11 @@ class OpenKlant2KlantinteractiesClient(
                     .codecs { configurer ->
                         with(configurer.defaultCodecs()) {
                             maxInMemorySize(16 * 1024 * 1024)
-                            jackson2JsonEncoder(
-                                Jackson2JsonEncoder(Mapper.get()),
+                            jacksonJsonEncoder(
+                                JacksonJsonEncoder(Mapper.get()),
                             )
-                            jackson2JsonDecoder(
-                                Jackson2JsonDecoder(Mapper.get()),
+                            jacksonJsonDecoder(
+                                JacksonJsonDecoder(Mapper.get()),
                             )
                         }
                     }.build(),

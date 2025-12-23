@@ -15,7 +15,7 @@
  */
 package nl.nlportal.case.graphql
 
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ObjectNode
 import nl.nlportal.case.domain.Case
 import java.time.format.DateTimeFormatter
 import java.util.UUID

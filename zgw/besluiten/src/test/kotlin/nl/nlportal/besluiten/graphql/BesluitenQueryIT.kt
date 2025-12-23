@@ -1,6 +1,6 @@
 package nl.nlportal.besluiten.graphql
 
-import com.fasterxml.jackson.databind.JsonNode
+import tools.jackson.databind.JsonNode
 import nl.nlportal.besluiten.TestHelper
 import nl.nlportal.besluiten.client.BesluitenApiConfig
 import nl.nlportal.catalogiapi.client.CatalogiApiConfig
@@ -17,8 +17,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry

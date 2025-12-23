@@ -15,7 +15,7 @@
  */
 package nl.nlportal.case.graphql
 
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ObjectNode
 import nl.nlportal.case.service.CaseService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import org.springframework.graphql.data.method.annotation.Argument

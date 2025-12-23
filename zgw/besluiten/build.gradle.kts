@@ -35,6 +35,9 @@ dependencies {
     testImplementation(TestDependencies.kotlinTest)
     testImplementation(TestDependencies.junitJupiterTest)
     testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.springBootWebClientTest)
+    testImplementation(TestDependencies.springBootTestWebClient)
+    testImplementation(TestDependencies.springGraphQLTest)
     testImplementation(TestDependencies.springSecurityTest)
 
     testImplementation(TestDependencies.kotlinCoroutines)
@@ -43,7 +46,6 @@ dependencies {
     testImplementation(TestDependencies.okHttp)
     testImplementation(TestDependencies.postgresql)
     testImplementation(project(":zgw:common-ground-authentication-test"))
-    testImplementation("org.springframework.graphql:spring-graphql-test")
 }
 
 val jar: Jar by tasks

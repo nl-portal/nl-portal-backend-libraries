@@ -15,12 +15,12 @@
  */
 package nl.nlportal.commonground.authentication
 
-import com.fasterxml.jackson.core.type.TypeReference
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.core.util.Mapper
 import org.springframework.core.io.ResourceLoader
 import java.util.UUID
+import tools.jackson.core.type.TypeReference
 
 class AuthenticationMachtigingsDienstService(
     val authenticationMachtingsDienstConfig: AuthenticationMachtigingsDienstConfig,

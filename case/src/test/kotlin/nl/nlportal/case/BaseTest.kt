@@ -15,9 +15,8 @@
  */
 package nl.nlportal.case
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.node.JsonNodeFactory
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.JsonNodeFactory
+import tools.jackson.databind.node.ObjectNode
 import nl.nlportal.case.domain.Case
 import nl.nlportal.case.domain.CaseDefinition
 import nl.nlportal.case.domain.CaseDefinitionId
@@ -36,6 +35,7 @@ import reactor.core.publisher.Sinks
 import java.io.InputStream
 import java.time.LocalDateTime
 import java.util.UUID
+import tools.jackson.core.type.TypeReference
 
 abstract class BaseTest {
     @Mock

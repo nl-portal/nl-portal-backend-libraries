@@ -16,7 +16,7 @@
 package nl.nlportal.data
 
 import org.springframework.boot.autoconfigure.AutoConfiguration
-import org.springframework.boot.autoconfigure.domain.EntityScan
+import org.springframework.boot.persistence.autoconfigure.EntityScan
 
 @AutoConfiguration
 @EntityScan("nl.nlportal.data.domain")

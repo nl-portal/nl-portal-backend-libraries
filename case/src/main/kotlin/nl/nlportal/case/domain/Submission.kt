@@ -15,9 +15,9 @@
  */
 package nl.nlportal.case.domain
 
-import com.fasterxml.jackson.core.JsonPointer
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.core.JsonPointer
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 import org.hibernate.annotations.JdbcTypeCode

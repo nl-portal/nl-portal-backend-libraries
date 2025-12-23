@@ -15,7 +15,7 @@
  */
 package nl.nlportal.product.service
 
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ObjectNode
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.util.UUID
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService

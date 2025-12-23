@@ -31,7 +31,7 @@ class MessagingAutoConfiguration {
 
     // Supplier
     @Bean
-    fun portalEventSupplier(sink: Sinks.Many<PortalMessage>): Supplier<Flux<Message<PortalMessage>?>> =
+    fun portalEventSupplier(sink: Sinks.Many<PortalMessage>): Supplier<Flux<Message<PortalMessage>>> =
         Supplier {
             sink.asFlux().map { e ->
                 MessageBuilder

@@ -15,8 +15,7 @@
  */
 package nl.nlportal.case.service
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ObjectNode
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.case.domain.CaseDefinition
 import nl.nlportal.case.domain.CaseDefinitionId
@@ -31,6 +30,7 @@ import org.springframework.core.io.support.ResourcePatternUtils
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.StreamUtils
 import java.nio.charset.StandardCharsets
+import tools.jackson.core.type.TypeReference
 
 @Transactional
 class CaseDefinitionService(

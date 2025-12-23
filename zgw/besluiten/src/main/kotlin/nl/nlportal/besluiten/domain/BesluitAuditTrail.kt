@@ -1,6 +1,6 @@
 package nl.nlportal.besluiten.domain
 
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ObjectNode
 import java.time.LocalDateTime
 import java.util.UUID
 

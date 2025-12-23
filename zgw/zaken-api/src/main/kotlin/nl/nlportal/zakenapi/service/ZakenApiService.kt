@@ -181,9 +181,7 @@ class ZakenApiService(
         val zaakDetailsObjects =
             zakenApiClient.zaakObjecten().search().forZaak(zaakId).retrieveAll()
                 .filter { it.objectTypeOverige.lowercase(Locale.getDefault()) == "portaalzaakdetails" }
-                .map { getObjectApiZaakDetails(it.objectUrl) }
-                .map { it?.record?.data?.data!! }
-                .flatten()
+                .map { getObjectApiZaakDetails(it.objectUrl) }.flatMap { it?.record?.data?.data!! }
         return ZaakDetails(zaakUrl, zaakDetailsObjects)
     }
 

@@ -26,7 +26,7 @@ object Versions {
     const val commonsCodec = "1.20.0"
     const val graphqlJava ="24.0"
     const val kotlinLogging = "7.0.13"
-    const val springCloud = "4.3.0"
+    const val springCloud = "5.0.0"
 
     //Test versions
     const val hamcrest = "3.0"

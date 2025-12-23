@@ -30,6 +30,8 @@ dependencies {
     testImplementation(TestDependencies.kotlinTest)
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.springBootWebClientTest)
+    testImplementation(TestDependencies.springBootTestWebClient)
     testImplementation(TestDependencies.springSecurityTest)
 
     testImplementation(TestDependencies.kotlinCoroutines)

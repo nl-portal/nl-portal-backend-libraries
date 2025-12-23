@@ -15,7 +15,7 @@
  */
 package nl.nlportal.form.domain
 
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ObjectNode
 import nl.nlportal.core.util.Mapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach

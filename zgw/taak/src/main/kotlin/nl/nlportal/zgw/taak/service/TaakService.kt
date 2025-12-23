@@ -15,8 +15,6 @@
  */
 package nl.nlportal.zgw.taak.service
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.node.ObjectNode
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
@@ -37,6 +35,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
+import tools.jackson.core.type.TypeReference
 
 open class TaakService(
     private val objectsApiClient: ObjectsApiClient,
@@ -206,7 +205,7 @@ open class TaakService(
                 ObjectSearchParameter(
                     "titel",
                     Comparator.STRING_CONTAINS,
-                    it.toString(),
+                    it,
                 ),
             )
         }

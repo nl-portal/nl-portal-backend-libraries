@@ -15,8 +15,8 @@
  */
 package nl.nlportal.case.service
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.case.domain.Case
 import nl.nlportal.case.domain.CaseDefinition
@@ -139,9 +139,9 @@ class CaseService(
         keys: MutableList<String>,
     ): List<String> {
         if (json.isObject) {
-            json.fields().forEachRemaining { field ->
-                keys.add(field.key)
-                getKeys(field.value, keys)
+            json.properties().forEach { property ->
+                keys.add(property.key)
+                getKeys(property.value, keys)
             }
         }
         if (json.isArray) {

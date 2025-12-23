@@ -15,7 +15,7 @@
  */
 package nl.nlportal.form.service
 
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ObjectNode
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.form.BaseIntegrationTest
 import nl.nlportal.form.domain.request.CreateFormDefinitionRequest

@@ -70,7 +70,7 @@ class HandelsregisterClient(
             ).baseUrl(haalCentraalHrClientConfig.url)
             .apply {
                 if (!haalCentraalHrClientConfig.apiKey.isNullOrBlank()) {
-                    it.defaultHeader("X-API-KEY", haalCentraalHrClientConfig.apiKey)
+                    it.defaultHeader("X-API-KEY", haalCentraalHrClientConfig.apiKey!!)
                     logger.debug { "X-API-KEY was set for client" }
                 }
             }.build()

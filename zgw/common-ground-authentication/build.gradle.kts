@@ -23,6 +23,8 @@ dependencies {
     api(project(":portal-authentication"))
 
     testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.springBootWebClientTest)
+    testImplementation(TestDependencies.springBootTestWebClient)
     testImplementation(TestDependencies.springSecurityTest)
     testImplementation(TestDependencies.kotlinTest)
     testImplementation(TestDependencies.mockitoKotlin)

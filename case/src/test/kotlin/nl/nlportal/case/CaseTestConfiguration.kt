@@ -19,18 +19,18 @@ import nl.nlportal.case.autodeployment.CaseDefinitionApplicationReadyEventListen
 import nl.nlportal.core.security.OauthSecurityAutoConfiguration
 import org.apache.commons.lang3.StringUtils
 import org.mockito.Mockito
-import org.springframework.beans.factory.ObjectProvider
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
-import org.springframework.boot.autoconfigure.security.SecurityProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.security.core.userdetails.MapReactiveUserDetailsService
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.util.regex.Pattern
+import org.springframework.beans.factory.ObjectProvider
+import org.springframework.boot.security.autoconfigure.SecurityProperties
 
 @SpringBootConfiguration
 @EnableAutoConfiguration(exclude = [OauthSecurityAutoConfiguration::class])
@@ -47,10 +47,17 @@ class CaseTestConfiguration {
     @ConditionalOnMissingBean
     fun reactiveUserDetailsService(
         properties: SecurityProperties,
-        passwordEncoder: ObjectProvider<PasswordEncoder?>,
+        passwordEncoder: ObjectProvider<Any>,
     ): MapReactiveUserDetailsService {
         val user: SecurityProperties.User = properties.getUser()
-        val userDetails = getUserDetails(user, getOrDeducePassword(user, passwordEncoder.getIfAvailable()))
+        val userDetails =
+            getUserDetails(
+                user,
+                getOrDeducePassword(
+                    user,
+                    passwordEncoder.getIfAvailable() as PasswordEncoder?,
+                ),
+            )
         return MapReactiveUserDetailsService(userDetails)
     }
 

@@ -15,8 +15,7 @@
  */
 package nl.nlportal.case.service
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ObjectNode
 import nl.nlportal.case.BaseIntegrationTest
 import nl.nlportal.core.util.Mapper
 import org.assertj.core.api.Assertions.assertThat
@@ -27,6 +26,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import tools.jackson.core.type.TypeReference
 
 @Transactional
 class CaseDefinitionServiceIntTest : BaseIntegrationTest() {

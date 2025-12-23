@@ -20,10 +20,10 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.web.reactive.server.WebTestClient
 import java.nio.charset.Charset
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")

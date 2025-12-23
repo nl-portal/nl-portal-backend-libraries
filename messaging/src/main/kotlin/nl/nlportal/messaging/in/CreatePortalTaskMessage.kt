@@ -15,7 +15,7 @@
  */
 package nl.nlportal.messaging.`in`
 
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ObjectNode
 
 data class CreatePortalTaskMessage(
     val taskId: String,

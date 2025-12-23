@@ -15,7 +15,7 @@
  */
 package nl.nlportal.haalcentraal.hr.client
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import kotlinx.coroutines.runBlocking
 import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrConfig.HaalCentraalHrConfigProperties
 import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit

@@ -15,6 +15,7 @@
  */
 package nl.nlportal.openproduct.client.path
 
+import java.util.UUID
 import nl.nlportal.openproduct.client.OpenProductTypeClient
 import nl.nlportal.openproduct.client.domain.OpenProductProductType
 import nl.nlportal.openproduct.client.domain.OpenProductProductTypeContent
@@ -22,7 +23,6 @@ import nl.nlportal.openproduct.client.domain.OpenProductProductTypesFilters
 import nl.nlportal.openproduct.client.domain.ResultPage
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.client.awaitBody
-import java.util.UUID
 
 class ProductTypes(
     val client: OpenProductTypeClient,
@@ -41,8 +41,11 @@ class ProductTypes(
                     .path(path)
                     .applyFilters(searchFilters)
                 uriBuilder.build()
-            }.header("Accept-Language", language)
-            .accept(MediaType.APPLICATION_JSON)
+            }.headers {
+                if (language != null) {
+                    it.add("Accept-Language", language)
+                }
+            }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody()
 
@@ -57,10 +60,11 @@ class ProductTypes(
                 uriBuilder
                     .path("$path/$id")
                     .build()
-            }.header(
-                "Accept-Language",
-                language,
-            ).accept(MediaType.APPLICATION_JSON)
+            }.headers {
+                if (language != null) {
+                    it.add("Accept-Language", language)
+                }
+            }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody()
 

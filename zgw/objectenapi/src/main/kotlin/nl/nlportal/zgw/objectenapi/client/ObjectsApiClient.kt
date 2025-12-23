@@ -16,6 +16,7 @@
 package nl.nlportal.zgw.objectenapi.client
 
 import io.netty.handler.logging.LogLevel.TRACE
+import java.util.UUID
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig.ObjectsApiClientConfigProperties
 import nl.nlportal.zgw.objectenapi.domain.CreateObjectsApiObjectRequest
@@ -26,8 +27,8 @@ import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.MediaType
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
-import org.springframework.http.codec.json.Jackson2JsonDecoder
-import org.springframework.http.codec.json.Jackson2JsonEncoder
+import org.springframework.http.codec.json.JacksonJsonDecoder
+import org.springframework.http.codec.json.JacksonJsonEncoder
 import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBodilessEntity
@@ -36,7 +37,6 @@ import org.springframework.web.reactive.function.client.awaitBodyOrNull
 import org.springframework.web.server.ResponseStatusException
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
-import java.util.UUID
 
 open class ObjectsApiClient(
     private val objectsApiClientConfig: ObjectsApiClientConfigProperties,
@@ -148,11 +148,11 @@ open class ObjectsApiClient(
                     .codecs { configurer ->
                         with(configurer.defaultCodecs()) {
                             maxInMemorySize(16 * 1024 * 1024)
-                            jackson2JsonEncoder(
-                                Jackson2JsonEncoder(Mapper.get()),
+                            jacksonJsonEncoder(
+                                JacksonJsonEncoder(Mapper.get()),
                             )
-                            jackson2JsonDecoder(
-                                Jackson2JsonDecoder(Mapper.get()),
+                            jacksonJsonDecoder(
+                                JacksonJsonDecoder(Mapper.get()),
                             )
                         }
                     }.build(),

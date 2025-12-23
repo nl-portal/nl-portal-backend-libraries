@@ -24,9 +24,9 @@ import liquibase.database.jvm.JdbcConnection
 import liquibase.exception.DatabaseException
 import liquibase.exception.LiquibaseException
 import liquibase.resource.ClassLoaderResourceAccessor
-import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties
 import java.sql.SQLException
 import javax.sql.DataSource
+import org.springframework.boot.liquibase.autoconfigure.LiquibaseProperties
 
 class LiquibaseRunner(
     private val liquibaseMasterChangeLogLocations: List<LiquibaseMasterChangeLogLocation>,

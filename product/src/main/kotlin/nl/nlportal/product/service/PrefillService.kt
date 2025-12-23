@@ -15,7 +15,7 @@
  */
 package nl.nlportal.product.service
 
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ObjectNode
 import com.github.wnameless.json.unflattener.JsonUnflattener
 import com.jayway.jsonpath.JsonPath
 import io.github.oshai.kotlinlogging.KotlinLogging

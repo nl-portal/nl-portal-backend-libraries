@@ -15,7 +15,7 @@
  */
 package nl.nlportal.form.domain.request
 
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ObjectNode
 
 data class CreateFormDefinitionRequest(
     private val name: String,

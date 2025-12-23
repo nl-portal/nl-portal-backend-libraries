@@ -15,7 +15,7 @@
  */
 package nl.nlportal.form.domain
 
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ObjectNode
 
 data class ObjectsApiFormIoFormDefinition(
     val formDefinition: ObjectNode,

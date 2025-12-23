@@ -18,13 +18,13 @@ package nl.nlportal.core
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.ObjectProvider
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
-import org.springframework.boot.autoconfigure.security.SecurityProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.security.core.userdetails.MapReactiveUserDetailsService
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.util.regex.Pattern
+import org.springframework.boot.security.autoconfigure.SecurityProperties
 
 class TestSecurityConfiguration {
     private val NOOP_PASSWORD_PREFIX = "{noop}"
@@ -35,10 +35,17 @@ class TestSecurityConfiguration {
     @ConditionalOnMissingBean
     fun reactiveUserDetailsService(
         properties: SecurityProperties,
-        passwordEncoder: ObjectProvider<PasswordEncoder?>,
+        passwordEncoder: ObjectProvider<Any>,
     ): MapReactiveUserDetailsService {
         val user: SecurityProperties.User = properties.getUser()
-        val userDetails = getUserDetails(user, getOrDeducePassword(user, passwordEncoder.getIfAvailable()))
+        val userDetails =
+            getUserDetails(
+                user,
+                getOrDeducePassword(
+                    user,
+                    passwordEncoder.getIfAvailable() as PasswordEncoder?,
+                ),
+            )
         return MapReactiveUserDetailsService(userDetails)
     }
 

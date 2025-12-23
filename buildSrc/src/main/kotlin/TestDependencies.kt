@@ -23,7 +23,10 @@ object TestDependencies {
     val okHttpTls by lazy { "com.squareup.okhttp3:okhttp-tls:${Versions.okHttp3}" }
     val postgresql by lazy { "org.postgresql:postgresql:${Versions.postgresql}" }
     val springBootTest by lazy {"org.springframework.boot:spring-boot-starter-test"}
+    val springBootWebClientTest by lazy {"org.springframework.boot:spring-boot-starter-webclient-test"}
+    val springBootTestWebClient by lazy {"org.springframework.boot:spring-boot-webtestclient"}
     val springSecurityTest by lazy {"org.springframework.security:spring-security-test"}
+    val springGraphQLTest by lazy {"org.springframework.boot:spring-boot-starter-graphql-test"}
     val assertJCore by lazy { "org.assertj:assertj-core" }
     val kotlinTest by lazy { "org.jetbrains.kotlin:kotlin-test" }
     val junitJupiterTest by lazy { "org.junit.jupiter:junit-jupiter" }

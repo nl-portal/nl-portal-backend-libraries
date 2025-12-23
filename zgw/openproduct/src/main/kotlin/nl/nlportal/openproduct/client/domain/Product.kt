@@ -17,7 +17,7 @@ package nl.nlportal.openproduct.client.domain
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ObjectNode
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.util.UUID
