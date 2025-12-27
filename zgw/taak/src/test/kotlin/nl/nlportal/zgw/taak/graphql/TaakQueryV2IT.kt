@@ -33,8 +33,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 
 @SpringBootTest
 @AutoConfigureHttpGraphQlTester
@@ -86,11 +88,11 @@ internal class TaakQueryV2IT(
         assertEquals(1, responseBody.get("totalPages")?.intValue())
         assertEquals(1, responseBody.get("totalElements")?.intValue())
         assertEquals(1, responseBody.get("numberOfElements")?.intValue())
-        assertEquals("58fad5ab-dc2f-11ec-9075-f22a405ce708", responseBody.requiredAt("/content/0/id")?.textValue())
-        assertEquals(TaakStatus.OPEN.toString(), responseBody.requiredAt("/content/0/status")?.textValue())
-        assertEquals(TaakSoort.PORTAALFORMULIER.name, responseBody.requiredAt("/content/0/soort")?.textValue())
-        assertEquals("2023-09-20T18:25:43.524", responseBody.requiredAt("/content/0/verloopdatum")?.textValue())
-        assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/content/0/portaalformulier/formulier/value")?.textValue())
+        assertEquals("58fad5ab-dc2f-11ec-9075-f22a405ce708", responseBody.requiredAt("/content/0/id")?.stringValue())
+        assertEquals(TaakStatus.OPEN.toString(), responseBody.requiredAt("/content/0/status")?.stringValue())
+        assertEquals(TaakSoort.PORTAALFORMULIER.name, responseBody.requiredAt("/content/0/soort")?.stringValue())
+        assertEquals("2023-09-20T18:25:43.524", responseBody.requiredAt("/content/0/verloopdatum")?.stringValue())
+        assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/content/0/portaalformulier/formulier/value")?.stringValue())
     }
 
     // Disabled durin migratiom from V1 to V2
@@ -112,12 +114,12 @@ internal class TaakQueryV2IT(
         assertEquals(2, responseBody.get("totalPages")?.intValue())
         assertEquals(2, responseBody.get("totalElements")?.intValue())
         assertEquals(1, responseBody.get("numberOfElements")?.intValue())
-        assertEquals("58fad5ab-dc2f-11ec-9075-f22a405ce708", responseBody.requiredAt("/content/0/id")?.textValue())
-        assertEquals(TaakStatus.OPEN.toString(), responseBody.requiredAt("/content/0/status")?.textValue())
-        assertEquals(TaakSoort.PORTAALFORMULIER.name, responseBody.requiredAt("/content/0/soort")?.textValue())
-        assertEquals("2023-09-20T18:25:43.524", responseBody.requiredAt("/content/0/verloopdatum")?.textValue())
-        assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/content/0/portaalformulier/formulier/value")?.textValue())
-        assertEquals("Jan", responseBody.requiredAt("/content/0/portaalformulier/data/voornaam")?.textValue())
+        assertEquals("58fad5ab-dc2f-11ec-9075-f22a405ce708", responseBody.requiredAt("/content/0/id")?.stringValue())
+        assertEquals(TaakStatus.OPEN.toString(), responseBody.requiredAt("/content/0/status")?.stringValue())
+        assertEquals(TaakSoort.PORTAALFORMULIER.name, responseBody.requiredAt("/content/0/soort")?.stringValue())
+        assertEquals("2023-09-20T18:25:43.524", responseBody.requiredAt("/content/0/verloopdatum")?.stringValue())
+        assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/content/0/portaalformulier/formulier/value")?.stringValue())
+        assertEquals("Jan", responseBody.requiredAt("/content/0/portaalformulier/data/voornaam")?.stringValue())
 
     }
 
@@ -142,12 +144,12 @@ internal class TaakQueryV2IT(
         assertEquals(1, responseBody.get("totalPages")?.intValue())
         assertEquals(1, responseBody.get("totalElements")?.intValue())
         assertEquals(1, responseBody.get("numberOfElements")?.intValue())
-        assertEquals("2d725c07-2f26-4705-8637-438a42b5ac2d", responseBody.requiredAt("/content/0/id")?.textValue())
-        assertEquals(TaakStatus.OPEN.toString(), responseBody.requiredAt("/content/0/status")?.textValue())
-        assertEquals(TaakSoort.PORTAALFORMULIER.name, responseBody.requiredAt("/content/0/soort")?.textValue())
-        assertEquals("2023-09-20T18:25:43.524", responseBody.requiredAt("/content/0/verloopdatum")?.textValue())
-        assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/content/0/portaalformulier/formulier/value")?.textValue())
-        assertEquals("Jan", responseBody.requiredAt("/content/0/portaalformulier/data/voornaam")?.textValue())
+        assertEquals("2d725c07-2f26-4705-8637-438a42b5ac2d", responseBody.requiredAt("/content/0/id")?.stringValue())
+        assertEquals(TaakStatus.OPEN.toString(), responseBody.requiredAt("/content/0/status")?.stringValue())
+        assertEquals(TaakSoort.PORTAALFORMULIER.name, responseBody.requiredAt("/content/0/soort")?.stringValue())
+        assertEquals("2023-09-20T18:25:43.524", responseBody.requiredAt("/content/0/verloopdatum")?.stringValue())
+        assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/content/0/portaalformulier/formulier/value")?.stringValue())
+        assertEquals("Jan", responseBody.requiredAt("/content/0/portaalformulier/data/voornaam")?.stringValue())
     }
 
     @Test
@@ -163,8 +165,8 @@ internal class TaakQueryV2IT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("58fad5ab-dc2f-11ec-9075-f22a405ce707", responseBody.get("id")?.textValue())
-        assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/portaalformulier/formulier/value")?.textValue())
+        assertEquals("58fad5ab-dc2f-11ec-9075-f22a405ce707", responseBody.get("id")?.stringValue())
+        assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/portaalformulier/formulier/value")?.stringValue())
     }
 
     @Test
@@ -180,11 +182,11 @@ internal class TaakQueryV2IT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("2d725c07-2f26-4705-8637-438a42b5ac2d", responseBody.get("id")?.textValue())
-        assertEquals(TaakStatus.OPEN.toString(), responseBody.get("status")?.textValue())
-        assertEquals("2023-09-20T18:25:43.524", responseBody.get("verloopdatum")?.textValue())
-        assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/portaalformulier/formulier/value")?.textValue())
-        assertEquals("Jan", responseBody.requiredAt("/portaalformulier/data/voornaam")?.textValue())
+        assertEquals("2d725c07-2f26-4705-8637-438a42b5ac2d", responseBody.get("id")?.stringValue())
+        assertEquals(TaakStatus.OPEN.toString(), responseBody.get("status")?.stringValue())
+        assertEquals("2023-09-20T18:25:43.524", responseBody.get("verloopdatum")?.stringValue())
+        assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/portaalformulier/formulier/value")?.stringValue())
+        assertEquals("Jan", responseBody.requiredAt("/portaalformulier/data/voornaam")?.stringValue())
 
     }
 
@@ -204,11 +206,11 @@ internal class TaakQueryV2IT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("2d725c07-2f26-4705-8637-438a42b5ac2d", responseBody.get("id")?.textValue())
-        assertEquals(TaakStatus.OPEN.toString(), responseBody.get("status")?.textValue())
-        assertEquals("2023-09-20T18:25:43.524", responseBody.get("verloopdatum")?.textValue())
-        assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/portaalformulier/formulier/value")?.textValue())
-        assertEquals("Jan", responseBody.requiredAt("/portaalformulier/data/voornaam")?.textValue())
+        assertEquals("2d725c07-2f26-4705-8637-438a42b5ac2d", responseBody.get("id")?.stringValue())
+        assertEquals(TaakStatus.OPEN.toString(), responseBody.get("status")?.stringValue())
+        assertEquals("2023-09-20T18:25:43.524", responseBody.get("verloopdatum")?.stringValue())
+        assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/portaalformulier/formulier/value")?.stringValue())
+        assertEquals("Jan", responseBody.requiredAt("/portaalformulier/data/voornaam")?.stringValue())
     }
 
     @Test

@@ -98,7 +98,7 @@ class OpenProductBestandQueryIT(
                     .get()
 
             assertEquals(1, responseBody.get("number")?.intValue())
-            assertEquals("http://localhost:8070/media/https%3A/gemeente.open-product.nl/media/test.txt", responseBody.requiredAt("/content/0/bestand")?.textValue())
+            assertEquals("http://localhost:8070/media/https%3A/gemeente.open-product.nl/media/test.txt", responseBody.requiredAt("/content/0/bestand")?.stringValue())
         }
 
     @Test
@@ -115,7 +115,7 @@ class OpenProductBestandQueryIT(
                     .entity(JsonNode::class.java)
                     .get()
 
-            assertEquals("http://localhost:8070/media/https%3A/gemeente.open-product.nl/media/test.txt", responseBody.requiredAt("/bestand")?.textValue())
+            assertEquals("http://localhost:8070/media/https%3A/gemeente.open-product.nl/media/test.txt", responseBody.requiredAt("/bestand")?.stringValue())
         }
 
     private fun setupMockServer() {

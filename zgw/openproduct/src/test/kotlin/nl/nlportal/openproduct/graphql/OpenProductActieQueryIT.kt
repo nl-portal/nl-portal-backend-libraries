@@ -100,7 +100,7 @@ class OpenProductActieQueryIT(
                     .get()
 
             assertEquals(1, responseBody.get("number")?.intValue())
-            assertEquals("watkanikregelen-belastingen", responseBody.requiredAt("/content/0/naam")?.textValue())
+            assertEquals("watkanikregelen-belastingen", responseBody.requiredAt("/content/0/naam")?.stringValue())
         }
 
     @Test
@@ -117,7 +117,7 @@ class OpenProductActieQueryIT(
                     .entity(JsonNode::class.java)
                     .get()
 
-            assertEquals("watkanikregelen-belastingen", responseBody.requiredAt("/naam")?.textValue())
+            assertEquals("watkanikregelen-belastingen", responseBody.requiredAt("/naam")?.stringValue())
         }
 
     @Test
@@ -134,7 +134,7 @@ class OpenProductActieQueryIT(
                     .entity(JsonNode::class.java)
                     .get()
 
-            assertEquals("https://openformulieren-zgw.test.denhaag.nl/bezwaarschrift-overige-gemeentelijke-belastingen/startpagina", responseBody.requiredAt("/0/action/value")?.textValue())
+            assertEquals("https://openformulieren-zgw.test.denhaag.nl/bezwaarschrift-overige-gemeentelijke-belastingen/startpagina", responseBody.requiredAt("/0/action/value")?.stringValue())
         }
 
     private fun setupMockServer() {

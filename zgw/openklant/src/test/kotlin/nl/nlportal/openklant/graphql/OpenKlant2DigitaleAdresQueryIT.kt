@@ -62,8 +62,8 @@ class OpenKlant2DigitaleAdresQueryIT(
                     .get()
 
             // then
-            assertEquals("OBJECT", responseBody.get("kind")?.textValue())
-            assertEquals("DigitaleAdresResponse", responseBody.get("name")?.textValue())
+            assertEquals("OBJECT", responseBody.get("kind")?.stringValue())
+            assertEquals("DigitaleAdresResponse", responseBody.get("name")?.stringValue())
         }
 
     @Test
@@ -85,7 +85,7 @@ class OpenKlant2DigitaleAdresQueryIT(
             verify(openKlant2Service, times(1)).findDigitaleAdressen(any())
 
             assertNotNull(responseBody)
-            assertEquals("OVERIG", responseBody.get(0)?.get("type")?.textValue())
+            assertEquals("OVERIG", responseBody.get(0)?.get("type")?.stringValue())
         }
 
     @Test

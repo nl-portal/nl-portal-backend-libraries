@@ -112,8 +112,8 @@ internal class HaalCentraal2GemachtigdeQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("Pieter Jan de Vries", responseBody.requiredAt("/persoon/naam/volledigeNaam")?.textValue())
-        assertEquals("Vries", responseBody.requiredAt("/persoon/naam/geslachtsnaam")?.textValue())
+        assertEquals("Pieter Jan de Vries", responseBody.requiredAt("/persoon/naam/volledigeNaam")?.stringValue())
+        assertEquals("Vries", responseBody.requiredAt("/persoon/naam/geslachtsnaam")?.stringValue())
     }
 
     private fun setupMockServer() {

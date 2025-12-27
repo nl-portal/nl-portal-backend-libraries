@@ -61,7 +61,7 @@ class OpenKlant2KlantContactQueryIT(
                     .get()
 
             assertNotNull(responseBody)
-            assertEquals("E-mail", responseBody.get(0)?.get("kanaal")?.textValue())
+            assertEquals("E-mail", responseBody.get(0)?.get("kanaal")?.stringValue())
         }
 
     @Test
@@ -79,7 +79,7 @@ class OpenKlant2KlantContactQueryIT(
                     .get()
 
             assertNotNull(responseBody)
-            assertEquals("E-mail", responseBody.get(0)?.get("kanaal")?.textValue())
+            assertEquals("E-mail", responseBody.get(0)?.get("kanaal")?.stringValue())
         }
 
     @Test
@@ -99,6 +99,6 @@ class OpenKlant2KlantContactQueryIT(
             verify(openKlant2Service, times(1)).findKlantContact(any())
 
             assertNotNull(responseBody)
-            assertEquals("E-mail", responseBody?.get("kanaal")?.textValue())
+            assertEquals("E-mail", responseBody.get("kanaal")?.stringValue())
         }
 }

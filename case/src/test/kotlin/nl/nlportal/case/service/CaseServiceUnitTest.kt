@@ -126,7 +126,7 @@ class CaseServiceUnitTest : BaseTest() {
         assertThat(
             case.submission.value
                 .path("firstName")
-                .textValue(),
+                .stringValue(),
         ).isEqualTo("myName")
     }
 

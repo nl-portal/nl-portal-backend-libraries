@@ -97,8 +97,8 @@ class OpenProductMutationIT(
                     .entity(JsonNode::class.java)
                     .get()
 
-            assertEquals("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/", responseBody.get("url")?.textValue())
-            assertEquals("PARKEREN", responseBody.requiredAt("/producttype/code")?.textValue())
+            assertEquals("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/", responseBody.get("url")?.stringValue())
+            assertEquals("PARKEREN", responseBody.requiredAt("/producttype/code")?.stringValue())
             assertEquals(30, responseBody.requiredAt("/verbruiksobject/uren")?.intValue())
         }
 

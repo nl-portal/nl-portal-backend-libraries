@@ -80,7 +80,7 @@ internal class HandelsregisterQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("Test bedrijf", responseBody.get("naam").textValue())
+        assertEquals("Test bedrijf", responseBody.get("naam").stringValue())
     }
 
     private fun setupMockServer() {

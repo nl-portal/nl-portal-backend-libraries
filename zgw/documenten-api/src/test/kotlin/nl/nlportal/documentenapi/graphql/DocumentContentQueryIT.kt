@@ -85,7 +85,7 @@ internal class DocumentContentQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        val content = responseBody.get("content").textValue()
+        val content = responseBody.get("content").stringValue()
         val resourceStream = getResourceAsStream("logo.png").use { Base64.getEncoder().encodeToString(it.readAllBytes()) }
 
         assertEquals(resourceStream, content)
@@ -113,7 +113,7 @@ internal class DocumentContentQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        val content = responseBody.get("content").textValue()
+        val content = responseBody.get("content").stringValue()
         val resourceStream = getResourceAsStream("github.png").use { Base64.getEncoder().encodeToString(it.readAllBytes()) }
 
         assertEquals(resourceStream, content)

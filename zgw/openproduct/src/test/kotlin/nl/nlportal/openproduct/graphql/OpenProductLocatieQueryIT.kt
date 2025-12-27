@@ -98,8 +98,8 @@ class OpenProductLocatieQueryIT(
                     .get()
 
             assertEquals(1, responseBody.get("numberOfElements")?.intValue())
-            assertEquals("Ritense", responseBody.requiredAt("/content/0/naam")?.textValue())
-            assertEquals("info@ritsense.nl", responseBody.requiredAt("/content/0/email")?.textValue())
+            assertEquals("Ritense", responseBody.requiredAt("/content/0/naam")?.stringValue())
+            assertEquals("info@ritsense.nl", responseBody.requiredAt("/content/0/email")?.stringValue())
         }
 
     @Test
@@ -116,8 +116,8 @@ class OpenProductLocatieQueryIT(
                     .entity(JsonNode::class.java)
                     .get()
 
-            assertEquals("Ritense", responseBody.requiredAt("/naam")?.textValue())
-            assertEquals("info@ritsense.nl", responseBody.requiredAt("/email")?.textValue())
+            assertEquals("Ritense", responseBody.requiredAt("/naam")?.stringValue())
+            assertEquals("info@ritsense.nl", responseBody.requiredAt("/email")?.stringValue())
         }
 
     private fun setupMockServer() {

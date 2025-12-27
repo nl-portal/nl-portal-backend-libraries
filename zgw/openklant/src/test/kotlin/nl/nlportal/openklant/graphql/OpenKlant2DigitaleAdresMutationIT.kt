@@ -75,11 +75,11 @@ class OpenKlant2DigitaleAdresMutationIT(
             verify(openKlant2Service, times(1)).createDigitaleAdres(any(), any())
 
             assertTrue(responseBody is ObjectNode)
-            assertEquals(DigitaleAdresType.TELEFOONNUMMER.name, responseBody.get("type").textValue())
-            assertEquals("0611111111", responseBody.get("waarde").textValue())
-            assertEquals("Privè telefoonnummer", responseBody.get("omschrijving").textValue())
+            assertEquals(DigitaleAdresType.TELEFOONNUMMER.name, responseBody.get("type").stringValue())
+            assertEquals("0611111111", responseBody.get("waarde").stringValue())
+            assertEquals("Privè telefoonnummer", responseBody.get("omschrijving").stringValue())
 
-            testdigitaleAdresUUID = responseBody.get("uuid").textValue()
+            testdigitaleAdresUUID = responseBody.get("uuid").stringValue()
         }
 
     @Test
@@ -118,9 +118,9 @@ class OpenKlant2DigitaleAdresMutationIT(
 
             assertTrue(responseBody is ObjectNode)
             assertTrue(responseBody is ObjectNode)
-            assertEquals(DigitaleAdresType.TELEFOONNUMMER.name, responseBody.get("type").textValue())
-            assertEquals("0611111112", responseBody.get("waarde").textValue())
-            assertEquals("Modified", responseBody.get("omschrijving").textValue())
+            assertEquals(DigitaleAdresType.TELEFOONNUMMER.name, responseBody.get("type").stringValue())
+            assertEquals("0611111112", responseBody.get("waarde").stringValue())
+            assertEquals("Modified", responseBody.get("omschrijving").stringValue())
         }
 
     @Test
@@ -152,7 +152,7 @@ class OpenKlant2DigitaleAdresMutationIT(
                     .entity(JsonNode::class.java)
                     .get()
 
-            assertFalse(testdigitaleAdresUUID in responseBodyUserAdressen.mapNotNull { it?.get("uuid")?.textValue() })
+            assertFalse(testdigitaleAdresUUID in responseBodyUserAdressen.mapNotNull { it?.get("uuid")?.stringValue() })
         }
 
     @Test
@@ -175,8 +175,8 @@ class OpenKlant2DigitaleAdresMutationIT(
             verify(openKlant2Service, times(1)).createDigitaleAdres(any(), any())
 
             assertTrue(responseBody is ObjectNode)
-            assertEquals(DigitaleAdresType.TELEFOONNUMMER.name, responseBody.get("type").textValue())
-            assertEquals("0611111111", responseBody.get("waarde").textValue())
-            assertEquals("Privè telefoonnummer", responseBody.get("omschrijving").textValue())
+            assertEquals(DigitaleAdresType.TELEFOONNUMMER.name, responseBody.get("type").stringValue())
+            assertEquals("0611111111", responseBody.get("waarde").stringValue())
+            assertEquals("Privè telefoonnummer", responseBody.get("omschrijving").stringValue())
         }
 }

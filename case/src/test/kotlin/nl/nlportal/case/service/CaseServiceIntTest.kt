@@ -85,7 +85,7 @@ class CaseServiceIntTest : BaseIntegrationTest() {
         assertThat(
             case.submission.value
                 .path("firstName")
-                .textValue(),
+                .stringValue(),
         ).isEqualTo("myName")
         assertThat(case.submission.value.contains(extraProperty)).isFalse
     }

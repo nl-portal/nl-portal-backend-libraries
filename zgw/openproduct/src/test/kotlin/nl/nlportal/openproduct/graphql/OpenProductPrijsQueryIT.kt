@@ -99,7 +99,7 @@ class OpenProductPrijsQueryIT(
 
             assertEquals(1, responseBody.get("numberOfElements")?.intValue())
             assertEquals(100.0, responseBody.requiredAt("/content/0/prijsopties/0/bedrag")?.doubleValue())
-            assertEquals("prijs optie regel 1", responseBody.requiredAt("/content/0/prijsopties/0/beschrijving")?.textValue())
+            assertEquals("prijs optie regel 1", responseBody.requiredAt("/content/0/prijsopties/0/beschrijving")?.stringValue())
         }
 
     @Test
@@ -117,7 +117,7 @@ class OpenProductPrijsQueryIT(
                     .get()
 
             assertEquals(100.0, responseBody.requiredAt("/prijsopties/0/bedrag")?.doubleValue())
-            assertEquals("prijs optie regel 1", responseBody.requiredAt("/prijsopties/0/beschrijving")?.textValue())
+            assertEquals("prijs optie regel 1", responseBody.requiredAt("/prijsopties/0/beschrijving")?.stringValue())
         }
 
     private fun setupMockServer() {

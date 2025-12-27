@@ -98,8 +98,8 @@ class OpenProductContactQueryIT(
                     .get()
 
             assertEquals(1, responseBody.get("number")?.intValue())
-            assertEquals("Vincent van Beek", responseBody.requiredAt("/content/0/naam")?.textValue())
-            assertEquals("Ritense", responseBody.requiredAt("/content/0/organisatie/naam")?.textValue())
+            assertEquals("Vincent van Beek", responseBody.requiredAt("/content/0/naam")?.stringValue())
+            assertEquals("Ritense", responseBody.requiredAt("/content/0/organisatie/naam")?.stringValue())
         }
 
     @Test
@@ -116,7 +116,7 @@ class OpenProductContactQueryIT(
                     .entity(JsonNode::class.java)
                     .get()
 
-            assertEquals("Vincent van Beek", responseBody.requiredAt("/naam")?.textValue())
+            assertEquals("Vincent van Beek", responseBody.requiredAt("/naam")?.stringValue())
         }
 
     private fun setupMockServer() {

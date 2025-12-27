@@ -76,9 +76,9 @@ class BerichtenQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("NOTIFICATIE", responseBody.requiredAt("/content/0/berichtType")?.textValue())
+        assertEquals("NOTIFICATIE", responseBody.requiredAt("/content/0/berichtType")?.stringValue())
         assertEquals(false, responseBody.requiredAt("/content/0/geopend")?.booleanValue())
-        assertEquals("2024-07-18T18:25:43.524", responseBody.requiredAt("/content/0/publicatiedatum")?.textValue())
+        assertEquals("2024-07-18T18:25:43.524", responseBody.requiredAt("/content/0/publicatiedatum")?.stringValue())
     }
 
     @WithBurgerUser("999990755")
@@ -94,7 +94,7 @@ class BerichtenQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("NOTIFICATIE", responseBody.get("berichtType").textValue())
+        assertEquals("NOTIFICATIE", responseBody.get("berichtType").stringValue())
         assertEquals(true, responseBody.get("geopend").booleanValue())
     }
 
@@ -111,7 +111,7 @@ class BerichtenQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("NOTIFICATIE", responseBody.get("berichtType").textValue())
+        assertEquals("NOTIFICATIE", responseBody.get("berichtType").stringValue())
         assertEquals(true, responseBody.get("geopend").booleanValue())
     }
 
@@ -128,7 +128,7 @@ class BerichtenQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("NOTIFICATIE", responseBody.get("berichtType").textValue())
+        assertEquals("NOTIFICATIE", responseBody.get("berichtType").stringValue())
         assertEquals(true, responseBody.get("geopend").booleanValue())
     }
 

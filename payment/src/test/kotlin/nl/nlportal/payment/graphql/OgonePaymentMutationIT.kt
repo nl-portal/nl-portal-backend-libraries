@@ -93,9 +93,9 @@ internal class OgonePaymentMutationIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("http://localhost:3000", responseBody.requiredAt("/formFields/0/value")?.textValue())
-        assertEquals("10025", responseBody.requiredAt("/formFields/9/value")?.textValue())
-        assertEquals(shaSign, responseBody.requiredAt("/formFields/11/value")?.textValue())
+        assertEquals("http://localhost:3000", responseBody.requiredAt("/formFields/0/value")?.stringValue())
+        assertEquals("10025", responseBody.requiredAt("/formFields/9/value")?.stringValue())
+        assertEquals(shaSign, responseBody.requiredAt("/formFields/11/value")?.stringValue())
     }
 
     @Test
@@ -150,9 +150,9 @@ internal class OgonePaymentMutationIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("http://localhost:3000", responseBody.requiredAt("/formFields/0/value")?.textValue())
-        assertEquals("10025", responseBody.requiredAt("/formFields/9/value")?.textValue())
-        assertEquals(shaSign, responseBody.requiredAt("/formFields/11/value")?.textValue())
+        assertEquals("http://localhost:3000", responseBody.requiredAt("/formFields/0/value")?.stringValue())
+        assertEquals("10025", responseBody.requiredAt("/formFields/9/value")?.stringValue())
+        assertEquals(shaSign, responseBody.requiredAt("/formFields/11/value")?.stringValue())
     }
 
     companion object {

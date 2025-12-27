@@ -75,24 +75,24 @@ class OpenKlant2PartijMutationIT(
             verify(openKlant2Service, times(1)).createPartijWithIdentificator(any(), any())
 
             assertTrue(responseBody is ObjectNode)
-            assertEquals(PERSOON.name, responseBody.requiredAt("/type")?.textValue())
+            assertEquals(PERSOON.name, responseBody.requiredAt("/type")?.stringValue())
             assertTrue(responseBody.requiredAt("/indicatieActief").booleanValue())
             assertTrue(responseBody.requiredAt("/indicatieGeheimhouding").booleanValue())
             assertEquals(
                 "Bob de Bouwer",
-                responseBody.requiredAt("/persoonsIdentificatie/volledigeNaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/volledigeNaam").stringValue(),
             )
             assertEquals(
                 "Bob",
-                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voornaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voornaam").stringValue(),
             )
             assertEquals(
                 "de",
-                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voorvoegselAchternaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voorvoegselAchternaam").stringValue(),
             )
             assertEquals(
                 "Bouwer",
-                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/achternaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/achternaam").stringValue(),
             )
         }
 
@@ -116,24 +116,24 @@ class OpenKlant2PartijMutationIT(
             verify(openKlant2Service, times(1)).updatePartij(any(), any())
 
             assertTrue(responseBody is ObjectNode)
-            assertEquals(PERSOON.name, responseBody.requiredAt("/type")?.textValue())
+            assertEquals(PERSOON.name, responseBody.requiredAt("/type")?.stringValue())
             assertTrue(responseBody.requiredAt("/indicatieActief").booleanValue())
             assertFalse(responseBody.requiredAt("/indicatieGeheimhouding").booleanValue())
             assertEquals(
                 "Kees de Boer",
-                responseBody.requiredAt("/persoonsIdentificatie/volledigeNaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/volledigeNaam").stringValue(),
             )
             assertEquals(
                 "Kees",
-                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voornaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voornaam").stringValue(),
             )
             assertEquals(
                 "de",
-                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voorvoegselAchternaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voorvoegselAchternaam").stringValue(),
             )
             assertEquals(
                 "Boer",
-                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/achternaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/achternaam").stringValue(),
             )
         }
 
@@ -158,24 +158,24 @@ class OpenKlant2PartijMutationIT(
             verify(openKlant2Service, times(1)).createPartijWithIdentificator(any(), any())
 
             assertTrue(responseBody is ObjectNode)
-            assertEquals(PERSOON.name, responseBody.requiredAt("/type")?.textValue())
+            assertEquals(PERSOON.name, responseBody.requiredAt("/type")?.stringValue())
             assertTrue(responseBody.requiredAt("/indicatieActief").booleanValue())
             assertFalse(responseBody.requiredAt("/indicatieGeheimhouding").booleanValue())
             assertEquals(
                 "Kees de Boer",
-                responseBody.requiredAt("/persoonsIdentificatie/volledigeNaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/volledigeNaam").stringValue(),
             )
             assertEquals(
                 "Kees",
-                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voornaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voornaam").stringValue(),
             )
             assertEquals(
                 "de",
-                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voorvoegselAchternaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voorvoegselAchternaam").stringValue(),
             )
             assertEquals(
                 "Boer",
-                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/achternaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/achternaam").stringValue(),
             )
         }
 
@@ -201,12 +201,12 @@ class OpenKlant2PartijMutationIT(
             verify(openKlant2Service, times(1)).createPartijWithIdentificator(any(), any())
 
             assertTrue(responseBody is ObjectNode)
-            assertEquals(ORGANISATIE.name, responseBody.requiredAt("/type")?.textValue())
+            assertEquals(ORGANISATIE.name, responseBody.requiredAt("/type")?.stringValue())
             assertTrue(responseBody.requiredAt("/indicatieActief").booleanValue())
             assertTrue(responseBody.requiredAt("/indicatieGeheimhouding").booleanValue())
             assertEquals(
                 "Gemeente Den Haag",
-                responseBody.requiredAt("/organisatieIdentificatie/naam").textValue(),
+                responseBody.requiredAt("/organisatieIdentificatie/naam").stringValue(),
             )
         }
 
@@ -233,12 +233,12 @@ class OpenKlant2PartijMutationIT(
             verify(openKlant2Service, times(1)).createPartijWithIdentificator(any(), any())
 
             assertTrue(responseBody is ObjectNode)
-            assertEquals(ORGANISATIE.name, responseBody.requiredAt("/type")?.textValue())
+            assertEquals(ORGANISATIE.name, responseBody.requiredAt("/type")?.stringValue())
             assertTrue(responseBody.requiredAt("/indicatieActief").booleanValue())
             assertTrue(responseBody.requiredAt("/indicatieGeheimhouding").booleanValue())
             assertEquals(
                 "Gemeente Den Haag",
-                responseBody.requiredAt("/organisatieIdentificatie/naam").textValue(),
+                responseBody.requiredAt("/organisatieIdentificatie/naam").stringValue(),
             )
         }
 

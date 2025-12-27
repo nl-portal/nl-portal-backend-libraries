@@ -90,9 +90,9 @@ class BesluitenQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("klantportaal", responseBody.requiredAt("/content/0/identificatie").textValue())
-        assertEquals("toelichting", responseBody.requiredAt("/content/0/toelichting").textValue())
-        assertEquals("2019-08-24", responseBody.requiredAt("/content/0/publicatiedatum").textValue())
+        assertEquals("klantportaal", responseBody.requiredAt("/content/0/identificatie").stringValue())
+        assertEquals("toelichting", responseBody.requiredAt("/content/0/toelichting").stringValue())
+        assertEquals("2019-08-24", responseBody.requiredAt("/content/0/publicatiedatum").stringValue())
     }
 
     @Test
@@ -108,9 +108,9 @@ class BesluitenQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("klantportaal", responseBody.get("identificatie").textValue())
-        assertEquals("toelichting", responseBody.get("toelichting").textValue())
-        assertEquals("2019-08-24", responseBody.get("publicatiedatum").textValue())
+        assertEquals("klantportaal", responseBody.get("identificatie").stringValue())
+        assertEquals("toelichting", responseBody.get("toelichting").stringValue())
+        assertEquals("2019-08-24", responseBody.get("publicatiedatum").stringValue())
     }
 
     @Test
@@ -126,10 +126,10 @@ class BesluitenQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("095be615-a8ad-4c33-8e9c-c7612fbf6c9f", responseBody.requiredAt("/0/uuid").textValue())
-        assertEquals("ac", responseBody.requiredAt("/0/bron").textValue())
-        assertEquals("list", responseBody.requiredAt("/0/actie").textValue())
-        assertEquals("2019-08-24T14:15:22", responseBody.requiredAt("/0/aanmaakdatum").textValue())
+        assertEquals("095be615-a8ad-4c33-8e9c-c7612fbf6c9f", responseBody.requiredAt("/0/uuid").stringValue())
+        assertEquals("ac", responseBody.requiredAt("/0/bron").stringValue())
+        assertEquals("list", responseBody.requiredAt("/0/actie").stringValue())
+        assertEquals("2019-08-24T14:15:22", responseBody.requiredAt("/0/aanmaakdatum").stringValue())
     }
 
     @Test
@@ -145,9 +145,9 @@ class BesluitenQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("095be615-a8ad-4c33-8e9c-c7612fbf6c9f", responseBody.get("uuid").textValue())
-        assertEquals("ac", responseBody.get("bron").textValue())
-        assertEquals("list", responseBody.get("actie").textValue())
+        assertEquals("095be615-a8ad-4c33-8e9c-c7612fbf6c9f", responseBody.get("uuid").stringValue())
+        assertEquals("ac", responseBody.get("bron").stringValue())
+        assertEquals("list", responseBody.get("actie").stringValue())
     }
 
     @Test
@@ -163,9 +163,9 @@ class BesluitenQueryIT(
             .entity(JsonNode::class.java)
             .get()
 
-        assertEquals("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z", responseBody.requiredAt("/0/url").textValue())
-        assertEquals("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z", responseBody.requiredAt("/0/informatieobject").textValue())
-        assertEquals("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z", responseBody.requiredAt("/0/besluit").textValue())
+        assertEquals("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z", responseBody.requiredAt("/0/url").stringValue())
+        assertEquals("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z", responseBody.requiredAt("/0/informatieobject").stringValue())
+        assertEquals("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z", responseBody.requiredAt("/0/besluit").stringValue())
     }
 
     @Test
@@ -181,9 +181,9 @@ class BesluitenQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z", responseBody.get("url").textValue())
-        assertEquals("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z", responseBody.get("informatieobject").textValue())
-        assertEquals("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z", responseBody.get("besluit").textValue())
+        assertEquals("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z", responseBody.get("url").stringValue())
+        assertEquals("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z", responseBody.get("informatieobject").stringValue())
+        assertEquals("http://localhost:8001/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z", responseBody.get("besluit").stringValue())
     }
 
     fun setupMockObjectsApiServer() {

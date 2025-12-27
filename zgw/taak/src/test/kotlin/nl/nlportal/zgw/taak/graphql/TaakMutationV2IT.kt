@@ -79,11 +79,11 @@ internal class TaakMutationV2IT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("58fad5ab-dc2f-11ec-9075-f22a405ce708", responseBody.get("id")?.textValue())
-        assertEquals(TaakStatus.OPEN.toString(), responseBody.get("status")?.textValue())
-        assertEquals("2023-09-20T18:25:43.524", responseBody.get("verloopdatum")?.textValue())
-        assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/portaalformulier/formulier/value")?.textValue())
-        assertEquals("Jan", responseBody.requiredAt("/portaalformulier/data/voornaam")?.textValue())
+        assertEquals("58fad5ab-dc2f-11ec-9075-f22a405ce708", responseBody.get("id")?.stringValue())
+        assertEquals(TaakStatus.OPEN.toString(), responseBody.get("status")?.stringValue())
+        assertEquals("2023-09-20T18:25:43.524", responseBody.get("verloopdatum")?.stringValue())
+        assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/portaalformulier/formulier/value")?.stringValue())
+        assertEquals("Jan", responseBody.requiredAt("/portaalformulier/data/voornaam")?.stringValue())
     }
 
     @Test

@@ -127,9 +127,9 @@ internal class HaalCentraal2BrpQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("999993847", responseBody.get("burgerservicenummer").textValue())
-        assertEquals("Pieter Jan de Vries", responseBody.requiredAt("/naam/volledigeNaam")?.textValue())
-        assertEquals("Vries", responseBody.requiredAt("/naam/geslachtsnaam")?.textValue())
+        assertEquals("999993847", responseBody.get("burgerservicenummer").stringValue())
+        assertEquals("Pieter Jan de Vries", responseBody.requiredAt("/naam/volledigeNaam")?.stringValue())
+        assertEquals("Vries", responseBody.requiredAt("/naam/geslachtsnaam")?.stringValue())
     }
 
     @Test
@@ -159,7 +159,7 @@ internal class HaalCentraal2BrpQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("999993847", responseBody.get("burgerservicenummer").textValue())
+        assertEquals("999993847", responseBody.get("burgerservicenummer").stringValue())
         assertEquals(4, responseBody.get("bewonersAantal").intValue())
     }
 
@@ -256,11 +256,11 @@ internal class HaalCentraal2BrpQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("999993847", responseBody.get("burgerservicenummer").textValue())
+        assertEquals("999993847", responseBody.get("burgerservicenummer").stringValue())
         assertEquals(true, responseBody.get("geheimhoudingPersoonsgegevens").booleanValue())
-        assertEquals("226010000038820", responseBody.requiredAt("/verblijfplaats/adresseerbaarObjectIdentificatie")?.textValue())
-        assertEquals("Het Spui 1", responseBody.requiredAt("/verblijfplaats/verblijfadres/officieleStraatnaam")?.textValue())
-        assertEquals("Nederlands", responseBody.requiredAt("/nationaliteiten/0/nationaliteit/omschrijving")?.textValue())
+        assertEquals("226010000038820", responseBody.requiredAt("/verblijfplaats/adresseerbaarObjectIdentificatie")?.stringValue())
+        assertEquals("Het Spui 1", responseBody.requiredAt("/verblijfplaats/verblijfadres/officieleStraatnaam")?.stringValue())
+        assertEquals("Nederlands", responseBody.requiredAt("/nationaliteiten/0/nationaliteit/omschrijving")?.stringValue())
     }
 
     private fun setupMockServer() {

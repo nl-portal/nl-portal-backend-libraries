@@ -109,7 +109,7 @@ internal class DirectPaymentQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("SUCCESSFUL", responseBody.get("status")?.textValue())
+        assertEquals("SUCCESSFUL", responseBody.get("status")?.stringValue())
     }
 
     fun setupMockServer() {

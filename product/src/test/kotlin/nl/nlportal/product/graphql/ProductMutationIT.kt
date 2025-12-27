@@ -84,7 +84,7 @@ internal class ProductMutationIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("2d725c07-2f26-4705-8637-438a42b5a800", responseBody.requiredAt("/id")?.textValue())
+        assertEquals("2d725c07-2f26-4705-8637-438a42b5a800", responseBody.requiredAt("/id")?.stringValue())
     }
 
     fun setupMockOpenZaakServer() {

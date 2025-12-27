@@ -109,7 +109,7 @@ internal class DirectPaymentMutationIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("https://payment.preprod.direct.worldline-solutions.com/hostedcheckout/PaymentMethods/Selection/e61340e579e04172a740676ffdda162e", responseBody.get("redirectUrl")?.textValue())
+        assertEquals("https://payment.preprod.direct.worldline-solutions.com/hostedcheckout/PaymentMethods/Selection/e61340e579e04172a740676ffdda162e", responseBody.get("redirectUrl")?.stringValue())
     }
 
     fun setupMockServer() {

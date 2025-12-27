@@ -98,8 +98,8 @@ class OpenProductLinkQueryIT(
                     .get()
 
             assertEquals(2, responseBody.get("numberOfElements")?.intValue())
-            assertEquals("link naar Ritense website", responseBody.requiredAt("/content/0/naam")?.textValue())
-            assertEquals("https://ritense.com/", responseBody.requiredAt("/content/0/url")?.textValue())
+            assertEquals("link naar Ritense website", responseBody.requiredAt("/content/0/naam")?.stringValue())
+            assertEquals("https://ritense.com/", responseBody.requiredAt("/content/0/url")?.stringValue())
         }
 
     @Test
@@ -116,8 +116,8 @@ class OpenProductLinkQueryIT(
                     .entity(JsonNode::class.java)
                     .get()
 
-            assertEquals("link naar Ritense website", responseBody.requiredAt("/naam")?.textValue())
-            assertEquals("https://ritense.com/", responseBody.requiredAt("/url")?.textValue())
+            assertEquals("link naar Ritense website", responseBody.requiredAt("/naam")?.stringValue())
+            assertEquals("https://ritense.com/", responseBody.requiredAt("/url")?.stringValue())
         }
 
     private fun setupMockServer() {
