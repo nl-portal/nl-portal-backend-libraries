@@ -43,7 +43,7 @@ dependencies {
     api(Dependencies.commonsCodec)
 
     // Liquibase
-    api("org.liquibase:liquibase-core")
+    //api("org.liquibase:liquibase-core")
     api("org.springframework.boot:spring-boot-starter-liquibase")
 
     // Apache Commons

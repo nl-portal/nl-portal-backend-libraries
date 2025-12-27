@@ -80,8 +80,8 @@
         },
         {
             "moduleLicense": null,
-            "moduleVersion": "2.*",
-            "moduleName": "com.fasterxml.jackson:jackson-bom"
+            "moduleVersion": "3.*",
+            "moduleName": "tools.jackson:jackson-bom"
         },
         {
             "moduleLicense": null,
