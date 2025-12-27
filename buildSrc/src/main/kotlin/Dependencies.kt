@@ -39,6 +39,5 @@ object Dependencies {
     val springCloudStreamBinderRabbit by lazy { "org.springframework.cloud:spring-cloud-stream-binder-rabbit:${Versions.springCloud}" }
     val springBootStarter by lazy {"org.springframework.boot:spring-boot-starter"}
     val springWebFlux by lazy {"org.springframework.boot:spring-boot-starter-webflux"}
-    val springWebMvc by lazy {"org.springframework.boot:spring-boot-starter-webmvc"}
     val springBootWebClient by lazy {"org.springframework.boot:spring-boot-starter-webclient"}
 }

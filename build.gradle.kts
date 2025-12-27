@@ -175,13 +175,6 @@ subprojects {
 
     println("Enabling Spring Boot Dependency Management in project ${project.name}...")
     apply(plugin = "io.spring.dependency-management")
-    configure<DependencyManagementExtension> {
-        imports {
-            mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES) {
-                bomProperty("graphql-java.version", Versions.graphqlJava)
-            }
-        }
-    }
 
     publishing {
         repositories {

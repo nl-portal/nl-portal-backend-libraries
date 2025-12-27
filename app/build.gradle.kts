@@ -20,7 +20,7 @@ plugins {
 
 dependencies {
     implementation(project(":zgw:openklant"))
-    implementation(project(":form"))
+    //implementation(project(":form"))
     implementation(project(":haalcentraal-hr"))
     implementation(project(":haalcentraal2"))
     implementation(project(":zgw:taak"))
