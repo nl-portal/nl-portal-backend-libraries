@@ -10,7 +10,7 @@ type MaatschappelijkeActiviteit {
     formeleRegistratiedatum: String,
     materieleRegistratie: MaterieleRegistratie,
     totaalWerkzamePersonen: Int,
-    statutaireNaam: String!,
+    statutaireNaam: String,
     handelsnamen: [HandelsNaam],
     sbiActiviteiten: [SbiActiviteit],
     embedded: Embedded

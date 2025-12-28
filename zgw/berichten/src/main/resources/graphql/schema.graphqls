@@ -27,7 +27,7 @@ type Bericht {
     identificatie: BerichtIdentificatie!
     onderwerp: String!
     publicatiedatum: ZonedDateTime!
-    referentie: String!
+    referentie: String
     documenten: [Document!]!
 }
 
