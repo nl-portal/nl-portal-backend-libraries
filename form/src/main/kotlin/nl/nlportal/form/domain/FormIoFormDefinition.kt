@@ -15,7 +15,6 @@
  */
 package nl.nlportal.form.domain
 
-import tools.jackson.databind.node.ObjectNode
 import jakarta.persistence.Column
 import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
@@ -23,6 +22,7 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import org.springframework.data.domain.Persistable
+import tools.jackson.databind.node.ObjectNode
 
 @Entity
 @Table(name = "form_io_form_definition")
