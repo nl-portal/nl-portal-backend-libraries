@@ -27,11 +27,7 @@ object Mapper {
     // private var mapper: ObjectMapper
     private val mapper: JsonMapper
     private const val DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-    private val jacksonBuilderCustomizer =
-        JsonMapperBuilderCustomizer { builder ->
-            // builder.simpleDateFormat(DATE_TIME_FORMAT)
-            // builder.serializers(LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)))
-        }
+
     private val jacksonConfigurationModule =
         KotlinModule
             .Builder()
