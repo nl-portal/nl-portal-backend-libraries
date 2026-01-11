@@ -26,17 +26,19 @@ import nl.nlportal.documentenapi.service.VirusScanService
 import nl.nlportal.documentenapi.web.rest.DocumentContentResource
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.ResourceLoader
 
-@Configuration
+@AutoConfiguration
 @EnableConfigurationProperties(DocumentApisConfig::class)
 @ConditionalOnProperty(prefix = "nl-portal.config.documentenapis", name = ["enabled"], havingValue = "true")
+
 class DocumentenApiAutoConfiguration {
+
     @Bean
     @ConditionalOnMissingBean(ClientSslContextResolver::class)
     fun clientSslContextResolver(resourceLoader: ResourceLoader): ClientSslContextResolver {
@@ -47,7 +49,8 @@ class DocumentenApiAutoConfiguration {
     @ConditionalOnMissingBean(DocumentenApiService::class)
     fun documentenApiService(
         documentenApiClient: DocumentenApiClient,
-        documentApisConfig: DocumentApisConfig,
+        documentApisConfig: DocumentApisConfig
+
     ): DocumentenApiService {
         return DocumentenApiService(documentenApiClient, documentApisConfig.properties)
     }
@@ -77,7 +80,7 @@ class DocumentenApiAutoConfiguration {
     fun documentContentResource2(
         documentenApiService: DocumentenApiService,
         virusScanService: VirusScanService?,
-        documentApisConfig: DocumentApisConfig,
+        documentApisConfig: DocumentApisConfig
     ): DocumentContentResource {
         return DocumentContentResource(documentenApiService, virusScanService, documentApisConfig)
     }
