@@ -14,3 +14,7 @@ scalar PositiveFloat
 scalar LocalTime
 scalar DateTime
 scalar Locale
+scalar LocalDateTime
+scalar Long
+scalar BigDecimal
+scalar BigInteger

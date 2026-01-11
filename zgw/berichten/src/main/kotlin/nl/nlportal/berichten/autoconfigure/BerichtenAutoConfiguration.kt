@@ -19,13 +19,13 @@ import nl.nlportal.berichten.graphql.BerichtenQuery
 import nl.nlportal.berichten.service.BerichtenService
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.zgw.objectenapi.service.ObjectenApiService
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 
-@Configuration
+@AutoConfiguration
 @EnableConfigurationProperties(BerichtenConfiguration::class)
 @ConditionalOnProperty(prefix = "nl-portal.config", name = ["berichten.enabled", "documentenapis.enabled"], havingValue = "true")
 class BerichtenAutoConfiguration {

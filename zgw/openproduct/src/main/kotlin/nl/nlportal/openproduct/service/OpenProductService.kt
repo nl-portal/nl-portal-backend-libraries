@@ -934,7 +934,7 @@ class OpenProductService(
             collectedThemaList.addAll(themasList)
         }
         // 2. loop through productTypes and get zaakTypes
-        val zaakTypes = mutableListOf<UUID>()
+        val zaakTypes = mutableSetOf<UUID>()
 
         collectedThemaList.forEach { thema ->
             thema.producttypen.forEach {
@@ -959,7 +959,7 @@ class OpenProductService(
             request.isOpen(isOpen)
         }
 
-        if (!authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes)) {
+        if (!authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes.toList())) {
             return emptyList()
         }
 
@@ -1042,10 +1042,17 @@ class OpenProductService(
      * @param: zaken, list of zaken
      * @return: list of zaken
      */
-    suspend fun getProductZaken(zaken: List<OpenProductUrl>): List<Zaak> =
-        zaken.map {
-            zakenApiClient.zaken().get(CoreUtils.extractId(it.url)).retrieve()
+    suspend fun getProductZaken(zaken: List<OpenProductUrl>): List<Zaak> {
+        val zaakList = mutableListOf<Zaak>()
+        zaken.forEach {
+            try {
+                zaakList.add(zakenApiClient.zaken().get(CoreUtils.extractId(it.url)).retrieve())
+            } catch (e: Exception) {
+                logger.error(e) { "Error while fetching product zaken: " + e.message }
+            }
         }
+        return zaakList
+    }
 
     /**
      * Get taken of a product
@@ -1132,7 +1139,7 @@ class OpenProductService(
             ),
         )
 
-        return themas.toList()
+        return collectedThemas.toList()
     }
 
     /**
@@ -1216,10 +1223,15 @@ class OpenProductService(
         val hoofdThemas = mutableListOf<OpenProductThema>()
         if (thema.hoofdThema != null) {
             val hoofdThema =
-                themas?.find { it.uuid == thema.uuid }
+                themas?.find { it.uuid == thema.hoofdThema }
             if (hoofdThema != null) {
                 hoofdThemas.add(hoofdThema)
-                hoofdThemas.addAll(searchFromSubThemaUpToHoofdThema(hoofdThema))
+                hoofdThemas.addAll(
+                    searchFromSubThemaUpToHoofdThema(
+                        thema = hoofdThema,
+                        themas = themas,
+                    ),
+                )
             }
         }
 
@@ -1248,7 +1260,7 @@ class OpenProductService(
                     listOf(
                         Pair(
                             OpenProductProductenFilters.EIGENAREN_VESTIGINGSNUMMER,
-                            authentication.userId,
+                            vestigingsNummer,
                         ),
                     )
                 } else {

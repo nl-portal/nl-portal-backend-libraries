@@ -143,9 +143,7 @@ input UpdateProductRequestInput {
 type OpenProductActie {
     naam: String!
     productTypeUuid: UUID
-    url: String!
     uuid: UUID!
-    mapping: JSON!
 }
 
 type OpenProductBestand {
@@ -259,7 +257,6 @@ type OpenProductProductType {
     bestanden: [OpenProductProductTypeBestand!]!
     code: String!
     contacten: [OpenProductContact!]!
-    dataObjectSchema: OpenProductSchema!
     externCodes: [OpenProductProductTypeExterneCode!]!
     gepubliceerd: Boolean
     interneOpmerking: String
@@ -278,7 +275,8 @@ type OpenProductProductType {
     uniformeProductNaam: String!
     updateDatum: ZonedDateTime!
     uuid: UUID!
-    verbruiksObjectSchema: OpenProductSchema!
+    verbruiksObjectSchema: OpenProductSchema
+    dataObjectSchema: OpenProductSchema
     verzoektypen: [OpenProductUrl!]!
     zaaktypen: [OpenProductUrl!]!
     content: [OpenProductProductTypeContent!]

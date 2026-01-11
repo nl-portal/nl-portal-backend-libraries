@@ -17,9 +17,7 @@ package nl.nlportal.openproduct.client.domain
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
-import com.fasterxml.jackson.databind.node.ObjectNode
 import java.util.UUID
-import nl.nlportal.core.util.Mapper
 
 data class OpenProductActie(
     val uuid: UUID,
@@ -27,10 +25,8 @@ data class OpenProductActie(
     val url: String,
     @JsonProperty("producttype_uuid")
     val productTypeUuid: UUID? = null,
-    val mapping: Map<String, List<OpenProductActieMappingVariable>> = emptyMap(),
-) {
-    fun mapping(): ObjectNode = Mapper.get().valueToTree<ObjectNode>(mapping)
-}
+    val mapping: Map<String, List<OpenProductActieMappingVariable>>? = emptyMap(),
+)
 
 data class OpenProductActieMappingVariable(
     val name: String,

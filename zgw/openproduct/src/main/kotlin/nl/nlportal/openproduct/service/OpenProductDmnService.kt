@@ -109,27 +109,27 @@ class OpenProductDmnService(
         try {
             val variablesMapping = mutableMapOf<String, OpenProductDmnVariable>()
             // add the product mapping
-            variablesMapping.putAll(
-                mapActieMappingVariables(
-                    actieMappingVariables = actie.mapping[ACTIE_MAPPING_KEY_PRODUCT]!!,
-                    source = Mapper.get().writeValueAsString(product),
-                ),
-            )
-
-            // add the static mapping
-            // handle the configured static variables
-            actie.mapping[ACTIE_MAPPING_KEY_STATIC]?.let {
+            if (actie.mapping != null) {
                 variablesMapping.putAll(
                     mapActieMappingVariables(
-                        it,
+                        actieMappingVariables = actie.mapping[ACTIE_MAPPING_KEY_PRODUCT]!!,
+                        source = Mapper.get().writeValueAsString(product),
                     ),
                 )
             }
 
-            if (variablesMapping.isEmpty()) {
-                logger.warn { SOURCE_MAPPING_FAILED + actie.naam }
-                return emptyList()
+            // add the static mapping
+            // handle the configured static variables
+            if (actie.mapping != null) {
+                actie.mapping[ACTIE_MAPPING_KEY_STATIC]?.let {
+                    variablesMapping.putAll(
+                        mapActieMappingVariables(
+                            it,
+                        ),
+                    )
+                }
             }
+
             val dmnRequest =
                 OpenProductDmnRequest(
                     key = actie.naam,
@@ -155,7 +155,7 @@ class OpenProductDmnService(
         source: String? = null,
     ): Map<String, OpenProductDmnVariable> {
         val variablesMapping = mutableMapOf<String, OpenProductDmnVariable>()
-        actieMappingVariables.forEach {
+        actieMappingVariables?.forEach {
             if (it.regex != null && source != null) {
                 variablesMapping.put(
                     it.name,

@@ -96,8 +96,8 @@ type PrefillResponse {
 type Product {
     documenten: [String!]!
     eigenschappen: JSON
-    geldigTot: DateTime
-    geldigVan: DateTime!
+    geldigTot: LocalDateTime
+    geldigVan: LocalDateTime!
     id: UUID
     naam: String!
     parameters: JSON
@@ -420,6 +420,7 @@ scalar JSON
 scalar UUID
 scalar Date
 scalar DateTime
+scalar LocalDateTime
 
 
 
