@@ -32,6 +32,7 @@ dependencies {
     implementation(project(":zgw:zaken-api"))
     implementation(project(":zgw:openproduct"))
     implementation(project(":product"))
+    implementation(project(":zgw:verificatie"))
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     api("org.postgresql:postgresql")
