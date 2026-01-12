@@ -17,7 +17,6 @@ package nl.nlportal.openklant.autoconfigure
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import java.net.URI
-import nl.nlportal.core.ssl.Ssl
 
 @ConfigurationProperties(prefix = "nl-portal.config.openklant2")
 class OpenKlantModuleConfiguration {
@@ -40,18 +39,5 @@ class OpenKlantModuleConfiguration {
         var klantinteractiesApiUrl: URI? = null,
         var token: String? = null,
         var digitalAdressenReferentie: String? = null,
-        var verificatie: OpenKlantVerificatieConfigurationProperties = OpenKlantVerificatieConfigurationProperties(),
-    ) {
-        class OpenKlantVerificatieConfigurationProperties(
-            var url: String = "",
-            var clientId: String = "",
-            var secret: String = "",
-            var apiKey: String = "",
-            var templateIdPhoneNumber: String = "",
-            var templateIdEmail: String = "",
-            var ssl: Ssl? = null,
-        ) {
-            fun isEnabled() = url.isNotBlank()
-        }
-    }
+    )
 }

@@ -1,0 +1,46 @@
+type Query {
+    verificatieEnabled: Boolean
+}
+
+type Mutation {
+
+    createVerificatie(
+        verificatieCreateInput: VerificatieCreateInput!
+    ): VerificatieCreateResponse
+
+    verifyVerificatie(
+        verificatieVerifyInput: VerificatieVerifyInput!
+    ): VerificatieVerifyResponse
+}
+
+enum VerificatieType {
+    TELEFOONNUMMER
+    EMAIL
+    OVERIG
+}
+
+input VerificatieCreateInput {
+    type: VerificatieType!
+    uuid: UUID!
+    waarde: String!
+}
+
+type VerificatieCreateResponse {
+    success: Boolean!
+}
+
+input VerificatieVerifyInput {
+    code: String!
+    type: VerificatieType!
+    uuid: UUID!
+    waarde: String!
+}
+
+type VerificatieVerifyResponse {
+    verified: Boolean!
+    verifiedOp: DateTime!
+}
+
+scalar UUID
+scalar Date
+scalar DateTime

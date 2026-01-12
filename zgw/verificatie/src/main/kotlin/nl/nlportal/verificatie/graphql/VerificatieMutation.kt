@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.openklant.graphql
+package nl.nlportal.verificatie.graphql
 
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.openklant.client.domain.VerificatieCreateResponse
-import nl.nlportal.openklant.client.domain.VerificatieVerifyResponse
-import nl.nlportal.openklant.graphql.domain.VerificatieCreateInput
-import nl.nlportal.openklant.graphql.domain.VerificatieVerifyInput
-import nl.nlportal.openklant.service.OpenKlantVerificatieService
+import nl.nlportal.verificatie.graphql.domain.VerificatieCreateInput
+import nl.nlportal.verificatie.graphql.domain.VerificatieCreateResponse
+import nl.nlportal.verificatie.graphql.domain.VerificatieVerifyInput
+import nl.nlportal.verificatie.graphql.domain.VerificatieVerifyResponse
+import nl.nlportal.verificatie.service.VerificatieService
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.stereotype.Controller
 
 @Controller
 class VerificatieMutation(
-    val verificatieService: OpenKlantVerificatieService,
+    val verificatieService: VerificatieService,
 ) {
     @MutationMapping
     suspend fun createVerificatie(
         @Argument verificatieCreateInput: VerificatieCreateInput,
-    ): VerificatieCreateResponse =
+    ): VerificatieCreateResponse? =
         verificatieService.createVerificatie(
             verificatieCreateInput = verificatieCreateInput,
         )
@@ -41,9 +41,8 @@ class VerificatieMutation(
     suspend fun verifyVerificatie(
         authentication: CommonGroundAuthentication,
         @Argument verificatieVerifyInput: VerificatieVerifyInput,
-    ): VerificatieVerifyResponse =
+    ): VerificatieVerifyResponse? =
         verificatieService.verify(
-            authentication = authentication,
             verificatieVerifyInput = verificatieVerifyInput,
         )
 }

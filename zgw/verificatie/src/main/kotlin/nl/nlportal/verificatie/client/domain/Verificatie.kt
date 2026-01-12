@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.openklant.client.domain
+package nl.nlportal.verificatie.client.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import java.time.LocalDateTime
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class VerificatieCreateRequest(
+data class VerificatieCreateApiRequest(
     val email: String? = null,
     val phoneNumber: String? = null,
     val reference: String? = null,
@@ -27,19 +27,19 @@ data class VerificatieCreateRequest(
     val templateId: String? = null,
 )
 
-data class VerificatieCreateResponse(
+data class VerificatieCreateApiResponse(
     val success: Boolean,
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class VerificatieVerifyRequest(
+data class VerificatieVerifyApiRequest(
     val code: String,
     val reference: String? = null,
     val email: String? = null,
     val phoneNumber: String? = null,
 )
 
-data class VerificatieVerifyResponse(
+data class VerificatieVerifyApiResponse(
     val verified: Boolean,
     val verifiedOp: LocalDateTime,
 )

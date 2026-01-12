@@ -15,6 +15,7 @@
  */
 package nl.nlportal.openklant.client.path
 
+import java.util.UUID
 import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
 import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdres
 import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdresUpdate
@@ -25,7 +26,6 @@ import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.awaitBodilessEntity
 import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.awaitBodyOrNull
-import java.util.UUID
 
 class DigitaleAdressen(
     val client: OpenKlant2KlantinteractiesClient,

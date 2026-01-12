@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Ritense BV, the Netherlands.
+ * Copyright $YEAR Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.openklant.graphql.domain
-
-import java.util.UUID
-
-data class VerificatieCreateInput(
-    val uuid: UUID,
-    val waarde: String,
-    val type: DigitaleAdresType,
-)
-
-data class VerificatieVerifyInput(
-    val uuid: UUID,
-    val waarde: String,
-    val type: DigitaleAdresType,
-    val code: String,
-)

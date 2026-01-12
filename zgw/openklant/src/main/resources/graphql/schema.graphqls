@@ -21,8 +21,6 @@ extend type Query {
     # Get Partij by Id for authenticated user.
     getUserPartij(partijId: UUID!): OpenKlant2Partij
 
-    verificatieEnabled: Boolean
-
 }
 
 extend type Mutation {
@@ -44,14 +42,6 @@ extend type Mutation {
 
     # Update user Partij
     updateUserPartij(partijRequest: PartijRequestInput!): PartijResponse
-
-    createVerificatie(
-        verificatieCreateInput: VerificatieCreateInput!
-    ): VerificatieCreateResponse!
-
-    verifyVerificatie(
-        verificatieVerifyInput: VerificatieVerifyInput!
-    ): VerificatieVerifyResponse!
 }
 
 type Betrokkene {
@@ -733,20 +723,4 @@ input VerificatieCreateInput {
     type: DigitaleAdresType!
     uuid: UUID!
     waarde: String!
-}
-
-type VerificatieCreateResponse {
-    success: Boolean!
-}
-
-input VerificatieVerifyInput {
-    code: String!
-    type: DigitaleAdresType!
-    uuid: UUID!
-    waarde: String!
-}
-
-type VerificatieVerifyResponse {
-    verified: Boolean!
-    verifiedOp: DateTime!
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Ritense BV, the Netherlands.
+ * Copyright 2024 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.openklant.graphql
+package nl.nlportal.verificatie.graphql
 
-import nl.nlportal.openklant.service.OpenKlantVerificatieService
-import org.springframework.graphql.data.method.annotation.QueryMapping
-import org.springframework.stereotype.Controller
-
-@Controller
-class VerificatieQuery(
-    val verificatieService: OpenKlantVerificatieService,
-) {
-    @QueryMapping
-    fun verificatieEnabled(): Boolean = verificatieService.verificatieEnabled()
+enum class VerificatieType {
+    TELEFOONNUMMER,
+    EMAIL,
+    OVERIG,
 }

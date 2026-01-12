@@ -20,9 +20,7 @@ import nl.nlportal.openklant.graphql.DigitaleAdresQuery
 import nl.nlportal.openklant.graphql.KlantContactQuery
 import nl.nlportal.openklant.graphql.PartijMutation
 import nl.nlportal.openklant.graphql.PartijQuery
-import nl.nlportal.openklant.graphql.VerificatieMutation
 import nl.nlportal.openklant.service.OpenKlant2Service
-import nl.nlportal.openklant.service.OpenKlantVerificatieService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
@@ -48,8 +46,4 @@ class OpenKlantGraphqlAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(KlantContactQuery::class)
     fun klantContactQuery(openKlant2Service: OpenKlant2Service) = KlantContactQuery(openKlant2Service)
-
-    @Bean
-    @ConditionalOnMissingBean(VerificatieMutation::class)
-    fun verificatieMutation(verificatieService: OpenKlantVerificatieService) = VerificatieMutation(verificatieService)
 }

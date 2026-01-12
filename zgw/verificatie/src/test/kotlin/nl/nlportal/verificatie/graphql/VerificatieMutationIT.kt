@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.openklant.graphql
+package nl.nlportal.verificatie.graphql
 
 import com.fasterxml.jackson.databind.JsonNode
 import java.net.URI
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
-import nl.nlportal.openklant.TestHelper
-import nl.nlportal.openklant.autoconfigure.OpenKlantModuleConfiguration
+import nl.nlportal.verificatie.TestHelper
+import nl.nlportal.verificatie.autoconfigure.VerificatieModuleConfiguration
+import okhttp3.mockwebserver.Dispatcher
+import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
@@ -40,9 +43,9 @@ import org.springframework.test.context.DynamicPropertySource
 @AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-class VerificatieQueryIT(
+class VerificatieMutationIT(
     @Autowired private val httpGraphQlTester: HttpGraphQlTester,
-    @Autowired private val openKlantModuleConfiguration: OpenKlantModuleConfiguration,
+    @Autowired private val verificatieModuleConfiguration: VerificatieModuleConfiguration,
 ) {
     companion object {
         @JvmStatic
@@ -54,8 +57,7 @@ class VerificatieQueryIT(
         @JvmStatic
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
-            propsRegistry.add("nl-portal.config.openklant2.properties.verificatie.url") { url }
-            propsRegistry.add("nl-portal.config.openklant2.properties.klantinteractiesApiUrl") { url }
+            propsRegistry.add("nl-portal.config.verificatie.properties.url") { url }
         }
 
         @JvmStatic
@@ -75,25 +77,64 @@ class VerificatieQueryIT(
 
     @BeforeEach
     internal fun setUp() {
+        setupMockServer()
         url = server?.url("/").toString()
-        openKlantModuleConfiguration.properties.verificatie.url = url
-        openKlantModuleConfiguration.properties.klantinteractiesApiUrl = URI(url)
+        verificatieModuleConfiguration.properties.url = URI(url)
     }
 
     @Test
     @WithBurgerUser("569312863")
-    fun `is verificatie Enabled`() =
+    fun `create verificatie`() =
         runTest {
             val responseBody =
                 httpGraphQlTester
-                    .document(TestHelper.readFileAsString("/config/graphql/verificatieEnabled.gql"))
+                    .document(TestHelper.readFileAsString("/config/graphql/createVerificatie.gql"))
                     .execute()
                     .errors()
                     .verify()
-                    .path("verificatieEnabled")
+                    .path("createVerificatie")
                     .entity(JsonNode::class.java)
                     .get()
 
-            assertEquals(true, responseBody.booleanValue())
+            assertEquals(true, responseBody.get("success").booleanValue())
         }
+
+    @Test
+    @WithBurgerUser("569312863")
+    fun `verify verificatie`() =
+        runTest {
+            val responseBody =
+                httpGraphQlTester
+                    .document(TestHelper.readFileAsString("/config/graphql/verifyVerificatie.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("verifyVerificatie")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals(true, responseBody.get("verified").booleanValue())
+        }
+
+    private fun setupMockServer() {
+        val dispatcher: Dispatcher =
+            object : Dispatcher() {
+                @Throws(InterruptedException::class)
+                override fun dispatch(request: RecordedRequest): MockResponse {
+                    val path = request.path?.substringBefore('?')
+                    val response =
+                        when (request.method + " " + path) {
+                            "POST /api/verification-requests" -> {
+                                TestHelper.mockResponseFromFile("/config/data/create-verificatie-response.json")
+                            }
+                            "POST /api/verification-requests/verify" -> {
+                                TestHelper.mockResponseFromFile("/config/data/verify-verificatie-response.json")
+                            }
+                            else -> MockResponse().setResponseCode(404)
+                        }
+                    return response
+                }
+            }
+        server?.dispatcher = dispatcher
+    }
 }

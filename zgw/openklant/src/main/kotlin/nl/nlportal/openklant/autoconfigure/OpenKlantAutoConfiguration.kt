@@ -15,16 +15,11 @@
  */
 package nl.nlportal.openklant.autoconfigure
 
-import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
-import nl.nlportal.openklant.client.OpenKlant2VerificatieClient
 import nl.nlportal.openklant.service.OpenKlant2Service
-import nl.nlportal.openklant.service.OpenKlantVerificatieService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.web.reactive.function.client.WebClient
 
 @EnableConfigurationProperties(
     OpenKlantModuleConfiguration::class,
@@ -44,27 +39,4 @@ class OpenKlantAutoConfiguration {
             openKlant2Client = openklant2Client,
             openKlantConfigurationProperties = openKlantModuleConfiguration.properties,
         )
-
-    @Bean("openKlantVerificatieClient")
-    fun openKlantVerificatieClient(
-        openklantModuleConfiguration: OpenKlantModuleConfiguration,
-        @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
-        webClientBuilder: WebClient.Builder,
-    ): OpenKlant2VerificatieClient =
-        OpenKlant2VerificatieClient(
-            verificatieConfigurationProperties = openklantModuleConfiguration.properties.verificatie,
-            clientSslContextResolver = clientSslContextResolver,
-            webClientBuilder = webClientBuilder,
-        )
-
-    @Bean
-    fun openKlantVerificatieService(
-        openklantModuleConfiguration: OpenKlantModuleConfiguration,
-        openKlant2VerificatieClient: OpenKlant2VerificatieClient,
-        openKlant2Service: OpenKlant2Service,
-    ) = OpenKlantVerificatieService(
-        verificatieConfigurationProperties = openklantModuleConfiguration.properties.verificatie,
-        verificatieClient = openKlant2VerificatieClient,
-        openKlant2Service = openKlant2Service,
-    )
 }

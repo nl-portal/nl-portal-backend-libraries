@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.openklant.client
+package nl.nlportal.verificatie.client
 
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -21,11 +21,11 @@ import io.netty.handler.logging.LogLevel
 import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
-import nl.nlportal.openklant.autoconfigure.OpenKlantModuleConfiguration.OpenKlantConfigurationProperties.OpenKlantVerificatieConfigurationProperties
-import nl.nlportal.openklant.client.domain.VerificatieCreateRequest
-import nl.nlportal.openklant.client.domain.VerificatieCreateResponse
-import nl.nlportal.openklant.client.domain.VerificatieVerifyRequest
-import nl.nlportal.openklant.client.domain.VerificatieVerifyResponse
+import nl.nlportal.verificatie.autoconfigure.VerificatieModuleConfiguration.VerificatieConfigurationProperties
+import nl.nlportal.verificatie.client.domain.VerificatieCreateApiRequest
+import nl.nlportal.verificatie.client.domain.VerificatieCreateApiResponse
+import nl.nlportal.verificatie.client.domain.VerificatieVerifyApiRequest
+import nl.nlportal.verificatie.client.domain.VerificatieVerifyApiResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
@@ -39,16 +39,16 @@ import org.springframework.web.server.ResponseStatusException
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
 
-class OpenKlant2VerificatieClient(
-    private val verificatieConfigurationProperties: OpenKlantVerificatieConfigurationProperties,
+class VerificatieClient(
+    private val verificatieConfigurationProperties: VerificatieConfigurationProperties,
     private val clientSslContextResolver: ClientSslContextResolver? = null,
-    webClientBuilder: WebClient.Builder,
 ) {
     val webClient: WebClient
 
     init {
         this.webClient =
-            webClientBuilder
+            WebClient
+                .builder()
                 .clone()
                 .clientConnector(
                     ReactorClientHttpConnector(
@@ -95,13 +95,13 @@ class OpenKlant2VerificatieClient(
                                 )
                             }
                         }.build(),
-                ).baseUrl(verificatieConfigurationProperties.url)
+                ).baseUrl(verificatieConfigurationProperties.url.toString())
                 .build()
     }
 
     suspend fun create(
-        request: VerificatieCreateRequest,
-    ): VerificatieCreateResponse =
+        request: VerificatieCreateApiRequest,
+    ): VerificatieCreateApiResponse =
         webClient
             .post()
             .uri("/api/verification-requests")
@@ -111,11 +111,11 @@ class OpenKlant2VerificatieClient(
                 BodyInserters.fromValue(request),
             ).retrieve()
             .handleStatus()
-            .awaitBody<VerificatieCreateResponse>()
+            .awaitBody<VerificatieCreateApiResponse>()
 
     suspend fun verify(
-        request: VerificatieVerifyRequest,
-    ): VerificatieVerifyResponse =
+        request: VerificatieVerifyApiRequest,
+    ): VerificatieVerifyApiResponse =
         webClient
             .post()
             .uri("/api/verification-requests/verify")
@@ -125,13 +125,13 @@ class OpenKlant2VerificatieClient(
                 BodyInserters.fromValue(request),
             ).retrieve()
             .handleStatus()
-            .awaitBody<VerificatieVerifyResponse>()
+            .awaitBody<VerificatieVerifyApiResponse>()
 
     private fun getToken(): String? {
-        if (verificatieConfigurationProperties.clientId.isNotEmpty() && verificatieConfigurationProperties.secret.isNotEmpty()) {
+        if (verificatieConfigurationProperties.clientId != null && verificatieConfigurationProperties.secret != null) {
             return IdTokenGenerator().generateToken(
-                verificatieConfigurationProperties.secret,
-                verificatieConfigurationProperties.clientId,
+                verificatieConfigurationProperties.secret!!,
+                verificatieConfigurationProperties.clientId!!,
             )
         }
         return null

@@ -20,9 +20,9 @@ import nl.nlportal.openklant.client.domain.OpenKlant2Partij
 import nl.nlportal.openklant.client.domain.OrganisatieIdentificatie
 import nl.nlportal.openklant.client.domain.PartijIdentificatie
 import nl.nlportal.openklant.client.domain.PersoonsIdentificatie
-import nl.nlportal.openklant.graphql.domain.PartijType.CONTACTPERSOON
 import nl.nlportal.openklant.graphql.domain.PartijType.ORGANISATIE
 import nl.nlportal.openklant.graphql.domain.PartijType.PERSOON
+import nl.nlportal.openklant.graphql.domain.PartijType.CONTACTPERSOON
 
 data class PartijRequest(
     val indicatieGeheimhouding: Boolean,

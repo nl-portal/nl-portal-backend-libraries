@@ -15,10 +15,10 @@
  */
 package nl.nlportal.openklant.graphql.domain
 
-import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdres
 import nl.nlportal.openklant.graphql.domain.DigitaleAdresType.OVERIG
 import java.time.LocalDate
 import java.util.UUID
+import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdres
 
 data class DigitaleAdresResponse(
     val uuid: UUID,
