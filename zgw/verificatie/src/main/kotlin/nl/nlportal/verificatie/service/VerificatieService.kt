@@ -16,6 +16,7 @@
 package nl.nlportal.verificatie.service
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.time.ZonedDateTime
 import nl.nlportal.verificatie.autoconfigure.VerificatieModuleConfiguration.VerificatieConfigurationProperties
 import nl.nlportal.verificatie.client.VerificatieClient
 import nl.nlportal.verificatie.client.domain.VerificatieCreateApiRequest
@@ -32,7 +33,7 @@ class VerificatieService(
 ) {
     suspend fun createVerificatie(
         verificatieCreateInput: VerificatieCreateInput,
-    ): VerificatieCreateResponse? {
+    ): VerificatieCreateResponse {
         try {
             val request =
                 VerificatieCreateApiRequest(
@@ -56,7 +57,7 @@ class VerificatieService(
                                 null
                             }
                         },
-                    reference = verificatieCreateInput.uuid.toString(),
+                    reference = verificatieCreateInput.uuid?.toString(),
                     apiKey = verificatieConfigurationProperties.apiKey,
                     templateId =
                         when (verificatieCreateInput.type) {
@@ -79,12 +80,16 @@ class VerificatieService(
             logger.error(e) { "Issue creating verificatie request failed" }
         }
 
-        return null
+        return VerificatieCreateResponse(
+            uuid = verificatieCreateInput.uuid,
+            success = false,
+            errorMessage = "Issue createing verificatie request failed",
+        )
     }
 
     suspend fun verify(
         verificatieVerifyInput: VerificatieVerifyInput,
-    ): VerificatieVerifyResponse? {
+    ): VerificatieVerifyResponse {
         try {
             val request =
                 VerificatieVerifyApiRequest(
@@ -108,7 +113,7 @@ class VerificatieService(
                                 null
                             }
                         },
-                    reference = verificatieVerifyInput.uuid.toString(),
+                    reference = verificatieVerifyInput.uuid?.toString(),
                     code = verificatieVerifyInput.code,
                 )
 
@@ -119,10 +124,15 @@ class VerificatieService(
                 verifiedOp = response.verifiedOp,
             )
         } catch (e: Exception) {
-            logger.error(e) { "Issue creating verificatie request failed" }
+            logger.error(e) { "Issue verify verificatie request failed" }
         }
 
-        return null
+        return VerificatieVerifyResponse(
+            uuid = verificatieVerifyInput.uuid,
+            verified = false,
+            verifiedOp = ZonedDateTime.now(),
+            errorMessage = "Issue verify verificatie request failed",
+        )
     }
 
     companion object {

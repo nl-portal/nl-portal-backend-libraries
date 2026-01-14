@@ -15,30 +15,32 @@
  */
 package nl.nlportal.verificatie.graphql.domain
 
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import java.util.UUID
 import nl.nlportal.verificatie.graphql.VerificatieType
 
 data class VerificatieCreateInput(
-    val uuid: UUID,
+    val uuid: UUID? = null,
     val waarde: String,
     val type: VerificatieType,
 )
 
 data class VerificatieVerifyInput(
-    val uuid: UUID,
+    val uuid: UUID? = null,
     val waarde: String,
     val type: VerificatieType,
     val code: String,
 )
 
 data class VerificatieCreateResponse(
-    val uuid: UUID,
+    val uuid: UUID? = null,
     val success: Boolean,
+    val errorMessage: String? = null,
 )
 
 data class VerificatieVerifyResponse(
-    val uuid: UUID,
+    val uuid: UUID? = null,
     val verified: Boolean,
-    val verifiedOp: LocalDateTime,
+    val verifiedOp: ZonedDateTime,
+    val errorMessage: String? = null,
 )

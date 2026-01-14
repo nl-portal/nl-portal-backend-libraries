@@ -32,7 +32,7 @@ class VerificatieMutation(
     @MutationMapping
     suspend fun createVerificatie(
         @Argument verificatieCreateInput: VerificatieCreateInput,
-    ): VerificatieCreateResponse? =
+    ): VerificatieCreateResponse =
         verificatieService.createVerificatie(
             verificatieCreateInput = verificatieCreateInput,
         )
@@ -41,7 +41,7 @@ class VerificatieMutation(
     suspend fun verifyVerificatie(
         authentication: CommonGroundAuthentication,
         @Argument verificatieVerifyInput: VerificatieVerifyInput,
-    ): VerificatieVerifyResponse? =
+    ): VerificatieVerifyResponse =
         verificatieService.verify(
             verificatieVerifyInput = verificatieVerifyInput,
         )

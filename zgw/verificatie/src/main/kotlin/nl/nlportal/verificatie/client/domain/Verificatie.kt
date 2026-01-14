@@ -16,7 +16,7 @@
 package nl.nlportal.verificatie.client.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class VerificatieCreateApiRequest(
@@ -41,5 +41,5 @@ data class VerificatieVerifyApiRequest(
 
 data class VerificatieVerifyApiResponse(
     val verified: Boolean,
-    val verifiedOp: LocalDateTime,
+    val verifiedOp: ZonedDateTime,
 )

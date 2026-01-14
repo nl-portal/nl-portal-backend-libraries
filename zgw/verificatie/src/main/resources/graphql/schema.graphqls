@@ -16,25 +16,28 @@ enum VerificatieType {
     EMAIL
     OVERIG
 }
-
 input VerificatieCreateInput {
     type: VerificatieType!
-    uuid: UUID!
+    uuid: UUID
     waarde: String!
 }
 
 type VerificatieCreateResponse {
     success: Boolean!
+    uuid: UUID
+    errorMessage: String
 }
 
 input VerificatieVerifyInput {
     code: String!
-    type: DigitaleAdresType!
-    uuid: UUID!
+    type: VerificatieType!
+    uuid: UUID
     waarde: String!
 }
 
 type VerificatieVerifyResponse {
     verified: Boolean!
-    verifiedOp: DateTime!
+    verifiedOp: ZonedDateTime!
+    uuid: UUID
+    errorMessage: String
 }
