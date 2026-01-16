@@ -236,3 +236,7 @@ nl-portal:
         theme:
             logo:
             style:
+        verificatie:
+            enabled: false
+            properties:
+                url: http://localhost:8080
