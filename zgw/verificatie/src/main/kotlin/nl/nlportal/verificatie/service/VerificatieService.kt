@@ -21,7 +21,7 @@ import nl.nlportal.verificatie.autoconfigure.VerificatieModuleConfiguration.Veri
 import nl.nlportal.verificatie.client.VerificatieClient
 import nl.nlportal.verificatie.client.domain.VerificatieCreateApiRequest
 import nl.nlportal.verificatie.client.domain.VerificatieVerifyApiRequest
-import nl.nlportal.verificatie.graphql.VerificatieType
+import nl.nlportal.verificatie.graphql.domain.VerificatieType
 import nl.nlportal.verificatie.graphql.domain.VerificatieCreateInput
 import nl.nlportal.verificatie.graphql.domain.VerificatieCreateResponse
 import nl.nlportal.verificatie.graphql.domain.VerificatieVerifyInput

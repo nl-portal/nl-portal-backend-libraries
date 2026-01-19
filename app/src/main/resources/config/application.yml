@@ -239,4 +239,4 @@ nl-portal:
         verificatie:
             enabled: false
             properties:
-                url: http://localhost:8080
+                url: http://localhost:8088

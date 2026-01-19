@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Ritense BV, the Netherlands.
+ * Copyright 2026 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.verificatie.graphql
+package nl.nlportal.verificatie.graphql.domain
 
 enum class VerificatieType {
     TELEFOONNUMMER,

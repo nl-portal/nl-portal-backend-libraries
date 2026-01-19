@@ -20,13 +20,11 @@ import nl.nlportal.verificatie.client.VerificatieClient
 import nl.nlportal.verificatie.service.VerificatieService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfiguration
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
 @EnableConfigurationProperties(VerificatieModuleConfiguration::class)
-@ConditionalOnProperty(prefix = "nl-portal.config", name = ["verificatie.enabled"], havingValue = "true")
 class VerificatieAutoConfiguration {
     @Bean("verificatieClient")
     fun verificatieClient(
