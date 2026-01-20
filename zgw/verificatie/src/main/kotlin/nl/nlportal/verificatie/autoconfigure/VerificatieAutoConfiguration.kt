@@ -20,6 +20,8 @@ import nl.nlportal.verificatie.client.VerificatieClient
 import nl.nlportal.verificatie.service.VerificatieService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfiguration
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
@@ -27,6 +29,8 @@ import org.springframework.context.annotation.Bean
 @EnableConfigurationProperties(VerificatieModuleConfiguration::class)
 class VerificatieAutoConfiguration {
     @Bean("verificatieClient")
+    @ConditionalOnMissingBean(VerificatieClient::class)
+    @ConditionalOnProperty(prefix = "nl-portal.config", name = ["verificatie.enabled"], havingValue = "true")
     fun verificatieClient(
         verificatieModuleConfiguration: VerificatieModuleConfiguration,
         @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
@@ -37,6 +41,8 @@ class VerificatieAutoConfiguration {
         )
 
     @Bean
+    @ConditionalOnMissingBean(VerificatieService::class)
+    @ConditionalOnProperty(prefix = "nl-portal.config", name = ["verificatie.enabled"], havingValue = "true")
     fun verificatieService(
         verificatieModuleConfiguration: VerificatieModuleConfiguration,
         verificatieClient: VerificatieClient,

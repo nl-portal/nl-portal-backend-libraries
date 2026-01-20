@@ -19,11 +19,13 @@ import nl.nlportal.verificatie.graphql.VerificatieMutation
 import nl.nlportal.verificatie.graphql.VerificatieQuery
 import nl.nlportal.verificatie.service.VerificatieService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 
 class VerificatieGraphqlAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(VerificatieMutation::class)
+    @ConditionalOnProperty(prefix = "nl-portal.config", name = ["verificatie.enabled"], havingValue = "true")
     fun verificatieMutation(verificatieService: VerificatieService) = VerificatieMutation(verificatieService)
 
     @Bean

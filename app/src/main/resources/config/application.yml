@@ -237,6 +237,6 @@ nl-portal:
             logo:
             style:
         verificatie:
-            enabled: false
+            enabled: true
             properties:
                 url: http://localhost:8088
