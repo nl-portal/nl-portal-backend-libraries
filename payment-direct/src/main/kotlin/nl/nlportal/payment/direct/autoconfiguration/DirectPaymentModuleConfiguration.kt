@@ -54,5 +54,6 @@ data class DirectPaymentModuleConfiguration(
         val returnUrl: String = "",
         val webhookApiKey: String = "",
         val webhookApiSecret: String = "",
+        val creditcardEnabled: Boolean = false,
     )
 }

@@ -108,10 +108,6 @@ open class DirectPaymentService(
                 hostedCheckoutSpecificInput.variant = it
             }
 
-            val cardPaymentMethodSpecificInput =
-                CardPaymentMethodSpecificInputBase()
-                    .withAuthorizationMode("SALE")
-
             val checkoutRequest =
                 CreateHostedCheckoutRequest()
                     .withOrder(
@@ -127,9 +123,15 @@ open class DirectPaymentService(
                             ),
                     ).withHostedCheckoutSpecificInput(
                         hostedCheckoutSpecificInput,
-                    ).withCardPaymentMethodSpecificInput(
-                        cardPaymentMethodSpecificInput,
                     )
+
+            // only enable creditcard support if creditcardEnabled is enabled
+            if (paymentDirectProfile.creditcardEnabled) {
+                checkoutRequest.withCardPaymentMethodSpecificInput(
+                    CardPaymentMethodSpecificInputBase()
+                        .withAuthorizationMode("SALE"),
+                )
+            }
 
             // if webhookUrl property is configured, set webhook url in the request. Benefit is dynamically set the webhook url per environment.
             directPaymentModuleConfiguration.properties.webhookUrl?.let {
