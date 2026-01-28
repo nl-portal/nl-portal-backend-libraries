@@ -17,6 +17,7 @@ package nl.nlportal.openklant.autoconfigure
 
 import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
 import nl.nlportal.openklant.service.OpenKlant2Service
+import nl.nlportal.verificatie.autoconfigure.VerificatieModuleConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -34,9 +35,11 @@ class OpenKlantAutoConfiguration {
     fun openKlant2Service(
         openklant2Client: OpenKlant2KlantinteractiesClient,
         openKlantModuleConfiguration: OpenKlantModuleConfiguration,
+        verificatieModuleConfiguration: VerificatieModuleConfiguration,
     ): OpenKlant2Service =
         OpenKlant2Service(
             openKlant2Client = openklant2Client,
             openKlantConfigurationProperties = openKlantModuleConfiguration.properties,
+            verificatieModuleConfiguration = verificatieModuleConfiguration,
         )
 }
