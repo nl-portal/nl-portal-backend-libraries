@@ -870,6 +870,28 @@ class OpenProductService(
         return emptyList()
     }
 
+    suspend fun getThemaLinks(
+        thema: OpenProductThema,
+    ): List<OpenProductLink> {
+        val links = mutableListOf<OpenProductLink>()
+
+        thema.producttypen.forEach { productType ->
+            val searchVariables =
+                listOf<Pair<OpenProductLinksFilters, Any>>(
+                    OpenProductLinksFilters.PAGE to 1,
+                    OpenProductLinksFilters.PAGE_SIZE to 999,
+                    OpenProductLinksFilters.PRODUCTTYPE_UUID to productType.uuid.toString(),
+                )
+
+            val linkResponse = openProductTypeClient.path<Links>().get(searchVariables)
+            if (linkResponse.results.isNotEmpty()) {
+                links.addAll(linkResponse.results)
+            }
+        }
+
+        return links
+    }
+
     /**
      * Update product verbruiksobject or dataobject
      * @param: authentication, authenticated user
