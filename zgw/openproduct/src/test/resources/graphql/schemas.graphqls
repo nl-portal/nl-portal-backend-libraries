@@ -334,6 +334,7 @@ type OpenProductThema {
     producten: [OpenProductProduct!]
     taken: [TaakV2!]
     zaken: [Zaak!]
+    links: [OpenProductLink!]
 }
 
 type OpenProductThemaHierarchy {
