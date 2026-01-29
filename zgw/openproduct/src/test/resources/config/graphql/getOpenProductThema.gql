@@ -44,6 +44,11 @@ query {
             frequentie,
             verbruiksobject,
             dataobject
+
+        }
+        links {
+            url,
+            naam
         }
     }
 }

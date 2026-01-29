@@ -17,6 +17,7 @@ package nl.nlportal.openproduct.graphql
 
 import java.util.UUID
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.openproduct.client.domain.OpenProductLink
 import nl.nlportal.openproduct.client.domain.OpenProductProduct
 import nl.nlportal.openproduct.client.domain.OpenProductThema
 import nl.nlportal.openproduct.graphql.domain.OpenProductThemaHierarchy
@@ -134,6 +135,14 @@ class OpenProductThemaQuery(
     ): List<OpenProductProduct>? =
         openProductService.getThemaProducten(
             authentication = authentication,
+            thema = openProductThema,
+        )
+
+    @SchemaMapping(typeName = "OpenProductThema", field = "links")
+    suspend fun links(
+        openProductThema: OpenProductThema,
+    ): List<OpenProductLink> =
+        openProductService.getThemaLinks(
             thema = openProductThema,
         )
 }

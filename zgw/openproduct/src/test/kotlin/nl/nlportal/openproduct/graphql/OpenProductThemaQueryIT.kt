@@ -225,6 +225,8 @@ class OpenProductThemaQueryIT(
             assertEquals("Parkeren", responseBody.requiredAt("/naam")?.stringValue())
             assertEquals("Parkeervergunning", responseBody.requiredAt("/producttypen/0/uniformeProductNaam")?.stringValue())
             assertEquals("PARKEREN", responseBody.requiredAt("/producttypen/0/code")?.stringValue())
+            assertEquals("link naar Ritense website", responseBody.requiredAt("/links/0/naam")?.stringValue())
+            assertEquals("https://ritense.com/", responseBody.requiredAt("/links/0/url")?.stringValue())
         }
 
     @Test
@@ -278,6 +280,9 @@ class OpenProductThemaQueryIT(
                             }
                             "GET /producten" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-producten.json")
+                            }
+                            "GET /links" -> {
+                                TestHelper.mockResponseFromFile("/config/data/get-links.json")
                             }
                             "GET /api/v2/objects" -> {
                                 if (queryParams.any { it.contains("identificatie__value__exact__569312863") }) {
