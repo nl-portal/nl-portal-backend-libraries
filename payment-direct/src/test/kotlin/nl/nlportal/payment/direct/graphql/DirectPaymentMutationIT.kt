@@ -123,7 +123,10 @@ internal class DirectPaymentMutationIT(
                             "POST /v2/TAX/hostedcheckouts" -> {
                                 TestHelper.mockResponseFromFile("/data/payment-response.json")
                             }
-                            else -> MockResponse().setResponseCode(404)
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }

@@ -418,31 +418,42 @@ internal class ProductQueryIT(
                                     MockResponse().setResponseCode(404)
                                 }
                             }
+
                             "POST /zaken/api/v1/zaken/_zoek" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-zaken.json")
                             }
+
                             "POST /api/v2/objects" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-prefill-object.json")
                             }
+
                             "GET /api/v2/objects/2d725c07-2f26-4705-8637-438a42b5a800" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-product-verbruiks-object.json")
                             }
+
                             "GET /api/v2/objects/7d9cd6c2-8147-46f2-9ae9-c67e8213c200" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-product-type.json")
                             }
+
                             "GET /zaken/api/v1/zaken/7d9cd6c2-8147-46f2-9ae9-c67e8213c202" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-zaak.json")
                             }
+
                             "GET /api/v2/objects/58fad5ab-dc2f-11ec-9075-f22a405ce708" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-taak.json")
                             }
+
                             "GET /api/v2/objects/2d725c07-2f26-4705-8637-438a42b5ac2d" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-product.json")
                             }
+
                             "POST /decision-definition/key/watkanikregelenDmn/evaluate" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-dmn-decision.json")
                             }
-                            else -> MockResponse().setResponseCode(404)
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }

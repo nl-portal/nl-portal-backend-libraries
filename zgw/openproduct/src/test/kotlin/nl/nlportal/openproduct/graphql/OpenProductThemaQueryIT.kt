@@ -260,30 +260,39 @@ class OpenProductThemaQueryIT(
                             "GET /themas/41f71c2e-9e0c-4a1b-8d39-709669b256c2" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-thema.json")
                             }
+
                             "GET /themas/5422b0e4-18ae-4017-bcea-fb03446a8136" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-subthema.json")
                             }
+
                             "GET /themas/c111ce6f-308f-4e6d-9460-ffe6a07e283a" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-hoofdthema.json")
                             }
+
                             "GET /themas" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-themas.json")
                             }
+
                             "POST /zaken/api/v1/zaken/_zoek" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-zaken.json")
                             }
+
                             "GET /producttypen/dee273e9-2aa8-40ae-84b7-cb7da3c075ba" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-producttype.json")
                             }
+
                             "GET /producttypen/202fef9d-4594-45c5-86e4-4bccb06a2679" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-producttype.json")
                             }
+
                             "GET /producten" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-producten.json")
                             }
+
                             "GET /links" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-links.json")
                             }
+
                             "GET /api/v2/objects" -> {
                                 if (queryParams.any { it.contains("identificatie__value__exact__569312863") }) {
                                     TestHelper.mockResponseFromFile("/config/data/get-taken.json")
@@ -291,7 +300,10 @@ class OpenProductThemaQueryIT(
                                     MockResponse().setResponseCode(404)
                                 }
                             }
-                            else -> MockResponse().setResponseCode(404)
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }

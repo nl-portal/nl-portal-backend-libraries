@@ -131,10 +131,14 @@ class OpenProductLocatieQueryIT(
                             "GET /locaties/ea3069ae-7ec0-4663-91b7-cab404cc450d" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-locatie.json")
                             }
+
                             "GET /locaties" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-locaties.json")
                             }
-                            else -> MockResponse().setResponseCode(404)
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }
