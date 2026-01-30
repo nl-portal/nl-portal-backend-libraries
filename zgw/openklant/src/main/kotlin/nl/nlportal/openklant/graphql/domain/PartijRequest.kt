@@ -34,18 +34,23 @@ data class PartijRequest(
 ) {
     private val identificatie: PartijIdentificatie =
         when (type) {
-            PERSOON ->
+            PERSOON -> {
                 requireNotNull(persoonsIdentificatie) {
                     "{persoonIdentification} can not be null when <type> is $type"
                 }
-            ORGANISATIE ->
+            }
+
+            ORGANISATIE -> {
                 requireNotNull(organisatieIdentificatie) {
                     "{organisatieIdentificatie} can not be null when <type> is $type"
                 }
-            CONTACTPERSOON ->
+            }
+
+            CONTACTPERSOON -> {
                 requireNotNull(contactpersoonIdentificatie) {
                     "{contactpersoonIdentificatie} can not be null when <type> is $type"
                 }
+            }
         }
 
     fun asOpenKlant2Partij(): OpenKlant2Partij =

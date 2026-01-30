@@ -17,6 +17,7 @@ package nl.nlportal.payment.direct.service
 
 import com.onlinepayments.communication.RequestHeader
 import com.onlinepayments.domain.AmountOfMoney
+import com.onlinepayments.domain.CardPaymentMethodSpecificInputBase
 import com.onlinepayments.domain.CreateHostedCheckoutRequest
 import com.onlinepayments.domain.Feedbacks
 import com.onlinepayments.domain.HostedCheckoutSpecificInput
@@ -123,6 +124,14 @@ open class DirectPaymentService(
                     ).withHostedCheckoutSpecificInput(
                         hostedCheckoutSpecificInput,
                     )
+
+            // only enable creditcard support if creditcardEnabled is enabled
+            if (paymentDirectProfile.creditcardEnabled) {
+                checkoutRequest.withCardPaymentMethodSpecificInput(
+                    CardPaymentMethodSpecificInputBase()
+                        .withAuthorizationMode("SALE"),
+                )
+            }
 
             // if webhookUrl property is configured, set webhook url in the request. Benefit is dynamically set the webhook url per environment.
             directPaymentModuleConfiguration.properties.webhookUrl?.let {

@@ -164,19 +164,26 @@ class BerichtenQueryIT(
                                     MockResponse().setResponseCode(404)
                                 }
                             }
+
                             "GET /api/v2/objects/9e021130-8cbd-4c6f-846a-677448e21ce8" -> {
                                 TestHelper.mockResponse(TestHelper.objectenApiBerichtObjectResponse)
                             }
+
                             "GET /api/v2/objects/a4961c4a-29a7-4cc7-9d5d-bceed1dfccba" -> {
                                 TestHelper.mockResponse(TestHelper.objectenApiBerichtIsReadObjectResponse)
                             }
+
                             "PUT /api/v2/objects/9e021130-8cbd-4c6f-846a-677448e21ce8" -> {
                                 TestHelper.mockResponse(TestHelper.objectenApiBerichtIsReadObjectResponse)
                             }
+
                             "GET /enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> {
                                 TestHelper.mockResponse(TestHelper.handleDocumentResponse)
                             }
-                            else -> MockResponse().setResponseCode(404)
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }

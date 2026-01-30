@@ -113,10 +113,14 @@ class OpenProductMutationIT(
                             "GET /producten/694242af-d906-470b-b7e1-eb3527886854" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-product.json")
                             }
+
                             "PATCH /producten/694242af-d906-470b-b7e1-eb3527886854" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-product.json")
                             }
-                            else -> MockResponse().setResponseCode(404)
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }

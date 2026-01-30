@@ -127,12 +127,15 @@ class HaalCentraal2Service(
             AanduidingNaamGebruikBrpNaam.PARTNER.value -> {
                 lastNamePartner
             }
+
             AanduidingNaamGebruikBrpNaam.PARTNER_EIGEN.value -> {
                 "$lastNamePartner - ${persoon.naam.lastName()}"
             }
+
             AanduidingNaamGebruikBrpNaam.EIGEN_PARTNER.value -> {
                 "${persoon.naam.lastName()} - $lastNamePartner"
             }
+
             else -> {
                 persoon.naam.lastName()
             }

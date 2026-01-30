@@ -151,13 +151,18 @@ class OpenProductTypeQueryIT(
                             "GET /producttypen/dee273e9-2aa8-40ae-84b7-cb7da3c075ba/content" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-producttype-content.json")
                             }
+
                             "GET /producttypen/dee273e9-2aa8-40ae-84b7-cb7da3c075ba" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-producttype.json")
                             }
+
                             "GET /producttypen" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-producttypes.json")
                             }
-                            else -> MockResponse().setResponseCode(404)
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }
