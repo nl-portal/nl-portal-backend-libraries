@@ -20,6 +20,7 @@ import java.util.UUID
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.openklant.graphql.domain.DigitaleAdresRequest
 import nl.nlportal.openklant.graphql.domain.DigitaleAdresResponse
+import nl.nlportal.openklant.graphql.domain.DigitaleAdresType
 import nl.nlportal.openklant.service.OpenKlant2Service
 import nl.nlportal.verificatie.autoconfigure.VerificatieModuleConfiguration
 import nl.nlportal.verificatie.graphql.domain.VerificatieCreateInput
@@ -44,7 +45,7 @@ class DigitaleAdresMutation(
         @Argument digitaleAdresRequest: DigitaleAdresRequest,
     ): DigitaleAdresResponse? {
         if (verificatieService != null &&
-            verificatieModuleConfiguration.properties.typesNeedVerification.contains(VerificatieType.valueOf(digitaleAdresRequest.type.toString()))
+            verificatieModuleConfiguration.properties.typesNeedVerification.contains(DigitaleAdresType.toVerificationType(digitaleAdresRequest.type))
         ) {
             // verificate flow
             val response = doVerificatie(digitaleAdresRequest)
@@ -67,7 +68,7 @@ class DigitaleAdresMutation(
         @Argument digitaleAdresRequest: DigitaleAdresRequest,
     ): DigitaleAdresResponse? {
         if (verificatieService != null &&
-            verificatieModuleConfiguration.properties.typesNeedVerification.contains(VerificatieType.valueOf(digitaleAdresRequest.type.toString())) &&
+            verificatieModuleConfiguration.properties.typesNeedVerification.contains(DigitaleAdresType.toVerificationType(digitaleAdresRequest.type)) &&
             digitaleAdresRequest.verificatieDatum == null
         ) {
             // verificate flow
