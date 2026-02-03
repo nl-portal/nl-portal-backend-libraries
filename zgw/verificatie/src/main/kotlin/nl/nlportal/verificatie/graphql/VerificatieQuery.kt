@@ -16,6 +16,7 @@
 package nl.nlportal.verificatie.graphql
 
 import nl.nlportal.verificatie.autoconfigure.VerificatieModuleConfiguration
+import nl.nlportal.verificatie.graphql.domain.VerificationConfig
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.stereotype.Controller
 
@@ -24,5 +25,9 @@ class VerificatieQuery(
     val verificatieModuleConfiguration: VerificatieModuleConfiguration,
 ) {
     @QueryMapping
-    fun verificatieEnabled(): Boolean = verificatieModuleConfiguration.enabled
+    fun verificatieConfig(): VerificationConfig =
+        VerificationConfig(
+            enabled = verificatieModuleConfiguration.enabled,
+            typesNeedVerification = verificatieModuleConfiguration.properties.typesNeedVerification,
+        )
 }

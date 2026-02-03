@@ -1,5 +1,5 @@
 extend type Query {
-    verificatieEnabled: Boolean
+    verificatieConfig: VerificationConfig
 }
 extend type Mutation {
     createVerificatie(
@@ -22,6 +22,10 @@ input VerificatieCreateInput {
     waarde: String!
 }
 
+type VerificationConfig {
+    enabled: Boolean
+    typesNeedVerification: [VerificatieType!]
+}
 type VerificatieCreateResponse {
     success: Boolean!
     uuid: UUID

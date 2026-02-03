@@ -17,6 +17,7 @@ package nl.nlportal.verificatie.autoconfigure
 
 import java.net.URI
 import nl.nlportal.core.ssl.Ssl
+import nl.nlportal.verificatie.graphql.domain.VerificatieType
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.verificatie")
@@ -43,5 +44,6 @@ class VerificatieModuleConfiguration {
         var templateIdPhoneNumber: String? = null,
         var templateIdEmail: String? = null,
         var ssl: Ssl? = null,
+        var typesNeedVerification: List<VerificatieType> = emptyList(),
     )
 }

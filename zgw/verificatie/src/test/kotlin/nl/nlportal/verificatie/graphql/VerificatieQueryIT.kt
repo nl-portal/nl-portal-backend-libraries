@@ -37,18 +37,19 @@ class VerificatieQueryIT(
 ) {
     @Test
     @WithBurgerUser("569312863")
-    fun `is verificatie Enabled`() =
+    fun `verificatie config`() =
         runTest {
             val responseBody =
                 httpGraphQlTester
-                    .document(TestHelper.readFileAsString("/config/graphql/verificatieEnabled.gql"))
+                    .document(TestHelper.readFileAsString("/config/graphql/verificatieConfig.gql"))
                     .execute()
                     .errors()
                     .verify()
-                    .path("verificatieEnabled")
+                    .path("verificatieConfig")
                     .entity(JsonNode::class.java)
                     .get()
 
-            assertEquals(true, responseBody.booleanValue())
+            assertEquals(true, responseBody.get("enabled").booleanValue())
+            assertEquals("[\"EMAIL\",\"TELEFOONNUMMER\"]", responseBody.get("typesNeedVerification").toString())
         }
 }

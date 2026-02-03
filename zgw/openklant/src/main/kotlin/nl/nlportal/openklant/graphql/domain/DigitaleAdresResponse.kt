@@ -21,12 +21,13 @@ import java.util.UUID
 import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdres
 
 data class DigitaleAdresResponse(
-    val uuid: UUID,
+    val uuid: UUID? = null,
     val waarde: String,
     val type: DigitaleAdresType,
     val omschrijving: String,
     val referentie: String,
     val verificatieDatum: LocalDate? = null,
+    val verificatieNeeded: Boolean? = false,
 ) {
     companion object {
         fun fromOpenKlant2DigitaleAdres(openKlant2DigitaleAdres: OpenKlant2DigitaleAdres): DigitaleAdresResponse =

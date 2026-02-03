@@ -16,7 +16,6 @@
 package nl.nlportal.openklant.service
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.time.LocalDate
 import nl.nlportal.commonground.authentication.BedrijfAuthentication
 import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
@@ -52,12 +51,10 @@ import nl.nlportal.openklant.client.path.Partijen
 import nl.nlportal.openklant.graphql.domain.OnderwerpObjectIndentificatorType
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import java.util.UUID
-import nl.nlportal.verificatie.autoconfigure.VerificatieModuleConfiguration
 
 class OpenKlant2Service(
     private val openKlant2Client: OpenKlant2KlantinteractiesClient,
     private val openKlantConfigurationProperties: OpenKlantConfigurationProperties,
-    private val verificatieModuleConfiguration: VerificatieModuleConfiguration,
 ) {
     suspend fun findPartijByAuthentication(authentication: CommonGroundAuthentication): OpenKlant2Partij? {
         val searchVariables = searchVariablesPartij(authentication)
@@ -246,12 +243,6 @@ class OpenKlant2Service(
                     .copy(
                         verstrektDoorPartij = OpenKlant2UUID(userPartijId!!),
                         referentie = openKlantConfigurationProperties.digitalAdressenReferentie ?: "",
-                        verificatieDatum =
-                            if (verificatieModuleConfiguration.enabled) {
-                                LocalDate.now()
-                            } else {
-                                null
-                            },
                     ),
             )
     }
@@ -290,15 +281,7 @@ class OpenKlant2Service(
                 openKlant2Client
                     .path<DigitaleAdressen>()
                     .patch(
-                        digitaleAdres =
-                            digitaleAdres.copy(
-                                verificatieDatum =
-                                    if (verificatieModuleConfiguration.enabled) {
-                                        LocalDate.now()
-                                    } else {
-                                        null
-                                    },
-                            ),
+                        digitaleAdres,
                     )
             } catch (ex: WebClientResponseException) {
                 logger.debug(ex) { "Failed to update DigitaleAdres: ${ex.responseBodyAsString}" }
