@@ -127,11 +127,16 @@ internal class HaalCentraal2GemachtigdeQueryIT(
                             "POST /brp/personen" -> {
                                 TestHelper.mockResponseFromFile("/data/get-personen.json")
                             }
-                            "GET /basisprofielen/90012768" ->
+
+                            "GET /basisprofielen/90012768" -> {
                                 TestHelper.mockResponseFromFile(
                                     "/data/get-maatschappelijke-activiteiten.json",
                                 )
-                            else -> MockResponse().setResponseCode(404)
+                            }
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }

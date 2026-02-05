@@ -69,10 +69,14 @@ abstract class CommonGroundAuthentication(
                 is List<*> -> {
                     claim.filterIsInstance<String>().map { UUID.fromString(it) }
                 }
+
                 is String -> {
                     listOf(UUID.fromString(claim))
                 }
-                else -> null
+
+                else -> {
+                    null
+                }
             }
 
         if (list == null) {

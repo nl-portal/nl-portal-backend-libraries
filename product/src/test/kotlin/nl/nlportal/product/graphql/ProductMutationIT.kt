@@ -103,16 +103,22 @@ internal class ProductMutationIT(
                                     MockResponse().setResponseCode(404)
                                 }
                             }
+
                             "GET /api/v2/objects/2d725c07-2f26-4705-8637-438a42b5a800" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-product-verbruiks-object.json")
                             }
+
                             "PUT /api/v2/objects/2d725c07-2f26-4705-8637-438a42b5a800" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-product-verbruiks-object.json")
                             }
+
                             "GET /api/v2/objects/2d725c07-2f26-4705-8637-438a42b5ac2d" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-product.json")
                             }
-                            else -> MockResponse().setResponseCode(404)
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }

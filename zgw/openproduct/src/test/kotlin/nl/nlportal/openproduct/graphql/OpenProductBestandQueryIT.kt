@@ -129,10 +129,14 @@ class OpenProductBestandQueryIT(
                             "GET /bestanden/0a9ff804-d151-477b-81aa-09e16f3064d9" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-bestand.json")
                             }
+
                             "GET /bestanden" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-bestanden.json")
                             }
-                            else -> MockResponse().setResponseCode(404)
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }

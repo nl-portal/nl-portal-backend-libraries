@@ -173,28 +173,38 @@ class OpenProductQueryIT(
                             "GET /producten/694242af-d906-470b-b7e1-eb3527886854" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-product.json")
                             }
+
                             "GET /themas/41f71c2e-9e0c-4a1b-8d39-709669b256c2" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-thema.json")
                             }
+
                             "GET /producten" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-producten.json")
                             }
+
                             "GET /producttypen/dee273e9-2aa8-40ae-84b7-cb7da3c075ba" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-producttype.json")
                             }
+
                             "GET /api/v2/objects/4b5f4fba-0746-11ed-b939-0242ac120023" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-taak.json")
                             }
+
                             "GET /zaken/api/v1/zaken/703af290-abe0-418c-b9c3-10a65e662788" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-zaak.json")
                             }
+
                             "POST /engine-rest/decision-definition/key/alg-belastingen/evaluate" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-dmn-decision.json")
                             }
+
                             "GET /acties" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-acties.json")
                             }
-                            else -> MockResponse().setResponseCode(404)
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }

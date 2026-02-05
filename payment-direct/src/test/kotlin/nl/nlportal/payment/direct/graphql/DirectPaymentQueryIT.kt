@@ -123,7 +123,10 @@ internal class DirectPaymentQueryIT(
                             "GET /v2/TAX/hostedcheckouts/4373041363" -> {
                                 TestHelper.mockResponseFromFile("/data/payment-status-response.json")
                             }
-                            else -> MockResponse().setResponseCode(404)
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }

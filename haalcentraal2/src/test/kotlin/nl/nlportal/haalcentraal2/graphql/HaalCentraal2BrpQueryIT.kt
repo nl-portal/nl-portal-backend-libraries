@@ -274,8 +274,14 @@ internal class HaalCentraal2BrpQueryIT(
                             "POST /brp/personen" -> {
                                 TestHelper.mockResponseFromFile("/data/get-personen.json")
                             }
-                            "POST /bewoning/bewoningen" -> TestHelper.mockResponseFromFile("/data/get-bewoningen.json")
-                            else -> MockResponse().setResponseCode(404)
+
+                            "POST /bewoning/bewoningen" -> {
+                                TestHelper.mockResponseFromFile("/data/get-bewoningen.json")
+                            }
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }

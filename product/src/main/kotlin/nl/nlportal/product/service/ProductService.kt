@@ -424,28 +424,36 @@ class ProductService(
         value: UUID,
     ): String? =
         when (key) {
-            "product" ->
+            "product" -> {
                 getObjectsApiObjectById<Product>(value.toString())
                     ?.apply {
                         this.record.data.id = this.uuid
                     }?.let {
                         Mapper.get().writeValueAsString(it.record.data)
                     }
-            "productverbruiksobject" ->
+            }
+
+            "productverbruiksobject" -> {
                 getObjectsApiObjectById<ProductVerbruiksObject>(value.toString())
                     ?.apply {
                         this.record.data.id = this.uuid
                     }?.let {
                         Mapper.get().writeValueAsString(it.record.data)
                     }
-            "productdetails" ->
+            }
+
+            "productdetails" -> {
                 getObjectsApiObjectById<ProductDetails>(value.toString())
                     ?.apply {
                         this.record.data.id = this.uuid
                     }?.let {
                         Mapper.get().writeValueAsString(it.record.data)
                     }
-            else -> null
+            }
+
+            else -> {
+                null
+            }
         }
 
     private fun getInitiatorSearchParameters(authentication: CommonGroundAuthentication): List<ObjectSearchParameter> =
@@ -456,6 +464,7 @@ class ProductService(
                     ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_ROLLEN_BETROKKENETYPE, Comparator.EQUAL_TO, "natuurlijkpersoon"),
                 )
             }
+
             is BedrijfAuthentication -> {
                 val vestigingsNummer = authentication.getVestigingsNummer()
                 if (vestigingsNummer != null) {
@@ -471,7 +480,9 @@ class ProductService(
                 }
             }
 
-            else -> throw IllegalArgumentException("Authentication not supported")
+            else -> {
+                throw IllegalArgumentException("Authentication not supported")
+            }
         }
 
     companion object {

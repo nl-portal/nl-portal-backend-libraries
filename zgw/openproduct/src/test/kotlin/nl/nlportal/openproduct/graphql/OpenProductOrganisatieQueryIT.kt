@@ -131,10 +131,14 @@ class OpenProductOrganisatieQueryIT(
                             "GET /organisaties/ac1ee933-8f9a-414b-bf0c-11adc969ed2c" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-organisatie.json")
                             }
+
                             "GET /organisaties" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-organisaties.json")
                             }
-                            else -> MockResponse().setResponseCode(404)
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }

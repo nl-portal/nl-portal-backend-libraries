@@ -64,7 +64,9 @@ class AuthenticationMachtigingsDienstService(
                 null
             }
 
-            else -> zaakTypeList
+            else -> {
+                zaakTypeList
+            }
         }
     }
 
@@ -84,7 +86,9 @@ class AuthenticationMachtigingsDienstService(
                 null
             }
 
-            else -> taakTypeList
+            else -> {
+                taakTypeList
+            }
         }
     }
 

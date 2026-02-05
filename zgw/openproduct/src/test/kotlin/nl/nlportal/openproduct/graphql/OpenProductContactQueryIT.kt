@@ -130,10 +130,14 @@ class OpenProductContactQueryIT(
                             "GET /contacten/09cd7326-1bf0-4890-b8d1-0ac3ee22bac0" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-contact.json")
                             }
+
                             "GET /contacten" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-contacten.json")
                             }
-                            else -> MockResponse().setResponseCode(404)
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }

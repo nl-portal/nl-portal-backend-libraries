@@ -131,10 +131,14 @@ class OpenProductLinkQueryIT(
                             "GET /links/7506562c-9a2a-4931-85cd-2c752cbabaf0" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-link.json")
                             }
+
                             "GET /links" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-links.json")
                             }
-                            else -> MockResponse().setResponseCode(404)
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }

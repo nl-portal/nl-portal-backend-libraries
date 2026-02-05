@@ -33,9 +33,11 @@ object CoreUtils {
             ShaVersion.SHA256.version -> {
                 DigestUtils.sha512Hex(input)
             }
+
             ShaVersion.SHA512.version -> {
                 DigestUtils.sha512Hex(input)
             }
+
             else -> {
                 DigestUtils.sha1Hex(input)
             }

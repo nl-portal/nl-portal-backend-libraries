@@ -46,7 +46,7 @@ plugins {
 
     id("com.github.jk1.dependency-license-report") version "2.9"
 
-    id("org.owasp.dependencycheck") version "12.1.9"
+    id("org.owasp.dependencycheck") version "12.2.0"
 
     id("org.jreleaser") version "1.19.0"
 

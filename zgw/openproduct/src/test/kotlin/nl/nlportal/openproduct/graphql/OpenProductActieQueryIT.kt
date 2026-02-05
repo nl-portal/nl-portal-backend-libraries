@@ -148,16 +148,22 @@ class OpenProductActieQueryIT(
                             "GET /acties/2435b986-7742-4cef-91f2-e1162c2f19c9" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-actie.json")
                             }
+
                             "GET /acties" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-acties.json")
                             }
+
                             "GET /producten/694242af-d906-470b-b7e1-eb3527886854" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-product.json")
                             }
+
                             "POST /engine-rest/decision-definition/key/alg-belastingen/evaluate" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-dmn-decision.json")
                             }
-                            else -> MockResponse().setResponseCode(404)
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }
