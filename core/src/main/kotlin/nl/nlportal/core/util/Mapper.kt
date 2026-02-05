@@ -16,9 +16,6 @@
 package nl.nlportal.core.util
 
 import java.text.SimpleDateFormat
-import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer
-import tools.jackson.databind.DeserializationFeature
-import tools.jackson.databind.SerializationFeature
 import tools.jackson.databind.json.JsonMapper
 import tools.jackson.module.kotlin.KotlinFeature
 import tools.jackson.module.kotlin.KotlinModule

@@ -15,18 +15,18 @@
  */
 package nl.nlportal.form.autodeployment
 
+import tools.jackson.core.JacksonException
 import tools.jackson.databind.node.ObjectNode
+import io.github.oshai.kotlinlogging.KotlinLogging
+import java.io.IOException
+import java.nio.charset.StandardCharsets
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.form.domain.request.CreateFormDefinitionRequest
 import nl.nlportal.form.service.FormIoFormDefinitionService
-import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.commons.io.IOUtils
 import org.springframework.core.io.Resource
 import org.springframework.core.io.ResourceLoader
 import org.springframework.core.io.support.ResourcePatternUtils
-import java.io.IOException
-import java.nio.charset.StandardCharsets
-import tools.jackson.core.JacksonException
 
 class FormDefinitionDeploymentService(
     private val formIoFormDefinitionService: FormIoFormDefinitionService,
