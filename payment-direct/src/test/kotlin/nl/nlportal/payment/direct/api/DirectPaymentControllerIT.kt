@@ -332,10 +332,14 @@ internal class DirectPaymentControllerIT(
                             "GET /api/v2/objects/58fad5ab-dc2f-11ec-9075-f22a405ce707" -> {
                                 TestHelper.mockResponseFromFile("/data/get-task.json")
                             }
+
                             "PUT /api/v2/objects/58fad5ab-dc2f-11ec-9075-f22a405ce707" -> {
                                 TestHelper.mockResponseFromFile("/data/put-task.json")
                             }
-                            else -> MockResponse().setResponseCode(404)
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }

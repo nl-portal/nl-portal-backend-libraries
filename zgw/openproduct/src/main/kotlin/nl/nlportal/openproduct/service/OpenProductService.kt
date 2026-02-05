@@ -1276,6 +1276,7 @@ class OpenProductService(
                     ),
                 )
             }
+
             is BedrijfAuthentication -> {
                 val vestigingsNummer = authentication.getVestigingsNummer()
                 if (vestigingsNummer != null) {
@@ -1295,7 +1296,9 @@ class OpenProductService(
                 }
             }
 
-            else -> throw IllegalArgumentException("Authentication not supported")
+            else -> {
+                throw IllegalArgumentException("Authentication not supported")
+            }
         }
 
     /**
@@ -1312,6 +1315,7 @@ class OpenProductService(
             is BurgerAuthentication -> {
                 product.eigenaren.firstOrNull { it.bsn == authentication.userId } != null
             }
+
             is BedrijfAuthentication -> {
                 val vestigingsNummer = authentication.getVestigingsNummer()
                 if (vestigingsNummer != null) {
@@ -1324,7 +1328,9 @@ class OpenProductService(
                 }
             }
 
-            else -> false
+            else -> {
+                false
+            }
         }
 
     /**

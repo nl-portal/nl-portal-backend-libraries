@@ -357,6 +357,7 @@ class OpenKlant2Service(
                     codeRegister = PartijIdentificatorCodeRegister.BRP.register,
                 )
             }
+
             is BedrijfAuthentication -> {
                 OpenKlant2Identificator(
                     objectId = authentication.userId,
@@ -365,7 +366,10 @@ class OpenKlant2Service(
                     codeRegister = PartijIdentificatorCodeRegister.HR.register,
                 )
             }
-            else -> throw IllegalArgumentException("Unsupported authentication type: ${authentication::class.qualifiedName}")
+
+            else -> {
+                throw IllegalArgumentException("Unsupported authentication type: ${authentication::class.qualifiedName}")
+            }
         }
 
     private fun searchVariablesPartij(authentication: CommonGroundAuthentication): List<Pair<OpenKlant2PartijenFilters, String>> =
@@ -392,7 +396,9 @@ class OpenKlant2Service(
                 }
             }
 
-            else -> throw IllegalArgumentException("Unsupported authentication type: ${authentication::class.qualifiedName}")
+            else -> {
+                throw IllegalArgumentException("Unsupported authentication type: ${authentication::class.qualifiedName}")
+            }
         }
 
     private fun searchVariablesDigitaleAdressen(
@@ -421,7 +427,9 @@ class OpenKlant2Service(
                 }
             }
 
-            else -> throw IllegalArgumentException("Unsupported authentication type: ${authentication::class.qualifiedName}")
+            else -> {
+                throw IllegalArgumentException("Unsupported authentication type: ${authentication::class.qualifiedName}")
+            }
         }
 
     private fun searchVariablesKlantcontacten(
@@ -450,7 +458,9 @@ class OpenKlant2Service(
                 }
             }
 
-            else -> throw IllegalArgumentException("Unsupported authentication type: ${authentication::class.qualifiedName}")
+            else -> {
+                throw IllegalArgumentException("Unsupported authentication type: ${authentication::class.qualifiedName}")
+            }
         }
 
     private fun createPartijIdentificatie(authentication: CommonGroundAuthentication): PartijIdentificatie =
@@ -467,10 +477,11 @@ class OpenKlant2Service(
                 )
             }
 
-            else ->
+            else -> {
                 ContactpersoonIdentificatie(
                     uuid = UUID.randomUUID(),
                 )
+            }
         }
 
     companion object {
