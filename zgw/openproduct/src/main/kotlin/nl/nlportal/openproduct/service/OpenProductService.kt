@@ -964,7 +964,7 @@ class OpenProductService(
                     id = it.uuid,
                     language = language,
                 )?.zaaktypen?.forEach { zaakType ->
-                    zaakTypes.add(CoreUtils.extractId(zaakType.url))
+                    zaakTypes.add(CoreUtils.extractId(zaakType.url!!))
                 }
             }
         }
@@ -1068,7 +1068,7 @@ class OpenProductService(
         val zaakList = mutableListOf<Zaak>()
         zaken.forEach {
             try {
-                zaakList.add(zakenApiClient.zaken().get(CoreUtils.extractId(it.url)).retrieve())
+                zaakList.add(zakenApiClient.zaken().get(CoreUtils.extractId(it.url!!)).retrieve())
             } catch (e: Exception) {
                 logger.error(e) { "Error while fetching product zaken: " + e.message }
             }
@@ -1087,7 +1087,7 @@ class OpenProductService(
         val takenList = mutableListOf<TaakV2>()
         taken.forEach {
             try {
-                val taakObject = objectsApiClient.getObjectById<TaakObjectV2>(CoreUtils.extractId(it.url).toString())
+                val taakObject = objectsApiClient.getObjectById<TaakObjectV2>(CoreUtils.extractId(it.url!!).toString())
                 if (taakObject != null) {
                     takenList.add(TaakV2.fromObjectsApi(taakObject))
                 }

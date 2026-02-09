@@ -20,7 +20,8 @@ import com.fasterxml.jackson.annotation.JsonValue
 interface OpenProductFilters
 
 data class OpenProductUrl(
-    val url: String,
+    val url: String? = null,
+    val urn: String? = null,
 )
 
 enum class OpenProductToegestaneStatus(
@@ -33,6 +34,15 @@ enum class OpenProductToegestaneStatus(
     INGETROKKEN("ingetrokken"),
     GEWEIGERD("geweigerd"),
     VERLOPEN("verlopen"),
+}
+
+enum class OpenProductDoelgroep(
+    @JsonValue val status: String,
+) {
+    BURGERS("burgers"),
+    INTERNE_ORGANISATIE("interne_organisatie"),
+    SAMENWERKINGSPARTNERS("samenwerkingspartners"),
+    BEDRIJVEN_EN_INSTELLINGEN("bedrijven_en_instellingen")
 }
 
 enum class OpenProductFrequentie(

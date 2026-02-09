@@ -17,6 +17,7 @@ package nl.nlportal.openproduct.client.domain
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
+import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.util.UUID
 
@@ -38,6 +39,10 @@ data class OpenProductProductType(
     val aanmaakDatum: ZonedDateTime,
     @JsonProperty("update_datum")
     val updateDatum: ZonedDateTime,
+    @JsonProperty("publicatie_start_datum")
+    val publicatieStartDatum: LocalDate? = null,
+    @JsonProperty("publicatie_eind_datum")
+    val publicatieEindDatum: LocalDate? = null,
     val themas: List<OpenProductProductTypeThema> = emptyList(),
     val locaties: List<OpenProductLocatie> = emptyList(),
     val organisaties: List<OpenProductOrganisatie> = emptyList(),
@@ -56,6 +61,9 @@ data class OpenProductProductType(
     val zaaktypen: List<OpenProductUrl> = emptyList(),
     val verzoektypen: List<OpenProductUrl> = emptyList(),
     val processen: List<OpenProductUrl> = emptyList(),
+    @JsonProperty("interne_opmerkingen")
+    val interneOpmerkingen: String? = null,
+    val doelgroep: OpenProductDoelgroep,
 )
 
 data class OpenProductProductTypeContent(

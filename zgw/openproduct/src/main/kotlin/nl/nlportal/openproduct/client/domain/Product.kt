@@ -45,6 +45,10 @@ data class OpenProductProduct(
     val dataobject: ObjectNode? = null,
     val zaken: List<OpenProductUrl>? = emptyList(),
     val taken: List<OpenProductUrl>? = emptyList(),
+    @JsonProperty("aanvraag_zaak_urn")
+    val aanvraagZaakUrn: String? = null,
+    @JsonProperty("aanvraag_zaak_url")
+    val aanvraagZaakUrl: String? = null,
 )
 
 data class OpenProductProductUpdate(
@@ -66,6 +70,9 @@ data class OpenProductProductProductType(
     val aanmaakDatum: ZonedDateTime,
     @JsonProperty("update_datum")
     val updateDatum: ZonedDateTime,
+    val publicatieStartDatum: LocalDate? = null,
+    @JsonProperty("publicatie_eind_datum")
+    val publicatieEindDatum: LocalDate? = null,
 )
 
 data class OpenProductProductEigenaar(
