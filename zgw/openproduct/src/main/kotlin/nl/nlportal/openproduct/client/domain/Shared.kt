@@ -42,7 +42,7 @@ enum class OpenProductDoelgroep(
     BURGERS("burgers"),
     INTERNE_ORGANISATIE("interne_organisatie"),
     SAMENWERKINGSPARTNERS("samenwerkingspartners"),
-    BEDRIJVEN_EN_INSTELLINGEN("bedrijven_en_instellingen")
+    BEDRIJVEN_EN_INSTELLINGEN("bedrijven_en_instellingen"),
 }
 
 enum class OpenProductFrequentie(

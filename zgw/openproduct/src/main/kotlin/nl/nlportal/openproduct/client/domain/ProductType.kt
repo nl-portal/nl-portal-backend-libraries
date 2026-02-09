@@ -61,9 +61,7 @@ data class OpenProductProductType(
     val zaaktypen: List<OpenProductUrl> = emptyList(),
     val verzoektypen: List<OpenProductUrl> = emptyList(),
     val processen: List<OpenProductUrl> = emptyList(),
-    @JsonProperty("interne_opmerkingen")
-    val interneOpmerkingen: String? = null,
-    val doelgroep: OpenProductDoelgroep,
+    val doelgroep: OpenProductDoelgroep? = null,
 )
 
 data class OpenProductProductTypeContent(

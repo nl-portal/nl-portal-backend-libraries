@@ -251,8 +251,8 @@ type OpenProductProductProductType {
     uniformeProductNaam: String!
     updateDatum: ZonedDateTime!
     uuid: UUID!
-    publicatieStartDatum: LocalDate
-    publicatieEindDatum: LocalDate
+    publicatieStartDatum: Date
+    publicatieEindDatum: Date
 }
 
 type OpenProductProductType {
@@ -284,8 +284,8 @@ type OpenProductProductType {
     verzoektypen: [OpenProductUrl!]!
     zaaktypen: [OpenProductUrl!]!
     content: [OpenProductProductTypeContent!]
-    publicatieStartDatum: LocalDate
-    publicatieEindDatum: LocalDate
+    publicatieStartDatum: Date
+    publicatieEindDatum: Date
     interneOpmerkingen: String
     doelgroep: OpenProductDoelgroep
 }
@@ -359,6 +359,13 @@ type OpenProductThemaProductType {
     uniformeProductNaam: String!
     updateDatum: ZonedDateTime!
     uuid: UUID!
+}
+
+enum OpenProductDoelgroep {
+    BURGERS
+    INTERNE_ORGANISATIE
+    SAMENWERKINGSPARTNER
+    BEDRIJVEN_EN_INSTELLINGEN
 }
 
 enum OpenProductToegestaneStatus {
