@@ -77,14 +77,13 @@ class VerificatieService(
                 success = response.success,
             )
         } catch (e: Exception) {
-            logger.error(e) { "Issue creating verificatie request failed" }
+            logger.error(e) { "Issue creating verificatie request failed: ${e.message}" }
+            return VerificatieCreateResponse(
+                uuid = verificatieCreateInput.uuid,
+                success = false,
+                errorMessage = "Issue createing verificatie request failed: ${e.message}",
+            )
         }
-
-        return VerificatieCreateResponse(
-            uuid = verificatieCreateInput.uuid,
-            success = false,
-            errorMessage = "Issue createing verificatie request failed",
-        )
     }
 
     suspend fun verify(
@@ -124,15 +123,14 @@ class VerificatieService(
                 verifiedOp = response.verifiedOp,
             )
         } catch (e: Exception) {
-            logger.error(e) { "Issue verify verificatie request failed" }
+            logger.error(e) { "Issue verify verificatie request failed: ${e.message}" }
+            return VerificatieVerifyResponse(
+                uuid = verificatieVerifyInput.uuid,
+                verified = false,
+                verifiedOp = ZonedDateTime.now(),
+                errorMessage = "Issue verify verificatie request failed: ${e.message}",
+            )
         }
-
-        return VerificatieVerifyResponse(
-            uuid = verificatieVerifyInput.uuid,
-            verified = false,
-            verifiedOp = ZonedDateTime.now(),
-            errorMessage = "Issue verify verificatie request failed",
-        )
     }
 
     companion object {
