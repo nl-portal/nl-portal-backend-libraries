@@ -38,7 +38,7 @@ class ZakenApiConfig {
         var secret: String = ""
         var zaakTypesIdsExcluded: List<UUID> = emptyList()
         var zaakDocumentenConfig: ZaakDocumentenConfig = ZaakDocumentenConfig()
-        val useNnpKvkQueryIdentificators: Boolean = false
+        var useNnpKvkQueryIdentificators: Boolean = false
 
         class ZaakDocumentenConfig {
             var vertrouwelijkheidsaanduidingWhitelist: List<Vertrouwelijkheid> =
