@@ -78,7 +78,6 @@ data class OpenProductProductTypeThema(
     val gepubliceerd: Boolean? = false,
     @JsonProperty("hoofd_thema")
     val hoofdThema: String? = null,
-    val producttypen: List<OpenProductThemaProductType> = emptyList(),
     @JsonProperty("aanmaak_datum")
     val aanmaakDatum: ZonedDateTime,
     @JsonProperty("update_datum")

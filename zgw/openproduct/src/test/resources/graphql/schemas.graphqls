@@ -253,6 +253,7 @@ type OpenProductProductProductType {
     uuid: UUID!
     publicatieStartDatum: Date
     publicatieEindDatum: Date
+    themas: [OpenProductEmbeddedThema!]
 }
 
 type OpenProductProductType {
@@ -319,6 +320,16 @@ type OpenProductProductTypeThema {
     hoofdThema: String
     naam: String!
     producttypen: [OpenProductThemaProductType!]!
+    updateDatum: ZonedDateTime!
+    uuid: UUID!
+}
+
+type OpenProductEmbeddedThema {
+    aanmaakDatum: ZonedDateTime!
+    beschrijving: String
+    gepubliceerd: Boolean
+    hoofdThema: String
+    naam: String!
     updateDatum: ZonedDateTime!
     uuid: UUID!
 }
