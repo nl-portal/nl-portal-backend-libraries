@@ -31,6 +31,8 @@ dependencies {
     api(project(":graphql"))
     api(project(":portal-authentication"))
     api(project(":zgw:common-ground-authentication"))
+    api(project(":zgw:idtoken-authentication"))
+    api(project(":zgw:verificatie"))
 
     implementation(Dependencies.kotlinCoroutines)
     implementation(Dependencies.kotlinCoroutinesReactor)

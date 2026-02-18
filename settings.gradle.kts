@@ -52,5 +52,6 @@ include(
     "payment-direct",
     "zgw:zaken-api",
     "zgw:openproduct",
+    "zgw:verificatie",
     "product",
 )

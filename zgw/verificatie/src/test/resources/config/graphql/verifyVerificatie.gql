@@ -1,0 +1,8 @@
+mutation {
+    verifyVerificatie(verificatieVerifyInput: {uuid: "7ed7fdae-9715-46e1-b967-295d22685b76", waarde: "0611111111", type: TELEFOONNUMMER, code: "12345"}) {
+        verified,
+        uuid,
+        errorMessage
+        verifiedOp
+    }
+}

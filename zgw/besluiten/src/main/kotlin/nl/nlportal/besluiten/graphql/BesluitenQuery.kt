@@ -87,7 +87,7 @@ class BesluitenQuery(
             documentId = documentId)
     }
 
-    @SchemaMapping(typeName = "Besluit", field = "auditrails")
+    @SchemaMapping(typeName = "Besluit", field = "auditTrails")
     suspend fun auditTrails(
         besluit: Besluit
     ): List<BesluitAuditTrail> {

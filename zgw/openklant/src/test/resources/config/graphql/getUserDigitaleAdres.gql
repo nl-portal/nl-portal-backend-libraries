@@ -1,0 +1,10 @@
+
+query {
+    getUserDigitaleAdres(uuid: "a5f323d8-8c87-43c2-990b-eae03d721adf") {
+        uuid
+        waarde
+        type
+        omschrijving,
+        referentie
+    }
+}

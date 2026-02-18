@@ -20,7 +20,6 @@ type Query {
 
     # Get Partij by Id for authenticated user.
     getUserPartij(partijId: UUID!): OpenKlant2Partij
-
 }
 
 type Mutation {
@@ -148,14 +147,19 @@ input DigitaleAdresRequestInput {
     type: DigitaleAdresType!
     uuid: UUID
     waarde: String!
+    verificatieCode: String
+    verificatieDatum: DateTime
 }
 
 type DigitaleAdresResponse {
     omschrijving: String!
     referentie: String!
     type: DigitaleAdresType!
-    uuid: UUID!
+    uuid: UUID
+    verificatieDatum: Date
     waarde: String!
+    isGeverifieerd: Boolean!
+    verificatieNeeded: Boolean!
 }
 
 enum DigitaleAdresType {
@@ -752,3 +756,4 @@ enum SoortPartij {
 
 scalar UUID
 scalar Date
+scalar DateTime
