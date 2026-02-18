@@ -56,5 +56,16 @@
   },
   "dataobject": {
     "uren": 30
-  }
+  },
+  "themas": [
+    {
+      "uuid": "41f71c2e-9e0c-4a1b-8d39-709669b256c2",
+      "naam": "Parkeren",
+      "beschrijving": "Parkeren thema",
+      "gepubliceerd": true,
+      "aanmaak_datum": "2025-04-30T13:51:32.735390+02:00",
+      "update_datum": "2025-04-30T13:51:32.735390+02:00",
+      "hoofd_thema": null
+    }
+  ]
 }
