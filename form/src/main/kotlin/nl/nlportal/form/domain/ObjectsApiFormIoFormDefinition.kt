@@ -15,8 +15,8 @@
  */
 package nl.nlportal.form.domain
 
-import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.JsonNode
 
 data class ObjectsApiFormIoFormDefinition(
-    val formDefinition: ObjectNode,
+    val formDefinition: JsonNode,
 )

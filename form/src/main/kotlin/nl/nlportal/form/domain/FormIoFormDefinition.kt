@@ -22,7 +22,7 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import org.springframework.data.domain.Persistable
-import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.JsonNode
 
 @Entity
 @Table(name = "form_io_form_definition")
@@ -33,7 +33,7 @@ data class FormIoFormDefinition(
     var name: String,
     @Column(name = "form_definition", columnDefinition = "json")
     @JdbcTypeCode(SqlTypes.JSON)
-    var formDefinition: ObjectNode,
+    var formDefinition: JsonNode,
     @Column(name = "read_only", columnDefinition = "BOOLEAN")
     var readOnly: Boolean,
 ) : Persistable<FormDefinitionId> {
@@ -41,7 +41,7 @@ data class FormIoFormDefinition(
 
     override fun isNew(): Boolean = formDefinitionId.isNew()
 
-    fun modifyFormDefinition(formDefinition: ObjectNode) {
+    fun modifyFormDefinition(formDefinition: JsonNode) {
         this.formDefinition = formDefinition
     }
 }

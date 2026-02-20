@@ -15,16 +15,16 @@
  */
 package nl.nlportal.form.domain.request
 
-import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.JsonNode
 
 data class CreateFormDefinitionRequest(
     private val name: String,
-    private val formDefinition: ObjectNode,
+    private val formDefinition: JsonNode,
     private val isReadOnly: Boolean,
 ) {
     fun getName(): String = name
 
-    fun getFormDefinition(): ObjectNode = formDefinition
+    fun getFormDefinition(): JsonNode = formDefinition
 
     fun isReadOnly(): Boolean = isReadOnly
 }

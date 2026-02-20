@@ -15,8 +15,8 @@
  */
 package nl.nlportal.form.graphql
 
-import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.JsonNode
 
 data class FormDefinition(
-    var formDefinition: ObjectNode,
+    var formDefinition: JsonNode,
 )

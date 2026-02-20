@@ -28,27 +28,30 @@ import java.util.UUID
 class FormIoFormDefinitionService(
     private val formIoFormDefinitionRepository: FormIoFormDefinitionRepository,
 ) {
-    fun createFormDefinition(request: CreateFormDefinitionRequest): FormIoFormDefinition =
-        formIoFormDefinitionRepository.saveAndFlush(
-            FormIoFormDefinition(
-                FormDefinitionId.newId(
-                    UUID.randomUUID(),
-                ),
-                request.getName(),
-                request.getFormDefinition(),
-                request.isReadOnly(),
+    fun createFormDefinition(request: CreateFormDefinitionRequest): FormIoFormDefinition {
+        val formIoFormDefinition = FormIoFormDefinition(
+            FormDefinitionId.newId(
+                UUID.randomUUID(),
             ),
+            request.getName(),
+            request.getFormDefinition(),
+            request.isReadOnly(),
         )
+        return formIoFormDefinitionRepository.saveAndFlush(
+            formIoFormDefinition
+        )
+    }
+
 
     fun findAllFormDefinitions(): List<FormIoFormDefinition> = formIoFormDefinitionRepository.findAll()
 
     fun findFormIoFormDefinitionByName(name: String): FormIoFormDefinition? {
-        try {
+        //try {
             return formIoFormDefinitionRepository.findByName(name)
-        } catch (e: Exception) {
-            logger.debug { e.message }
-        }
-        return null
+        //} catch (e: Exception) {
+        //    logger.debug { e.message }
+        //}
+        //return null
     }
 
     fun modify(form: FormIoFormDefinition): FormIoFormDefinition = formIoFormDefinitionRepository.saveAndFlush(form)

@@ -27,6 +27,7 @@ import org.apache.commons.io.IOUtils
 import org.springframework.core.io.Resource
 import org.springframework.core.io.ResourceLoader
 import org.springframework.core.io.support.ResourcePatternUtils
+import tools.jackson.databind.JsonNode
 
 class FormDefinitionDeploymentService(
     private val formIoFormDefinitionService: FormIoFormDefinitionService,
@@ -62,7 +63,7 @@ class FormDefinitionDeploymentService(
         }
 
     @Throws(JacksonException::class)
-    private fun getJson(jsonString: String): ObjectNode = Mapper.get().readValue(jsonString, ObjectNode::class.java)
+    private fun getJson(jsonString: String): JsonNode = Mapper.get().readTree(jsonString)
 
     private fun getFormName(resource: Resource): String {
         var formName = resource.filename
