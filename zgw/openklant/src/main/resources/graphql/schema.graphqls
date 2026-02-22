@@ -127,6 +127,7 @@ type DigitaleAdresResponse {
     verificatieDatum: Date
     waarde: String!
     verificatieNeeded: Boolean!
+    verificatieCodeVerified: Boolean!
 }
 
 enum DigitaleAdresType {
