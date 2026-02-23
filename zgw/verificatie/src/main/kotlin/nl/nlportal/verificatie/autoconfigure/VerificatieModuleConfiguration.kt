@@ -30,9 +30,6 @@ class VerificatieModuleConfiguration {
             requireNotNull(properties.url) {
                 "Verificatie API URL not configured"
             }
-            requireNotNull(properties.clientId) {
-                "Verificatie clientId not configured"
-            }
         }
     }
 
