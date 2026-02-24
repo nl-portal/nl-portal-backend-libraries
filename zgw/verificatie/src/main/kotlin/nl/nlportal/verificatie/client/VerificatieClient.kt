@@ -29,8 +29,8 @@ import nl.nlportal.verificatie.client.domain.VerificatieVerifyApiResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
-import org.springframework.http.codec.json.Jackson2JsonDecoder
-import org.springframework.http.codec.json.Jackson2JsonEncoder
+import org.springframework.http.codec.json.JacksonJsonDecoder
+import org.springframework.http.codec.json.JacksonJsonEncoder
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
@@ -87,11 +87,11 @@ class VerificatieClient(
                         .codecs { configurer ->
                             with(configurer.defaultCodecs()) {
                                 maxInMemorySize(16 * 1024 * 1024)
-                                jackson2JsonEncoder(
-                                    Jackson2JsonEncoder(Mapper.get()),
+                                jacksonJsonEncoder(
+                                    JacksonJsonEncoder(Mapper.get()),
                                 )
-                                jackson2JsonDecoder(
-                                    Jackson2JsonDecoder(Mapper.get()),
+                                jacksonJsonDecoder(
+                                    JacksonJsonDecoder(Mapper.get()),
                                 )
                             }
                         }.build(),

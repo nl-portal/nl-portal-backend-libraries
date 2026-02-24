@@ -148,7 +148,7 @@ class CaseService(
             json.forEach { node -> getKeys(node, keys) }
         }
         if (json.isValueNode) {
-            keys.add(json.asText())
+            keys.add(json.asString())
         }
         return keys
     }

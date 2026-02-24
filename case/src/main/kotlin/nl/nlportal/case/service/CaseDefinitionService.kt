@@ -102,7 +102,7 @@ class CaseDefinitionService(
         )
 
     private fun retrieveIdFrom(schema: ObjectNode): CaseDefinitionId {
-        val id = StringUtils.substringBefore(schema.get("\$id").asText(), ".schema").lowercase()
+        val id = StringUtils.substringBefore(schema.get("\$id").asString(), ".schema").lowercase()
         return CaseDefinitionId.newId(id)
     }
 
