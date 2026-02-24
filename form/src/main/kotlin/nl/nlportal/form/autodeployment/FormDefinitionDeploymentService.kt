@@ -16,7 +16,6 @@
 package nl.nlportal.form.autodeployment
 
 import tools.jackson.core.JacksonException
-import tools.jackson.databind.node.ObjectNode
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.io.IOException
 import java.nio.charset.StandardCharsets

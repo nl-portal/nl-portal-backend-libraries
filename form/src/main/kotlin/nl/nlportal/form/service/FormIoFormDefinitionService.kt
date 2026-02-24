@@ -29,29 +29,29 @@ class FormIoFormDefinitionService(
     private val formIoFormDefinitionRepository: FormIoFormDefinitionRepository,
 ) {
     fun createFormDefinition(request: CreateFormDefinitionRequest): FormIoFormDefinition {
-        val formIoFormDefinition = FormIoFormDefinition(
-            FormDefinitionId.newId(
-                UUID.randomUUID(),
-            ),
-            request.getName(),
-            request.getFormDefinition(),
-            request.isReadOnly(),
-        )
+        val formIoFormDefinition =
+            FormIoFormDefinition(
+                FormDefinitionId.newId(
+                    UUID.randomUUID(),
+                ),
+                request.getName(),
+                request.getFormDefinition(),
+                request.isReadOnly(),
+            )
         return formIoFormDefinitionRepository.saveAndFlush(
-            formIoFormDefinition
+            formIoFormDefinition,
         )
     }
-
 
     fun findAllFormDefinitions(): List<FormIoFormDefinition> = formIoFormDefinitionRepository.findAll()
 
     fun findFormIoFormDefinitionByName(name: String): FormIoFormDefinition? {
-        //try {
-            return formIoFormDefinitionRepository.findByName(name)
-        //} catch (e: Exception) {
+        // try {
+        return formIoFormDefinitionRepository.findByName(name)
+        // } catch (e: Exception) {
         //    logger.debug { e.message }
-        //}
-        //return null
+        // }
+        // return null
     }
 
     fun modify(form: FormIoFormDefinition): FormIoFormDefinition = formIoFormDefinitionRepository.saveAndFlush(form)

@@ -16,13 +16,11 @@
 package nl.nlportal.core.util
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import java.text.SimpleDateFormat
 import tools.jackson.databind.DeserializationFeature
 import tools.jackson.databind.SerializationFeature
 import tools.jackson.databind.json.JsonMapper
 import tools.jackson.module.kotlin.KotlinFeature
 import tools.jackson.module.kotlin.KotlinModule
-
 
 object Mapper {
     // private var mapper: ObjectMapper
@@ -50,15 +48,16 @@ object Mapper {
                 .addModule(jacksonConfigurationModule)
                 .build()*/
 
-        mapper = builder.changeDefaultPropertyInclusion({ include -> include.withValueInclusion(JsonInclude.Include.NON_NULL) })
-            .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
-            .disable(
-                DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-                DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES
-            )
-            .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
-            .findAndAddModules()
-            .addModule(jacksonConfigurationModule)
-            .build()
+        mapper =
+            builder
+                .changeDefaultPropertyInclusion({ include -> include.withValueInclusion(JsonInclude.Include.NON_NULL) })
+                .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+                .disable(
+                    DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+                    DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES,
+                ).enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+                .findAndAddModules()
+                .addModule(jacksonConfigurationModule)
+                .build()
     }
 }
