@@ -105,7 +105,7 @@ class DigitaleAdresMutation(
         if (digitaleAdresRequest.verificatieCode != null) {
             // there is a verificatie code. first we need to verify the code
             val verifyResponse =
-                verificatieService?.verify(
+                verificatieService!!.verify(
                     VerificatieVerifyInput(
                         uuid = digitaleAdresRequest.uuid,
                         waarde = digitaleAdresRequest.waarde,
@@ -114,14 +114,26 @@ class DigitaleAdresMutation(
                     ),
                 )
 
-            if (verifyResponse?.errorMessage != null) {
+            if (verifyResponse.errorMessage != null) {
                 throw ResponseStatusException(HttpStatus.BAD_REQUEST, verifyResponse.errorMessage)
             }
-            null
+
+            if (!verifyResponse.verified) {
+                DigitaleAdresResponse(
+                    waarde = digitaleAdresRequest.waarde,
+                    type = digitaleAdresRequest.type,
+                    omschrijving = digitaleAdresRequest.omschrijving,
+                    referentie = digitaleAdresRequest.omschrijving,
+                    uuid = digitaleAdresRequest.uuid,
+                    verificatieCodeVerified = false,
+                )
+            } else {
+                null
+            }
         } else {
             // create a verificatie request
             val createResponse =
-                verificatieService?.createVerificatie(
+                verificatieService!!.createVerificatie(
                     VerificatieCreateInput(
                         uuid = digitaleAdresRequest.uuid,
                         waarde = digitaleAdresRequest.waarde,
@@ -129,15 +141,19 @@ class DigitaleAdresMutation(
                     ),
                 )
 
-            if (createResponse?.errorMessage != null) {
+            if (createResponse.errorMessage != null) {
                 throw ResponseStatusException(HttpStatus.BAD_REQUEST, createResponse.errorMessage)
+            }
+
+            if (!createResponse.success) {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Create verificatie was not successful")
             }
 
             DigitaleAdresResponse(
                 waarde = digitaleAdresRequest.waarde,
                 type = digitaleAdresRequest.type,
                 omschrijving = digitaleAdresRequest.omschrijving,
-                referentie = "",
+                referentie = digitaleAdresRequest.omschrijving,
                 verificatieNeeded = true,
                 uuid = digitaleAdresRequest.uuid,
             )

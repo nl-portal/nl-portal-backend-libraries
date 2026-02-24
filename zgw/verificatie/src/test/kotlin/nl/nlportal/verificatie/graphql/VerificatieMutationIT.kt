@@ -17,6 +17,7 @@ package nl.nlportal.verificatie.graphql
 
 import com.fasterxml.jackson.databind.JsonNode
 import java.net.URI
+import java.util.UUID
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.verificatie.TestHelper
@@ -80,6 +81,9 @@ class VerificatieMutationIT(
         setupMockServer()
         url = server?.url("/").toString()
         verificatieModuleConfiguration.properties.url = URI(url)
+        verificatieModuleConfiguration.properties.apiKey = UUID.randomUUID().toString()
+        verificatieModuleConfiguration.properties.templateIdEmail = UUID.randomUUID().toString()
+        verificatieModuleConfiguration.properties.templateIdPhoneNumber = UUID.randomUUID().toString()
     }
 
     @Test

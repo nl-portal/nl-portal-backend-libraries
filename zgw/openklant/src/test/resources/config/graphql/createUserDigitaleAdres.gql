@@ -9,6 +9,8 @@ mutation {
         type
         omschrijving,
         verificatieDatum,
-        verificatieNeeded
+        verificatieNeeded,
+        verificatieCreateSuccessfull,
+        verificatieCodeVerified
     }
 }

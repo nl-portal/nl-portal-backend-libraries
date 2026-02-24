@@ -158,8 +158,8 @@ type DigitaleAdresResponse {
     uuid: UUID
     verificatieDatum: Date
     waarde: String!
-    isGeverifieerd: Boolean!
     verificatieNeeded: Boolean!
+    verificatieCodeVerified: Boolean!
 }
 
 enum DigitaleAdresType {
