@@ -16,8 +16,10 @@
 package nl.nlportal.verificatie.client.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.ZonedDateTime
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class VerificatieCreateApiRequest(
     val email: String? = null,
@@ -31,6 +33,7 @@ data class VerificatieCreateApiResponse(
     val success: Boolean,
 )
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class VerificatieVerifyApiRequest(
     val code: String,
