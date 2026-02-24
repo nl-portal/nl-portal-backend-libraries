@@ -26,12 +26,12 @@ import nl.nlportal.openklant.client.domain.OrganisatieIdentificatie
 import nl.nlportal.openklant.client.domain.PersoonsIdentificatie
 import nl.nlportal.openklant.client.domain.SoortPartij
 import nl.nlportal.openklant.service.OpenKlant2Service
+import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.assertDoesNotThrow
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any

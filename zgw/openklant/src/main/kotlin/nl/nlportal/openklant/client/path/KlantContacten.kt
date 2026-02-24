@@ -15,6 +15,7 @@
  */
 package nl.nlportal.openklant.client.path
 
+import java.util.UUID
 import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
 import nl.nlportal.openklant.client.domain.OpenKlant2Klantcontact
 import nl.nlportal.openklant.client.domain.OpenKlant2KlantcontactenFilters
@@ -22,7 +23,6 @@ import nl.nlportal.openklant.client.domain.ResultPage
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.awaitBodyOrNull
-import java.util.UUID
 
 class KlantContacten(
     val client: OpenKlant2KlantinteractiesClient,

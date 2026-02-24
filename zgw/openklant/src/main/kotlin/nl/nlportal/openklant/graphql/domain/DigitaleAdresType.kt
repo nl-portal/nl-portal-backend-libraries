@@ -15,8 +15,15 @@
  */
 package nl.nlportal.openklant.graphql.domain
 
+import nl.nlportal.verificatie.graphql.domain.VerificatieType
+
 enum class DigitaleAdresType {
     TELEFOONNUMMER,
     EMAIL,
     OVERIG,
+    ;
+
+    companion object {
+        fun toVerificationType(type: DigitaleAdresType): VerificatieType? = VerificatieType.valueOf(type.toString())
+    }
 }

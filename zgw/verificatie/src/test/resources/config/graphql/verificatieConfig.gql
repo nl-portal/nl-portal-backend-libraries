@@ -1,0 +1,6 @@
+query {
+    verificatieConfig {
+        enabled
+        typesNeedVerification
+    }
+}

@@ -29,7 +29,7 @@ dependencies {
     implementation(Dependencies.kotlinCoroutinesReactor)
     implementation("org.springframework.data:spring-data-commons")
 
-    api("commons-codec:commons-codec:1.19.0")
+    api("commons-codec:commons-codec:1.21.0")
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.springBootTest)
     testImplementation(TestDependencies.springBootWebClientTest)

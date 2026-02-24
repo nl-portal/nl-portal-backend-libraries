@@ -115,14 +115,19 @@ input DigitaleAdresRequestInput {
     type: DigitaleAdresType!
     uuid: UUID
     waarde: String!
+    verificatieCode: String
+    verificatieDatum: DateTime
 }
 
 type DigitaleAdresResponse {
     omschrijving: String!
     referentie: String!
     type: DigitaleAdresType!
-    uuid: UUID!
+    uuid: UUID
+    verificatieDatum: Date
     waarde: String!
+    verificatieNeeded: Boolean!
+    verificatieCodeVerified: Boolean!
 }
 
 enum DigitaleAdresType {

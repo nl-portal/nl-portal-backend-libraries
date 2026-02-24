@@ -238,6 +238,8 @@ type OpenProductProduct {
     decisions: [JSON!]!
     taken: [TaakV2!]
     zaken: [Zaak!]
+    aanvraagZaakUrn: String
+    aanvraagZaakUrl: String
 }
 
 type OpenProductProductProductType {
@@ -249,6 +251,9 @@ type OpenProductProductProductType {
     uniformeProductNaam: String!
     updateDatum: ZonedDateTime!
     uuid: UUID!
+    publicatieStartDatum: Date
+    publicatieEindDatum: Date
+    themas: [OpenProductEmbeddedThema!]
 }
 
 type OpenProductProductType {
@@ -280,6 +285,9 @@ type OpenProductProductType {
     verzoektypen: [OpenProductUrl!]!
     zaaktypen: [OpenProductUrl!]!
     content: [OpenProductProductTypeContent!]
+    publicatieStartDatum: Date
+    publicatieEindDatum: Date
+    doelgroep: OpenProductDoelgroep
 }
 
 type OpenProductProductTypeBestand {
@@ -310,7 +318,16 @@ type OpenProductProductTypeThema {
     gepubliceerd: Boolean
     hoofdThema: String
     naam: String!
-    producttypen: [OpenProductThemaProductType!]!
+    updateDatum: ZonedDateTime!
+    uuid: UUID!
+}
+
+type OpenProductEmbeddedThema {
+    aanmaakDatum: ZonedDateTime!
+    beschrijving: String
+    gepubliceerd: Boolean
+    hoofdThema: String
+    naam: String!
     updateDatum: ZonedDateTime!
     uuid: UUID!
 }
@@ -351,6 +368,13 @@ type OpenProductThemaProductType {
     uniformeProductNaam: String!
     updateDatum: ZonedDateTime!
     uuid: UUID!
+}
+
+enum OpenProductDoelgroep {
+    BURGERS
+    INTERNE_ORGANISATIE
+    SAMENWERKINGSPARTNER
+    BEDRIJVEN_EN_INSTELLINGEN
 }
 
 enum OpenProductToegestaneStatus {

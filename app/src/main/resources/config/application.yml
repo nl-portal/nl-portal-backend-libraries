@@ -236,3 +236,9 @@ nl-portal:
         theme:
             logo:
             style:
+        verificatie:
+            enabled: false
+            properties:
+                url: http://localhost:8088
+                types-need-verification: email
+
