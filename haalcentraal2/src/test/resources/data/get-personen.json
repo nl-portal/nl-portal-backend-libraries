@@ -35,8 +35,7 @@
                 "leeftijd": true,
                 "gemeenteVanInschrijving": true,
                 "datumInschrijvingInGemeente": true,
-                "indicatieCurateleRegister": true,
-                "indicatieGezagMinderjarige": true
+                "indicatieCurateleRegister": true
             },
             "uitsluitingKiesrecht": {
                 "uitgeslotenVanKiesrecht": true,
@@ -247,10 +246,6 @@
                 }
             },
             "indicatieCurateleRegister": true,
-            "indicatieGezagMinderjarige": {
-                "code": "6030",
-                "omschrijving": "Nederland"
-            },
             "gezag": [
                 {
                     "type": "TweehoofdigOuderlijkGezag",

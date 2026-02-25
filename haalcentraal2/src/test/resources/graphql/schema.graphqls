@@ -213,7 +213,6 @@ type BrpInOnderzoek {
     gemeenteVanInschrijving: Boolean
     geslacht: Boolean
     indicatieCurateleRegister: Boolean
-    indicatieGezagMinderjarige: Boolean
     leeftijd: Boolean
 }
 
@@ -336,7 +335,6 @@ type BrpPersoon {
     imigratie: BrpImigratie
     inOnderzoek: BrpInOnderzoek
     indicatieCurateleRegister: Boolean
-    indicatieGezagMinderjarige: BrpCodeOmschrijving
     kinderen: [BrpKind!]
     leeftijd: Int!
     naam: BrpNaam!

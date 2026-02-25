@@ -25,6 +25,4 @@ data class BrpInOnderzoek(
     val gemeenteVanInschrijving: Boolean? = false,
     val datumInschrijvingInGemeente: Boolean? = false,
     val indicatieCurateleRegister: Boolean? = false,
-    @Deprecated("This value is deprecated and should be removed")
-    val indicatieGezagMinderjarige: Boolean? = false,
 )

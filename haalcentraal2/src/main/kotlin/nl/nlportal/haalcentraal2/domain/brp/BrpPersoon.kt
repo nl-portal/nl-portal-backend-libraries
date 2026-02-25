@@ -34,8 +34,6 @@ data class BrpPersoon(
     val datumInschrijvingInGemeente: BrpDatum? = null,
     val adressering: BrpAdressering? = null,
     val indicatieCurateleRegister: Boolean? = false,
-    @Deprecated("This value is deprecated and should be removed")
-    val indicatieGezagMinderjarige: BrpCodeOmschrijving? = null,
     val gezag: List<BrpGezag>? = null,
     val verblijfstitel: BrpVerblijfsTitel? = null,
     val kinderen: List<BrpKind>? = null,

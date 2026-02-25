@@ -152,10 +152,6 @@ type BrpInOnderzoek {
     gemeenteVanInschrijving: Boolean
     geslacht: Boolean
     indicatieCurateleRegister: Boolean
-    #deprecated(
-    # reason: "This value is deprecated and should be removed."
-    #)
-    indicatieGezagMinderjarige: Boolean
     leeftijd: Boolean
 }
 
@@ -278,10 +274,6 @@ type BrpPersoon {
     imigratie: BrpImigratie
     inOnderzoek: BrpInOnderzoek
     indicatieCurateleRegister: Boolean
-    #deprecated(
-    # reason: "This value is deprecated and should be removed."
-    #)
-    indicatieGezagMinderjarige: BrpCodeOmschrijving
     kinderen: [BrpKind!]
     leeftijd: Int!
     naam: BrpNaam!
