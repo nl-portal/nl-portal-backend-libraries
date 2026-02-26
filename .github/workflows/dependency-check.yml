@@ -34,10 +34,12 @@ jobs:
                 with:
                     project: 'NL Portal Backend Libraries'
                     path: '.'
-                    format: 'HTML,JSON'
+                    format: 'HTML'
                     out: 'dependency-check'
                     args: >
                         --failOnCVSS 8
+                        --format HTML
+                        --format JSON
                         --enableRetired
                         --suppression cve-exclusions.xml
             -   name: Publish scan information (markdown)
