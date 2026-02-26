@@ -3,6 +3,7 @@ import io.spring.gradle.dependencymanagement.org.codehaus.plexus.interpolation.o
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import org.jreleaser.model.Active
 import java.net.URI
 import kotlin.io.encoding.Base64.Default.decode
 import kotlin.io.encoding.ExperimentalEncodingApi
@@ -48,7 +49,7 @@ plugins {
 
     id("org.owasp.dependencycheck") version "12.2.0"
 
-    id("org.jreleaser") version "1.19.0"
+    id("org.jreleaser") version "1.22.0"
 
     `maven-publish`
     signing
@@ -67,13 +68,17 @@ allprojects {
 
 jreleaser {
     project {
-        java {
-            groupId.set("nl.nl-portal")
+        languages {
+            java {
+                group = "nl.nl-portal"
+            }
         }
     }
     signing {
-        active.set(org.jreleaser.model.Active.ALWAYS)
-        armored.set(true)
+        active = Active.ALWAYS
+        pgp {
+            armored = true
+        }
     }
 
     release {

@@ -42,6 +42,10 @@ tasks.getByName<Jar>("jar") {
     enabled = false
 }
 
+tasks.bootJar {
+    enabled = false
+}
+
 tasks.withType<PublishToMavenRepository>().configureEach {
     enabled = false
 }
