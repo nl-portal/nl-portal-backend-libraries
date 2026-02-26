@@ -3,6 +3,6 @@ mutation {
         verified,
         uuid,
         errorMessage
-        verifiedOp
+        verifiedOn
     }
 }
