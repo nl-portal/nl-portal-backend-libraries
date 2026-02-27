@@ -82,7 +82,7 @@ class OpenKlant2DigitaleAdresQueryIT(
                     .get()
 
             // then
-            verify(openKlant2Service, times(1)).findDigitaleAdressen(any())
+            verify(openKlant2Service, times(1)).findDigitaleAdressen(any(), any())
 
             assertNotNull(responseBody)
             assertEquals("OVERIG", responseBody.get(0)?.get("type")?.textValue())
@@ -104,7 +104,7 @@ class OpenKlant2DigitaleAdresQueryIT(
                     .get()
 
             // then
-            verify(openKlant2Service, times(1)).findDigitaleAdressen(any())
+            verify(openKlant2Service, times(1)).findDigitaleAdressen(any(), any())
             assertTrue(responseBody.isEmpty)
         }
 }
