@@ -32,7 +32,7 @@ data class Actor(
     val actoridentificator: OpenKlant2Identificator? = null,
 ) {
     init {
-        require(naam == null || naam.length in 1..200) { "Actor name has to be between 1 and 200 characters long" }
+        require(naam.length in 1..200) { "Actor name has to be between 1 and 200 characters long" }
     }
 }
 

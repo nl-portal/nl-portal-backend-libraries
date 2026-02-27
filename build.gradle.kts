@@ -93,24 +93,28 @@ jreleaser {
         maven {
             mavenCentral {
                 register("sonatype") {
-                    active.set(org.jreleaser.model.Active.RELEASE)
+                    active.set(Active.RELEASE)
                     url.set("https://central.sonatype.com/api/v1/publisher")
                     subprojects.filter { it.name !in projectsExcludedFromPublish }.forEach { project ->
-                        stagingRepository(project.layout.buildDirectory.dir(sonatypeCentralStagingDir).get().asFile.path)
+                        stagingRepository(
+                            project.layout.buildDirectory.dir(sonatypeCentralStagingDir).get().asFile.path
+                        )
                     }
                 }
             }
 
             nexus2 {
                 register("snapshot-deploy") {
-                    active.set(org.jreleaser.model.Active.SNAPSHOT)
+                    active.set(Active.SNAPSHOT)
                     snapshotUrl.set("https://central.sonatype.com/repository/maven-snapshots/")
                     applyMavenCentralRules.set(true)
                     snapshotSupported.set(true)
                     closeRepository.set(true)
                     releaseRepository.set(true)
                     subprojects.filter { it.name !in projectsExcludedFromPublish }.forEach { project ->
-                        stagingRepository(project.layout.buildDirectory.dir(sonatypeCentralStagingDir).get().asFile.path)
+                        stagingRepository(
+                            project.layout.buildDirectory.dir(sonatypeCentralStagingDir).get().asFile.path
+                        )
                     }
                 }
             }
