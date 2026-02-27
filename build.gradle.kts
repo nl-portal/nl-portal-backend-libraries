@@ -109,8 +109,6 @@ jreleaser {
                     snapshotUrl.set("https://central.sonatype.com/repository/maven-snapshots/")
                     applyMavenCentralRules.set(true)
                     snapshotSupported.set(true)
-                    closeRepository.set(true)
-                    releaseRepository.set(true)
                     subprojects.filter { it.name !in projectsExcludedFromPublish }.forEach { project ->
                         stagingRepository(
                             project.layout.buildDirectory.dir(sonatypeCentralStagingDir).get().asFile.path
