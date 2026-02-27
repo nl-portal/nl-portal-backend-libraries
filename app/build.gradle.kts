@@ -38,11 +38,7 @@ dependencies {
     api("org.postgresql:postgresql")
 }
 
-tasks.getByName<Jar>("jar") {
-    enabled = false
-}
-
-tasks.bootJar {
+tasks.withType<Jar>().configureEach {
     enabled = false
 }
 
