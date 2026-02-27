@@ -120,14 +120,14 @@ class VerificatieService(
             return VerificatieVerifyResponse(
                 uuid = verificatieVerifyInput.uuid,
                 verified = response.verified,
-                verifiedOp = response.verifiedOp,
+                verifiedOn = response.verifiedOn,
             )
         } catch (e: Exception) {
             logger.error(e) { "Issue verify verificatie request failed: ${e.message}" }
             return VerificatieVerifyResponse(
                 uuid = verificatieVerifyInput.uuid,
                 verified = false,
-                verifiedOp = ZonedDateTime.now(),
+                verifiedOn = ZonedDateTime.now(),
                 errorMessage = "Issue verify verificatie request failed: ${e.message}",
             )
         }
