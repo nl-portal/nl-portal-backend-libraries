@@ -21,6 +21,6 @@ import java.util.UUID
 data class VerificatieVerifyResponse(
     val uuid: UUID? = null,
     val verified: Boolean,
-    val verifiedOp: ZonedDateTime,
+    val verifiedOn: ZonedDateTime,
     val errorMessage: String? = null,
 )
