@@ -44,5 +44,5 @@ data class VerificatieVerifyApiRequest(
 
 data class VerificatieVerifyApiResponse(
     val verified: Boolean,
-    val verifiedOp: ZonedDateTime,
+    val verifiedOn: ZonedDateTime,
 )
