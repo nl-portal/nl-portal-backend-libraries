@@ -18,5 +18,9 @@ plugins {
     id 'maven-publish'
 }
 
+tasks.findByName("jar")?.enabled = false
+tasks.findByName("bootJar")?.enabled = false
+tasks.findByName("javadocJar")?.enabled = false
+
 project.tasks.findByName("publishDefaultPublicationToSonatypeRepository")?.enabled = false
 project.tasks.findByName("publishDefaultPublicationToMavenLocal")?.enabled = false
