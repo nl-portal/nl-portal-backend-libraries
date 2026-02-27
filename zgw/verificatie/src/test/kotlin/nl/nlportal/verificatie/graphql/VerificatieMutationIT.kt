@@ -131,10 +131,14 @@ class VerificatieMutationIT(
                             "POST /api/verification-requests" -> {
                                 TestHelper.mockResponseFromFile("/config/data/create-verificatie-response.json")
                             }
+
                             "POST /api/verification-requests/verify" -> {
                                 TestHelper.mockResponseFromFile("/config/data/verify-verificatie-response.json")
                             }
-                            else -> MockResponse().setResponseCode(404)
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }
