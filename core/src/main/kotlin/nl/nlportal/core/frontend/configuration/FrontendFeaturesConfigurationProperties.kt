@@ -19,19 +19,27 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.features", ignoreUnknownFields = true)
 class FrontendFeaturesConfigurationProperties {
-    var myAddressResearchUrl: String = ""
-    var myAddressResearchMoreInfoUrl: String = ""
-    var myAddressChangeUrl: String = ""
-    var myNameChangeUrl: String = ""
-    var myGenderChangeUrl: String = ""
-    var myBrpChangeUrl: String = ""
-    var myBrpConfidentiallyChangeUrl: String = ""
-    var themeClass: String = ""
-    var messageCountEnabled: Boolean = false
-    var messageCountPollingInterval: Int = 0
-    var casesPartialSearchEnabled: Boolean = false
-    var openProductEnabled: Boolean = false
-    var legacyPaymentEnabled: Boolean = false
-    var themeApiEnabled: Boolean = false
-    var casesResultExplanationEnabled: Boolean = false
+    var properties: FrontendFeaturesProperties = FrontendFeaturesProperties()
+    var toggles: FrontendFeaturesToggles = FrontendFeaturesToggles()
+
+    class FrontendFeaturesProperties {
+        var myAddressResearchUrl: String = ""
+        var myAddressResearchMoreInfoUrl: String = ""
+        var myAddressChangeUrl: String = ""
+        var myNameChangeUrl: String = ""
+        var myGenderChangeUrl: String = ""
+        var myBrpChangeUrl: String = ""
+        var myBrpConfidentiallyChangeUrl: String = ""
+        var themeClass: String = ""
+        var messageCountPollingInterval: Int = 0
+    }
+
+    class FrontendFeaturesToggles {
+        var messageCountEnabled: Boolean = false
+        var casesPartialSearchEnabled: Boolean = false
+        var openProductEnabled: Boolean = false
+        var legacyPaymentEnabled: Boolean = false
+        var themeApiEnabled: Boolean = false
+        var casesResultExplanationEnabled: Boolean = false
+    }
 }

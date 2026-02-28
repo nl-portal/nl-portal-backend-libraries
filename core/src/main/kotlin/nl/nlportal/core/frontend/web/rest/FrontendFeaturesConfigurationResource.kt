@@ -27,6 +27,6 @@ import org.springframework.web.bind.annotation.RestController
 class FrontendFeaturesConfigurationResource(
     private val frontendFeaturesConfigurationService: FrontendFeaturesConfigurationService,
 ) {
-    @GetMapping(value = ["/features/toggles"])
+    @GetMapping(value = ["/features"])
     fun features(): ResponseEntity<FrontendFeaturesConfigurationProperties> = ResponseEntity.ok().header("Content-Type", "application/json").body(frontendFeaturesConfigurationService.getFeatures())
 }

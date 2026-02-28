@@ -237,21 +237,23 @@ nl-portal:
             logo:
             style:
         features:
-            my-address-research-url: http://www.google.com
-            my-address-research-more-info-url: http://www.google.com
-            my-address-change-url: http://www.google.com
-            my-brp-change-url: http://www.google.com
-            my-name-change-url: http://www.google.com
-            my-brp-confidentially-change-url: http://www.google.com
-            my-gender-change-url: http://www.google.com
-            theme-class: "test"
-            theme-api-enabled: true
-            message-count-enabled: true
-            message-count-polling-interval: 10000
-            cases-partial-search-enabled: true
-            cases-result-explanation-enabled: true
-            open-product-enabled: true
-            legacy-payment-enabled: false
+            properties:
+                my-address-research-url: http://www.google.com
+                my-address-research-more-info-url: http://www.google.com
+                my-address-change-url: http://www.google.com
+                my-brp-change-url: http://www.google.com
+                my-name-change-url: http://www.google.com
+                my-brp-confidentially-change-url: http://www.google.com
+                my-gender-change-url: http://www.google.com
+                theme-class: "test"
+                message-count-polling-interval: 10000
+            toggles:
+                theme-api-enabled: true
+                message-count-enabled: true
+                cases-partial-search-enabled: true
+                cases-result-explanation-enabled: true
+                open-product-enabled: true
+                legacy-payment-enabled: false
         verificatie:
             enabled: false
             properties:

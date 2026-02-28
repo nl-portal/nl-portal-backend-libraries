@@ -37,7 +37,7 @@ class FrontendFeaturesConfigurationResourceTest(
         val responseBodyContent =
             webTestClient
                 .get()
-                .uri("/api/public/features/toggles")
+                .uri("/api/public/features")
                 .exchange()
                 .expectStatus()
                 .isOk
@@ -47,6 +47,6 @@ class FrontendFeaturesConfigurationResourceTest(
 
         val responseJson = Mapper.get().readTree(responseBodyContent)
 
-        assertEquals(frontendFeaturesConfigurationProperties.myAddressResearchUrl, responseJson.get("myAddressResearchUrl").textValue())
+        assertEquals(frontendFeaturesConfigurationProperties.properties.myAddressResearchUrl, responseJson.requiredAt("/properties/myAddressResearchUrl").textValue())
     }
 }
