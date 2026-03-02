@@ -21,6 +21,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 class FrontendFeaturesConfigurationProperties {
     var properties: FrontendFeaturesProperties = FrontendFeaturesProperties()
     var toggles: FrontendFeaturesToggles = FrontendFeaturesToggles()
+    var custom: Map<String, Any> = emptyMap()
 
     class FrontendFeaturesProperties {
         var myAddressResearchUrl: String = ""
@@ -42,5 +43,11 @@ class FrontendFeaturesConfigurationProperties {
         var themeApiEnabled: Boolean = false
         var casesResultExplanationEnabled: Boolean = false
         var myInhabitantCountEnabled: Boolean = false
+        var casesContactMomentsEnabled: Boolean = false
+    }
+
+    class FrontendFeaturesCustom {
+        var name: String = ""
+        var value: Any? = null
     }
 }

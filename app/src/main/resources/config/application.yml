@@ -255,6 +255,10 @@ nl-portal:
                 open-product-enabled: true
                 legacy-payment-enabled: false
                 my-inhabitant-count-enabled: false
+            custom:
+                customProperties: test
+                fff: 1000
+                toggle: true
         verificatie:
             enabled: false
             properties:
