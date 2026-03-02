@@ -109,7 +109,7 @@ class BerichtenService(
                 ObjectSearchParameter(
                     "onderwerp",
                     Comparator.STRING_CONTAINS,
-                    it.toString(),
+                    it,
                 ),
             )
         }

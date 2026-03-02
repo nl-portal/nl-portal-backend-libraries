@@ -10,7 +10,6 @@ mutation {
         omschrijving,
         verificatieDatum,
         verificatieNeeded,
-        verificatieCreateSuccessfull,
         verificatieCodeVerified
     }
 }

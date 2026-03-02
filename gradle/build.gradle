@@ -18,5 +18,9 @@ plugins {
     id 'maven-publish'
 }
 
+tasks.withType(Jar).configureEach {
+    enabled = false
+}
+
 project.tasks.findByName("publishDefaultPublicationToSonatypeRepository")?.enabled = false
 project.tasks.findByName("publishDefaultPublicationToMavenLocal")?.enabled = false
