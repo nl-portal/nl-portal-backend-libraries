@@ -24,6 +24,7 @@ nl-portal:
         cases-result-explanation-enabled: true
         open-product-enabled: true
         legacy-payment-enabled: false
+        my-inhabitant-count-enabled: false
 ---
 spring:
   config:

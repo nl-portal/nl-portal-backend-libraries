@@ -41,5 +41,6 @@ class FrontendFeaturesConfigurationProperties {
         var legacyPaymentEnabled: Boolean = false
         var themeApiEnabled: Boolean = false
         var casesResultExplanationEnabled: Boolean = false
+        var myInhabitantCountEnabled: Boolean = false
     }
 }
