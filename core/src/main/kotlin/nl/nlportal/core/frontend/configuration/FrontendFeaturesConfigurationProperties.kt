@@ -33,6 +33,10 @@ class FrontendFeaturesConfigurationProperties {
         var myBrpConfidentiallyChangeUrl: String = ""
         var themeClass: String = ""
         var messageCountPollingInterval: Int = 0
+        var overviewMaintenanceAlertTitleNl: String = ""
+        var overviewMaintenanceAlertTitleEn: String = ""
+        var overviewMaintenanceAlertTextNl: String = ""
+        var overviewMaintenanceAlertTextEn: String = ""
     }
 
     class FrontendFeaturesToggles {
@@ -44,6 +48,8 @@ class FrontendFeaturesConfigurationProperties {
         var casesResultExplanationEnabled: Boolean = false
         var myInhabitantCountEnabled: Boolean = false
         var casesContactMomentsEnabled: Boolean = false
+        var overviewIntroEnabled: Boolean = false
+        var overviewMaintenanceAlertEnabled: Boolean = false
     }
 
     class FrontendFeaturesCustom {

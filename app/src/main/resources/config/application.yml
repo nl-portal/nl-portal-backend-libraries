@@ -247,6 +247,10 @@ nl-portal:
                 my-gender-change-url: http://www.google.com
                 theme-class: "test"
                 message-count-polling-interval: 10000
+                overview-maintenance-alert-text-en: alert text
+                overview-maintenance-alert-text-nl: waarschuwings tekst
+                overview-maintenance-alert-title-en: alert title
+                overview-maintenance-alert-title-nl: waarschuwings onderwerp
             toggles:
                 theme-api-enabled: true
                 message-count-enabled: true
@@ -255,6 +259,9 @@ nl-portal:
                 open-product-enabled: true
                 legacy-payment-enabled: false
                 my-inhabitant-count-enabled: false
+                cases-contact-moments-enabled: true
+                overview-intro-enabled: true
+                overview-maintenance-alert-enabled: false
             custom:
                 customProperties: test
                 fff: 1000
