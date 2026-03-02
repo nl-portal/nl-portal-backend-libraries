@@ -24,7 +24,8 @@ object Versions {
     const val apacheCommons = "3.20.0"
     const val commonsIo = "2.21.0"
     const val commonsCodec = "1.21.0"
-    const val graphqlJava ="24.0"
+    const val graphqlJava ="24.3"
+    const val graphqlJavaScalars ="24.0"
     const val kotlinLogging = "7.0.13"
     const val springCloud = "4.3.0"
 

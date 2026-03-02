@@ -32,7 +32,7 @@ jobs:
                 env:
                     JAVA_HOME: /opt/jdk
                 with:
-                    project: 'NL Portal Backend Libraries'
+                    project: 'nl-portal-backend-libraries'
                     path: '.'
                     format: 'HTML'
                     out: 'dependency-check'

@@ -139,7 +139,7 @@ class CaseService(
         keys: MutableList<String>,
     ): List<String> {
         if (json.isObject) {
-            json.fields().forEachRemaining { field ->
+            json.properties().forEach { field ->
                 keys.add(field.key)
                 getKeys(field.value, keys)
             }

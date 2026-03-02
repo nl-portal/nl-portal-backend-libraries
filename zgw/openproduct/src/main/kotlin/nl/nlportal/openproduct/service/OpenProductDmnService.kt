@@ -155,25 +155,21 @@ class OpenProductDmnService(
         source: String? = null,
     ): Map<String, OpenProductDmnVariable> {
         val variablesMapping = mutableMapOf<String, OpenProductDmnVariable>()
-        actieMappingVariables?.forEach {
+        actieMappingVariables.forEach {
             if (it.regex != null && source != null) {
-                variablesMapping.put(
-                    it.name,
+                variablesMapping[it.name] =
                     OpenProductDmnVariable(
                         findVariableInJson(it.regex, source),
                         it.classType,
-                    ),
-                )
+                    )
             }
 
             if (it.value != null) {
-                variablesMapping.put(
-                    it.name,
+                variablesMapping[it.name] =
                     OpenProductDmnVariable(
                         it.value,
                         it.classType,
-                    ),
-                )
+                    )
             }
         }
 
