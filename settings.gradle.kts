@@ -30,6 +30,7 @@ include(
     "core",
     "gradle:cve-report",
     "gradle:license-report",
+    "gradle:jreleaser",
     "graphql",
     "portal-authentication",
     "zgw:idtoken-authentication",
