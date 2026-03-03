@@ -21,7 +21,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 class FrontendFeaturesConfigurationProperties {
     var properties: FrontendFeaturesProperties = FrontendFeaturesProperties()
     var toggles: FrontendFeaturesToggles = FrontendFeaturesToggles()
-    var custom: Map<String, Any> = emptyMap()
+    // var custom: String? = null
 
     class FrontendFeaturesProperties {
         var myAddressResearchUrl: String = ""
@@ -37,6 +37,7 @@ class FrontendFeaturesConfigurationProperties {
         var overviewMaintenanceAlertTitleEn: String = ""
         var overviewMaintenanceAlertTextNl: String = ""
         var overviewMaintenanceAlertTextEn: String = ""
+        var custom: String? = null
     }
 
     class FrontendFeaturesToggles {
@@ -50,10 +51,5 @@ class FrontendFeaturesConfigurationProperties {
         var casesContactMomentsEnabled: Boolean = false
         var overviewIntroEnabled: Boolean = false
         var overviewMaintenanceAlertEnabled: Boolean = false
-    }
-
-    class FrontendFeaturesCustom {
-        var name: String = ""
-        var value: Any? = null
     }
 }

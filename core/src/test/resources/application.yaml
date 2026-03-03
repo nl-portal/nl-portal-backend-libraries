@@ -21,6 +21,16 @@ nl-portal:
         overview-maintenance-alert-text-nl: waarschuwings tekst
         overview-maintenance-alert-title-en: alert title
         overview-maintenance-alert-title-nl: waarschuwings onderwerp
+        custom: '{
+    "pwikProSiteId": "f25a2e8a-bae1-423c-8478-fee59040da63",
+    "pwikProAccountAddress": "http://pwikpro.com",
+    "enableKtoDiv": true,
+    "emandateActive": true,
+    "arcgisUrlWithPlaceholder": "arcgis url",
+    "enableMessages": true,
+    "otelEnvironment": "DEV",
+    "otelEnabled": true
+}'
       toggles:
         theme-api-enabled: true
         message-count-enabled: true
@@ -30,10 +40,7 @@ nl-portal:
         legacy-payment-enabled: false
         my-inhabitant-count-enabled: false
         cases-contact-moments-enabled: true
-      custom:
-        customProperties: test
-        fff: 1000
-        toggle: true
+
 
 ---
 spring:
