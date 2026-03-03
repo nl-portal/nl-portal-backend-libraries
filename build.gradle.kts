@@ -3,13 +3,11 @@ import io.spring.gradle.dependencymanagement.org.codehaus.plexus.interpolation.o
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
-import org.jreleaser.model.Active
 import java.net.URI
 import kotlin.io.encoding.Base64.Default.decode
 import kotlin.io.encoding.ExperimentalEncodingApi
 
-val sonatypeCentralStagingDir = "sonatypeCentralStaging"
-val projectsExcludedFromPublish = setOf("app", "gradle", "cve-report", "license-report", "zgw")
+val sonatypeCentralStagingDir: String by project
 
 plugins {
     java
@@ -49,8 +47,6 @@ plugins {
 
     id("org.owasp.dependencycheck") version "12.2.0"
 
-    id("org.jreleaser") version "1.22.0"
-
     `maven-publish`
     signing
 }
@@ -63,60 +59,6 @@ allprojects {
         maven(URI("https://app.camunda.com/nexus/content/groups/public"))
         maven(URI("https://s01.oss.sonatype.org/content/groups/staging/"))
         maven(URI("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-    }
-}
-
-jreleaser {
-    project {
-        languages {
-            java {
-                group = "nl.nl-portal"
-            }
-        }
-    }
-    signing {
-        active = Active.ALWAYS
-        pgp {
-            armored = true
-        }
-    }
-
-    release {
-        // At least one releaser must be configured, but we only want to /deploy/ to Maven Central for now
-        github {
-            skipTag.set(true)
-            skipRelease.set(true)
-        }
-    }
-
-    deploy {
-        maven {
-            mavenCentral {
-                register("sonatype") {
-                    active.set(Active.RELEASE)
-                    url.set("https://central.sonatype.com/api/v1/publisher")
-                    subprojects.filter { it.name !in projectsExcludedFromPublish }.forEach { project ->
-                        stagingRepository(
-                            project.layout.buildDirectory.dir(sonatypeCentralStagingDir).get().asFile.path
-                        )
-                    }
-                }
-            }
-
-            nexus2 {
-                register("snapshot-deploy") {
-                    active.set(Active.SNAPSHOT)
-                    snapshotUrl.set("https://central.sonatype.com/repository/maven-snapshots/")
-                    applyMavenCentralRules.set(true)
-                    snapshotSupported.set(true)
-                    subprojects.filter { it.name !in projectsExcludedFromPublish }.forEach { project ->
-                        stagingRepository(
-                            project.layout.buildDirectory.dir(sonatypeCentralStagingDir).get().asFile.path
-                        )
-                    }
-                }
-            }
-        }
     }
 }
 
