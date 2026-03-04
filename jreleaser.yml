@@ -1,0 +1,88 @@
+# jreleaser.yml
+# Used by jreleaser/release-action@v2 (arguments: deploy) in publish-release.yml
+# and publish-snapshot.yml. Replaces the gradle:jreleaser Gradle submodule.
+#
+# IMPORTANT: Adding a new publishable subproject requires manually adding its
+# staging path to both stagingRepositories lists below.
+
+project:
+  languages:
+    java:
+      groupId: nl.nl-portal
+
+signing:
+  active: ALWAYS
+  pgp:
+    armored: true
+
+release:
+  # At least one releaser must be configured. Only deploying to Maven Central —
+  # tag and release creation are disabled.
+  github:
+    skipTag: true
+    skipRelease: true
+
+deploy:
+  maven:
+    mavenCentral:
+      sonatype:
+        active: RELEASE
+        url: https://central.sonatype.com/api/v1/publisher
+        stagingRepositories:
+          - case/build/sonatypeCentralStaging
+          - core/build/sonatypeCentralStaging
+          - data/build/sonatypeCentralStaging
+          - form/build/sonatypeCentralStaging
+          - graphql/build/sonatypeCentralStaging
+          - haalcentraal-hr/build/sonatypeCentralStaging
+          - haalcentraal2/build/sonatypeCentralStaging
+          - messaging/build/sonatypeCentralStaging
+          - payment-direct/build/sonatypeCentralStaging
+          - payment/build/sonatypeCentralStaging
+          - portal-authentication/build/sonatypeCentralStaging
+          - product/build/sonatypeCentralStaging
+          - zgw/berichten/build/sonatypeCentralStaging
+          - zgw/besluiten/build/sonatypeCentralStaging
+          - zgw/catalogi-api/build/sonatypeCentralStaging
+          - zgw/common-ground-authentication-test/build/sonatypeCentralStaging
+          - zgw/common-ground-authentication/build/sonatypeCentralStaging
+          - zgw/documenten-api/build/sonatypeCentralStaging
+          - zgw/idtoken-authentication/build/sonatypeCentralStaging
+          - zgw/objectenapi/build/sonatypeCentralStaging
+          - zgw/openklant/build/sonatypeCentralStaging
+          - zgw/openproduct/build/sonatypeCentralStaging
+          - zgw/taak/build/sonatypeCentralStaging
+          - zgw/verificatie/build/sonatypeCentralStaging
+          - zgw/zaken-api/build/sonatypeCentralStaging
+    nexus2:
+      sonatype-snapshots:
+        active: SNAPSHOT
+        snapshotUrl: https://central.sonatype.com/repository/maven-snapshots/
+        applyMavenCentralRules: true
+        snapshotSupported: true
+        stagingRepositories:
+          - case/build/sonatypeCentralStaging
+          - core/build/sonatypeCentralStaging
+          - data/build/sonatypeCentralStaging
+          - form/build/sonatypeCentralStaging
+          - graphql/build/sonatypeCentralStaging
+          - haalcentraal-hr/build/sonatypeCentralStaging
+          - haalcentraal2/build/sonatypeCentralStaging
+          - messaging/build/sonatypeCentralStaging
+          - payment-direct/build/sonatypeCentralStaging
+          - payment/build/sonatypeCentralStaging
+          - portal-authentication/build/sonatypeCentralStaging
+          - product/build/sonatypeCentralStaging
+          - zgw/berichten/build/sonatypeCentralStaging
+          - zgw/besluiten/build/sonatypeCentralStaging
+          - zgw/catalogi-api/build/sonatypeCentralStaging
+          - zgw/common-ground-authentication-test/build/sonatypeCentralStaging
+          - zgw/common-ground-authentication/build/sonatypeCentralStaging
+          - zgw/documenten-api/build/sonatypeCentralStaging
+          - zgw/idtoken-authentication/build/sonatypeCentralStaging
+          - zgw/objectenapi/build/sonatypeCentralStaging
+          - zgw/openklant/build/sonatypeCentralStaging
+          - zgw/openproduct/build/sonatypeCentralStaging
+          - zgw/taak/build/sonatypeCentralStaging
+          - zgw/verificatie/build/sonatypeCentralStaging
+          - zgw/zaken-api/build/sonatypeCentralStaging

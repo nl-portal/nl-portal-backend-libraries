@@ -28,10 +28,14 @@ jobs:
                 run: ./gradlew checkLicense
             -   name: Gradle htmlDependencyReport
                 run: ./gradlew htmlDependencyReport
-            -   name: Publish to Sonatype Central with Gradle
-                # Must be two separate gradle invocations or it can fail with a race condition.
-                # Most likely because JReleaser does not declare a Gradle dependency from `jreleaserdeploy` to `publish`
-                run: ./gradlew publish -Pversion=${{env.ARTIFACT_VERSION}} --stacktrace && ./gradlew :gradle:jreleaser:jreleaserDeploy -Pversion=${{env.ARTIFACT_VERSION}} --stacktrace
+            -   name: Publish staged artifacts with Gradle
+                run: ./gradlew publish -Pversion=${{env.ARTIFACT_VERSION}} --stacktrace
+            -   name: Deploy to Maven Central with JReleaser
+                uses: jreleaser/release-action@v2
+                with:
+                    arguments: deploy --deployer-name sonatype
+                    setup-java: 'false'
+                    version: '1.22.0'
                 env:
                     JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_STAGE: 'UPLOAD' # don't wait for confirmation in the web UI
                     JRELEASER_GPG_SECRET_KEY: ${{ secrets.SIGNING_KEY }}
