@@ -1,7 +1,7 @@
 import org.jreleaser.model.Active
 
 plugins {
-    id("org.jreleaser") version "1.22.0"
+    id("org.jreleaser") version "1.23.0"
 }
 
 val sonatypeCentralStagingDir: String by project
