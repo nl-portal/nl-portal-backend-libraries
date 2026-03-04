@@ -33,7 +33,7 @@ jobs:
             -   name: Deploy to Maven Central with JReleaser
                 uses: jreleaser/release-action@v2
                 with:
-                    arguments: deploy
+                    arguments: deploy --deployer-name sonatype
                     setup-java: 'false'
                     version: '1.22.0'
                 env:

@@ -41,7 +41,7 @@ jobs:
                 if: ${{ contains(fromJSON(inputs.targets), 'sonatype-snapshots') }}
                 uses: jreleaser/release-action@v2
                 with:
-                    arguments: deploy
+                    arguments: deploy --deployer-name sonatype-snapshots
                     setup-java: 'false'
                     version: '1.22.0'
                 env:
