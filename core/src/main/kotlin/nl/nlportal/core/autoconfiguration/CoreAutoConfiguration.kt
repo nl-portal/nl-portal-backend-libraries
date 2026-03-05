@@ -16,9 +16,12 @@
 package nl.nlportal.core.autoconfiguration
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import nl.nlportal.core.frontend.configuration.FrontendFeaturesConfigurationProperties
 import nl.nlportal.core.frontend.configuration.FrontendThemeConfigurationProperties
-import nl.nlportal.core.frontend.web.rest.FrontendThemeConfigurationResource
+import nl.nlportal.core.frontend.service.FrontendFeaturesConfigurationService
 import nl.nlportal.core.frontend.service.FrontendThemeConfigurationService
+import nl.nlportal.core.frontend.web.rest.FrontendFeaturesConfigurationResource
+import nl.nlportal.core.frontend.web.rest.FrontendThemeConfigurationResource
 import nl.nlportal.core.util.Mapper
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -26,7 +29,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
-@EnableConfigurationProperties(FrontendThemeConfigurationProperties::class)
+@EnableConfigurationProperties(
+    FrontendThemeConfigurationProperties::class,
+    FrontendFeaturesConfigurationProperties::class,
+)
 class CoreAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(name = ["objectMapper"])
@@ -43,4 +49,16 @@ class CoreAutoConfiguration {
     fun frontendThemeConfigurationResource(
         frontendConfigurationService: FrontendThemeConfigurationService,
     ): FrontendThemeConfigurationResource = FrontendThemeConfigurationResource(frontendConfigurationService)
+
+    @Bean
+    @ConditionalOnMissingBean(FrontendFeaturesConfigurationService::class)
+    fun frontendFeaturesConfigurationService(
+        frontendFeaturesConfigurationProperties: FrontendFeaturesConfigurationProperties,
+    ): FrontendFeaturesConfigurationService = FrontendFeaturesConfigurationService(frontendFeaturesConfigurationProperties)
+
+    @Bean
+    @ConditionalOnMissingBean(FrontendFeaturesConfigurationResource::class)
+    fun frontendFeaturesConfigurationResource(
+        frontendFeaturesConfigurationService: FrontendFeaturesConfigurationService,
+    ): FrontendFeaturesConfigurationResource = FrontendFeaturesConfigurationResource(frontendFeaturesConfigurationService)
 }
