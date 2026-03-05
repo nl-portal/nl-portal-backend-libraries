@@ -102,6 +102,16 @@ subprojects {
     if (!(project.path.contains("gradle"))) {
         println("Enabling Spring Boot plugin in project ${project.name}...")
         apply(plugin = "org.springframework.boot")
+
+        println("Enabling Spring Boot Dependency Management in project ${project.name}...")
+        apply(plugin = "io.spring.dependency-management")
+        configure<DependencyManagementExtension> {
+            imports {
+                mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES) {
+                    bomProperty("graphql-java.version", Versions.graphqlJava)
+                }
+            }
+        }
     }
 
     println("Enabling Kotlin Spring plugin in project ${project.name}...")
@@ -119,16 +129,6 @@ subprojects {
             freeCompilerArgs.add("-Xjsr305=strict")
             freeCompilerArgs.add("-Xemit-jvm-type-annotations")
             freeCompilerArgs.add("-Xannotation-default-target=param-property")
-        }
-    }
-
-    println("Enabling Spring Boot Dependency Management in project ${project.name}...")
-    apply(plugin = "io.spring.dependency-management")
-    configure<DependencyManagementExtension> {
-        imports {
-            mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES) {
-                bomProperty("graphql-java.version", Versions.graphqlJava)
-            }
         }
     }
 
