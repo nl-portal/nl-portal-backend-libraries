@@ -48,12 +48,13 @@ data class OpenKlant2SubIdentificatorVan(
 enum class OpenKlant2PartijIdentificatorenFilters(
     @JsonValue val value: String,
 ) : OpenKlant2Filters {
-    ANDERE_PARTIJ_IDENTIFICATOR("andere_partij_identificator"),
+    @Deprecated("will be removed in a future release.")
+    ANDERE_PARTIJ_IDENTIFICATOR("anderePartijIdentificator"),
     PAGE("page"),
-    PARTIJ_IDENTIFICATOR_CODE_OBJECTTYPE("partij_identificator_code_objecttype"),
-    PARTIJ_IDENTIFICATOR_CODE_SOORT_OBJECT_ID("partij_identificator_code_soort_object_id"),
-    PARTIJ_IDENTIFICATOR_OBJECT_ID("partij_identificator_object_id"),
-    PARTIJ_IDENTIFICATOR_CODE_REGISTER("partij_identificator_code_register"),
+    PARTIJ_IDENTIFICATOR_CODE_OBJECTTYPE("partijIdentificatorCodeObjecttype"),
+    PARTIJ_IDENTIFICATOR_CODE_SOORT_OBJECT_ID("partijIdentificatorCodeSoortObjectId"),
+    PARTIJ_IDENTIFICATOR_OBJECT_ID("partijIdentificatorObjectId"),
+    PARTIJ_IDENTIFICATOR_CODE_REGISTER("partijIdentificatorCodeRegister"),
     ;
 
     override fun toString() = this.value

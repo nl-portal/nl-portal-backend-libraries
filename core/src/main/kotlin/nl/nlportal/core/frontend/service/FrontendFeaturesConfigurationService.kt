@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2025 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package nl.nlportal.core.frontend.service
 
-plugins {
-    id 'maven-publish'
+import nl.nlportal.core.frontend.configuration.FrontendFeaturesConfigurationProperties
+
+class FrontendFeaturesConfigurationService(
+    private var frontendFeaturesConfigurationProperties: FrontendFeaturesConfigurationProperties,
+) {
+    fun getFeatures(): FrontendFeaturesConfigurationProperties = frontendFeaturesConfigurationProperties
 }
-
-tasks.withType(Jar).configureEach {
-    enabled = false
-}
-
-project.tasks.findByName("publishDefaultPublicationToSonatypeRepository")?.enabled = false
-project.tasks.findByName("publishDefaultPublicationToMavenLocal")?.enabled = false

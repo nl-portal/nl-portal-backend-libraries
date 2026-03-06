@@ -31,7 +31,7 @@ object Dependencies {
     val commonsIo by lazy { "commons-io:commons-io:${Versions.commonsIo}" }
     val commonsCodec by lazy { "commons-codec:commons-codec:${Versions.commonsCodec}" }
     val apacheCommons by lazy { "org.apache.commons:commons-lang3:${Versions.apacheCommons}"}
-    val graphqlJavaExtendedScalars by lazy { "com.graphql-java:graphql-java-extended-scalars:${Versions.graphqlJava}"}
+    val graphqlJavaExtendedScalars by lazy { "com.graphql-java:graphql-java-extended-scalars:${Versions.graphqlJavaScalars}"}
 
     val jacksonKotlinModule by lazy { "tools.jackson.module:jackson-module-kotlin" }
     val kotlinLogging by lazy { "io.github.oshai:kotlin-logging-jvm:${Versions.kotlinLogging}"}

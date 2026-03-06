@@ -139,9 +139,9 @@ class CaseService(
         keys: MutableList<String>,
     ): List<String> {
         if (json.isObject) {
-            json.properties().forEach { property ->
-                keys.add(property.key)
-                getKeys(property.value, keys)
+            json.properties().forEach { field ->
+                keys.add(field.key)
+                getKeys(field.value, keys)
             }
         }
         if (json.isArray) {

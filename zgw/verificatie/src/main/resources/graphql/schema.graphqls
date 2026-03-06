@@ -41,7 +41,7 @@ input VerificatieVerifyInput {
 
 type VerificatieVerifyResponse {
     verified: Boolean!
-    verifiedOp: ZonedDateTime!
+    verifiedOn: ZonedDateTime!
     uuid: UUID
     errorMessage: String
 }
