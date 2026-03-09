@@ -1,0 +1,190 @@
+server:
+    port: 0
+
+spring:
+    profiles:
+        default: test
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://localhost:5450/app-test
+        username: postgres
+        password: test
+        hikari:
+            auto-commit: false
+    jpa:
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+        database: postgresql
+        show_sql: false
+        open-in-view: false
+        properties:
+            hibernate:
+                hbm2ddl.auto: create-drop
+    liquibase:
+        enabled: false
+    graphql:
+        graphiql:
+            enabled: true
+        schema:
+            locations: classpath*:graphql/**/
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://localhost:9999/auth/realms/test
+
+nl-portal:
+    security:
+        cors:
+            -   path: "/**"
+                config:
+                    allowedHeaders: "*"
+                    allowedOrigins: "*"
+                    allowedMethods: "*"
+        endpoints:
+            unsecured: /api/public/**
+    authentication:
+        keycloak:
+            resource: test-client
+            audience: test-audience
+            credentials:
+                secret: test-secret
+    config:
+        besluitenapi:
+            enabled: true
+            properties:
+                url: http://localhost:56789
+                clientId: test-client
+                secret: test-secret
+        catalogiapi:
+            enabled: true
+            properties:
+                url: http://localhost:56789
+                clientId: test-client
+                secret: test-secret
+        documentenapis:
+            enabled: true
+            properties:
+                default-document-api: openzaak
+                configurations:
+                    openzaak:
+                        url: http://localhost:56789/documenten/api/v1
+                        clientId: test-client
+                        secret: test-secret
+                        rsin: "051845623"
+                        documentTypeUrl: http://localhost:56789/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-0000-000000000000
+        virusscan:
+            clamav:
+                enabled: false
+        zakenapi:
+            enabled: true
+            properties:
+                url: http://localhost:56789
+                clientId: test-client
+                secret: test-secret
+                zaak-documenten-config:
+                    vertrouwelijkheidsaanduiding-whitelist:
+                        - openbaar
+                        - beperkt_openbaar
+                        - intern
+                        - zaakvertrouwelijk
+                        - vertrouwelijk
+                        - confidentieel
+                        - geheim
+                        - zeer_geheim
+                    status-whitelist:
+                        - ter_vaststelling
+                        - in_bewerking
+                        - definitief
+                        - gearchiveerd
+        objectenapi:
+            enabled: true
+            properties:
+                url: http://localhost:56789
+                token: 0000000000000000000000000000000000000000
+        openklant2:
+            enabled: true
+            properties:
+                klantinteracties-api-url: http://localhost:56789/klantinteracties/api/v1
+                token: 0000000000000000000000000000000000000000
+        haalcentraal2:
+            enabled: true
+            properties:
+                brp-api-url: http://localhost:56789/haalcentraal/api/brp/
+                bewoning-api-url: http://localhost:56789/haalcentraal/api/bewoning/
+        haalcentraal:
+            hr:
+                enabled: true
+                properties:
+                    url: http://localhost:56789
+                    apiKey: test-api-key
+                    ssl:
+                        enabled: false
+        taak:
+            enabled: true
+            properties:
+                object-type-url: http://localhost:56789/api/v2/objecttypes/00000000-0000-0000-0000-000000000001
+        berichten:
+            enabled: true
+            properties:
+                bericht-object-type-url: http://localhost:56789/api/v2/objecttypes/00000000-0000-0000-0000-000000000002
+        openproduct:
+            enabled: true
+            properties:
+                token: 0000000000000000000000000000000000000000
+                product-api-url: http://localhost:56789/producten/api/v1
+                product-type-api-url: http://localhost:56789/producttypen/api/v1
+        product:
+            enabled: true
+            properties:
+                product-type-url: http://localhost:56789/api/v1/objecttypes/00000000-0000-0000-0000-000000000003
+                product-instantie-type-url: http://localhost:56789/api/v1/objecttypes/00000000-0000-0000-0000-000000000004
+                product-details-type-url: http://localhost:56789/api/v1/objecttypes/00000000-0000-0000-0000-000000000005
+                product-verbruiks-object-type-url: http://localhost:56789/api/v1/objecttypes/00000000-0000-0000-0000-000000000006
+        dmn:
+            enabled: true
+            properties:
+                url: http://localhost:56789
+        prefill:
+            enabled: true
+            properties:
+                type-url: http://localhost:56789/api/v1/objecttypes/00000000-0000-0000-0000-000000000007
+        payment:
+            direct:
+                enabled: true
+                properties:
+                    url: https://payment.preprod.direct.worldline-solutions.com
+                    sha-out-parameters: AAVADDRESS,AAVCHECK,AAVMAIL,AAVNAME,AAVPHONE,AAVZIP,ACCEPTANCE,ALIAS,AMOUNT,BIC,BIN,BRAND,CARDNO,CCCTY,CN,COLLECTOR_BIC,COLLECTOR_IBAN,COMPLUS,CREATION_STATUS,CREDITDEBIT,CURRENCY,CVCCHECK,DCC_COMMPERCENTAGE,DCC_CONVAMOUNT,DCC_CONVCCY,DCC_EXCHRATE,DCC_EXCHRATESOURCE,DCC_EXCHRATETS,DCC_INDICATOR,DCC_MARGINPERCENTAGE,DCC_VALIDHOURS,DIGESTCARDNO,ECI,ED,EMAIL,ENCCARDNO,FXAMOUNT,FXCURRENCY,IP,IPCTY,MANDATEID,MOBILEMODE,NBREMAILUSAGE,NBRIPUSAGE,NBRIPUSAGE_ALLTX,NBRUSAGE,NCERROR,ORDERID,PAYID,PAYIDSUB,PAYMENT_REFERENCE,PM,SCO_CATEGORY,SCORING,SEQUENCETYPE,SIGNDATE,STATUS,SUBBRAND,SUBSCRIPTION_ID,TRXDATE,VC
+                    configurations:
+                        belastingzaken:
+                            pspId: TAX
+                            language: "nl_NL"
+                            returnUrl: http://localhost:3000
+                            apiKey: test-api-key
+                            apiSecret: test-api-secret
+                            webhookApiKey: test-webhook-api-key
+                            webhookApiSecret: test-webhook-api-secret
+            ogone:
+                enabled: true
+                properties:
+                    url: https://secure.ogone.com/ncol/test/orderstandard.asp
+                    sha-out-parameters: AAVADDRESS,AAVCHECK,AAVMAIL,AAVNAME,AAVPHONE,AAVZIP,ACCEPTANCE,ALIAS,AMOUNT,BIC,BIN,BRAND,CARDNO,CCCTY,CN,COLLECTOR_BIC,COLLECTOR_IBAN,COMPLUS,CREATION_STATUS,CREDITDEBIT,CURRENCY,CVCCHECK,DCC_COMMPERCENTAGE,DCC_CONVAMOUNT,DCC_CONVCCY,DCC_EXCHRATE,DCC_EXCHRATESOURCE,DCC_EXCHRATETS,DCC_INDICATOR,DCC_MARGINPERCENTAGE,DCC_VALIDHOURS,DIGESTCARDNO,ECI,ED,EMAIL,ENCCARDNO,FXAMOUNT,FXCURRENCY,IP,IPCTY,MANDATEID,MOBILEMODE,NBREMAILUSAGE,NBRIPUSAGE,NBRIPUSAGE_ALLTX,NBRUSAGE,NCERROR,ORDERID,PAYID,PAYIDSUB,PAYMENT_REFERENCE,PM,SCO_CATEGORY,SCORING,SEQUENCETYPE,SIGNDATE,STATUS,SUBBRAND,SUBSCRIPTION_ID,TRXDATE,VC
+                    configurations:
+                        belastingzaken:
+                            pspId: TAX
+                            title: Belastingzaken
+                            shaInKey: de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00
+                            shaOutKey: de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00
+                            failureUrl: http://localhost:3000
+                            successUrl: http://localhost:3000
+        verificatie:
+            enabled: false
+        theme:
+            logo:
+            style:
+        features:
+            properties:
+                theme-class: "test"
+            toggles:
+                theme-api-enabled: false
+                message-count-enabled: false
