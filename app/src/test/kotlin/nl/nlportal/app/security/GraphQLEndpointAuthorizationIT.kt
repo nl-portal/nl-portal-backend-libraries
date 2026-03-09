@@ -84,30 +84,6 @@ class GraphQLEndpointAuthorizationIT {
         val ALLOWED_PUBLIC_OPERATIONS =
             setOf(
                 "verificatieConfig", // Returns public config (no user data, no authentication needed)
-                // OpenProduct catalog/reference data - publicly accessible, no authentication parameter in resolver
-                "getOpenProductThemas",
-                "getOpenProductHoofdThemas",
-                "getOpenProductThemasHierarchy",
-                "getOpenProductThemaHierarchy",
-                "getOpenProductThema",
-                "getOpenProductTypes",
-                "getOpenProductType",
-                "getOpenProductActies",
-                "getOpenProductActie",
-                "getOpenProductBestanden",
-                "getOpenProductBestand",
-                "getOpenProductContacten",
-                "getOpenProductContact",
-                "getOpenProductLocaties",
-                "getOpenProductLocatie",
-                "getOpenProductLinks",
-                "getOpenProductLink",
-                "getOpenProductOrganisaties",
-                "getOpenProductOrganisatie",
-                "getOpenProductPrijzen",
-                "getOpenProductPrijs",
-                // Product consumption objects - no authentication parameter in resolver
-                "getProductVerbruiksObjecten",
                 // Form definitions - loaded without authentication (e.g. before login)
                 "getFormDefinitionById",
                 "getFormDefinitionByName",
