@@ -77,11 +77,12 @@ class RestEndpointAuthorizationIT {
          * regardless of SecurityEndpointsConfig. These mirror the hardcoded
          * permitAll() rules in the security filter chain.
          */
-        private val ALWAYS_PUBLIC_PATTERNS = listOf(
-            "/graphiql",
-            "/graphql",
-            "/actuator/**",
-        )
+        private val ALWAYS_PUBLIC_PATTERNS =
+            listOf(
+                "/graphiql",
+                "/graphql",
+                "/actuator/**",
+            )
     }
 
     // ============================================================
@@ -154,8 +155,7 @@ class RestEndpointAuthorizationIT {
             .flatMap { (info, _) -> resolveEndpoints(info) }
             .map { (method, path) ->
                 Triple(method, path, isPublic(path, publicPatterns))
-            }
-            .distinctBy { (method, path, _) -> "$method $path" }
+            }.distinctBy { (method, path, _) -> "$method $path" }
             .sortedWith(compareBy({ it.third }, { it.first.name() }, { it.second }))
     }
 
@@ -163,15 +163,17 @@ class RestEndpointAuthorizationIT {
         // In Spring WebFlux, RequestMappingInfo only has getPatternsCondition() (no getPathPatternsCondition).
         // getPatternsCondition() returns a PatternsRequestCondition whose getPatterns() gives Set<PathPattern>.
         // Each PathPattern exposes its string form via patternString.
-        val patterns = mappingInfo.patternsCondition
-            ?.patterns
-            ?.map { it.patternString }
-            ?.ifEmpty { return emptyList() }
-            ?: return emptyList()
+        val patterns =
+            mappingInfo.patternsCondition
+                ?.patterns
+                ?.map { it.patternString }
+                ?.ifEmpty { return emptyList() }
+                ?: return emptyList()
 
-        val methods = mappingInfo.methodsCondition.methods
-            .mapNotNull { runCatching { HttpMethod.valueOf(it.name) }.getOrNull() }
-            .ifEmpty { return emptyList() } // skip mappings with no explicit HTTP method
+        val methods =
+            mappingInfo.methodsCondition.methods
+                .mapNotNull { runCatching { HttpMethod.valueOf(it.name) }.getOrNull() }
+                .ifEmpty { return emptyList() } // skip mappings with no explicit HTTP method
 
         return patterns.flatMap { pattern ->
             val path = pattern.replace(Regex("\\{[^}]+}"), DUMMY_UUID)
@@ -179,6 +181,8 @@ class RestEndpointAuthorizationIT {
         }
     }
 
-    private fun isPublic(path: String, publicPatterns: List<String>): Boolean =
-        publicPatterns.any { pattern -> PATH_MATCHER.match(pattern, path) }
+    private fun isPublic(
+        path: String,
+        publicPatterns: List<String>,
+    ): Boolean = publicPatterns.any { pattern -> PATH_MATCHER.match(pattern, path) }
 }
