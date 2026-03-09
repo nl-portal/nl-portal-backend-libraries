@@ -8,7 +8,7 @@
  * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -30,7 +30,6 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @TestInstance(PER_CLASS)
 @Tag("integration")
 class RestEndpointAuthorizationIT {
-
     @Autowired
     lateinit var webTestClient: WebTestClient
 
@@ -38,90 +37,110 @@ class RestEndpointAuthorizationIT {
 
     @Test
     fun `GET document content should require authentication`() {
-        webTestClient.get()
+        webTestClient
+            .get()
             .uri("/api/documentapi/openzaak/document/00000000-0000-0000-0000-000000000001/content")
             .exchange()
-            .expectStatus().isUnauthorized
+            .expectStatus()
+            .isUnauthorized
     }
 
     @Test
     fun `POST document upload should require authentication`() {
-        webTestClient.post()
+        webTestClient
+            .post()
             .uri("/api/document/content")
             .exchange()
-            .expectStatus().isUnauthorized
+            .expectStatus()
+            .isUnauthorized
     }
 
     @Test
     fun `POST document upload to specific API should require authentication`() {
-        webTestClient.post()
+        webTestClient
+            .post()
             .uri("/api/documentapi/openzaak/document/content")
             .exchange()
-            .expectStatus().isUnauthorized
+            .expectStatus()
+            .isUnauthorized
     }
 
     @Test
     fun `GET zaak document content should require authentication`() {
-        webTestClient.get()
+        webTestClient
+            .get()
             .uri("/api/zakenapi/zaakdocument/00000000-0000-0000-0000-000000000001/content")
             .exchange()
-            .expectStatus().isUnauthorized
+            .expectStatus()
+            .isUnauthorized
     }
 
     // ======= PUBLIC ENDPOINTS - Should return 200 without JWT =======
 
     @Test
     fun `GET public features should be accessible without authentication`() {
-        webTestClient.get()
+        webTestClient
+            .get()
             .uri("/api/public/features")
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
     }
 
     @Test
     fun `GET public theme style should be accessible without authentication`() {
-        webTestClient.get()
+        webTestClient
+            .get()
             .uri("/api/public/theme/style")
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
     }
 
     @Test
     fun `GET public theme logo should be accessible without authentication`() {
-        webTestClient.get()
+        webTestClient
+            .get()
             .uri("/api/public/theme/logo")
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
     }
 
     // ======= ACTUATOR ENDPOINTS - Should be accessible without JWT =======
 
     @Test
     fun `GET actuator health should be accessible without authentication`() {
-        webTestClient.get()
+        webTestClient
+            .get()
             .uri("/actuator/health")
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
     }
 
     // ======= GRAPHQL TRANSPORT - Should be accessible (auth at resolver level) =======
 
     @Test
     fun `POST graphql endpoint should be accessible without authentication`() {
-        webTestClient.post()
+        webTestClient
+            .post()
             .uri("/graphql")
             .header("Content-Type", "application/json")
             .bodyValue("""{"query": "{ __typename }"}""")
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
     }
 
     @Test
     fun `GET graphiql should be accessible without authentication`() {
         // /graphiql redirects to /graphiql?path=/graphql - a 3xx redirect is still publicly accessible
-        webTestClient.get()
+        webTestClient
+            .get()
             .uri("/graphiql")
             .exchange()
-            .expectStatus().is3xxRedirection
+            .expectStatus()
+            .is3xxRedirection
     }
 }

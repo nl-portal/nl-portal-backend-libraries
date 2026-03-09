@@ -8,7 +8,7 @@
  * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -61,7 +61,6 @@ import org.springframework.graphql.test.tester.HttpGraphQlTester
 @TestInstance(PER_CLASS)
 @Tag("integration")
 class GraphQLEndpointAuthorizationIT {
-
     @Autowired
     lateinit var httpGraphQlTester: HttpGraphQlTester
 
@@ -82,36 +81,37 @@ class GraphQLEndpointAuthorizationIT {
          *
          *   val ALLOWED_PUBLIC_OPERATIONS = setOf("myPublicQuery")
          */
-        val ALLOWED_PUBLIC_OPERATIONS = setOf(
-            "verificatieConfig", // Returns public config (no user data, no authentication needed)
-            // OpenProduct catalog/reference data - publicly accessible, no authentication parameter in resolver
-            "getOpenProductThemas",
-            "getOpenProductHoofdThemas",
-            "getOpenProductThemasHierarchy",
-            "getOpenProductThemaHierarchy",
-            "getOpenProductThema",
-            "getOpenProductTypes",
-            "getOpenProductType",
-            "getOpenProductActies",
-            "getOpenProductActie",
-            "getOpenProductBestanden",
-            "getOpenProductBestand",
-            "getOpenProductContacten",
-            "getOpenProductContact",
-            "getOpenProductLocaties",
-            "getOpenProductLocatie",
-            "getOpenProductLinks",
-            "getOpenProductLink",
-            "getOpenProductOrganisaties",
-            "getOpenProductOrganisatie",
-            "getOpenProductPrijzen",
-            "getOpenProductPrijs",
-            // Product consumption objects - no authentication parameter in resolver
-            "getProductVerbruiksObjecten",
-            // Form definitions - loaded without authentication (e.g. before login)
-            "getFormDefinitionById",
-            "getFormDefinitionByName",
-        )
+        val ALLOWED_PUBLIC_OPERATIONS =
+            setOf(
+                "verificatieConfig", // Returns public config (no user data, no authentication needed)
+                // OpenProduct catalog/reference data - publicly accessible, no authentication parameter in resolver
+                "getOpenProductThemas",
+                "getOpenProductHoofdThemas",
+                "getOpenProductThemasHierarchy",
+                "getOpenProductThemaHierarchy",
+                "getOpenProductThema",
+                "getOpenProductTypes",
+                "getOpenProductType",
+                "getOpenProductActies",
+                "getOpenProductActie",
+                "getOpenProductBestanden",
+                "getOpenProductBestand",
+                "getOpenProductContacten",
+                "getOpenProductContact",
+                "getOpenProductLocaties",
+                "getOpenProductLocatie",
+                "getOpenProductLinks",
+                "getOpenProductLink",
+                "getOpenProductOrganisaties",
+                "getOpenProductOrganisatie",
+                "getOpenProductPrijzen",
+                "getOpenProductPrijs",
+                // Product consumption objects - no authentication parameter in resolver
+                "getProductVerbruiksObjecten",
+                // Form definitions - loaded without authentication (e.g. before login)
+                "getFormDefinitionById",
+                "getFormDefinitionByName",
+            )
     }
 
     // ============================================================
@@ -187,8 +187,9 @@ class GraphQLEndpointAuthorizationIT {
     fun `schema should have queries registered`() {
         val schema = graphQlSource.schema()
         val totalCount = schema.queryType.fieldDefinitions.size
-        val activeCount = schema.queryType.fieldDefinitions
-            .count { field -> field.name !in unmappedGraphQlFields.queryFields }
+        val activeCount =
+            schema.queryType.fieldDefinitions
+                .count { field -> field.name !in unmappedGraphQlFields.queryFields }
         assert(totalCount > 0) {
             "No queries found in GraphQL schema SDL - something is wrong with schema assembly"
         }
@@ -200,8 +201,10 @@ class GraphQLEndpointAuthorizationIT {
         val schema = graphQlSource.schema()
         val mutationType = schema.mutationType
         val totalCount = mutationType?.fieldDefinitions?.size ?: 0
-        val activeCount = mutationType?.fieldDefinitions
-            ?.count { field -> field.name !in unmappedGraphQlFields.mutationFields } ?: 0
+        val activeCount =
+            mutationType
+                ?.fieldDefinitions
+                ?.count { field -> field.name !in unmappedGraphQlFields.mutationFields } ?: 0
         assert(totalCount > 0) {
             "No mutations found in GraphQL schema SDL - something is wrong with schema assembly"
         }
@@ -216,23 +219,25 @@ class GraphQLEndpointAuthorizationIT {
         field: GraphQLFieldDefinition,
         isQuery: Boolean,
     ) {
-        val document = if (isQuery) {
-            GraphQLQueryBuilder.buildQuery(field)
-        } else {
-            GraphQLQueryBuilder.buildMutation(field)
-        }
+        val document =
+            if (isQuery) {
+                GraphQLQueryBuilder.buildQuery(field)
+            } else {
+                GraphQLQueryBuilder.buildMutation(field)
+            }
 
         httpGraphQlTester
             .document(document)
             .execute()
             .errors()
             .satisfy { errors ->
-                val authErrors = errors.filter { error ->
-                    error.extensions?.get("classification") == "UNAUTHORIZED" ||
-                        error.message?.contains("Unauthorized", ignoreCase = true) == true ||
-                        error.message?.contains("Access Denied", ignoreCase = true) == true ||
-                        error.message?.contains("403", ignoreCase = true) == true
-                }
+                val authErrors =
+                    errors.filter { error ->
+                        error.extensions?.get("classification") == "UNAUTHORIZED" ||
+                            error.message?.contains("Unauthorized", ignoreCase = true) == true ||
+                            error.message?.contains("Access Denied", ignoreCase = true) == true ||
+                            error.message?.contains("403", ignoreCase = true) == true
+                    }
                 assert(authErrors.isEmpty()) {
                     """
                     |PUBLIC ENDPOINT BLOCKED: ${if (isQuery) "Query" else "Mutation"} '${field.name}'
@@ -253,11 +258,12 @@ class GraphQLEndpointAuthorizationIT {
         field: GraphQLFieldDefinition,
         isQuery: Boolean,
     ) {
-        val document = if (isQuery) {
-            GraphQLQueryBuilder.buildQuery(field)
-        } else {
-            GraphQLQueryBuilder.buildMutation(field)
-        }
+        val document =
+            if (isQuery) {
+                GraphQLQueryBuilder.buildQuery(field)
+            } else {
+                GraphQLQueryBuilder.buildMutation(field)
+            }
 
         httpGraphQlTester
             .document(document)

@@ -8,7 +8,7 @@
  * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -33,7 +33,6 @@ import graphql.schema.GraphQLTypeUtil
  * parameter resolution, not to produce valid business responses.
  */
 object GraphQLQueryBuilder {
-
     fun buildQuery(field: GraphQLFieldDefinition): String {
         val args = buildArgumentString(field.arguments)
         val selection = buildSelectionSet(field.type)
@@ -48,15 +47,17 @@ object GraphQLQueryBuilder {
 
     private fun buildArgumentString(arguments: List<GraphQLArgument>): String {
         // Include all required arguments (NonNull without defaults)
-        val requiredArgs = arguments.filter { arg ->
-            GraphQLTypeUtil.isNonNull(arg.type) &&
-                !arg.hasSetDefaultValue()
-        }
+        val requiredArgs =
+            arguments.filter { arg ->
+                GraphQLTypeUtil.isNonNull(arg.type) &&
+                    !arg.hasSetDefaultValue()
+            }
         if (requiredArgs.isEmpty()) return ""
 
-        val argStrings = requiredArgs.map { arg ->
-            "${arg.name}: ${generateDummyValue(arg.type)}"
-        }
+        val argStrings =
+            requiredArgs.map { arg ->
+                "${arg.name}: ${generateDummyValue(arg.type)}"
+            }
         return "(${argStrings.joinToString(", ")})"
     }
 
@@ -72,8 +73,8 @@ object GraphQLQueryBuilder {
         }
     }
 
-    private fun generateScalarDummy(scalarName: String): String {
-        return when (scalarName) {
+    private fun generateScalarDummy(scalarName: String): String =
+        when (scalarName) {
             "String" -> "\"test\""
             "ID" -> "\"00000000-0000-0000-0000-000000000001\""
             "UUID" -> "\"00000000-0000-0000-0000-000000000001\""
@@ -89,20 +90,22 @@ object GraphQLQueryBuilder {
             "Locale" -> "\"nl\""
             else -> "\"test\""
         }
-    }
 
     private fun buildInputObjectDummy(type: GraphQLInputObjectType): String {
-        val requiredFields = type.fieldDefinitions.filter { field ->
-            GraphQLTypeUtil.isNonNull(field.type) &&
-                !field.hasSetDefaultValue()
-        }
+        val requiredFields =
+            type.fieldDefinitions.filter { field ->
+                GraphQLTypeUtil.isNonNull(field.type) &&
+                    !field.hasSetDefaultValue()
+            }
         // If no required fields, provide at least one field to avoid empty object
-        val fieldsToInclude = requiredFields.ifEmpty {
-            type.fieldDefinitions.take(1)
-        }
-        val fieldStrings = fieldsToInclude.map { field ->
-            "${field.name}: ${generateDummyValue(field.type)}"
-        }
+        val fieldsToInclude =
+            requiredFields.ifEmpty {
+                type.fieldDefinitions.take(1)
+            }
+        val fieldStrings =
+            fieldsToInclude.map { field ->
+                "${field.name}: ${generateDummyValue(field.type)}"
+            }
         return "{${fieldStrings.joinToString(", ")}}"
     }
 
@@ -110,16 +113,18 @@ object GraphQLQueryBuilder {
         val unwrapped = unwrapType(type)
         return when (unwrapped) {
             is GraphQLObjectType -> " { __typename }"
-            is GraphQLScalarType -> "" // Scalars don't need selection set
+
+            is GraphQLScalarType -> ""
+
+            // Scalars don't need selection set
             else -> " { __typename }"
         }
     }
 
-    private fun unwrapType(type: GraphQLType): GraphQLType {
-        return when (type) {
+    private fun unwrapType(type: GraphQLType): GraphQLType =
+        when (type) {
             is GraphQLNonNull -> unwrapType(type.wrappedType)
             is GraphQLList -> unwrapType(type.wrappedType)
             else -> type
         }
-    }
 }
