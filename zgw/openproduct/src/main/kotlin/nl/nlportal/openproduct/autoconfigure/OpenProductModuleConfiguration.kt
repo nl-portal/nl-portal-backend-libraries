@@ -15,10 +15,9 @@
  */
 package nl.nlportal.openproduct.autoconfigure
 
+import java.net.URI
 import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
-import java.net.URI
-import nl.nlportal.openproduct.client.domain.OpenProductShowObjectProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.openproduct")
 class OpenProductModuleConfiguration {
@@ -56,12 +55,23 @@ class OpenProductModuleConfiguration {
         }
 
         class ProductTypeObjectConfiguration {
-            var showObjectProperties: OpenProductShowObjectProperties = OpenProductShowObjectProperties.ALWAYS
+            var showObjectProperties: ShowObjectProperties = ShowObjectProperties.ALWAYS
             var productTypesConfigurations: Map<String, ProducttypeConfigurationProperties> = emptyMap()
 
             class ProducttypeConfigurationProperties {
-                var showObjectProperties: OpenProductShowObjectProperties = OpenProductShowObjectProperties.ALWAYS
+                var showObjectProperties: ShowObjectProperties = ShowObjectProperties.ALWAYS
                 var properties: List<String> = emptyList()
+            }
+
+            class ObjectConfiguration(
+                val showObjectProperties: ShowObjectProperties = ShowObjectProperties.ALWAYS,
+                val properties: List<String> = emptyList(),
+            )
+
+            enum class ShowObjectProperties {
+                ALWAYS,
+                NEVER,
+                CONFIGURED,
             }
         }
     }

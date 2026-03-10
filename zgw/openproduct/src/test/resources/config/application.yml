@@ -14,17 +14,16 @@ nl-portal:
                     show-object-properties: always
                     product-types-configurations:
                         parkeren:
-                              showObjectProperties: configured
-                              properties:
-                                  - uren
-                                  - naam
+                            show-object-properties: configured
+                            properties:
+                                - naam
                 verbruiks-object-configuration:
                     show-object-properties: never
                     product-types-configurations:
                         parkeren:
-                          show-object-properties: configured
+                          show-object-properties: always
                           properties:
-                            - test
+                            - uren
                             - naam
                         belastingzaken:
                             show-object-properties: never

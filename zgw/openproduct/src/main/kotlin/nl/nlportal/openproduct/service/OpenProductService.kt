@@ -15,12 +15,20 @@
  */
 package nl.nlportal.openproduct.service
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.node.ObjectNode
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.util.UUID
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.commonground.authentication.BedrijfAuthentication
 import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils
+import nl.nlportal.core.util.Mapper
+import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration.OpenProductConfigurationProperties
+import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration.OpenProductConfigurationProperties.ProductTypeObjectConfiguration.ShowObjectProperties
+import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration.OpenProductConfigurationProperties.ProductTypeObjectConfiguration.ShowObjectProperties.NEVER
+import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration.OpenProductConfigurationProperties.ProductTypeObjectConfiguration.ShowObjectProperties.CONFIGURED
 import nl.nlportal.openproduct.client.OpenProductClient
 import nl.nlportal.openproduct.client.OpenProductTypeClient
 import nl.nlportal.openproduct.client.domain.OpenProductActie
@@ -74,10 +82,6 @@ import nl.nlportal.zgw.taak.domain.TaakV2
 import nl.nlportal.zgw.taak.graphql.TaakPageV2
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
-import java.util.UUID
-import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration.OpenProductConfigurationProperties
-import nl.nlportal.openproduct.client.domain.OpenProductObjectConfiguration
-import nl.nlportal.openproduct.client.domain.OpenProductShowObjectProperties
 
 class OpenProductService(
     private val openProductClient: OpenProductClient,
@@ -1135,33 +1139,71 @@ class OpenProductService(
         return emptyList()
     }
 
-    fun getDataObjectConfiguration(productTypeCode: String): OpenProductObjectConfiguration {
-        val objectConfigurationProperties = openProductConfigurationProperties.dataObjectConfiguration.productTypesConfigurations.get(productTypeCode.lowercase())
-        if (objectConfigurationProperties != null) {
-            return OpenProductObjectConfiguration(
-                showObjectProperties = objectConfigurationProperties.showObjectProperties,
-                properties = objectConfigurationProperties.properties,
-            )
+    fun getVerbruiksObject(
+        productTypeCode: String,
+        verbruiksObject: ObjectNode? = null,
+    ): ObjectNode {
+        if (verbruiksObject == null) {
+            return Mapper.get().createObjectNode()
         }
+        var showObjectProperties = openProductConfigurationProperties.verbruiksObjectConfiguration.showObjectProperties
+        var producTypeProperties = emptyList<String>()
+        val productTypesConfigurations = openProductConfigurationProperties.verbruiksObjectConfiguration.productTypesConfigurations.get(productTypeCode.lowercase())
 
-        return OpenProductObjectConfiguration(
-            showObjectProperties = openProductConfigurationProperties.dataObjectConfiguration.showObjectProperties,
+        if (productTypesConfigurations != null) {
+            showObjectProperties = productTypesConfigurations.showObjectProperties
+            producTypeProperties = productTypesConfigurations.properties
+        }
+        return filterObject(
+            showObjectProperties = showObjectProperties,
+            objectToFilter = verbruiksObject,
+            producTypeProperties = producTypeProperties,
         )
     }
 
-    fun getVerbruiksObjectConfiguration(productTypeCode: String): OpenProductObjectConfiguration {
-        val objectConfigurationProperties = openProductConfigurationProperties.verbruiksObjectConfiguration.productTypesConfigurations.get(productTypeCode.lowercase())
-        if (objectConfigurationProperties != null) {
-            return OpenProductObjectConfiguration(
-                showObjectProperties = objectConfigurationProperties.showObjectProperties,
-                properties = objectConfigurationProperties.properties,
-            )
+    fun getDataObject(
+        productTypeCode: String,
+        dataObject: ObjectNode? = null,
+    ): ObjectNode {
+        if (dataObject == null) {
+            return Mapper.get().createObjectNode()
         }
+        var showObjectProperties = openProductConfigurationProperties.dataObjectConfiguration.showObjectProperties
+        var producTypeProperties = emptyList<String>()
+        val productTypesConfigurations = openProductConfigurationProperties.dataObjectConfiguration.productTypesConfigurations.get(productTypeCode.lowercase())
 
-        return OpenProductObjectConfiguration(
-            showObjectProperties = openProductConfigurationProperties.verbruiksObjectConfiguration.showObjectProperties,
+        if (productTypesConfigurations != null) {
+            showObjectProperties = productTypesConfigurations.showObjectProperties
+            producTypeProperties = productTypesConfigurations.properties
+        }
+        //
+        return filterObject(
+            showObjectProperties = showObjectProperties,
+            objectToFilter = dataObject,
+            producTypeProperties = producTypeProperties,
         )
     }
+
+    fun filterObject(
+        showObjectProperties: ShowObjectProperties,
+        objectToFilter: ObjectNode,
+        producTypeProperties: List<String>,
+    ): ObjectNode =
+        when (showObjectProperties) {
+            CONFIGURED -> {
+                val objectMap = Mapper.get().convertValue(objectToFilter, object : TypeReference<Map<String, Any>>() {})
+                val filteredObjectMap = objectMap.filterNot { obj -> producTypeProperties.any { obj.key != it } }
+                Mapper.get().convertValue(filteredObjectMap, ObjectNode::class.java)
+            }
+
+            NEVER -> {
+                Mapper.get().createObjectNode()
+            }
+
+            else -> {
+                objectToFilter
+            }
+        }
 
     /**
      * Collect thema hierarchy up from subthema

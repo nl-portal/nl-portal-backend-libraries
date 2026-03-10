@@ -240,8 +240,6 @@ type OpenProductProduct {
     zaken: [Zaak!]
     aanvraagZaakUrn: String
     aanvraagZaakUrl: String
-    verbruiksObjectConfiguration: OpenProductObjectConfiguration
-    dataObjectConfiguration: OpenProductObjectConfiguration
 }
 
 type OpenProductProductProductType {
@@ -292,16 +290,6 @@ type OpenProductProductType {
     doelgroep: OpenProductDoelgroep
 }
 
-type OpenProductObjectConfiguration {
-    showObjectProperties: OpenProductShowObjectProperties
-    properties: [String!]!
-}
-
-enum OpenProductShowObjectProperties {
-    ALWAYS
-    NEVER
-    CONFIGURED
-}
 type OpenProductProductTypeBestand {
     bestand: String!
     uuid: UUID!

@@ -34,14 +34,6 @@ query {
             uuid,
             naam,
         },
-        decisions,
-        verbruiksObjectConfiguration {
-            showObjectProperties,
-            properties
-        },
-        dataObjectConfiguration {
-            showObjectProperties,
-            properties
-        }
+        decisions
     }
 }

@@ -21,7 +21,6 @@ import java.util.UUID
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.openproduct.client.domain.OpenProductActie
-import nl.nlportal.openproduct.client.domain.OpenProductObjectConfiguration
 import nl.nlportal.openproduct.client.domain.OpenProductProduct
 import nl.nlportal.openproduct.client.domain.OpenProductToegestaneStatus
 import nl.nlportal.openproduct.service.OpenProductDmnService
@@ -122,19 +121,21 @@ class OpenProductQuery(
         return Mapper.get().convertValue(result, object : TypeReference<List<ObjectNode>>() {})
     }
 
-    @SchemaMapping(typeName = "OpenProductProduct", field = "dataObjectConfiguration")
+    @SchemaMapping(typeName = "OpenProductProduct", field = "verbruiksobject")
     suspend fun dataObjectConfiguration(
         openProductProduct: OpenProductProduct,
-    ): OpenProductObjectConfiguration =
-        openProductService.getDataObjectConfiguration(
+    ): ObjectNode =
+        openProductService.getVerbruiksObject(
             productTypeCode = openProductProduct.producttype.code,
+            verbruiksObject = openProductProduct.verbruiksobject,
         )
 
-    @SchemaMapping(typeName = "OpenProductProduct", field = "verbruiksObjectConfiguration")
+    @SchemaMapping(typeName = "OpenProductProduct", field = "dataobject")
     suspend fun verbruiksObjectConfiguration(
         openProductProduct: OpenProductProduct,
-    ): OpenProductObjectConfiguration =
-        openProductService.getVerbruiksObjectConfiguration(
+    ): ObjectNode =
+        openProductService.getDataObject(
             productTypeCode = openProductProduct.producttype.code,
+            dataObject = openProductProduct.verbruiksobject,
         )
 }

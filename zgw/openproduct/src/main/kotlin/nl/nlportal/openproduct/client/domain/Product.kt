@@ -50,8 +50,6 @@ data class OpenProductProduct(
     val aanvraagZaakUrn: String? = null,
     @JsonProperty("aanvraag_zaak_url")
     val aanvraagZaakUrl: String? = null,
-    val dataObjectConfiguration: OpenProductObjectConfiguration = OpenProductObjectConfiguration(),
-    val verbruiksObjectConfiguration: OpenProductObjectConfiguration = OpenProductObjectConfiguration(),
 )
 
 data class OpenProductProductUpdate(
@@ -59,17 +57,6 @@ data class OpenProductProductUpdate(
     val verbruiksobject: Any? = null,
     val dataobject: Any? = null,
 )
-
-data class OpenProductObjectConfiguration(
-    val showObjectProperties: OpenProductShowObjectProperties = OpenProductShowObjectProperties.ALWAYS,
-    val properties: List<String> = emptyList(),
-)
-
-enum class OpenProductShowObjectProperties {
-    ALWAYS,
-    NEVER,
-    CONFIGURED,
-}
 
 data class OpenProductProductProductType(
     val uuid: UUID,
