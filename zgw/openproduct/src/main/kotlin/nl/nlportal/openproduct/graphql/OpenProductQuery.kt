@@ -21,6 +21,7 @@ import java.util.UUID
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.openproduct.client.domain.OpenProductActie
+import nl.nlportal.openproduct.client.domain.OpenProductObjectConfiguration
 import nl.nlportal.openproduct.client.domain.OpenProductProduct
 import nl.nlportal.openproduct.client.domain.OpenProductToegestaneStatus
 import nl.nlportal.openproduct.service.OpenProductDmnService
@@ -120,4 +121,18 @@ class OpenProductQuery(
 
         return Mapper.get().convertValue(result, object : TypeReference<List<ObjectNode>>() {})
     }
+
+    @SchemaMapping(typeName = "OpenProductProduct", field = "dataObjectConfiguration")
+    suspend fun dataObjectConfiguration(
+        openProductProduct: OpenProductProduct,
+    ): OpenProductObjectConfiguration = openProductService.getDataObjectConfiguration(
+        productTypeCode = openProductProduct.producttype.code
+    )
+
+    @SchemaMapping(typeName = "OpenProductProduct", field = "verbruiksObjectConfiguration")
+    suspend fun verbruiksObjectConfiguration(
+        openProductProduct: OpenProductProduct,
+    ): OpenProductObjectConfiguration = openProductService.getDataObjectConfiguration(
+        productTypeCode = openProductProduct.producttype.code
+    )
 }
