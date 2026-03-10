@@ -298,8 +298,8 @@ type OpenProductObjectConfiguration {
 }
 
 enum OpenProductShowObjectProperties {
-    ALWAYS,
-    NEVER,
+    ALWAYS
+    NEVER
     CONFIGURED
 }
 type OpenProductProductTypeBestand {

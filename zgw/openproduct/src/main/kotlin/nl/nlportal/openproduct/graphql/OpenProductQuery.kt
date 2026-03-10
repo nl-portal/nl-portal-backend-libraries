@@ -125,14 +125,16 @@ class OpenProductQuery(
     @SchemaMapping(typeName = "OpenProductProduct", field = "dataObjectConfiguration")
     suspend fun dataObjectConfiguration(
         openProductProduct: OpenProductProduct,
-    ): OpenProductObjectConfiguration = openProductService.getDataObjectConfiguration(
-        productTypeCode = openProductProduct.producttype.code
-    )
+    ): OpenProductObjectConfiguration =
+        openProductService.getDataObjectConfiguration(
+            productTypeCode = openProductProduct.producttype.code,
+        )
 
     @SchemaMapping(typeName = "OpenProductProduct", field = "verbruiksObjectConfiguration")
     suspend fun verbruiksObjectConfiguration(
         openProductProduct: OpenProductProduct,
-    ): OpenProductObjectConfiguration = openProductService.getDataObjectConfiguration(
-        productTypeCode = openProductProduct.producttype.code
-    )
+    ): OpenProductObjectConfiguration =
+        openProductService.getVerbruiksObjectConfiguration(
+            productTypeCode = openProductProduct.producttype.code,
+        )
 }

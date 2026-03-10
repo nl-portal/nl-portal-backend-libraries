@@ -54,7 +54,6 @@ data class OpenProductProduct(
     val verbruiksObjectConfiguration: OpenProductObjectConfiguration = OpenProductObjectConfiguration(),
 )
 
-
 data class OpenProductProductUpdate(
     val uuid: UUID,
     val verbruiksobject: Any? = null,
@@ -69,7 +68,7 @@ data class OpenProductObjectConfiguration(
 enum class OpenProductShowObjectProperties {
     ALWAYS,
     NEVER,
-    CONFIGURED
+    CONFIGURED,
 }
 
 data class OpenProductProductProductType(

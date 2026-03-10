@@ -57,16 +57,12 @@ class OpenProductModuleConfiguration {
 
         class ProductTypeObjectConfiguration {
             var showObjectProperties: OpenProductShowObjectProperties = OpenProductShowObjectProperties.ALWAYS
-            var productTypesConfigurations : Map<String, ProducttypeConfigurationProperties> = emptyMap()
+            var productTypesConfigurations: Map<String, ProducttypeConfigurationProperties> = emptyMap()
 
             class ProducttypeConfigurationProperties {
                 var showObjectProperties: OpenProductShowObjectProperties = OpenProductShowObjectProperties.ALWAYS
                 var properties: List<String> = emptyList()
             }
         }
-
-
     }
 }
-
-

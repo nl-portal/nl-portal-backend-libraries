@@ -54,8 +54,6 @@ class OpenProductQueryIT(
     @Autowired private val zakenApiConfig: ZakenApiConfig,
 ) {
     companion object {
-        private val logger = KotlinLogging.logger {}
-
         @JvmStatic
         var server: MockWebServer? = null
 
@@ -130,8 +128,6 @@ class OpenProductQueryIT(
                     .path("getOpenProduct")
                     .entity(JsonNode::class.java)
                     .get()
-
-            logger.info { responseBody }
 
             assertEquals("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/", responseBody.requiredAt("/url")?.textValue())
             assertEquals("2025-04-30", responseBody.requiredAt("/startDatum")?.textValue())

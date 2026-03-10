@@ -86,7 +86,7 @@ class OpenProductService(
     private val objectsApiClient: ObjectsApiClient,
     private val zakenApiClient: ZakenApiClient,
     private val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
-    private val openProductConfigurationProperties: OpenProductConfigurationProperties
+    private val openProductConfigurationProperties: OpenProductConfigurationProperties,
 ) {
     /**
      * Get published themas
@@ -1137,10 +1137,10 @@ class OpenProductService(
 
     fun getDataObjectConfiguration(productTypeCode: String): OpenProductObjectConfiguration {
         val objectConfigurationProperties = openProductConfigurationProperties.dataObjectConfiguration.productTypesConfigurations.get(productTypeCode.lowercase())
-        if(objectConfigurationProperties != null) {
+        if (objectConfigurationProperties != null) {
             return OpenProductObjectConfiguration(
                 showObjectProperties = objectConfigurationProperties.showObjectProperties,
-                properties =objectConfigurationProperties.properties
+                properties = objectConfigurationProperties.properties,
             )
         }
 
@@ -1151,10 +1151,10 @@ class OpenProductService(
 
     fun getVerbruiksObjectConfiguration(productTypeCode: String): OpenProductObjectConfiguration {
         val objectConfigurationProperties = openProductConfigurationProperties.verbruiksObjectConfiguration.productTypesConfigurations.get(productTypeCode.lowercase())
-        if(objectConfigurationProperties != null) {
+        if (objectConfigurationProperties != null) {
             return OpenProductObjectConfiguration(
                 showObjectProperties = objectConfigurationProperties.showObjectProperties,
-                properties =objectConfigurationProperties.properties
+                properties = objectConfigurationProperties.properties,
             )
         }
 

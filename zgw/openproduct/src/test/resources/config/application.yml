@@ -10,7 +10,24 @@ nl-portal:
                 token: ac045222c9e7cde8120b48735560f9b920bb58cd
                 product-api-url: http://localhost:9070/producten/api/v1
                 product-type-api-url: http://localhost:9070/producttypen/api/v1
-
+                data-object-configuration:
+                    show-object-properties: always
+                    product-types-configurations:
+                        parkeren:
+                              showObjectProperties: configured
+                              properties:
+                                  - uren
+                                  - naam
+                verbruiks-object-configuration:
+                    show-object-properties: never
+                    product-types-configurations:
+                        parkeren:
+                          show-object-properties: configured
+                          properties:
+                            - test
+                            - naam
+                        belastingzaken:
+                            show-object-properties: never
 
         catalogiapi:
             enabled: true

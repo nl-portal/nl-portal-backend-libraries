@@ -35,7 +35,13 @@ query {
             naam,
         },
         decisions,
-        verbruiksObjectConfiguration
-        dataObjectConfiguration
+        verbruiksObjectConfiguration {
+            showObjectProperties,
+            properties
+        },
+        dataObjectConfiguration {
+            showObjectProperties,
+            properties
+        }
     }
 }
