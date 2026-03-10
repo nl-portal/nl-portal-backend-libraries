@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.util.UUID
+import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration
 
 data class OpenProductProduct(
     val uuid: UUID,
@@ -49,13 +50,27 @@ data class OpenProductProduct(
     val aanvraagZaakUrn: String? = null,
     @JsonProperty("aanvraag_zaak_url")
     val aanvraagZaakUrl: String? = null,
+    val dataObjectConfiguration: OpenProductObjectConfiguration = OpenProductObjectConfiguration(),
+    val verbruiksObjectConfiguration: OpenProductObjectConfiguration = OpenProductObjectConfiguration(),
 )
+
 
 data class OpenProductProductUpdate(
     val uuid: UUID,
     val verbruiksobject: Any? = null,
     val dataobject: Any? = null,
 )
+
+data class OpenProductObjectConfiguration(
+    val showObjectProperties: OpenProductShowObjectProperties = OpenProductShowObjectProperties.ALWAYS,
+    val properties: List<String> = emptyList(),
+)
+
+enum class OpenProductShowObjectProperties {
+    ALWAYS,
+    NEVER,
+    CONFIGURED
+}
 
 data class OpenProductProductProductType(
     val uuid: UUID,

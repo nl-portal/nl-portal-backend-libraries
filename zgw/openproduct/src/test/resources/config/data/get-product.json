@@ -52,10 +52,13 @@
   "prijs": "20.20",
   "frequentie": "eenmalig",
   "verbruiksobject": {
-    "uren": 30
+    "uren": 30,
+    "naam": "parkeerplaats"
   },
   "dataobject": {
-    "uren": 30
+    "uren": 30,
+    "naam": "parkeerplaats",
+    "adres": "spui 1"
   },
   "themas": [
     {

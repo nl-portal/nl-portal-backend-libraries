@@ -75,6 +75,9 @@ import nl.nlportal.zgw.taak.graphql.TaakPageV2
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
+import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration.OpenProductConfigurationProperties
+import nl.nlportal.openproduct.client.domain.OpenProductObjectConfiguration
+import nl.nlportal.openproduct.client.domain.OpenProductShowObjectProperties
 
 class OpenProductService(
     private val openProductClient: OpenProductClient,
@@ -83,6 +86,7 @@ class OpenProductService(
     private val objectsApiClient: ObjectsApiClient,
     private val zakenApiClient: ZakenApiClient,
     private val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
+    private val openProductConfigurationProperties: OpenProductConfigurationProperties
 ) {
     /**
      * Get published themas
@@ -1129,6 +1133,34 @@ class OpenProductService(
             logger.error { "Error getting product acties: " + e.message }
         }
         return emptyList()
+    }
+
+    fun getDataObjectConfiguration(productTypeCode: String): OpenProductObjectConfiguration {
+        val objectConfigurationProperties = openProductConfigurationProperties.dataObjectConfiguration.productTypesConfigurations.get(productTypeCode.lowercase())
+        if(objectConfigurationProperties != null) {
+            return OpenProductObjectConfiguration(
+                showObjectProperties = objectConfigurationProperties.showObjectProperties,
+                properties =objectConfigurationProperties.properties
+            )
+        }
+
+        return OpenProductObjectConfiguration(
+            showObjectProperties = openProductConfigurationProperties.dataObjectConfiguration.showObjectProperties,
+        )
+    }
+
+    fun getVerbruiksObjectConfiguration(productTypeCode: String): OpenProductObjectConfiguration {
+        val objectConfigurationProperties = openProductConfigurationProperties.verbruiksObjectConfiguration.productTypesConfigurations.get(productTypeCode.lowercase())
+        if(objectConfigurationProperties != null) {
+            return OpenProductObjectConfiguration(
+                showObjectProperties = objectConfigurationProperties.showObjectProperties,
+                properties =objectConfigurationProperties.properties
+            )
+        }
+
+        return OpenProductObjectConfiguration(
+            showObjectProperties = openProductConfigurationProperties.verbruiksObjectConfiguration.showObjectProperties,
+        )
     }
 
     /**

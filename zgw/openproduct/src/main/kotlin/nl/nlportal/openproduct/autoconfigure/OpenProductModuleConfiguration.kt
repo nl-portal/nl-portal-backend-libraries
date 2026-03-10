@@ -18,6 +18,7 @@ package nl.nlportal.openproduct.autoconfigure
 import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 import java.net.URI
+import nl.nlportal.openproduct.client.domain.OpenProductShowObjectProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.openproduct")
 class OpenProductModuleConfiguration {
@@ -43,6 +44,8 @@ class OpenProductModuleConfiguration {
         var productTypeApiUrl: URI? = null
         var token: String? = null
         var dmn: OpenProductDmnConfigurationProperties = OpenProductDmnConfigurationProperties()
+        var dataObjectConfiguration: ProductTypeObjectConfiguration = ProductTypeObjectConfiguration()
+        var verbruiksObjectConfiguration: ProductTypeObjectConfiguration = ProductTypeObjectConfiguration()
 
         class OpenProductDmnConfigurationProperties {
             var clientId: String = ""
@@ -51,5 +54,19 @@ class OpenProductModuleConfiguration {
             var password: String = ""
             var ssl: Ssl? = null
         }
+
+        class ProductTypeObjectConfiguration {
+            var showObjectProperties: OpenProductShowObjectProperties = OpenProductShowObjectProperties.ALWAYS
+            var productTypesConfigurations : Map<String, ProducttypeConfigurationProperties> = emptyMap()
+
+            class ProducttypeConfigurationProperties {
+                var showObjectProperties: OpenProductShowObjectProperties = OpenProductShowObjectProperties.ALWAYS
+                var properties: List<String> = emptyList()
+            }
+        }
+
+
     }
 }
+
+
