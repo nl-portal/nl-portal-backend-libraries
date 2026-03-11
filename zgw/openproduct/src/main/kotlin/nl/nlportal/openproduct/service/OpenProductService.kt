@@ -1192,7 +1192,7 @@ class OpenProductService(
         when (showObjectProperties) {
             CONFIGURED -> {
                 val objectMap = Mapper.get().convertValue(objectToFilter, object : TypeReference<Map<String, Any>>() {})
-                val filteredObjectMap = objectMap.filterNot { obj -> producTypeProperties.any { obj.key != it } }
+                val filteredObjectMap = objectMap.filter { obj -> producTypeProperties.any { obj.key != it } }
                 Mapper.get().convertValue(filteredObjectMap, ObjectNode::class.java)
             }
 

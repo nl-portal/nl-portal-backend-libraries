@@ -63,11 +63,6 @@ class OpenProductModuleConfiguration {
                 var properties: List<String> = emptyList()
             }
 
-            class ObjectConfiguration(
-                val showObjectProperties: ShowObjectProperties = ShowObjectProperties.ALWAYS,
-                val properties: List<String> = emptyList(),
-            )
-
             enum class ShowObjectProperties {
                 ALWAYS,
                 NEVER,

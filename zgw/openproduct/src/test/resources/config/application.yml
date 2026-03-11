@@ -18,10 +18,10 @@ nl-portal:
                             properties:
                                 - naam
                 verbruiks-object-configuration:
-                    show-object-properties: never
+                    show-object-properties: always
                     product-types-configurations:
                         parkeren:
-                          show-object-properties: always
+                          show-object-properties: configured
                           properties:
                             - uren
                             - naam
