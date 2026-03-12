@@ -62,9 +62,9 @@ jobs:
                     dependency-snapshot: false
             -   name: Upload SBOM to S3
                 run: |
-                    aws s3 cp sbom.cyclonedx.json s3://nl-portal-dependency-reports/sbom/${ARTIFACT_VERSION}/sbom.cyclonedx.json
-                    aws s3 rm s3://nl-portal-dependency-reports/sbom/latest/sbom.cyclonedx.json || true
-                    aws s3 cp sbom.cyclonedx.json s3://nl-portal-dependency-reports/sbom/latest/sbom.cyclonedx.json
+                    aws s3 cp sbom.cyclonedx.json s3://nl-portal-dependency-reports/${ARTIFACT_VERSION}/sbom/backend/sbom.cyclonedx.json
+                    aws s3 rm s3://nl-portal-dependency-reports/latest/sbom/backend/sbom.cyclonedx.json || true
+                    aws s3 cp sbom.cyclonedx.json s3://nl-portal-dependency-reports/latest/sbom/backend/sbom.cyclonedx.json
                 env:
                     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
                     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
