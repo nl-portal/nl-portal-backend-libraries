@@ -15,6 +15,8 @@ jobs:
             ARTIFACT_VERSION: ${{ inputs.artifactVersion }}
             JAVA_VERSION: ${{ inputs.javaVersion }}
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
         steps:
             -   uses: actions/checkout@v5
             -   name: Set up JDK ${{ env.JAVA_VERSION }}
@@ -24,6 +26,8 @@ jobs:
                     distribution: 'temurin'
             -   name: Set up gradle
                 uses: gradle/actions/setup-gradle@v5
+                with:
+                    dependency-graph: generate-and-submit
             -   name: Gradle CheckLicense
                 run: ./gradlew checkLicense
             -   name: Gradle htmlDependencyReport
@@ -45,6 +49,26 @@ jobs:
                     JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_PASSWORD: ${{ secrets.SONATYPE_PSW }}
                     JRELEASER_GPG_PASSPHRASE: ${{ secrets.SIGNING_KEY_PASSWORD }}
                     JRELEASER_GITHUB_TOKEN: "..." # intentionally an ellipsis
+            -   name: Generate SBOM
+                uses: anchore/sbom-action@v0
+                with:
+                    path: .
+                    format: cyclonedx-json
+                    output-file: sbom.cyclonedx.json
+                    artifact-name: nl-portal-${{ env.ARTIFACT_VERSION }}-sbom.cyclonedx.json
+                    upload-artifact: true
+                    upload-artifact-retention: 90
+                    upload-release-assets: false
+                    dependency-snapshot: false
+            -   name: Upload SBOM to S3
+                run: |
+                    aws s3 cp sbom.cyclonedx.json s3://nl-portal-dependency-reports/sbom/${{ env.ARTIFACT_VERSION }}/backend.cdx.json
+                    aws s3 rm s3://nl-portal-dependency-reports/sbom/latest/backend.cdx.json || true
+                    aws s3 cp sbom.cyclonedx.json s3://nl-portal-dependency-reports/sbom/latest/backend.cdx.json
+                env:
+                    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
+                    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                    AWS_DEFAULT_REGION: 'eu-central-1'
             -   name: Upload licence report to S3
                 run: |
                     mkdir ./build/reports/dependency-license/${ARTIFACT_VERSION}
