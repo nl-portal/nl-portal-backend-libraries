@@ -18,6 +18,12 @@ plugins {
     kotlin("jvm")
 }
 
+dockerCompose {
+    setProjectName("$name-test")
+    isRequiredBy(tasks.getByName("integrationTest"))
+    useComposeFiles.addAll("../docker-resources/docker-compose-base-test.yml", "docker-compose-override.yml")
+}
+
 dependencies {
     implementation(project(":zgw:openklant"))
     implementation(project(":form"))
@@ -36,6 +42,15 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     api("org.postgresql:postgresql")
+
+    testImplementation(project(":zgw:common-ground-authentication-test"))
+    testImplementation(TestDependencies.postgresql)
+    testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.springSecurityTest)
+    testImplementation(TestDependencies.assertJCore)
+    testImplementation(TestDependencies.kotlinCoroutines)
+    testImplementation(TestDependencies.okHttpMockWebserver)
+    testImplementation("org.springframework.graphql:spring-graphql-test")
 }
 
 tasks.withType<Jar>().configureEach {

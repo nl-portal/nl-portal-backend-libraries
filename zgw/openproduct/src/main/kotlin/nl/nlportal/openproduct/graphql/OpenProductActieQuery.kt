@@ -34,6 +34,7 @@ class OpenProductActieQuery(
 ) {
     @QueryMapping
     suspend fun getOpenProductActies(
+        authentication: CommonGroundAuthentication,
         @Argument pageNumber: Int? = null,
         @Argument pageSize: Int? = null,
     ): ActiesPage =
@@ -49,6 +50,7 @@ class OpenProductActieQuery(
 
     @QueryMapping
     suspend fun getOpenProductActie(
+        authentication: CommonGroundAuthentication,
         @Argument id: UUID,
     ): OpenProductActie? =
         openProductService.getActie(

@@ -16,6 +16,7 @@
 package nl.nlportal.openproduct.graphql
 
 import java.util.UUID
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.openproduct.client.domain.OpenProductPrijs
 import nl.nlportal.openproduct.service.OpenProductService
 import org.springframework.graphql.data.method.annotation.Argument
@@ -28,6 +29,7 @@ class OpenProductPrijsQuery(
 ) {
     @QueryMapping
     suspend fun getOpenProductPrijzen(
+        authentication: CommonGroundAuthentication,
         @Argument pageNumber: Int? = null,
         @Argument pageSize: Int? = null,
     ): PrijzenPage =
@@ -43,6 +45,7 @@ class OpenProductPrijsQuery(
 
     @QueryMapping
     suspend fun getOpenProductPrijs(
+        authentication: CommonGroundAuthentication,
         @Argument id: UUID,
     ): OpenProductPrijs? =
         openProductService.getPrijs(

@@ -16,6 +16,7 @@
 package nl.nlportal.openproduct.graphql
 
 import java.util.UUID
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.openproduct.client.domain.OpenProductLocatie
 import nl.nlportal.openproduct.service.OpenProductService
 import org.springframework.graphql.data.method.annotation.Argument
@@ -28,6 +29,7 @@ class OpenProductLocatieQuery(
 ) {
     @QueryMapping
     suspend fun getOpenProductLocaties(
+        authentication: CommonGroundAuthentication,
         @Argument pageNumber: Int? = null,
         @Argument pageSize: Int? = null,
         @Argument naam: String? = null,
@@ -45,6 +47,7 @@ class OpenProductLocatieQuery(
 
     @QueryMapping
     suspend fun getOpenProductLocatie(
+        authentication: CommonGroundAuthentication,
         @Argument id: UUID,
     ): OpenProductLocatie? =
         openProductService.getLocatie(
