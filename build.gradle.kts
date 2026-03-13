@@ -47,6 +47,8 @@ plugins {
 
     id("org.owasp.dependencycheck") version "12.2.0"
 
+    id("org.sonarqube")
+
     `maven-publish`
     signing
 }
@@ -164,11 +166,36 @@ subprojects {
 
     apply(from = "${rootProject.projectDir}/gradle/testing.gradle.kts")
 
+    sonar {
+        properties {
+            property(
+                "sonar.coverage.jacoco.xmlReportPaths",
+                "${layout.buildDirectory.get()}/reports/jacoco/test/jacocoTestReport.xml"
+            )
+        }
+    }
+
     if (Os.isFamily(FAMILY_MAC)) {
         println("Configure docker compose for macOs")
         dockerCompose {
             executable = "/usr/local/bin/docker-compose"
             dockerExecutable = "/usr/local/bin/docker"
+        }
+    }
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "nl-portal-backend-libraries")
+        property("sonar.organization", "nl-portal")
+        property("sonar.token", System.getenv("SONAR_TOKEN"))
+    }
+}
+
+listOf(":app", ":gradle:cve-report", ":gradle:license-report").forEach { modulePath ->
+    project(modulePath) {
+        sonar {
+            isSkipProject = true
         }
     }
 }
