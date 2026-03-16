@@ -35,3 +35,13 @@ tasks.named<Test>("test") {
 tasks.named("check") {
     dependsOn(tasks.getByName("integrationTest"))
 }
+
+apply(plugin = "jacoco")
+
+tasks.named<JacocoReport>("jacocoTestReport") {
+    dependsOn(tasks.named("test"))
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+}
