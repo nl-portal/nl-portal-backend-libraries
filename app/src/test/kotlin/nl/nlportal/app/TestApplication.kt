@@ -17,14 +17,14 @@ package nl.nlportal.app
 
 import nl.nlportal.data.liquibase.LiquibaseRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.autoconfigure.graphql.GraphQlSourceBuilderCustomizer
-import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import reactor.core.publisher.Mono
 import java.util.concurrent.CopyOnWriteArraySet
 import javax.sql.DataSource
+import org.springframework.boot.graphql.autoconfigure.GraphQlSourceBuilderCustomizer
+import org.springframework.boot.liquibase.autoconfigure.LiquibaseProperties
 
 /**
  * Holds the set of GraphQL field names that Spring detected as "unmapped"
