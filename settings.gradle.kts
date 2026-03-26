@@ -7,6 +7,7 @@ pluginManagement {
     val benManesVersionsVersion: String by settings
     val spotlessVersion: String by settings
     val gradleDockerComposeVersion: String by settings
+    val sonarqubeVersion: String by settings
 
     plugins {
         kotlin("jvm") version kotlinVersion apply false
@@ -19,6 +20,7 @@ pluginManagement {
         id("com.github.ben-manes.versions") version benManesVersionsVersion apply false
         id("com.diffplug.spotless") version spotlessVersion apply false
         id("com.avast.gradle.docker-compose") version gradleDockerComposeVersion apply false
+        id("org.sonarqube") version sonarqubeVersion apply false
     }
 }
 plugins {

@@ -107,6 +107,7 @@ class ProductQuery(
 
     @QueryMapping
     suspend fun getProductVerbruiksObjecten(
+        authentication: CommonGroundAuthentication,
         @Argument productId: UUID,
     ): List<ProductVerbruiksObject> =
         productService.getProductVerbruiksObjecten(
