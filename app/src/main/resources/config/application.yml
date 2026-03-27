@@ -162,6 +162,7 @@ nl-portal:
             properties:
                 brp-api-url: http://localhost:5010/haalcentraal/api/brp/
                 bewoning-api-url: http://localhost:5011/haalcentraal/api/bewoning/
+                additional-headers: {}
         haalcentraal:
             hr:
                 enabled: true
@@ -277,4 +278,3 @@ nl-portal:
             properties:
                 url: http://localhost:8088
                 types-need-verification: email
-

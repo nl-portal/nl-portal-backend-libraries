@@ -68,6 +68,14 @@ class HaalCentraal2BewoningClient(
                     ),
                 ).baseUrl(haalCentraal2ConfigurationProperties.bewoningApiUrl)
                 .apply {
+                    if (haalCentraal2ConfigurationProperties.additionalHeaders.isNotEmpty()) {
+                        it.defaultHeaders { headers ->
+                            haalCentraal2ConfigurationProperties.additionalHeaders.forEach { (name, value) ->
+                                headers[name] = value
+                            }
+                        }
+                        logger.debug { "Additional default headers were set for client: ${haalCentraal2ConfigurationProperties.additionalHeaders.keys}" }
+                    }
                     if (!haalCentraal2ConfigurationProperties.apiKey.isNullOrBlank()) {
                         it.defaultHeader("X-API-KEY", haalCentraal2ConfigurationProperties.apiKey)
                         logger.debug { "X-API-KEY was set for client" }

@@ -39,6 +39,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
+import java.util.concurrent.TimeUnit
 
 @SpringBootTest
 @AutoConfigureHttpGraphQlTester
@@ -49,6 +50,14 @@ internal class HaalCentraal2BewoningenQueryIT(
     @Autowired private val haalCentraal2ModuleConfiguration: HaalCentraal2ModuleConfiguration,
 ) {
     companion object {
+        private val passThroughHeaders =
+            mapOf(
+                "x-origin-oin" to "test-origin-oin",
+                "x-doelbinding" to "test-doelbinding",
+                "x-verwerking" to "test-verwerking",
+                "x-gebruiker" to "test-gebruiker",
+            )
+
         private val logger: KLogger = KotlinLogging.logger {}
         private val objectMapper = Mapper.get()
 
@@ -62,6 +71,9 @@ internal class HaalCentraal2BewoningenQueryIT(
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
             propsRegistry.add("nl-portal.config.haalcentraal2.properties.bewoning-api-url") { url }
+            passThroughHeaders.forEach { (name, value) ->
+                propsRegistry.add("nl-portal.config.haalcentraal2.properties.additional-headers.$name") { value }
+            }
         }
 
         @JvmStatic
@@ -107,6 +119,7 @@ internal class HaalCentraal2BewoningenQueryIT(
                 .get()
 
         assertEquals(4, responseBody.intValue())
+        assertRequestHasPassThroughHeader("/bewoning/bewoningen")
     }
 
     private fun setupMockServer() {
@@ -124,5 +137,14 @@ internal class HaalCentraal2BewoningenQueryIT(
                 }
             }
         server?.dispatcher = dispatcher
+    }
+
+    private fun assertRequestHasPassThroughHeader(expectedPath: String) {
+        val request = server?.takeRequest(5, TimeUnit.SECONDS)
+        requireNotNull(request) { "Expected request for $expectedPath but none was received" }
+        assertEquals(expectedPath, request.path?.substringBefore('?'))
+        passThroughHeaders.forEach { (name, value) ->
+            assertEquals(value, request.getHeader(name))
+        }
     }
 }

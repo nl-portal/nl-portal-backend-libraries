@@ -36,6 +36,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
+import java.util.concurrent.TimeUnit
 
 @SpringBootTest
 @AutoConfigureHttpGraphQlTester
@@ -46,6 +47,14 @@ internal class HaalCentraal2BrpQueryIT(
     @Autowired private val haalCentraal2ModuleConfiguration: HaalCentraal2ModuleConfiguration,
 ) {
     companion object {
+        private val passThroughHeaders =
+            mapOf(
+                "x-origin-oin" to "test-origin-oin",
+                "x-doelbinding" to "test-doelbinding",
+                "x-verwerking" to "test-verwerking",
+                "x-gebruiker" to "test-gebruiker",
+            )
+
         @JvmStatic
         var server: MockWebServer? = null
 
@@ -60,6 +69,9 @@ internal class HaalCentraal2BrpQueryIT(
         fun properties(propsRegistry: DynamicPropertyRegistry) {
             propsRegistry.add("nl-portal.config.haalcentraal2.properties.brp-api-url") { url }
             propsRegistry.add("nl-portal.config.haalcentraal2.properties.bewoning-api-url") { url2 }
+            passThroughHeaders.forEach { (name, value) ->
+                propsRegistry.add("nl-portal.config.haalcentraal2.properties.additional-headers.$name") { value }
+            }
         }
 
         @JvmStatic
@@ -129,6 +141,7 @@ internal class HaalCentraal2BrpQueryIT(
         assertEquals("999993847", responseBody.get("burgerservicenummer").textValue())
         assertEquals("Pieter Jan de Vries", responseBody.requiredAt("/naam/volledigeNaam")?.textValue())
         assertEquals("Vries", responseBody.requiredAt("/naam/geslachtsnaam")?.textValue())
+        assertRequestHasPassThroughHeader("/brp/personen")
     }
 
     @Test
@@ -160,6 +173,8 @@ internal class HaalCentraal2BrpQueryIT(
 
         assertEquals("999993847", responseBody.get("burgerservicenummer").textValue())
         assertEquals(4, responseBody.get("bewonersAantal").intValue())
+        assertRequestHasPassThroughHeader("/brp/personen")
+        assertRequestHasPassThroughHeader("/bewoning/bewoningen")
     }
 
     @Test
@@ -260,6 +275,7 @@ internal class HaalCentraal2BrpQueryIT(
         assertEquals("226010000038820", responseBody.requiredAt("/verblijfplaats/adresseerbaarObjectIdentificatie")?.textValue())
         assertEquals("Het Spui 1", responseBody.requiredAt("/verblijfplaats/verblijfadres/officieleStraatnaam")?.textValue())
         assertEquals("Nederlands", responseBody.requiredAt("/nationaliteiten/0/nationaliteit/omschrijving")?.textValue())
+        assertRequestHasPassThroughHeader("/brp/personen")
     }
 
     private fun setupMockServer() {
@@ -286,5 +302,14 @@ internal class HaalCentraal2BrpQueryIT(
                 }
             }
         server?.dispatcher = dispatcher
+    }
+
+    private fun assertRequestHasPassThroughHeader(expectedPath: String) {
+        val request = server?.takeRequest(5, TimeUnit.SECONDS)
+        requireNotNull(request) { "Expected request for $expectedPath but none was received" }
+        assertEquals(expectedPath, request.path?.substringBefore('?'))
+        passThroughHeaders.forEach { (name, value) ->
+            assertEquals(value, request.getHeader(name))
+        }
     }
 }
