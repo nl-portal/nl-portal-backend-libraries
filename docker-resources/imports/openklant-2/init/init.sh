@@ -3,7 +3,6 @@
 # Apply database migrations
 >&2 echo "Apply database migrations"
 python src/manage.py migrate
-python src/manage.py setup_configuration --yaml-file data.yaml
 
 exists=$(echo "from django.contrib.auth import get_user_model; User = get_user_model(); print(User.objects.filter(username='admin').exists())" | python src/manage.py shell)
 if [ "False" = "${exists}" ]
@@ -17,6 +16,7 @@ echo "Setting 'admin' password."
 echo "from django.contrib.auth import get_user_model; User = get_user_model(); user = User.objects.get(username='admin'); user.set_password('admin'); user.save()" | python src/manage.py shell
 echo "Loading fixtures"
 python src/manage.py loaddata klantinteracties contactgegevens
+python src/manage.py setup_configuration --yaml-file data.yaml
 echo "Finished setup"
 
 sh /start.sh
