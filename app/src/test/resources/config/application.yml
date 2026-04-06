@@ -112,7 +112,6 @@ nl-portal:
             properties:
                 brp-api-url: http://localhost:56789/haalcentraal/api/brp/
                 bewoning-api-url: http://localhost:56789/haalcentraal/api/bewoning/
-                additional-headers: {}
         haalcentraal:
             hr:
                 enabled: true
