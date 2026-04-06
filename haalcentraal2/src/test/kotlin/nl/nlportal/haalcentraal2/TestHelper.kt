@@ -17,7 +17,10 @@ package nl.nlportal.haalcentraal2
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.springframework.test.web.reactive.server.WebTestClient
+import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
 object TestHelper {
@@ -32,6 +35,20 @@ object TestHelper {
             .setBody(readFileAsString(fileName))
 
     fun readFileAsString(fileName: String): String = this::class.java.getResource(fileName).readText(Charsets.UTF_8)
+
+    fun assertRequestHasPassThroughHeader(
+        server: MockWebServer?,
+        expectedPath: String,
+        expectedHeaders: Map<String, String>,
+    ) {
+        val mockWebServer = requireNotNull(server) { "Expected MockWebServer to be initialized" }
+        val request = mockWebServer.takeRequest(5, TimeUnit.SECONDS)
+        requireNotNull(request) { "Expected request for $expectedPath but none was received" }
+        assertEquals(expectedPath, request.path?.substringBefore('?'))
+        expectedHeaders.forEach { (name, value) ->
+            assertEquals(value, request.getHeader(name))
+        }
+    }
 
     fun WebTestClient.ResponseSpec.verifyOnlyDataExists(basePath: String): WebTestClient.BodyContentSpec =
         this

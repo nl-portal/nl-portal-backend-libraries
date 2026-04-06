@@ -39,7 +39,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
-import java.util.concurrent.TimeUnit
 
 @SpringBootTest
 @AutoConfigureHttpGraphQlTester
@@ -119,7 +118,7 @@ internal class HaalCentraal2BewoningenQueryIT(
                 .get()
 
         assertEquals(4, responseBody.intValue())
-        assertRequestHasPassThroughHeader("/bewoning/bewoningen")
+        TestHelper.assertRequestHasPassThroughHeader(server, "/bewoning/bewoningen", passThroughHeaders)
     }
 
     private fun setupMockServer() {
@@ -137,14 +136,5 @@ internal class HaalCentraal2BewoningenQueryIT(
                 }
             }
         server?.dispatcher = dispatcher
-    }
-
-    private fun assertRequestHasPassThroughHeader(expectedPath: String) {
-        val request = server?.takeRequest(5, TimeUnit.SECONDS)
-        requireNotNull(request) { "Expected request for $expectedPath but none was received" }
-        assertEquals(expectedPath, request.path?.substringBefore('?'))
-        passThroughHeaders.forEach { (name, value) ->
-            assertEquals(value, request.getHeader(name))
-        }
     }
 }
