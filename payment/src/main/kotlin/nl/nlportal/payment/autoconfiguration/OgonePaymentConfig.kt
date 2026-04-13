@@ -18,6 +18,7 @@ package nl.nlportal.payment.autoconfiguration
 import nl.nlportal.core.util.ShaVersion
 import org.springframework.boot.context.properties.ConfigurationProperties
 
+@Deprecated("Is not supported anymore at payment provider, use Direct payment")
 @ConfigurationProperties(prefix = "nl-portal.config.payment.ogone", ignoreUnknownFields = true)
 class OgonePaymentConfig {
     var enabled: Boolean = true

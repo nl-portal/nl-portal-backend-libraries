@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 
+@Deprecated("Is not supported anymore at payment provider, use Direct payment")
 @SpringBootTest
 @AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
