@@ -5,6 +5,7 @@ import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.commonground.authentication.KeycloakUserAuthentication
 
+@Suppress("UNCHECKED_CAST")
 interface AuthenticationFilter<T : AuthenticationFilter<T>> {
     fun withBsn(bsn: String): T
 
