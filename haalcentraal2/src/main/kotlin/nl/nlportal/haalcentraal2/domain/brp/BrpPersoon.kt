@@ -16,16 +16,16 @@
 package nl.nlportal.haalcentraal2.domain.brp
 
 data class BrpPersoon(
-    val burgerservicenummer: String,
+    val burgerservicenummer: String? = null,
     val datumEersteInschrijvingGBA: BrpDatum? = null,
     val geheimhoudingPersoonsgegevens: Boolean? = false,
     val geslacht: BrpCodeOmschrijving? = null,
     val inOnderzoek: BrpInOnderzoek? = null,
     val uitsluitingKiesrecht: BrpUitsluitingKiesrecht? = null,
     val europeesKiesrecht: BrpEuropeesKiesrecht? = null,
-    val leeftijd: Int,
+    val leeftijd: Int? = null,
     val naam: BrpNaam,
-    val nationaliteiten: List<BrpNationaliteit>,
+    val nationaliteiten: List<BrpNationaliteit>? = null,
     val geboorte: BrpDatumLandPlaats? = null,
     val overlijden: BrpDatumLandPlaats? = null,
     val verblijfplaats: BrpVerblijfplaats? = null,

@@ -266,7 +266,7 @@ type BrpPartnerInOnderzoek {
 
 type BrpPersoon {
     adressering: BrpAdressering
-    burgerservicenummer: String!
+    burgerservicenummer: String
     datumEersteInschrijvingGBA: BrpDatum
     datumInschrijvingInGemeente: BrpDatum
     europeesKiesrecht: BrpEuropeesKiesrecht
@@ -283,9 +283,9 @@ type BrpPersoon {
     #)
     indicatieGezagMinderjarige: BrpCodeOmschrijving
     kinderen: [BrpKind!]
-    leeftijd: Int!
+    leeftijd: Int
     naam: BrpNaam!
-    nationaliteiten: [BrpNationaliteit!]!
+    nationaliteiten: [BrpNationaliteit!]
     ouders: [BrpOuder!]
     overlijden: BrpDatumLandPlaats
     partners: [BrpPartner!]
