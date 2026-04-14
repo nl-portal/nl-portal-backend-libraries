@@ -284,7 +284,7 @@ type BrpPersoon {
     indicatieGezagMinderjarige: BrpCodeOmschrijving
     kinderen: [BrpKind!]
     leeftijd: Int
-    naam: BrpNaam!
+    naam: BrpNaam
     nationaliteiten: [BrpNationaliteit!]
     ouders: [BrpOuder!]
     overlijden: BrpDatumLandPlaats

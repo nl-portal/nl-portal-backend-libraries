@@ -24,7 +24,7 @@ data class BrpPersoon(
     val uitsluitingKiesrecht: BrpUitsluitingKiesrecht? = null,
     val europeesKiesrecht: BrpEuropeesKiesrecht? = null,
     val leeftijd: Int? = null,
-    val naam: BrpNaam,
+    val naam: BrpNaam? = null,
     val nationaliteiten: List<BrpNationaliteit>? = null,
     val geboorte: BrpDatumLandPlaats? = null,
     val overlijden: BrpDatumLandPlaats? = null,

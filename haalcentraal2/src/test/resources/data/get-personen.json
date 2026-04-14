@@ -57,6 +57,7 @@
                     "langFormaat": "1 juli 2018"
                 }
             },
+            "leeftijd": 34,
             "naam": {
                 "voornamen": "Pieter Jan",
                 "adellijkeTitelPredicaat": {
@@ -87,6 +88,19 @@
                     "volledigeNaam": true
                 }
             },
+            "nationaliteiten": [
+                {
+                    "type": "Nationaliteit",
+                    "redenOpname": {
+                        "code": "6030",
+                        "omschrijving": "Nederland"
+                    },
+                    "nationaliteit": {
+                        "code": "1000",
+                        "omschrijving": "Nederlands"
+                    }
+                }
+            ],
             "geboorte": {
                 "datum": {
                     "type": "Datum",
