@@ -51,7 +51,7 @@ class HaalCentraal2Service(
                 ).personen
                 .singleOrNull()
                 ?.apply {
-                    naam.officialLastName = determineOfficialLastName(this)
+                    naam?.officialLastName = determineOfficialLastName(this)
                 }
         } else {
             null
@@ -107,12 +107,15 @@ class HaalCentraal2Service(
                 ).personen
                 .singleOrNull()
                 ?.apply {
-                    naam.officialLastName = determineOfficialLastName(this)
+                    naam?.officialLastName = determineOfficialLastName(this)
                 }
         }
     }
 
     private fun determineOfficialLastName(persoon: BrpPersoon): String {
+        if (persoon.naam == null) {
+            return ""
+        }
         if (persoon.naam.aanduidingNaamgebruik?.code == null) {
             return persoon.naam.lastName()
         }
