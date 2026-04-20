@@ -39,7 +39,15 @@ class OpenKlantGraphqlAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(DigitaleAdresQuery::class)
-    fun digitaleAdresQuery(openKlant2Service: OpenKlant2Service) = DigitaleAdresQuery(openKlant2Service)
+    fun digitaleAdresQuery(
+        openKlant2Service: OpenKlant2Service,
+        verificatieModuleConfiguration: VerificatieModuleConfiguration,
+        verificatieService: VerificatieService?,
+    ) = DigitaleAdresQuery(
+        openklant2Service = openKlant2Service,
+        verificatieModuleConfiguration = verificatieModuleConfiguration,
+        verificatieService = verificatieService,
+    )
 
     @Bean
     @ConditionalOnMissingBean(DigitaleAdresMutation::class)

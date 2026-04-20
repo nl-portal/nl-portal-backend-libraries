@@ -262,7 +262,7 @@ object TestHelper {
                                         "url": "http://localhost:8007/klantinteracties/api/v1/partijen/9f8e8009-2d1c-40ae-931e-c08861ba7207"
                                     },
                                     "adres": "lucas@boom.nl",
-                                    "soortDigitaalAdres": "Email",
+                                    "soortDigitaalAdres": "email",
                                     "omschrijving": "Persoonlijke email adres"
                                 },
                                 {
