@@ -112,6 +112,7 @@ internal class HaalCentraal2BrpQueryIT(
                         lastName,
                         officialLastName,
                     }
+                    leeftijd,
                     nationaliteiten {
                         type,
                         redenOpname {
