@@ -18,17 +18,21 @@ package nl.nlportal.openklant.graphql
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.openklant.graphql.domain.DigitaleAdresResponse
 import nl.nlportal.openklant.service.OpenKlant2Service
+import nl.nlportal.verificatie.autoconfigure.VerificatieModuleConfiguration
+import nl.nlportal.verificatie.service.VerificatieService
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.stereotype.Controller
 
 @Controller
 class DigitaleAdresQuery(
     private val openklant2Service: OpenKlant2Service,
+    private val verificatieModuleConfiguration: VerificatieModuleConfiguration,
+    private val verificatieService: VerificatieService?,
 ) {
     @QueryMapping
     suspend fun getUserDigitaleAdressen(authentication: CommonGroundAuthentication): List<DigitaleAdresResponse>? {
         val userDigitaleAdressen = openklant2Service.findDigitaleAdressen(authentication)
 
-        return userDigitaleAdressen?.map { DigitaleAdresResponse.fromOpenKlant2DigitaleAdres(it) }
+        return userDigitaleAdressen.map { DigitaleAdresResponse.fromOpenKlant2DigitaleAdres(it, verificatieModuleConfiguration, verificatieService) }
     }
 }
