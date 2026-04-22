@@ -5,6 +5,8 @@ query {
         waarde
         type
         omschrijving
-        referentie
+        referentie,
+        verificatieDatum,
+        verificatieNeeded
     }
 }
