@@ -206,7 +206,7 @@ open class TaakService(
                 ObjectSearchParameter(
                     "titel",
                     Comparator.STRING_CONTAINS,
-                    it.toString(),
+                    it,
                 ),
             )
         }

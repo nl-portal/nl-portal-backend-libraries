@@ -31,8 +31,8 @@ class GetZaakInformatieobjectImpl(val zakenApiClient: ZakenApiClient, val id: UU
 class SearchZaakInformatieobjectenImpl(val zakenApiClient: ZakenApiClient) : SearchZaakInformatieobjecten {
     val queryParams: MultiValueMap<String, String> = LinkedMultiValueMap()
 
-    override fun forZaak(zaakuri: String): SearchZaakInformatieobjecten {
-        queryParams.add("zaak", zaakuri)
+    override fun forZaak(zaakUri: String): SearchZaakInformatieobjecten {
+        queryParams.add("zaak", zaakUri)
         return this
     }
 
