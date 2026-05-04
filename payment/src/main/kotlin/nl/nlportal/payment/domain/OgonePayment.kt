@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import java.math.BigDecimal
 import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig.OgonePaymentProfile
 
+@Deprecated("Is not supported anymore at payment provider, use Direct payment")
 data class OgonePayment(
     @JsonIgnore val pspId: String,
     @JsonIgnore val amount: BigDecimal = BigDecimal.ZERO,
@@ -100,6 +101,7 @@ data class OgonePayment(
     }
 }
 
+@Deprecated("Is not supported anymore at payment provider, use Direct payment")
 data class PaymentField(
     val name: String,
     val value: String,

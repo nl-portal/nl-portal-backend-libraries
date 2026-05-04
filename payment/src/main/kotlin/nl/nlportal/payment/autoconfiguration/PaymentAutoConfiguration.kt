@@ -25,6 +25,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
+@Deprecated("Is not supported anymore at payment provider, use Direct payment")
 @AutoConfiguration
 @EnableConfigurationProperties(OgonePaymentConfig::class)
 @ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled", "payment.ogone.enabled"], havingValue = "true")

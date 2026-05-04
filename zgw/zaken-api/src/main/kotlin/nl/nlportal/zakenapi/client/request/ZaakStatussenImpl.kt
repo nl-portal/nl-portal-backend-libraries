@@ -52,8 +52,8 @@ class SearchZaakStatussenImpl(val zakenApiClient: ZakenApiClient) : SearchZaakSt
         return this
     }
 
-    override fun pageSize(page: Int): SearchZaakStatussen {
-        queryParams.add("pageSize", page.toString())
+    override fun pageSize(pageSize: Int): SearchZaakStatussen {
+        queryParams.add("pageSize", pageSize.toString())
         return this
     }
 
