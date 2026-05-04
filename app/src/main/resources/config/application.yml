@@ -277,4 +277,3 @@ nl-portal:
             properties:
                 url: http://localhost:8088
                 types-need-verification: email
-

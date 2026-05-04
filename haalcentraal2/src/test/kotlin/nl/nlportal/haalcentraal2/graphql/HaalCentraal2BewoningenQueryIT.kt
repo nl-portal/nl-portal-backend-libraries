@@ -49,6 +49,14 @@ internal class HaalCentraal2BewoningenQueryIT(
     @Autowired private val haalCentraal2ModuleConfiguration: HaalCentraal2ModuleConfiguration,
 ) {
     companion object {
+        private val passThroughHeaders =
+            mapOf(
+                "x-origin-oin" to "test-origin-oin",
+                "x-doelbinding" to "test-doelbinding",
+                "x-verwerking" to "test-verwerking",
+                "x-gebruiker" to "test-gebruiker",
+            )
+
         private val logger: KLogger = KotlinLogging.logger {}
         private val objectMapper = Mapper.get()
 
@@ -62,6 +70,9 @@ internal class HaalCentraal2BewoningenQueryIT(
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
             propsRegistry.add("nl-portal.config.haalcentraal2.properties.bewoning-api-url") { url }
+            passThroughHeaders.forEach { (name, value) ->
+                propsRegistry.add("nl-portal.config.haalcentraal2.properties.additional-headers.$name") { value }
+            }
         }
 
         @JvmStatic
@@ -107,6 +118,7 @@ internal class HaalCentraal2BewoningenQueryIT(
                 .get()
 
         assertEquals(4, responseBody.intValue())
+        TestHelper.assertRequestHasPassThroughHeader(server, "/bewoning/bewoningen", passThroughHeaders)
     }
 
     private fun setupMockServer() {
