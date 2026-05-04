@@ -45,7 +45,7 @@ plugins {
 
     id("com.github.jk1.dependency-license-report") version "2.9"
 
-    id("org.owasp.dependencycheck") version "12.2.1"
+    id("org.owasp.dependencycheck") version "12.2.2"
 
     id("org.sonarqube")
 
