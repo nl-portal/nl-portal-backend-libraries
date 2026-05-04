@@ -209,7 +209,7 @@ class GraphQLEndpointAuthorizationIT {
             .satisfy { errors ->
                 val authErrors =
                     errors.filter { error ->
-                        error.extensions?.get("classification") == "UNAUTHORIZED" ||
+                        error.extensions["classification"] == "UNAUTHORIZED" ||
                             error.message?.contains("Unauthorized", ignoreCase = true) == true ||
                             error.message?.contains("Access Denied", ignoreCase = true) == true ||
                             error.message?.contains("403", ignoreCase = true) == true

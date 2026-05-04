@@ -99,6 +99,6 @@ class OpenKlant2KlantContactQueryIT(
             verify(openKlant2Service, times(1)).findKlantContact(any())
 
             assertNotNull(responseBody)
-            assertEquals("E-mail", responseBody?.get("kanaal")?.textValue())
+            assertEquals("E-mail", responseBody.get("kanaal")?.textValue())
         }
 }

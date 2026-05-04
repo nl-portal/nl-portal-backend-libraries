@@ -165,10 +165,9 @@ class RestEndpointAuthorizationIT {
         // Each PathPattern exposes its string form via patternString.
         val patterns =
             mappingInfo.patternsCondition
-                ?.patterns
-                ?.map { it.patternString }
-                ?.ifEmpty { return emptyList() }
-                ?: return emptyList()
+                .patterns
+                .map { it.patternString }
+                .ifEmpty { return emptyList() }
 
         val methods =
             mappingInfo.methodsCondition.methods
