@@ -30,6 +30,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.springframework.web.server.ResponseStatusException
 
+@Deprecated("Is not supported anymore at payment provider, use Direct payment")
 @ExperimentalCoroutinesApi
 internal class OgonePaymentServiceTest {
     val paymentConfigProperties: OgonePaymentConfigProperties = mock()

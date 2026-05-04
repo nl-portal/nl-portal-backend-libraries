@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 
+@Deprecated("Is not supported anymore at payment provider, use Direct payment")
 @RestController
 @RequestMapping(value = ["/api/public"])
 class OgonePaymentController(
