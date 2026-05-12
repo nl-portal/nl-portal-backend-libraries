@@ -17,6 +17,7 @@ package nl.nlportal.openklant.client.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonValue
+import com.fasterxml.jackson.databind.node.ObjectNode
 
 data class HadKlantcontact(
     val gingOverOnderwerpobjecten: List<OpenKlant2ForeignKey>,
@@ -26,7 +27,9 @@ data class HadKlantcontact(
     val inhoud: String,
     val kanaal: String,
     val leiddeTotInterneTaken: List<OpenKlant2ForeignKey>,
+    @Deprecated("use referentienummer")
     val nummer: String,
+    val referentienummer: String,
     val omvatteBijlagen: List<OpenKlant2ForeignKey>,
     val onderwerp: String,
     val plaatsgevondenOp: String,
@@ -34,6 +37,8 @@ data class HadKlantcontact(
     val url: String,
     val uuid: String,
     val vertrouwelijk: Boolean,
+    val reactie: String,
+    val metadata: ObjectNode,
 )
 
 data class HadBetrokkenActoren(
