@@ -217,6 +217,7 @@ type OpenKlant2Klantcontact {
     kanaal: String!
     leiddeTotInterneTaken: [OpenKlant2ForeignKey!]!
     nummer: String!
+    referentienummer: String
     omvatteBijlagen: [OpenKlant2ForeignKey!]!
     onderwerp: String!
     plaatsgevondenOp: String!
@@ -224,6 +225,8 @@ type OpenKlant2Klantcontact {
     url: String!
     uuid: String!
     vertrouwelijk: Boolean!
+    reactie: String
+    metadata: JSON
 }
 
 enum OpenKlant2Landcode {
