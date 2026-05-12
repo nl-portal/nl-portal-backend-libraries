@@ -29,7 +29,7 @@ data class HadKlantcontact(
     val leiddeTotInterneTaken: List<OpenKlant2ForeignKey>,
     @Deprecated("use referentienummer")
     val nummer: String,
-    val referentienummer: String,
+    val referentienummer: String?,
     val omvatteBijlagen: List<OpenKlant2ForeignKey>,
     val onderwerp: String,
     val plaatsgevondenOp: String,
@@ -37,8 +37,8 @@ data class HadKlantcontact(
     val url: String,
     val uuid: String,
     val vertrouwelijk: Boolean,
-    val reactie: String,
-    val metadata: ObjectNode,
+    val reactie: String?,
+    val metadata: ObjectNode?,
 )
 
 data class HadBetrokkenActoren(
