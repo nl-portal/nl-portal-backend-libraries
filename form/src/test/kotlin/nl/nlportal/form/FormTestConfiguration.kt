@@ -41,8 +41,8 @@ class FormTestConfiguration {
 
     private val PASSWORD_ALGORITHM_PATTERN: Pattern = Pattern.compile("^\\{.+}.*$")
 
-    @Bean
-    @ConditionalOnMissingBean
+    //@Bean
+    //@ConditionalOnMissingBean
     fun reactiveUserDetailsService(
         properties: SecurityProperties,
         passwordEncoder: ObjectProvider<Any>,
