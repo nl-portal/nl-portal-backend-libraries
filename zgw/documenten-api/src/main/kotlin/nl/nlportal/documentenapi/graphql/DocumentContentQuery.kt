@@ -16,6 +16,7 @@
 package nl.nlportal.documentenapi.graphql
 
 import java.util.UUID
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.documentenapi.domain.DocumentContent
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import org.springframework.graphql.data.method.annotation.Argument
@@ -28,6 +29,7 @@ class DocumentContentQuery(private val documentenApiService: DocumentenApiServic
     suspend fun getDocumentContent(
         @Argument documentApi: String,
         @Argument id: UUID,
+        authentication: CommonGroundAuthentication,
     ): DocumentContent {
         return documentenApiService.getDocumentContent(
             documentId = id,

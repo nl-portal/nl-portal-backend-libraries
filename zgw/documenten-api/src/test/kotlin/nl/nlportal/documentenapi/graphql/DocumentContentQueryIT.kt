@@ -18,6 +18,7 @@ package nl.nlportal.documentenapi.graphql
 import com.fasterxml.jackson.databind.JsonNode
 import java.io.InputStream
 import java.util.Base64
+import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.documentenapi.client.DocumentApisConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -36,7 +37,6 @@ import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureH
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.graphql.test.tester.HttpGraphQlTester
-import org.springframework.security.test.context.support.WithMockUser
 
 @SpringBootTest
 @AutoConfigureHttpGraphQlTester
@@ -64,7 +64,7 @@ internal class DocumentContentQueryIT(
     }
 
     @Test
-    @WithMockUser("test")
+    @WithBurgerUser("569312864")
     fun getDocumentContentServer1() {
         val query =
             """
@@ -92,7 +92,7 @@ internal class DocumentContentQueryIT(
     }
 
     @Test
-    @WithMockUser("test")
+    @WithBurgerUser("569312864")
     fun getDocumentContentServer2() {
         val query =
             """

@@ -17,6 +17,7 @@ package nl.nlportal.documentenapi.graphql
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
@@ -26,13 +27,14 @@ import java.util.UUID
 @ExperimentalCoroutinesApi
 internal class DocumentContentQueryTest {
     var documentenApiService: DocumentenApiService = mock()
+    var authentication: CommonGroundAuthentication = mock()
     var documentContentQuery = DocumentContentQuery(documentenApiService)
 
     @Test
     fun getDocumentContent() =
         runTest {
             val documentId = UUID.randomUUID()
-            documentContentQuery.getDocumentContent("openzaak", documentId)
+            documentContentQuery.getDocumentContent("openzaak", documentId, authentication)
             verify(documentenApiService).getDocumentContent(documentId, "openzaak")
         }
 }
