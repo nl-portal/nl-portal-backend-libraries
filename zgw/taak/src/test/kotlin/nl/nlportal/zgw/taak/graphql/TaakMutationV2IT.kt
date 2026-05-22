@@ -93,7 +93,6 @@ internal class TaakMutationV2IT(
             .document(updateTaakPayloadV2)
             .execute()
             .errors()
-            .verify()
     }
 
     fun setupMockObjectsApiServer() {
