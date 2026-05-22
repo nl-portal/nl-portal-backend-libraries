@@ -15,8 +15,12 @@
  */
 package nl.nlportal.data
 
+import org.hibernate.type.format.jackson.JacksonJsonFormatMapper
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.persistence.autoconfigure.EntityScan
+import org.springframework.context.annotation.Bean
+import tools.jackson.databind.ObjectMapper
+
 
 @AutoConfiguration
 @EntityScan("nl.nlportal.data.domain")

@@ -34,8 +34,8 @@ import tools.jackson.databind.json.JsonMapper
     FrontendFeaturesConfigurationProperties::class,
 )
 class CoreAutoConfiguration {
-    @Bean
-    @ConditionalOnMissingBean(name = ["jsonMapper"])
+    @Bean("objectMapper")
+    @ConditionalOnMissingBean(name = ["objectMapper"])
     fun jsonMapper(): JsonMapper = Mapper.get()
 
     @Bean
