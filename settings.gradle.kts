@@ -8,6 +8,8 @@ pluginManagement {
     val spotlessVersion: String by settings
     val gradleDockerComposeVersion: String by settings
     val sonarqubeVersion: String by settings
+    val dependencyLicenseVersion: String by settings
+    val owaspDependencyCheckVersion: String by settings
 
     plugins {
         kotlin("jvm") version kotlinVersion apply false
@@ -21,6 +23,8 @@ pluginManagement {
         id("com.diffplug.spotless") version spotlessVersion apply false
         id("com.avast.gradle.docker-compose") version gradleDockerComposeVersion apply false
         id("org.sonarqube") version sonarqubeVersion apply false
+        id("com.github.jk1.dependency-license-report") version dependencyLicenseVersion apply false
+        id("org.owasp.dependencycheck") version owaspDependencyCheckVersion apply false
     }
 }
 plugins {
