@@ -26,7 +26,8 @@ dockerCompose {
 
 dependencies {
     implementation(project(":zgw:openklant"))
-    implementation(project(":form"))
+    //implementation(project(":form"))
+    implementation(project(":case"))
     implementation(project(":haalcentraal-hr"))
     implementation(project(":haalcentraal2"))
     implementation(project(":zgw:taak"))
