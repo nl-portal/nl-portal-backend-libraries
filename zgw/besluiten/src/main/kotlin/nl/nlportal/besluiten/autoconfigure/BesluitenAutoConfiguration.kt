@@ -2,7 +2,6 @@ package nl.nlportal.besluiten.autoconfigure
 
 import nl.nlportal.besluiten.client.BesluitenApiClient
 import nl.nlportal.besluiten.client.BesluitenApiConfig
-import nl.nlportal.besluiten.graphql.BesluitenQuery
 import nl.nlportal.besluiten.service.BesluitenService
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -23,10 +22,5 @@ class BesluitenAutoConfiguration {
     @Bean
     fun besluitenService(besluitenApiClient: BesluitenApiClient): BesluitenService {
         return BesluitenService(besluitenApiClient)
-    }
-
-    @Bean
-    fun besluitenQuery(besluitenService: BesluitenService): BesluitenQuery {
-        return BesluitenQuery(besluitenService)
     }
 }
