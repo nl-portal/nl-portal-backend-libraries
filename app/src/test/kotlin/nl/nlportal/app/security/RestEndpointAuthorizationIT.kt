@@ -89,7 +89,7 @@ class RestEndpointAuthorizationIT {
     // Dynamic test: every secured endpoint should return 401
     // ============================================================
 
-    // @TestFactory
+    @TestFactory
     fun `all secured REST endpoints should require authentication`(): List<DynamicTest> =
         discoverEndpoints()
             .filter { (_, _, isPublic) -> !isPublic }
@@ -108,7 +108,7 @@ class RestEndpointAuthorizationIT {
     // Dynamic test: every public endpoint should NOT return 401
     // ============================================================
 
-    // @TestFactory
+    @TestFactory
     fun `all public REST endpoints should be accessible without authentication`(): List<DynamicTest> =
         discoverEndpoints()
             .filter { (_, _, isPublic) -> isPublic }
@@ -165,10 +165,9 @@ class RestEndpointAuthorizationIT {
         // Each PathPattern exposes its string form via patternString.
         val patterns =
             mappingInfo.patternsCondition
-                ?.patterns
-                ?.map { it.patternString }
-                ?.ifEmpty { return emptyList() }
-                ?: return emptyList()
+                .patterns
+                .map { it.patternString }
+                .ifEmpty { return emptyList() }
 
         val methods =
             mappingInfo.methodsCondition.methods

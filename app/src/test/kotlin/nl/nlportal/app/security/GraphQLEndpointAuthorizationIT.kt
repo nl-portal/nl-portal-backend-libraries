@@ -94,7 +94,7 @@ class GraphQLEndpointAuthorizationIT {
     // Dynamic test: every query should fail without auth
     // ============================================================
 
-    // @TestFactory
+    @TestFactory
     fun `all GraphQL queries should require authentication`(): List<DynamicTest> {
         val schema = graphQlSource.schema()
         val queryTypeName = schema.queryType.name
@@ -109,7 +109,7 @@ class GraphQLEndpointAuthorizationIT {
             }
     }
 
-    // @TestFactory
+    @TestFactory
     fun `all GraphQL mutations should require authentication`(): List<DynamicTest> {
         val schema = graphQlSource.schema()
         val mutationType = schema.mutationType ?: return emptyList()
@@ -128,7 +128,7 @@ class GraphQLEndpointAuthorizationIT {
     // Dynamic test: every public query should succeed without auth
     // ============================================================
 
-    // @TestFactory
+    @TestFactory
     fun `all public GraphQL queries should be accessible without authentication`(): List<DynamicTest> {
         val schema = graphQlSource.schema()
 
@@ -141,7 +141,7 @@ class GraphQLEndpointAuthorizationIT {
             }
     }
 
-    // @TestFactory
+    @TestFactory
     fun `all public GraphQL mutations should be accessible without authentication`(): List<DynamicTest> {
         val schema = graphQlSource.schema()
         val mutationType = schema.mutationType ?: return emptyList()
@@ -159,7 +159,7 @@ class GraphQLEndpointAuthorizationIT {
     // Sanity check: verify schema has expected number of endpoints
     // ============================================================
 
-    // @Test
+    @Test
     fun `schema should have queries registered`() {
         val schema = graphQlSource.schema()
         val totalCount = schema.queryType.fieldDefinitions.size
@@ -172,7 +172,7 @@ class GraphQLEndpointAuthorizationIT {
         println("Discovered $activeCount active GraphQL queries (of $totalCount declared in SDL)")
     }
 
-    // @Test
+    @Test
     fun `schema should have mutations registered`() {
         val schema = graphQlSource.schema()
         val mutationType = schema.mutationType
@@ -209,7 +209,7 @@ class GraphQLEndpointAuthorizationIT {
             .satisfy { errors ->
                 val authErrors =
                     errors.filter { error ->
-                        error.extensions?.get("classification") == "UNAUTHORIZED" ||
+                        error.extensions["classification"] == "UNAUTHORIZED" ||
                             error.message?.contains("Unauthorized", ignoreCase = true) == true ||
                             error.message?.contains("Access Denied", ignoreCase = true) == true ||
                             error.message?.contains("403", ignoreCase = true) == true
