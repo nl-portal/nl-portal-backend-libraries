@@ -41,7 +41,8 @@ object Mapper {
 
     init {
         mapper =
-            JsonMapper.builder()
+            JsonMapper
+                .builder()
                 .changeDefaultPropertyInclusion({ include -> include.withValueInclusion(JsonInclude.Include.NON_NULL) })
                 .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
                 .disable(
