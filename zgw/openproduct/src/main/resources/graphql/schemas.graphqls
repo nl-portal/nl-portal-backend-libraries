@@ -388,7 +388,8 @@ enum OpenProductToegestaneStatus {
 }
 
 type OpenProductUrl {
-    url: String!
+    url: String
+    urn: String
 }
 
 type OrganisatiesPage {
