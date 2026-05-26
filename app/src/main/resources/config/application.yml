@@ -28,6 +28,8 @@ spring:
             enabled: true
         schema:
             locations: classpath*:graphql/**/
+            inspection:
+                enabled: true
     security:
         oauth2:
             resourceserver:
@@ -68,8 +70,6 @@ spring:
 graphql:
     packages:
         - "nl.nlportal"
-    playground:
-        enabled: true
 
 logging:
     level:

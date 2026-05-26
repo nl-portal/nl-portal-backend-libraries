@@ -23,7 +23,6 @@ import tools.jackson.module.kotlin.KotlinFeature
 import tools.jackson.module.kotlin.KotlinModule
 
 object Mapper {
-    // private var mapper: ObjectMapper
     private val mapper: JsonMapper
     private const val DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 
@@ -41,15 +40,8 @@ object Mapper {
     fun get(): JsonMapper = mapper
 
     init {
-        val builder = JsonMapper.builder()
-        /*mapper =
-            builder
-                .defaultDateFormat(SimpleDateFormat(DATE_TIME_FORMAT))
-                .addModule(jacksonConfigurationModule)
-                .build()*/
-
         mapper =
-            builder
+            JsonMapper.builder()
                 .changeDefaultPropertyInclusion({ include -> include.withValueInclusion(JsonInclude.Include.NON_NULL) })
                 .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
                 .disable(
