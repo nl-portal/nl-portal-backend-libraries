@@ -43,7 +43,7 @@ include(
     "case",
     "data",
     "messaging",
-    //"form",
+    "form",
     "haalcentraal-hr",
     "haalcentraal2",
     "zgw:taak",

@@ -200,6 +200,9 @@ listOf(":app", ":gradle:cve-report", ":gradle:license-report").forEach { moduleP
     }
 }
 
+//override hibernate version, which is compatible with Jackson 3.x
+extra["hibernate.version"] = "7.3.5.Final"
+
 tasks.register<HtmlDependencyReportTask>("htmlDependencyReport")
 
 tasks.named<HtmlDependencyReportTask>("htmlDependencyReport") {
