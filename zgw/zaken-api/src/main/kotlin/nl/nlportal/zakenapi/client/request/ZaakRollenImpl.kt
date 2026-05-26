@@ -66,8 +66,8 @@ class SearchRollenImpl(val zakenApiClient: ZakenApiClient) : SearchZaakRollen {
         return this
     }
 
-    override fun forZaak(id: UUID): SearchZaakRollen {
-        queryParams.add("zaak", this.zakenApiClient.getZaakUrl(id))
+    override fun forZaak(zaakId: UUID): SearchZaakRollen {
+        queryParams.add("zaak", this.zakenApiClient.getZaakUrl(zaakId))
         return this
     }
 
@@ -76,8 +76,8 @@ class SearchRollenImpl(val zakenApiClient: ZakenApiClient) : SearchZaakRollen {
         return this
     }
 
-    override fun pageSize(page: Int): SearchZaakRollen {
-        queryParams.add("pageSize", page.toString())
+    override fun pageSize(pageSize: Int): SearchZaakRollen {
+        queryParams.add("pageSize", pageSize.toString())
         return this
     }
 

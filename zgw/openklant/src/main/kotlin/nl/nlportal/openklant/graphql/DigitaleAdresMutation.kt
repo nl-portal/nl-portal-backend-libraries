@@ -59,7 +59,7 @@ class DigitaleAdresMutation(
                 authentication = authentication,
                 digitaleAdres = digitaleAdresRequest.asOpenKlant2DigitaleAdres(),
             )
-        return digitaleAdres?.let { DigitaleAdresResponse.fromOpenKlant2DigitaleAdres(digitaleAdres) }
+        return digitaleAdres?.let { DigitaleAdresResponse.fromOpenKlant2DigitaleAdres(digitaleAdres, verificatieModuleConfiguration, verificatieService) }
     }
 
     @MutationMapping
@@ -83,7 +83,7 @@ class DigitaleAdresMutation(
                     digitaleAdres = digitaleAdresRequest.asOpenKlant2DigitaleAdresUpdate(),
                 )
 
-        return digitaleAdres?.let { DigitaleAdresResponse.fromOpenKlant2DigitaleAdres(digitaleAdres) }
+        return digitaleAdres?.let { DigitaleAdresResponse.fromOpenKlant2DigitaleAdres(digitaleAdres, verificatieModuleConfiguration, verificatieService) }
     }
 
     @MutationMapping

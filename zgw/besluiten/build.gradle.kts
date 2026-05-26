@@ -23,6 +23,7 @@ val isLib = true
 dependencies {
 
     api(project(":graphql"))
+    api(project(":zgw:common-ground-authentication"))
     api(project(":zgw:idtoken-authentication"))
     api(project(":zgw:catalogi-api"))
 

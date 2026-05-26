@@ -15,6 +15,7 @@
  */
 package nl.nlportal.payment.constants
 
+@Deprecated("Is not supported anymore at payment provider, use Direct payment")
 enum class OgoneState(
     val status: Int,
 ) {

@@ -19,6 +19,8 @@ import nl.nlportal.openklant.graphql.domain.DigitaleAdresType.OVERIG
 import java.time.LocalDate
 import java.util.UUID
 import nl.nlportal.openklant.client.domain.OpenKlant2DigitaleAdres
+import nl.nlportal.verificatie.autoconfigure.VerificatieModuleConfiguration
+import nl.nlportal.verificatie.service.VerificatieService
 
 data class DigitaleAdresResponse(
     val uuid: UUID? = null,
@@ -31,19 +33,29 @@ data class DigitaleAdresResponse(
     val verificatieCodeVerified: Boolean? = true,
 ) {
     companion object {
-        fun fromOpenKlant2DigitaleAdres(openKlant2DigitaleAdres: OpenKlant2DigitaleAdres): DigitaleAdresResponse =
-            DigitaleAdresResponse(
+        fun fromOpenKlant2DigitaleAdres(
+            openKlant2DigitaleAdres: OpenKlant2DigitaleAdres,
+            verificatieModuleConfiguration: VerificatieModuleConfiguration,
+            verificatieService: VerificatieService?,
+        ): DigitaleAdresResponse {
+            val type =
+                DigitaleAdresType
+                    .entries
+                    .singleOrNull { it.name.lowercase() == openKlant2DigitaleAdres.soortDigitaalAdres.lowercase() }
+                    ?: OVERIG
+            return DigitaleAdresResponse(
                 uuid = openKlant2DigitaleAdres.uuid!!,
                 waarde = openKlant2DigitaleAdres.adres,
                 omschrijving = openKlant2DigitaleAdres.omschrijving,
-                type =
-                    DigitaleAdresType
-                        .entries
-                        .singleOrNull { it.name.lowercase() == openKlant2DigitaleAdres.soortDigitaalAdres }
-                        ?: OVERIG,
+                type = type,
                 referentie = openKlant2DigitaleAdres.referentie ?: "",
                 verificatieDatum = openKlant2DigitaleAdres.verificatieDatum,
+                verificatieNeeded =
+                    verificatieService != null &&
+                        verificatieModuleConfiguration.properties.typesNeedVerification.contains(DigitaleAdresType.toVerificationType(type)) &&
+                        openKlant2DigitaleAdres.verificatieDatum == null,
             )
+        }
     }
 
     fun isGeverifieerd(): Boolean = verificatieDatum != null

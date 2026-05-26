@@ -15,6 +15,7 @@
  */
 package nl.nlportal.payment.domain
 
+@Deprecated("Is not supported anymore at payment provider, use Direct payment")
 data class OgonePaymentRequest(
     val pspId: String,
     val amount: Double,

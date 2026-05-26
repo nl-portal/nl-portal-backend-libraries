@@ -35,6 +35,7 @@ import org.springframework.web.server.ResponseStatusException
 import java.util.Locale
 import java.util.UUID
 
+@Deprecated("Is not supported anymore at payment provider, use Direct payment")
 open class OgonePaymentService(
     private val paymentConfig: OgonePaymentConfigProperties,
     private val objectsApiClient: ObjectsApiClient,

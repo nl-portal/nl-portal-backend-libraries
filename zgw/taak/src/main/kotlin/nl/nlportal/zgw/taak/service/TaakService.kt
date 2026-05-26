@@ -138,6 +138,12 @@ open class TaakService(
     ): TaakV2 {
         val objectsApiTask =
             getObjectsApiTaak<TaakObjectV2>(id)
+        val taak = TaakV2.fromObjectsApi(objectsApiTask)
+        // do validation if the user is authenticated for this task
+        val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
+        if (!isAuthorized || !authenticationMachtigingsDienstService.isAllowedTaakType(authentication, taak.eigenaar)) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this taak")
+        }
         if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
             throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,

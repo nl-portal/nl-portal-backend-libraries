@@ -18,6 +18,7 @@ package nl.nlportal.documentenapi.graphql
 import tools.jackson.databind.JsonNode
 import java.io.InputStream
 import java.util.Base64
+import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.documentenapi.client.DocumentApisConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -64,7 +65,7 @@ internal class DocumentContentQueryIT(
     }
 
     @Test
-    @WithMockUser("test")
+    @WithBurgerUser("569312864")
     fun getDocumentContentServer1() {
         val query =
             """
@@ -92,7 +93,7 @@ internal class DocumentContentQueryIT(
     }
 
     @Test
-    @WithMockUser("test")
+    @WithBurgerUser("569312864")
     fun getDocumentContentServer2() {
         val query =
             """

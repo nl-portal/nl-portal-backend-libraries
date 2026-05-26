@@ -22,6 +22,7 @@ import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.stereotype.Controller
 
+@Deprecated("Is not supported anymore at payment provider, use Direct payment")
 @Controller
 class OgonePaymentMutation(
     private val ogonePaymentService: OgonePaymentService,
