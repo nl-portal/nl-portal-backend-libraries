@@ -24,6 +24,6 @@ class CaseDefinitionApplicationReadyEventListener(
 ) {
     @EventListener(ApplicationReadyEvent::class)
     fun handle() {
-        //caseDefinitionService.deployAll()
+        // caseDefinitionService.deployAll()
     }
 }
