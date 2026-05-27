@@ -23,12 +23,13 @@ import nl.nlportal.core.util.ObjectValidator
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import org.json.JSONObject
+import tools.jackson.databind.JsonNode
 
 @Embeddable
 data class Schema(
     @Column(name = "`schema`", columnDefinition = "json")
     @JdbcTypeCode(SqlTypes.JSON)
-    var value: ObjectNode,
+    var value: JsonNode,
 ) {
     init {
         ObjectValidator.validate(this)

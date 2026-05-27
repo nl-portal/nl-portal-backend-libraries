@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.StreamUtils
 import java.nio.charset.StandardCharsets
 import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.JsonNode
 
 @Transactional
 class CaseDefinitionService(
@@ -40,7 +41,7 @@ class CaseDefinitionService(
     fun findById(caseDefinitionId: CaseDefinitionId): CaseDefinition? = caseDefinitionRepository.findByCaseDefinitionId(caseDefinitionId)
 
     fun deploy(
-        caseSchema: ObjectNode,
+        caseSchema: JsonNode,
         statuses: List<String>,
     ) {
         val id = retrieveIdFrom(caseSchema)
@@ -75,7 +76,7 @@ class CaseDefinitionService(
                                 resource.inputStream,
                                 StandardCharsets.UTF_8,
                             ),
-                            ObjectNode::class.java,
+                            JsonNode::class.java,
                         ),
                         Mapper.get().readValue(
                             StreamUtils.copyToString(
@@ -101,7 +102,7 @@ class CaseDefinitionService(
             path,
         )
 
-    private fun retrieveIdFrom(schema: ObjectNode): CaseDefinitionId {
+    private fun retrieveIdFrom(schema: JsonNode): CaseDefinitionId {
         val id = StringUtils.substringBefore(schema.get("\$id").asString(), ".schema").lowercase()
         return CaseDefinitionId.newId(id)
     }

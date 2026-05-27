@@ -15,10 +15,11 @@
  */
 package nl.nlportal.case.graphql
 
+import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 
 data class CaseDefinition(
     val id: String,
-    val schema: ObjectNode,
+    val schema: JsonNode,
     val statusDefinition: List<String>,
 )
