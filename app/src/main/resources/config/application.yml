@@ -65,7 +65,7 @@ graphql:
     packages:
         - "nl.nlportal"
     playground:
-        enabled: true
+        enabled: false
 
 logging:
     level:

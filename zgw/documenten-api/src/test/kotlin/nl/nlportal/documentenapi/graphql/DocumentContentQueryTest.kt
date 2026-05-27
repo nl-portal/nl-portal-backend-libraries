@@ -15,10 +15,16 @@
  */
 package nl.nlportal.documentenapi.graphql
 
+import graphql.GraphQLContext
+import graphql.schema.DataFetchingEnvironment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.documentenapi.service.DocumentenApiService
+import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import java.util.UUID
@@ -26,13 +32,22 @@ import java.util.UUID
 @ExperimentalCoroutinesApi
 internal class DocumentContentQueryTest {
     var documentenApiService: DocumentenApiService = mock()
+    var environment: DataFetchingEnvironment = mock()
+    var authentication: CommonGroundAuthentication = mock()
+    val context: GraphQLContext = mock()
     var documentContentQuery = DocumentContentQuery(documentenApiService)
+
+    @BeforeEach
+    fun setup() {
+        Mockito.`when`(environment.graphQlContext).thenReturn(context)
+        Mockito.`when`(context.get<CommonGroundAuthentication>(AUTHENTICATION_KEY)).thenReturn(authentication)
+    }
 
     @Test
     fun getDocumentContent() =
         runTest {
             val documentId = UUID.randomUUID()
-            documentContentQuery.getDocumentContent("openzaak", documentId)
+            documentContentQuery.getDocumentContent(environment, "openzaak", documentId)
             verify(documentenApiService).getDocumentContent(documentId, "openzaak")
         }
 }

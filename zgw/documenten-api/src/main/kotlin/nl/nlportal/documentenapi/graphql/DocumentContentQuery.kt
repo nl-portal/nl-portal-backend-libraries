@@ -17,16 +17,21 @@ package nl.nlportal.documentenapi.graphql
 
 import com.expediagroup.graphql.generator.annotations.GraphQLDescription
 import com.expediagroup.graphql.server.operations.Query
-import nl.nlportal.documentenapi.service.DocumentenApiService
+import graphql.schema.DataFetchingEnvironment
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.documentenapi.domain.DocumentContent
+import nl.nlportal.documentenapi.service.DocumentenApiService
+import nl.nlportal.graphql.security.SecurityConstants.AUTHENTICATION_KEY
 import java.util.UUID
 
 class DocumentContentQuery(private val documentenApiService: DocumentenApiService) : Query {
     @GraphQLDescription("Gets a document content by id as base64 encoded")
     suspend fun getDocumentContent(
+        dfe: DataFetchingEnvironment,
         documentApi: String,
         id: UUID,
     ): DocumentContent {
+        dfe.graphQlContext.get<CommonGroundAuthentication>(AUTHENTICATION_KEY)
         return documentenApiService.getDocumentContent(id, documentApi)
     }
 }
