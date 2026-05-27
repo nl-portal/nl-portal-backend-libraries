@@ -36,7 +36,7 @@ class HaalCentraal2ModuleConfiguration {
         var bewoningApiUrl: String = ""
         var apiKey: String? = null
         var ssl: Ssl? = null
-        val brpFields: List<String> =
+        var brpFields: List<String> =
             listOf(
                 "aNummer",
                 "adressering",
