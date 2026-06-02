@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.Flow
 import nl.nlportal.berichten.service.BerichtenService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.documentenapi.util.FilenameSanitizer
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -33,7 +32,6 @@ import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
 
 @RestController
-@ConditionalOnProperty(prefix = "nl-portal.config.berichten", name = ["enabled"], havingValue = "true")
 @RequestMapping(value = ["/api/berichten"])
 class BerichtDocumentResource(
     private val berichtenService: BerichtenService,

@@ -23,7 +23,6 @@ import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.documentenapi.service.VirusScanService
 import nl.nlportal.documentenapi.util.FilenameSanitizer
 import nl.nlportal.zgw.taak.service.TaakService
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.io.buffer.DataBufferUtils
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -37,9 +36,8 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
 @RestController
-@ConditionalOnProperty(prefix = "nl-portal.config.documentenapis", name = ["enabled"], havingValue = "true")
 @RequestMapping(value = ["/api/taak"])
-class TaakDocumentUploadResource(
+class TaakDocumentResource(
     private val taakService: TaakService,
     private val documentenApiService: DocumentenApiService,
     private val virusScanService: VirusScanService?,

@@ -45,7 +45,7 @@ import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Flux
 import java.util.UUID
 
-class TaakDocumentUploadResourceTest {
+class TaakDocumentResourceTest {
     private val taakService: TaakService = mock()
     private val documentenApiService: DocumentenApiService = mock()
     private val virusScanService: VirusScanService = mock()
@@ -55,11 +55,11 @@ class TaakDocumentUploadResourceTest {
         }
     private val authentication: CommonGroundAuthentication = mock()
 
-    private lateinit var resource: TaakDocumentUploadResource
+    private lateinit var resource: TaakDocumentResource
 
     @BeforeEach
     fun setUp() {
-        resource = TaakDocumentUploadResource(taakService, documentenApiService, virusScanService, documentApisConfig)
+        resource = TaakDocumentResource(taakService, documentenApiService, virusScanService, documentApisConfig)
     }
 
     @Test
