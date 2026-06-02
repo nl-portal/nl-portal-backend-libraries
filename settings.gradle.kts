@@ -56,4 +56,5 @@ include(
     "zgw:openproduct",
     "zgw:verificatie",
     "product",
+    "payment-qrlink",
 )
