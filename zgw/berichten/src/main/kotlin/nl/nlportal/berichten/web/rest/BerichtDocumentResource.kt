@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2024 Ritense BV, the Netherlands.
+ * Copyright (c) 2026 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.zakenapi.web.rest
+package nl.nlportal.berichten.web.rest
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.flow.Flow
+import nl.nlportal.berichten.service.BerichtenService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.documentenapi.util.FilenameSanitizer
-import nl.nlportal.zakenapi.service.ZakenApiService
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -30,32 +30,26 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
+import java.util.UUID
 
 @RestController
-@RequestMapping(value = ["/api"])
-class ZaakDocumentResource(
-    private val zakenApiService: ZakenApiService,
+@ConditionalOnProperty(prefix = "nl-portal.config.berichten", name = ["enabled"], havingValue = "true")
+@RequestMapping(value = ["/api/berichten"])
+class BerichtDocumentResource(
+    private val berichtenService: BerichtenService,
 ) {
-    @GetMapping(value = ["/zakenapi/zaakdocument/{zaakDocumentId}/content"])
-    suspend fun getContentStreaming(
-        @PathVariable zaakDocumentId: String,
+    @GetMapping(value = ["/{berichtId}/document/{documentId}/content"])
+    suspend fun downloadStreaming(
+        @PathVariable berichtId: UUID,
+        @PathVariable documentId: UUID,
         authentication: CommonGroundAuthentication,
     ): ResponseEntity<Flow<DataBuffer>> {
         val (document, content) =
-            zakenApiService
-                .getZaakDocumentContent(
-                    zaakDocumentId = zaakDocumentId,
-                    commonGroundAuthentication = authentication,
-                )
+            berichtenService.getBerichtDocumentContent(authentication, berichtId, documentId)
+                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Bericht not found")
 
-        if (document == null || content == null) {
-            logger.debug {
-                "Access denied to document $zaakDocumentId for user ${authentication.userId}"
-            }
-            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied")
-        }
-
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(
                 HttpHeaders().apply {
                     set(
@@ -63,12 +57,7 @@ class ZaakDocumentResource(
                         FilenameSanitizer.encodeForContentDisposition(document.bestandsnaam),
                     )
                 },
-            )
-            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            ).contentType(MediaType.APPLICATION_OCTET_STREAM)
             .body(content)
-    }
-
-    companion object {
-        private val logger = KotlinLogging.logger {}
     }
 }

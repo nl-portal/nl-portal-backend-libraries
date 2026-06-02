@@ -24,7 +24,7 @@ import org.springframework.security.config.web.server.ServerHttpSecurity
 class ZaakDocumentResourceHttpSecurityConfigurer : HttpSecurityConfigurer {
     override fun configure(http: ServerHttpSecurity) {
         http.authorizeExchange { authorize ->
-            authorize.pathMatchers(GET, "/zakenapi/zaakdocument/{zaakDocumentId}/content").authenticated()
+            authorize.pathMatchers(GET, "/api/zakenapi/zaakdocument/{zaakDocumentId}/content").authenticated()
         }
     }
 }
