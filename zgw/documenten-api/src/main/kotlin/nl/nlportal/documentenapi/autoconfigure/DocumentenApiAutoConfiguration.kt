@@ -20,10 +20,7 @@ import nl.nlportal.core.ssl.ResourceClientSslContextResolver
 import nl.nlportal.documentenapi.client.DocumentApisConfig
 import nl.nlportal.documentenapi.client.DocumentenApiClient
 import nl.nlportal.documentenapi.graphql.DocumentContentQuery
-import nl.nlportal.documentenapi.security.config.DocumentContentResourceHttpSecurityConfigurer
 import nl.nlportal.documentenapi.service.DocumentenApiService
-import nl.nlportal.documentenapi.service.VirusScanService
-import nl.nlportal.documentenapi.web.rest.DocumentContentResource
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfiguration
@@ -67,21 +64,5 @@ class DocumentenApiAutoConfiguration {
     @Bean
     fun documentContentQuery(documentenApiService: DocumentenApiService): DocumentContentQuery {
         return DocumentContentQuery(documentenApiService)
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(DocumentContentResourceHttpSecurityConfigurer::class)
-    fun documentContentResourceHttpSecurityConfigurer(): DocumentContentResourceHttpSecurityConfigurer {
-        return DocumentContentResourceHttpSecurityConfigurer()
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(DocumentContentResource::class)
-    fun documentContentResource2(
-        documentenApiService: DocumentenApiService,
-        virusScanService: VirusScanService?,
-        documentApisConfig: DocumentApisConfig
-    ): DocumentContentResource {
-        return DocumentContentResource(documentenApiService, virusScanService, documentApisConfig)
     }
 }
