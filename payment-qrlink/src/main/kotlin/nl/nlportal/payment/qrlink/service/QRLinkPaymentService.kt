@@ -36,7 +36,6 @@ import nl.nlportal.payment.direct.domain.DirectPaymentStatus
 import nl.nlportal.payment.direct.service.DirectPaymentService
 import nl.nlportal.payment.qrlink.autoconfiguratie.QRLinkPaymentModuleConfiguration.QRLinkPaymentProperties
 import nl.nlportal.payment.qrlink.domain.QRLinkPaymentCodeFileType
-import nl.nlportal.payment.qrlink.domain.QRLinkPaymentCodeResponse
 import nl.nlportal.payment.qrlink.domain.QRLinkPaymentResponse
 import org.apache.commons.io.FileUtils
 import org.springframework.http.HttpStatus
@@ -107,7 +106,7 @@ class QRLinkPaymentService(
         qrCodeFileType: QRLinkPaymentCodeFileType? = null,
         subject: String? = null,
         margin: Int? = 0,
-    ): QRLinkPaymentCodeResponse {
+    ): QRLinkPaymentResponse {
         val qrcodeFile =
             generateQrCodeFile(
                 identifier = identifier,
@@ -123,7 +122,7 @@ class QRLinkPaymentService(
             )
 
         val fileContent = FileUtils.readFileToByteArray(qrcodeFile)
-        return QRLinkPaymentCodeResponse(
+        return QRLinkPaymentResponse(
             qrcode = Base64.getEncoder().encodeToString(fileContent),
         )
     }

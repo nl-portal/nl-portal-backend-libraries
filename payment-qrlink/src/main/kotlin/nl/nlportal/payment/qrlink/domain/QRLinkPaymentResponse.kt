@@ -15,6 +15,11 @@
  */
 package nl.nlportal.payment.qrlink.domain
 
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonInclude.Include
+
+@JsonInclude(Include.NON_NULL)
 data class QRLinkPaymentResponse(
-    val link: String,
+    val link: String? = null,
+    val qrcode: String? = null,
 )
