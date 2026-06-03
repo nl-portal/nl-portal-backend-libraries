@@ -155,7 +155,7 @@ class OpenProductQueryIT(
                     .entity(JsonNode::class.java)
                     .get()
 
-            assertEquals(4, responseBody.size())
+            assertEquals(5, responseBody.size())
             assertEquals("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/", responseBody.requiredAt("/0/url")?.textValue())
             assertEquals("2025-04-30", responseBody.requiredAt("/0/startDatum")?.textValue())
             assertEquals("PARKEREN", responseBody.requiredAt("/0/producttype/code")?.textValue())
