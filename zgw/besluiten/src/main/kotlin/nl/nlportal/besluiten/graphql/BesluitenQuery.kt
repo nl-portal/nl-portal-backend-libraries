@@ -7,6 +7,7 @@ import nl.nlportal.besluiten.domain.BesluitDocument
 import nl.nlportal.besluiten.service.BesluitenService
 import nl.nlportal.catalogiapi.domain.BesluitType
 import nl.nlportal.catalogiapi.service.CatalogiApiService
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.graphql.data.method.annotation.Argument
@@ -21,6 +22,7 @@ class BesluitenQuery(
 ) {
     @QueryMapping
     suspend fun getBesluiten(
+        authentication: CommonGroundAuthentication,
         @Argument besluitType: String? = null,
         @Argument identificatie: String? = null,
         @Argument pageNumber: Int? = 1,
@@ -41,6 +43,7 @@ class BesluitenQuery(
 
     @QueryMapping
     suspend fun getBesluit(
+        authentication: CommonGroundAuthentication,
         @Argument besluitId: UUID
     ): Besluit {
         return besluitenService.getBesluit(
@@ -50,6 +53,7 @@ class BesluitenQuery(
 
     @QueryMapping
     suspend fun getBesluitAuditTrails(
+        authentication: CommonGroundAuthentication,
         @Argument besluitId: UUID
     ): List<BesluitAuditTrail> {
         return besluitenService.getBesluitAuditTrails(
@@ -59,6 +63,7 @@ class BesluitenQuery(
 
     @QueryMapping
     suspend fun getBesluitAuditTrail(
+        authentication: CommonGroundAuthentication,
         @Argument besluitId: UUID,
         @Argument auditTrailId: UUID,
     ): BesluitAuditTrail {
@@ -70,6 +75,7 @@ class BesluitenQuery(
 
     @QueryMapping
     suspend fun getBesluitDocumenten(
+        authentication: CommonGroundAuthentication,
         @Argument besluit: String? = null,
         @Argument informatieobject: String? = null,
     ): List<BesluitDocument> {
@@ -81,6 +87,7 @@ class BesluitenQuery(
 
     @QueryMapping
     suspend fun getBesluitDocument(
+        authentication: CommonGroundAuthentication,
         @Argument documentId: UUID
     ): BesluitDocument {
         return besluitenService.getBesluitDocument(
