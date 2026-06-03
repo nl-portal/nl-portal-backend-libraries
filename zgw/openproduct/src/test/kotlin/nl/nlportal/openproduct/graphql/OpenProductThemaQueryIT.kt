@@ -147,7 +147,7 @@ class OpenProductThemaQueryIT(
                     .entity(JsonNode::class.java)
                     .get()
 
-            assertEquals(1, responseBody.size())
+            assertEquals(2, responseBody.size())
             assertEquals("HoofdThema", responseBody.requiredAt("/0/naam")?.textValue())
         }
 
