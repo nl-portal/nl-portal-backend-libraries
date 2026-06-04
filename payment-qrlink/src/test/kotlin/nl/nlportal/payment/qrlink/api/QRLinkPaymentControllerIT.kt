@@ -51,8 +51,6 @@ class QRLinkPaymentControllerIT(
     @Autowired private val directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
 ) {
     companion object {
-        val logger = KotlinLogging.logger {}
-
         @JvmStatic
         var server: MockWebServer? = null
 
@@ -159,6 +157,33 @@ class QRLinkPaymentControllerIT(
             .expectBody()
             .jsonPath("$.link")
             .isEqualTo("http://localhost:3000?identifier=${identifier}&amount=${amount}&orderid=${orderId}&reference=${reference}&hash=${hash}&subject=dit%20is%20een%20test")
+    }
+
+    @Test
+    fun `should generate a betaal link, no identifier query string parameter`() {
+        val headers = HttpHeaders()
+        headers.add(
+            QRLinkPaymentAuthorizationFilter.HEADER_APIKEY,
+            qrLinkPaymentModuleConfiguration.properties.getConfiguration(identifier)?.apiKey,
+        )
+        webTestClient
+            .get()
+            .uri("${path}/generate/link?orderid=${orderId}&reference=${reference}&amount=${amountInCents}")
+            .headers {
+                it.addAll(headers)
+            }.exchange()
+            .expectStatus()
+            .isUnauthorized
+    }
+
+    @Test
+    fun `should generate a betaal link, no api key header`() {
+        webTestClient
+            .get()
+            .uri("${path}/generate/link?identifier=${identifier}&orderid=${orderId}&reference=${reference}&amount=${amountInCents}")
+            .exchange()
+            .expectStatus()
+            .isUnauthorized
     }
 
     @Test
