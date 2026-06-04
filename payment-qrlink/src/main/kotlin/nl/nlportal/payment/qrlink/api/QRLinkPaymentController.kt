@@ -96,7 +96,7 @@ class QRLinkPaymentController(
 
     /**
      *  Generate a betaal QR Code, but only if identifier is configured
-     *  is protected by an x-api-key header, which is a SHA512 hash of the identifier
+     *  is protected by an x-api-key header, as specified in the configuration of identifier
      * @param identifier: the identifier as specified in the configuration with PSP ID and other payment properties
      * @param amount: amount for the payment, should be in euro cents
      * @param orderid: the payment identifier
@@ -139,7 +139,7 @@ class QRLinkPaymentController(
 
     /**
      *  Generate a betaal QR Code file, but only if identifier is configured
-     *  is protected by an x-api-key header, which is a SHA512 hash of the identifier
+     *  is protected by an x-api-key header, as specified in the configuration of identifier
      * @param identifier: the identifier as specified in the configuration with PSP ID and other payment properties
      * @param amount: amount for the payment, should be in euro cents
      * @param orderid: the payment identifier
@@ -187,7 +187,7 @@ class QRLinkPaymentController(
 
     /**
      *  Generate a betaal link, but only if identifier is configured
-     *  is protected by an x-api-key header, which is a SHA512 hash of the identifier
+     *  is protected by an x-api-key header, as specified in the configuration of identifier
      * @param identifier: the identifier as specified in the configuration with PSP ID and other payment properties
      * @param amount: amount for the payment, should be in euro cents
      * @param orderid: the payment identifier
