@@ -38,25 +38,39 @@ class QRLinkPaymentAuthorizationFilter(
         val queryParams = exchange.request.queryParams
         val apiKey = exchange.request.headers[HEADER_APIKEY]
         /*
-        Only allowed access to QR Link Payment generate links with hash of indentifier as x-api-key header in the request
+        Only allowed access to QR Link Payment generate links with hash of identifier as x-api-key header in the request
          */
         if (path.contains("/api/public/payment/qrlink/generate")) {
+            /*
+            1. check is api key header is present
+             */
             if (apiKey == null) {
+                logger.error { "QRLinkPaymentAuthorizationFilter: No apikey found for $path" }
                 throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not allowed to access endpoint.")
             }
 
+            /*
+            2. check if identifier querystring is present
+             */
             val identifier = queryParams.getFirst("identifier")
             if (identifier == null) {
                 logger.error { "QRLinkPaymentAuthorizationFilter: No identifier found for $path" }
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "No identifier found")
+                throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not allowed to access endpoint.")
             }
-            //find the apikey of the identifier
+
+            /*
+            3. find the apikey of the identifier to get the configured api key
+             */
             val identifierConfiguration = qrLinkPaymentProperties.getConfiguration(identifier)
             if(identifierConfiguration == null) {
-                logger.error { "QRLinkPaymentAuthorizationFilter: Identifier configuration not found" }
-                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Identifier configuration not found")
+                logger.error { "QRLinkPaymentAuthorizationFilter: Identifier $identifier configuration not found" }
+                throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not allowed to access endpoint.")
             }
+            /*
+            4. check is api key header from header matched the configured api key
+             */
             if (identifierConfiguration.apiKey != apiKey[0]) {
+                logger.error { "QRLinkPaymentAuthorizationFilter: No match for apikey $apiKey" }
                 throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not allowed to access endpoint.")
             }
         }

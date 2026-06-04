@@ -175,7 +175,7 @@ class QRLinkPaymentControllerIT(
                 it.addAll(headers)
             }.exchange()
             .expectStatus()
-            .isBadRequest
+            .isUnauthorized
     }
 
     @Test
@@ -209,7 +209,7 @@ class QRLinkPaymentControllerIT(
                 it.addAll(headers)
             }.exchange()
             .expectStatus()
-            .isBadRequest
+            .isUnauthorized
     }
 
     @Test
@@ -257,8 +257,6 @@ class QRLinkPaymentControllerIT(
             responseResult.responseBodyContent
                 ?.toString(Charset.defaultCharset())
 
-        val responseHeaders = responseResult.responseHeaders
-        logger.info { responseHeaders }
         assertNotNull(responseBodyContent)
     }
 
