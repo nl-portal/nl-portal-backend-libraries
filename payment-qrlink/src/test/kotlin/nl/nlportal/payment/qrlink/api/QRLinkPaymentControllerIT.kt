@@ -15,7 +15,6 @@
  */
 package nl.nlportal.payment.qrlink.api
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import java.nio.charset.Charset
 import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.core.util.ShaVersion
