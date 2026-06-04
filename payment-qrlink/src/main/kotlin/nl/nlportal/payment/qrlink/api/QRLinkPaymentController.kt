@@ -40,6 +40,7 @@ class QRLinkPaymentController(
      * @param amount: amount for the payment, should be in euro cents
      * @param orderid: the payment identifier
      * @param reference: a reference to the payment
+     * @param hash: a hash of the required parameter, to avoid unwanted access
      * @param language: the language of the payment page, like nl_NL or en_US. Is optional
      * @param returnurl: the return url after payment. Is optional
      * @return the redirectUrl to Ogone/Wordline payment page
@@ -50,9 +51,9 @@ class QRLinkPaymentController(
         @RequestParam("amount") amount: Double,
         @RequestParam("orderid") orderid: String,
         @RequestParam("reference") reference: String,
+        @RequestParam("hash") hash: String,
         @RequestParam("language", required = false) language: String? = null,
         @RequestParam("returnurl", required = false) returnUrl: String? = null,
-        @RequestParam("hash", required = false) hash: String? = null,
     ): ResponseEntity<Any> {
         try {
             return ResponseEntity.ok(

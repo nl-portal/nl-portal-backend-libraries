@@ -196,7 +196,7 @@ class QRLinkPaymentService(
         reference: String,
         language: String? = null,
         returnUrl: String? = null,
-        hash: String? = null,
+        hash: String,
     ): DirectPaymentResponse {
         val newHash =
             generateHash(
