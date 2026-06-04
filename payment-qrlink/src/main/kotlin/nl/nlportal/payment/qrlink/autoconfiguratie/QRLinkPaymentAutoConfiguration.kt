@@ -55,5 +55,9 @@ class QRLinkPaymentAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(QRLinkPaymentAuthorizationFilter::class)
-    fun qrLinkPaymentAuthorizationFilter() = QRLinkPaymentAuthorizationFilter()
+    fun qrLinkPaymentAuthorizationFilter(
+        qRLinkPaymentModuleConfiguration: QRLinkPaymentModuleConfiguration,
+    ) = QRLinkPaymentAuthorizationFilter(
+        qrLinkPaymentProperties = qRLinkPaymentModuleConfiguration.properties,
+    )
 }

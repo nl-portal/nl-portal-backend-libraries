@@ -228,6 +228,9 @@ nl-portal:
                     qrcode-width: 400
                     return-url: http://localhost:3000
                     secret: 123gdgg122
+                    configurations:
+                        belastingzaken:
+                            api-key: jdjdjdjdjdrnfllff
             ogone:
                 enabled: true
                 properties:

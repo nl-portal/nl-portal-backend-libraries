@@ -139,24 +139,16 @@ class QRLinkPaymentService(
         subject: String? = null,
         margin: Int? = 0,
     ): File {
-        if (!isIdentifierConfigured(
-                identifier = identifier,
-            )
-        ) {
-            logger.error { "Generate betaal link: $identifier is not configured" }
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "$identifier is not configured")
-        }
-        val link =
-            generateLink(
-                identifier = identifier,
-                amountInCents = amountInCents,
-                orderid = orderid,
-                reference = reference,
-                returnUrl = returnUrl,
-                subject = subject,
-            )
-
         try {
+            val link =
+                generateLink(
+                    identifier = identifier,
+                    amountInCents = amountInCents,
+                    orderid = orderid,
+                    reference = reference,
+                    returnUrl = returnUrl,
+                    subject = subject,
+                )
             val qrCodeFileTypeExtension =
                 when {
                     qrCodeFileType != null -> {
@@ -189,6 +181,8 @@ class QRLinkPaymentService(
             }
 
             return qrcodeFile
+        } catch (ex: ResponseStatusException) {
+            throw ex
         } catch (e: Exception) {
             logger.error { "Could not generate qrcode with $identifier for $orderid: ${e.message}" }
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error generating qrcode file for $identifier and order id $orderid", e)

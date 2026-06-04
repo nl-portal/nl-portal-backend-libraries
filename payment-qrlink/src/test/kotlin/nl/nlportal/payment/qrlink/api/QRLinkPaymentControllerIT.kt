@@ -125,7 +125,7 @@ class QRLinkPaymentControllerIT(
         val headers = HttpHeaders()
         headers.add(
             QRLinkPaymentAuthorizationFilter.HEADER_APIKEY,
-            QRLinkPaymentAuthorizationFilter.hashIdentifier(identifier),
+            qrLinkPaymentModuleConfiguration.properties.getConfiguration(identifier)?.apiKey
         )
         webTestClient
             .get()
@@ -145,7 +145,7 @@ class QRLinkPaymentControllerIT(
         val headers = HttpHeaders()
         headers.add(
             QRLinkPaymentAuthorizationFilter.HEADER_APIKEY,
-            QRLinkPaymentAuthorizationFilter.hashIdentifier(identifier),
+            qrLinkPaymentModuleConfiguration.properties.getConfiguration(identifier)?.apiKey
         )
 
         webTestClient
@@ -166,7 +166,7 @@ class QRLinkPaymentControllerIT(
         val headers = HttpHeaders()
         headers.add(
             QRLinkPaymentAuthorizationFilter.HEADER_APIKEY,
-            QRLinkPaymentAuthorizationFilter.hashIdentifier(identifier + "1"),
+            qrLinkPaymentModuleConfiguration.properties.getConfiguration(identifier)?.apiKey,
         )
         webTestClient
             .get()
@@ -179,11 +179,28 @@ class QRLinkPaymentControllerIT(
     }
 
     @Test
+    fun `should generate a betaal link, api key is not equal`() {
+        val headers = HttpHeaders()
+        headers.add(
+            QRLinkPaymentAuthorizationFilter.HEADER_APIKEY,
+            "12345",
+        )
+        webTestClient
+            .get()
+            .uri("${path}/generate/link?identifier=${identifier}&orderid=${orderId}&reference=${reference}&amount=${amountInCents}")
+            .headers {
+                it.addAll(headers)
+            }.exchange()
+            .expectStatus()
+            .isUnauthorized
+    }
+
+    @Test
     fun `should generate a betaal qrcode, identifier not configured`() {
         val headers = HttpHeaders()
         headers.add(
             QRLinkPaymentAuthorizationFilter.HEADER_APIKEY,
-            QRLinkPaymentAuthorizationFilter.hashIdentifier(identifier + "1"),
+            qrLinkPaymentModuleConfiguration.properties.getConfiguration(identifier)?.apiKey + "1",
         )
         webTestClient
             .get()
@@ -200,7 +217,7 @@ class QRLinkPaymentControllerIT(
         val headers = HttpHeaders()
         headers.add(
             QRLinkPaymentAuthorizationFilter.HEADER_APIKEY,
-            QRLinkPaymentAuthorizationFilter.hashIdentifier(identifier),
+            qrLinkPaymentModuleConfiguration.properties.getConfiguration(identifier)?.apiKey,
         )
         webTestClient
             .get()
@@ -220,7 +237,7 @@ class QRLinkPaymentControllerIT(
         val headers = HttpHeaders()
         headers.add(
             QRLinkPaymentAuthorizationFilter.HEADER_APIKEY,
-            QRLinkPaymentAuthorizationFilter.hashIdentifier(identifier),
+            qrLinkPaymentModuleConfiguration.properties.getConfiguration(identifier)?.apiKey,
         )
         val responseResult =
             webTestClient

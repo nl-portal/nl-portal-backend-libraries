@@ -18,6 +18,8 @@ package nl.nlportal.payment.qrlink.filter
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.core.util.ShaVersion
+import nl.nlportal.payment.qrlink.autoconfiguratie.QRLinkPaymentModuleConfiguration
+import nl.nlportal.payment.qrlink.autoconfiguratie.QRLinkPaymentModuleConfiguration.QRLinkPaymentProperties
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.server.ServerWebExchange
@@ -25,7 +27,9 @@ import org.springframework.web.server.WebFilter
 import org.springframework.web.server.WebFilterChain
 import reactor.core.publisher.Mono
 
-class QRLinkPaymentAuthorizationFilter : WebFilter {
+class QRLinkPaymentAuthorizationFilter(
+    val qrLinkPaymentProperties: QRLinkPaymentProperties
+) : WebFilter {
     override fun filter(
         exchange: ServerWebExchange,
         chain: WebFilterChain,
@@ -46,9 +50,13 @@ class QRLinkPaymentAuthorizationFilter : WebFilter {
                 logger.error { "QRLinkPaymentAuthorizationFilter: No identifier found for $path" }
                 throw ResponseStatusException(HttpStatus.BAD_REQUEST, "No identifier found")
             }
-            val hashIndentifier = hashIdentifier(identifier)
-
-            if (hashIndentifier != apiKey[0]) {
+            //find the apikey of the identifier
+            val identifierConfiguration = qrLinkPaymentProperties.getConfiguration(identifier)
+            if(identifierConfiguration == null) {
+                logger.error { "QRLinkPaymentAuthorizationFilter: Identifier configuration not found" }
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Identifier configuration not found")
+            }
+            if (identifierConfiguration.apiKey != apiKey[0]) {
                 throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not allowed to access endpoint.")
             }
         }
