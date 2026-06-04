@@ -67,11 +67,5 @@ class QRLinkPaymentAuthorizationFilter(
     companion object {
         val logger = KotlinLogging.logger {}
         const val HEADER_APIKEY: String = "x-api-key"
-
-        fun hashIdentifier(identifier: String): String =
-            CoreUtils.createHash(
-                input = identifier,
-                shaVersion = ShaVersion.SHA512.version,
-            )
     }
 }
