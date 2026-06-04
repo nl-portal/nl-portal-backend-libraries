@@ -230,7 +230,7 @@ nl-portal:
                     secret: 123gdgg122
                     configurations:
                         belastingzaken:
-                            api-key: jdjdjdjdjdrnfllff
+                            api-key: dummy
             ogone:
                 enabled: true
                 properties:
