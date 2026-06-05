@@ -15,6 +15,7 @@
  */
 package nl.nlportal.payment.qrlink.api
 
+import nl.nlportal.core.qrcode.QRCodeFileExtension
 import nl.nlportal.payment.qrlink.domain.QRLinkPaymentCodeFileType
 import nl.nlportal.payment.qrlink.domain.QRLinkPaymentResponse
 import nl.nlportal.payment.qrlink.service.QRLinkPaymentService
@@ -119,7 +120,7 @@ class QRLinkPaymentController(
         @RequestParam("height", required = false) height: Int? = null,
         @RequestParam("width", required = false) width: Int? = null,
         @RequestParam("returnurl", required = false) returnurl: String? = null,
-        @RequestParam("filetype", required = false) filetype: QRLinkPaymentCodeFileType? = null,
+        @RequestParam("filetype", required = false) filetype: QRCodeFileExtension? = null,
         @RequestParam("subject", required = false) subject: String? = null,
         @RequestParam("margin", required = false) margin: Int? = null,
     ): ResponseEntity<Any> =
@@ -162,7 +163,7 @@ class QRLinkPaymentController(
         @RequestParam("height", required = false) height: Int? = null,
         @RequestParam("width", required = false) width: Int? = null,
         @RequestParam("returnurl", required = false) returnurl: String? = null,
-        @RequestParam("filetype", required = false) filetype: QRLinkPaymentCodeFileType? = null,
+        @RequestParam("filetype", required = false) filetype: QRCodeFileExtension? = null,
         @RequestParam("subject", required = false) subject: String? = null,
         @RequestParam("margin", required = false) margin: Int? = null,
     ): ResponseEntity<ByteArray> =
@@ -170,8 +171,7 @@ class QRLinkPaymentController(
             .ok()
             .contentType(MediaType.APPLICATION_OCTET_STREAM)
             .body(
-                FileUtils.readFileToByteArray(
-                    qrLinkPaymentService.generateQrCodeFile(
+                qrLinkPaymentService.generateQrCodeFile(
                         identifier = identifier,
                         amountInCents = amount,
                         reference = reference,
@@ -183,7 +183,6 @@ class QRLinkPaymentController(
                         subject = subject,
                         margin = margin,
                     ),
-                ),
             )
 
     /**

@@ -44,6 +44,9 @@ dependencies {
     // Liquibase
     api("org.liquibase:liquibase-core")
 
+    //QRCode
+    implementation("com.google.zxing:javase:3.5.4")
+
     // Apache Commons
     api(Dependencies.commonsIo)
     api(Dependencies.apacheCommons)

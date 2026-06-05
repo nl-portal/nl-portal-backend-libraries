@@ -27,6 +27,9 @@ import java.io.FileOutputStream
 import java.net.URLEncoder
 import java.util.Base64
 import java.util.EnumMap
+import nl.nlportal.core.qrcode.QRCodeException
+import nl.nlportal.core.qrcode.QRCodeFileExtension
+import nl.nlportal.core.qrcode.QRCodeService
 import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.core.util.ShaVersion
 import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration.DirectPaymentProperties
@@ -43,6 +46,7 @@ import org.springframework.web.server.ResponseStatusException
 
 class QRLinkPaymentService(
     private val directPaymentService: DirectPaymentService,
+    private val qrCodeService: QRCodeService,
     private val qrLinkPaymentProperties: QRLinkPaymentProperties,
     private val directPaymentProperties: DirectPaymentProperties,
 ) {
@@ -103,7 +107,7 @@ class QRLinkPaymentService(
         height: Int? = null,
         width: Int? = null,
         returnUrl: String? = null,
-        qrCodeFileType: QRLinkPaymentCodeFileType? = null,
+        qrCodeFileType: QRCodeFileExtension? = null,
         subject: String? = null,
         margin: Int? = 0,
     ): QRLinkPaymentResponse {
@@ -120,10 +124,8 @@ class QRLinkPaymentService(
                 subject = subject,
                 margin = margin,
             )
-
-        val fileContent = FileUtils.readFileToByteArray(qrcodeFile)
         return QRLinkPaymentResponse(
-            qrcode = Base64.getEncoder().encodeToString(fileContent),
+            qrcode = Base64.getEncoder().encodeToString(qrcodeFile),
         )
     }
 
@@ -135,10 +137,10 @@ class QRLinkPaymentService(
         height: Int? = null,
         width: Int? = null,
         returnUrl: String? = null,
-        qrCodeFileType: QRLinkPaymentCodeFileType? = null,
+        qrCodeFileType: QRCodeFileExtension? = null,
         subject: String? = null,
         margin: Int? = 0,
-    ): File {
+    ): ByteArray {
         try {
             val link =
                 generateLink(
@@ -149,38 +151,15 @@ class QRLinkPaymentService(
                     returnUrl = returnUrl,
                     subject = subject,
                 )
-            val qrCodeFileTypeExtension =
-                when {
-                    qrCodeFileType != null -> {
-                        qrCodeFileType.toString()
-                    }
 
-                    else -> {
-                        QRLinkPaymentCodeFileType.PNG.toString()
-                    }
-                }
-            val qrcodeFile = File.createTempFile("qrcode-$orderid", ".$qrCodeFileTypeExtension")
-
-            val hints: MutableMap<EncodeHintType?, Any?> = EnumMap<EncodeHintType?, Any?>(EncodeHintType::class.java)
-            hints[EncodeHintType.MARGIN] = margin ?: 0
-            if (margin == null) {
-                hints[EncodeHintType.ERROR_CORRECTION] = ErrorCorrectionLevel.H
-            }
-
-            val matrix =
-                QRCodeWriter().encode(
-                    link,
-                    BarcodeFormat.QR_CODE,
-                    width ?: qrLinkPaymentProperties.qrcodeWidth,
-                    height ?: qrLinkPaymentProperties.qrcodeHeight,
-                    hints,
-                )
-
-            FileOutputStream(qrcodeFile).use { out ->
-                MatrixToImageWriter.writeToStream(matrix, qrCodeFileTypeExtension, out, MatrixToImageConfig())
-            }
-
-            return qrcodeFile
+            return qrCodeService.generateQrCode(
+                link = link,
+                filePrefix = "qrcode-$orderid",
+                height = height ?: qrLinkPaymentProperties.qrcodeHeight,
+                width = width ?: qrLinkPaymentProperties.qrcodeWidth,
+                extension = qrCodeFileType,
+                margin = margin ?: 0
+            )
         } catch (ex: ResponseStatusException) {
             throw ex
         } catch (e: Exception) {

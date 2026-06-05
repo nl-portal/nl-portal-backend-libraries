@@ -15,6 +15,7 @@
  */
 package nl.nlportal.payment.qrlink.autoconfiguratie
 
+import nl.nlportal.core.qrcode.QRCodeService
 import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration
 import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration.DirectPaymentProperties
 import nl.nlportal.payment.direct.service.DirectPaymentService
@@ -31,7 +32,6 @@ import org.springframework.context.annotation.Import
 
 @Configuration
 @EnableConfigurationProperties(QRLinkPaymentModuleConfiguration::class, DirectPaymentModuleConfiguration::class)
-@Import(DirectPaymentService::class)
 @ConditionalOnProperty(prefix = "nl-portal.config.payment", name = ["qrlink.enabled", "direct.enabled"], havingValue = "true")
 class QRLinkPaymentAutoConfiguration {
 
@@ -39,10 +39,12 @@ class QRLinkPaymentAutoConfiguration {
     @ConditionalOnMissingBean(QRLinkPaymentService::class)
     fun qrlinkPaymentService(
         directPaymentService: DirectPaymentService,
+        qrCodeService: QRCodeService,
         qRLinkPaymentModuleConfiguration: QRLinkPaymentModuleConfiguration,
         directPaymentModuleConfiguration: DirectPaymentModuleConfiguration
     ): QRLinkPaymentService = QRLinkPaymentService(
         directPaymentService = directPaymentService,
+        qrCodeService = qrCodeService,
         qrLinkPaymentProperties = qRLinkPaymentModuleConfiguration.properties,
         directPaymentProperties = directPaymentModuleConfiguration.properties
     )
