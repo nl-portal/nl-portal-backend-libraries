@@ -19,7 +19,6 @@ import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.core.ssl.ResourceClientSslContextResolver
 import nl.nlportal.documentenapi.client.DocumentApisConfig
 import nl.nlportal.documentenapi.client.DocumentenApiClient
-import nl.nlportal.documentenapi.graphql.DocumentContentQuery
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import org.springframework.beans.factory.annotation.Autowired
@@ -61,8 +60,4 @@ class DocumentenApiAutoConfiguration {
         return DocumentenApiClient(documentApisConfig.properties, idTokenGenerator, clientSslContextResolver)
     }
 
-    @Bean
-    fun documentContentQuery(documentenApiService: DocumentenApiService): DocumentContentQuery {
-        return DocumentContentQuery(documentenApiService)
-    }
 }
