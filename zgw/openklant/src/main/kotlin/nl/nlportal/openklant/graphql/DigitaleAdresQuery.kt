@@ -30,8 +30,15 @@ class DigitaleAdresQuery(
     private val verificatieService: VerificatieService?,
 ) {
     @QueryMapping
-    suspend fun getUserDigitaleAdressen(authentication: CommonGroundAuthentication): List<DigitaleAdresResponse>? {
-        val userDigitaleAdressen = openklant2Service.findDigitaleAdressen(authentication)
+    suspend fun getUserDigitaleAdressen(
+        authentication: CommonGroundAuthentication,
+        isStandaardAdres: Boolean? = false,
+    ): List<DigitaleAdresResponse>? {
+        val userDigitaleAdressen =
+            openklant2Service.findDigitaleAdressen(
+                authentication = authentication,
+                isStandaardAdres = isStandaardAdres,
+            )
 
         return userDigitaleAdressen.map { DigitaleAdresResponse.fromOpenKlant2DigitaleAdres(it, verificatieModuleConfiguration, verificatieService) }
     }

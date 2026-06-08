@@ -31,6 +31,7 @@ data class DigitaleAdresResponse(
     val verificatieDatum: LocalDate? = null,
     val verificatieNeeded: Boolean? = false,
     val verificatieCodeVerified: Boolean? = true,
+    val isStandaardAdres: Boolean? = false,
 ) {
     companion object {
         fun fromOpenKlant2DigitaleAdres(
@@ -48,6 +49,7 @@ data class DigitaleAdresResponse(
                 waarde = openKlant2DigitaleAdres.adres,
                 omschrijving = openKlant2DigitaleAdres.omschrijving,
                 type = type,
+                isStandaardAdres = openKlant2DigitaleAdres.isStandaardAdres,
                 referentie = openKlant2DigitaleAdres.referentie ?: "",
                 verificatieDatum = openKlant2DigitaleAdres.verificatieDatum,
                 verificatieNeeded =
