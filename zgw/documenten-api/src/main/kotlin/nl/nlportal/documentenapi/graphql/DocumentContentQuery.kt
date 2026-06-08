@@ -27,7 +27,6 @@ import org.springframework.stereotype.Controller
 class DocumentContentQuery(private val documentenApiService: DocumentenApiService) {
     @QueryMapping
     suspend fun getDocumentContent(
-        authentication: CommonGroundAuthentication,
         @Argument documentApi: String,
         @Argument id: UUID,
         authentication: CommonGroundAuthentication,
