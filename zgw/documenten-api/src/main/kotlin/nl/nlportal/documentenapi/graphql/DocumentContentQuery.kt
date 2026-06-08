@@ -30,6 +30,7 @@ class DocumentContentQuery(private val documentenApiService: DocumentenApiServic
         authentication: CommonGroundAuthentication,
         @Argument documentApi: String,
         @Argument id: UUID,
+        authentication: CommonGroundAuthentication,
     ): DocumentContent {
         return documentenApiService.getDocumentContent(
             documentId = id,

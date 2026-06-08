@@ -37,7 +37,6 @@ import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureH
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.graphql.test.tester.HttpGraphQlTester
-import org.springframework.security.test.context.support.WithMockUser
 
 @SpringBootTest
 @AutoConfigureHttpGraphQlTester
