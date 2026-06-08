@@ -10,6 +10,7 @@ import reactor.core.publisher.Flux
 import reactor.core.scheduler.Schedulers
 import xyz.capybara.clamav.ClamavClient
 import xyz.capybara.clamav.commands.scan.result.ScanResult
+import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.InputStream
 import java.io.PipedInputStream
@@ -18,6 +19,24 @@ import java.io.PipedOutputStream
 class ClamAVService(
     private val clamAVVirusScanConfigProperties: ClamAVVirusScanConfigProperties,
 ) : VirusScanService {
+    override fun scan(content: ByteArray): VirusScanResult {
+        val clamAVClient =
+            ClamavClient(
+                clamAVVirusScanConfigProperties.hostName,
+                clamAVVirusScanConfigProperties.port,
+            )
+        return ByteArrayInputStream(content).use { inputStream ->
+            when (val scanResult = clamAVClient.scan(inputStream)) {
+                is ScanResult.OK -> VirusScanResult(VirusScanStatus.OK, mapOf())
+                is ScanResult.VirusFound -> VirusScanResult(VirusScanStatus.VIRUS_FOUND, scanResult.foundViruses)
+            }
+        }
+    }
+
+    @Deprecated(
+        message = "Use scan(ByteArray) instead",
+        replaceWith = ReplaceWith("scan(bufferedContent)"),
+    )
     override fun scan(content: Flux<DataBuffer>): VirusScanResult {
         val clamAVClient =
             ClamavClient(

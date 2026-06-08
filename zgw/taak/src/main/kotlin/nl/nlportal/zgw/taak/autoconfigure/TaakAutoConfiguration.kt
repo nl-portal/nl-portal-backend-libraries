@@ -16,10 +16,16 @@
 package nl.nlportal.zgw.taak.autoconfigure
 
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
+import nl.nlportal.core.security.config.HttpSecurityConfigurer
+import nl.nlportal.documentenapi.client.DocumentApisConfig
+import nl.nlportal.documentenapi.service.DocumentenApiService
+import nl.nlportal.documentenapi.service.VirusScanService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.taak.graphql.TaakMutationV2
 import nl.nlportal.zgw.taak.graphql.TaakQueryV2
+import nl.nlportal.zgw.taak.security.config.TaakDocumentResourceHttpSecurityConfigurer
 import nl.nlportal.zgw.taak.service.TaakService
+import nl.nlportal.zgw.taak.web.rest.TaakDocumentResource
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -51,4 +57,21 @@ class TaakAutoConfiguration {
     fun taskMutationV2(taskService: TaakService): TaakMutationV2 {
         return TaakMutationV2(taskService)
     }
+
+    @Bean
+    @ConditionalOnMissingBean(TaakDocumentResource::class)
+    @ConditionalOnProperty(prefix = "nl-portal.config.documentenapis", name = ["enabled"], havingValue = "true")
+    fun taakDocumentUploadResource(
+        taakService: TaakService,
+        documentenApiService: DocumentenApiService,
+        virusScanService: VirusScanService?,
+        documentApisConfig: DocumentApisConfig,
+    ): TaakDocumentResource =
+        TaakDocumentResource(taakService, documentenApiService, virusScanService, documentApisConfig)
+
+    @Bean
+    @ConditionalOnMissingBean(TaakDocumentResourceHttpSecurityConfigurer::class)
+    @ConditionalOnProperty(prefix = "nl-portal.config.documentenapis", name = ["enabled"], havingValue = "true")
+    fun taakDocumentResourceHttpSecurityConfigurer(): HttpSecurityConfigurer =
+        TaakDocumentResourceHttpSecurityConfigurer()
 }

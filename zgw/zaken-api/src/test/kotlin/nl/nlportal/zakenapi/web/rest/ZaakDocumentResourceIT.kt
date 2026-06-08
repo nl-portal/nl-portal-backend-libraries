@@ -7,7 +7,6 @@ import nl.nlportal.zakenapi.client.ZakenApiConfig
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -40,7 +39,7 @@ class ZaakDocumentResourceIT(
 
     @Test
     @WithBurgerUser("111111110")
-    fun `should return empty response for incorrect user`() {
+    fun `should return 401 for user without rol`() {
         // given
         val zaakDocumentResponse =
             MockResponse()
@@ -73,13 +72,7 @@ class ZaakDocumentResourceIT(
                     .build()
             }
             .exchange()
-            .expectStatus().isOk
-            .expectBody()
-            .consumeWith {
-                assertNull(
-                    it.responseBody,
-                )
-            }
+            .expectStatus().isUnauthorized
 
         val zaakDocumentRequest = mockZakenApi.takeRequest()
         val zaakRolRequest = mockZakenApi.takeRequest()
