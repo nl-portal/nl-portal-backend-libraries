@@ -6,7 +6,6 @@ import nl.nlportal.core.util.CoreUtils.extractId
 import nl.nlportal.documentenapi.client.DocumentApisConfig.DocumentenApisConfigProperties
 import nl.nlportal.documentenapi.client.DocumentenApiClient
 import nl.nlportal.documentenapi.domain.Document
-import nl.nlportal.documentenapi.domain.DocumentContent
 import nl.nlportal.documentenapi.domain.DocumentStatus
 import nl.nlportal.documentenapi.domain.PostEnkelvoudiginformatieobjectRequest
 import nl.nlportal.documentenapi.exceptions.MimeTypeDeniedException
@@ -16,7 +15,6 @@ import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.security.core.context.ReactiveSecurityContextHolder
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Base64
 import java.util.UUID
 
 class DocumentenApiService(
@@ -35,14 +33,6 @@ class DocumentenApiService(
             extractId(documentUrl),
             documentenApisConfigProperties.getConfigForDocumentUrl(documentUrl),
         )
-    }
-
-    suspend fun getDocumentContent(
-        documentId: UUID,
-        documentApi: String,
-    ): DocumentContent {
-        val documentContent = documentenApiClient.getDocumentContent(documentId, documentApi)
-        return DocumentContent(Base64.getEncoder().encodeToString(documentContent))
     }
 
     fun getDocumentContentStreaming(
