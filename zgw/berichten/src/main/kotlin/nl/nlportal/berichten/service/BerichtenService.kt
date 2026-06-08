@@ -16,10 +16,12 @@
 package nl.nlportal.berichten.service
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlinx.coroutines.flow.Flow
 import nl.nlportal.berichten.autoconfigure.BerichtenConfiguration.BerichtenConfigurationProperties
 import nl.nlportal.berichten.domain.Bericht
 import nl.nlportal.berichten.graphql.BerichtenPage
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.core.util.CoreUtils.extractId
 import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.Comparator.EQUAL_TO
 import nl.nlportal.zgw.objectenapi.domain.Comparator.LOWER_THAN_OR_EQUAL_TO
@@ -29,6 +31,7 @@ import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import nl.nlportal.zgw.objectenapi.service.ObjectenApiService
+import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
@@ -77,6 +80,43 @@ class BerichtenService(
         updateRequest.record.correctionFor = objectsApiBericht.record.index.toString()
         val updatedObjectsApiBericht = objectenApiService.updateObject(objectsApiBericht.uuid, updateRequest)
         return updatedObjectsApiBericht?.record?.data?.copy(id = id)
+    }
+
+    suspend fun getBerichtDocumentContent(
+        authentication: CommonGroundAuthentication,
+        berichtId: UUID,
+        documentId: UUID,
+    ): Pair<Document, Flow<DataBuffer>>? {
+        val objectsApiBericht =
+            objectenApiService.getObjectById<Bericht>(berichtId.toString()) ?: return null
+        val bericht = objectsApiBericht.record.data
+
+        if (bericht.identificatie.value != authentication.userId) {
+            logger.debug {
+                "Access denied to document $documentId on bericht $berichtId for user ${authentication.userId}"
+            }
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied")
+        }
+
+        if (!bericht.geopend) {
+            logger.debug {
+                "Access denied to document $documentId on bericht $berichtId for user ${authentication.userId}"
+            }
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied")
+        }
+
+        val bijlageUrl =
+            bericht.bijlages.firstOrNull { extractId(it) == documentId }
+                ?: run {
+                    logger.debug {
+                        "Access denied to document $documentId on bericht $berichtId for user ${authentication.userId}"
+                    }
+                    throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied")
+                }
+
+        val document = documentenApiService.getDocument(bijlageUrl)
+        val content = documentenApiService.getDocumentContentStreaming(bijlageUrl)
+        return document to content
     }
 
     suspend fun getDocumenten(

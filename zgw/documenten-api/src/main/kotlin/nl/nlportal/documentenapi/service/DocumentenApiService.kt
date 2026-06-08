@@ -13,15 +13,7 @@ import nl.nlportal.documentenapi.exceptions.MimeTypeDeniedException
 import nl.nlportal.portal.authentication.domain.PortalAuthentication
 import org.apache.tika.Tika
 import org.springframework.core.io.buffer.DataBuffer
-import org.springframework.core.io.buffer.DataBufferUtils
-import org.springframework.http.codec.multipart.FilePart
 import org.springframework.security.core.context.ReactiveSecurityContextHolder
-import reactor.core.publisher.Flux
-import reactor.core.scheduler.Schedulers
-import java.io.IOException
-import java.io.InputStream
-import java.io.PipedInputStream
-import java.io.PipedOutputStream
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Base64
@@ -68,7 +60,8 @@ class DocumentenApiService(
     }
 
     suspend fun uploadDocument(
-        file: FilePart,
+        content: ByteArray,
+        filename: String,
         documentApi: String,
         informatieobjecttype: String? = null,
     ): Document {
@@ -79,11 +72,9 @@ class DocumentenApiService(
         val documentenApiConfig = documentenApisConfigProperties.getConfig(documentApi)
 
         if (documentenApisConfigProperties.allowedMimeTypes.isNotEmpty()) {
-            getInputStreamFromFluxDataBuffer(file.content()).use {
-                val mediaType = Tika().detect(it).split(";")[0].trim()
-                if (!documentenApisConfigProperties.allowedMimeTypes.contains(mediaType)) {
-                    throw MimeTypeDeniedException("$mediaType is not allowed for uploads.")
-                }
+            val mediaType = Tika().detect(content).split(";")[0].trim()
+            if (mediaType !in documentenApisConfigProperties.allowedMimeTypes) {
+                throw MimeTypeDeniedException("$mediaType is not allowed for uploads.")
             }
         }
 
@@ -91,11 +82,11 @@ class DocumentenApiService(
             PostEnkelvoudiginformatieobjectRequest(
                 bronorganisatie = documentenApiConfig.rsin!!,
                 creatiedatum = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE),
-                titel = file.filename(),
+                titel = filename,
                 auteur = auteur,
                 status = DocumentStatus.DEFINITIEF,
                 taal = "nld",
-                bestandsnaam = file.filename(),
+                bestandsnaam = filename,
                 indicatieGebruiksrecht = false,
                 informatieobjecttype =
                     informatieobjecttype
@@ -104,21 +95,8 @@ class DocumentenApiService(
                         }
                         ?: documentenApiConfig.documentTypeUrl!!,
             ),
-            file.content(),
+            content,
             documentApi,
         )
-    }
-
-    @Throws(IOException::class)
-    private fun getInputStreamFromFluxDataBuffer(content: Flux<DataBuffer>): InputStream {
-        val osPipe = PipedOutputStream()
-        val isPipe = PipedInputStream(osPipe)
-        DataBufferUtils.write(content, osPipe)
-            .subscribeOn(Schedulers.boundedElastic())
-            .doOnComplete {
-                osPipe.close()
-            }
-            .subscribe(DataBufferUtils.releaseConsumer())
-        return isPipe
     }
 }
