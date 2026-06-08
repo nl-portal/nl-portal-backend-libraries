@@ -15,19 +15,9 @@
  */
 package nl.nlportal.payment.qrlink.service
 
-import com.google.zxing.BarcodeFormat
-import com.google.zxing.EncodeHintType
-import com.google.zxing.client.j2se.MatrixToImageConfig
-import com.google.zxing.client.j2se.MatrixToImageWriter
-import com.google.zxing.qrcode.QRCodeWriter
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.io.File
-import java.io.FileOutputStream
 import java.net.URLEncoder
 import java.util.Base64
-import java.util.EnumMap
-import nl.nlportal.core.qrcode.QRCodeException
 import nl.nlportal.core.qrcode.QRCodeFileExtension
 import nl.nlportal.core.qrcode.QRCodeService
 import nl.nlportal.core.util.CoreUtils
@@ -38,9 +28,7 @@ import nl.nlportal.payment.direct.domain.DirectPaymentResponse
 import nl.nlportal.payment.direct.domain.DirectPaymentStatus
 import nl.nlportal.payment.direct.service.DirectPaymentService
 import nl.nlportal.payment.qrlink.autoconfiguratie.QRLinkPaymentModuleConfiguration.QRLinkPaymentProperties
-import nl.nlportal.payment.qrlink.domain.QRLinkPaymentCodeFileType
 import nl.nlportal.payment.qrlink.domain.QRLinkPaymentResponse
-import org.apache.commons.io.FileUtils
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 

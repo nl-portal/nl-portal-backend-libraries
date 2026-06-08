@@ -26,8 +26,6 @@ dependencies {
     implementation(Dependencies.kotlinCoroutines)
     implementation(Dependencies.kotlinCoroutinesReactor)
 
-    //QRCode
-    implementation("com.google.zxing:javase:3.5.4")
     testImplementation(TestDependencies.springBootTest)
     testImplementation(TestDependencies.assertJCore)
     testImplementation(TestDependencies.mockitoKotlin)
