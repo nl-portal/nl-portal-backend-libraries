@@ -16,7 +16,10 @@
 package nl.nlportal.berichten.autoconfigure
 
 import nl.nlportal.berichten.graphql.BerichtenQuery
+import nl.nlportal.berichten.security.config.BerichtDocumentResourceHttpSecurityConfigurer
 import nl.nlportal.berichten.service.BerichtenService
+import nl.nlportal.berichten.web.rest.BerichtDocumentResource
+import nl.nlportal.core.security.config.HttpSecurityConfigurer
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.zgw.objectenapi.service.ObjectenApiService
 import org.springframework.boot.autoconfigure.AutoConfiguration
@@ -44,4 +47,12 @@ class BerichtenAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(BerichtenQuery::class)
     fun berichtenQuery(berichtenService: BerichtenService): BerichtenQuery = BerichtenQuery(berichtenService)
+
+    @Bean
+    @ConditionalOnMissingBean(BerichtDocumentResource::class)
+    fun berichtDocumentResource(berichtenService: BerichtenService): BerichtDocumentResource = BerichtDocumentResource(berichtenService)
+
+    @Bean
+    @ConditionalOnMissingBean(BerichtDocumentResourceHttpSecurityConfigurer::class)
+    fun berichtDocumentResourceHttpSecurityConfigurer(): HttpSecurityConfigurer = BerichtDocumentResourceHttpSecurityConfigurer()
 }
