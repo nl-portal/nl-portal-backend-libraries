@@ -118,6 +118,7 @@ class ProductQuery(
 
     @QueryMapping
     suspend fun getProductType(
+        authentication: CommonGroundAuthentication,
         @Argument productTypeId: UUID? = null,
         @Argument productName: String,
     ): ProductType? =
@@ -134,6 +135,7 @@ class ProductQuery(
 
     @QueryMapping
     suspend fun getProductDecision(
+        authentication: CommonGroundAuthentication,
         @Argument sources: Any? = null,
         @Argument key: String,
         @Argument productTypeId: UUID? = null,
@@ -160,6 +162,7 @@ class ProductQuery(
 
     @QueryMapping
     suspend fun getDecision(
+        authentication: CommonGroundAuthentication,
         @Argument sources: Any? = null,
         @Argument key: String,
         @Argument productTypeId: UUID? = null,
