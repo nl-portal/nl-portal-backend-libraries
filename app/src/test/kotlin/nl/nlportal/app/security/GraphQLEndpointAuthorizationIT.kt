@@ -87,6 +87,9 @@ class GraphQLEndpointAuthorizationIT {
                 // Form definitions - loaded without authentication (e.g. before login)
                 "getFormDefinitionById",
                 "getFormDefinitionByName",
+                "getFormDefinitionByObjectenApiUrl",
+                // Case definitions - schema metadata, no user data
+                "allCaseDefinitions",
             )
     }
 
@@ -97,7 +100,6 @@ class GraphQLEndpointAuthorizationIT {
     @TestFactory
     fun `all GraphQL queries should require authentication`(): List<DynamicTest> {
         val schema = graphQlSource.schema()
-        val queryTypeName = schema.queryType.name
 
         return schema.queryType.fieldDefinitions
             .filter { it.name !in ALLOWED_PUBLIC_OPERATIONS }
