@@ -760,3 +760,4 @@ enum SoortPartij {
 scalar UUID
 scalar Date
 scalar DateTime
+scalar JSON
