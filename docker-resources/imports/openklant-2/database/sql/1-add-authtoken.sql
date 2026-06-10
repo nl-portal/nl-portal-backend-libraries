@@ -17,13 +17,9 @@ VALUES(900, 'V','Vincent', 'van', 'Beek', 100);
 INSERT INTO public.klantinteracties_organisatie (id, naam, partij_id)
 VALUES(901, 'Ritense', 101);
 
-INSERT INTO public.klantinteracties_klantcontact (id, uuid, nummer, referentienummer, kanaal, onderwerp, inhoud, indicatie_contact_gelukt, taal, vertrouwelijk, plaatsgevonden_op, reactie, metadata)
-VALUES (400, '482a8529-0ebd-4424-83a9-b9f88335673d', '0000000333', '0000000333', 'E-mail', 'Vraag over vergunningsaanvraag', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut aliquam velit.', true, 'nld', true, '2025-03-06 11:02:24+00', 'reactie','{
-"test": "test"
-}'),
-       (401, 'f6b89308-7c91-4ca3-a280-4dc08a69de7c', '0000000334', '0000000334', 'Telefoon', 'Klacht', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut aliquam velit.', true, 'nld', true, '2025-01-06 11:02:24+00', 'reactie','{
-"test": "test"
-}');
+INSERT INTO public.klantinteracties_klantcontact (id, uuid, nummer, kanaal, onderwerp, inhoud, indicatie_contact_gelukt, taal, vertrouwelijk, plaatsgevonden_op)
+VALUES (400, '482a8529-0ebd-4424-83a9-b9f88335673d', '0000000333', 'E-mail', 'Vraag over vergunningsaanvraag', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut aliquam velit.', true, 'nld', true, '2025-03-06 11:02:24+00'),
+       (401, 'f6b89308-7c91-4ca3-a280-4dc08a69de7c', '0000000334', 'Telefoon', 'Klacht', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut aliquam velit.', true, 'nld', true, '2025-01-06 11:02:24+00');
 
 INSERT INTO public.klantinteracties_onderwerpobject(id, onderwerpobjectidentificator_object_id, uuid, klantcontact_id, was_klantcontact_id, onderwerpobjectidentificator_code_objecttype, onderwerpobjectidentificator_code_register, onderwerpobjectidentificator_code_soort_object_id)
 VALUES (600, '4a8b9c0d-109f-42d4-910c-bdb6addf47a8', '33489b0e-5954-4fc7-a3fd-d91f00ec0aa3', 400, null, 'zaak', 'open-zaak', 'uuid');

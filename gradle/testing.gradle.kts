@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+import org.gradle.api.tasks.SourceSetContainer
+import org.gradle.api.tasks.testing.Test
+
+val testSourceSet = the<SourceSetContainer>().named("test").get()
+
 tasks.register<Test>("integrationTest") {
     group = "verification"
     description =
@@ -21,6 +26,8 @@ tasks.register<Test>("integrationTest") {
         Composes docker containers and runs Tests tagged with "integration".
         NB! Project root must contain a docker compose file with the following name: docker-compose-override.yml
         """.trimIndent()
+    testClassesDirs = testSourceSet.output.classesDirs
+    classpath = testSourceSet.runtimeClasspath
     useJUnitPlatform {
         includeTags("integration")
     }

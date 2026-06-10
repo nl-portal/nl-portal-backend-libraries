@@ -15,6 +15,7 @@
  */
 package nl.nlportal.payment.graphql
 
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.payment.domain.OgonePayment
 import nl.nlportal.payment.domain.OgonePaymentRequest
 import nl.nlportal.payment.service.OgonePaymentService
@@ -29,6 +30,7 @@ class OgonePaymentMutation(
 ) {
     @MutationMapping
     fun generateOgonePayment(
+        authentication: CommonGroundAuthentication,
         @Argument paymentRequest: OgonePaymentRequest,
     ): OgonePayment =
         ogonePaymentService.createPayment(
