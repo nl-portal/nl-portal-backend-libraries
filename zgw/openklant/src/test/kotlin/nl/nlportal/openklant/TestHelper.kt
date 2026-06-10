@@ -263,7 +263,8 @@ object TestHelper {
                                     },
                                     "adres": "lucas@boom.nl",
                                     "soortDigitaalAdres": "email",
-                                    "omschrijving": "Persoonlijke email adres"
+                                    "omschrijving": "Persoonlijke email adres",
+                                    "isStandaardAdres": true
                                 },
                                 {
                                     "uuid": "2596d218-05fa-4d8f-ab29-8a5c3029dcf2",

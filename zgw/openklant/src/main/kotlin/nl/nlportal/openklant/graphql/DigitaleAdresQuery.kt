@@ -20,6 +20,7 @@ import nl.nlportal.openklant.graphql.domain.DigitaleAdresResponse
 import nl.nlportal.openklant.service.OpenKlant2Service
 import nl.nlportal.verificatie.autoconfigure.VerificatieModuleConfiguration
 import nl.nlportal.verificatie.service.VerificatieService
+import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.stereotype.Controller
 
@@ -32,7 +33,7 @@ class DigitaleAdresQuery(
     @QueryMapping
     suspend fun getUserDigitaleAdressen(
         authentication: CommonGroundAuthentication,
-        isStandaardAdres: Boolean? = false,
+        @Argument isStandaardAdres: Boolean? = false,
     ): List<DigitaleAdresResponse>? {
         val userDigitaleAdressen =
             openklant2Service.findDigitaleAdressen(

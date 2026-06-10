@@ -1,6 +1,6 @@
 
 query {
-    getUserDigitaleAdressen(isStandaardAdres: true) {
+    getUserDigitaleAdressen(isStandaardAdres: false) {
         uuid
         waarde
         type

@@ -34,6 +34,7 @@ data class OpenKlant2DigitaleAdres(
     val verstrektDoorBetrokkene: OpenKlant2UUID? = null,
     val verstrektDoorPartij: OpenKlant2UUID? = null,
     val verificatieDatum: LocalDate? = null,
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     val isStandaardAdres: Boolean? = null,
 ) {
     init {
