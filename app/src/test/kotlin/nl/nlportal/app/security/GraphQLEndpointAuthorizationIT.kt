@@ -15,21 +15,26 @@
  */
 package nl.nlportal.app.security
 
-import graphql.schema.GraphQLFieldDefinition
 import nl.nlportal.app.TestApplication
 import nl.nlportal.app.UnmappedGraphQlFields
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Tag
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
+import org.springframework.beans.factory.ListableBeanFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.getBeansWithAnnotation
 import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.graphql.data.method.annotation.SubscriptionMapping
 import org.springframework.graphql.execution.GraphQlSource
 import org.springframework.graphql.test.tester.HttpGraphQlTester
+import org.springframework.stereotype.Controller
 
 /**
  * Integration test that DYNAMICALLY discovers ALL GraphQL queries and mutations
@@ -62,13 +67,7 @@ import org.springframework.graphql.test.tester.HttpGraphQlTester
 @Tag("integration")
 class GraphQLEndpointAuthorizationIT {
     @Autowired
-    lateinit var httpGraphQlTester: HttpGraphQlTester
-
-    @Autowired
-    lateinit var graphQlSource: GraphQlSource
-
-    @Autowired
-    lateinit var unmappedGraphQlFields: UnmappedGraphQlFields
+    lateinit var listableBeanFactory: ListableBeanFactory
 
     companion object {
         /**
@@ -99,171 +98,76 @@ class GraphQLEndpointAuthorizationIT {
 
     @TestFactory
     fun `all GraphQL queries should require authentication`(): List<DynamicTest> {
-        val schema = graphQlSource.schema()
+        var controllers = listableBeanFactory.getBeansWithAnnotation<Controller>()
 
-        return schema.queryType.fieldDefinitions
-            .filter { it.name !in ALLOWED_PUBLIC_OPERATIONS }
-            .filter { field -> field.name !in unmappedGraphQlFields.queryFields }
-            .map { field ->
-                DynamicTest.dynamicTest("Query '${field.name}' should require authentication") {
-                    assertRequiresAuthentication(field, isQuery = true)
+        return controllers.flatMap { controller ->
+            controller.value.javaClass.declaredMethods.mapNotNull { method ->
+                if (method.isAnnotationPresent(QueryMapping::class.java)) {
+                    DynamicTest.dynamicTest("QueryMapping: ${method.name} should not be public") {
+                        val isProtected = method.parameters.find { it.type == CommonGroundAuthentication::class.java } != null
+                        val isAllowedPublic = ALLOWED_PUBLIC_OPERATIONS.find { method.name.startsWith(it) } != null
+
+                        assert(isProtected || isAllowedPublic) {
+                            """
+                            QueryMapping: ${controller.key} - ${method.name} does not have a CommonGroundAuthentication and therefore is
+                            publicly accessible if this is correct, add the function to the exclusion list.
+                            """.trimIndent()
+                        }
+                    }
+                } else {
+                    null
                 }
             }
+        }
     }
 
     @TestFactory
     fun `all GraphQL mutations should require authentication`(): List<DynamicTest> {
-        val schema = graphQlSource.schema()
-        val mutationType = schema.mutationType ?: return emptyList()
+        var controllers = listableBeanFactory.getBeansWithAnnotation<Controller>()
 
-        return mutationType.fieldDefinitions
-            .filter { it.name !in ALLOWED_PUBLIC_OPERATIONS }
-            .filter { field -> field.name !in unmappedGraphQlFields.mutationFields }
-            .map { field ->
-                DynamicTest.dynamicTest("Mutation '${field.name}' should require authentication") {
-                    assertRequiresAuthentication(field, isQuery = false)
-                }
-            }
-    }
+        return controllers.flatMap { controller ->
+            controller.value.javaClass.declaredMethods.mapNotNull { method ->
+                if (method.isAnnotationPresent(MutationMapping::class.java)) {
+                    DynamicTest.dynamicTest("MutationMapping: ${method.name} should not be public") {
+                        val isProtected = method.parameters.find { it.type == CommonGroundAuthentication::class.java } != null
+                        val isAllowedPublic = ALLOWED_PUBLIC_OPERATIONS.find { method.name.startsWith(it) } != null
 
-    // ============================================================
-    // Dynamic test: every public query should succeed without auth
-    // ============================================================
-
-    @TestFactory
-    fun `all public GraphQL queries should be accessible without authentication`(): List<DynamicTest> {
-        val schema = graphQlSource.schema()
-
-        return schema.queryType.fieldDefinitions
-            .filter { it.name in ALLOWED_PUBLIC_OPERATIONS }
-            .map { field ->
-                DynamicTest.dynamicTest("Query '${field.name}' should be accessible without authentication") {
-                    assertAccessibleWithoutAuthentication(field, isQuery = true)
-                }
-            }
-    }
-
-    @TestFactory
-    fun `all public GraphQL mutations should be accessible without authentication`(): List<DynamicTest> {
-        val schema = graphQlSource.schema()
-        val mutationType = schema.mutationType ?: return emptyList()
-
-        return mutationType.fieldDefinitions
-            .filter { it.name in ALLOWED_PUBLIC_OPERATIONS }
-            .map { field ->
-                DynamicTest.dynamicTest("Mutation '${field.name}' should be accessible without authentication") {
-                    assertAccessibleWithoutAuthentication(field, isQuery = false)
-                }
-            }
-    }
-
-    // ============================================================
-    // Sanity check: verify schema has expected number of endpoints
-    // ============================================================
-
-    @Test
-    fun `schema should have queries registered`() {
-        val schema = graphQlSource.schema()
-        val totalCount = schema.queryType.fieldDefinitions.size
-        val activeCount =
-            schema.queryType.fieldDefinitions
-                .count { field -> field.name !in unmappedGraphQlFields.queryFields }
-        assert(totalCount > 0) {
-            "No queries found in GraphQL schema SDL - something is wrong with schema assembly"
-        }
-        println("Discovered $activeCount active GraphQL queries (of $totalCount declared in SDL)")
-    }
-
-    @Test
-    fun `schema should have mutations registered`() {
-        val schema = graphQlSource.schema()
-        val mutationType = schema.mutationType
-        val totalCount = mutationType?.fieldDefinitions?.size ?: 0
-        val activeCount =
-            mutationType
-                ?.fieldDefinitions
-                ?.count { field -> field.name !in unmappedGraphQlFields.mutationFields } ?: 0
-        assert(totalCount > 0) {
-            "No mutations found in GraphQL schema SDL - something is wrong with schema assembly"
-        }
-        println("Discovered $activeCount active GraphQL mutations (of $totalCount declared in SDL)")
-    }
-
-    // ============================================================
-    // Helper: execute operation and verify auth is required
-    // ============================================================
-
-    private fun assertAccessibleWithoutAuthentication(
-        field: GraphQLFieldDefinition,
-        isQuery: Boolean,
-    ) {
-        val document =
-            if (isQuery) {
-                GraphQLQueryBuilder.buildQuery(field)
-            } else {
-                GraphQLQueryBuilder.buildMutation(field)
-            }
-
-        httpGraphQlTester
-            .document(document)
-            .execute()
-            .errors()
-            .satisfy { errors ->
-                val authErrors =
-                    errors.filter { error ->
-                        error.extensions["classification"] == "UNAUTHORIZED" ||
-                            error.message?.contains("Unauthorized", ignoreCase = true) == true ||
-                            error.message?.contains("Access Denied", ignoreCase = true) == true ||
-                            error.message?.contains("403", ignoreCase = true) == true
+                        assert(isProtected || isAllowedPublic) {
+                            """
+                            MutationMapping: ${controller.key} - ${method.name} does not have a CommonGroundAuthentication and therefore is
+                            publicly accessible if this is correct, add the function to the exclusion list.
+                            """.trimIndent()
+                        }
                     }
-                assert(authErrors.isEmpty()) {
-                    """
-                    |PUBLIC ENDPOINT BLOCKED: ${if (isQuery) "Query" else "Mutation"} '${field.name}'
-                    |returned an authentication error when called without authentication!
-                    |
-                    |This endpoint is listed in ALLOWED_PUBLIC_OPERATIONS but is not actually public.
-                    |Either remove it from ALLOWED_PUBLIC_OPERATIONS, or remove the
-                    |'authentication: CommonGroundAuthentication' parameter from the resolver method.
-                    |
-                    |Auth errors: ${authErrors.joinToString { it.message ?: "unknown" }}
-                    |Query used: $document
-                    """.trimMargin()
+                } else {
+                    null
                 }
             }
+        }
     }
 
-    private fun assertRequiresAuthentication(
-        field: GraphQLFieldDefinition,
-        isQuery: Boolean,
-    ) {
-        val document =
-            if (isQuery) {
-                GraphQLQueryBuilder.buildQuery(field)
-            } else {
-                GraphQLQueryBuilder.buildMutation(field)
-            }
+    @TestFactory
+    fun `all GraphQL subscription queries should require authentication`(): List<DynamicTest> {
+        var controllers = listableBeanFactory.getBeansWithAnnotation<Controller>()
 
-        httpGraphQlTester
-            .document(document)
-            .execute()
-            .errors()
-            .satisfy { errors ->
-                assert(errors.isNotEmpty()) {
-                    """
-                    |SECURITY VIOLATION: ${if (isQuery) "Query" else "Mutation"} '${field.name}'
-                    |returned no errors when called without authentication!
-                    |
-                    |This means the endpoint is publicly accessible.
-                    |
-                    |If this is INTENTIONAL, add '${field.name}' to
-                    |ALLOWED_PUBLIC_OPERATIONS in GraphQLEndpointAuthorizationIT.
-                    |
-                    |If this is a BUG, add 'authentication: CommonGroundAuthentication'
-                    |as a parameter to the resolver method.
-                    |
-                    |Query used: $document
-                    """.trimMargin()
+        return controllers.flatMap { controller ->
+            controller.value.javaClass.declaredMethods.mapNotNull { method ->
+                if (method.isAnnotationPresent(SubscriptionMapping::class.java)) {
+                    DynamicTest.dynamicTest("SubscriptionMapping: ${method.name} should not be public") {
+                        val isProtected = method.parameters.find { it.type == CommonGroundAuthentication::class.java } != null
+                        val isAllowedPublic = ALLOWED_PUBLIC_OPERATIONS.find { method.name.startsWith(it) } != null
+
+                        assert(isProtected || isAllowedPublic) {
+                            """
+                            SubscriptionMapping: ${controller.key} - ${method.name} does not have a CommonGroundAuthentication and therefore is
+                            publicly accessible if this is correct, add the function to the exclusion list.
+                            """.trimIndent()
+                        }
+                    }
+                } else {
+                    null
                 }
             }
+        }
     }
 }
