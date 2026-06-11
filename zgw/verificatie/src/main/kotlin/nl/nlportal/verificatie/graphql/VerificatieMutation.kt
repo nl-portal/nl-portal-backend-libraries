@@ -31,6 +31,7 @@ class VerificatieMutation(
 ) {
     @MutationMapping
     suspend fun createVerificatie(
+        authentication: CommonGroundAuthentication,
         @Argument verificatieCreateInput: VerificatieCreateInput,
     ): VerificatieCreateResponse =
         verificatieService.createVerificatie(

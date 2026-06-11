@@ -30,6 +30,7 @@ object Versions {
     const val springCloud = "4.3.0"
 
     //Test versions
+    const val archUnit = "1.3.0"
     const val hamcrest = "3.0"
     const val mockitoKotlin = "6.1.0"
     const val okHttp3 = "5.2.0"

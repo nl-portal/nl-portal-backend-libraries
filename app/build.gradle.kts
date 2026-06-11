@@ -44,6 +44,8 @@ dependencies {
     api("org.postgresql:postgresql")
 
     testImplementation(project(":zgw:common-ground-authentication-test"))
+    testImplementation(project(":case"))
+    testImplementation(TestDependencies.archUnitJunit5)
     testImplementation(TestDependencies.postgresql)
     testImplementation(TestDependencies.springBootTest)
     testImplementation(TestDependencies.springSecurityTest)

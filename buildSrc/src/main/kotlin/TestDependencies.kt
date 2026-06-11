@@ -15,6 +15,7 @@
  */
 
 object TestDependencies {
+    val archUnitJunit5 by lazy { "com.tngtech.archunit:archunit-junit5:${Versions.archUnit}" }
     val hamcrest by lazy { "org.hamcrest:hamcrest:${Versions.hamcrest}" }
     val kotlinCoroutines by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlinCoroutines}"}
     val mockitoKotlin by lazy { "org.mockito.kotlin:mockito-kotlin:${Versions.mockitoKotlin}" }

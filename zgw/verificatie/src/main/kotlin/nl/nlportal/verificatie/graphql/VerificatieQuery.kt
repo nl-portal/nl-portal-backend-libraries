@@ -15,6 +15,7 @@
  */
 package nl.nlportal.verificatie.graphql
 
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.verificatie.autoconfigure.VerificatieModuleConfiguration
 import nl.nlportal.verificatie.graphql.domain.VerificationConfig
 import org.springframework.graphql.data.method.annotation.QueryMapping
@@ -25,7 +26,7 @@ class VerificatieQuery(
     val verificatieModuleConfiguration: VerificatieModuleConfiguration,
 ) {
     @QueryMapping
-    fun verificatieConfig(): VerificationConfig =
+    fun verificatieConfig(authentication: CommonGroundAuthentication): VerificationConfig =
         VerificationConfig(
             enabled = verificatieModuleConfiguration.enabled,
             typesNeedVerification = verificatieModuleConfiguration.properties.typesNeedVerification,
