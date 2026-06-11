@@ -17,6 +17,16 @@ nl-portal:
             enabled: true
             properties:
                 object-type-url: "http://localhost:8011/api/v1/objecttypes/3c24cab6-4346-4c7d-912b-e34a1e9e21bf"
+        documentenapis:
+            enabled: true
+            properties:
+                default-document-api: localhost
+                configs:
+                    localhost:
+                        url: http://localhost:8001
+                        token: 0000000000000000000000000000000000000000
+                        rsin: "051845623"
+                        document-type-url: "http://localhost:8001/api/v1/informatieobjecttypen/1"
     authentication:
         machtingsdienst:
             resource-url: classpath:machtigingsdiensten.json

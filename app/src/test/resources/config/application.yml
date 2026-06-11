@@ -55,13 +55,13 @@ nl-portal:
             properties:
                 url: http://localhost:56789
                 clientId: test-client
-                secret: test-secret
+                secret: 12345678123456781234567812345678
         catalogiapi:
             enabled: true
             properties:
                 url: http://localhost:56789
                 clientId: test-client
-                secret: test-secret
+                secret: 12345678123456781234567812345678
         documentenapis:
             enabled: true
             properties:
@@ -178,7 +178,7 @@ nl-portal:
                             failureUrl: http://localhost:3000
                             successUrl: http://localhost:3000
         verificatie:
-            enabled: false
+            enabled: true
         theme:
             logo:
             style:

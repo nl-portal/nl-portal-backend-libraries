@@ -26,6 +26,7 @@ dependencies {
     api(project(":graphql"))
     api(project(":zgw:common-ground-authentication"))
     api(project(":zgw:objectenapi"))
+    api(project(":zgw:documenten-api"))
 
 
     implementation(Dependencies.kotlinCoroutines)
@@ -35,6 +36,8 @@ dependencies {
     testImplementation(TestDependencies.springBootTest)
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.okHttpMockWebserver)
+    testImplementation(TestDependencies.mockitoKotlin)
+    testImplementation(TestDependencies.kotlinCoroutines)
     testImplementation("org.springframework.graphql:spring-graphql-test")
 }
 
