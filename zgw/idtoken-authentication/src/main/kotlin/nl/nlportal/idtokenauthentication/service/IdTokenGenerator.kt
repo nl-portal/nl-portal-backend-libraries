@@ -15,10 +15,13 @@
  */
 package nl.nlportal.idtokenauthentication.service
 
-import io.jsonwebtoken.JwtBuilder
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.security.Keys
+import com.nimbusds.jose.JWSAlgorithm
+import com.nimbusds.jose.JWSHeader
+import com.nimbusds.jose.crypto.MACSigner
+import com.nimbusds.jwt.JWTClaimsSet.Builder
+import com.nimbusds.jwt.SignedJWT
 import java.util.Date
+
 
 class IdTokenGenerator {
     fun generateToken(
@@ -29,16 +32,22 @@ class IdTokenGenerator {
             "SecretKey needs to be at least 32 in length"
         }
 
-        val signingKey = Keys.hmacShaKeyFor(secretKey.encodeToByteArray())
-        val jwtBuilder = Jwts.builder()
-
-        return jwtBuilder
+        val claimsSet = Builder()
+            .subject(clientId)
             .issuer(clientId)
-            .issuedAt(Date())
+            .issueTime(Date())
+            .expirationTime(Date(System.currentTimeMillis() + 15 * 60 * 1000)) // 15 minutes
             .claim("client_id", clientId)
             .appendUserInfo(null, null)
-            .signWith(signingKey)
-            .compact()
+            .build()
+
+        val signedJWT = SignedJWT(
+            JWSHeader.Builder(JWSAlgorithm.HS256)
+                .build(),
+            claimsSet
+        )
+        signedJWT.sign(MACSigner(secretKey.encodeToByteArray()))
+        return signedJWT.serialize()
     }
 
     fun generateToken(
@@ -51,67 +60,28 @@ class IdTokenGenerator {
             "SecretKey needs to be at least 32 in length"
         }
 
-        val signingKey = Keys.hmacShaKeyFor(secretKey.encodeToByteArray())
-        val jwtBuilder = Jwts.builder()
-
-        return jwtBuilder
+        val claimsSet = Builder()
+            .subject(clientId)
             .issuer(clientId)
-            .issuedAt(Date())
+            .issueTime(Date())
+            .expirationTime(Date(System.currentTimeMillis() + 15 * 60 * 1000)) // 15 minutes
             .claim("client_id", clientId)
             .appendUserInfo(userId, userRepresentation)
-            .signWith(signingKey)
-            .compact()
+            .build()
+
+        val signedJWT = SignedJWT(
+            JWSHeader.Builder(JWSAlgorithm.HS256)
+                .build(),
+            claimsSet
+        )
+        signedJWT.sign(MACSigner(secretKey.encodeToByteArray()))
+        return signedJWT.serialize()
     }
 
-    fun generateToken(
-        secretKey: String,
-        clientId: String,
-        claims: Map<String, Any>,
-    ): String {
-        require(secretKey.length >= 32) {
-            "SecretKey needs to be at least 32 in length"
-        }
-
-        val signingKey = Keys.hmacShaKeyFor(secretKey.encodeToByteArray())
-        val jwtBuilder = Jwts.builder()
-
-        return jwtBuilder
-            .issuer(clientId)
-            .issuedAt(Date())
-            .claim("client_id", clientId)
-            .claims(claims)
-            .appendUserInfo(null, null)
-            .signWith(signingKey)
-            .compact()
-    }
-
-    fun generateToken(
-        secretKey: String,
-        clientId: String,
-        userId: String,
-        userRepresentation: Any,
-        claims: Map<String, Any>,
-    ): String {
-        require(secretKey.length >= 32) {
-            "SecretKey needs to be at least 32 in length"
-        }
-
-        val signingKey = Keys.hmacShaKeyFor(secretKey.encodeToByteArray())
-        val jwtBuilder = Jwts.builder()
-
-        return jwtBuilder
-            .issuer(clientId)
-            .issuedAt(Date())
-            .claims(claims)
-            .appendUserInfo(userId, userRepresentation)
-            .signWith(signingKey)
-            .compact()
-    }
-
-    private fun JwtBuilder.appendUserInfo(
+    private fun Builder.appendUserInfo(
         userId: String?,
         userRepresentation: Any?,
-    ): JwtBuilder {
+    ): Builder {
         return this
             .claim("user_id", userId ?: DEFAULT_USER_ID)
             .claim("user_representation", userRepresentation ?: DEFAULT_USER_REPRESENTATION)

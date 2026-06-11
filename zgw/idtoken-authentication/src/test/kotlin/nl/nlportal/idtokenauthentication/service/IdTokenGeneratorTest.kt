@@ -1,17 +1,17 @@
 package nl.nlportal.idtokenauthentication.service
 
+import com.nimbusds.jwt.SignedJWT
+import kotlin.test.assertEquals
 import nl.nlportal.idtokenauthentication.TestHelper.TEST_CLIENT_ID
 import nl.nlportal.idtokenauthentication.TestHelper.TEST_ENCRYPTION_SECRET_INVALID
 import nl.nlportal.idtokenauthentication.TestHelper.TEST_ENCRYPTION_SECRET_VALID
 import nl.nlportal.idtokenauthentication.TestHelper.TEST_USER_ID
 import nl.nlportal.idtokenauthentication.TestHelper.TEST_USER_REPRESENTATION
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.security.Keys
-import kotlin.test.assertEquals
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+
 
 class IdTokenGeneratorTest {
     private val idTokenGenerator = IdTokenGenerator()
@@ -36,16 +36,13 @@ class IdTokenGeneratorTest {
                 testClientId,
             )
 
-        val claims =
-            Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(testSecretKey.encodeToByteArray()))
-                .build()
-                .parseSignedClaims(generatedToken)
+        val signedJWT = SignedJWT.parse(generatedToken)
+        val claimsSet = signedJWT.getJWTClaimsSet()
 
-        Assertions.assertThat(claims.payload.issuer).isEqualTo(testClientId)
-        Assertions.assertThat(claims.payload.get("client_id")).isEqualTo(testClientId)
-        Assertions.assertThat(claims.payload.get("user_id")).isEqualTo("Valtimo")
-        Assertions.assertThat(claims.payload.get("user_representation")).isEqualTo("Valtimo")
+        Assertions.assertThat(claimsSet.issuer).isEqualTo(testClientId)
+        Assertions.assertThat(claimsSet.claims.get("client_id")).isEqualTo(testClientId)
+        Assertions.assertThat(claimsSet.claims.get("user_id")).isEqualTo("Valtimo")
+        Assertions.assertThat(claimsSet.claims.get("user_representation")).isEqualTo("Valtimo")
     }
 
     @Test
@@ -60,16 +57,12 @@ class IdTokenGeneratorTest {
                 testUserRepresentation,
             )
 
-        val claims =
-            Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(testSecretKey.encodeToByteArray()))
-                .build()
-                .parseSignedClaims(generatedToken)
+        val signedJWT = SignedJWT.parse(generatedToken)
+        val claimsSet = signedJWT.getJWTClaimsSet()
 
-        Assertions.assertThat(claims.payload.issuer).isEqualTo(testClientId)
-        Assertions.assertThat(claims.payload.get("client_id")).isEqualTo(testClientId)
-        Assertions.assertThat(claims.payload.get("user_id")).isEqualTo(testUserId)
-        Assertions.assertThat(claims.payload.get("user_representation")).isEqualTo(testUserRepresentation)
+        Assertions.assertThat(claimsSet.issuer).isEqualTo(testClientId)
+        Assertions.assertThat(claimsSet.claims.get("client_id")).isEqualTo(testClientId)
+        Assertions.assertThat(claimsSet.claims.get("user_id")).isEqualTo(testUserId)
     }
 
     @Test

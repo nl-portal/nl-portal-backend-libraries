@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration
 
 @AutoConfiguration
 class IdTokenGeneratorAutoConfiguration {
+
     @Bean
     fun idTokenGenerator(): IdTokenGenerator {
         return IdTokenGenerator()

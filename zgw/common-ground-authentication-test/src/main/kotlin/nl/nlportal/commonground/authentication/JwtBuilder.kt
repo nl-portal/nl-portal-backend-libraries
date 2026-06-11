@@ -15,13 +15,15 @@
  */
 package nl.nlportal.commonground.authentication
 
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.security.Keys
-import nl.nlportal.portal.authentication.domain.SUB_KEY
-import org.springframework.security.oauth2.jwt.Jwt
-import java.nio.charset.StandardCharsets
+import com.nimbusds.jose.JWSAlgorithm
+import com.nimbusds.jose.JWSHeader
+import com.nimbusds.jose.crypto.MACSigner
+import com.nimbusds.jwt.JWTClaimsSet.Builder
+import com.nimbusds.jwt.SignedJWT
 import java.util.Date
 import java.util.UUID
+import nl.nlportal.portal.authentication.domain.SUB_KEY
+import org.springframework.security.oauth2.jwt.Jwt
 
 class JwtBuilder {
     private var aanvragerBsn: String? = null
@@ -119,20 +121,23 @@ class JwtBuilder {
         return jwtBuilder.build()
     }
 
-    fun randomClaimes(): Jwt.Builder? = jwtBuilder.claim("claim", "value")
-
     fun buildJwtString(secretString: String): String {
-        val jwt = randomClaimes()!!.build()
+        val claimsSet =
+            Builder()
+                .issueTime(Date())
+                .expirationTime(Date(System.currentTimeMillis() + 20000)) // 15 minutes
+                .claim("claim", "value")
+                .build()
 
-        val key = Keys.hmacShaKeyFor(secretString.toByteArray(StandardCharsets.UTF_8))
-
-        return Jwts
-            .builder()
-            .claims(jwt.claims)
-            .subject(jwt.subject)
-            .expiration(Date(System.currentTimeMillis() + 20000))
-            .signWith(key)
-            .compact()
+        val signedJWT =
+            SignedJWT(
+                JWSHeader
+                    .Builder(JWSAlgorithm.HS256)
+                    .build(),
+                claimsSet,
+            )
+        signedJWT.sign(MACSigner(secretString.encodeToByteArray()))
+        return signedJWT.serialize()
     }
 
     fun buildBurgerAuthentication(): BurgerAuthentication {

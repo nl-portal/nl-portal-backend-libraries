@@ -25,11 +25,6 @@ dependencies {
     api(project(":zgw:common-ground-authentication"))
     api(project(":haalcentraal-hr"))
 
-    // jjwt
-    implementation(Dependencies.jsonWebTokensApi)
-    implementation(Dependencies.jsonWebTokensImpl)
-    implementation(Dependencies.jsonWebTokensJackson)
-
     implementation(Dependencies.kotlinCoroutines)
     implementation(Dependencies.kotlinCoroutinesReactor)
     implementation("org.springframework.data:spring-data-commons")

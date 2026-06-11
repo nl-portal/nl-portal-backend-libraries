@@ -17,9 +17,6 @@
 object Dependencies {
     val everitJsonSchema by lazy { "com.github.erosb:everit-json-schema:${Versions.everitJsonSchema}" }
     val jsonPath by lazy { "com.jayway.jsonpath:json-path:${Versions.jsonPath}" }
-    val jsonWebTokensApi by lazy { "io.jsonwebtoken:jjwt-api:${Versions.jsonWebTokens}" }
-    val jsonWebTokensImpl by lazy { "io.jsonwebtoken:jjwt-impl:${Versions.jsonWebTokens}" }
-    val jsonWebTokensJackson by lazy { "io.jsonwebtoken:jjwt-jackson:${Versions.jsonWebTokens}" }
     val kotlinCoroutines by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlinCoroutines}" }
     val kotlinCoroutinesReactor by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${Versions.kotlinCoroutines}" }
     val springCloudConfig by lazy { "org.springframework.cloud:spring-cloud-starter-config:${Versions.springCloud}" }

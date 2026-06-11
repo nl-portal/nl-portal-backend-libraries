@@ -20,9 +20,6 @@ plugins {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     api(project(":zgw:common-ground-authentication"))
-    implementation(Dependencies.jsonWebTokensApi)
-    implementation(Dependencies.jsonWebTokensImpl)
-    implementation(Dependencies.jsonWebTokensJackson)
     implementation(TestDependencies.springSecurityTest)
 
     testImplementation(TestDependencies.springBootTest)
