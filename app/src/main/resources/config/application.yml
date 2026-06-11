@@ -25,8 +25,10 @@ spring:
         name: nl-portal-backend-libraries
     graphql:
         graphiql:
-            enabled: true
+            enabled: false
         schema:
+            introspection:
+                enabled: false
             locations: classpath*:graphql/**/
             inspection:
                 enabled: true

@@ -16,10 +16,7 @@
 package nl.nlportal.documentenapi.client
 
 import io.netty.handler.logging.LogLevel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.reactor.awaitSingleOrNull
-import kotlinx.coroutines.withContext
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.core.ssl.ClientSslContextResolver
@@ -28,7 +25,6 @@ import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.domain.PostEnkelvoudiginformatieobjectRequest
 import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import org.springframework.core.io.buffer.DataBuffer
-import org.springframework.core.io.buffer.DataBufferUtils
 import org.springframework.http.MediaType
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.BodyInserters
@@ -36,7 +32,6 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.reactive.function.client.bodyToFlow
-import reactor.core.publisher.Flux
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
 import java.util.Base64
@@ -92,35 +87,22 @@ class DocumentenApiClient(
 
     suspend fun postDocument(
         request: PostEnkelvoudiginformatieobjectRequest,
-        documentContent: Flux<DataBuffer>,
+        documentContent: ByteArray,
         documentApi: String,
     ): Document {
-        request.inhoud = UUID.randomUUID().toString()
+        request.inhoud = Base64.getEncoder().encodeToString(documentContent)
 
-        val documentContentStream = DataBufferUtils.join(documentContent).awaitSingleOrNull()?.asInputStream()
-
-        request.inhoud =
-            withContext(Dispatchers.IO) {
-                Base64.getEncoder()
-                    .encodeToString(
-                        documentContentStream?.readAllBytes(),
-                    )
-            }
-
-        val response =
-            webClient(documentApi)
-                .post()
-                .uri("/enkelvoudiginformatieobjecten")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .body(
-                    BodyInserters
-                        .fromValue(request),
-                )
-                .retrieve()
-                .awaitBody<Document>()
-
-        return response
+        return webClient(documentApi)
+            .post()
+            .uri("/enkelvoudiginformatieobjecten")
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .body(
+                BodyInserters
+                    .fromValue(request),
+            )
+            .retrieve()
+            .awaitBody<Document>()
     }
 
     private fun webClient(documentApi: String): WebClient {

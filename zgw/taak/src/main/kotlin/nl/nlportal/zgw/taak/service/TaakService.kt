@@ -107,11 +107,7 @@ open class TaakService(
             TaakV2.fromObjectsApi(
                 getObjectsApiTaak<TaakObjectV2>(id),
             )
-        // do validation if the user is authenticated for this task
-        val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
-        if (!isAuthorized || !authenticationMachtigingsDienstService.isAllowedTaakType(authentication, taak.eigenaar)) {
-            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this taak")
-        }
+        isAuthorizedForTaak(authentication, taak)
 
         return taak
     }
@@ -138,12 +134,7 @@ open class TaakService(
     ): TaakV2 {
         val objectsApiTask =
             getObjectsApiTaak<TaakObjectV2>(id)
-        val taak = TaakV2.fromObjectsApi(objectsApiTask)
-        // do validation if the user is authenticated for this task
-        val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
-        if (!isAuthorized || !authenticationMachtigingsDienstService.isAllowedTaakType(authentication, taak.eigenaar)) {
-            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this taak")
-        }
+        isAuthorizedForTaak(authentication, objectsApiTask)
         if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
             throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
@@ -241,6 +232,28 @@ open class TaakService(
         taakIdentificatie: TaakIdentificatie,
     ): Boolean {
         return taakIdentificatie.type.lowercase() == authentication.userType && taakIdentificatie.value == authentication.userId
+    }
+
+    private fun isAuthorizedForTaak(
+        authentication: CommonGroundAuthentication,
+        taak: TaakV2,
+    ) {
+        // do validation if the user is authenticated for this task
+        val isAuthorized = isAuthorizedForTaak(authentication, taak.identificatie)
+        if (!isAuthorized || !authenticationMachtigingsDienstService.isAllowedTaakType(authentication, taak.eigenaar)) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this taak")
+        }
+    }
+
+    private fun isAuthorizedForTaak(
+        authentication: CommonGroundAuthentication,
+        taakObject: ObjectsApiObject<TaakObjectV2>,
+    ) {
+        // do validation if the user is authenticated for this task
+        val isAuthorized = isAuthorizedForTaak(authentication, taakObject.record.data.identificatie)
+        if (!isAuthorized || !authenticationMachtigingsDienstService.isAllowedTaakType(authentication, taakObject.record.data.eigenaar)) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this taak")
+        }
     }
 
     companion object {

@@ -148,7 +148,7 @@ class OpenProductThemaQueryIT(
                     .get()
 
             assertEquals(1, responseBody.size())
-            assertEquals("HoofdThema", responseBody.requiredAt("/0/naam")?.stringValue())
+            assertEquals("HoofdThema", responseBody.requiredAt("/0/naam")?.textValue())
         }
 
     @Test
