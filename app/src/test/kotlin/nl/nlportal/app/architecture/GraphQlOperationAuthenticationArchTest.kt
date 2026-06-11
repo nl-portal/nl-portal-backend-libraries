@@ -40,10 +40,17 @@ class GraphQlOperationAuthenticationArchTest {
     fun `graphql query and mutation methods must declare a CommonGroundAuthentication parameter`() {
         methods()
             .that(annotatedWithQueryOrMutationMapping())
-            .and().doNotHaveModifier(JavaModifier.SYNTHETIC)
-            .and().areDeclaredInClassesThat().areAnnotatedWith(Controller::class.java)
-            .and().areDeclaredInClassesThat().resideInAPackage("..graphql..")
-            .and().areDeclaredInClassesThat().haveSimpleNameNotEndingWith("DefinitionQuery")
+            .and()
+            .doNotHaveModifier(JavaModifier.SYNTHETIC)
+            .and()
+            .areDeclaredInClassesThat()
+            .areAnnotatedWith(Controller::class.java)
+            .and()
+            .areDeclaredInClassesThat()
+            .resideInAPackage("..graphql..")
+            .and()
+            .areDeclaredInClassesThat()
+            .haveSimpleNameNotEndingWith("DefinitionQuery")
             .should(declareCommonGroundAuthenticationParameter())
             .check(importedClasses)
     }
@@ -55,7 +62,10 @@ class GraphQlOperationAuthenticationArchTest {
 
     private fun declareCommonGroundAuthenticationParameter(): ArchCondition<JavaMethod> =
         object : ArchCondition<JavaMethod>("declare a parameter of type $AUTHENTICATION_TYPE") {
-            override fun check(method: JavaMethod, events: ConditionEvents) {
+            override fun check(
+                method: JavaMethod,
+                events: ConditionEvents,
+            ) {
                 val hasAuthentication = method.rawParameterTypes.any { it.fullName == AUTHENTICATION_TYPE }
                 if (!hasAuthentication) {
                     events.add(
