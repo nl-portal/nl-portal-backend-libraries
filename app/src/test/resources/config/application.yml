@@ -178,7 +178,7 @@ nl-portal:
                             failureUrl: http://localhost:3000
                             successUrl: http://localhost:3000
         verificatie:
-            enabled: false
+            enabled: true
         theme:
             logo:
             style:

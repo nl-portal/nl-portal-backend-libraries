@@ -34,6 +34,10 @@ jobs:
                 run: ./gradlew htmlDependencyReport
             -   name: Publish staged artifacts with Gradle
                 run: ./gradlew publish -Pversion=${{env.ARTIFACT_VERSION}} --stacktrace
+            -   name: Create git tag
+                run: |
+                    git tag "${ARTIFACT_VERSION}"
+                    git push origin "${ARTIFACT_VERSION}"
             -   name: Deploy to Maven Central with JReleaser
                 uses: jreleaser/release-action@v2
                 with:
