@@ -17,10 +17,8 @@ package nl.nlportal.payment.qrlink.autoconfiguratie
 
 import nl.nlportal.core.qrcode.QRCodeService
 import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration
-import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration.DirectPaymentProperties
 import nl.nlportal.payment.direct.service.DirectPaymentService
-import nl.nlportal.payment.qrlink.api.QRLinkPaymentController
-import nl.nlportal.payment.qrlink.autoconfiguratie.QRLinkPaymentModuleConfiguration.QRLinkPaymentProperties
+import nl.nlportal.payment.qrlink.web.rest.QRLinkPaymentController
 import nl.nlportal.payment.qrlink.filter.QRLinkPaymentAuthorizationFilter
 import nl.nlportal.payment.qrlink.service.QRLinkPaymentService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -28,7 +26,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Import
 
 @Configuration
 @EnableConfigurationProperties(QRLinkPaymentModuleConfiguration::class, DirectPaymentModuleConfiguration::class)
