@@ -16,7 +16,6 @@
 package nl.nlportal.app.security
 
 import nl.nlportal.app.TestApplication
-import nl.nlportal.app.UnmappedGraphQlFields
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Tag
@@ -26,14 +25,12 @@ import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.springframework.beans.factory.ListableBeanFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.getBeansWithAnnotation
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.graphql.data.method.annotation.SubscriptionMapping
-import org.springframework.graphql.execution.GraphQlSource
-import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.stereotype.Controller
 
 /**
