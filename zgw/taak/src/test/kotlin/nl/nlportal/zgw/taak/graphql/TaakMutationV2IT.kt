@@ -15,11 +15,9 @@
  */
 package nl.nlportal.zgw.taak.graphql
 
-import tools.jackson.databind.JsonNode
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import nl.nlportal.zgw.taak.TestHelper
-import nl.nlportal.zgw.taak.TestHelper.verifyOnlyDataExists
 import nl.nlportal.zgw.taak.domain.TaakStatus
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -33,12 +31,10 @@ import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
-import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.graphql.test.tester.HttpGraphQlTester
-import org.springframework.http.MediaType
-import org.springframework.http.MediaType.APPLICATION_JSON
-import org.springframework.test.web.reactive.server.WebTestClient
+import tools.jackson.databind.JsonNode
 
 @SpringBootTest
 @AutoConfigureHttpGraphQlTester

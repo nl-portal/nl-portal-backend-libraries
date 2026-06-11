@@ -85,7 +85,7 @@ class OpenKlant2DigitaleAdresQueryIT(
             verify(openKlant2Service, times(1)).findDigitaleAdressen(any(), any())
 
             assertNotNull(responseBody)
-            assertEquals("OVERIG", responseBody.get(0)?.get("type")?.stringValue())
+            assertEquals("EMAIL", responseBody.get(0)?.get("type")?.stringValue())
         }
 
     @Test
