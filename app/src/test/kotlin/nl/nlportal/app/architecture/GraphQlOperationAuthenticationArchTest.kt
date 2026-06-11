@@ -25,6 +25,7 @@ import com.tngtech.archunit.lang.ArchCondition
 import com.tngtech.archunit.lang.ConditionEvents
 import com.tngtech.archunit.lang.SimpleConditionEvent
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.methods
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import org.junit.jupiter.api.Test
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
@@ -69,6 +70,6 @@ class GraphQlOperationAuthenticationArchTest {
 
     companion object {
         private const val BASE_PACKAGE = "nl.nlportal"
-        private const val AUTHENTICATION_TYPE = "nl.nlportal.commonground.authentication.CommonGroundAuthentication"
+        private val AUTHENTICATION_TYPE = CommonGroundAuthentication::class.java.name
     }
 }
