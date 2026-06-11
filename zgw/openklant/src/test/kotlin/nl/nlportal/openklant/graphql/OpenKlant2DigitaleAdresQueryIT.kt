@@ -89,6 +89,28 @@ class OpenKlant2DigitaleAdresQueryIT(
         }
 
     @Test
+    @WithBurgerUser("569312863")
+    fun `should find DigitaleAdressen for authenticated user with isStandaardAdres = true`() =
+        runTest {
+            // when
+            val responseBody =
+                httpGraphQlTester
+                    .document(TestHelper.readFileAsString("/config/graphql/getUserDigitaleAdressenIsStandaardAdres.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getUserDigitaleAdressen")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            // then
+            verify(openKlant2Service, times(1)).findDigitaleAdressen(any(), any(), any())
+
+            assertNotNull(responseBody)
+            assertEquals("EMAIL", responseBody.get(1)?.get("type")?.textValue())
+        }
+
+    @Test
     @WithBurgerUser("111111110")
     fun `should return empty list when no DigitaleAdres was found for authenticated user`() =
         runTest {

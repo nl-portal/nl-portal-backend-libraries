@@ -32,5 +32,5 @@ VALUES(300, '0000000000000001','damrak 1 1001XX Amsterdam', '', '', 'nl', '00000
 
 INSERT INTO public.klantinteracties_digitaaladres (id, uuid, soort_digitaal_adres, adres, omschrijving, betrokkene_id, partij_id, is_standaard_adres, referentie, verificatie_datum)
 VALUES(500, 'a5f323d8-8c87-43c2-990b-eae03d721adf', 'email', 'test@test.nl', '', 300, 100, true, 'portaal', '2025-08-06'),
-      (501, '3b006b45-afa9-44ed-a690-32c545924a28', 'telefoonnummer', '0701234567', '', 300, 100, true, '', null),
-      (502, 'da80dc1c-bf9b-449f-80e6-2906e66db0a7', 'telefoonnummer', '0701234567', '', 300, 101, false, 'portaal', null);
+      (501, '3b006b45-afa9-44ed-a690-32c545924a28', 'telefoonnummer', '0701234568', '', 300, 100, true, '', null),
+      (502, 'da80dc1c-bf9b-449f-80e6-2906e66db0a7', 'telefoonnummer', '0701234567', '', 300, 100, false, 'portaal', null);
