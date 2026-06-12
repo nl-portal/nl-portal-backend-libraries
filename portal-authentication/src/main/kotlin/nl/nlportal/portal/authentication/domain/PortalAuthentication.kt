@@ -21,7 +21,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 
 open class PortalAuthentication(
     jwt: Jwt,
-    authorities: Collection<GrantedAuthority>?,
+    authorities: Collection<GrantedAuthority>,
     val userType: String,
     val userId: String,
 ) : JwtAuthenticationToken(jwt, authorities) {

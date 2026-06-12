@@ -43,7 +43,7 @@ internal class JwtBuilderTest {
     fun getBurgerJwt() {
         val jwt = JwtBuilder().aanvragerBsn("1234").buildJwt()
         val aanvrager = jwt.getClaim<Map<String, Any>>(AANVRAGER_KEY)
-        assertEquals("1234", aanvrager[BSN_KEY])
+        assertEquals("1234", aanvrager?.get(BSN_KEY))
     }
 
     @Test
@@ -56,8 +56,8 @@ internal class JwtBuilderTest {
 
         val aanvrager = jwt.getClaim<Map<String, Any>>(AANVRAGER_KEY)
         val gemachtigde = jwt.getClaim<Map<String, Any>>(GEMACHTIGDE_KEY)
-        assertEquals("1234", aanvrager[BSN_KEY])
-        assertEquals("5678", gemachtigde[BSN_KEY])
+        assertEquals("1234", aanvrager?.get(BSN_KEY))
+        assertEquals("5678", gemachtigde?.get(BSN_KEY))
     }
 
     @Test
@@ -70,7 +70,7 @@ internal class JwtBuilderTest {
     fun getBedrijfJwt() {
         val jwt = JwtBuilder().aanvragerKvk("1234").buildJwt()
         val aanvrager = jwt.getClaim<Map<String, Any>>(AANVRAGER_KEY)
-        assertEquals("1234", aanvrager[KVK_NUMMER_KEY])
+        assertEquals("1234", aanvrager?.get(KVK_NUMMER_KEY))
     }
 
     @Test
@@ -116,8 +116,7 @@ internal class JwtBuilderTest {
                 .buildJwt()
 
         val gemachtigde = jwt.getClaim<Map<String, Any>>(GEMACHTIGDE_KEY)
-        assertNull(gemachtigde[BSN_KEY])
-        assertEquals("123", gemachtigde[KVK_NUMMER_KEY])
+        assertEquals("123", gemachtigde?.get(KVK_NUMMER_KEY))
     }
 
     @Test

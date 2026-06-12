@@ -21,7 +21,7 @@ import org.springframework.security.oauth2.jwt.Jwt
 
 class KeycloakUserAuthentication(
     jwt: Jwt,
-    authorities: Collection<GrantedAuthority>?,
+    authorities: Collection<GrantedAuthority>,
 ) : CommonGroundAuthentication(jwt, authorities, UID_KEY, getUserId(jwt)) {
     init {
         if (userType != "uid") {

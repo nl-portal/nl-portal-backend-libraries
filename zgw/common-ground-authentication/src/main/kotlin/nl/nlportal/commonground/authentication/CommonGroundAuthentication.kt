@@ -23,7 +23,7 @@ import java.util.UUID
 
 abstract class CommonGroundAuthentication(
     jwt: Jwt,
-    authorities: Collection<GrantedAuthority>?,
+    authorities: Collection<GrantedAuthority>,
     userId: String,
     userType: String,
 ) : PortalAuthentication(jwt, authorities, userId, userType) {

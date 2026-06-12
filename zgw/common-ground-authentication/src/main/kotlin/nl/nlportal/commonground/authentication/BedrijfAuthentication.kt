@@ -20,7 +20,7 @@ import org.springframework.security.oauth2.jwt.Jwt
 
 class BedrijfAuthentication(
     jwt: Jwt,
-    authorities: Collection<GrantedAuthority>?,
+    authorities: Collection<GrantedAuthority>,
 ) : CommonGroundAuthentication(jwt, authorities, KVK_NUMMER_KEY, getUserId(jwt)) {
     init {
         if (userType != KVK_NUMMER_KEY) {
