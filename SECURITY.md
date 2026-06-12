@@ -24,25 +24,21 @@ We ask you to provide your name, email address and telephone number in order to 
 - Not use so-called 'brute force attacks' to get into running systems.
 
 # Our promise
-- You will receive an acknowledgment from us as soon as possible, and at least within 3 working days. Depending on the action to be taken, you may receive further follow-up emails. 
-- If you have complied with the above conditions, we will not take legal action against you regarding the report. 
-- We treat your report confidentially and will not share your personal information with third parties without your consent, unless this is necessary to comply with a legal obligation. Reporting under a pseudonym is possible. 
-- We will keep you informed of the progress of solving the problem.
-- We will, if you wish, include your name as the discoverer in reporting about the reported problem. 
-- As a thank you for your help, we offer a reward for every report of a security problem unknown to us. We determine the size of the reward based on the severity of the leak and the quality of the report, with a minimum of a voucher of €50.
+
+* You will receive an acknowledgment from us as soon as possible, and at least within 3 working days. Depending on the action to be taken, you may receive further follow-up emails.
+* If you have complied with the above conditions, we will not take legal action against you regarding the report.
+* We treat your report confidentially and will not share your personal information with third parties without your consent, unless this is necessary to comply with a legal obligation. Reporting under a pseudonym is possible.
+* We will keep you informed of the progress of solving the problem.
+* We will, if you wish, include your name as the discoverer in reporting about the reported problem.
 
 # As a thank you
-We value your contribution to keeping this software secure. We have small rewards for valuable notifications: 
 
-- A Ritense hoods or
-- Diner check
+As a thank you for your help, we offer a reward for every report of a security problem unknown to us. We determine the size of the reward based on the severity of the leak and the quality of the report, minimum € 50 and a maximum of € 500. The total amount of awards per year is 3, and 1 per person / organisation / group. Note this project is an open source project with very limited funding.
 
-We determine whether a reward applies and which reward is offered, based on the risk of the security problem. To be eligible, a report must be valid and unreported, and the reported vulnerability must be significant in terms of risk. 
+We determine whether a reward applies and which reward is offered, based on the risk of the security problem. To be eligible, a report must be valid and unreported, and the reported vulnerability must be significant in terms of risk.
 
-A Reward is not offered if a reporter or the report does not comply with the rules of this procedure.
-If the report does not concern a security issue or poses a low risk, no reward may be offered.
+A Reward is not offered if a reporter or the report does not comply with the rules of this procedure. If the report does not concern a security issue or poses a low risk, no reward may be offered.
 
 When duplicate reports are received about a specific vulnerability, the reward will be awarded to the first person to report this vulnerability. A reward awarded will only be provided to one person.
 
 We try to award equal rewards for similar security vulnerabilities. However, the rewards and the eligible security vulnerabilities are subject to change. Remunerations awarded in the past do not guarantee rewards offered in the future. Anonymous reports are excluded from participation in the rewards program.
-
