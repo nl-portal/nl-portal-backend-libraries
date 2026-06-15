@@ -94,7 +94,7 @@ class QRLinkPaymentController(
      * @param height: the height of the QR code in pixels. Is optional
      * @param width: the width of the QR code in pixels. Is optional
      * @param returnurl: the return url after payment. Is optional
-     * @param filetype: the qrcode file type. Supported file types are PNG, GIF, JPG. Is optional, default is PNG.
+     * @param filetype: the qrcode file type. Supported file types are PNG, GIF, JPG, BMP. Is optional, default is PNG.
      * @param subject: a subject which is displayed on the landing page of the payment. Is Optional
      * @param margin: the margin of around the qrcode. Is Optional
      * @return a base64 encode qrcode
@@ -137,7 +137,7 @@ class QRLinkPaymentController(
      * @param height: the height of the QR code in pixels. Is optional
      * @param width: the width of the QR code in pixels. Is optional
      * @param returnurl: the return url after payment. Is optional
-     * @param filetype: the qrcode file type. Supported file types are PNG, GIF, JPG. Is optional, default is PNG.
+     * @param filetype: the qrcode file type. Supported file types are PNG, GIF, JPG, BMP. Is optional, default is PNG.
      * @param subject: a subject which is displayed on the landing page of the payment. Is Optional
      * @param margin: the margin of around the qrcode. Is Optional
      * @return a file as ByteArray
