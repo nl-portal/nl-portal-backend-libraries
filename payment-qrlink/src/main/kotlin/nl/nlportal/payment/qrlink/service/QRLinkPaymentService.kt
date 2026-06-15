@@ -149,10 +149,8 @@ class QRLinkPaymentService(
                 margin = margin ?: 0
             )
         } catch (ex: ResponseStatusException) {
+            logger.error { "Could not generate qrcode with $identifier for $orderid: ${ex.message}" }
             throw ex
-        } catch (e: Exception) {
-            logger.error { "Could not generate qrcode with $identifier for $orderid: ${e.message}" }
-            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error generating qrcode file for $identifier and order id $orderid", e)
         }
     }
 
