@@ -35,7 +35,6 @@ class QRLinkPaymentAuthorizationFilter(
         chain: WebFilterChain,
     ): Mono<Void?> {
         val path = exchange.request.uri.path
-        //val queryParams = exchange.request.queryParams
         val apiKey = exchange.request.headers[HEADER_APIKEY]
         val identifier = exchange.request.queryParams.getFirst("identifier")
         /*

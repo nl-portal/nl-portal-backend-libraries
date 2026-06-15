@@ -1,9 +1,12 @@
 package nl.nlportal.payment.qrlink.web.rest
 
+import io.github.oshai.kotlinlogging.KLogger
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.core.qrcode.QRCodeFileExtension
 import nl.nlportal.payment.qrlink.domain.QRLinkPaymentResponse
 import nl.nlportal.payment.qrlink.service.QRLinkPaymentService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -52,7 +55,8 @@ class QRLinkPaymentController(
                 ),
             )
         } catch (e: ResponseStatusException) {
-            return ResponseEntity.status(e.statusCode).body(e.message)
+            logger.error(e) { "Error while doing payment: ${e.message}" }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
         }
     }
 
@@ -75,7 +79,8 @@ class QRLinkPaymentController(
                 ),
             )
         } catch (e: ResponseStatusException) {
-            return ResponseEntity.status(e.statusCode).body(e.message)
+            logger.error(e) { "Error while check payment status: ${e.message}" }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
         }
     }
 
@@ -201,4 +206,8 @@ class QRLinkPaymentController(
                     ),
             ),
         )
+
+    companion object {
+        private val logger: KLogger = KotlinLogging.logger {}
+    }
 }

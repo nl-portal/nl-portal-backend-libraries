@@ -18,17 +18,17 @@ package nl.nlportal.payment.qrlink.autoconfiguratie
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.payment.qrlink", ignoreUnknownFields = true)
-data class QRLinkPaymentModuleConfiguration(
+class QRLinkPaymentModuleConfiguration(
     var enabled: Boolean = false,
     var properties: QRLinkPaymentProperties = QRLinkPaymentProperties(),
 ) {
     data class QRLinkPaymentProperties(
-        val landingUrl: String = "",
-        val returnUrl: String = "",
-        val qrcodeHeight: Int = 0,
-        val qrcodeWidth: Int = 0,
+        var landingUrl: String = "",
+        var returnUrl: String = "",
+        var qrcodeHeight: Int = 0,
+        var qrcodeWidth: Int = 0,
         var secret: String = "",
-        val configurations: Map<String, QRLinkPaymentConfiguration> = emptyMap()
+        var configurations: Map<String, QRLinkPaymentConfiguration> = emptyMap()
     ) {
         fun getConfiguration(identifier: String?): QRLinkPaymentConfiguration? {
             return configurations[identifier]
@@ -36,6 +36,6 @@ data class QRLinkPaymentModuleConfiguration(
     }
 
     data class QRLinkPaymentConfiguration(
-        val apiKey: String = "",
+        var apiKey: String = "",
     )
 }
