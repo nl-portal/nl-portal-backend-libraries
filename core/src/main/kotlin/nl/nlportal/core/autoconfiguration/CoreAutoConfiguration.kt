@@ -22,6 +22,7 @@ import nl.nlportal.core.frontend.service.FrontendFeaturesConfigurationService
 import nl.nlportal.core.frontend.service.FrontendThemeConfigurationService
 import nl.nlportal.core.frontend.web.rest.FrontendFeaturesConfigurationResource
 import nl.nlportal.core.frontend.web.rest.FrontendThemeConfigurationResource
+import nl.nlportal.core.qrcode.QRCodeService
 import nl.nlportal.core.util.Mapper
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -61,4 +62,8 @@ class CoreAutoConfiguration {
     fun frontendFeaturesConfigurationResource(
         frontendFeaturesConfigurationService: FrontendFeaturesConfigurationService,
     ): FrontendFeaturesConfigurationResource = FrontendFeaturesConfigurationResource(frontendFeaturesConfigurationService)
+
+    @Bean
+    @ConditionalOnMissingBean
+    fun qrcodeService(): QRCodeService = QRCodeService()
 }

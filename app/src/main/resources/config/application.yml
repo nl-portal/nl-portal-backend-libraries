@@ -222,6 +222,17 @@ nl-portal:
                             apiSecret: dummy
                             webhookApiKey: dummy
                             webhookApiSecret: dummy
+            qrlink:
+                enabled: true
+                properties:
+                    landing-url: http://localhost:3000
+                    qrcode-height: 400
+                    qrcode-width: 400
+                    return-url: http://localhost:3000
+                    secret: 123gdgg122
+                    configurations:
+                        belastingzaken:
+                            api-key: dummy
             ogone:
                 enabled: true
                 properties:
