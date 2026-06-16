@@ -28,7 +28,7 @@ import org.springframework.web.server.WebFilterChain
 import reactor.core.publisher.Mono
 
 class QRLinkPaymentAuthorizationFilter(
-    val qrLinkPaymentProperties: QRLinkPaymentProperties
+    val qrLinkPaymentProperties: QRLinkPaymentProperties,
 ) : WebFilter {
     override fun filter(
         exchange: ServerWebExchange,

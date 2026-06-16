@@ -28,11 +28,9 @@ class QRLinkPaymentModuleConfiguration(
         var qrcodeHeight: Int = 0,
         var qrcodeWidth: Int = 0,
         var secret: String = "",
-        var configurations: Map<String, QRLinkPaymentConfiguration> = emptyMap()
+        var configurations: Map<String, QRLinkPaymentConfiguration> = emptyMap(),
     ) {
-        fun getConfiguration(identifier: String?): QRLinkPaymentConfiguration? {
-            return configurations[identifier]
-        }
+        fun getConfiguration(identifier: String?): QRLinkPaymentConfiguration? = configurations[identifier]
     }
 
     data class QRLinkPaymentConfiguration(

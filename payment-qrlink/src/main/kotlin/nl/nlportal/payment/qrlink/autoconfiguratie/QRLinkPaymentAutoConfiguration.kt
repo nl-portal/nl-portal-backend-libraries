@@ -31,20 +31,20 @@ import org.springframework.context.annotation.Configuration
 @EnableConfigurationProperties(QRLinkPaymentModuleConfiguration::class, DirectPaymentModuleConfiguration::class)
 @ConditionalOnProperty(prefix = "nl-portal.config.payment", name = ["qrlink.enabled", "direct.enabled"], havingValue = "true")
 class QRLinkPaymentAutoConfiguration {
-
     @Bean
     @ConditionalOnMissingBean(QRLinkPaymentService::class)
     fun qrlinkPaymentService(
         directPaymentService: DirectPaymentService,
         qrCodeService: QRCodeService,
         qRLinkPaymentModuleConfiguration: QRLinkPaymentModuleConfiguration,
-        directPaymentModuleConfiguration: DirectPaymentModuleConfiguration
-    ): QRLinkPaymentService = QRLinkPaymentService(
-        directPaymentService = directPaymentService,
-        qrCodeService = qrCodeService,
-        qrLinkPaymentProperties = qRLinkPaymentModuleConfiguration.properties,
-        directPaymentProperties = directPaymentModuleConfiguration.properties
-    )
+        directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
+    ): QRLinkPaymentService =
+        QRLinkPaymentService(
+            directPaymentService = directPaymentService,
+            qrCodeService = qrCodeService,
+            qrLinkPaymentProperties = qRLinkPaymentModuleConfiguration.properties,
+            directPaymentProperties = directPaymentModuleConfiguration.properties,
+        )
 
     @Bean
     @ConditionalOnMissingBean(QRLinkPaymentController::class)

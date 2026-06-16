@@ -146,7 +146,7 @@ class QRLinkPaymentService(
                 height = height ?: qrLinkPaymentProperties.qrcodeHeight,
                 width = width ?: qrLinkPaymentProperties.qrcodeWidth,
                 extension = qrCodeFileType,
-                margin = margin ?: 0
+                margin = margin ?: 0,
             )
         } catch (ex: ResponseStatusException) {
             logger.error { "Could not generate qrcode with $identifier for $orderid: ${ex.message}" }

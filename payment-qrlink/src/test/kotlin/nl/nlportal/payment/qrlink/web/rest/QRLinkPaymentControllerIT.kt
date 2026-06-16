@@ -1,3 +1,18 @@
+/*
+ * Copyright 2026 Ritense BV, the Netherlands.
+ *
+ * Licensed under EUPL, Version 1.2 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package nl.nlportal.payment.qrlink.web.rest
 
 import java.nio.charset.Charset
@@ -107,11 +122,11 @@ class QRLinkPaymentControllerIT(
         val headers = HttpHeaders()
         headers.add(
             QRLinkPaymentAuthorizationFilter.HEADER_APIKEY,
-            qrLinkPaymentModuleConfiguration.properties.getConfiguration(identifier)?.apiKey
+            qrLinkPaymentModuleConfiguration.properties.getConfiguration(identifier)?.apiKey,
         )
         webTestClient
             .get()
-            .uri("${path}/generate/link?identifier=${identifier}&orderid=${orderId}&reference=${reference}&amount=${amountInCents}")
+            .uri("$path/generate/link?identifier=$identifier&orderid=$orderId&reference=$reference&amount=$amountInCents")
             .headers {
                 it.addAll(headers)
             }.exchange()
@@ -119,7 +134,7 @@ class QRLinkPaymentControllerIT(
             .isOk
             .expectBody()
             .jsonPath("$.link")
-            .isEqualTo("http://localhost:3000?identifier=${identifier}&amount=${amount}&orderid=${orderId}&reference=${reference}&hash=${hash}")
+            .isEqualTo("http://localhost:3000?identifier=$identifier&amount=$amount&orderid=$orderId&reference=$reference&hash=$hash")
     }
 
     @Test
@@ -127,12 +142,12 @@ class QRLinkPaymentControllerIT(
         val headers = HttpHeaders()
         headers.add(
             QRLinkPaymentAuthorizationFilter.HEADER_APIKEY,
-            qrLinkPaymentModuleConfiguration.properties.getConfiguration(identifier)?.apiKey
+            qrLinkPaymentModuleConfiguration.properties.getConfiguration(identifier)?.apiKey,
         )
 
         webTestClient
             .get()
-            .uri("${path}/generate/link?identifier=${identifier}&orderid=${orderId}&reference=${reference}&amount=${amountInCents}&subject=dit is een test")
+            .uri("$path/generate/link?identifier=$identifier&orderid=$orderId&reference=$reference&amount=$amountInCents&subject=dit is een test")
             .headers {
                 it.addAll(headers)
             }.exchange()
@@ -140,7 +155,7 @@ class QRLinkPaymentControllerIT(
             .isOk
             .expectBody()
             .jsonPath("$.link")
-            .isEqualTo("http://localhost:3000?identifier=${identifier}&amount=${amount}&orderid=${orderId}&reference=${reference}&hash=${hash}&subject=dit%20is%20een%20test")
+            .isEqualTo("http://localhost:3000?identifier=$identifier&amount=$amount&orderid=$orderId&reference=$reference&hash=$hash&subject=dit%20is%20een%20test")
     }
 
     @Test
@@ -152,7 +167,7 @@ class QRLinkPaymentControllerIT(
         )
         webTestClient
             .get()
-            .uri("${path}/generate/link?orderid=${orderId}&reference=${reference}&amount=${amountInCents}")
+            .uri("$path/generate/link?orderid=$orderId&reference=$reference&amount=$amountInCents")
             .headers {
                 it.addAll(headers)
             }.exchange()
@@ -164,7 +179,7 @@ class QRLinkPaymentControllerIT(
     fun `should generate a betaal link, no api key header`() {
         webTestClient
             .get()
-            .uri("${path}/generate/link?identifier=${identifier}&orderid=${orderId}&reference=${reference}&amount=${amountInCents}")
+            .uri("$path/generate/link?identifier=$identifier&orderid=$orderId&reference=$reference&amount=$amountInCents")
             .exchange()
             .expectStatus()
             .isUnauthorized
@@ -179,7 +194,7 @@ class QRLinkPaymentControllerIT(
         )
         webTestClient
             .get()
-            .uri("${path}/generate/link?identifier=${identifier}1&orderid=${orderId}&reference=${reference}&amount=${amountInCents}")
+            .uri("$path/generate/link?identifier=${identifier}1&orderid=$orderId&reference=$reference&amount=$amountInCents")
             .headers {
                 it.addAll(headers)
             }.exchange()
@@ -196,7 +211,7 @@ class QRLinkPaymentControllerIT(
         )
         webTestClient
             .get()
-            .uri("${path}/generate/link?identifier=${identifier}&orderid=${orderId}&reference=${reference}&amount=${amountInCents}")
+            .uri("$path/generate/link?identifier=$identifier&orderid=$orderId&reference=$reference&amount=$amountInCents")
             .headers {
                 it.addAll(headers)
             }.exchange()
@@ -213,7 +228,7 @@ class QRLinkPaymentControllerIT(
         )
         webTestClient
             .get()
-            .uri("${path}/generate/qrcode?identifier=${identifier}1&orderid=${orderId}&reference=${reference}&amount=${amountInCents}")
+            .uri("$path/generate/qrcode?identifier=${identifier}1&orderid=$orderId&reference=$reference&amount=$amountInCents")
             .headers {
                 it.addAll(headers)
             }.exchange()
@@ -230,7 +245,7 @@ class QRLinkPaymentControllerIT(
         )
         webTestClient
             .get()
-            .uri("${path}/generate/qrcode?identifier=${identifier}&orderid=${orderId}&reference=${reference}&amount=${amountInCents}")
+            .uri("$path/generate/qrcode?identifier=$identifier&orderid=$orderId&reference=$reference&amount=$amountInCents")
             .headers {
                 it.addAll(headers)
             }.exchange()
@@ -251,7 +266,7 @@ class QRLinkPaymentControllerIT(
         val responseResult =
             webTestClient
                 .get()
-                .uri("${path}/generate/qrcode/download?identifier=${identifier}&orderid=${orderId}&reference=${reference}&amount=${amountInCents}&filetype=JPG")
+                .uri("$path/generate/qrcode/download?identifier=$identifier&orderid=$orderId&reference=$reference&amount=$amountInCents&filetype=JPG")
                 .headers {
                     it.addAll(headers)
                 }.exchange()
@@ -273,7 +288,7 @@ class QRLinkPaymentControllerIT(
     fun `should do betaling`() {
         webTestClient
             .get()
-            .uri("${path}/pay?identifier=${identifier}&orderid=${orderId}&reference=${reference}&amount=${amount}&hash=${hash}")
+            .uri("$path/pay?identifier=$identifier&orderid=$orderId&reference=$reference&amount=$amount&hash=$hash")
             .exchange()
             .expectStatus()
             .isOk
@@ -286,7 +301,7 @@ class QRLinkPaymentControllerIT(
     fun `should do betaling tempered data`() {
         webTestClient
             .get()
-            .uri("${path}/pay?identifier=${identifier}&orderid=${orderId}&reference=${reference}&amount=${amount}")
+            .uri("$path/pay?identifier=$identifier&orderid=$orderId&reference=$reference&amount=$amount")
             .exchange()
             .expectStatus()
             .isBadRequest
@@ -296,7 +311,7 @@ class QRLinkPaymentControllerIT(
     fun `should get status`() {
         webTestClient
             .get()
-            .uri("${path}/status?identifier=${identifier}&hostedCheckoutId=4418080728")
+            .uri("$path/status?identifier=$identifier&hostedCheckoutId=4418080728")
             .exchange()
             .expectStatus()
             .isOk
@@ -330,5 +345,4 @@ class QRLinkPaymentControllerIT(
             }
         server?.dispatcher = dispatcher
     }
-
 }
