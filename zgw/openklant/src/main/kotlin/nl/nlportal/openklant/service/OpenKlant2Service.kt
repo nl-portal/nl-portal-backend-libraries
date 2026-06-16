@@ -180,6 +180,7 @@ class OpenKlant2Service(
     suspend fun findDigitaleAdressen(
         authentication: CommonGroundAuthentication,
         isGeverifieerd: Boolean? = false,
+        isStandaardAdres: Boolean? = false,
     ): List<OpenKlant2DigitaleAdres> {
         val searchVariables = searchVariablesDigitaleAdressen(authentication).toMutableList()
 
@@ -189,6 +190,10 @@ class OpenKlant2Service(
 
         if (isGeverifieerd == true) {
             searchVariables.add(OpenKlant2DigitaleAdressenFilters.ISGEVERIFIEERD to isGeverifieerd)
+        }
+
+        if (isStandaardAdres == true) {
+            searchVariables.add(OpenKlant2DigitaleAdressenFilters.ISSTANDAARDADRES to isStandaardAdres)
         }
 
         val response =

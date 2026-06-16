@@ -34,6 +34,8 @@ data class OpenKlant2DigitaleAdres(
     val verstrektDoorBetrokkene: OpenKlant2UUID? = null,
     val verstrektDoorPartij: OpenKlant2UUID? = null,
     val verificatieDatum: LocalDate? = null,
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    val isStandaardAdres: Boolean? = null,
 ) {
     init {
         require(adres.length <= 80) {
@@ -64,6 +66,7 @@ enum class OpenKlant2DigitaleAdressenFilters(
     VERSTREKTDOORPARTIJ_PARTIJ_IDENTIFICATOR_CODE_OBJECTID("verstrektDoorPartij__partijIdentificator__objectId"),
     REFERENTIE("referentie"),
     ISGEVERIFIEERD("isGeverifieerd"),
+    ISSTANDAARDADRES("isStandaardAdres"),
     ;
 
     override fun toString() = this.value
