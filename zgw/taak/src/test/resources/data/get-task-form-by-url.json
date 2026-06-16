@@ -1,0 +1,32 @@
+{
+    "url": "http://localhost:8010/api/v2/objects/58fad5ab-dc2f-11ec-9075-f22a405ce707",
+    "uuid": "58fad5ab-dc2f-11ec-9075-f22a405ce707",
+    "type": "http://localhost:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb35",
+    "record": {
+        "index": 1,
+        "typeVersion": 1,
+        "data": {
+            "titel": "Task with url formulier",
+            "status": "open",
+            "soort": "portaalformulier",
+            "verloopdatum": "2023-09-20T18:25:43.524Z",
+            "eigenaar": "gzac",
+            "identificatie": {
+                "type": "bsn",
+                "value": "569312863"
+            },
+            "koppeling": {
+                "registratie": "zaak",
+                "value": "5551a7c5-4e92-43e6-8d23-80359b7e22b7"
+            },
+            "portaalformulier": {
+                "formulier": {
+                    "soort": "url",
+                    "value": "http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4"
+                }
+            },
+            "verwerker_taak_id": "58fad5ab-dc2f-11ec-9075-f22a405ce708"
+        },
+        "startAt": "2022-06-01"
+    }
+}
