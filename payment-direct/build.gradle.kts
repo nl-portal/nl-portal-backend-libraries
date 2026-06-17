@@ -32,6 +32,7 @@ dependencies {
     api("commons-codec:commons-codec:1.19.0")
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.h2)
     testImplementation(TestDependencies.assertJCore)
     testImplementation(TestDependencies.mockitoKotlin)
     testImplementation(TestDependencies.kotlinCoroutines)

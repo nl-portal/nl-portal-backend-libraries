@@ -1,0 +1,15 @@
+{
+    "uuid": "22222222-2222-2222-2222-222222222222",
+    "type": "http://localhost:8011/api/v1/objecttypes/some-other-type",
+    "record": {
+        "index": 1,
+        "typeVersion": 1,
+        "data": {
+            "formDefinition": {
+                "display": "form",
+                "components": []
+            }
+        },
+        "startAt": "2022-06-01"
+    }
+}
