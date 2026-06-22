@@ -33,4 +33,5 @@ object Versions {
     const val mockitoKotlin = "6.1.0"
     const val okHttp3 = "5.2.0"
     const val postgresql = "42.7.8"
+    const val h2 = "2.3.232"
 }

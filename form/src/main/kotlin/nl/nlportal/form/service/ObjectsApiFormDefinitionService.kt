@@ -15,15 +15,34 @@
  */
 package nl.nlportal.form.service
 
+import nl.nlportal.form.autoconfigure.FormConfig
 import nl.nlportal.form.domain.ObjectsApiFormIoFormDefinition
+import nl.nlportal.form.graphql.FormDefinition
 import nl.nlportal.zgw.objectenapi.service.ObjectenApiService
-import org.springframework.transaction.annotation.Transactional
+import org.slf4j.LoggerFactory
+import java.util.UUID
 
-@Transactional
 class ObjectsApiFormDefinitionService(
     private val objectenApiService: ObjectenApiService,
+    private val formConfig: FormConfig,
 ) {
-    suspend fun findObjectsApiFormDefinitionById(objectId: String): ObjectsApiFormIoFormDefinition? = objectenApiService.getObjectById<ObjectsApiFormIoFormDefinition>(objectId)?.record?.data
+    private val logger = LoggerFactory.getLogger(javaClass)
 
-    suspend fun findObjectsApiFormDefinitionByUrl(objectUrl: String): ObjectsApiFormIoFormDefinition? = objectenApiService.getObjectByUrl<ObjectsApiFormIoFormDefinition>(objectUrl)?.record?.data
+    suspend fun getObjectsApiFormDefinitionById(objectId: UUID): FormDefinition? {
+        val obj =
+            objectenApiService.getObjectById<ObjectsApiFormIoFormDefinition>(objectId.toString())
+                ?: return null
+
+        val expected = formConfig.properties.formDefinitionObjectTypeUrl
+        if (expected == null) {
+            logger.debug("formDefinitionObjectTypeUrl not configured — skipping type validation")
+        } else if (obj.type != expected) {
+            throw RuntimeException(
+                "Object type mismatch for form definition fetch. " +
+                    "Expected: $expected, Actual: ${obj.type}, ObjectId: $objectId",
+            )
+        }
+
+        return FormDefinition(obj.record.data.formDefinition)
+    }
 }

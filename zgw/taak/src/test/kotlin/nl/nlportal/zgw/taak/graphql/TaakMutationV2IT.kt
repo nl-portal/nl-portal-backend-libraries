@@ -26,6 +26,7 @@ import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
@@ -40,6 +41,7 @@ import tools.jackson.databind.JsonNode
 @AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(PER_CLASS)
+@Tag("integration")
 internal class TaakMutationV2IT(
     @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,

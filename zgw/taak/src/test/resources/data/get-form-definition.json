@@ -1,0 +1,21 @@
+{
+    "uuid": "4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4",
+    "type": "http://localhost:8011/api/v1/objecttypes/form-definition-type",
+    "record": {
+        "index": 1,
+        "typeVersion": 1,
+        "data": {
+            "formDefinition": {
+                "display": "form",
+                "components": [
+                    {
+                        "key": "voornaam",
+                        "type": "textfield",
+                        "label": "Voornaam"
+                    }
+                ]
+            }
+        },
+        "startAt": "2022-06-01"
+    }
+}

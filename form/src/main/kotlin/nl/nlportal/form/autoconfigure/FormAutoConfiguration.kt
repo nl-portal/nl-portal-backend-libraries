@@ -26,7 +26,8 @@ import nl.nlportal.zgw.objectenapi.service.ObjectenApiService
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.boot.persistence.autoconfigure.EntityScan
+import org.springframework.boot.autoconfigure.domain.EntityScan
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.core.io.ResourceLoader
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
@@ -34,6 +35,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 @AutoConfiguration
 @EnableJpaRepositories(basePackages = ["nl.nlportal.form.repository"])
 @EntityScan("nl.nlportal.form.domain")
+@EnableConfigurationProperties(FormConfig::class)
 @ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled"], havingValue = "true")
 class FormAutoConfiguration {
     @Bean
@@ -48,7 +50,10 @@ class FormAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(ObjectsApiFormDefinitionService::class)
-    fun objectsApiFormDefinitionService(objectenApiService: ObjectenApiService): ObjectsApiFormDefinitionService = ObjectsApiFormDefinitionService(objectenApiService)
+    fun objectsApiFormDefinitionService(
+        objectenApiService: ObjectenApiService,
+        formConfig: FormConfig,
+    ): ObjectsApiFormDefinitionService = ObjectsApiFormDefinitionService(objectenApiService, formConfig)
 
     @Bean
     @ConditionalOnMissingBean(FormDefinitionDeploymentService::class)
@@ -63,6 +68,5 @@ class FormAutoConfiguration {
     @Bean
     fun formDefinitionQuery(
         formIoFormDefinitionService: FormIoFormDefinitionService,
-        objectenApiFormDefinitionService: ObjectsApiFormDefinitionService,
-    ): FormDefinitionQuery = FormDefinitionQuery(formIoFormDefinitionService, objectenApiFormDefinitionService)
+    ): FormDefinitionQuery = FormDefinitionQuery(formIoFormDefinitionService)
 }

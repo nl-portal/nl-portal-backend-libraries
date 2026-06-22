@@ -29,6 +29,7 @@ dependencies {
     api(project(":data"))
     api(project(":graphql"))
     api(project(":zgw:objectenapi"))
+    api(project(":zgw:common-ground-authentication"))
 
     implementation(Dependencies.kotlinCoroutines)
     implementation(Dependencies.kotlinCoroutinesReactor)

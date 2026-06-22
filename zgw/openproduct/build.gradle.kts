@@ -33,6 +33,7 @@ dependencies {
 
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.postgresql)
+    testImplementation(TestDependencies.h2)
     testImplementation(TestDependencies.springBootTest)
     testImplementation(TestDependencies.springBootWebClientTest)
     testImplementation(TestDependencies.springBootTestWebClient)
