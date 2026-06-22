@@ -20,7 +20,9 @@ import nl.nlportal.core.security.config.HttpSecurityConfigurer
 import nl.nlportal.documentenapi.client.DocumentApisConfig
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.documentenapi.service.VirusScanService
+import nl.nlportal.form.service.ObjectsApiFormDefinitionService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
+import nl.nlportal.zgw.taak.graphql.TaakFormQuery
 import nl.nlportal.zgw.taak.graphql.TaakMutationV2
 import nl.nlportal.zgw.taak.graphql.TaakQueryV2
 import nl.nlportal.zgw.taak.security.config.TaakDocumentResourceHttpSecurityConfigurer
@@ -56,6 +58,15 @@ class TaakAutoConfiguration {
     @ConditionalOnMissingBean(TaakMutationV2::class)
     fun taskMutationV2(taskService: TaakService): TaakMutationV2 {
         return TaakMutationV2(taskService)
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(TaakFormQuery::class)
+    fun taakFormQuery(
+        taskService: TaakService,
+        objectsApiFormDefinitionService: ObjectsApiFormDefinitionService,
+    ): TaakFormQuery {
+        return TaakFormQuery(taskService, objectsApiFormDefinitionService)
     }
 
     @Bean

@@ -27,6 +27,7 @@ dependencies {
     api(project(":zgw:common-ground-authentication"))
     api(project(":zgw:objectenapi"))
     api(project(":zgw:documenten-api"))
+    api(project(":form"))
 
 
     implementation(Dependencies.kotlinCoroutines)
@@ -34,6 +35,7 @@ dependencies {
     implementation("org.springframework.data:spring-data-commons")
 
     testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.h2)
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.okHttpMockWebserver)
     testImplementation(TestDependencies.mockitoKotlin)
