@@ -82,13 +82,12 @@ class HaalCentraal2Service(
     suspend fun getBewonersAantal(
         authentication: CommonGroundAuthentication,
         adresseerbaarObjectIdentificatie: String,
-    ): Int? {
-        getBewoningen(authentication, adresseerbaarObjectIdentificatie)?.bewoningen?.first {
-            return it.bewoners.size
-        }
-
-        return null
-    }
+    ): Int? =
+        getBewoningen(authentication, adresseerbaarObjectIdentificatie)
+            ?.bewoningen
+            ?.firstOrNull()
+            ?.bewoners
+            ?.size
 
     suspend fun getGemachtigde(authentication: CommonGroundAuthentication): BrpPersoon? {
         val authenticationGemachtigde = authentication.getGemachtigde()
