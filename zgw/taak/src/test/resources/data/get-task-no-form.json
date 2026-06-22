@@ -1,0 +1,29 @@
+{
+    "url": "http://localhost:8010/api/v2/objects/33333333-3333-3333-3333-333333333333",
+    "uuid": "33333333-3333-3333-3333-333333333333",
+    "type": "http://localhost:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb35",
+    "record": {
+        "index": 1,
+        "typeVersion": 1,
+        "data": {
+            "titel": "Task without portaalformulier",
+            "status": "open",
+            "soort": "url",
+            "verloopdatum": null,
+            "eigenaar": "gzac",
+            "identificatie": {
+                "type": "bsn",
+                "value": "569312863"
+            },
+            "koppeling": {
+                "registratie": "zaak",
+                "value": "5551a7c5-4e92-43e6-8d23-80359b7e22b7"
+            },
+            "url": {
+                "uri": "http://example.com/some-task"
+            },
+            "verwerker_taak_id": "33333333-3333-3333-3333-333333333334"
+        },
+        "startAt": "2022-06-01"
+    }
+}

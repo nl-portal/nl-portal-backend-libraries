@@ -10,6 +10,9 @@ type Query {
         status: TaakStatus
         title: String
     ): TaakPageV2!
+
+    # Get the form definition for a task the authenticated user owns
+    getFormDefinitionByTaskId(taskId: UUID!): FormDefinition
 }
 
 type Mutation {
@@ -93,6 +96,10 @@ type OgoneBetaling {
     bedrag: PositiveFloat!
     betaalkenmerk: String!
     pspid: String!
+}
+
+type FormDefinition {
+    formDefinition: JSON!
 }
 
 scalar JSON

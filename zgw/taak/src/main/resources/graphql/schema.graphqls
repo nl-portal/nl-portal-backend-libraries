@@ -10,6 +10,9 @@ extend type Query {
         status: TaakStatus
         title: String
     ): TaakPageV2!
+
+    # Get the form definition for a task the authenticated user owns
+    getFormDefinitionByTaskId(taskId: UUID!): FormDefinition
 }
 
 extend type Mutation {
