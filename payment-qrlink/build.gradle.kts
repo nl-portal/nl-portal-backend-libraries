@@ -27,6 +27,7 @@ dependencies {
     implementation(Dependencies.kotlinCoroutinesReactor)
 
     testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.h2)
     testImplementation(TestDependencies.assertJCore)
     testImplementation(TestDependencies.mockitoKotlin)
     testImplementation(TestDependencies.kotlinCoroutines)
