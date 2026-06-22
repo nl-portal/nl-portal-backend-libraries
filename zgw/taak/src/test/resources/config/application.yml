@@ -13,6 +13,9 @@ nl-portal:
             properties:
                 url: http://localhost:8010
                 token: 0000000000000000000000000000000000000000
+        form:
+            properties:
+                form-definition-object-type-url: "http://localhost:8011/api/v1/objecttypes/form-definition-type"
         taak:
             enabled: true
             properties:
@@ -32,6 +35,25 @@ nl-portal:
             resource-url: classpath:machtigingsdiensten.json
 
 spring:
+    liquibase:
+        enabled: true
+        change-log: classpath:config/liquibase/form-master.xml
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: org.h2.Driver
+        url: jdbc:h2:mem:taak-test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+        username: sa
+        password: ""
+        hikari:
+            auto-commit: false
+    jpa:
+        database-platform: org.hibernate.dialect.H2Dialect
+        open-in-view: false
+        properties:
+            hibernate:
+                hbm2ddl.auto: none
+                connection:
+                    provider_disables_autocommit: true
     security:
         oauth2:
             resourceserver:

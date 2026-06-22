@@ -22,6 +22,7 @@ object TestDependencies {
     val okHttpMockWebserver by lazy { "com.squareup.okhttp3:mockwebserver:${Versions.okHttp3}" }
     val okHttpTls by lazy { "com.squareup.okhttp3:okhttp-tls:${Versions.okHttp3}" }
     val postgresql by lazy { "org.postgresql:postgresql:${Versions.postgresql}" }
+    val h2 by lazy { "com.h2database:h2:${Versions.h2}" }
     val springBootTest by lazy {"org.springframework.boot:spring-boot-starter-test"}
     val springSecurityTest by lazy {"org.springframework.security:spring-security-test"}
     val assertJCore by lazy { "org.assertj:assertj-core" }
