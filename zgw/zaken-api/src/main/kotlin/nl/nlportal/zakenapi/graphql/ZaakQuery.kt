@@ -166,27 +166,4 @@ open class ZaakQuery(
             statusUrl = zaakStatus.url
         )
     }
-
-    @SchemaMapping(typeName = "Besluit", field = "auditTrails")
-    suspend fun auditTrails(
-        besluit: Besluit
-    ): List<BesluitAuditTrail> {
-        return besluitenService.getBesluitAuditTrails(CoreUtils.extractId(besluit.url))
-    }
-
-    @SchemaMapping(typeName = "Besluit", field = "documenten")
-    suspend fun documenten(
-        besluit: Besluit
-    ): List<BesluitDocument> {
-        return besluitenService.getBesluitDocumenten(besluit.url)
-    }
-
-    @SchemaMapping(typeName = "Besluit", field = "besluittype")
-    suspend fun besluittype(
-        besluit: Besluit
-    ): BesluitType {
-        return catalogiApiService.getBesluitType(
-            besluitTypeUrl = besluit.besluittype
-        )
-    }
 }
