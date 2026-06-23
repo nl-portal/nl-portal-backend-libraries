@@ -37,6 +37,7 @@ class HaalCentraal2ModuleConfiguration {
         var apiKey: String? = null
         var additionalHeaders: Map<String, String> = emptyMap()
         var ssl: Ssl? = null
+        var allowedCitiesForBewoning: List<String> = emptyList()
         var brpFields: List<String> =
             listOf(
                 "aNummer",

@@ -103,7 +103,7 @@ internal class HaalCentraal2BewoningenQueryIT(
         val query =
             """
             query {
-                getBewonersAantalV2(adresseerbaarObjectIdentificatie: "0226010000038820")
+                getBewonersAantalV2(adresseerbaarObjectIdentificatie: "0226010000038820", woonplaats: "'s-Gravenhage")
             }
             """.trimIndent()
 
@@ -119,6 +119,24 @@ internal class HaalCentraal2BewoningenQueryIT(
 
         assertEquals(4, responseBody.intValue())
         TestHelper.assertRequestHasPassThroughHeader(server, "/bewoning/bewoningen", passThroughHeaders)
+    }
+
+    @Test
+    @WithBurgerUser("999993872")
+    fun getBewonersAantalNoAllowed() {
+        val query =
+            """
+            query {
+                getBewonersAantalV2(adresseerbaarObjectIdentificatie: "0226010000038820", woonplaats: "Amsterdam")
+            }
+            """.trimIndent()
+
+        httpGraphQlTester
+            .document(query)
+            .execute()
+            .errors()
+            .verify()
+            .path("getBewonersAantalV2")
     }
 
     private fun setupMockServer() {
