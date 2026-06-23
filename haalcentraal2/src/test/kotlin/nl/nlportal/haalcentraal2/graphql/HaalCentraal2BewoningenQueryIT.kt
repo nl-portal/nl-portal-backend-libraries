@@ -137,10 +137,14 @@ internal class HaalCentraal2BewoningenQueryIT(
                             "POST /bewoning/bewoningen" -> {
                                 TestHelper.mockResponseFromFile("/data/get-bewoningen.json")
                             }
+
                             "POST /brp/personen" -> {
                                 TestHelper.mockResponseFromFile("/data/get-personen.json")
                             }
-                            else -> MockResponse().setResponseCode(404)
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }
