@@ -92,6 +92,18 @@ class HaalCentraal2Service(
         return null
     }
 
+    suspend fun getBewonersAantal(authentication: CommonGroundAuthentication): Int? {
+        val persoon = getPersoon(authentication)
+            return persoon?.verblijfplaats?.adresseerbaarObjectIdentificatie?.let {
+                getBewonersAantal(
+                    authentication = authentication,
+                    adresseerbaarObjectIdentificatie = it,
+                    woonplaats = persoon.verblijfplaats.verblijfadres?.woonplaats,
+                )
+            }
+
+    }
+
     suspend fun getGemachtigde(authentication: CommonGroundAuthentication): BrpPersoon? {
         val authenticationGemachtigde = authentication.getGemachtigde()
 
