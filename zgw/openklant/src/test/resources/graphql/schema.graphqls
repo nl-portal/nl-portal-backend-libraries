@@ -1,6 +1,6 @@
 type Query {
     # Get DigitaleAdressen of authenticated user.
-    getUserDigitaleAdressen: [DigitaleAdresResponse!]
+    getUserDigitaleAdressen(isStandaardAdres: Boolean): [DigitaleAdresResponse!]
 
     # Get KlantContact by id of authenticated user.
     getUserKlantContact(klantContactId: UUID!): OpenKlant2Klantcontact
@@ -158,8 +158,9 @@ type DigitaleAdresResponse {
     uuid: UUID
     verificatieDatum: Date
     waarde: String!
-    verificatieNeeded: Boolean
-    verificatieCodeVerified: Boolean
+    verificatieNeeded: Boolean!
+    verificatieCodeVerified: Boolean!
+    isStandaardAdres: Boolean
 }
 
 enum DigitaleAdresType {
