@@ -1,35 +1,3 @@
-type Query {
-    # Get all besluit by id
-    getBesluit(besluitId: UUID!): Besluit!
-
-    # Get all besluit audit trails by id
-    getBesluitAuditTrail(
-        besluitId: UUID!
-        auditTrailId: UUID!
-    ): BesluitAuditTrail!
-
-    # Get all besluit audit trails
-    getBesluitAuditTrails(besluitId: UUID!): [BesluitAuditTrail!]!
-
-    # Get all besluit document by id
-    getBesluitDocument(documentId: UUID!): BesluitDocument!
-
-    # Get all besluit documents
-    getBesluitDocumenten(
-        besluit: String
-        informatieobject: String
-    ): [BesluitDocument!]!
-
-    # Get all besluiten
-    getBesluiten(
-        besluitType: String
-        identificatie: String
-        pageNumber: Int
-        verantwoordelijkeOrganisatie: String
-        zaak: String
-    ): BesluitPage!
-}
-
 type Besluit {
     bestuursorgaan: String
     datum: Date!

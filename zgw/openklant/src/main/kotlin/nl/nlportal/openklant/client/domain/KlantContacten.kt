@@ -59,7 +59,9 @@ data class OpenKlant2Klantcontact(
     val inhoud: String,
     val kanaal: String,
     val leiddeTotInterneTaken: List<OpenKlant2ForeignKey>,
+    @Deprecated("use referentienummer")
     val nummer: String,
+    val referentienummer: String?,
     val omvatteBijlagen: List<OpenKlant2ForeignKey>,
     val onderwerp: String,
     val plaatsgevondenOp: String,
@@ -67,6 +69,8 @@ data class OpenKlant2Klantcontact(
     val url: String,
     val uuid: String,
     val vertrouwelijk: Boolean,
+    val reactie: String?,
+    val metadata: ObjectNode?,
 )
 
 enum class OpenKlant2KlantcontactenFilters(

@@ -82,15 +82,12 @@ class HaalCentraal2Service(
     suspend fun getBewonersAantal(
         authentication: CommonGroundAuthentication,
         adresseerbaarObjectIdentificatie: String,
-        woonplaats: String? = null,
-    ): Int? {
-        if (allowedBewoningRequest(woonplaats)) {
-            getBewoningen(authentication, adresseerbaarObjectIdentificatie)?.bewoningen?.first {
-                return it.bewoners.size
-            }
-        }
-        return null
-    }
+    ): Int? =
+        getBewoningen(authentication, adresseerbaarObjectIdentificatie)
+            ?.bewoningen
+            ?.firstOrNull()
+            ?.bewoners
+            ?.size
 
     suspend fun getBewonersAantal(authentication: CommonGroundAuthentication): Int? {
         val persoon = getPersoon(authentication)
@@ -156,22 +153,6 @@ class HaalCentraal2Service(
                 persoon.naam.lastName()
             }
         }
-    }
-
-    private fun allowedBewoningRequest(
-        woonplaats: String? = null,
-    ): Boolean {
-        if (haalCentraal2ConfigurationProperties.allowedCitiesForBewoning.isNotEmpty()) {
-            if (woonplaats == null) {
-                return false
-            }
-
-            if (woonplaats !in haalCentraal2ConfigurationProperties.allowedCitiesForBewoning) {
-                return false
-            }
-        }
-
-        return true
     }
 
     companion object {
