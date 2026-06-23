@@ -29,17 +29,6 @@ class HaalCentraal2BewoningQuery(
     suspend fun getBewonersAantalV2(
         authentication: CommonGroundAuthentication,
         @Argument adresseerbaarObjectIdentificatie: String,
-    ): Int? =
-        haalCentraal2Service.getBewonersAantal(
-            authentication = authentication,
-            adresseerbaarObjectIdentificatie = adresseerbaarObjectIdentificatie,
-            woonplaats = null,
-        )
-
-    @QueryMapping
-    suspend fun getBewonersAantal(
-        authentication: CommonGroundAuthentication,
-        @Argument adresseerbaarObjectIdentificatie: String,
         @Argument woonplaats: String? = null,
     ): Int? =
         haalCentraal2Service.getBewonersAantal(

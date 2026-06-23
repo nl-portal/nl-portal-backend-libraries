@@ -103,7 +103,7 @@ internal class HaalCentraal2BewoningenQueryIT(
         val query =
             """
             query {
-                getBewonersAantal(adresseerbaarObjectIdentificatie: "0226010000038820", woonplaats: "'s-Gravenhage")
+                getBewonersAantalV2(adresseerbaarObjectIdentificatie: "0226010000038820", woonplaats: "'s-Gravenhage")
             }
             """.trimIndent()
 
@@ -113,7 +113,7 @@ internal class HaalCentraal2BewoningenQueryIT(
                 .execute()
                 .errors()
                 .verify()
-                .path("getBewonersAantal")
+                .path("getBewonersAantalV2")
                 .entity(JsonNode::class.java)
                 .get()
 
@@ -127,7 +127,7 @@ internal class HaalCentraal2BewoningenQueryIT(
         val query =
             """
             query {
-                getBewonersAantal(adresseerbaarObjectIdentificatie: "0226010000038820", woonplaats: "Amsterdam")
+                getBewonersAantalV2(adresseerbaarObjectIdentificatie: "0226010000038820", woonplaats: "Amsterdam")
             }
             """.trimIndent()
 
