@@ -17,13 +17,17 @@ package nl.nlportal.zakenapi.graphql
 
 import java.util.UUID
 import nl.nlportal.besluiten.domain.Besluit
+import nl.nlportal.besluiten.domain.BesluitAuditTrail
+import nl.nlportal.besluiten.domain.BesluitDocument
 import nl.nlportal.besluiten.service.BesluitenService
+import nl.nlportal.catalogiapi.domain.BesluitType
 import nl.nlportal.catalogiapi.domain.ResultaatType
 import nl.nlportal.catalogiapi.domain.StatusType
 import nl.nlportal.catalogiapi.domain.ZaakStatusType
 import nl.nlportal.catalogiapi.domain.ZaakType
 import nl.nlportal.catalogiapi.service.CatalogiApiService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zakenapi.domain.ZaakDetails
