@@ -3,7 +3,9 @@ type Query {
     getPersoonV2: BrpPersoon
 
     # Gets the number of people living in the same house of the adresseerbaarObjectIdentificatie
-    getBewonersAantalV2(adresseerbaarObjectIdentificatie: String!, woonplaats: String): Int
+    getBewonersAantal(adresseerbaarObjectIdentificatie: String!, woonplaats: String): Int
+
+    getBewonersAantalV2(adresseerbaarObjectIdentificatie: String!): Int
 
     # Gets the data of the gemachtigde
     getGemachtigdeV2: GemachtigdeV2

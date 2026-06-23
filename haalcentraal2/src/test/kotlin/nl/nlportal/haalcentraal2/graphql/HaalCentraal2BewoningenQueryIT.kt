@@ -103,7 +103,7 @@ internal class HaalCentraal2BewoningenQueryIT(
         val query =
             """
             query {
-                getBewonersAantalV2(adresseerbaarObjectIdentificatie: "0226010000038820", woonplaats: "'s-Gravenhage")
+                getBewonersAantal(adresseerbaarObjectIdentificatie: "0226010000038820", woonplaats: "'s-Gravenhage")
             }
             """.trimIndent()
 
@@ -113,7 +113,7 @@ internal class HaalCentraal2BewoningenQueryIT(
                 .execute()
                 .errors()
                 .verify()
-                .path("getBewonersAantalV2")
+                .path("getBewonersAantal")
                 .entity(JsonNode::class.java)
                 .get()
 
@@ -123,11 +123,11 @@ internal class HaalCentraal2BewoningenQueryIT(
 
     @Test
     @WithBurgerUser("999993872")
-    fun getBewonersAantalNoAllowed() {
+    fun getBewonersAantalNotAllowed() {
         val query =
             """
             query {
-                getBewonersAantalV2(adresseerbaarObjectIdentificatie: "0226010000038820", woonplaats: "Amsterdam")
+                getBewonersAantal(adresseerbaarObjectIdentificatie: "0226010000038820", woonplaats: "Amsterdam")
             }
             """.trimIndent()
 
