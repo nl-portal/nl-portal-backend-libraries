@@ -43,7 +43,7 @@ plugins {
     // Docker-compose plugin
     id("com.avast.gradle.docker-compose")
 
-    id("com.github.jk1.dependency-license-report") version "2.9"
+    id("com.github.jk1.dependency-license-report") version "3.1.4"
 
     id("org.owasp.dependencycheck") version "12.2.2"
 
