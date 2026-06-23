@@ -31,6 +31,7 @@ data class DigitaleAdresResponse(
     val verificatieDatum: LocalDate? = null,
     val verificatieNeeded: Boolean? = false,
     val verificatieCodeVerified: Boolean? = true,
+    val isStandaardAdres: Boolean? = false,
 ) {
     companion object {
         fun fromOpenKlant2DigitaleAdres(
@@ -54,6 +55,7 @@ data class DigitaleAdresResponse(
                     verificatieService != null &&
                         verificatieModuleConfiguration.properties.typesNeedVerification.contains(DigitaleAdresType.toVerificationType(type)) &&
                         openKlant2DigitaleAdres.verificatieDatum == null,
+                isStandaardAdres = openKlant2DigitaleAdres.isStandaardAdres,
             )
         }
     }
