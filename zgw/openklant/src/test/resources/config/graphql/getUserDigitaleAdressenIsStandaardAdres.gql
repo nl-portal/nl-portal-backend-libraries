@@ -1,0 +1,12 @@
+
+query {
+    getUserDigitaleAdressen(isStandaardAdres: true) {
+        uuid
+        waarde
+        type
+        omschrijving
+        referentie,
+        verificatieDatum,
+        verificatieNeeded
+    }
+}
