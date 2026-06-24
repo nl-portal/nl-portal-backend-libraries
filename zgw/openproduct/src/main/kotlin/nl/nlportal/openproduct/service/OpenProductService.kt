@@ -75,6 +75,11 @@ import nl.nlportal.zgw.taak.graphql.TaakPageV2
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
+import kotlinx.coroutines.flow.Flow
+import nl.nlportal.core.util.CoreUtils.extractId
+import nl.nlportal.documentenapi.domain.Document
+import nl.nlportal.documentenapi.service.DocumentenApiService
+import org.springframework.core.io.buffer.DataBuffer
 
 class OpenProductService(
     private val openProductClient: OpenProductClient,
@@ -83,6 +88,7 @@ class OpenProductService(
     private val objectsApiClient: ObjectsApiClient,
     private val zakenApiClient: ZakenApiClient,
     private val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
+    private val documentenApiService: DocumentenApiService,
 ) {
     /**
      * Get published themas
@@ -1129,6 +1135,48 @@ class OpenProductService(
             logger.error { "Error getting product acties: " + e.message }
         }
         return emptyList()
+    }
+
+    suspend fun getProductDocumentContent(
+        authentication: CommonGroundAuthentication,
+        productId: UUID,
+        documentApi: String,
+        documentId: UUID,
+    ): Pair<Document, Flow<DataBuffer>> {
+        try {
+            // get product, if not authorized throws an unauthorized
+            val product =
+                getProduct(
+                    authentication = authentication,
+                    id = productId,
+                )
+
+            // if product is not found, return a 204
+            if (product == null) {
+                throw ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
+            }
+
+            // check if documentId is in list of product documenten
+            product.documenten.firstOrNull { it.url?.contains(documentId.toString()) == true } ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Document not found")
+            /*if(checkDocumentId == null) {
+                throw ResponseStatusException(HttpStatus.NOT_FOUND, "Document not found")
+            }*/
+
+            val document =
+                documentenApiService.getDocument(
+                    documentId = documentId,
+                    documentApi = documentApi,
+                )
+            val content =
+                documentenApiService.getDocumentContentStreaming(
+                    documentId = documentId,
+                    documentApi = documentApi,
+                )
+            return document to content
+        } catch (e: Exception) {
+            logger.error(e) { "Error getting product document: " + e.message }
+            throw e
+        }
     }
 
     /**
