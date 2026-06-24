@@ -13,6 +13,9 @@ nl-portal:
             properties:
                 brp-api-url: #filled in test
                 bewoning-api-url: #filled in test
+                allowed-cities-for-bewoning:
+                    - "'s-Gravenhage"
+                    - "Ypenburg"
         haalcentraal:
             hr:
                 enabled: true

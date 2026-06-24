@@ -67,9 +67,13 @@ internal class HaalCentraal2BewoningenQueryIT(
         var url: String = ""
 
         @JvmStatic
+        var url2: String = ""
+
+        @JvmStatic
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
-            propsRegistry.add("nl-portal.config.haalcentraal2.properties.bewoning-api-url") { url }
+            propsRegistry.add("nl-portal.config.haalcentraal2.properties.brp-api-url") { url }
+            propsRegistry.add("nl-portal.config.haalcentraal2.properties.bewoning-api-url") { url2 }
             passThroughHeaders.forEach { (name, value) ->
                 propsRegistry.add("nl-portal.config.haalcentraal2.properties.additional-headers.$name") { value }
             }
@@ -80,7 +84,8 @@ internal class HaalCentraal2BewoningenQueryIT(
         fun beforeAll() {
             server = MockWebServer()
             server?.start()
-            url = server?.url("/bewoning").toString()
+            url = server?.url("/brp").toString()
+            url2 = server?.url("/bewoning").toString()
         }
 
         @JvmStatic
@@ -103,7 +108,7 @@ internal class HaalCentraal2BewoningenQueryIT(
         val query =
             """
             query {
-                getBewonersAantalV2(adresseerbaarObjectIdentificatie: "0226010000038820")
+                getBewonersAantalV2
             }
             """.trimIndent()
 
@@ -118,7 +123,7 @@ internal class HaalCentraal2BewoningenQueryIT(
                 .get()
 
         assertEquals(4, responseBody.intValue())
-        TestHelper.assertRequestHasPassThroughHeader(server, "/bewoning/bewoningen", passThroughHeaders)
+        TestHelper.assertRequestHasPassThroughHeader(server, "/brp/personen", passThroughHeaders)
     }
 
     private fun setupMockServer() {
@@ -129,8 +134,17 @@ internal class HaalCentraal2BewoningenQueryIT(
                     val path = request.path?.substringBefore('?')
                     val response =
                         when (request.method + " " + path) {
-                            "POST /bewoning/bewoningen" -> TestHelper.mockResponseFromFile("/data/get-bewoningen.json")
-                            else -> MockResponse().setResponseCode(404)
+                            "POST /bewoning/bewoningen" -> {
+                                TestHelper.mockResponseFromFile("/data/get-bewoningen.json")
+                            }
+
+                            "POST /brp/personen" -> {
+                                TestHelper.mockResponseFromFile("/data/get-personen.json")
+                            }
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }
