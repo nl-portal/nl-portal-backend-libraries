@@ -169,7 +169,9 @@
                     "omschrijving": "woonadres"
                 },
                 "verblijfadres": {
-                    "officieleStraatnaam": "Het Spui 1"
+                    "officieleStraatnaam": "Het Spui 1",
+                    "postcode":"2531AK",
+                    "woonplaats":"'s-Gravenhage"
                 },
                 "adresseerbaarObjectIdentificatie": 226010000038820
             },
