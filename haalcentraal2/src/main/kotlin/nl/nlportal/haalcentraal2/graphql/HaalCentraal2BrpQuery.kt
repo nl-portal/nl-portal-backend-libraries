@@ -41,6 +41,7 @@ class HaalCentraal2BrpQuery(
             haalCentraal2Service.getBewonersAantal(
                 authentication = authentication,
                 adresseerbaarObjectIdentificatie = it,
+                woonplaats = persoon.verblijfplaats.verblijfadres?.woonplaats,
             )
         }
 }
