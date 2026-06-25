@@ -1193,8 +1193,6 @@ class OpenProductService(
                     logger.debug { "Error getting document " + e.message }
                 }
             }
-
-            logger.info { documentenApiService.filterDocuments(documents) }
         }
         return documentenApiService.filterDocuments(documents)
     }
