@@ -16,6 +16,14 @@
 package nl.nlportal.documentenapi.client
 
 import nl.nlportal.core.ssl.Ssl
+import nl.nlportal.documentenapi.domain.DocumentStatus
+import nl.nlportal.documentenapi.domain.DocumentStatus.DEFINITIEF
+import nl.nlportal.documentenapi.domain.DocumentStatus.GEARCHIVEERD
+import nl.nlportal.documentenapi.domain.Vertrouwelijkheid
+import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.BEPERKT_OPENBAAR
+import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.INTERN
+import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.OPENBAAR
+import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.ZAAKVERTROUWELIJK
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.documentenapis", ignoreUnknownFields = true)
@@ -26,6 +34,18 @@ class DocumentApisConfig {
     class DocumentenApisConfigProperties{
         var defaultDocumentApi: String = ""
         var allowedMimeTypes: Set<String> = setOf()
+        var vertrouwelijkheidsaanduidingWhitelist: List<Vertrouwelijkheid> =
+            listOf(
+                OPENBAAR,
+                BEPERKT_OPENBAAR,
+                INTERN,
+                ZAAKVERTROUWELIJK,
+            )
+        var statusWhitelist: List<DocumentStatus> =
+            listOf(
+                DEFINITIEF,
+                GEARCHIVEERD,
+            )
         var configurations: Map<String, DocumentApiConfig> = emptyMap()
 
         fun getConfig(documentApi: String): DocumentApiConfig {

@@ -152,16 +152,14 @@ class ZakenApiService(
     }
 
     suspend fun getDocumenten(zaakUrl: String): List<Document> {
-        return getZaakDocumenten(zaakUrl)
+        val documents = getZaakDocumenten(zaakUrl)
             .map { zaakDocument ->
                 documentenApiService
                     .getDocument(zaakDocument.informatieobject)
                     .copy(identificatie = zaakDocument.uuid)
             }
-            .filter { document ->
-                document.status in zakenApiConfigProperties.zaakDocumentenConfig.statusWhitelist &&
-                    document.vertrouwelijkheidaanduiding in zakenApiConfigProperties.zaakDocumentenConfig.vertrouwelijkheidsaanduidingWhitelist
-            }
+
+        return documentenApiService.filterDocuments(documents)
     }
 
     suspend fun getZaakStatusHistory(zaakId: UUID): List<ZaakStatus> {

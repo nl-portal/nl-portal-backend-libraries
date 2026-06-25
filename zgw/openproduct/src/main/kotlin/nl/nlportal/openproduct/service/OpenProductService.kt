@@ -16,11 +16,15 @@
 package nl.nlportal.openproduct.service
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.util.UUID
+import kotlinx.coroutines.flow.Flow
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.commonground.authentication.BedrijfAuthentication
 import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils
+import nl.nlportal.documentenapi.domain.Document
+import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.openproduct.client.OpenProductClient
 import nl.nlportal.openproduct.client.OpenProductTypeClient
 import nl.nlportal.openproduct.client.domain.OpenProductActie
@@ -72,14 +76,9 @@ import nl.nlportal.zgw.taak.autoconfigure.TaakConfig.TaakConfigProperties
 import nl.nlportal.zgw.taak.domain.TaakObjectV2
 import nl.nlportal.zgw.taak.domain.TaakV2
 import nl.nlportal.zgw.taak.graphql.TaakPageV2
+import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
-import java.util.UUID
-import kotlinx.coroutines.flow.Flow
-import nl.nlportal.core.util.CoreUtils.extractId
-import nl.nlportal.documentenapi.domain.Document
-import nl.nlportal.documentenapi.service.DocumentenApiService
-import org.springframework.core.io.buffer.DataBuffer
 
 class OpenProductService(
     private val openProductClient: OpenProductClient,
@@ -1158,9 +1157,6 @@ class OpenProductService(
 
             // check if documentId is in list of product documenten
             product.documenten.firstOrNull { it.url?.contains(documentId.toString()) == true } ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Document not found")
-            /*if(checkDocumentId == null) {
-                throw ResponseStatusException(HttpStatus.NOT_FOUND, "Document not found")
-            }*/
 
             val document =
                 documentenApiService.getDocument(
@@ -1177,6 +1173,30 @@ class OpenProductService(
             logger.error(e) { "Error getting product document: " + e.message }
             throw e
         }
+    }
+
+    suspend fun getOpenProductDocumenten(
+        openProductProduct: OpenProductProduct,
+    ): List<Document> {
+        val documents = mutableListOf<Document>()
+        openProductProduct.documenten.forEach { document ->
+            val splitDocumentUrl = document.url?.split("/")
+            if (splitDocumentUrl != null) {
+                try {
+                    documents.add(
+                        documentenApiService.getDocument(
+                            documentId = UUID.fromString(splitDocumentUrl[9]),
+                            documentApi = splitDocumentUrl[7],
+                        ),
+                    )
+                } catch (e: Exception) {
+                    logger.debug { "Error getting document " + e.message }
+                }
+            }
+
+            logger.info { documentenApiService.filterDocuments(documents) }
+        }
+        return documentenApiService.filterDocuments(documents)
     }
 
     /**

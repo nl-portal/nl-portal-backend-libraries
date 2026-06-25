@@ -33,10 +33,10 @@
   ],
   "documenten": [
     {
-      "url": "http://localhost:8070/api/product/694242af-d906-470b-b7e1-eb3527886854/documentapi/openzaak/document/095be615-a8ad-4c33-8e9c-c7612fbf6c9f/content"
+      "url": "http://localhost:8070/api/product/694242af-d906-470b-b7e1-eb3527886854/documentapi/openzaak/document/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
     },
     {
-      "url": "http://localhost:8070/api/product/694242af-d906-470b-b7e1-eb3527886854/documentapi/openzaak/document/095be615-a8ad-4c33-8e9c-c7612fbf6c9e/content"
+      "url": "http://localhost:8070/api/product/694242af-d906-470b-b7e1-eb3527886854/documentapi/openzaak/document/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
     }
   ],
   "zaken": [
