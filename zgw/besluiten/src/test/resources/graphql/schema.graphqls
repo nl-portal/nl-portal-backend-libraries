@@ -1,3 +1,6 @@
+type Query{
+    dummy: String
+}
 type Besluit {
     bestuursorgaan: String
     datum: Date!
@@ -15,7 +18,7 @@ type Besluit {
     zaak: String!
     auditTrails: [BesluitAuditTrail!]!
     besluittype: BesluitType!
-    documenten: [BesluitDocument!]!
+    documenten: [Document!]!
 }
 
 type BesluitAuditTrail {
@@ -79,6 +82,17 @@ type BesluitType {
     toelichting: String
     url: String!
     zaaktypen: [String!]!
+}
+
+type Document {
+    bestandsnaam: String
+    bestandsomvang: Int
+    creatiedatum: String
+    documentapi: String!
+    formaat: String
+    identificatie: String
+    titel: String
+    uuid: UUID!
 }
 
 scalar UUID

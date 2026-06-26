@@ -6,7 +6,9 @@ import nl.nlportal.besluiten.domain.BesluitDocument
 import nl.nlportal.besluiten.service.BesluitenService
 import nl.nlportal.catalogiapi.domain.BesluitType
 import nl.nlportal.catalogiapi.service.CatalogiApiService
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils
+import nl.nlportal.documentenapi.domain.Document
 import org.springframework.graphql.data.method.annotation.SchemaMapping
 import org.springframework.stereotype.Controller
 
@@ -24,9 +26,13 @@ class BesluitenQuery(
 
     @SchemaMapping(typeName = "Besluit", field = "documenten")
     suspend fun documenten(
+        authentication: CommonGroundAuthentication,
         besluit: Besluit
-    ): List<BesluitDocument> {
-        return besluitenService.getBesluitDocumenten(besluit.url)
+    ): List<Document> {
+        return besluitenService.getBesluitDocumenten(
+            authentication = authentication,
+            besluit = besluit.url
+        )
     }
 
     @SchemaMapping(typeName = "Besluit", field = "besluittype")
