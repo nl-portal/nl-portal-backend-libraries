@@ -25,7 +25,6 @@ dependencies {
     api(project(":graphql"))
     api(project(":zgw:catalogi-api"))
     api(project(":zgw:documenten-api"))
-    //api(Dependencies.springWebFlux)
 
     implementation(Dependencies.springBootStarter)
 
@@ -33,8 +32,6 @@ dependencies {
     implementation(Dependencies.kotlinCoroutinesReactor)
     implementation("org.springframework.data:spring-data-commons")
 
-    //testImplementation(TestDependencies.kotlinTest)
-    //testImplementation(TestDependencies.junitJupiterTest)
     testImplementation(TestDependencies.springBootTest)
     testImplementation(TestDependencies.springSecurityTest)
 
@@ -42,9 +39,7 @@ dependencies {
     testImplementation(TestDependencies.mockitoKotlin)
     testImplementation(TestDependencies.okHttpMockWebserver)
     testImplementation(TestDependencies.okHttp)
-    //testImplementation(TestDependencies.postgresql)
     testImplementation(project(":zgw:common-ground-authentication-test"))
-    //testImplementation("org.springframework.graphql:spring-graphql-test")
 }
 
 val jar: Jar by tasks
