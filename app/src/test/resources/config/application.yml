@@ -66,6 +66,20 @@ nl-portal:
             enabled: true
             properties:
                 default-document-api: openzaak
+                vertrouwelijkheidsaanduiding-whitelist:
+                    - openbaar
+                    - beperkt_openbaar
+                    - intern
+                    - zaakvertrouwelijk
+                    - vertrouwelijk
+                    - confidentieel
+                    - geheim
+                    - zeer_geheim
+                status-whitelist:
+                    - ter_vaststelling
+                    - in_bewerking
+                    - definitief
+                    - gearchiveerd
                 configurations:
                     openzaak:
                         url: http://localhost:56789/documenten/api/v1
@@ -82,21 +96,6 @@ nl-portal:
                 url: http://localhost:56789
                 clientId: test-client
                 secret: test-secret
-                zaak-documenten-config:
-                    vertrouwelijkheidsaanduiding-whitelist:
-                        - openbaar
-                        - beperkt_openbaar
-                        - intern
-                        - zaakvertrouwelijk
-                        - vertrouwelijk
-                        - confidentieel
-                        - geheim
-                        - zeer_geheim
-                    status-whitelist:
-                        - ter_vaststelling
-                        - in_bewerking
-                        - definitief
-                        - gearchiveerd
         objectenapi:
             enabled: true
             properties:

@@ -31,7 +31,14 @@
       "klantnummer": ""
     }
   ],
-  "documenten": [],
+  "documenten": [
+    {
+      "url": "http://localhost:8070/api/product/694242af-d906-470b-b7e1-eb3527886854/documentapi/openzaak/document/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
+    },
+    {
+      "url": "http://localhost:8070/api/product/694242af-d906-470b-b7e1-eb3527886854/documentapi/openzaak/document/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
+    }
+  ],
   "zaken": [
     {
       "url": "http://localhost:8001/zaken/api/v1/zaken/703af290-abe0-418c-b9c3-10a65e662789"

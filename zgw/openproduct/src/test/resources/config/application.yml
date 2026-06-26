@@ -36,6 +36,20 @@ nl-portal:
                 #hostName: localhost
                 #enabled: true
                 defaultDocumentApi: openzaak
+                vertrouwelijkheidsaanduiding-whitelist:
+                    - openbaar
+                    - beperkt_openbaar
+                    - intern
+                    - zaakvertrouwelijk
+                    - vertrouwelijk
+                    - confidentieel
+                    - geheim
+                    - zeer_geheim
+                status-whitelist:
+                    - ter_vaststelling
+                    - in_bewerking
+                    - definitief
+                    - gearchiveerd
                 configurations:
                     openzaak:
                         url: http://localhost:8001/documenten/api/v1

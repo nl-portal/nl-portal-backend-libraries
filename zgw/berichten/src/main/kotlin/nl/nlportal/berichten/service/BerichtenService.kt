@@ -123,11 +123,13 @@ class BerichtenService(
         identificatie: String,
         bijlages: List<String>,
     ): List<Document> =
-        bijlages.map {
-            documentenApiService
-                .getDocument(it)
-                .copy(identificatie = identificatie)
-        }
+        documentenApiService.filterDocuments(
+            bijlages.map {
+                documentenApiService
+                    .getDocument(it)
+                    .copy(identificatie = identificatie)
+            },
+        )
 
     suspend fun getBerichtenPage(
         authentication: CommonGroundAuthentication,

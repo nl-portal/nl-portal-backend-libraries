@@ -17,6 +17,7 @@ package nl.nlportal.openproduct.autoconfigure
 
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.core.ssl.ClientSslContextResolver
+import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.openproduct.client.OpenProductClient
 import nl.nlportal.openproduct.client.OpenProductDmnClient
 import nl.nlportal.openproduct.client.OpenProductTypeClient
@@ -63,6 +64,7 @@ class OpenProductAutoConfiguration {
         objectsApiClient: ObjectsApiClient,
         taakObjectConfig: TaakConfig,
         authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
+        documentenApiService: DocumentenApiService,
     ): OpenProductService =
         OpenProductService(
             openProductClient = openProductClient,
@@ -71,6 +73,7 @@ class OpenProductAutoConfiguration {
             zakenApiClient = zakenApiClient,
             objectsApiClient = objectsApiClient,
             authenticationMachtigingsDienstService = authenticationMachtigingsDienstService,
+            documentenApiService = documentenApiService,
         )
 
     @Bean("openProductDmnClient")

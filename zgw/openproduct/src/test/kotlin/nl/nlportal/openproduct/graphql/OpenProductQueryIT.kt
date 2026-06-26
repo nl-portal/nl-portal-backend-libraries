@@ -16,10 +16,10 @@
 package nl.nlportal.openproduct.graphql
 
 import com.fasterxml.jackson.databind.JsonNode
-import io.github.oshai.kotlinlogging.KotlinLogging
 import java.net.URI
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
+import nl.nlportal.documentenapi.client.DocumentApisConfig
 import nl.nlportal.openproduct.TestHelper
 import nl.nlportal.openproduct.TestHelper.readFileAsString
 import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration
@@ -52,9 +52,10 @@ class OpenProductQueryIT(
     @Autowired private val openProductModuleConfiguration: OpenProductModuleConfiguration,
     @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
     @Autowired private val zakenApiConfig: ZakenApiConfig,
+    @Autowired private val documentApisConfig: DocumentApisConfig,
 ) {
     companion object {
-        private val logger = KotlinLogging.logger {}
+        private const val KNOWN_DOC_ID = "095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
 
         @JvmStatic
         var server: MockWebServer? = null
@@ -94,6 +95,7 @@ class OpenProductQueryIT(
         openProductModuleConfiguration.properties.productTypeApiUrl = URI(url)
         objectsApiClientConfig.properties.url = URI(url)
         zakenApiConfig.properties.url = url
+        documentApisConfig.properties.getConfig("openzaak").url = server?.url("/").toString()
     }
 
     @Test
@@ -130,8 +132,6 @@ class OpenProductQueryIT(
                     .path("getOpenProduct")
                     .entity(JsonNode::class.java)
                     .get()
-
-            logger.info { responseBody }
 
             assertEquals("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/", responseBody.requiredAt("/url")?.textValue())
             assertEquals("2025-04-30", responseBody.requiredAt("/startDatum")?.textValue())
@@ -200,6 +200,10 @@ class OpenProductQueryIT(
 
                             "GET /acties" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-acties.json")
+                            }
+
+                            "GET /enkelvoudiginformatieobjecten/${KNOWN_DOC_ID}" -> {
+                                TestHelper.mockResponse(TestHelper.handleDocumentResponse)
                             }
 
                             else -> {
