@@ -59,11 +59,10 @@ class BesluitenService(
         )
     }
 
-    suspend fun getBerichtDocumentContent(
-        authentication: CommonGroundAuthentication,
+    suspend fun getBesluitDocumentContent(
         besluitId: UUID,
         documentId: UUID,
-    ): Pair<Document, Flow<DataBuffer>>? {
+    ): Pair<Document, Flow<DataBuffer>> {
         val besluit = besluitenApiClient.getBesluit(
             besluitId = besluitId,
         )

@@ -43,8 +43,7 @@ class BesluitDocumentResource(
         authentication: CommonGroundAuthentication,
     ): ResponseEntity<Flow<DataBuffer>> {
         val (document, content) =
-            besluitenService.getBerichtDocumentContent(
-                authentication= authentication,
+            besluitenService.getBesluitDocumentContent(
                 besluitId = besluitId,
                 documentId = documentId
             )
