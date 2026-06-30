@@ -15,8 +15,6 @@
  */
 package nl.nlportal.openproduct.graphql
 
-import tools.jackson.databind.JsonNode
-import io.github.oshai.kotlinlogging.KotlinLogging
 import java.net.URI
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
@@ -38,11 +36,12 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
-import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
+import tools.jackson.databind.JsonNode
 
 @SpringBootTest
 @AutoConfigureHttpGraphQlTester
@@ -96,6 +95,7 @@ class OpenProductQueryIT(
         openProductModuleConfiguration.properties.productTypeApiUrl = URI(url)
         objectsApiClientConfig.properties.url = URI(url)
         zakenApiConfig.properties.url = url
+        documentApisConfig.properties.getConfig("openzaak").url = server?.url("/").toString()
     }
 
     @Test
@@ -132,8 +132,6 @@ class OpenProductQueryIT(
                     .path("getOpenProduct")
                     .entity(JsonNode::class.java)
                     .get()
-
-            logger.info { responseBody }
 
             assertEquals("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/", responseBody.requiredAt("/url")?.stringValue())
             assertEquals("2025-04-30", responseBody.requiredAt("/startDatum")?.stringValue())
