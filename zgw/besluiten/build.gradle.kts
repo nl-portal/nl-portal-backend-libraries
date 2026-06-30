@@ -24,7 +24,7 @@ dependencies {
     api(project(":zgw:idtoken-authentication"))
     api(project(":graphql"))
     api(project(":zgw:catalogi-api"))
-    api(Dependencies.springWebFlux)
+    api(project(":zgw:documenten-api"))
 
     implementation(Dependencies.springBootStarter)
 
@@ -32,8 +32,6 @@ dependencies {
     implementation(Dependencies.kotlinCoroutinesReactor)
     implementation("org.springframework.data:spring-data-commons")
 
-    testImplementation(TestDependencies.kotlinTest)
-    testImplementation(TestDependencies.junitJupiterTest)
     testImplementation(TestDependencies.springBootTest)
     testImplementation(TestDependencies.springBootWebClientTest)
     testImplementation(TestDependencies.springBootTestWebClient)
@@ -44,7 +42,6 @@ dependencies {
     testImplementation(TestDependencies.mockitoKotlin)
     testImplementation(TestDependencies.okHttpMockWebserver)
     testImplementation(TestDependencies.okHttp)
-    testImplementation(TestDependencies.postgresql)
     testImplementation(project(":zgw:common-ground-authentication-test"))
 }
 

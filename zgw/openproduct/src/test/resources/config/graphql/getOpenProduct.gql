@@ -18,7 +18,14 @@ query {
         gepubliceerd,
         status,
         documenten {
-            url
+            uuid,
+            documentapi,
+            identificatie,
+            creatiedatum,
+            titel,
+            formaat,
+            bestandsnaam,
+            bestandsomvang
         },
         frequentie,
         verbruiksobject,

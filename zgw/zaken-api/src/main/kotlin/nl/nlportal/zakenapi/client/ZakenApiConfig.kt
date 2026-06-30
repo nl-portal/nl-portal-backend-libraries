@@ -37,22 +37,6 @@ class ZakenApiConfig {
         var clientId: String = ""
         var secret: String = ""
         var zaakTypesIdsExcluded: List<UUID> = emptyList()
-        var zaakDocumentenConfig: ZaakDocumentenConfig = ZaakDocumentenConfig()
         var useNnpKvkQueryIdentificators: Boolean = false
-
-        class ZaakDocumentenConfig {
-            var vertrouwelijkheidsaanduidingWhitelist: List<Vertrouwelijkheid> =
-                listOf(
-                    OPENBAAR,
-                    BEPERKT_OPENBAAR,
-                    INTERN,
-                    ZAAKVERTROUWELIJK,
-                )
-            var statusWhitelist: List<DocumentStatus> =
-                listOf(
-                    DEFINITIEF,
-                    GEARCHIVEERD,
-                )
-        }
     }
 }

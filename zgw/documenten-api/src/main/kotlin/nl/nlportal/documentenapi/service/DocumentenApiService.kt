@@ -1,5 +1,8 @@
 package nl.nlportal.documentenapi.service
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.UUID
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import nl.nlportal.core.util.CoreUtils.extractId
@@ -13,9 +16,6 @@ import nl.nlportal.portal.authentication.domain.PortalAuthentication
 import org.apache.tika.Tika
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.security.core.context.ReactiveSecurityContextHolder
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.UUID
 
 class DocumentenApiService(
     val documentenApiClient: DocumentenApiClient,
@@ -88,5 +88,14 @@ class DocumentenApiService(
             content,
             documentApi,
         )
+    }
+
+    fun filterDocuments(
+        documents: List<Document>,
+    ): List<Document> {
+        return documents.filter { document ->
+            document.status in documentenApisConfigProperties.statusWhitelist &&
+                    document.vertrouwelijkheidaanduiding in documentenApisConfigProperties.vertrouwelijkheidsaanduidingWhitelist
+        }
     }
 }

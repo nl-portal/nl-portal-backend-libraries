@@ -653,7 +653,17 @@ internal class ZaakQueryIT(
                         identificatie,
                         datum,
                         toelichting,
-                        publicatiedatum
+                        publicatiedatum,
+                        documenten {
+                            uuid,
+                            documentapi,
+                            identificatie,
+                            creatiedatum,
+                            titel,
+                            formaat,
+                            bestandsnaam,
+                            bestandsomvang
+                        }
                     },
                     resultaat{
                         toelichting,
@@ -836,7 +846,7 @@ internal class ZaakQueryIT(
                         identificatie,
                         datum,
                         toelichting,
-                        publicatiedatum
+                        publicatiedatum                      
                     }
                 }
             }
@@ -899,6 +909,7 @@ internal class ZaakQueryIT(
                             "/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> handleDocumentRequest()
                             "/zaken/api/v1/rollen" -> handleZaakRollenRequest()
                             "/besluiten/api/v1/besluiten" -> handleBesluitenRequest()
+                            "/besluiten/api/v1/besluitinformatieobjecten" -> handleBesluitDocumentenRequest()
                             "/zaken/api/v1/substatussen" -> handleSubStatusListRequest()
                             "/zaken/api/v1/resultaten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> handleResultaatRequest()
                             "/catalogi/api/v1/resultaattypen/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> handleResultaatTypeRequest()
@@ -1407,6 +1418,21 @@ internal class ZaakQueryIT(
                 }
               ]
             }
+            """.trimIndent()
+
+        return mockResponse(body)
+    }
+
+    fun handleBesluitDocumentenRequest(): MockResponse {
+        val body =
+            """
+            [
+              {
+                "url": "$url/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+                "informatieobject": "$url/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+                "besluit": "$url/besluiten/api/v1/besluiten/496f51fd-ccdb-406e-805a-e7602ae78a2z"
+              }
+            ]
             """.trimIndent()
 
         return mockResponse(body)

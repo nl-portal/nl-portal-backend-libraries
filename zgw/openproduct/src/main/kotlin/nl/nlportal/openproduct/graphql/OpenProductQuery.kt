@@ -20,6 +20,7 @@ import tools.jackson.databind.node.ObjectNode
 import java.util.UUID
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.Mapper
+import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.openproduct.client.domain.OpenProductActie
 import nl.nlportal.openproduct.client.domain.OpenProductProduct
 import nl.nlportal.openproduct.client.domain.OpenProductToegestaneStatus
@@ -120,4 +121,12 @@ class OpenProductQuery(
 
         return Mapper.get().convertValue(result, object : TypeReference<List<ObjectNode>>() {})
     }
+
+    @SchemaMapping(typeName = "OpenProductProduct", field = "documenten")
+    suspend fun documenten(
+        openProductProduct: OpenProductProduct,
+    ): List<Document>? =
+        openProductService.getOpenProductDocumenten(
+            openProductProduct = openProductProduct,
+        )
 }

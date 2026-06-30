@@ -24,6 +24,7 @@ dependencies {
     api(project(":zgw:common-ground-authentication"))
     api(project(":zgw:zaken-api"))
     api(project(":zgw:taak"))
+    api(project(":zgw:documenten-api"))
 
     implementation(Dependencies.jsonPath)
     api("com.github.wnameless.json:json-flattener:0.18.1")
