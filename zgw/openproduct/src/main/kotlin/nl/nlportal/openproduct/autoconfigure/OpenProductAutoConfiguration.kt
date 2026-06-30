@@ -16,14 +16,17 @@
 package nl.nlportal.openproduct.autoconfigure
 
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
+import nl.nlportal.core.security.config.HttpSecurityConfigurer
 import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.openproduct.client.OpenProductClient
 import nl.nlportal.openproduct.client.OpenProductDmnClient
 import nl.nlportal.openproduct.client.OpenProductTypeClient
+import nl.nlportal.openproduct.security.config.ProductDocumentResourceHttpSecurityConfigurer
 import nl.nlportal.openproduct.service.OpenProductDmnService
 import nl.nlportal.openproduct.service.OpenProductService
 import nl.nlportal.zakenapi.client.ZakenApiClient
+import nl.nlportal.zakenapi.security.config.ZaakDocumentResourceHttpSecurityConfigurer
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.taak.autoconfigure.TaakConfig
 import org.springframework.beans.factory.annotation.Autowired
@@ -39,7 +42,7 @@ import org.springframework.web.reactive.function.client.WebClient
     OpenProductModuleConfiguration::class,
     TaakConfig::class,
 )
-@ConditionalOnProperty(prefix = "nl-portal.config", name = ["openproduct.enabled", "objectenapi.enabled", "taak.enabled", "zakenapi.enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["openproduct.enabled", "objectenapi.enabled", "taak.enabled", "zakenapi.enabled", "documentenapis.enabled"], havingValue = "true")
 class OpenProductAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(OpenProductClient::class)
@@ -97,4 +100,8 @@ class OpenProductAutoConfiguration {
             openProductDmnClient = openProductDmnClient,
             openProductService = openProductService,
         )
+
+    @Bean
+    @ConditionalOnMissingBean(ProductDocumentResourceHttpSecurityConfigurer::class)
+    fun productDocumentResourceHttpSecurityConfigurer(): HttpSecurityConfigurer = ProductDocumentResourceHttpSecurityConfigurer()
 }

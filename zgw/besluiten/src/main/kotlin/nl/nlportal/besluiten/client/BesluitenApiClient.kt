@@ -96,11 +96,11 @@ class BesluitenApiClient(
     }
 
     suspend fun getBesluitDocumenten(
-        besluit: String?,
+        besluit: String,
         informatieobject: String?,
     ): List<BesluitDocument> {
         val params = LinkedMultiValueMap<String, String>()
-        besluit?.let { params.add("besluit", it) }
+        params.add("besluit", besluit)
         informatieobject?.let { params.add("informatieobject", it) }
         return webClient
             .get()

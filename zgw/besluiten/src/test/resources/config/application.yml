@@ -2,6 +2,7 @@ graphql:
     packages:
         - "nl.nlportal"
 
+
 spring:
     security:
         oauth2:
@@ -22,6 +23,21 @@ nl-portal:
                 url: http://localhost:8001
                 clientId: valtimo_client
                 secret: e09b8bc5-5831-4618-ab28-41411304309d
+        documentenapis:
+            enabled: true
+            properties:
+                default-document-api: openzaak
+                configurations:
+                    openzaak:
+                        url: http://localhost:10001
+                        clientId: valtimo_client
+                        secret: e09b8bc5-5831-4618-ab28-41411304309d
+                        rsin: "051845623"
+                        documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000
+                    example:
+                        url: https://example.org/documenten/api/v1
+                        clientId: valtimo_client
+                        secret: e09b8bc5-5831-4618-ab28-111111111111
 
 logging:
     level:

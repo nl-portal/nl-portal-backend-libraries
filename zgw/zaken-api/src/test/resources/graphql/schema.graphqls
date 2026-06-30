@@ -152,7 +152,7 @@ type Besluit {
     zaak: String!
     auditTrails: [BesluitAuditTrail!]!
     besluittype: BesluitType!
-    documenten: [BesluitDocument!]!
+    documenten: [Document!]
 }
 
 type BesluitAuditTrail {

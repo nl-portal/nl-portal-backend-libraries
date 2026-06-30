@@ -1,0 +1,10 @@
+type Document {
+    bestandsnaam: String
+    bestandsomvang: Int
+    creatiedatum: String
+    documentapi: String!
+    formaat: String
+    identificatie: String
+    titel: String
+    uuid: UUID!
+}
