@@ -132,7 +132,7 @@ enum class OpenProductProductenFilters(
     PRIJS_DATUM_LTE("prijs__lte"),
     PRODUCTTYPE_NAAM("producttype__naam"),
     PRODUCTTYPE_NAAM_IN("producttype__naam__in"),
-    PRODUCTTYPE_NAAM_CONTAINS("producttype__naam__contains"),
+    PRODUCTTYPE_NAAM_CONTAINS("producttype__naam__icontains"),
     PRODUCTTYPE_UUID("producttype__uuid"),
     PRODUCTTYPE_UUID_IN("producttype__uuid__in"),
     PRODUCTTYPE_CODE("producttype__code"),
