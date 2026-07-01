@@ -190,9 +190,4 @@ class BerichtenQueryIT(
             }
         mockObjectenApi.dispatcher = dispatcher
     }
-
-    companion object {
-        private val logger: KLogger = KotlinLogging.logger {}
-        private val objectMapper = Mapper.get()
-    }
 }

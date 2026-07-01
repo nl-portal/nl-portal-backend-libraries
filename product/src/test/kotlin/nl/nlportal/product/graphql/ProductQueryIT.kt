@@ -65,9 +65,6 @@ internal class ProductQueryIT(
     @Autowired private val graphqlProductPrefill: String,
 ) {
     companion object {
-        private val logger: KLogger = KotlinLogging.logger {}
-        private val objectMapper = Mapper.get()
-
         @JvmStatic
         var server: MockWebServer? = null
 
