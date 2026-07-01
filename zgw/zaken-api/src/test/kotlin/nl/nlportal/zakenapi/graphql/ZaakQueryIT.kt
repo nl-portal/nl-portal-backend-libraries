@@ -53,8 +53,6 @@ internal class ZaakQueryIT(
     @Autowired private val documentApisConfig: DocumentApisConfig,
     @Autowired private val besluitenApiConfig: BesluitenApiConfig,
 ) {
-    private val logger = KotlinLogging.logger {}
-
     companion object {
         @JvmStatic
         var server: MockWebServer? = null
