@@ -67,7 +67,7 @@ class ProductDocumentResourceIT(
         @BeforeAll
         fun beforeAll() {
             server = MockWebServer()
-            server?.start()
+            server?.start(9000)
             url = server?.url("/").toString()
         }
 
@@ -92,7 +92,7 @@ class ProductDocumentResourceIT(
     fun `should stream content with safe Content-Disposition header for valid request`() {
         webTestClient
             .get()
-            .uri("/api/product/694242af-d906-470b-b7e1-eb3527886854/documentapi/openzaak/document/$KNOWN_DOC_ID/content")
+            .uri("/api/product/694242af-d906-470b-b7e1-eb3527886854/document/$KNOWN_DOC_ID/content")
             .exchange()
             .expectStatus()
             .isOk
@@ -107,7 +107,7 @@ class ProductDocumentResourceIT(
     fun `should return 404 when product is not found`() {
         webTestClient
             .get()
-            .uri("/api/product/eda96f52-171f-46e4-b7a3-134e3cdd1276/documentapi/openzaak/document/$KNOWN_DOC_ID/content")
+            .uri("/api/product/eda96f52-171f-46e4-b7a3-134e3cdd1276/document/$KNOWN_DOC_ID/content")
             .exchange()
             .expectStatus()
             .isNotFound
@@ -118,7 +118,7 @@ class ProductDocumentResourceIT(
     fun `should return 403 when user is not authorized`() {
         webTestClient
             .get()
-            .uri("/api/product/694242af-d906-470b-b7e1-eb3527886854/documentapi/openzaak/document/$KNOWN_DOC_ID/content")
+            .uri("/api/product/694242af-d906-470b-b7e1-eb3527886854/document/$KNOWN_DOC_ID/content")
             .exchange()
             .expectStatus()
             .isUnauthorized
@@ -129,10 +129,10 @@ class ProductDocumentResourceIT(
     fun `should return 404 when document is not found as part of product`() {
         webTestClient
             .get()
-            .uri("/api/product/694242af-d906-470b-b7e1-eb3527886854/documentapi/openzaak/document/$UNRELATED_DOC_ID/content")
+            .uri("/api/product/694242af-d906-470b-b7e1-eb3527886854/document/$UNRELATED_DOC_ID/content")
             .exchange()
             .expectStatus()
-            .isNotFound
+            .isUnauthorized
     }
 
     private fun setupDispatcher() {

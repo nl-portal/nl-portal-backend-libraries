@@ -23,6 +23,7 @@ import nl.nlportal.commonground.authentication.BedrijfAuthentication
 import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils
+import nl.nlportal.core.util.CoreUtils.extractId
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.openproduct.client.OpenProductClient
@@ -908,11 +909,10 @@ class OpenProductService(
         productUpdate: OpenProductProductUpdate,
     ): OpenProductProduct? {
         // get product, only to check if user authorized to perform this update
-        val product =
-            getProduct(
-                authentication = authentication,
-                id = productUpdate.uuid,
-            )
+        getProduct(
+            authentication = authentication,
+            id = productUpdate.uuid,
+        )
 
         return openProductClient.path<Producten>().patch(productUpdate = productUpdate)
     }
@@ -1139,7 +1139,6 @@ class OpenProductService(
     suspend fun getProductDocumentContent(
         authentication: CommonGroundAuthentication,
         productId: UUID,
-        documentApi: String,
         documentId: UUID,
     ): Pair<Document, Flow<DataBuffer>> {
         try {
@@ -1155,18 +1154,21 @@ class OpenProductService(
                 throw ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
             }
 
-            // check if documentId is in list of product documenten
-            product.documenten.firstOrNull { it.url?.contains(documentId.toString()) == true } ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Document not found")
-
+            val documentUrl =
+                product.documenten.firstOrNull { extractId(it.url!!) == documentId }
+                    ?: run {
+                        logger.debug {
+                            "Access denied to document $documentId on product $productId for user ${authentication.userId}"
+                        }
+                        throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied")
+                    }
             val document =
                 documentenApiService.getDocument(
-                    documentId = documentId,
-                    documentApi = documentApi,
+                    documentUrl = documentUrl.url!!,
                 )
             val content =
                 documentenApiService.getDocumentContentStreaming(
-                    documentId = documentId,
-                    documentApi = documentApi,
+                    informatieobejctUrl = documentUrl.url,
                 )
             return document to content
         } catch (e: Exception) {
@@ -1177,25 +1179,13 @@ class OpenProductService(
 
     suspend fun getOpenProductDocumenten(
         openProductProduct: OpenProductProduct,
-    ): List<Document> {
-        val documents = mutableListOf<Document>()
-        openProductProduct.documenten.forEach { document ->
-            val splitDocumentUrl = document.url?.split("/")
-            if (splitDocumentUrl != null) {
-                try {
-                    documents.add(
-                        documentenApiService.getDocument(
-                            documentId = UUID.fromString(splitDocumentUrl[9]),
-                            documentApi = splitDocumentUrl[7],
-                        ),
-                    )
-                } catch (e: Exception) {
-                    logger.debug { "Error getting document " + e.message }
-                }
-            }
-        }
-        return documentenApiService.filterDocuments(documents)
-    }
+    ): List<Document> =
+        documentenApiService.filterDocuments(
+            openProductProduct.documenten.map {
+                documentenApiService
+                    .getDocument(it.url!!)
+            },
+        )
 
     /**
      * Collect thema hierarchy up from subthema

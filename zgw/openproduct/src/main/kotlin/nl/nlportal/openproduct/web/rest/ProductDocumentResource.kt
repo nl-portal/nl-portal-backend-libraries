@@ -34,10 +34,9 @@ import org.springframework.web.bind.annotation.RestController
 class ProductDocumentResource(
     private val productService: OpenProductService,
 ) {
-    @GetMapping(value = ["/{productId}/documentapi/{documentapi}/document/{documentId}/content"])
+    @GetMapping(value = ["/{productId}/document/{documentId}/content"])
     suspend fun downloadStreaming(
         @PathVariable productId: UUID,
-        @PathVariable documentapi: String,
         @PathVariable documentId: UUID,
         authentication: CommonGroundAuthentication,
     ): ResponseEntity<Flow<DataBuffer>> {
@@ -46,7 +45,6 @@ class ProductDocumentResource(
                 authentication = authentication,
                 productId = productId,
                 documentId = documentId,
-                documentApi = documentapi,
             )
 
         return ResponseEntity
