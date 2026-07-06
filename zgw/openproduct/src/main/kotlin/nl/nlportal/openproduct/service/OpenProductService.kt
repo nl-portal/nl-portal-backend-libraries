@@ -81,6 +81,7 @@ import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
+@Suppress("UNCHECKED_CAST")
 class OpenProductService(
     private val openProductClient: OpenProductClient,
     private val openProductTypeClient: OpenProductTypeClient,
@@ -1173,19 +1174,29 @@ class OpenProductService(
             return document to content
         } catch (e: Exception) {
             logger.error(e) { "Error getting product document: " + e.message }
+            if (e is NullPointerException) {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST)
+            }
             throw e
         }
     }
 
     suspend fun getOpenProductDocumenten(
         openProductProduct: OpenProductProduct,
-    ): List<Document> =
-        documentenApiService.filterDocuments(
-            openProductProduct.documenten.map {
-                documentenApiService
-                    .getDocument(it.url!!)
-            },
-        )
+    ): List<Document> {
+        val documents = mutableListOf<Document>()
+        openProductProduct.documenten.forEach {
+            try {
+                documents.add(
+                    documentenApiService
+                        .getDocument(it.url!!),
+                )
+            } catch (e: Exception) {
+                logger.error { "Error getting product document: ${e.message}" }
+            }
+        }
+        return documentenApiService.filterDocuments(documents)
+    }
 
     /**
      * Collect thema hierarchy up from subthema

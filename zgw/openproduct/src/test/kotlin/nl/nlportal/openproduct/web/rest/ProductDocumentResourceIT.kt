@@ -47,6 +47,7 @@ class ProductDocumentResourceIT(
 ) {
     companion object {
         private const val KNOWN_DOC_ID = "095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
+        private const val MISCONFIGURED_DOC_ID = "f977e33f-16ae-4e55-9328-eab97bb8297d"
         private const val UNRELATED_DOC_ID = "00000000-0000-0000-0000-0000000000ff"
         private val logger = KotlinLogging.logger {}
 
@@ -133,6 +134,17 @@ class ProductDocumentResourceIT(
             .exchange()
             .expectStatus()
             .isUnauthorized
+    }
+
+    @Test
+    @WithBurgerUser("569312863")
+    fun `should return 400 when documentapi is not found`() {
+        webTestClient
+            .get()
+            .uri("/api/product/694242af-d906-470b-b7e1-eb3527886854/document/$MISCONFIGURED_DOC_ID/content")
+            .exchange()
+            .expectStatus()
+            .isBadRequest
     }
 
     private fun setupDispatcher() {
