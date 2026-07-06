@@ -75,7 +75,7 @@ jobs:
                     echo "::notice title=Dependency Check Scan Information::Dependency-check version: ${engine_version}; Report Generated On: ${report_generated_on}; Dependencies Scanned: ${total_dependencies} (${unique_dependencies} unique); Vulnerable Dependencies: ${vulnerable_dependencies}; Vulnerabilities Found: ${vulnerabilities_found}"
             -   name: Upload Test results
                 if: always()
-                uses: actions/upload-artifact@v4
+                uses: actions/upload-artifact@v7
                 with:
                     name: Dependency check result
                     path: ${{github.workspace}}/dependency-check
