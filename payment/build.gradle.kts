@@ -23,7 +23,7 @@ dependencies {
     api(project(":graphql"))
     api(project(":zgw:taak"))
 
-    api("commons-codec:commons-codec:1.21.0")
+    api(Dependencies.commonsCodec)
     implementation(Dependencies.kotlinCoroutines)
     implementation(Dependencies.kotlinCoroutinesReactor)
     implementation("org.springframework.data:spring-data-commons")
