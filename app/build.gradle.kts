@@ -40,6 +40,7 @@ dependencies {
     implementation(project(":zgw:openproduct"))
     implementation(project(":product"))
     implementation(project(":zgw:verificatie"))
+    implementation(project(":case"))
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     api("org.postgresql:postgresql")

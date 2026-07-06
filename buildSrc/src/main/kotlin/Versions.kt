@@ -22,7 +22,7 @@ object Versions {
     const val clamAvVersion="2.1.2"
     const val apacheCommons = "3.20.0"
     const val commonsIo = "2.21.0"
-    const val commonsCodec = "1.21.0"
+    const val commonsCodec = "1.22.0"
     const val graphqlJava ="25.0"
     const val graphqlJavaScalars ="24.0"
     const val kotlinLogging = "7.0.13"

@@ -23,6 +23,7 @@ import nl.nlportal.commonground.authentication.BedrijfAuthentication
 import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils
+import nl.nlportal.core.util.CoreUtils.extractId
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.openproduct.client.OpenProductClient
@@ -80,6 +81,7 @@ import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
+@Suppress("UNCHECKED_CAST")
 class OpenProductService(
     private val openProductClient: OpenProductClient,
     private val openProductTypeClient: OpenProductTypeClient,
@@ -908,11 +910,10 @@ class OpenProductService(
         productUpdate: OpenProductProductUpdate,
     ): OpenProductProduct? {
         // get product, only to check if user authorized to perform this update
-        val product =
-            getProduct(
-                authentication = authentication,
-                id = productUpdate.uuid,
-            )
+        getProduct(
+            authentication = authentication,
+            id = productUpdate.uuid,
+        )
 
         return openProductClient.path<Producten>().patch(productUpdate = productUpdate)
     }
@@ -1139,7 +1140,6 @@ class OpenProductService(
     suspend fun getProductDocumentContent(
         authentication: CommonGroundAuthentication,
         productId: UUID,
-        documentApi: String,
         documentId: UUID,
     ): Pair<Document, Flow<DataBuffer>> {
         try {
@@ -1155,22 +1155,28 @@ class OpenProductService(
                 throw ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
             }
 
-            // check if documentId is in list of product documenten
-            product.documenten.firstOrNull { it.url?.contains(documentId.toString()) == true } ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Document not found")
-
+            val documentUrl =
+                product.documenten.firstOrNull { extractId(it.url!!) == documentId }
+                    ?: run {
+                        logger.debug {
+                            "Access denied to document $documentId on product $productId for user ${authentication.userId}"
+                        }
+                        throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied")
+                    }
             val document =
                 documentenApiService.getDocument(
-                    documentId = documentId,
-                    documentApi = documentApi,
+                    documentUrl = documentUrl.url!!,
                 )
             val content =
                 documentenApiService.getDocumentContentStreaming(
-                    documentId = documentId,
-                    documentApi = documentApi,
+                    informatieobejctUrl = documentUrl.url,
                 )
             return document to content
         } catch (e: Exception) {
             logger.error(e) { "Error getting product document: " + e.message }
+            if (e is NullPointerException) {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST)
+            }
             throw e
         }
     }
@@ -1179,19 +1185,14 @@ class OpenProductService(
         openProductProduct: OpenProductProduct,
     ): List<Document> {
         val documents = mutableListOf<Document>()
-        openProductProduct.documenten.forEach { document ->
-            val splitDocumentUrl = document.url?.split("/")
-            if (splitDocumentUrl != null) {
-                try {
-                    documents.add(
-                        documentenApiService.getDocument(
-                            documentId = UUID.fromString(splitDocumentUrl[9]),
-                            documentApi = splitDocumentUrl[7],
-                        ),
-                    )
-                } catch (e: Exception) {
-                    logger.debug { "Error getting document " + e.message }
-                }
+        openProductProduct.documenten.forEach {
+            try {
+                documents.add(
+                    documentenApiService
+                        .getDocument(it.url!!),
+                )
+            } catch (e: Exception) {
+                logger.error { "Error getting product document: ${e.message}" }
             }
         }
         return documentenApiService.filterDocuments(documents)

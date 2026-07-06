@@ -19,6 +19,7 @@ import tools.jackson.databind.JsonNode
 import java.net.URI
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
+import nl.nlportal.documentenapi.client.DocumentApisConfig
 import nl.nlportal.openproduct.TestHelper
 import nl.nlportal.openproduct.TestHelper.readFileAsString
 import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration
@@ -47,8 +48,11 @@ import org.springframework.test.context.DynamicPropertySource
 class OpenProductMutationIT(
     @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val openProductModuleConfiguration: OpenProductModuleConfiguration,
+    @Autowired private val documentApisConfig: DocumentApisConfig,
 ) {
     companion object {
+        private const val KNOWN_DOC_ID = "095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
+
         @JvmStatic
         var server: MockWebServer? = null
 
@@ -65,7 +69,7 @@ class OpenProductMutationIT(
         @BeforeAll
         fun beforeAll() {
             server = MockWebServer()
-            server?.start()
+            server?.start(9000)
             url = server?.url("/").toString()
         }
 
@@ -81,6 +85,7 @@ class OpenProductMutationIT(
         setupMockServer()
         url = server?.url("/").toString()
         openProductModuleConfiguration.properties.productApiUrl = URI(url)
+        documentApisConfig.properties.getConfig("openzaak").url = server?.url("/").toString()
     }
 
     @Test
@@ -116,6 +121,10 @@ class OpenProductMutationIT(
 
                             "PATCH /producten/694242af-d906-470b-b7e1-eb3527886854" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-product.json")
+                            }
+
+                            "GET /enkelvoudiginformatieobjecten/${KNOWN_DOC_ID}" -> {
+                                TestHelper.mockResponse(TestHelper.handleDocumentResponse)
                             }
 
                             else -> {

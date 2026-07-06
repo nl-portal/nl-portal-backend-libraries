@@ -47,6 +47,7 @@ class ProductDocumentResourceIT(
 ) {
     companion object {
         private const val KNOWN_DOC_ID = "095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
+        private const val MISCONFIGURED_DOC_ID = "f977e33f-16ae-4e55-9328-eab97bb8297d"
         private const val UNRELATED_DOC_ID = "00000000-0000-0000-0000-0000000000ff"
         private val logger = KotlinLogging.logger {}
 
@@ -67,7 +68,7 @@ class ProductDocumentResourceIT(
         @BeforeAll
         fun beforeAll() {
             server = MockWebServer()
-            server?.start()
+            server?.start(9000)
             url = server?.url("/").toString()
         }
 
@@ -92,7 +93,7 @@ class ProductDocumentResourceIT(
     fun `should stream content with safe Content-Disposition header for valid request`() {
         webTestClient
             .get()
-            .uri("/api/product/694242af-d906-470b-b7e1-eb3527886854/documentapi/openzaak/document/$KNOWN_DOC_ID/content")
+            .uri("/api/product/694242af-d906-470b-b7e1-eb3527886854/document/$KNOWN_DOC_ID/content")
             .exchange()
             .expectStatus()
             .isOk
@@ -107,7 +108,7 @@ class ProductDocumentResourceIT(
     fun `should return 404 when product is not found`() {
         webTestClient
             .get()
-            .uri("/api/product/eda96f52-171f-46e4-b7a3-134e3cdd1276/documentapi/openzaak/document/$KNOWN_DOC_ID/content")
+            .uri("/api/product/eda96f52-171f-46e4-b7a3-134e3cdd1276/document/$KNOWN_DOC_ID/content")
             .exchange()
             .expectStatus()
             .isNotFound
@@ -118,7 +119,7 @@ class ProductDocumentResourceIT(
     fun `should return 403 when user is not authorized`() {
         webTestClient
             .get()
-            .uri("/api/product/694242af-d906-470b-b7e1-eb3527886854/documentapi/openzaak/document/$KNOWN_DOC_ID/content")
+            .uri("/api/product/694242af-d906-470b-b7e1-eb3527886854/document/$KNOWN_DOC_ID/content")
             .exchange()
             .expectStatus()
             .isUnauthorized
@@ -129,10 +130,21 @@ class ProductDocumentResourceIT(
     fun `should return 404 when document is not found as part of product`() {
         webTestClient
             .get()
-            .uri("/api/product/694242af-d906-470b-b7e1-eb3527886854/documentapi/openzaak/document/$UNRELATED_DOC_ID/content")
+            .uri("/api/product/694242af-d906-470b-b7e1-eb3527886854/document/$UNRELATED_DOC_ID/content")
             .exchange()
             .expectStatus()
-            .isNotFound
+            .isUnauthorized
+    }
+
+    @Test
+    @WithBurgerUser("569312863")
+    fun `should return 400 when documentapi is not found`() {
+        webTestClient
+            .get()
+            .uri("/api/product/694242af-d906-470b-b7e1-eb3527886854/document/$MISCONFIGURED_DOC_ID/content")
+            .exchange()
+            .expectStatus()
+            .isBadRequest
     }
 
     private fun setupDispatcher() {
