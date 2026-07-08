@@ -47,6 +47,6 @@ class FrontendFeaturesConfigurationResourceTest(
 
         val responseJson = Mapper.get().readTree(responseBodyContent)
 
-        assertEquals(frontendFeaturesConfigurationProperties.properties.myAddressResearchUrl, responseJson.requiredAt("/properties/myAddressResearchUrl").textValue())
+        assertEquals(frontendFeaturesConfigurationProperties.properties.myAddressResearchUrl, responseJson.requiredAt("/properties/myAddressResearchUrl").stringValue())
     }
 }

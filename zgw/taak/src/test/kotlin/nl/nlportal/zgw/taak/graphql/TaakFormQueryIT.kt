@@ -66,7 +66,7 @@ internal class TaakFormQueryIT(
     fun `returns form definition for task with formulier soort=url`() {
         val formDefinition = executeForTask("58fad5ab-dc2f-11ec-9075-f22a405ce707")
 
-        assertEquals("form", formDefinition.requiredAt("/formDefinition/display").textValue())
+        assertEquals("form", formDefinition.requiredAt("/formDefinition/display").stringValue())
     }
 
     @Test
@@ -74,7 +74,7 @@ internal class TaakFormQueryIT(
     fun `returns form definition for task with formulier soort=id`() {
         val formDefinition = executeForTask("44444444-4444-4444-4444-444444444444")
 
-        assertEquals("form", formDefinition.requiredAt("/formDefinition/display").textValue())
+        assertEquals("form", formDefinition.requiredAt("/formDefinition/display").stringValue())
     }
 
     @Test

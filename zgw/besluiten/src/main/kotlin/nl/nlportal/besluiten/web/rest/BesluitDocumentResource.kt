@@ -47,7 +47,6 @@ class BesluitDocumentResource(
                 besluitId = besluitId,
                 documentId = documentId
             )
-                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Besluit not found")
 
         return ResponseEntity
             .ok()

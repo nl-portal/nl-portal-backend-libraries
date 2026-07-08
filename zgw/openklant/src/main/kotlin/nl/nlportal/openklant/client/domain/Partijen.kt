@@ -77,9 +77,6 @@ data class OpenKlant2Partij(
         require(interneNotitie == null || interneNotitie.length <= 1000) {
             "Interne notitie can't be longer than 1000 characters."
         }
-        require(nummer == null || nummer.length <= 10) {
-            "Nummer can't be longer than 10 characters."
-        }
     }
 }
 
